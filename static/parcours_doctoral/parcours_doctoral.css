@@ -1,0 +1,528 @@
+/*
+ *
+ *   OSIS stands for Open Student Information System. It's an application
+ *   designed to manage the core business of higher education institutions,
+ *   such as universities, faculties, institutes and professional schools.
+ *   The core business involves the administration of students, teachers,
+ *   courses, programs and so on.
+ *
+ *   Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+ *
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   A copy of this license - GNU General Public License - is available
+ *   at the root of the source code of this program.  If not,
+ *   see http://www.gnu.org/licenses/.
+ *
+ */
+
+.nav-pills.nav-grey > li.active > a,
+.nav-pills.nav-grey > li.active > a:focus,
+.nav-pills.nav-grey > li.active > a:hover {
+  background-color: #aaa;
+}
+
+blockquote {
+  padding: 5px 10px;
+  font-size: 1em;
+  font-style: italic;
+  white-space: pre-line;
+}
+
+.media-list {
+  margin: 0;
+}
+
+dl .media-list {
+  margin-top: 0.5em;
+}
+
+.media {
+  border: 1px solid #ddd;
+  padding: 1em;
+}
+
+textarea {
+  resize: vertical;
+}
+
+.flex-content {
+  display: flex;
+  justify-content:space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1em;
+}
+
+.flex-content-no-wrap {
+  display: flex;
+  justify-content:space-between;
+  align-items: center;
+  gap: 1em;
+}
+
+.flex-content.no-space {
+  justify-content: normal;
+  gap: normal;
+}
+
+.flex-content-no-wrap-no-justify {
+  display: flex;
+  align-items: center;
+  gap: 1em;
+}
+
+.align-items-baseline {
+  align-items: baseline;
+}
+
+.border-right {
+  border-right: 1px solid #ddd;
+}
+
+.flex-content.align-top {
+  align-items: start;
+}
+
+.flex-1 {
+  flex: 1;
+}
+
+.inline-field-data {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.required_field .control-label:after {
+  color: #a94442;
+}
+
+.required_panel .panel-title:after {
+  content: " *";
+  color: #a94442;
+}
+
+.panel-with-default-header-font-size .panel-title {
+  font-size: inherit;
+}
+
+.min_field {
+  width: max-content;
+}
+
+/* To override the bootstrap fieldset style */
+fieldset.custom-fieldset {
+  border: 1px solid #ddd;
+  padding: inherit;
+}
+
+fieldset.custom-fieldset > legend {
+  font-size: 1em;
+  width: fit-content;
+  border: none;
+  font-weight: bold;
+  margin-bottom: 0.5em;
+}
+
+@media (min-width: 990px) {
+  .tabsbar-collapse {
+    width: auto;
+    border-top: 0;
+    -webkit-box-shadow: none;
+    box-shadow: none
+  }
+
+  .tabsbar-collapse.collapse {
+    display: block !important;
+    height: auto !important;
+    padding-bottom: 0;
+    overflow: visible !important
+  }
+
+  .tabsbar-collapse.in {
+    overflow-y: visible
+  }
+
+  .tabsbar-toggle {
+    display: none
+  }
+}
+
+@media (max-width: 990px) {
+  .navbar-toggle.tabsbar-toggle {
+    display: block;
+  }
+
+  .tabsbar-collapse > .navbar-nav {
+    float: none;
+    margin: 0;
+    clear: both;
+  }
+
+  .tabsbar-collapse > .navbar-nav > li {
+    float: none;
+    clear: both;
+  }
+}
+
+.tabsbar-collapse.collapsing {
+  width: 100%;
+}
+
+.tabsbar-collapse {
+  border-top: 1px solid #e7e7e7;
+  -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, .1);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .1);
+}
+
+#id_is_online .radio {
+  display: inline-block;
+  margin-right: 1em;
+}
+
+.popover-buttons, .custom-popover-buttons {
+  text-decoration: none !important;
+  margin-left: 5px;
+}
+
+.popover p:last-child {
+  margin-bottom: 0;
+}
+
+.mb-15 {
+  margin-bottom: 15px;
+}
+
+.field-with-tooltip .label-container {
+  max-width: 100%;
+  margin-bottom: 5px;
+}
+
+.field-with-tooltip label {
+  display: initial;
+}
+
+.tooltip .tooltip-inner {
+  width: auto;
+}
+
+@media print {
+  .inline-field-data {
+    display: block;
+  }
+
+  .inline-field-data dd, .inline-field-data dt {
+    display: inline;
+  }
+}
+
+.mt-1 {
+  margin-top: 1em;
+}
+
+.mt-2 {
+  margin-top: 2em;
+}
+
+.mt-3 {
+  margin-top: 3em;
+}
+
+.bold-text {
+  font-weight: bold;
+}
+
+.underline-text {
+  text-decoration: underline;
+}
+
+.default-cursor {
+  cursor: default;
+}
+
+.copy-button {
+  position: relative;
+  display: inline-block;
+}
+
+.copy-button > .copy-tooltip {
+  visibility: hidden;
+  width: 140px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px;
+  position: absolute;
+  z-index: 1;
+  bottom: 150%;
+  left: 50%;
+  margin-left: -75px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.copy-button .copy-tooltip::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
+}
+
+.copy-button:hover .copy-tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+
+.label-parcours-doctoral-primary {
+  background-color: #269abc;
+}
+
+.min-width {
+  width: 1%;
+  white-space: nowrap;
+}
+
+.no-wrap {
+  white-space: nowrap;
+}
+
+.auto-width {
+  width: auto;
+}
+
+.flag-icon {
+  height: 1em;
+}
+
+#parcours .tab-pane {
+  overflow-x: auto;
+}
+
+.toast-messages-container {
+  z-index: 2000;
+  top: 0;
+}
+
+.comment-content {
+  white-space: pre-wrap;
+}
+
+.panel-default-badge-success{
+    color: #fff !important;
+    background-color: #28a745 !important;
+}
+
+.panel-default-badge-primary{
+    color: #fff !important;
+    background-color: #337ab7 !important;
+}
+
+
+.merge-panel-container {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  margin-top: 15px;
+}
+
+#select2-match-container {
+  line-height: 28px !important;
+  padding-left: 8px !important;
+}
+
+.flex-merge-input {
+  display: flex;
+  align-items: center;
+}
+
+.btn-merge {
+  display: none;
+}
+
+.btn-merge-all {
+  height: 30px;
+  width: 30px;
+  margin-right: 0 !important;
+  margin-top: 0 !important;
+  padding: 0;
+}
+
+.flex-merge-input:hover .btn-merge {
+  display: block !important;
+}
+
+select#match + .select2-container {
+  min-width: unset !important;
+}
+
+.original-data {
+  padding-right: 0 !important;
+}
+
+.original-data-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-right: 0;
+}
+
+.original-data-heading .panel-title{
+  flex: 5;
+  line-height: 2;
+}
+
+.original-data-heading .merge-btn-container {
+  padding-right: 5px;
+}
+
+.input-field-data {
+  flex: 5;
+}
+
+.merge-btn-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.fusion-data-heading .panel-title {
+  line-height: 2;
+  padding-left: 15px;
+}
+
+.digit-data-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-left: 0 !important;
+}
+
+.digit-data-heading .panel-title {
+  flex: 5;
+  line-height: 2;
+}
+
+.digit-data {
+  padding-left: 0 !important;
+}
+
+.digit-data-heading .merge-btn-container {
+  padding-left: 5px;
+}
+
+#proposal-form .help-block {
+  display: none;
+}
+
+@media (min-width: 992px) {
+  .parcours-doctoral-modal-lg {
+    width: 90%;
+    min-width: 900px;
+  }
+}
+
+.debug-content {
+  background-color: #ffb4ff78;
+}
+
+.select2-results hr {
+  padding: 0;
+  margin: 0;
+}
+
+.text-orange {
+  color: orange;
+}
+
+.relative-position {
+  position: relative;
+}
+
+select.select2-hidden-accessible + span {
+  width: 100% !important;
+  min-width: auto;
+}
+
+.select2-selection.select2-selection--single {
+  padding: 6px 12px;
+}
+
+#document-spinner {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  background: rgba(0, 0, 0, 0.1);
+  text-align: center;
+  padding: 20%;
+}
+
+#document-spinner.htmx-request {
+  display: block;
+}
+
+#document-spinner .fa-spinner {
+  font-size: 3em;
+}
+
+#document-spinner.htmx-request .fa-spinner {
+  -moz-animation: spin-loader 2s linear infinite;
+  -webkit-animation: spin-loader 2s linear infinite;
+  animation: spin-loader 2s linear infinite;
+}
+
+a.no-link {
+  text-decoration: none !important;
+  color: white;
+}
+
+.fit-content {
+  width: fit-content;
+}
+
+.fusion-data{
+  pointer-events: none;
+}
+
+.fusion-data #id_identification_type{
+  pointer-events: all !important;
+}
+
+.parcours-doctoral-collapse-button[aria-expanded="false"] i.fa-chevron-up,
+.parcours-doctoral-collapse-button[aria-expanded="true"] i.fa-chevron-down {
+  display: none;
+}
+
+.word-break-keep-all {
+  word-break: keep-all;
+}
+
+.datepicker table {
+  width: 100%;
+}
+
+.multi-widget ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.multi-widget ul label {
+  font-weight: normal;
+}
