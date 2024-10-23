@@ -33,3 +33,5 @@ except DuplicateMailTemplateIdentifier:
 
     if 'test' not in sys.argv:
         raise
+
+PARCOURS_DOCTORAL_TAG = 'Parcours doctoral'

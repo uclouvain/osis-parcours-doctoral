@@ -25,7 +25,7 @@
 # ##############################################################################
 from django.utils.translation import gettext_lazy as _
 
-from admission.mail_templates.tokens import DOCTORATE_ADMISSION_TAG, common_tokens
+from admission.mail_templates.tokens import common_tokens
 from osis_mail_template import Token, templates
 
 __all__ = [
@@ -39,6 +39,8 @@ __all__ = [
     "ADMISSION_EMAIL_CANDIDATE_COURSE_ENROLLMENT_REFUSED",
     "ADMISSION_EMAIL_REFERENCE_PROMOTER_COURSE_ENROLLMENTS_SUBMITTED",
 ]
+
+from parcours_doctoral.mail_templates import PARCOURS_DOCTORAL_TAG
 
 training_common_tokens = common_tokens + [
     Token(
@@ -73,7 +75,7 @@ templates.register(
     ADMISSION_EMAIL_REFERENCE_PROMOTER_DOCTORAL_TRAININGS_SUBMITTED,
     description=_("Mail sent to reference promoter to inform of the submission of doctoral training activities"),
     tokens=training_common_tokens + doctoral_training_token,
-    tag=DOCTORATE_ADMISSION_TAG,
+    tag=PARCOURS_DOCTORAL_TAG,
 )
 
 ADMISSION_EMAIL_CANDIDATE_DOCTORAL_TRAINING_REFUSED = 'osis-admission-doctoral-training-refused-candidate'
@@ -96,7 +98,7 @@ templates.register(
             ),
         ]
     ),
-    tag=DOCTORATE_ADMISSION_TAG,
+    tag=PARCOURS_DOCTORAL_TAG,
 )
 ADMISSION_EMAIL_CANDIDATE_DOCTORAL_TRAINING_NEEDS_UPDATE = 'osis-admission-doctoral-training-needs-update-candidate'
 templates.register(
@@ -118,7 +120,7 @@ templates.register(
             ),
         ]
     ),
-    tag=DOCTORATE_ADMISSION_TAG,
+    tag=PARCOURS_DOCTORAL_TAG,
 )
 
 # Complementary training
@@ -136,7 +138,7 @@ templates.register(
     ADMISSION_EMAIL_REFERENCE_PROMOTER_COMPLEMENTARY_TRAININGS_SUBMITTED,
     description=_("Mail sent to reference promoter to inform of the submission of complementary training activities"),
     tokens=training_common_tokens + complementary_training_token,
-    tag=DOCTORATE_ADMISSION_TAG,
+    tag=PARCOURS_DOCTORAL_TAG,
 )
 
 ADMISSION_EMAIL_CANDIDATE_COMPLEMENTARY_TRAINING_REFUSED = 'osis-admission-complementary-training-refused-candidate'
@@ -157,7 +159,7 @@ templates.register(
             example="Cours de langue : Anglais médiéval (ANGMED003) - 2 ECTS",
         ),
     ],
-    tag=DOCTORATE_ADMISSION_TAG,
+    tag=PARCOURS_DOCTORAL_TAG,
 )
 ADMISSION_EMAIL_CANDIDATE_COMPLEMENTARY_TRAINING_NEEDS_UPDATE = (
     'osis-admission-complementary-training-needs-update-candidate'
@@ -181,7 +183,7 @@ templates.register(
             ),
         ]
     ),
-    tag=DOCTORATE_ADMISSION_TAG,
+    tag=PARCOURS_DOCTORAL_TAG,
 )
 
 # Course enrollment
@@ -199,7 +201,7 @@ templates.register(
     ADMISSION_EMAIL_REFERENCE_PROMOTER_COURSE_ENROLLMENTS_SUBMITTED,
     description=_("Mail sent to reference promoter to inform of the submission of course enrollment"),
     tokens=training_common_tokens + course_enrollment_token,
-    tag=DOCTORATE_ADMISSION_TAG,
+    tag=PARCOURS_DOCTORAL_TAG,
 )
 
 ADMISSION_EMAIL_CANDIDATE_COURSE_ENROLLMENT_REFUSED = 'osis-admission-course-enrollment-refused-candidate'
@@ -222,7 +224,7 @@ templates.register(
             ),
         ]
     ),
-    tag=DOCTORATE_ADMISSION_TAG,
+    tag=PARCOURS_DOCTORAL_TAG,
 )
 ADMISSION_EMAIL_CANDIDATE_COURSE_ENROLLMENT_NEEDS_UPDATE = 'osis-admission-course-enrollment-needs-update-candidate'
 templates.register(
@@ -244,5 +246,5 @@ templates.register(
             ),
         ]
     ),
-    tag=DOCTORATE_ADMISSION_TAG,
+    tag=PARCOURS_DOCTORAL_TAG,
 )

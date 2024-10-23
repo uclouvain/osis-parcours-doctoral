@@ -93,7 +93,7 @@ def admission_confirmation_success_attestation(task_uuid, language=None):
         # Generate the pdf
         save_token = admission_generate_pdf(
             admission_task.admission,
-            template='admission/exports/confirmation_success_attestation.html',
+            template='parcours_doctoral/exports/confirmation_success_attestation.html',
             filename='confirmation_attestation.pdf',
             context={
                 'contact_address': contact_address,

@@ -66,7 +66,7 @@ class ParcoursDoctoralSchemaGenerator(SchemaGenerator):
                 },
             },
             {
-                "url": "https://osis.uclouvain.be/api/v1/admission/",
+                "url": "https://osis.uclouvain.be/api/v1/parcours_doctoral/",
                 "description": "Production server",
             },
         ]

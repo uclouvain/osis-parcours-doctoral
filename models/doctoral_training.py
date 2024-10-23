@@ -51,7 +51,7 @@ __all__ = [
 
 def training_activity_directory_path(instance: 'Activity', filename: str):
     """Return the file upload directory path."""
-    return 'admission/{}/{}/training/{}'.format(
+    return 'parcours_doctoral/{}/{}/training/{}'.format(
         instance.doctorate.candidate.uuid,
         instance.doctorate.uuid,
         filename,
@@ -359,7 +359,7 @@ class Activity(models.Model):
             Template(
                 """{% load admission %}
             {% firstof 0 activity.category|lower|add:'.html' as template_name %}
-            {% include "admission/doctorate/details/training/_activity_title.html" %}
+            {% include "parcours_doctoral/details/training/_activity_title.html" %}
             """
             )
             .render(Context({'activity': self}))

@@ -33,7 +33,7 @@ from django.utils.translation import get_language, gettext_lazy as _
 
 from admission.contrib.models import DoctorateAdmission
 from parcours_doctoral.models.doctoral_training import Activity
-from admission.contrib.models.doctorate import DoctorateProxy
+from admission.contrib.models.doctorate import ParcoursDoctoral
 from admission.ddd.admission.doctorat.preparation.commands import UUID
 from admission.ddd.admission.doctorat.preparation.domain.model._promoteur import PromoteurIdentity
 from parcours_doctoral.ddd.domain.model.doctorat import Doctorat
@@ -68,7 +68,7 @@ class Notification(INotification):
         return settings.ADMISSION_FRONTEND_LINK.format(context='doctorate', uuid=uuid) + tab
 
     @classmethod
-    def _get_doctorate_title_translation(cls, doctorate: Union[DoctorateProxy, DoctorateAdmission]) -> Promise:
+    def _get_doctorate_title_translation(cls, doctorate: Union[ParcoursDoctoral, DoctorateAdmission]) -> Promise:
         """Populate the translations of the doctorate title and lazy return them"""
         # Create a dict to cache the translations of the doctorate title
         doctorate_title = {
@@ -82,7 +82,7 @@ class Notification(INotification):
     @classmethod
     def get_common_tokens(
         cls,
-        doctorate: Union[DoctorateProxy, DoctorateAdmission],
+        doctorate: Union[ParcoursDoctoral, DoctorateAdmission],
     ) -> dict:
         """Return common tokens about a doctorate"""
         return {
@@ -141,7 +141,7 @@ class Notification(INotification):
         activites: List[Activite],
         promoteur_de_reference_id: PromoteurIdentity,
     ) -> None:
-        doctorate: DoctorateProxy = DoctorateProxy.objects.get(uuid=doctorat.entity_id.uuid)
+        doctorate: ParcoursDoctoral = ParcoursDoctoral.objects.get(uuid=doctorat.entity_id.uuid)
         common_tokens = cls.get_common_tokens(doctorate)
         promoteur = Actor.objects.get(uuid=promoteur_de_reference_id.uuid)
 
@@ -155,7 +155,7 @@ class Notification(INotification):
 
     @classmethod
     def notifier_validation_au_candidat(cls, doctorat: Doctorat, activites: List[Activite]) -> None:
-        doctorate: DoctorateProxy = DoctorateProxy.objects.get(uuid=doctorat.entity_id.uuid)
+        doctorate: ParcoursDoctoral = ParcoursDoctoral.objects.get(uuid=doctorat.entity_id.uuid)
         candidat = Person.objects.get(global_id=doctorat.matricule_doctorant)
         common_tokens = cls.get_common_tokens(doctorate)
         if activites[0].categorie == CategorieActivite.UCL_COURSE:
@@ -180,7 +180,7 @@ class Notification(INotification):
 
     @classmethod
     def notifier_refus_au_candidat(cls, doctorat, activite):
-        doctorate: DoctorateProxy = DoctorateProxy.objects.get(uuid=doctorat.entity_id.uuid)
+        doctorate: ParcoursDoctoral = ParcoursDoctoral.objects.get(uuid=doctorat.entity_id.uuid)
         common_tokens = cls.get_common_tokens(doctorate)
 
         mail_template_id = cls._get_mail_template_ids(activite).get(

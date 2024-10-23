@@ -26,9 +26,11 @@
 from django.contrib import admin
 from django.shortcuts import resolve_url
 from django.utils.translation import gettext_lazy as _
+from osis_mail_template.admin import MailTemplateAdmin
 
 from parcours_doctoral.ddd.formation.domain.model.enums import CategorieActivite, ContexteFormation
 from parcours_doctoral.models.cdd_config import CddConfiguration
+from parcours_doctoral.models.cdd_mail_template import CddMailTemplate
 from parcours_doctoral.models.doctoral_training import Activity
 
 
@@ -131,5 +133,23 @@ class ActivityAdmin(admin.ModelAdmin):
         return url + f'#{obj.uuid}'
 
 
+class CddMailTemplateAdmin(MailTemplateAdmin):
+    list_display = ('name', 'identifier', 'language', 'cdd')
+    search_fields = [
+        'cdd__acronym',
+        'idenfier',
+    ]
+    list_filter = [
+        'cdd',
+        'language',
+        'identifier',
+    ]
+
+    @staticmethod
+    def view_on_site(obj):
+        return resolve_url(f'admission:config:cdd-mail-template:preview', identifier=obj.identifier, pk=obj.pk)
+
+
+admin.site.register(CddMailTemplate, CddMailTemplateAdmin)
 admin.site.register(Activity, ActivityAdmin)
 admin.site.register(CddConfiguration)

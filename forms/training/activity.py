@@ -153,7 +153,7 @@ class ActivityFormMixin(forms.BaseForm):
 
 
 class ConferenceForm(ActivityFormMixin, forms.ModelForm):
-    template_name = "admission/doctorate/forms/training/conference.html"
+    template_name = "parcours_doctoral/forms/training/conference.html"
     type = ConfigurableActivityTypeField('conference_types', label=_("Activity type"))
     is_online = IsOnlineField()
 
@@ -191,7 +191,7 @@ class ConferenceForm(ActivityFormMixin, forms.ModelForm):
 
 
 class ConferenceCommunicationForm(ActivityFormMixin, forms.ModelForm):
-    template_name = "admission/doctorate/forms/training/conference_communication.html"
+    template_name = "parcours_doctoral/forms/training/conference_communication.html"
     type = SelectOrOtherField(
         label=_("Type of communication"),
         choices=[
@@ -232,7 +232,7 @@ class ConferenceCommunicationForm(ActivityFormMixin, forms.ModelForm):
 
 
 class ConferencePublicationForm(ActivityFormMixin, forms.ModelForm):
-    template_name = "admission/doctorate/forms/training/conference_publication.html"
+    template_name = "parcours_doctoral/forms/training/conference_publication.html"
     type = ConfigurableActivityTypeField('conference_publication_types', label=_("Publication type"))
 
     class Meta:
@@ -269,7 +269,7 @@ class ConferencePublicationForm(ActivityFormMixin, forms.ModelForm):
 
 
 class CommunicationForm(ActivityFormMixin, forms.ModelForm):
-    template_name = "admission/doctorate/forms/training/communication.html"
+    template_name = "parcours_doctoral/forms/training/communication.html"
     type = ConfigurableActivityTypeField('communication_types', label=_("Activity type"))
     subtype = SelectOrOtherField(
         label=_("Type of communication"),
@@ -329,7 +329,7 @@ class CommunicationForm(ActivityFormMixin, forms.ModelForm):
 
 
 class PublicationForm(ActivityFormMixin, forms.ModelForm):
-    template_name = "admission/doctorate/forms/training/publication.html"
+    template_name = "parcours_doctoral/forms/training/publication.html"
     type = ConfigurableActivityTypeField('publication_types', label=_("Publication type"))
 
     class Meta:
@@ -362,7 +362,7 @@ class PublicationForm(ActivityFormMixin, forms.ModelForm):
 
 
 class ResidencyForm(ActivityFormMixin, forms.ModelForm):
-    template_name = "admission/doctorate/forms/training/residency.html"
+    template_name = "parcours_doctoral/forms/training/residency.html"
     type = ConfigurableActivityTypeField('residency_types', label=_("Activity type"))
 
     class Meta:
@@ -391,7 +391,7 @@ class ResidencyForm(ActivityFormMixin, forms.ModelForm):
 
 
 class ResidencyCommunicationForm(ActivityFormMixin, forms.ModelForm):
-    template_name = "admission/doctorate/forms/training/residency_communication.html"
+    template_name = "parcours_doctoral/forms/training/residency_communication.html"
     type = SelectOrOtherField(choices=[_("Research seminar")], label=_("Activity type"))
     subtype = SelectOrOtherField(
         choices=[_("Oral presentation")],
@@ -431,7 +431,7 @@ class ResidencyCommunicationForm(ActivityFormMixin, forms.ModelForm):
 
 
 class ServiceForm(ActivityFormMixin, forms.ModelForm):
-    template_name = "admission/doctorate/forms/training/service.html"
+    template_name = "parcours_doctoral/forms/training/service.html"
     type = ConfigurableActivityTypeField("service_types", label=_("Activity type"))
 
     class Meta:
@@ -461,7 +461,7 @@ class ServiceForm(ActivityFormMixin, forms.ModelForm):
 
 
 class SeminarForm(ActivityFormMixin, forms.ModelForm):
-    template_name = "admission/doctorate/forms/training/seminar.html"
+    template_name = "parcours_doctoral/forms/training/seminar.html"
     type = ConfigurableActivityTypeField("seminar_types", label=_("Activity type"))
 
     class Meta:
@@ -487,7 +487,7 @@ class SeminarForm(ActivityFormMixin, forms.ModelForm):
 
 
 class SeminarCommunicationForm(ActivityFormMixin, forms.ModelForm):
-    template_name = "admission/doctorate/forms/training/seminar_communication.html"
+    template_name = "parcours_doctoral/forms/training/seminar_communication.html"
     is_online = IsOnlineField()
 
     class Meta:
@@ -518,7 +518,7 @@ class SeminarCommunicationForm(ActivityFormMixin, forms.ModelForm):
 
 
 class ValorisationForm(ActivityFormMixin, forms.ModelForm):
-    template_name = "admission/doctorate/forms/training/valorisation.html"
+    template_name = "parcours_doctoral/forms/training/valorisation.html"
 
     class Meta:
         model = Activity
@@ -542,7 +542,7 @@ class ValorisationForm(ActivityFormMixin, forms.ModelForm):
 
 
 class CourseForm(ActivityFormMixin, forms.ModelForm):
-    template_name = "admission/doctorate/forms/training/course.html"
+    template_name = "parcours_doctoral/forms/training/course.html"
     type = ConfigurableActivityTypeField("course_types", label=_("Activity type"))
     subtitle = forms.CharField(
         label=_("Course unit code (if applicable)"),
@@ -620,7 +620,7 @@ class ComplementaryCourseForm(CourseForm):
 
 
 class PaperForm(ActivityFormMixin, forms.ModelForm):
-    template_name = "admission/doctorate/forms/training/paper.html"
+    template_name = "parcours_doctoral/forms/training/paper.html"
     type = forms.ChoiceField(label=_("Type of paper"), choices=ChoixTypeEpreuve.choices())
 
     class Meta:
@@ -636,7 +636,7 @@ class PaperForm(ActivityFormMixin, forms.ModelForm):
 
 
 class UclCourseForm(ActivityFormMixin, forms.ModelForm):
-    template_name = "admission/doctorate/forms/training/ucl_course.html"
+    template_name = "parcours_doctoral/forms/training/ucl_course.html"
     academic_year = AcademicYearModelChoiceField(
         to_field_name='year',
         widget=autocomplete.ListSelect2(),

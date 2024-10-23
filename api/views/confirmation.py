@@ -28,8 +28,11 @@ from rest_framework import mixins, status
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 
-from admission.api import serializers
 from admission.api.schema import ResponseSpecificSchema
+from admission.api.serializers import DoctorateIdentityDTOSerializer
+from parcours_doctoral.api.serializers import ConfirmationPaperDTOSerializer, \
+    SubmitConfirmationPaperExtensionRequestCommandSerializer, SubmitConfirmationPaperCommandSerializer, \
+    ConfirmationPaperCanvasSerializer, CompleteConfirmationPaperByPromoterCommandSerializer
 from parcours_doctoral.ddd.commands import RecupererDoctoratQuery
 from parcours_doctoral.ddd.epreuve_confirmation.commands import (
     CompleterEpreuveConfirmationParPromoteurCommand,
@@ -39,10 +42,10 @@ from parcours_doctoral.ddd.epreuve_confirmation.commands import (
     SoumettreReportDeDateCommand,
 )
 from admission.ddd.admission.doctorat.preparation.commands import GetGroupeDeSupervisionCommand
-from admission.exports.admission_confirmation_canvas import admission_pdf_confirmation_canvas
 from admission.utils import get_cached_admission_perm_obj
 from infrastructure.messages_bus import message_bus_instance
 from osis_role.contrib.views import APIPermissionRequiredMixin
+from parcours_doctoral.exports.admission_confirmation_canvas import admission_pdf_confirmation_canvas
 
 __all__ = [
     "ConfirmationAPIView",
@@ -52,9 +55,10 @@ __all__ = [
 ]
 
 
+
 class ConfirmationSchema(ResponseSpecificSchema):
     serializer_mapping = {
-        'GET': serializers.ConfirmationPaperDTOSerializer,
+        'GET': ConfirmationPaperDTOSerializer,
     }
 
     def get_operation_id(self, path, method):
@@ -80,20 +84,20 @@ class ConfirmationAPIView(APIPermissionRequiredMixin, GenericAPIView):
         confirmation_papers = message_bus_instance.invoke(
             RecupererEpreuvesConfirmationQuery(doctorat_uuid=kwargs.get('uuid')),
         )
-        serializer = serializers.ConfirmationPaperDTOSerializer(instance=confirmation_papers, many=True)
+        serializer = ConfirmationPaperDTOSerializer(instance=confirmation_papers, many=True)
         return Response(serializer.data)
 
 
 class LastConfirmationSchema(ResponseSpecificSchema):
     serializer_mapping = {
-        'GET': serializers.ConfirmationPaperDTOSerializer,
+        'GET': ConfirmationPaperDTOSerializer,
         'POST': (
-            serializers.SubmitConfirmationPaperExtensionRequestCommandSerializer,
-            serializers.DoctorateIdentityDTOSerializer,
+            SubmitConfirmationPaperExtensionRequestCommandSerializer,
+            DoctorateIdentityDTOSerializer,
         ),
         'PUT': (
-            serializers.SubmitConfirmationPaperCommandSerializer,
-            serializers.DoctorateIdentityDTOSerializer,
+            SubmitConfirmationPaperCommandSerializer,
+            DoctorateIdentityDTOSerializer,
         ),
     }
 
@@ -125,12 +129,12 @@ class LastConfirmationAPIView(APIPermissionRequiredMixin, mixins.RetrieveModelMi
         confirmation_paper = message_bus_instance.invoke(
             RecupererDerniereEpreuveConfirmationQuery(doctorat_uuid=kwargs.get('uuid')),
         )
-        serializer = serializers.ConfirmationPaperDTOSerializer(instance=confirmation_paper)
+        serializer = ConfirmationPaperDTOSerializer(instance=confirmation_paper)
         return Response(serializer.data)
 
     def put(self, request, *args, **kwargs):
         """Submit the confirmation paper related to a doctorate"""
-        serializer = serializers.SubmitConfirmationPaperCommandSerializer(data=request.data)
+        serializer = SubmitConfirmationPaperCommandSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
         last_confirmation_paper = message_bus_instance.invoke(
@@ -144,13 +148,13 @@ class LastConfirmationAPIView(APIPermissionRequiredMixin, mixins.RetrieveModelMi
             )
         )
 
-        serializer = serializers.DoctorateIdentityDTOSerializer(instance=result)
+        serializer = DoctorateIdentityDTOSerializer(instance=result)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request, *args, **kwargs):
         """Submit the extension request of the last confirmation paper of a doctorate"""
-        serializer = serializers.SubmitConfirmationPaperExtensionRequestCommandSerializer(data=request.data)
+        serializer = SubmitConfirmationPaperExtensionRequestCommandSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
         last_confirmation_paper = message_bus_instance.invoke(
@@ -164,14 +168,14 @@ class LastConfirmationAPIView(APIPermissionRequiredMixin, mixins.RetrieveModelMi
             )
         )
 
-        serializer = serializers.DoctorateIdentityDTOSerializer(instance=result)
+        serializer = DoctorateIdentityDTOSerializer(instance=result)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class LastConfirmationCanvasSchema(ResponseSpecificSchema):
     serializer_mapping = {
-        'GET': serializers.ConfirmationPaperCanvasSerializer,
+        'GET': ConfirmationPaperCanvasSerializer,
     }
 
     def get_operation_id(self, path, method):
@@ -213,7 +217,7 @@ class LastConfirmationCanvasAPIView(APIPermissionRequiredMixin, mixins.RetrieveM
             },
         )
 
-        serializer = serializers.ConfirmationPaperCanvasSerializer(instance={'uuid': uuid})
+        serializer = ConfirmationPaperCanvasSerializer(instance={'uuid': uuid})
 
         return Response(serializer.data)
 
@@ -221,8 +225,8 @@ class LastConfirmationCanvasAPIView(APIPermissionRequiredMixin, mixins.RetrieveM
 class PromoterConfirmationSchema(ResponseSpecificSchema):
     serializer_mapping = {
         'PUT': (
-            serializers.CompleteConfirmationPaperByPromoterCommandSerializer,
-            serializers.DoctorateIdentityDTOSerializer,
+            CompleteConfirmationPaperByPromoterCommandSerializer,
+            DoctorateIdentityDTOSerializer,
         ),
     }
 
@@ -248,7 +252,7 @@ class SupervisedConfirmationAPIView(
 
     def put(self, request, *args, **kwargs):
         """Complete the confirmation paper related to a doctorate"""
-        serializer = serializers.CompleteConfirmationPaperByPromoterCommandSerializer(data=request.data)
+        serializer = CompleteConfirmationPaperByPromoterCommandSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
         last_confirmation_paper = message_bus_instance.invoke(
@@ -262,6 +266,6 @@ class SupervisedConfirmationAPIView(
             )
         )
 
-        serializer = serializers.DoctorateIdentityDTOSerializer(instance=result)
+        serializer = DoctorateIdentityDTOSerializer(instance=result)
 
         return Response(serializer.data, status=status.HTTP_200_OK)

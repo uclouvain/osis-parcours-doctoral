@@ -46,7 +46,7 @@ class ConfirmationPaperTestCase(TestCase):
     def test_valid_upload_to(self):
         self.assertEqual(
             confirmation_paper_directory_path(self.confirmation_paper, 'my_file.pdf'),
-            'admission/{}/{}/confirmation/{}/my_file.pdf'.format(
+            'parcours_doctoral/{}/{}/confirmation/{}/my_file.pdf'.format(
                 self.base_admission.candidate.uuid,
                 self.base_admission.uuid,
                 self.confirmation_paper.uuid,

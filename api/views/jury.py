@@ -27,8 +27,10 @@ from rest_framework import mixins, status
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 
-from admission.api import serializers
 from admission.api.schema import ResponseSpecificSchema
+from parcours_doctoral.api.serializers import ModifierRoleMembreCommandSerializer, JuryIdentityDTOSerializer, \
+    MembreJuryDTOSerializer, ModifierMembreCommandSerializer, AjouterMembreCommandSerializer, \
+    MembreJuryIdentityDTOSerializer, JuryDTOSerializer, ModifierJuryCommandSerializer
 from parcours_doctoral.ddd.jury.commands import (
     RecupererJuryQuery,
     ModifierJuryCommand,
@@ -51,8 +53,8 @@ __all__ = [
 
 class JuryPreparationSchema(ResponseSpecificSchema):
     serializer_mapping = {
-        'GET': serializers.JuryDTOSerializer,
-        'POST': (serializers.ModifierJuryCommandSerializer, serializers.JuryIdentityDTOSerializer),
+        'GET': JuryDTOSerializer,
+        'POST': (ModifierJuryCommandSerializer, JuryIdentityDTOSerializer),
     }
 
     method_mapping = {
@@ -84,12 +86,12 @@ class JuryPreparationAPIView(
     def get(self, request, *args, **kwargs):
         """Get the Jury of a doctorate"""
         jury = message_bus_instance.invoke(RecupererJuryQuery(uuid_jury=kwargs.get('uuid')))
-        serializer = serializers.JuryDTOSerializer(instance=jury)
+        serializer = JuryDTOSerializer(instance=jury)
         return Response(serializer.data)
 
     def post(self, request, *args, **kwargs):
         """Update the jury preparation information"""
-        serializer = serializers.ModifierJuryCommandSerializer(data=request.data)
+        serializer = ModifierJuryCommandSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
         result = message_bus_instance.invoke(
@@ -99,14 +101,14 @@ class JuryPreparationAPIView(
             )
         )
         self.get_permission_object().update_detailed_status(request.user.person)
-        serializer = serializers.JuryIdentityDTOSerializer(instance=result)
+        serializer = JuryIdentityDTOSerializer(instance=result)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class JuryMembersListSchema(ResponseSpecificSchema):
     serializer_mapping = {
-        'GET': serializers.MembreJuryDTOSerializer,
-        'POST': (serializers.AjouterMembreCommandSerializer, serializers.MembreJuryIdentityDTOSerializer),
+        'GET': MembreJuryDTOSerializer,
+        'POST': (AjouterMembreCommandSerializer, MembreJuryIdentityDTOSerializer),
     }
 
     method_mapping = {
@@ -138,12 +140,12 @@ class JuryMembersListAPIView(
     def get(self, request, *args, **kwargs):
         """Get the members of a jury"""
         jury = message_bus_instance.invoke(RecupererJuryQuery(uuid_jury=kwargs.get('uuid')))
-        serializer = serializers.MembreJuryDTOSerializer(instance=jury.membres, many=True)
+        serializer = MembreJuryDTOSerializer(instance=jury.membres, many=True)
         return Response(serializer.data)
 
     def post(self, request, *args, **kwargs):
         """Add a new member to the jury"""
-        serializer = serializers.AjouterMembreCommandSerializer(data=request.data)
+        serializer = AjouterMembreCommandSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
         result = message_bus_instance.invoke(
@@ -158,9 +160,9 @@ class JuryMembersListAPIView(
 
 class JuryMemberDetailSchema(ResponseSpecificSchema):
     serializer_mapping = {
-        'GET': serializers.MembreJuryDTOSerializer,
-        'PUT': (serializers.ModifierMembreCommandSerializer, serializers.JuryIdentityDTOSerializer),
-        'PATCH': (serializers.ModifierRoleMembreCommandSerializer, serializers.JuryIdentityDTOSerializer),
+        'GET': MembreJuryDTOSerializer,
+        'PUT': (ModifierMembreCommandSerializer, JuryIdentityDTOSerializer),
+        'PATCH': (ModifierRoleMembreCommandSerializer, JuryIdentityDTOSerializer),
         'DELETE': None,
     }
 
@@ -202,12 +204,12 @@ class JuryMemberDetailAPIView(
                 uuid_membre=str(self.kwargs['member_uuid']),
             )
         )
-        serializer = serializers.MembreJuryDTOSerializer(instance=membre)
+        serializer = MembreJuryDTOSerializer(instance=membre)
         return Response(serializer.data)
 
     def put(self, request, *args, **kwargs):
         """Update a member of the jury"""
-        serializer = serializers.ModifierMembreCommandSerializer(data=request.data)
+        serializer = ModifierMembreCommandSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
         result = message_bus_instance.invoke(
@@ -218,12 +220,12 @@ class JuryMemberDetailAPIView(
             )
         )
         self.get_permission_object().update_detailed_status(request.user.person)
-        serializer = serializers.JuryIdentityDTOSerializer(instance=result)
+        serializer = JuryIdentityDTOSerializer(instance=result)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def patch(self, request, *args, **kwargs):
         """Update the role of a member of the jury"""
-        serializer = serializers.ModifierRoleMembreCommandSerializer(data=request.data)
+        serializer = ModifierRoleMembreCommandSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
         result = message_bus_instance.invoke(
@@ -234,7 +236,7 @@ class JuryMemberDetailAPIView(
             )
         )
         self.get_permission_object().update_detailed_status(request.user.person)
-        serializer = serializers.JuryIdentityDTOSerializer(instance=result)
+        serializer = JuryIdentityDTOSerializer(instance=result)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def delete(self, request, *args, **kwargs):

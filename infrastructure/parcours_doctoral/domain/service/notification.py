@@ -32,13 +32,15 @@ from django.utils.functional import lazy
 from django.utils.translation import get_language
 
 from admission.contrib.models import SupervisionActor
-from admission.contrib.models.doctorate import DoctorateAdmission, DoctorateProxy
+from admission.contrib.models.doctorate import DoctorateAdmission
 from admission.contrib.models.enums.actor_type import ActorType
 from parcours_doctoral.ddd.domain.model.doctorat import Doctorat
 from parcours_doctoral.ddd.domain.service.i_notification import INotification
 from osis_mail_template.utils import transform_html_to_text
 from osis_notification.contrib.handlers import EmailNotificationHandler
 from osis_notification.contrib.notification import EmailNotification
+
+from parcours_doctoral.models.parcours_doctoral import ParcoursDoctoral
 
 
 class Notification(INotification):
@@ -53,18 +55,18 @@ class Notification(INotification):
         cc_promoteurs: bool,
         cc_membres_ca: bool,
     ) -> EmailMessage:
-        admission = DoctorateProxy.objects.get(uuid=doctorate.entity_id.uuid)
+        parcours_doctoral = ParcoursDoctoral.objects.get(uuid=doctorate.entity_id.uuid)
 
         # Notifier le doctorant via mail
         email_message = EmailNotificationHandler.build(
             EmailNotification(
-                admission.candidate,
+                parcours_doctoral.candidate,
                 sujet,
                 transform_html_to_text(message),
                 message,
             )
         )
-        actors = SupervisionActor.objects.filter(process=admission.supervision_group).select_related('person')
+        actors = SupervisionActor.objects.filter(process=parcours_doctoral.supervision_group).select_related('person')
         cc_list = []
         if cc_promoteurs:
             for promoter in actors.filter(type=ActorType.PROMOTER.name):
@@ -74,7 +76,7 @@ class Notification(INotification):
                 cc_list.append(cls._format_email(ca_member))
         if cc_list:
             email_message['Cc'] = ','.join(cc_list)
-        EmailNotificationHandler.create(email_message, person=admission.candidate)
+        EmailNotificationHandler.create(email_message, person=parcours_doctoral.candidate)
 
         return email_message
 

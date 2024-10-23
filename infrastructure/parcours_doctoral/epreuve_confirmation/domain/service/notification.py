@@ -39,7 +39,7 @@ from django.utils.module_loading import import_string
 from django.utils.translation import get_language, gettext as _
 
 from admission.contrib.models import AdmissionTask, DoctorateAdmission, SupervisionActor
-from admission.contrib.models.doctorate import DoctorateProxy
+from admission.contrib.models.doctorate import ParcoursDoctoral
 from admission.ddd.admission.doctorat.preparation.domain.model.enums import ChoixTypeFinancement
 from parcours_doctoral.ddd.domain.model.enums import ChoixStatutDoctorat
 from parcours_doctoral.ddd.epreuve_confirmation.domain.model.epreuve_confirmation import (
@@ -75,7 +75,7 @@ class Notification(INotification):
         return datetime.date.strftime(date, DATE_FORMAT) if date else ''
 
     @classmethod
-    def _get_doctorate_title_translation(cls, doctorate: Union[DoctorateProxy, DoctorateAdmission]) -> Promise:
+    def _get_doctorate_title_translation(cls, doctorate: Union[ParcoursDoctoral, DoctorateAdmission]) -> Promise:
         """Populate the translations of the doctorate title and lazy return them"""
         # Create a dict to cache the translations of the doctorate title
         doctorate_title = {
@@ -100,7 +100,7 @@ class Notification(INotification):
     @classmethod
     def get_common_tokens(
         cls,
-        doctorate: Union[DoctorateProxy, DoctorateAdmission],
+        doctorate: Union[ParcoursDoctoral, DoctorateAdmission],
         confirmation_paper: Union[EpreuveConfirmationDTO, EpreuveConfirmation],
     ) -> dict:
         """Return common tokens about a doctorate"""
@@ -142,7 +142,7 @@ class Notification(INotification):
 
     @classmethod
     def notifier_soumission(cls, epreuve_confirmation: EpreuveConfirmation) -> None:
-        doctorate: DoctorateProxy = DoctorateProxy.objects.get(uuid=epreuve_confirmation.doctorat_id.uuid)
+        doctorate: ParcoursDoctoral = ParcoursDoctoral.objects.get(uuid=epreuve_confirmation.doctorat_id.uuid)
         common_tokens = cls.get_common_tokens(doctorate, epreuve_confirmation)
 
         if doctorate.post_enrolment_status == ChoixStatutDoctorat.SUBMITTED_CONFIRMATION.name:
@@ -179,7 +179,7 @@ class Notification(INotification):
 
     @classmethod
     def notifier_completion_par_promoteur(cls, epreuve_confirmation: EpreuveConfirmation) -> None:
-        doctorate: DoctorateProxy = DoctorateProxy.objects.get(uuid=epreuve_confirmation.doctorat_id.uuid)
+        doctorate: ParcoursDoctoral = ParcoursDoctoral.objects.get(uuid=epreuve_confirmation.doctorat_id.uuid)
         common_tokens = cls.get_common_tokens(doctorate, epreuve_confirmation)
 
         # Notify the CDD managers > web notification
@@ -195,7 +195,7 @@ class Notification(INotification):
 
     @classmethod
     def notifier_nouvelle_echeance(cls, epreuve_confirmation: EpreuveConfirmation) -> None:
-        doctorate: DoctorateProxy = DoctorateProxy.objects.get(uuid=epreuve_confirmation.doctorat_id.uuid)
+        doctorate: ParcoursDoctoral = ParcoursDoctoral.objects.get(uuid=epreuve_confirmation.doctorat_id.uuid)
         common_tokens = cls.get_common_tokens(doctorate, epreuve_confirmation)
 
         # Notify the CCD managers > web notification
@@ -216,7 +216,7 @@ class Notification(INotification):
         sujet_notification_candidat: str,
         message_notification_candidat: str,
     ) -> None:
-        doctorate: DoctorateProxy = DoctorateProxy.objects.get(uuid=epreuve_confirmation.doctorat_id.uuid)
+        doctorate: ParcoursDoctoral = ParcoursDoctoral.objects.get(uuid=epreuve_confirmation.doctorat_id.uuid)
 
         email_notification = EmailNotification(
             recipient=doctorate.candidate,
@@ -260,7 +260,7 @@ class Notification(INotification):
         sujet_notification_candidat: str,
         message_notification_candidat: str,
     ) -> None:
-        doctorate: DoctorateProxy = DoctorateProxy.objects.get(uuid=epreuve_confirmation.doctorat_id.uuid)
+        doctorate: ParcoursDoctoral = ParcoursDoctoral.objects.get(uuid=epreuve_confirmation.doctorat_id.uuid)
 
         email_notification = EmailNotification(
             recipient=doctorate.candidate,
@@ -300,7 +300,7 @@ class Notification(INotification):
 
     @classmethod
     def notifier_reussite_epreuve(cls, epreuve_confirmation: EpreuveConfirmation):
-        doctorate = DoctorateProxy.objects.get(uuid=epreuve_confirmation.doctorat_id.uuid)
+        doctorate = ParcoursDoctoral.objects.get(uuid=epreuve_confirmation.doctorat_id.uuid)
 
         # Create the async task to generate the success attestation
         task = AsyncTask.objects.create(

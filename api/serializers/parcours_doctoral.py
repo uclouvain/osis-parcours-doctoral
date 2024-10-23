@@ -31,10 +31,6 @@ from backoffice.settings.rest_framework.fields import ActionLinksField
 from base.utils.serializers import DTOSerializer
 
 
-class DoctorateIdentityDTOSerializer(serializers.Serializer):
-    uuid = serializers.ReadOnlyField()
-
-
 class ParcoursDoctoralDTOSerializer(DTOSerializer):
     links = ActionLinksField(
         actions={

@@ -28,7 +28,7 @@ from typing import List, Optional
 from django.conf import settings
 from django.utils.translation import get_language
 
-from admission.contrib.models.doctorate import DoctorateAdmission, DoctorateProxy
+from admission.contrib.models.doctorate import DoctorateAdmission, ParcoursDoctoral
 from admission.ddd.admission.domain.model.bourse import BourseIdentity
 from parcours_doctoral.ddd.domain.model._formation import FormationIdentity
 from parcours_doctoral.ddd.domain.model.doctorat import Doctorat, DoctoratIdentity
@@ -53,8 +53,8 @@ class DoctoratRepository(IDoctoratRepository):
     @classmethod
     def get(cls, entity_id: 'DoctoratIdentity') -> 'Doctorat':
         try:
-            doctorate: DoctorateProxy = DoctorateProxy.objects.get(uuid=entity_id.uuid)
-        except DoctorateProxy.DoesNotExist:
+            doctorate: ParcoursDoctoral = ParcoursDoctoral.objects.get(uuid=entity_id.uuid)
+        except ParcoursDoctoral.DoesNotExist:
             raise DoctoratNonTrouveException
 
         return Doctorat(
@@ -71,7 +71,7 @@ class DoctoratRepository(IDoctoratRepository):
 
     @classmethod
     def verifier_existence(cls, entity_id: 'DoctoratIdentity') -> None:  # pragma: no cover
-        doctorate: DoctorateProxy = DoctorateProxy.objects.filter(uuid=entity_id.uuid)
+        doctorate: ParcoursDoctoral = ParcoursDoctoral.objects.filter(uuid=entity_id.uuid)
         if not doctorate:
             raise DoctoratNonTrouveException
 
@@ -85,8 +85,8 @@ class DoctoratRepository(IDoctoratRepository):
     @classmethod
     def get_dto(cls, entity_id: 'DoctoratIdentity') -> 'DoctoratDTO':
         try:
-            doctorate: DoctorateProxy = DoctorateProxy.objects.get(uuid=entity_id.uuid)
-        except DoctorateProxy.DoesNotExist:
+            doctorate: ParcoursDoctoral = ParcoursDoctoral.objects.get(uuid=entity_id.uuid)
+        except ParcoursDoctoral.DoesNotExist:
             raise DoctoratNonTrouveException
 
         student: Optional[Student] = Student.objects.filter(person=doctorate.candidate).first()
