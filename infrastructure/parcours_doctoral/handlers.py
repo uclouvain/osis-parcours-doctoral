@@ -29,16 +29,16 @@ from parcours_doctoral.ddd.use_case.read import *
 from parcours_doctoral.ddd.use_case.write import *
 from .domain.service.historique import Historique
 from .domain.service.notification import Notification
-from .repository.doctorat import DoctoratRepository
+from .repository.parcours_doctoral import ParcoursDoctoralRepository
 
 COMMAND_HANDLERS = {
-    RecupererDoctoratQuery: lambda msg_bus, cmd: recuperer_doctorat(
+    RecupererParcoursDoctoralQuery: lambda msg_bus, cmd: recuperer_parcours_doctoral(
         cmd,
-        doctorat_repository=DoctoratRepository(),
+        parcours_doctoral_repository=ParcoursDoctoralRepository(),
     ),
     EnvoyerMessageDoctorantCommand: lambda msg_bus, cmd: envoyer_message_au_doctorant(
         cmd,
-        doctorat_repository=DoctoratRepository(),
+        doctorat_repository=ParcoursDoctoralRepository(),
         notification=Notification(),
         historique=Historique(),
     ),

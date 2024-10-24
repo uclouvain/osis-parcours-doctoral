@@ -41,7 +41,7 @@ from django.utils.translation import get_language, gettext as _
 from admission.contrib.models import AdmissionTask, DoctorateAdmission, SupervisionActor
 from admission.contrib.models.doctorate import ParcoursDoctoral
 from admission.ddd.admission.doctorat.preparation.domain.model.enums import ChoixTypeFinancement
-from parcours_doctoral.ddd.domain.model.enums import ChoixStatutDoctorat
+from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from parcours_doctoral.ddd.epreuve_confirmation.domain.model.epreuve_confirmation import (
     EpreuveConfirmation,
 )
@@ -145,7 +145,7 @@ class Notification(INotification):
         doctorate: ParcoursDoctoral = ParcoursDoctoral.objects.get(uuid=epreuve_confirmation.doctorat_id.uuid)
         common_tokens = cls.get_common_tokens(doctorate, epreuve_confirmation)
 
-        if doctorate.post_enrolment_status == ChoixStatutDoctorat.SUBMITTED_CONFIRMATION.name:
+        if doctorate.post_enrolment_status == ChoixStatutParcoursDoctoral.SUBMITTED_CONFIRMATION.name:
             # Already submitted at least once
             manager_notification_content = _(
                 '<a href="%(confirmation_paper_link_back)s">%(reference)s</a> - '

@@ -29,7 +29,7 @@ from typing import Optional
 
 from dateutil.relativedelta import relativedelta
 
-from parcours_doctoral.ddd.domain.model.doctorat import DoctoratIdentity
+from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoralIdentity
 from parcours_doctoral.ddd.epreuve_confirmation.builder.epreuve_confirmation_identity import (
     EpreuveConfirmationIdentityBuilder,
 )
@@ -45,7 +45,7 @@ class EpreuveConfirmationService(interface.DomainService):
     @classmethod
     def initier(
         cls,
-        doctorat_id: 'DoctoratIdentity',
+        doctorat_id: 'ParcoursDoctoralIdentity',
         date_limite: Optional[datetime.date] = None,
     ) -> EpreuveConfirmation:
         if not date_limite:

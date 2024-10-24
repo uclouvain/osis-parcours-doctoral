@@ -23,4 +23,4 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from .recuperer_doctorat_service import recuperer_doctorat
+from .recuperer_parcours_doctoral_service import recuperer_parcours_doctoral

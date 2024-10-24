@@ -33,7 +33,7 @@ from django.views.generic.edit import FormMixin
 from osis_mail_template.models import MailTemplate
 
 from admission.contrib.models import CddMailTemplate
-from parcours_doctoral.ddd.domain.model.enums import ChoixStatutDoctorat
+from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from parcours_doctoral.ddd.epreuve_confirmation.commands import (
     ConfirmerEchecCommand,
     ConfirmerRepassageCommand,
@@ -77,7 +77,7 @@ class DoctorateAdmissionConfirmationSuccessDecisionView(
             messages.success(
                 self.request,
                 _("The status has been changed to %(status)s.")
-                % {'status': _(ChoixStatutDoctorat.PASSED_CONFIRMATION.value)},
+                % {'status': _(ChoixStatutParcoursDoctoral.PASSED_CONFIRMATION.value)},
             )
             messages.success(
                 self.request,
@@ -158,7 +158,7 @@ class DoctorateAdmissionConfirmationFailureDecisionView(
     identifier = ADMISSION_EMAIL_CONFIRMATION_PAPER_ON_FAILURE_STUDENT
     page_title = _('Failure of the confirmation paper')
     message_on_success = _("The status has been changed to %(status)s.") % {
-        'status': _(ChoixStatutDoctorat.NOT_ALLOWED_TO_CONTINUE.value)
+        'status': _(ChoixStatutParcoursDoctoral.NOT_ALLOWED_TO_CONTINUE.value)
     }
 
     def call_command(self, form):
@@ -180,7 +180,7 @@ class DoctorateAdmissionConfirmationRetakingDecisionView(
     identifier = ADMISSION_EMAIL_CONFIRMATION_PAPER_ON_RETAKING_STUDENT
     page_title = _('Retaking of the confirmation paper')
     message_on_success = _("The status has been changed to %(status)s.") % {
-        'status': _(ChoixStatutDoctorat.CONFIRMATION_TO_BE_REPEATED.value)
+        'status': _(ChoixStatutParcoursDoctoral.CONFIRMATION_TO_BE_REPEATED.value)
     }
 
     def call_command(self, form):

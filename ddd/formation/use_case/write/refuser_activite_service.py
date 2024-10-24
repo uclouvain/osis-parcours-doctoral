@@ -23,24 +23,24 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from parcours_doctoral.ddd.builder.doctorat_identity import DoctoratIdentityBuilder
+from parcours_doctoral.ddd.builder.parcours_doctoral_identity import ParcoursDoctoralIdentityBuilder
 from parcours_doctoral.ddd.formation.builder.activite_identity_builder import ActiviteIdentityBuilder
 from parcours_doctoral.ddd.formation.commands import RefuserActiviteCommand
 from parcours_doctoral.ddd.formation.domain.model.activite import ActiviteIdentity
 from parcours_doctoral.ddd.formation.domain.service.i_notification import INotification
 from parcours_doctoral.ddd.formation.domain.service.refuser_activite import RefuserActivite
 from parcours_doctoral.ddd.formation.repository.i_activite import IActiviteRepository
-from parcours_doctoral.ddd.repository.i_doctorat import IDoctoratRepository
+from parcours_doctoral.ddd.repository.i_doctorat import IParcoursDoctoralRepository
 
 
 def refuser_activite(
     cmd: 'RefuserActiviteCommand',
     activite_repository: 'IActiviteRepository',
-    doctorat_repository: 'IDoctoratRepository',
+    doctorat_repository: 'IParcoursDoctoralRepository',
     notification: 'INotification',
 ) -> 'ActiviteIdentity':
     # GIVEN
-    doctorat_id = DoctoratIdentityBuilder.build_from_uuid(cmd.doctorat_uuid)
+    doctorat_id = ParcoursDoctoralIdentityBuilder.build_from_uuid(cmd.doctorat_uuid)
     doctorat = doctorat_repository.get(doctorat_id)
     activite = activite_repository.get(entity_id=ActiviteIdentityBuilder.build_from_uuid(cmd.activite_uuid))
 

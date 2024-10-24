@@ -31,7 +31,7 @@ from admission.infrastructure.admission.doctorat.preparation.repository.groupe_d
 )
 from parcours_doctoral.infrastructure.parcours_doctoral.formation.domain.service.notification import Notification
 from parcours_doctoral.infrastructure.parcours_doctoral.formation.repository.activite import ActiviteRepository
-from parcours_doctoral.infrastructure.parcours_doctoral.repository.doctorat import DoctoratRepository
+from parcours_doctoral.infrastructure.parcours_doctoral.repository.parcours_doctoral import ParcoursDoctoralRepository
 
 COMMAND_HANDLERS = {
     SupprimerActiviteCommand: lambda msg_bus, cmd: supprimer_activite(
@@ -41,7 +41,7 @@ COMMAND_HANDLERS = {
     SoumettreActivitesCommand: lambda msg_bus, cmd: soumettre_activites(
         cmd,
         activite_repository=ActiviteRepository(),
-        doctorat_repository=DoctoratRepository(),
+        doctorat_repository=ParcoursDoctoralRepository(),
         groupe_de_supervision_repository=GroupeDeSupervisionRepository(),
         notification=Notification(),
     ),
@@ -52,13 +52,13 @@ COMMAND_HANDLERS = {
     AccepterActivitesCommand: lambda msg_bus, cmd: accepter_activites(
         cmd,
         activite_repository=ActiviteRepository(),
-        doctorat_repository=DoctoratRepository(),
+        doctorat_repository=ParcoursDoctoralRepository(),
         notification=Notification(),
     ),
     RefuserActiviteCommand: lambda msg_bus, cmd: refuser_activite(
         cmd,
         activite_repository=ActiviteRepository(),
-        doctorat_repository=DoctoratRepository(),
+        doctorat_repository=ParcoursDoctoralRepository(),
         notification=Notification(),
     ),
     RevenirSurStatutActiviteCommand: lambda msg_bus, cmd: revenir_sur_statut_activite(

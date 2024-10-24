@@ -23,7 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from parcours_doctoral.ddd.domain.model.doctorat import DoctoratIdentity
+from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoralIdentity
 from parcours_doctoral.ddd.epreuve_confirmation.builder.epreuve_confirmation_identity import (
     EpreuveConfirmationIdentityBuilder,
 )
@@ -34,15 +34,15 @@ from parcours_doctoral.ddd.epreuve_confirmation.domain.service.i_notification im
 from parcours_doctoral.ddd.epreuve_confirmation.repository.i_epreuve_confirmation import (
     IEpreuveConfirmationRepository,
 )
-from parcours_doctoral.ddd.repository.i_doctorat import IDoctoratRepository
+from parcours_doctoral.ddd.repository.i_doctorat import IParcoursDoctoralRepository
 
 
 def soumettre_epreuve_confirmation(
     cmd: 'SoumettreEpreuveConfirmationCommand',
-    doctorat_repository: 'IDoctoratRepository',
+    doctorat_repository: 'IParcoursDoctoralRepository',
     epreuve_confirmation_repository: 'IEpreuveConfirmationRepository',
     notification: 'INotification',
-) -> DoctoratIdentity:
+) -> ParcoursDoctoralIdentity:
     # GIVEN
     epreuve_confirmation_id = EpreuveConfirmationIdentityBuilder.build_from_uuid(cmd.uuid)
     epreuve_confirmation = epreuve_confirmation_repository.get(epreuve_confirmation_id)

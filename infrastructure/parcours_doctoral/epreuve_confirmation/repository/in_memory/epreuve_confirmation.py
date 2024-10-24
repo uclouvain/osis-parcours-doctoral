@@ -25,7 +25,7 @@
 # ##############################################################################
 from typing import List
 
-from parcours_doctoral.ddd.domain.model.doctorat import DoctoratIdentity
+from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoralIdentity
 from parcours_doctoral.ddd.epreuve_confirmation.domain.model.epreuve_confirmation import (
     EpreuveConfirmation,
     EpreuveConfirmationIdentity,
@@ -50,18 +50,18 @@ class EpreuveConfirmationInMemoryRepository(InMemoryGenericRepository, IEpreuveC
     dtos: List[EpreuveConfirmationDTO] = list()
 
     @classmethod
-    def search_by_doctorat_identity(cls, doctorat_entity_id: 'DoctoratIdentity') -> List['EpreuveConfirmation']:
+    def search_by_doctorat_identity(cls, doctorat_entity_id: 'ParcoursDoctoralIdentity') -> List['EpreuveConfirmation']:
         result = [entity for entity in cls.entities if entity.doctorat_id.uuid == doctorat_entity_id.uuid]
         result.sort(key=lambda x: x.id, reverse=True)
         return result
 
     @classmethod
-    def search_dto_by_doctorat_identity(cls, doctorat_entity_id: 'DoctoratIdentity') -> List['EpreuveConfirmationDTO']:
+    def search_dto_by_doctorat_identity(cls, doctorat_entity_id: 'ParcoursDoctoralIdentity') -> List['EpreuveConfirmationDTO']:
         result = cls.search_by_doctorat_identity(doctorat_entity_id)
         return [cls._load_confirmation_dto(entity) for entity in result]
 
     @classmethod
-    def get_dto_by_doctorat_identity(cls, doctorat_entity_id: 'DoctoratIdentity') -> 'EpreuveConfirmationDTO':
+    def get_dto_by_doctorat_identity(cls, doctorat_entity_id: 'ParcoursDoctoralIdentity') -> 'EpreuveConfirmationDTO':
         first_result = cls.search_by_doctorat_identity(doctorat_entity_id)
         if not first_result:
             raise EpreuveConfirmationNonTrouveeException

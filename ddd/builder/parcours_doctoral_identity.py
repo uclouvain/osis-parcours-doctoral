@@ -23,17 +23,19 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from parcours_doctoral.ddd.builder.doctorat_identity import DoctoratIdentityBuilder
-from parcours_doctoral.ddd.commands import RecupererDoctoratQuery
-from parcours_doctoral.ddd.dtos import DoctoratDTO
-from parcours_doctoral.ddd.repository.i_doctorat import IDoctoratRepository
+from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoralIdentity
+from osis_common.ddd.interface import CommandRequest, DTO, EntityIdentityBuilder
 
 
-def recuperer_doctorat(
-    cmd: 'RecupererDoctoratQuery',
-    doctorat_repository: 'IDoctoratRepository',
-) -> DoctoratDTO:
-    # GIVEN
-    doctorat_id = DoctoratIdentityBuilder.build_from_uuid(cmd.doctorat_uuid)
-    # THEN
-    return doctorat_repository.get_dto(doctorat_id)
+class ParcoursDoctoralIdentityBuilder(EntityIdentityBuilder):
+    @classmethod
+    def build_from_command(cls, cmd: 'CommandRequest') -> 'ParcoursDoctoralIdentity':
+        raise NotImplementedError
+
+    @classmethod
+    def build_from_repository_dto(cls, dto_object: 'DTO') -> 'ParcoursDoctoralIdentity':
+        raise NotImplementedError
+
+    @classmethod
+    def build_from_uuid(cls, uuid: str) -> 'ParcoursDoctoralIdentity':
+        return ParcoursDoctoralIdentity(uuid=uuid)

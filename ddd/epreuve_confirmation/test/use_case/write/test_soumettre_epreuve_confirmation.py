@@ -27,7 +27,7 @@ import datetime
 
 from django.test import TestCase
 
-from parcours_doctoral.ddd.domain.model.enums import ChoixStatutDoctorat
+from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from parcours_doctoral.ddd.epreuve_confirmation.builder.epreuve_confirmation_identity import (
     EpreuveConfirmationIdentityBuilder,
 )
@@ -43,7 +43,7 @@ from admission.infrastructure.message_bus_in_memory import message_bus_in_memory
 from parcours_doctoral.infrastructure.parcours_doctoral.epreuve_confirmation.repository.in_memory import (
     epreuve_confirmation,
 )
-from parcours_doctoral.infrastructure.parcours_doctoral.repository.in_memory.doctorat import DoctoratInMemoryRepository
+from parcours_doctoral.infrastructure.parcours_doctoral.repository.in_memory.parcours_doctoral import ParcoursDoctoralInMemoryRepository
 from base.ddd.utils.business_validator import MultipleBusinessExceptions
 
 
@@ -107,7 +107,7 @@ class TestSoumettreEpreuveConfirmation(TestCase):
             entity_id=self.epreuve_confirmation_id,
         )
 
-        doctorat = DoctoratInMemoryRepository.get(epreuve_confirmation_mise_a_jour.doctorat_id)
+        doctorat = ParcoursDoctoralInMemoryRepository.get(epreuve_confirmation_mise_a_jour.doctorat_id)
 
         self.assertEqual(epreuve_confirmation_mise_a_jour.doctorat_id, doctorat_id_resultat)
         self.assertEqual(epreuve_confirmation_mise_a_jour.date, datetime.date(2022, 1, 3))
@@ -115,4 +115,4 @@ class TestSoumettreEpreuveConfirmation(TestCase):
         self.assertEqual(epreuve_confirmation_mise_a_jour.proces_verbal_ca, ['mon_fichier_2'])
         self.assertEqual(epreuve_confirmation_mise_a_jour.avis_renouvellement_mandat_recherche, ['mon_fichier_3'])
 
-        self.assertEqual(doctorat.statut, ChoixStatutDoctorat.SUBMITTED_CONFIRMATION)
+        self.assertEqual(doctorat.statut, ChoixStatutParcoursDoctoral.SUBMITTED_CONFIRMATION)

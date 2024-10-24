@@ -29,17 +29,17 @@ from parcours_doctoral.ddd.use_case.read import *
 from parcours_doctoral.ddd.use_case.write import *
 from parcours_doctoral.infrastructure.parcours_doctoral.domain.service.in_memory.historique import HistoriqueInMemory
 from parcours_doctoral.infrastructure.parcours_doctoral.domain.service.in_memory.notification import NotificationInMemory
-from parcours_doctoral.infrastructure.parcours_doctoral.repository.in_memory.doctorat import DoctoratInMemoryRepository
+from parcours_doctoral.infrastructure.parcours_doctoral.repository.in_memory.parcours_doctoral import ParcoursDoctoralInMemoryRepository
 
-_doctorat_repository = DoctoratInMemoryRepository()
+_doctorat_repository = ParcoursDoctoralInMemoryRepository()
 _notification = NotificationInMemory()
 _historique = HistoriqueInMemory()
 
 
 COMMAND_HANDLERS = {
-    RecupererDoctoratQuery: lambda msg_bus, cmd: recuperer_doctorat(
+    RecupererParcoursDoctoralQuery: lambda msg_bus, cmd: recuperer_parcours_doctoral(
         cmd,
-        doctorat_repository=_doctorat_repository,
+        parcours_doctoral_repository=_doctorat_repository,
     ),
     EnvoyerMessageDoctorantCommand: lambda msg_bus, cmd: envoyer_message_au_doctorant(
         cmd,

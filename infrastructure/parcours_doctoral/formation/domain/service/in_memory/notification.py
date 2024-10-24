@@ -26,7 +26,7 @@
 from typing import List
 
 from admission.ddd.admission.doctorat.preparation.domain.model._promoteur import PromoteurIdentity
-from parcours_doctoral.ddd.domain.model.doctorat import Doctorat
+from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoral
 from parcours_doctoral.ddd.formation.domain.model.activite import Activite
 from parcours_doctoral.ddd.formation.domain.service.i_notification import INotification
 
@@ -35,14 +35,14 @@ class NotificationInMemory(INotification):
     @classmethod
     def notifier_soumission_au_promoteur_de_reference(
         cls,
-        doctorat: Doctorat,
+        doctorat: ParcoursDoctoral,
         activites: List[Activite],
         promoteur_de_reference_id: PromoteurIdentity,
     ) -> None:
         pass
 
     @classmethod
-    def notifier_validation_au_candidat(cls, doctorat: Doctorat, activites: List[Activite]) -> None:
+    def notifier_validation_au_candidat(cls, doctorat: ParcoursDoctoral, activites: List[Activite]) -> None:
         pass
 
     @classmethod

@@ -25,23 +25,23 @@
 # ##############################################################################
 from typing import List
 
-from parcours_doctoral.ddd.builder.doctorat_identity import DoctoratIdentityBuilder
+from parcours_doctoral.ddd.builder.parcours_doctoral_identity import ParcoursDoctoralIdentityBuilder
 from parcours_doctoral.ddd.formation.commands import AccepterActivitesCommand
 from parcours_doctoral.ddd.formation.domain.model.activite import ActiviteIdentity
 from parcours_doctoral.ddd.formation.domain.service.accepter_activites import AccepterActivites
 from parcours_doctoral.ddd.formation.domain.service.i_notification import INotification
 from parcours_doctoral.ddd.formation.repository.i_activite import IActiviteRepository
-from parcours_doctoral.ddd.repository.i_doctorat import IDoctoratRepository
+from parcours_doctoral.ddd.repository.i_doctorat import IParcoursDoctoralRepository
 
 
 def accepter_activites(
     cmd: 'AccepterActivitesCommand',
     activite_repository: 'IActiviteRepository',
-    doctorat_repository: 'IDoctoratRepository',
+    doctorat_repository: 'IParcoursDoctoralRepository',
     notification: 'INotification',
 ) -> List['ActiviteIdentity']:
     # GIVEN
-    doctorat_id = DoctoratIdentityBuilder.build_from_uuid(cmd.doctorat_uuid)
+    doctorat_id = ParcoursDoctoralIdentityBuilder.build_from_uuid(cmd.doctorat_uuid)
     doctorat = doctorat_repository.get(doctorat_id)
     activites = AccepterActivites.verifier(cmd.activite_uuids, activite_repository)
 

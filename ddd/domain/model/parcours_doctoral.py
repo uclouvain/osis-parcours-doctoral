@@ -29,19 +29,19 @@ import attr
 
 from admission.ddd.admission.domain.model.bourse import BourseIdentity
 from parcours_doctoral.ddd.domain.model._formation import FormationIdentity
-from parcours_doctoral.ddd.domain.model.enums import ChoixStatutDoctorat
+from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from osis_common.ddd import interface
 
 
 @attr.dataclass(frozen=True, slots=True)
-class DoctoratIdentity(interface.EntityIdentity):
+class ParcoursDoctoralIdentity(interface.EntityIdentity):
     uuid: str
 
 
 @attr.dataclass(slots=True, hash=False, eq=False)
-class Doctorat(interface.RootEntity):
-    entity_id: DoctoratIdentity
-    statut: ChoixStatutDoctorat
+class ParcoursDoctoral(interface.RootEntity):
+    entity_id: ParcoursDoctoralIdentity
+    statut: ChoixStatutParcoursDoctoral
 
     formation_id: FormationIdentity
     matricule_doctorant: str
@@ -50,13 +50,13 @@ class Doctorat(interface.RootEntity):
     autre_bourse_recherche: Optional[str] = ''
 
     def soumettre_epreuve_confirmation(self):
-        self.statut = ChoixStatutDoctorat.SUBMITTED_CONFIRMATION
+        self.statut = ChoixStatutParcoursDoctoral.SUBMITTED_CONFIRMATION
 
     def encoder_decision_reussite_epreuve_confirmation(self):
-        self.statut = ChoixStatutDoctorat.PASSED_CONFIRMATION
+        self.statut = ChoixStatutParcoursDoctoral.PASSED_CONFIRMATION
 
     def encoder_decision_echec_epreuve_confirmation(self):
-        self.statut = ChoixStatutDoctorat.NOT_ALLOWED_TO_CONTINUE
+        self.statut = ChoixStatutParcoursDoctoral.NOT_ALLOWED_TO_CONTINUE
 
     def encoder_decision_repassage_epreuve_confirmation(self):
-        self.statut = ChoixStatutDoctorat.CONFIRMATION_TO_BE_REPEATED
+        self.statut = ChoixStatutParcoursDoctoral.CONFIRMATION_TO_BE_REPEATED

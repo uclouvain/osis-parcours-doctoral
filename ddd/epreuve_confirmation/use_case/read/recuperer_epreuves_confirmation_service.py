@@ -25,22 +25,22 @@
 # ##############################################################################
 from typing import List
 
-from parcours_doctoral.ddd.builder.doctorat_identity import DoctoratIdentityBuilder
+from parcours_doctoral.ddd.builder.parcours_doctoral_identity import ParcoursDoctoralIdentityBuilder
 from parcours_doctoral.ddd.epreuve_confirmation.commands import RecupererEpreuvesConfirmationQuery
 from parcours_doctoral.ddd.epreuve_confirmation.dtos import EpreuveConfirmationDTO
 from parcours_doctoral.ddd.epreuve_confirmation.repository.i_epreuve_confirmation import (
     IEpreuveConfirmationRepository,
 )
-from parcours_doctoral.ddd.repository.i_doctorat import IDoctoratRepository
+from parcours_doctoral.ddd.repository.i_doctorat import IParcoursDoctoralRepository
 
 
 def recuperer_epreuves_confirmation(
     cmd: 'RecupererEpreuvesConfirmationQuery',
     epreuve_confirmation_repository: 'IEpreuveConfirmationRepository',
-    doctorat_repository: 'IDoctoratRepository',
+    doctorat_repository: 'IParcoursDoctoralRepository',
 ) -> List[EpreuveConfirmationDTO]:
     # GIVEN
-    doctorat_id = DoctoratIdentityBuilder.build_from_uuid(cmd.doctorat_uuid)
+    doctorat_id = ParcoursDoctoralIdentityBuilder.build_from_uuid(cmd.doctorat_uuid)
     doctorat_repository.get(doctorat_id)
 
     # THEN

@@ -28,7 +28,7 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 from osis_document.contrib import FileUploadField
 
-from parcours_doctoral.ddd.domain.model.enums import ChoixStatutDoctorat
+from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from admission.forms.doctorate.cdd.generic_send_mail import BaseEmailTemplateForm
 from base.forms.utils.datefield import CustomDateInput
 
@@ -65,7 +65,7 @@ class ConfirmationForm(ConfirmationOpinionForm):
 
     def __init__(self, doctorate_status=None, **kwargs):
         super().__init__(**kwargs)
-        if doctorate_status == ChoixStatutDoctorat.ADMITTED.name:
+        if doctorate_status == ChoixStatutParcoursDoctoral.ADMITTED.name:
             self.fields['date'].required = False
 
     def clean(self):

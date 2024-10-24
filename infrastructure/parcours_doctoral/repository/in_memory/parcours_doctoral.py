@@ -28,13 +28,13 @@ from typing import List
 from attr import dataclass
 
 from admission.ddd.admission.doctorat.validation.domain.model.enums import ChoixGenre
-from parcours_doctoral.ddd.domain.model.doctorat import Doctorat, DoctoratIdentity
+from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoral, ParcoursDoctoralIdentity
 from parcours_doctoral.ddd.domain.validator.exceptions import DoctoratNonTrouveException
-from parcours_doctoral.ddd.dtos import DoctoratDTO
+from parcours_doctoral.ddd.dtos import ParcoursDoctoralDTO
 from parcours_doctoral.ddd.epreuve_confirmation.domain.model.epreuve_confirmation import (
     EpreuveConfirmation,
 )
-from parcours_doctoral.ddd.repository.i_doctorat import IDoctoratRepository
+from parcours_doctoral.ddd.repository.i_doctorat import IParcoursDoctoralRepository
 from parcours_doctoral.ddd.test.factory.doctorat import (
     DoctoratPreSC3DPAvecPromoteursEtMembresCADejaApprouvesAccepteeFactory,
     DoctoratSC3DPAvecPromoteurRefuseEtMembreCADejaApprouveFactoryRejeteeCDDFactory,
@@ -62,7 +62,7 @@ class Formation:
     campus: str
 
 
-class DoctoratInMemoryRepository(InMemoryGenericRepository, IDoctoratRepository):
+class ParcoursDoctoralInMemoryRepository(InMemoryGenericRepository, IParcoursDoctoralRepository):
     entities: List[EpreuveConfirmation] = list()
     doctorants = [
         Doctorant("1", "Jean", "Dupont", "01", ChoixGenre.H),
@@ -76,20 +76,20 @@ class DoctoratInMemoryRepository(InMemoryGenericRepository, IDoctoratRepository)
     ]
 
     @classmethod
-    def get(cls, entity_id: 'DoctoratIdentity') -> 'Doctorat':
+    def get(cls, entity_id: 'ParcoursDoctoralIdentity') -> 'ParcoursDoctoral':
         doctorat = super().get(entity_id)
         if not doctorat:
             raise DoctoratNonTrouveException
         return doctorat
 
     @classmethod
-    def verifier_existence(cls, entity_id: 'DoctoratIdentity') -> None:
+    def verifier_existence(cls, entity_id: 'ParcoursDoctoralIdentity') -> None:
         doctorat = super().get(entity_id)
         if not doctorat:
             raise DoctoratNonTrouveException
 
     @classmethod
-    def get_dto(cls, entity_id: 'DoctoratIdentity') -> 'DoctoratDTO':
+    def get_dto(cls, entity_id: 'ParcoursDoctoralIdentity') -> 'ParcoursDoctoralDTO':
         doctorat = cls.get(entity_id)
         doctorant = next(d for d in cls.doctorants if d.matricule == doctorat.matricule_doctorant)  # pragma: no branch
         formation = next(f for f in cls.formations if f.sigle == doctorat.formation_id.sigle)  # pragma: no branch
@@ -99,7 +99,7 @@ class DoctoratInMemoryRepository(InMemoryGenericRepository, IDoctoratRepository)
             else None
         )
 
-        return DoctoratDTO(
+        return ParcoursDoctoralDTO(
             uuid=str(entity_id.uuid),
             statut=doctorat.statut.name,
             reference=doctorat.reference,

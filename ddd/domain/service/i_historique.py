@@ -25,11 +25,11 @@
 # ##############################################################################
 from email.message import EmailMessage
 
-from parcours_doctoral.ddd.domain.model.doctorat import Doctorat
+from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoral
 from osis_common.ddd import interface
 
 
 class IHistorique(interface.DomainService):
     @classmethod
-    def historiser_message_au_doctorant(cls, doctorat: Doctorat, matricule_emetteur: str, message: EmailMessage):
+    def historiser_message_au_doctorant(cls, doctorat: ParcoursDoctoral, matricule_emetteur: str, message: EmailMessage):
         raise NotImplementedError

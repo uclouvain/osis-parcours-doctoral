@@ -29,9 +29,7 @@ from django.utils.translation import gettext_lazy as _
 from base.models.utils.utils import ChoiceEnum
 
 
-class ChoixStatutDoctorat(ChoiceEnum):
-    # Before enrolment
-    ADMISSION_IN_PROGRESS = _('ADMISSION_IN_PROGRESS')
+class ChoixStatutParcoursDoctoral(ChoiceEnum):
     # After enrolment
     ADMITTED = _('ADMITTED')
     # Confirmation exam
@@ -49,7 +47,14 @@ class ChoixStatutDoctorat(ChoiceEnum):
 
 
 STATUTS_DOCTORAT_EPREUVE_CONFIRMATION_EN_COURS = {
-    ChoixStatutDoctorat.ADMITTED.name,
-    ChoixStatutDoctorat.SUBMITTED_CONFIRMATION.name,
-    ChoixStatutDoctorat.CONFIRMATION_TO_BE_REPEATED.name,
+    ChoixStatutParcoursDoctoral.ADMITTED.name,
+    ChoixStatutParcoursDoctoral.SUBMITTED_CONFIRMATION.name,
+    ChoixStatutParcoursDoctoral.CONFIRMATION_TO_BE_REPEATED.name,
 }
+
+
+class ChoixLangueDefense(ChoiceEnum):
+    FRENCH = _('French')
+    ENGLISH = _('English')
+    OTHER = _('Other')
+    UNDECIDED = _('Undecided')

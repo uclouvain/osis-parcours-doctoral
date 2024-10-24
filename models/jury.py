@@ -47,9 +47,9 @@ class JuryMember(models.Model):
         choices=RoleJury.choices(),
         max_length=50,
     )
-    doctorate = models.ForeignKey(
-        'admission.DoctorateAdmission',
-        verbose_name=_('PhD'),
+    parcours_doctoral = models.ForeignKey(
+        'parcours_doctoral.ParcoursDoctoral',
+        verbose_name=_('Parcours doctoral'),
         on_delete=models.CASCADE,
         related_name='jury_members',
     )

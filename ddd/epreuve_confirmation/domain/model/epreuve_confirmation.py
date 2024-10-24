@@ -28,7 +28,7 @@ from typing import List, Optional
 
 import attr
 
-from parcours_doctoral.ddd.domain.model.doctorat import DoctoratIdentity
+from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoralIdentity
 from parcours_doctoral.ddd.epreuve_confirmation.domain.model._demande_prolongation import (
     DemandeProlongation,
 )
@@ -50,7 +50,7 @@ class EpreuveConfirmationIdentity(interface.EntityIdentity):
 class EpreuveConfirmation(interface.RootEntity):
     entity_id: EpreuveConfirmationIdentity
 
-    doctorat_id: DoctoratIdentity
+    doctorat_id: ParcoursDoctoralIdentity
     date_limite: datetime.date
 
     id: int = 0  # Clé de tri

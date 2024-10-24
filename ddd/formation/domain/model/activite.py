@@ -27,7 +27,7 @@ from typing import Optional
 
 import attr
 
-from parcours_doctoral.ddd.domain.model.doctorat import DoctoratIdentity
+from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoralIdentity
 from parcours_doctoral.ddd.formation.domain.model.enums import CategorieActivite, StatutActivite
 from parcours_doctoral.ddd.formation.domain.model.enums import ContexteFormation
 from parcours_doctoral.ddd.formation.domain.validator.validator_by_business_action import (
@@ -45,7 +45,7 @@ class ActiviteIdentity(interface.EntityIdentity):
 @attr.dataclass(slots=True, hash=False, eq=False)
 class Activite(interface.RootEntity):
     entity_id: 'ActiviteIdentity'
-    doctorat_id: 'DoctoratIdentity'
+    doctorat_id: 'ParcoursDoctoralIdentity'
     categorie: 'CategorieActivite'
     contexte: 'ContexteFormation'
     statut: 'StatutActivite' = StatutActivite.NON_SOUMISE

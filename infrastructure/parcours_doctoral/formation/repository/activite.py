@@ -26,7 +26,7 @@
 from typing import List, Mapping, Optional
 
 from parcours_doctoral.models.doctoral_training import Activity
-from parcours_doctoral.ddd.builder.doctorat_identity import DoctoratIdentityBuilder
+from parcours_doctoral.ddd.builder.parcours_doctoral_identity import ParcoursDoctoralIdentityBuilder
 from parcours_doctoral.ddd.formation.builder.activite_identity_builder import ActiviteIdentityBuilder
 from parcours_doctoral.ddd.formation.domain.model.activite import Activite, ActiviteIdentity
 from parcours_doctoral.ddd.formation.domain.model.enums import (
@@ -82,7 +82,7 @@ class ActiviteRepository(IActiviteRepository):
     def _get(cls, activity, entity_id=None):
         return Activite(
             entity_id=entity_id or ActiviteIdentityBuilder.build_from_uuid(activity.uuid),
-            doctorat_id=DoctoratIdentityBuilder.build_from_uuid(activity.doctorate.uuid),
+            doctorat_id=ParcoursDoctoralIdentityBuilder.build_from_uuid(activity.doctorate.uuid),
             contexte=ContexteFormation[activity.context],
             ects=activity.ects,
             categorie=CategorieActivite[activity.category],

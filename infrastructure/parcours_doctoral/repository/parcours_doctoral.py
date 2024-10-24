@@ -28,20 +28,21 @@ from typing import List, Optional
 from django.conf import settings
 from django.utils.translation import get_language
 
-from admission.contrib.models.doctorate import DoctorateAdmission, ParcoursDoctoral
+from admission.contrib.models.doctorate import DoctorateAdmission
 from admission.ddd.admission.domain.model.bourse import BourseIdentity
+from parcours_doctoral.models.parcours_doctoral import ParcoursDoctoral as ParcoursDoctoralModel
 from parcours_doctoral.ddd.domain.model._formation import FormationIdentity
-from parcours_doctoral.ddd.domain.model.doctorat import Doctorat, DoctoratIdentity
-from parcours_doctoral.ddd.domain.model.enums import ChoixStatutDoctorat
+from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoral, ParcoursDoctoralIdentity
+from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from parcours_doctoral.ddd.domain.validator.exceptions import DoctoratNonTrouveException
-from parcours_doctoral.ddd.dtos import DoctoratDTO
-from parcours_doctoral.ddd.repository.i_doctorat import IDoctoratRepository
+from parcours_doctoral.ddd.dtos import ParcoursDoctoralDTO
+from parcours_doctoral.ddd.repository.i_doctorat import IParcoursDoctoralRepository
 from admission.infrastructure.admission.domain.service.bourse import BourseTranslator
 from base.models.student import Student
 from osis_common.ddd.interface import ApplicationService, EntityIdentity, RootEntity
 
 
-class DoctoratRepository(IDoctoratRepository):
+class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
     @classmethod
     def delete(cls, entity_id: EntityIdentity, **kwargs: ApplicationService) -> None:
         raise NotImplementedError
@@ -51,15 +52,15 @@ class DoctoratRepository(IDoctoratRepository):
         raise NotImplementedError
 
     @classmethod
-    def get(cls, entity_id: 'DoctoratIdentity') -> 'Doctorat':
+    def get(cls, entity_id: 'ParcoursDoctoralIdentity') -> 'ParcoursDoctoral':
         try:
-            doctorate: ParcoursDoctoral = ParcoursDoctoral.objects.get(uuid=entity_id.uuid)
+            doctorate: ParcoursDoctoral = ParcoursDoctoralModel.objects.get(uuid=entity_id.uuid)
         except ParcoursDoctoral.DoesNotExist:
             raise DoctoratNonTrouveException
 
-        return Doctorat(
+        return ParcoursDoctoral(
             entity_id=entity_id,
-            statut=ChoixStatutDoctorat[doctorate.post_enrolment_status],
+            statut=ChoixStatutParcoursDoctoral[doctorate.post_enrolment_status],
             formation_id=FormationIdentity(doctorate.doctorate.acronym, doctorate.doctorate.academic_year.year),
             reference=doctorate.reference,
             matricule_doctorant=doctorate.candidate.global_id,
@@ -70,20 +71,20 @@ class DoctoratRepository(IDoctoratRepository):
         )
 
     @classmethod
-    def verifier_existence(cls, entity_id: 'DoctoratIdentity') -> None:  # pragma: no cover
+    def verifier_existence(cls, entity_id: 'ParcoursDoctoralIdentity') -> None:  # pragma: no cover
         doctorate: ParcoursDoctoral = ParcoursDoctoral.objects.filter(uuid=entity_id.uuid)
         if not doctorate:
             raise DoctoratNonTrouveException
 
     @classmethod
-    def save(cls, entity: 'Doctorat') -> None:
+    def save(cls, entity: 'ParcoursDoctoral') -> None:
         DoctorateAdmission.objects.update_or_create(
             uuid=entity.entity_id.uuid,
             defaults={'post_enrolment_status': entity.statut.name},
         )
 
     @classmethod
-    def get_dto(cls, entity_id: 'DoctoratIdentity') -> 'DoctoratDTO':
+    def get_dto(cls, entity_id: 'ParcoursDoctoralIdentity') -> 'ParcoursDoctoralDTO':
         try:
             doctorate: ParcoursDoctoral = ParcoursDoctoral.objects.get(uuid=entity_id.uuid)
         except ParcoursDoctoral.DoesNotExist:
@@ -91,9 +92,9 @@ class DoctoratRepository(IDoctoratRepository):
 
         student: Optional[Student] = Student.objects.filter(person=doctorate.candidate).first()
 
-        return DoctoratDTO(
+        return ParcoursDoctoralDTO(
             uuid=str(entity_id.uuid),
-            statut=ChoixStatutDoctorat[doctorate.post_enrolment_status].name,
+            statut=ChoixStatutParcoursDoctoral[doctorate.post_enrolment_status].name,
             reference=doctorate.formatted_reference,
             matricule_doctorant=doctorate.candidate.global_id,
             nom_doctorant=doctorate.candidate.last_name,

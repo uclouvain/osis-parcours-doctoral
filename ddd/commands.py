@@ -29,8 +29,8 @@ from osis_common.ddd import interface
 
 
 @attr.dataclass(frozen=True, slots=True)
-class RecupererDoctoratQuery(interface.QueryRequest):
-    doctorat_uuid: str
+class RecupererParcoursDoctoralQuery(interface.QueryRequest):
+    parcours_doctoral_uuid: str
 
 
 @attr.dataclass(frozen=True, slots=True)

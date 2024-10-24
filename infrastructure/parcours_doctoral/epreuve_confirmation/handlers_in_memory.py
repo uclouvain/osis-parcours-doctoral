@@ -29,10 +29,10 @@ from parcours_doctoral.ddd.epreuve_confirmation.use_case.read import *
 from parcours_doctoral.ddd.epreuve_confirmation.use_case.write import *
 from .domain.service.in_memory.notification import NotificationInMemory
 from .repository.in_memory.epreuve_confirmation import EpreuveConfirmationInMemoryRepository
-from ..repository.in_memory.doctorat import DoctoratInMemoryRepository
+from ..repository.in_memory.parcours_doctoral import ParcoursDoctoralInMemoryRepository
 
 _epreuve_confirmation_repository = EpreuveConfirmationInMemoryRepository()
-_doctorat_repository = DoctoratInMemoryRepository()
+_doctorat_repository = ParcoursDoctoralInMemoryRepository()
 _notification = NotificationInMemory()
 
 

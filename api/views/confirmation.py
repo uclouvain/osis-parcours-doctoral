@@ -33,7 +33,7 @@ from admission.api.serializers import DoctorateIdentityDTOSerializer
 from parcours_doctoral.api.serializers import ConfirmationPaperDTOSerializer, \
     SubmitConfirmationPaperExtensionRequestCommandSerializer, SubmitConfirmationPaperCommandSerializer, \
     ConfirmationPaperCanvasSerializer, CompleteConfirmationPaperByPromoterCommandSerializer
-from parcours_doctoral.ddd.commands import RecupererDoctoratQuery
+from parcours_doctoral.ddd.commands import RecupererParcoursDoctoralQuery
 from parcours_doctoral.ddd.epreuve_confirmation.commands import (
     CompleterEpreuveConfirmationParPromoteurCommand,
     RecupererDerniereEpreuveConfirmationQuery,
@@ -197,7 +197,7 @@ class LastConfirmationCanvasAPIView(APIPermissionRequiredMixin, mixins.RetrieveM
         """Get the last confirmation paper canvas related to the doctorate"""
         doctorate, confirmation_paper, supervision_group = message_bus_instance.invoke_multiple(
             [
-                RecupererDoctoratQuery(self.kwargs.get('uuid')),
+                RecupererParcoursDoctoralQuery(self.kwargs.get('uuid')),
                 RecupererDerniereEpreuveConfirmationQuery(doctorat_uuid=kwargs.get('uuid')),
                 GetGroupeDeSupervisionCommand(uuid_proposition=self.kwargs.get('uuid')),
             ]

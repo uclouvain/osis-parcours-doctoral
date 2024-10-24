@@ -26,6 +26,21 @@
 import uuid
 
 from django.db import models
+from django.utils.translation import gettext_lazy as _
+
+from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral, ChoixLangueDefense
+from osis_document.contrib import FileField
+
+from parcours_doctoral.ddd.jury.domain.model.enums import FormuleDefense
+
+
+def parcours_doctoral_directory_path(parcours_doctoral: 'ParcoursDoctoral', filename: str):
+    """Return the file upload directory path."""
+    return 'parcours_doctoral/{}/{}/{}'.format(
+        parcours_doctoral.candidate.uuid,
+        parcours_doctoral.uuid,
+        filename,
+    )
 
 
 class ParcoursDoctoral(models.Model):
@@ -35,3 +50,77 @@ class ParcoursDoctoral(models.Model):
         unique=True,
         db_index=True,
     )
+
+    candidate = models.ForeignKey(
+        to="base.Person",
+        verbose_name=_("Candidate"),
+        related_name="%(class)ss",
+        on_delete=models.PROTECT,
+        editable=False,
+    )
+
+    status = models.CharField(
+        choices=ChoixStatutParcoursDoctoral.choices(),
+        max_length=30,
+        default=ChoixStatutParcoursDoctoral.ADMISSION_IN_PROGRESS.name,
+        verbose_name=_("Post-enrolment status"),
+    )
+
+    # Jury
+    thesis_proposed_title = models.CharField(
+        max_length=255,
+        verbose_name=_("Proposed thesis title"),
+        default='',
+        blank=True,
+    )
+    defense_method = models.CharField(
+        max_length=255,
+        verbose_name=_("Defense method"),
+        choices=FormuleDefense.choices(),
+        default='',
+        blank=True,
+    )
+    defense_indicative_date = models.DateField(
+        verbose_name=_("Defense indicative date"),
+        null=True,
+        blank=True,
+    )
+    defense_language = models.CharField(
+        max_length=255,
+        verbose_name=_("Defense language"),
+        choices=ChoixLangueDefense.choices(),
+        default=ChoixLangueDefense.UNDECIDED.name,
+        blank=True,
+    )
+    comment_about_jury = models.TextField(
+        default="",
+        verbose_name=_("Comment about jury"),
+        blank=True,
+    )
+    accounting_situation = models.BooleanField(
+        null=True,
+        blank=True,
+    )
+    jury_approval = FileField(
+        verbose_name=_("Jury approval"),
+        upload_to=parcours_doctoral_directory_path,
+    )
+
+    class Meta:
+        verbose_name = _("Doctorate admission")
+        ordering = ('-created_at',)
+        permissions = [
+            ('download_jury_approved_pdf', _("Can download jury-approved PDF")),
+            ('upload_jury_approved_pdf', _("Can upload jury-approved PDF")),
+            ('validate_registration', _("Can validate registration")),
+            ('approve_jury', _("Can approve jury")),
+            ('approve_confirmation_paper', _("Can approve confirmation paper")),
+            ('validate_doctoral_training', _("Can validate doctoral training")),
+            ('view_admission_jury', _("Can view the information related to the admission jury")),
+            ('change_admission_jury', _("Can update the information related to the admission jury")),
+            ('view_admission_confirmation', _("Can view the information related to the confirmation paper")),
+            (
+                'change_admission_confirmation',
+                _("Can update the information related to the confirmation paper"),
+            ),
+        ]

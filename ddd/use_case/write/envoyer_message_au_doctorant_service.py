@@ -24,22 +24,22 @@
 #
 # ##############################################################################
 
-from parcours_doctoral.ddd.builder.doctorat_identity import DoctoratIdentityBuilder
+from parcours_doctoral.ddd.builder.parcours_doctoral_identity import ParcoursDoctoralIdentityBuilder
 from parcours_doctoral.ddd.commands import EnvoyerMessageDoctorantCommand
-from parcours_doctoral.ddd.domain.model.doctorat import DoctoratIdentity
+from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoralIdentity
 from parcours_doctoral.ddd.domain.service.i_historique import IHistorique
 from parcours_doctoral.ddd.domain.service.i_notification import INotification
-from parcours_doctoral.ddd.repository.i_doctorat import IDoctoratRepository
+from parcours_doctoral.ddd.repository.i_doctorat import IParcoursDoctoralRepository
 
 
 def envoyer_message_au_doctorant(
     cmd: 'EnvoyerMessageDoctorantCommand',
-    doctorat_repository: 'IDoctoratRepository',
+    doctorat_repository: 'IParcoursDoctoralRepository',
     notification: 'INotification',
     historique: 'IHistorique',
-) -> 'DoctoratIdentity':
+) -> 'ParcoursDoctoralIdentity':
     # GIVEN
-    doctorat_identity = DoctoratIdentityBuilder.build_from_uuid(cmd.doctorat_uuid)
+    doctorat_identity = ParcoursDoctoralIdentityBuilder.build_from_uuid(cmd.doctorat_uuid)
     doctorat = doctorat_repository.get(entity_id=doctorat_identity)
 
     # THEN

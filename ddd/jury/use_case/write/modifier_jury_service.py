@@ -26,12 +26,12 @@
 from admission.ddd.admission.doctorat.preparation.repository.i_groupe_de_supervision import (
     IGroupeDeSupervisionRepository,
 )
-from parcours_doctoral.ddd.domain.model.doctorat import DoctoratIdentity
+from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoralIdentity
 from parcours_doctoral.ddd.jury.builder.jury_builder import JuryBuilder
 from parcours_doctoral.ddd.jury.commands import ModifierJuryCommand
 from parcours_doctoral.ddd.jury.domain.model.jury import JuryIdentity
 from parcours_doctoral.ddd.jury.repository.i_jury import IJuryRepository
-from parcours_doctoral.ddd.repository.i_doctorat import IDoctoratRepository
+from parcours_doctoral.ddd.repository.i_doctorat import IParcoursDoctoralRepository
 
 
 def modifier_jury(
@@ -41,7 +41,7 @@ def modifier_jury(
 ) -> 'JuryIdentity':
     # GIVEN
     groupe_de_supervision = groupe_de_supervision_repository.get_by_doctorat_id(
-        DoctoratIdentity(uuid=cmd.uuid_doctorat)
+        ParcoursDoctoralIdentity(uuid=cmd.uuid_doctorat)
     )
     cotutelle = groupe_de_supervision.cotutelle
     jury = JuryBuilder.build(cmd, cotutelle)

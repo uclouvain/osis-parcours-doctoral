@@ -37,7 +37,7 @@ from parcours_doctoral.models.confirmation_paper import ConfirmationPaper
 from admission.ddd.admission.doctorat.preparation.domain.model.enums import (
     ChoixStatutPropositionDoctorale,
 )
-from parcours_doctoral.ddd.domain.model.enums import ChoixStatutDoctorat
+from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from parcours_doctoral.ddd.epreuve_confirmation.validators.exceptions import (
     EpreuveConfirmationDateIncorrecteException,
     EpreuveConfirmationNonTrouveeException,
@@ -73,7 +73,7 @@ class ConfirmationAPIViewTestCase(APITestCase):
         ).entity
         cls.doctorate = DoctorateAdmissionFactory(
             status=ChoixStatutPropositionDoctorale.INSCRIPTION_AUTORISEE.name,
-            post_enrolment_status=ChoixStatutDoctorat.ADMITTED.name,
+            post_enrolment_status=ChoixStatutParcoursDoctoral.ADMITTED.name,
             training__management_entity=commission,
             supervision_group=promoter.process,
         )
@@ -83,7 +83,7 @@ class ConfirmationAPIViewTestCase(APITestCase):
         )
         other_doctorate = DoctorateAdmissionFactory(
             status=ChoixStatutPropositionDoctorale.INSCRIPTION_AUTORISEE.name,
-            post_enrolment_status=ChoixStatutDoctorat.ADMITTED.name,
+            post_enrolment_status=ChoixStatutParcoursDoctoral.ADMITTED.name,
             training__management_entity=commission,
             supervision_group=other_promoter.process,
         )
@@ -312,7 +312,7 @@ class LastConfirmationAPIViewTestCase(APITestCase):
         ).entity
         cls.doctorate = DoctorateAdmissionFactory(
             status=ChoixStatutPropositionDoctorale.INSCRIPTION_AUTORISEE.name,
-            post_enrolment_status=ChoixStatutDoctorat.ADMITTED.name,
+            post_enrolment_status=ChoixStatutParcoursDoctoral.ADMITTED.name,
             training__management_entity=commission,
             supervision_group=promoter.process,
         )
@@ -322,7 +322,7 @@ class LastConfirmationAPIViewTestCase(APITestCase):
         )
         other_doctorate = DoctorateAdmissionFactory(
             status=ChoixStatutPropositionDoctorale.INSCRIPTION_AUTORISEE.name,
-            post_enrolment_status=ChoixStatutDoctorat.ADMITTED.name,
+            post_enrolment_status=ChoixStatutParcoursDoctoral.ADMITTED.name,
             training__management_entity=commission,
         )
 
@@ -652,7 +652,7 @@ class LastConfirmationCanvasAPIViewTestCase(APITestCase):
         ).entity
         cls.doctorate = DoctorateAdmissionFactory(
             status=ChoixStatutPropositionDoctorale.INSCRIPTION_AUTORISEE.name,
-            post_enrolment_status=ChoixStatutDoctorat.ADMITTED.name,
+            post_enrolment_status=ChoixStatutParcoursDoctoral.ADMITTED.name,
             training__management_entity=commission,
             supervision_group=promoter.process,
         )
@@ -662,7 +662,7 @@ class LastConfirmationCanvasAPIViewTestCase(APITestCase):
         )
         other_doctorate = DoctorateAdmissionFactory(
             status=ChoixStatutPropositionDoctorale.INSCRIPTION_AUTORISEE.name,
-            post_enrolment_status=ChoixStatutDoctorat.ADMITTED.name,
+            post_enrolment_status=ChoixStatutParcoursDoctoral.ADMITTED.name,
             training__management_entity=commission,
         )
 

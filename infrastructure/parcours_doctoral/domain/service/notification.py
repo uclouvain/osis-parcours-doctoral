@@ -34,7 +34,7 @@ from django.utils.translation import get_language
 from admission.contrib.models import SupervisionActor
 from admission.contrib.models.doctorate import DoctorateAdmission
 from admission.contrib.models.enums.actor_type import ActorType
-from parcours_doctoral.ddd.domain.model.doctorat import Doctorat
+from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoral
 from parcours_doctoral.ddd.domain.service.i_notification import INotification
 from osis_mail_template.utils import transform_html_to_text
 from osis_notification.contrib.handlers import EmailNotificationHandler
@@ -47,7 +47,7 @@ class Notification(INotification):
     @classmethod
     def envoyer_message(
         cls,
-        doctorate: Doctorat,
+        doctorate: ParcoursDoctoral,
         matricule_emetteur: str,
         matricule_doctorant: str,
         sujet: str,

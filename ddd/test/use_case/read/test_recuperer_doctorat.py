@@ -26,10 +26,10 @@
 
 from django.test import TestCase
 
-from parcours_doctoral.ddd.commands import RecupererDoctoratQuery
-from parcours_doctoral.ddd.domain.model.enums import ChoixStatutDoctorat
+from parcours_doctoral.ddd.commands import RecupererParcoursDoctoralQuery
+from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from parcours_doctoral.ddd.domain.validator.exceptions import DoctoratNonTrouveException
-from parcours_doctoral.ddd.dtos import DoctoratDTO
+from parcours_doctoral.ddd.dtos import ParcoursDoctoralDTO
 from admission.infrastructure.message_bus_in_memory import message_bus_in_memory_instance
 
 
@@ -40,21 +40,21 @@ class TestRecupererDoctorat(TestCase):
     def test_should_pas_trouver_si_doctorat_inconnu(self):
         with self.assertRaises(DoctoratNonTrouveException):
             self.message_bus.invoke(
-                RecupererDoctoratQuery(
-                    doctorat_uuid='inconnu',
+                RecupererParcoursDoctoralQuery(
+                    parcours_doctoral_uuid='inconnu',
                 )
             )
 
     def test_should_recuperer_doctorat_connu(self):
-        doctorat_dto: DoctoratDTO = self.message_bus.invoke(
-            RecupererDoctoratQuery(
-                doctorat_uuid='uuid-SC3DP-promoteurs-membres-deja-approuves',
+        doctorat_dto: ParcoursDoctoralDTO = self.message_bus.invoke(
+            RecupererParcoursDoctoralQuery(
+                parcours_doctoral_uuid='uuid-SC3DP-promoteurs-membres-deja-approuves',
             )
         )
         self.assertEqual(doctorat_dto.uuid, 'uuid-SC3DP-promoteurs-membres-deja-approuves')
         self.assertEqual(doctorat_dto.reference, 'r4')
 
-        self.assertEqual(doctorat_dto.statut, ChoixStatutDoctorat.ADMITTED.name)
+        self.assertEqual(doctorat_dto.statut, ChoixStatutParcoursDoctoral.ADMITTED.name)
 
         self.assertEqual(doctorat_dto.sigle_formation, 'SC3DP')
         self.assertEqual(doctorat_dto.annee_formation, 2022)

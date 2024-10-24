@@ -48,9 +48,9 @@ class ConfirmationPaper(models.Model):
         db_index=True,
     )
 
-    admission = models.ForeignKey(
-        'admission.DoctorateAdmission',
-        verbose_name=_("Admission"),
+    parcours_doctoral = models.ForeignKey(
+        'parcours_doctoral.ParcoursDoctoral',
+        verbose_name=_("Parcours doctoral"),
         on_delete=models.CASCADE,
     )
 

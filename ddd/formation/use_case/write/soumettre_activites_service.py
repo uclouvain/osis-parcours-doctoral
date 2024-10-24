@@ -28,24 +28,24 @@ from typing import List
 from admission.ddd.admission.doctorat.preparation.repository.i_groupe_de_supervision import (
     IGroupeDeSupervisionRepository,
 )
-from parcours_doctoral.ddd.builder.doctorat_identity import DoctoratIdentityBuilder
+from parcours_doctoral.ddd.builder.parcours_doctoral_identity import ParcoursDoctoralIdentityBuilder
 from parcours_doctoral.ddd.formation.commands import SoumettreActivitesCommand
 from parcours_doctoral.ddd.formation.domain.model.activite import ActiviteIdentity
 from parcours_doctoral.ddd.formation.domain.service.i_notification import INotification
 from parcours_doctoral.ddd.formation.domain.service.soumettre_activites import SoumettreActivites
 from parcours_doctoral.ddd.formation.repository.i_activite import IActiviteRepository
-from parcours_doctoral.ddd.repository.i_doctorat import IDoctoratRepository
+from parcours_doctoral.ddd.repository.i_doctorat import IParcoursDoctoralRepository
 
 
 def soumettre_activites(
     cmd: 'SoumettreActivitesCommand',
     activite_repository: 'IActiviteRepository',
-    doctorat_repository: 'IDoctoratRepository',
+    doctorat_repository: 'IParcoursDoctoralRepository',
     groupe_de_supervision_repository: 'IGroupeDeSupervisionRepository',
     notification: 'INotification',
 ) -> List['ActiviteIdentity']:
     # GIVEN
-    doctorat_id = DoctoratIdentityBuilder.build_from_uuid(cmd.doctorat_uuid)
+    doctorat_id = ParcoursDoctoralIdentityBuilder.build_from_uuid(cmd.doctorat_uuid)
     doctorat = doctorat_repository.get(doctorat_id)
     activites = SoumettreActivites.verifier(cmd.activite_uuids, activite_repository)
     groupe_de_supervision = groupe_de_supervision_repository.get_by_doctorat_id(doctorat_id)

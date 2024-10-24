@@ -31,10 +31,10 @@ from admission.infrastructure.admission.doctorat.preparation.repository.in_memor
 )
 from .domain.service.in_memory.notification import NotificationInMemory
 from .repository.in_memory.activite import ActiviteInMemoryRepository
-from ..repository.in_memory.doctorat import DoctoratInMemoryRepository
+from ..repository.in_memory.parcours_doctoral import ParcoursDoctoralInMemoryRepository
 
 _activite_repository = ActiviteInMemoryRepository()
-_doctorat_repository = DoctoratInMemoryRepository()
+_doctorat_repository = ParcoursDoctoralInMemoryRepository()
 _groupe_de_supervision_repository = GroupeDeSupervisionInMemoryRepository()
 _notification = NotificationInMemory()
 

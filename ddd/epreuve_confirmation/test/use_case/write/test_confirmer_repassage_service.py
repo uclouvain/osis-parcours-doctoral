@@ -27,8 +27,8 @@ import datetime
 
 from django.test import TestCase
 
-from parcours_doctoral.ddd.commands import RecupererDoctoratQuery
-from parcours_doctoral.ddd.domain.model.enums import ChoixStatutDoctorat
+from parcours_doctoral.ddd.commands import RecupererParcoursDoctoralQuery
+from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from parcours_doctoral.ddd.epreuve_confirmation.commands import (
     ConfirmerRepassageCommand,
     RecupererEpreuvesConfirmationQuery,
@@ -68,10 +68,10 @@ class TestConfirmerRepassage(TestCase):
         doctorat_id = self.message_bus.invoke(ConfirmerRepassageCommand(uuid='c2', **self.parametres_commande_defaut))
 
         doctorat = self.message_bus.invoke(
-            RecupererDoctoratQuery(doctorat_uuid=doctorat_id.uuid),
+            RecupererParcoursDoctoralQuery(parcours_doctoral_uuid=doctorat_id.uuid),
         )
 
-        self.assertEqual(doctorat.statut, ChoixStatutDoctorat.CONFIRMATION_TO_BE_REPEATED.name)
+        self.assertEqual(doctorat.statut, ChoixStatutParcoursDoctoral.CONFIRMATION_TO_BE_REPEATED.name)
 
         epreuve_confirmation_creee = next(
             (

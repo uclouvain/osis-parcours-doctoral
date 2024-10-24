@@ -23,34 +23,17 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-import datetime
-from typing import Optional
-
-import attr
-
-from admission.ddd.admission.dtos.bourse import BourseDTO
-from osis_common.ddd import interface
+from parcours_doctoral.ddd.builder.parcours_doctoral_identity import ParcoursDoctoralIdentityBuilder
+from parcours_doctoral.ddd.commands import RecupererParcoursDoctoralQuery
+from parcours_doctoral.ddd.dtos import ParcoursDoctoralDTO
+from parcours_doctoral.ddd.repository.i_doctorat import IParcoursDoctoralRepository
 
 
-@attr.dataclass(frozen=True, slots=True)
-class DoctoratDTO(interface.DTO):
-    uuid: str
-    reference: str
-    statut: str
-
-    sigle_formation: str
-    annee_formation: int
-    intitule_formation: str
-
-    type_admission: str
-    titre_these: str
-    type_financement: str
-    bourse_recherche: Optional[BourseDTO]
-    autre_bourse_recherche: Optional[str]
-    admission_acceptee_le: Optional[datetime.datetime]
-
-    matricule_doctorant: str
-    noma_doctorant: str
-    genre_doctorant: str
-    prenom_doctorant: str
-    nom_doctorant: str
+def recuperer_parcours_doctoral(
+    cmd: 'RecupererParcoursDoctoralQuery',
+    parcours_doctoral_repository: 'IParcoursDoctoralRepository',
+) -> ParcoursDoctoralDTO:
+    # GIVEN
+    doctorat_id = ParcoursDoctoralIdentityBuilder.build_from_uuid(cmd.parcours_doctoral_uuid)
+    # THEN
+    return parcours_doctoral_repository.get_dto(doctorat_id)

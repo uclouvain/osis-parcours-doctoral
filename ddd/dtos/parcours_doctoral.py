@@ -23,19 +23,34 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from parcours_doctoral.ddd.domain.model.doctorat import DoctoratIdentity
-from osis_common.ddd.interface import CommandRequest, DTO, EntityIdentityBuilder
+import datetime
+from typing import Optional
+
+import attr
+
+from admission.ddd.admission.dtos.bourse import BourseDTO
+from osis_common.ddd import interface
 
 
-class DoctoratIdentityBuilder(EntityIdentityBuilder):
-    @classmethod
-    def build_from_command(cls, cmd: 'CommandRequest') -> 'DoctoratIdentity':
-        raise NotImplementedError
+@attr.dataclass(frozen=True, slots=True)
+class ParcoursDoctoralDTO(interface.DTO):
+    uuid: str
+    reference: str
+    statut: str
 
-    @classmethod
-    def build_from_repository_dto(cls, dto_object: 'DTO') -> 'DoctoratIdentity':
-        raise NotImplementedError
+    sigle_formation: str
+    annee_formation: int
+    intitule_formation: str
 
-    @classmethod
-    def build_from_uuid(cls, uuid: str) -> 'DoctoratIdentity':
-        return DoctoratIdentity(uuid=uuid)
+    type_admission: str
+    titre_these: str
+    type_financement: str
+    bourse_recherche: Optional[BourseDTO]
+    autre_bourse_recherche: Optional[str]
+    admission_acceptee_le: Optional[datetime.datetime]
+
+    matricule_doctorant: str
+    noma_doctorant: str
+    genre_doctorant: str
+    prenom_doctorant: str
+    nom_doctorant: str

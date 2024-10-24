@@ -25,18 +25,18 @@
 # ##############################################################################
 from admission.ddd.admission.doctorat.preparation.domain.model.proposition import Proposition
 from parcours_doctoral.ddd.domain.model._formation import FormationIdentity
-from parcours_doctoral.ddd.domain.model.doctorat import Doctorat, DoctoratIdentity
-from parcours_doctoral.ddd.domain.model.enums import ChoixStatutDoctorat
+from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoral, ParcoursDoctoralIdentity
+from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from osis_common.ddd import interface
 
 
 class DoctoratService(interface.DomainService):
     @classmethod
-    def initier(cls, entity_id: 'DoctoratIdentity', proposition: 'Proposition') -> Doctorat:
-        return Doctorat(
+    def initier(cls, entity_id: 'ParcoursDoctoralIdentity', proposition: 'Proposition') -> ParcoursDoctoral:
+        return ParcoursDoctoral(
             entity_id=entity_id,
             formation_id=FormationIdentity(sigle=proposition.sigle_formation, annee=proposition.annee),
             matricule_doctorant=proposition.matricule_candidat,
             reference=proposition.reference,
-            statut=ChoixStatutDoctorat.ADMITTED,
+            statut=ChoixStatutParcoursDoctoral.ADMITTED,
         )

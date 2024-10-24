@@ -28,18 +28,18 @@ from parcours_doctoral.ddd.epreuve_confirmation.use_case.read import *
 from parcours_doctoral.ddd.epreuve_confirmation.use_case.write import *
 from .domain.service.notification import Notification
 from .repository.epreuve_confirmation import EpreuveConfirmationRepository
-from ..repository.doctorat import DoctoratRepository
+from ..repository.parcours_doctoral import ParcoursDoctoralRepository
 
 COMMAND_HANDLERS = {
     RecupererEpreuvesConfirmationQuery: lambda msg_bus, cmd: recuperer_epreuves_confirmation(
         cmd,
         epreuve_confirmation_repository=EpreuveConfirmationRepository(),
-        doctorat_repository=DoctoratRepository(),
+        doctorat_repository=ParcoursDoctoralRepository(),
     ),
     RecupererDerniereEpreuveConfirmationQuery: lambda msg_bus, cmd: recuperer_derniere_epreuve_confirmation(
         cmd,
         epreuve_confirmation_repository=EpreuveConfirmationRepository(),
-        doctorat_repository=DoctoratRepository(),
+        doctorat_repository=ParcoursDoctoralRepository(),
     ),
     ModifierEpreuveConfirmationParCDDCommand: lambda msg_bus, cmd: modifier_epreuve_confirmation_par_cdd(
         cmd,
@@ -47,7 +47,7 @@ COMMAND_HANDLERS = {
     ),
     SoumettreEpreuveConfirmationCommand: lambda msg_bus, cmd: soumettre_epreuve_confirmation(
         cmd,
-        doctorat_repository=DoctoratRepository(),
+        doctorat_repository=ParcoursDoctoralRepository(),
         epreuve_confirmation_repository=EpreuveConfirmationRepository(),
         notification=Notification(),
     ),
@@ -68,19 +68,19 @@ COMMAND_HANDLERS = {
     ConfirmerReussiteCommand: lambda msg_bus, cmd: confirmer_reussite(
         cmd,
         epreuve_confirmation_repository=EpreuveConfirmationRepository(),
-        doctorat_repository=DoctoratRepository(),
+        doctorat_repository=ParcoursDoctoralRepository(),
         notification=Notification(),
     ),
     ConfirmerEchecCommand: lambda msg_bus, cmd: confirmer_echec(
         cmd,
         epreuve_confirmation_repository=EpreuveConfirmationRepository(),
-        doctorat_repository=DoctoratRepository(),
+        doctorat_repository=ParcoursDoctoralRepository(),
         notification=Notification(),
     ),
     ConfirmerRepassageCommand: lambda msg_bus, cmd: confirmer_repassage(
         cmd,
         epreuve_confirmation_repository=EpreuveConfirmationRepository(),
-        doctorat_repository=DoctoratRepository(),
+        doctorat_repository=ParcoursDoctoralRepository(),
         notification=Notification(),
     ),
     TeleverserAvisRenouvellementMandatRechercheCommand: lambda msg_bus, cmd:

@@ -27,27 +27,27 @@
 import abc
 
 from admission.ddd.admission.repository.i_proposition import IGlobalPropositionRepository
-from parcours_doctoral.ddd.domain.model.doctorat import Doctorat, DoctoratIdentity
-from parcours_doctoral.ddd.dtos import DoctoratDTO
+from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoral, ParcoursDoctoralIdentity
+from parcours_doctoral.ddd.dtos import ParcoursDoctoralDTO
 
 
-class IDoctoratRepository(IGlobalPropositionRepository):
+class IParcoursDoctoralRepository(IGlobalPropositionRepository):
     @classmethod
     @abc.abstractmethod
-    def get(cls, entity_id: 'DoctoratIdentity') -> 'Doctorat':  # type: ignore[override]
+    def get(cls, entity_id: 'ParcoursDoctoralIdentity') -> 'ParcoursDoctoral':  # type: ignore[override]
         raise NotImplementedError
 
     @classmethod
     @abc.abstractmethod
-    def verifier_existence(cls, entity_id: 'DoctoratIdentity') -> None:
+    def verifier_existence(cls, entity_id: 'ParcoursDoctoralIdentity') -> None:
         raise NotImplementedError
 
     @classmethod
     @abc.abstractmethod
-    def save(cls, entity: 'Doctorat') -> None:  # type: ignore[override]
+    def save(cls, entity: 'ParcoursDoctoral') -> None:  # type: ignore[override]
         raise NotImplementedError
 
     @classmethod
     @abc.abstractmethod
-    def get_dto(cls, entity_id: 'DoctoratIdentity') -> 'DoctoratDTO':  # type: ignore[override]
+    def get_dto(cls, entity_id: 'ParcoursDoctoralIdentity') -> 'ParcoursDoctoralDTO':  # type: ignore[override]
         raise NotImplementedError

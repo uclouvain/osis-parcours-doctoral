@@ -29,9 +29,9 @@ from django.utils.translation import gettext_lazy as _
 from osis_common.ddd.interface import BusinessException
 
 
-class DoctoratNonTrouveException(BusinessException):
-    status_code = "DOCTORAT-1"
+class ParcoursDoctoralNonTrouveException(BusinessException):
+    status_code = "PARCOURS-DOCTORAL-1"
 
     def __init__(self, **kwargs):
-        message = _("No doctorate found.")
+        message = _("No parcours doctoral found.")
         super().__init__(message, **kwargs)

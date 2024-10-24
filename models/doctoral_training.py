@@ -113,8 +113,9 @@ class Activity(models.Model):
         unique=True,
         db_index=True,
     )
-    doctorate = models.ForeignKey(
-        'admission.DoctorateAdmission',
+    parcours_doctoral = models.ForeignKey(
+        'parcours_doctoral.ParcoursDoctoral',
+        verbose_name=_("Parcours doctoral"),
         on_delete=models.CASCADE,
     )
     context = models.CharField(

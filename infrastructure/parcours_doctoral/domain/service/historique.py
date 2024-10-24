@@ -27,7 +27,7 @@ from email.message import EmailMessage
 
 from django.conf import settings
 
-from parcours_doctoral.ddd.domain.model.doctorat import Doctorat
+from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoral
 from parcours_doctoral.ddd.domain.service.i_historique import IHistorique
 from admission.infrastructure.utils import get_message_to_historize
 from infrastructure.shared_kernel.personne_connue_ucl.personne_connue_ucl import PersonneConnueUclTranslator
@@ -36,7 +36,7 @@ from osis_history.utilities import add_history_entry
 
 class Historique(IHistorique):
     @classmethod
-    def historiser_message_au_doctorant(cls, doctorat: Doctorat, matricule_emetteur: str, message: EmailMessage):
+    def historiser_message_au_doctorant(cls, doctorat: ParcoursDoctoral, matricule_emetteur: str, message: EmailMessage):
         emetteur = PersonneConnueUclTranslator.get(matricule_emetteur)
 
         message_a_historiser = get_message_to_historize(message)

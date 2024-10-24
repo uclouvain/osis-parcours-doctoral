@@ -25,7 +25,7 @@
 # ##############################################################################
 from email.message import EmailMessage
 
-from parcours_doctoral.ddd.domain.model.doctorat import Doctorat
+from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoral
 from osis_common.ddd import interface
 
 
@@ -33,7 +33,7 @@ class INotification(interface.DomainService):
     @classmethod
     def envoyer_message(
         cls,
-        doctorat: Doctorat,
+        doctorat: ParcoursDoctoral,
         matricule_emetteur: str,
         matricule_doctorant: str,
         sujet: str,

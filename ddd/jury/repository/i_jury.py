@@ -27,7 +27,7 @@
 import abc
 from typing import List, Optional
 
-from parcours_doctoral.ddd.domain.model.doctorat import DoctoratIdentity
+from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoralIdentity
 from parcours_doctoral.ddd.jury.domain.model.jury import Jury, JuryIdentity
 from parcours_doctoral.ddd.jury.dtos.jury import JuryDTO, MembreJuryDTO
 from osis_common.ddd import interface

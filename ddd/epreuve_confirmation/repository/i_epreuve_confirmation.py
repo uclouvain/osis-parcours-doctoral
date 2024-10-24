@@ -27,7 +27,7 @@
 import abc
 from typing import List, Optional
 
-from parcours_doctoral.ddd.domain.model.doctorat import DoctoratIdentity
+from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoralIdentity
 from parcours_doctoral.ddd.epreuve_confirmation.domain.model.epreuve_confirmation import (
     EpreuveConfirmation,
     EpreuveConfirmationIdentity,
@@ -44,7 +44,7 @@ class IEpreuveConfirmationRepository(interface.AbstractRepository):
 
     @classmethod
     @abc.abstractmethod
-    def search_by_doctorat_identity(cls, doctorat_entity_id: 'DoctoratIdentity') -> List['EpreuveConfirmation']:
+    def search_by_doctorat_identity(cls, doctorat_entity_id: 'ParcoursDoctoralIdentity') -> List['EpreuveConfirmation']:
         raise NotImplementedError
 
     @classmethod
@@ -54,12 +54,12 @@ class IEpreuveConfirmationRepository(interface.AbstractRepository):
 
     @classmethod
     @abc.abstractmethod
-    def search_dto_by_doctorat_identity(cls, doctorat_entity_id: 'DoctoratIdentity') -> List['EpreuveConfirmationDTO']:
+    def search_dto_by_doctorat_identity(cls, doctorat_entity_id: 'ParcoursDoctoralIdentity') -> List['EpreuveConfirmationDTO']:
         raise NotImplementedError
 
     @classmethod
     @abc.abstractmethod
-    def get_dto_by_doctorat_identity(cls, doctorat_entity_id: 'DoctoratIdentity') -> 'EpreuveConfirmationDTO':
+    def get_dto_by_doctorat_identity(cls, doctorat_entity_id: 'ParcoursDoctoralIdentity') -> 'EpreuveConfirmationDTO':
         raise NotImplementedError
 
     @classmethod

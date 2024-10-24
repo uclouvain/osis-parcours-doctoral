@@ -28,13 +28,13 @@ import uuid
 import factory
 
 from parcours_doctoral.ddd.domain.model._formation import FormationIdentity
-from parcours_doctoral.ddd.domain.model.doctorat import Doctorat, DoctoratIdentity
-from parcours_doctoral.ddd.domain.model.enums import ChoixStatutDoctorat
+from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoral, ParcoursDoctoralIdentity
+from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 
 
 class _DoctoratIdentityFactory(factory.Factory):
     class Meta:
-        model = DoctoratIdentity
+        model = ParcoursDoctoralIdentity
         abstract = False
 
     uuid = factory.LazyFunction(lambda: str(uuid.uuid4()))
@@ -42,11 +42,11 @@ class _DoctoratIdentityFactory(factory.Factory):
 
 class _DoctoratFactory(factory.Factory):
     class Meta:
-        model = Doctorat
+        model = ParcoursDoctoral
         abstract = False
 
     entity_id = factory.SubFactory(_DoctoratIdentityFactory)
-    statut = ChoixStatutDoctorat.ADMITTED
+    statut = ChoixStatutParcoursDoctoral.ADMITTED
 
 
 class DoctoratSC3DPMinimaleFactory(_DoctoratFactory):
@@ -68,7 +68,7 @@ class DoctoratSC3DPAvecPromoteurRefuseEtMembreCADejaApprouveFactoryRejeteeCDDFac
     formation_id = FormationIdentity(sigle='SC3DP', annee=2022)
     matricule_doctorant = '2'
     reference = 'r3'
-    statut = ChoixStatutDoctorat.ADMISSION_IN_PROGRESS
+    statut = ChoixStatutParcoursDoctoral.ADMISSION_IN_PROGRESS
 
 
 class DoctoratSC3DPAvecPromoteursEtMembresCADejaApprouvesFactory(_DoctoratFactory):

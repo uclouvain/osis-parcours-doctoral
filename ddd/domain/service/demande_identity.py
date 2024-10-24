@@ -25,16 +25,16 @@
 # ##############################################################################
 from admission.ddd.admission.doctorat.validation.builder.demande_identity import DemandeIdentityBuilder
 from admission.ddd.admission.doctorat.validation.domain.model.demande import DemandeIdentity
-from parcours_doctoral.ddd.builder.doctorat_identity import DoctoratIdentityBuilder
-from parcours_doctoral.ddd.domain.model.doctorat import DoctoratIdentity
+from parcours_doctoral.ddd.builder.parcours_doctoral_identity import ParcoursDoctoralIdentityBuilder
+from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoralIdentity
 from osis_common.ddd.interface import DomainService
 
 
 class DemandeIdentityTranslator(DomainService):
     @classmethod
-    def convertir_depuis_doctorat(cls, doctorat_id: DoctoratIdentity) -> DemandeIdentity:
+    def convertir_depuis_doctorat(cls, doctorat_id: ParcoursDoctoralIdentity) -> DemandeIdentity:
         return DemandeIdentityBuilder.build_from_uuid(doctorat_id.uuid)
 
     @classmethod
-    def convertir_en_doctorat(cls, demande_id: DemandeIdentity) -> DoctoratIdentity:
-        return DoctoratIdentityBuilder.build_from_uuid(demande_id.uuid)
+    def convertir_en_doctorat(cls, demande_id: DemandeIdentity) -> ParcoursDoctoralIdentity:
+        return ParcoursDoctoralIdentityBuilder.build_from_uuid(demande_id.uuid)

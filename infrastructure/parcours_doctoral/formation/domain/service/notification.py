@@ -36,7 +36,7 @@ from parcours_doctoral.models.doctoral_training import Activity
 from admission.contrib.models.doctorate import ParcoursDoctoral
 from admission.ddd.admission.doctorat.preparation.commands import UUID
 from admission.ddd.admission.doctorat.preparation.domain.model._promoteur import PromoteurIdentity
-from parcours_doctoral.ddd.domain.model.doctorat import Doctorat
+from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoral
 from parcours_doctoral.ddd.formation.domain.model.activite import Activite
 from parcours_doctoral.ddd.formation.domain.model.enums import (
     CategorieActivite,
@@ -137,7 +137,7 @@ class Notification(INotification):
     @classmethod
     def notifier_soumission_au_promoteur_de_reference(
         cls,
-        doctorat: Doctorat,
+        doctorat: ParcoursDoctoral,
         activites: List[Activite],
         promoteur_de_reference_id: PromoteurIdentity,
     ) -> None:
@@ -154,7 +154,7 @@ class Notification(INotification):
         EmailNotificationHandler.create(email_message, person=promoteur.person_id and promoteur.person)
 
     @classmethod
-    def notifier_validation_au_candidat(cls, doctorat: Doctorat, activites: List[Activite]) -> None:
+    def notifier_validation_au_candidat(cls, doctorat: ParcoursDoctoral, activites: List[Activite]) -> None:
         doctorate: ParcoursDoctoral = ParcoursDoctoral.objects.get(uuid=doctorat.entity_id.uuid)
         candidat = Person.objects.get(global_id=doctorat.matricule_doctorant)
         common_tokens = cls.get_common_tokens(doctorate)

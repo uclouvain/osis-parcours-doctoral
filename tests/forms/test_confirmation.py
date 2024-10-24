@@ -28,7 +28,7 @@ import datetime
 from django.test import TestCase
 from django.utils.translation import gettext as _
 
-from parcours_doctoral.ddd.domain.model.enums import ChoixStatutDoctorat
+from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from parcours_doctoral.forms.confirmation import ConfirmationForm, ConfirmationRetakingForm
 
 
@@ -43,7 +43,7 @@ class ConfirmationTestCase(TestCase):
         self.assertIn('date', form.errors)
 
     def test_form_validation_with_no_data_when_admitted(self):
-        form = ConfirmationForm(data={}, doctorate_status=ChoixStatutDoctorat.ADMITTED.name)
+        form = ConfirmationForm(data={}, doctorate_status=ChoixStatutParcoursDoctoral.ADMITTED.name)
 
         self.assertFalse(form.is_valid())
 
