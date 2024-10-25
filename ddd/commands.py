@@ -34,6 +34,11 @@ class RecupererParcoursDoctoralQuery(interface.QueryRequest):
 
 
 @attr.dataclass(frozen=True, slots=True)
+class InitialiserParcoursDoctoralCommand(interface.CommandRequest):
+    proposition_uuid: str
+
+
+@attr.dataclass(frozen=True, slots=True)
 class EnvoyerMessageDoctorantCommand(interface.CommandRequest):
     matricule_emetteur: str
     doctorat_uuid: str

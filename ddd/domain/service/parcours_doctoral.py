@@ -30,9 +30,10 @@ from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from osis_common.ddd import interface
 
 
-class DoctoratService(interface.DomainService):
+class ParcoursDoctoralService(interface.DomainService):
     @classmethod
-    def initier(cls, entity_id: 'ParcoursDoctoralIdentity', proposition: 'Proposition') -> ParcoursDoctoral:
+    def initier(cls, proposition: 'Proposition') -> ParcoursDoctoral:
+        entity_id = ParcoursDoctoralIdentity(uuid=proposition.entity_id.uuid)
         return ParcoursDoctoral(
             entity_id=entity_id,
             formation_id=FormationIdentity(sigle=proposition.sigle_formation, annee=proposition.annee),

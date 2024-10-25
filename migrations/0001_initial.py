@@ -6,6 +6,19 @@ import django.db.models.deletion
 import osis_document.contrib.fields
 import parcours_doctoral.models.cdd_config
 import uuid
+from parcours_doctoral.mail_templates import (
+    ADMISSION_EMAIL_CANDIDATE_COMPLEMENTARY_TRAINING_NEEDS_UPDATE,
+    ADMISSION_EMAIL_CANDIDATE_COMPLEMENTARY_TRAINING_REFUSED,
+    ADMISSION_EMAIL_CANDIDATE_COURSE_ENROLLMENT_NEEDS_UPDATE,
+    ADMISSION_EMAIL_CANDIDATE_COURSE_ENROLLMENT_REFUSED,
+    ADMISSION_EMAIL_CANDIDATE_DOCTORAL_TRAINING_NEEDS_UPDATE,
+    ADMISSION_EMAIL_CANDIDATE_DOCTORAL_TRAINING_REFUSED,
+    ADMISSION_EMAIL_REFERENCE_PROMOTER_COMPLEMENTARY_TRAININGS_SUBMITTED,
+    ADMISSION_EMAIL_REFERENCE_PROMOTER_COURSE_ENROLLMENTS_SUBMITTED,
+    ADMISSION_EMAIL_REFERENCE_PROMOTER_DOCTORAL_TRAININGS_SUBMITTED,
+)
+
+from osis_mail_template import MailTemplateMigration
 
 
 class Migration(migrations.Migration):
@@ -133,5 +146,332 @@ class Migration(migrations.Migration):
         migrations.AddConstraint(
             model_name='jurymember',
             constraint=models.CheckConstraint(check=models.Q(models.Q(('promoter__isnull', False), ('person__isnull', True), ('institute', ''), ('other_institute', ''), ('country__isnull', True), ('last_name', ''), ('first_name', ''), ('title', ''), ('gender', ''), ('email', '')), models.Q(('promoter__isnull', True), ('person__isnull', False), ('institute', ''), ('country__isnull', True), ('last_name', ''), ('first_name', ''), ('title', ''), ('gender', ''), ('email', '')), models.Q(('promoter__isnull', True), ('person__isnull', True), models.Q(('institute', ''), _negated=True), ('country__isnull', False), models.Q(('last_name', ''), _negated=True), models.Q(('first_name', ''), _negated=True), models.Q(('title', ''), _negated=True), models.Q(('gender', ''), _negated=True), models.Q(('email', ''), _negated=True)), _connector='OR'), name='admission_jurymember_constraint'),
+        ),
+
+
+        MailTemplateMigration(
+            ADMISSION_EMAIL_REFERENCE_PROMOTER_DOCTORAL_TRAININGS_SUBMITTED,
+            {
+                'en': '[OSIS] New doctoral training activities been submitted by {student_first_name} {student_last_name}',
+                'fr-be': "[OSIS] De nouvelles activités de formation doctorale ont été soumises par "
+                "{student_first_name} {student_last_name}",
+            },
+            {
+                'en': '''<p>Hello,</p>
+
+    <p>
+        {student_first_name} {student_last_name} have submitted new doctoral training activities for {training_title}, 
+        you can review them by following this link: {admission_link_front_doctoral_training}.
+    </p>
+
+    <p>
+        ---<br/>
+        The OSIS Team
+    </p>
+    ''',
+                'fr-be': '''<p>Bonjour,</p>
+
+    <p>
+        {student_first_name} {student_last_name} a soumis de nouvelles activités de formation doctorale 
+        pour son {training_title}, vous pouvez les consulter en suivant ce lien : {admission_link_front_doctoral_training}.
+    </p>
+
+    <p>
+        ---<br/>
+        L'équipe OSIS
+    </p>
+    ''',
+            },
+        ),
+        MailTemplateMigration(
+            ADMISSION_EMAIL_CANDIDATE_DOCTORAL_TRAINING_REFUSED,
+            {
+                'en': '[OSIS] A doctoral training activity has been refused',
+                'fr-be': "[OSIS] Une activité de formation doctorale a été refusée",
+            },
+            {
+                'en': '''<p>Hello,</p>
+
+    <p>
+        The submitted doctoral training activity entitled <em>{activity_title}</em> for your {training_title} has been refused, 
+        you can review all activities by following this link: {admission_link_front_doctoral_training}.
+
+        Here's the reason for this refusal: {reason}
+    </p>
+
+    <p>
+        ---<br/>
+        The OSIS Team
+    </p>
+    ''',
+                'fr-be': '''<p>Bonjour,</p>
+
+    <p>
+        L'activité de formation doctorale soumise intitulée <em>{activity_title}</em> pour votre {training_title} a été refusée,
+        vous pouvez la consulter en suivant ce lien : {admission_link_front_doctoral_training}.
+
+        La raison invoquée pour ce refus : {reason}
+    </p>
+
+    <p>
+        ---<br/>
+        L'équipe OSIS
+    </p>
+    ''',
+            },
+        ),
+        MailTemplateMigration(
+            ADMISSION_EMAIL_CANDIDATE_DOCTORAL_TRAINING_NEEDS_UPDATE,
+            {
+                'en': '[OSIS] A doctoral training activity needs to be updated',
+                'fr-be': "[OSIS] Une activité de formation doctorale doit être mise à jour",
+            },
+            {
+                'en': '''<p>Hello,</p>
+
+    <p>
+        The submitted doctoral training activity entitled <em>{activity_title}</em> for {training_title} must be updated, 
+        you can review all activities by following this link: {admission_link_front_doctoral_training}.
+
+        Here's why it needs to be updated: {reason}
+    </p>
+
+    <p>
+        ---<br/>
+        The OSIS Team
+    </p>
+    ''',
+                'fr-be': '''<p>Bonjour,</p>
+
+    <p>
+        L'activité de formation doctorale soumise intitulée <em>{activity_title}</em> doit être mise à jour 
+        pour {training_title}, vous pouvez la consulter en suivant ce lien : {admission_link_front_doctoral_training}.
+
+        Voici ce pourquoi vous devez la modifier : {reason}
+    </p>
+
+    <p>
+        ---<br/>
+        L'équipe OSIS
+    </p>
+    ''',
+            },
+        ),
+        MailTemplateMigration(
+            ADMISSION_EMAIL_REFERENCE_PROMOTER_COMPLEMENTARY_TRAININGS_SUBMITTED,
+            {
+                'en': '[OSIS] New complementary training activities been submitted by '
+                '{student_first_name} {student_last_name}',
+                'fr-be': "[OSIS] De nouvelles activités de formation complémentaire ont été soumises par {student_first_name} "
+                "{student_last_name}",
+            },
+            {
+                'en': '''<p>Hello,</p>
+
+    <p>
+        {student_first_name} {student_last_name} have submitted new complementary training activities for {training_title}, 
+        you can review them by following this link: {admission_link_front_complementary_training}.
+    </p>
+
+    <p>
+        ---<br/>
+        The OSIS Team
+    </p>
+    ''',
+                'fr-be': '''<p>Bonjour,</p>
+
+    <p>
+        {student_first_name} {student_last_name} a soumis de nouvelles activités de formation complémentaire pour son {training_title},
+        vous pouvez les consulter en suivant ce lien : {admission_link_front_complementary_training}.
+    </p>
+
+    <p>
+        ---<br/>
+        L'équipe OSIS
+    </p>
+    ''',
+            },
+        ),
+        MailTemplateMigration(
+            ADMISSION_EMAIL_CANDIDATE_COMPLEMENTARY_TRAINING_REFUSED,
+            {
+                'en': '[OSIS] A complementary training activity has been refused',
+                'fr-be': "[OSIS] Une activité de formation complémentaire a été refusée",
+            },
+            {
+                'en': '''<p>Hello,</p>
+
+    <p>
+        The submitted complementary training activity entitled <em>{activity_title}</em> for your {training_title} has been refused, 
+        you can review all activities by following this link: {admission_link_front_complementary_training}.
+
+        Here's the reason for this refusal: {reason}
+    </p>
+
+    <p>
+        ---<br/>
+        The OSIS Team
+    </p>
+    ''',
+                'fr-be': '''<p>Bonjour,</p>
+
+    <p>
+        L'activité de formation complémentaire soumise intitulée <em>{activity_title}</em> pour votre {training_title} a été refusée,
+        vous pouvez la consulter en suivant ce lien : {admission_link_front_complementary_training}.
+
+        La raison invoquée pour ce refus : {reason}
+    </p>
+
+    <p>
+        ---<br/>
+        L'équipe OSIS
+    </p>
+    ''',
+            },
+        ),
+        MailTemplateMigration(
+            ADMISSION_EMAIL_CANDIDATE_COMPLEMENTARY_TRAINING_NEEDS_UPDATE,
+            {
+                'en': '[OSIS] A complementary training activity needs to be updated',
+                'fr-be': "[OSIS] Une activité de formation complémentaire doit être mise à jour",
+            },
+            {
+                'en': '''<p>Hello,</p>
+
+    <p>
+        The submitted complementary training activity entitled <em>{activity_title}</em> for {training_title} must be updated, 
+        you can review them by following this link: {admission_link_front_complementary_training}.
+
+        Here's why it needs to be updated: {reason}
+    </p>
+
+    <p>
+        ---<br/>
+        The OSIS Team
+    </p>
+    ''',
+                'fr-be': '''<p>Bonjour,</p>
+
+    <p>
+        L'activité de formation complémentaire soumise intitulée <em>{activity_title}</em> doit être mise à jour pour {training_title},
+        vous pouvez la consulter en suivant ce lien : {admission_link_front_complementary_training}.
+
+        Voici ce pourquoi vous devez la modifier : {reason}
+    </p>
+
+    <p>
+        ---<br/>
+        L'équipe OSIS
+    </p>
+    ''',
+            },
+        ),
+        MailTemplateMigration(
+            ADMISSION_EMAIL_REFERENCE_PROMOTER_COURSE_ENROLLMENTS_SUBMITTED,
+            {
+                'en': '[OSIS] New course enrollments been submitted by {student_first_name} {student_last_name}',
+                'fr-be': "[OSIS] Nouvelles inscriptions aux cours soumises par {student_first_name} "
+                "{student_last_name}",
+            },
+            {
+                'en': '''<p>Hello,</p>
+
+    <p>
+        {student_first_name} {student_last_name} have submitted new course enrollments for {training_title}, 
+        you can review them by following this link: {admission_link_front_course_enrollment}.
+    </p>
+
+    <p>
+        ---<br/>
+        The OSIS Team
+    </p>
+    ''',
+                'fr-be': '''<p>Bonjour,</p>
+
+    <p>
+        {student_first_name} {student_last_name} a soumis de nouvelles inscriptions aux cours pour son {training_title},
+        vous pouvez les consulter en suivant ce lien : {admission_link_front_course_enrollment}.
+    </p>
+
+    <p>
+        ---<br/>
+        L'équipe OSIS
+    </p>
+    ''',
+            },
+        ),
+        MailTemplateMigration(
+            ADMISSION_EMAIL_CANDIDATE_COURSE_ENROLLMENT_REFUSED,
+            {
+                'en': '[OSIS] A course enrollment has been refused',
+                'fr-be': "[OSIS] Une inscription à un cours a été refusée",
+            },
+            {
+                'en': '''<p>Hello,</p>
+
+    <p>
+        The submitted course enrollment entitled <em>{activity_title}</em> for your {training_title} has been refused, 
+        you can review all courses by following this link: {admission_link_front_course_enrollment}.
+
+        Here's the reason for this refusal: {reason}
+    </p>
+
+    <p>
+        ---<br/>
+        The OSIS Team
+    </p>
+    ''',
+                'fr-be': '''<p>Bonjour,</p>
+
+    <p>
+        Une inscription à un cours intitulé <em>{activity_title}</em> pour votre {training_title} a été refusée,
+        vous pouvez la consulter en suivant ce lien : {admission_link_front_course_enrollment}.
+
+        La raison invoquée pour ce refus : {reason}
+    </p>
+
+    <p>
+        ---<br/>
+        L'équipe OSIS
+    </p>
+    ''',
+            },
+        ),
+        MailTemplateMigration(
+            ADMISSION_EMAIL_CANDIDATE_COURSE_ENROLLMENT_NEEDS_UPDATE,
+            {
+                'en': '[OSIS] A course enrollment needs to be updated',
+                'fr-be': "[OSIS] Une inscription à un cours doit être mise à jour",
+            },
+            {
+                'en': '''<p>Hello,</p>
+
+    <p>
+        The submitted course enrollment entitled <em>{activity_title}</em> for {training_title} must be updated, 
+        you can review all courses by following this link: {admission_link_front_course_enrollment}.
+
+        Here's why it needs to be updated: {reason}
+    </p>
+
+    <p>
+        ---<br/>
+        The OSIS Team
+    </p>
+    ''',
+                'fr-be': '''<p>Bonjour,</p>
+
+    <p>
+        Une inscription à un cours intitulé <em>{activity_title}</em> doit être mise à jour pour {training_title},
+        vous pouvez la consulter en suivant ce lien : {admission_link_front_course_enrollment}.
+
+        Voici ce pourquoi vous devez la modifier : {reason}
+    </p>
+
+    <p>
+        ---<br/>
+        L'équipe OSIS
+    </p>
+    ''',
+            },
         ),
     ]

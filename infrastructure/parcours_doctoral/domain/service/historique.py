@@ -36,15 +36,25 @@ from osis_history.utilities import add_history_entry
 
 class Historique(IHistorique):
     @classmethod
-    def historiser_message_au_doctorant(cls, doctorat: ParcoursDoctoral, matricule_emetteur: str, message: EmailMessage):
+    def historiser_message_au_doctorant(cls, parcours_doctoral: ParcoursDoctoral, matricule_emetteur: str, message: EmailMessage):
         emetteur = PersonneConnueUclTranslator.get(matricule_emetteur)
 
         message_a_historiser = get_message_to_historize(message)
 
         add_history_entry(
-            doctorat.entity_id.uuid,
+            parcours_doctoral.entity_id.uuid,
             message_a_historiser[settings.LANGUAGE_CODE_FR],
             message_a_historiser[settings.LANGUAGE_CODE_EN],
             "{emetteur.prenom} {emetteur.nom}".format(emetteur=emetteur),
-            tags=["doctorat", "message"],
+            tags=["parcours_doctoral", "message"],
+        )
+
+    @classmethod
+    def historiser_initialisation(cls, parcours_doctoral: ParcoursDoctoral):
+        add_history_entry(
+            parcours_doctoral.entity_id.uuid,
+            "Le parcours doctoral a été initialisé.",
+            "Doctoral training was initialized.",
+            "",
+            tags=["parcours_doctoral"],
         )
