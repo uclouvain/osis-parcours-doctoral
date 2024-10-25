@@ -26,6 +26,7 @@
 from django.utils.translation import gettext_lazy as _
 
 from admission.mail_templates.tokens import common_tokens
+from parcours_doctoral.mail_templates import PARCOURS_DOCTORAL_TAG
 from osis_mail_template import Token, templates
 
 __all__ = [
@@ -40,7 +41,6 @@ __all__ = [
     "ADMISSION_EMAIL_REFERENCE_PROMOTER_COURSE_ENROLLMENTS_SUBMITTED",
 ]
 
-from parcours_doctoral.mail_templates import PARCOURS_DOCTORAL_TAG
 
 training_common_tokens = common_tokens + [
     Token(

@@ -39,24 +39,14 @@ from django.utils.module_loading import import_string
 from django.utils.translation import get_language, gettext as _
 
 from admission.contrib.models import AdmissionTask, DoctorateAdmission, SupervisionActor
-from admission.contrib.models.doctorate import ParcoursDoctoral
 from admission.ddd.admission.doctorat.preparation.domain.model.enums import ChoixTypeFinancement
 from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
+from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoral
 from parcours_doctoral.ddd.epreuve_confirmation.domain.model.epreuve_confirmation import (
     EpreuveConfirmation,
 )
 from parcours_doctoral.ddd.epreuve_confirmation.domain.service.i_notification import INotification
 from parcours_doctoral.ddd.epreuve_confirmation.dtos import EpreuveConfirmationDTO
-from admission.mail_templates import (
-    ADMISSION_EMAIL_CONFIRMATION_PAPER_ON_FAILURE_ADRE,
-    ADMISSION_EMAIL_CONFIRMATION_PAPER_ON_FAILURE_ADRI,
-    ADMISSION_EMAIL_CONFIRMATION_PAPER_ON_RETAKING_ADRE,
-    ADMISSION_EMAIL_CONFIRMATION_PAPER_ON_RETAKING_ADRI,
-    ADMISSION_EMAIL_CONFIRMATION_PAPER_ON_SUCCESS_ADRE,
-    ADMISSION_EMAIL_CONFIRMATION_PAPER_ON_SUCCESS_ADRI,
-    ADMISSION_EMAIL_CONFIRMATION_PAPER_ON_SUCCESS_STUDENT,
-    ADMISSION_EMAIL_CONFIRMATION_PAPER_SUBMISSION_ADRE,
-)
 from admission.utils import get_doctoral_cdd_managers
 from base.forms.utils.datefield import DATE_FORMAT
 from osis_async.models import AsyncTask
@@ -64,6 +54,12 @@ from osis_common.messaging.message_config import create_receiver
 from osis_mail_template.utils import generate_email, transform_html_to_text
 from osis_notification.contrib.handlers import EmailNotificationHandler, WebNotificationHandler
 from osis_notification.contrib.notification import EmailNotification, WebNotification
+
+from parcours_doctoral.mail_templates.confirmation_paper import ADMISSION_EMAIL_CONFIRMATION_PAPER_SUBMISSION_ADRE, \
+    ADMISSION_EMAIL_CONFIRMATION_PAPER_ON_FAILURE_ADRE, ADMISSION_EMAIL_CONFIRMATION_PAPER_ON_FAILURE_ADRI, \
+    ADMISSION_EMAIL_CONFIRMATION_PAPER_ON_RETAKING_ADRE, ADMISSION_EMAIL_CONFIRMATION_PAPER_ON_RETAKING_ADRI, \
+    ADMISSION_EMAIL_CONFIRMATION_PAPER_ON_SUCCESS_STUDENT, ADMISSION_EMAIL_CONFIRMATION_PAPER_ON_SUCCESS_ADRE, \
+    ADMISSION_EMAIL_CONFIRMATION_PAPER_ON_SUCCESS_ADRI
 
 
 class Notification(INotification):
@@ -75,16 +71,16 @@ class Notification(INotification):
         return datetime.date.strftime(date, DATE_FORMAT) if date else ''
 
     @classmethod
-    def _get_doctorate_title_translation(cls, doctorate: Union[ParcoursDoctoral, DoctorateAdmission]) -> Promise:
-        """Populate the translations of the doctorate title and lazy return them"""
-        # Create a dict to cache the translations of the doctorate title
-        doctorate_title = {
-            settings.LANGUAGE_CODE_EN: doctorate.training.title_english,
-            settings.LANGUAGE_CODE_FR: doctorate.training.title,
+    def _get_doctorate_title_translation(cls, parcours_doctoral: ParcoursDoctoral) -> Promise:
+        """Populate the translations of the parcours_doctoral title and lazy return them"""
+        # Create a dict to cache the translations of the parcours_doctoral title
+        parcours_doctoral_title = {
+            settings.LANGUAGE_CODE_EN: parcours_doctoral.training.title_english,
+            settings.LANGUAGE_CODE_FR: parcours_doctoral.training.title,
         }
 
         # Return a lazy proxy which, when evaluated to string, return the correct translation given the current language
-        return lazy(lambda: doctorate_title[get_language()], str)()
+        return lazy(lambda: parcours_doctoral_title[get_language()], str)()
 
     @classmethod
     def get_admission_link_back(cls, uuid: UUID, tab='project') -> str:

@@ -25,6 +25,8 @@
 # ##############################################################################
 from osis_mail_template.exceptions import DuplicateMailTemplateIdentifier
 
+PARCOURS_DOCTORAL_TAG = 'Parcours doctoral'
+
 # When running tests, the test runner try to import it directly, re-registrering the identifiers
 try:
     from .training import *
@@ -34,4 +36,3 @@ except DuplicateMailTemplateIdentifier:
     if 'test' not in sys.argv:
         raise
 
-PARCOURS_DOCTORAL_TAG = 'Parcours doctoral'

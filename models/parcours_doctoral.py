@@ -62,7 +62,7 @@ class ParcoursDoctoral(models.Model):
     status = models.CharField(
         choices=ChoixStatutParcoursDoctoral.choices(),
         max_length=30,
-        default=ChoixStatutParcoursDoctoral.ADMISSION_IN_PROGRESS.name,
+        default=ChoixStatutParcoursDoctoral.ADMITTED.name,
         verbose_name=_("Post-enrolment status"),
     )
 

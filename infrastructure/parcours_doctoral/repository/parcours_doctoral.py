@@ -30,11 +30,11 @@ from django.utils.translation import get_language
 
 from admission.contrib.models.doctorate import DoctorateAdmission
 from admission.ddd.admission.domain.model.bourse import BourseIdentity
+from parcours_doctoral.ddd.domain.validator.exceptions import ParcoursDoctoralNonTrouveException
 from parcours_doctoral.models.parcours_doctoral import ParcoursDoctoral as ParcoursDoctoralModel
 from parcours_doctoral.ddd.domain.model._formation import FormationIdentity
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoral, ParcoursDoctoralIdentity
 from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
-from parcours_doctoral.ddd.domain.validator.exceptions import DoctoratNonTrouveException
 from parcours_doctoral.ddd.dtos import ParcoursDoctoralDTO
 from parcours_doctoral.ddd.repository.i_doctorat import IParcoursDoctoralRepository
 from admission.infrastructure.admission.domain.service.bourse import BourseTranslator
@@ -56,7 +56,7 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
         try:
             doctorate: ParcoursDoctoral = ParcoursDoctoralModel.objects.get(uuid=entity_id.uuid)
         except ParcoursDoctoral.DoesNotExist:
-            raise DoctoratNonTrouveException
+            raise ParcoursDoctoralNonTrouveException
 
         return ParcoursDoctoral(
             entity_id=entity_id,
@@ -74,7 +74,7 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
     def verifier_existence(cls, entity_id: 'ParcoursDoctoralIdentity') -> None:  # pragma: no cover
         doctorate: ParcoursDoctoral = ParcoursDoctoral.objects.filter(uuid=entity_id.uuid)
         if not doctorate:
-            raise DoctoratNonTrouveException
+            raise ParcoursDoctoralNonTrouveException
 
     @classmethod
     def save(cls, entity: 'ParcoursDoctoral') -> None:
@@ -88,7 +88,7 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
         try:
             doctorate: ParcoursDoctoral = ParcoursDoctoral.objects.get(uuid=entity_id.uuid)
         except ParcoursDoctoral.DoesNotExist:
-            raise DoctoratNonTrouveException
+            raise ParcoursDoctoralNonTrouveException
 
         student: Optional[Student] = Student.objects.filter(person=doctorate.candidate).first()
 

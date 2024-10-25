@@ -24,10 +24,15 @@
 #
 # ##############################################################################
 from django.contrib import admin
+from django.db import models
 from django.shortcuts import resolve_url
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import gettext_lazy as _, pgettext_lazy
 from osis_mail_template.admin import MailTemplateAdmin
 
+from admission.admin import HijackRoleModelAdmin
+from base.models.entity_version import EntityVersion
+from parcours_doctoral.auth.roles.cdd_configurator import CddConfigurator
+from parcours_doctoral.auth.roles.jury_secretary import JurySecretary
 from parcours_doctoral.ddd.formation.domain.model.enums import CategorieActivite, ContexteFormation
 from parcours_doctoral.models.cdd_config import CddConfiguration
 from parcours_doctoral.models.cdd_mail_template import CddMailTemplate
@@ -150,6 +155,36 @@ class CddMailTemplateAdmin(MailTemplateAdmin):
         return resolve_url(f'admission:config:cdd-mail-template:preview', identifier=obj.identifier, pk=obj.pk)
 
 
+class CddConfiguratorAdmin(HijackRoleModelAdmin):
+    list_display = ('person', 'most_recent_acronym')
+    search_fields = [
+        'person__first_name',
+        'person__last_name',
+        'entity__entityversion__acronym',
+    ]
+
+    @admin.display(description=pgettext_lazy('admission', 'Entity'))
+    def most_recent_acronym(self, obj):
+        return obj.most_recent_acronym
+
+    def get_queryset(self, request):
+        return (
+            super()
+            .get_queryset(request)
+            .annotate(
+                most_recent_acronym=models.Subquery(
+                    EntityVersion.objects.filter(
+                        entity__id=models.OuterRef('entity_id'),
+                    )
+                    .order_by("-start_date")
+                    .values('acronym')[:1]
+                )
+            )
+        )
+
+
 admin.site.register(CddMailTemplate, CddMailTemplateAdmin)
 admin.site.register(Activity, ActivityAdmin)
 admin.site.register(CddConfiguration)
+admin.site.register(JurySecretary, HijackRoleModelAdmin)
+admin.site.register(CddConfigurator, CddConfiguratorAdmin)
