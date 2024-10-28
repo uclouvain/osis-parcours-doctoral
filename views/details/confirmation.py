@@ -29,10 +29,10 @@ from typing import List
 from django.http import Http404
 from django.views.generic import TemplateView
 
-from parcours_doctoral.ddd.domain.validator.exceptions import DoctoratNonTrouveException
+from parcours_doctoral.ddd.domain.validator.exceptions import ParcoursDoctoralNonTrouveException
 from parcours_doctoral.ddd.epreuve_confirmation.commands import RecupererEpreuvesConfirmationQuery
 from parcours_doctoral.ddd.epreuve_confirmation.dtos import EpreuveConfirmationDTO
-from admission.mail_templates import ADMISSION_EMAIL_CONFIRMATION_PAPER_INFO_STUDENT
+from parcours_doctoral.mail_templates.confirmation_paper import ADMISSION_EMAIL_CONFIRMATION_PAPER_INFO_STUDENT
 from admission.views.common.mixins import LoadDossierViewMixin
 from infrastructure.messages_bus import message_bus_instance
 
@@ -56,7 +56,7 @@ class DoctorateAdmissionConfirmationDetailView(LoadDossierViewMixin, TemplateVie
             all_confirmation_papers: List[EpreuveConfirmationDTO] = message_bus_instance.invoke(
                 RecupererEpreuvesConfirmationQuery(doctorat_uuid=self.admission_uuid),
             )
-        except DoctoratNonTrouveException as e:
+        except ParcoursDoctoralNonTrouveException as e:
             raise Http404(e.message)
 
         if all_confirmation_papers:

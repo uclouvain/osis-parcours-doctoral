@@ -26,7 +26,7 @@
 import uuid
 
 from django.db import models
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import gettext_lazy as _, pgettext_lazy
 
 from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral, ChoixLangueDefense
 from osis_document.contrib import FileField
@@ -50,6 +50,9 @@ class ParcoursDoctoral(models.Model):
         unique=True,
         db_index=True,
     )
+
+    created_at = models.DateTimeField(verbose_name=_('Created'), auto_now_add=True)
+    modified_at = models.DateTimeField(verbose_name=_('Modified'), auto_now=True)
 
     candidate = models.ForeignKey(
         to="base.Person",

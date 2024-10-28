@@ -32,7 +32,7 @@ from django.test import TestCase
 from osis_mail_template import templates
 from rest_framework import status
 
-from admission.contrib.models import CddMailTemplate
+from parcours_doctoral.models.cdd_mail_template import CddMailTemplate
 from admission.mail_templates import ADMISSION_EMAIL_MEMBER_REMOVED
 from admission.tests.factories.roles import CddConfiguratorFactory
 from base.tests.factories.person import PersonFactory

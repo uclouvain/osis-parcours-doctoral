@@ -36,8 +36,8 @@ from django.urls import reverse_lazy
 from django.utils.translation import get_language, gettext_lazy as _
 from django.views import generic
 
-from admission.auth.roles.cdd_configurator import CddConfigurator
-from admission.contrib.models import CddMailTemplate
+from parcours_doctoral.auth.roles.cdd_configurator import CddConfigurator
+from parcours_doctoral.models.cdd_mail_template import CddMailTemplate
 from admission.forms.cdd_mail_template import NameMailTemplateForm
 from osis_mail_template.forms import MailTemplateConfigureForm
 from osis_mail_template.models import MailTemplate

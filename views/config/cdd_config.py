@@ -29,18 +29,16 @@ from django.db.models import OuterRef, Subquery
 from django.views import generic
 from django.utils.translation import gettext_lazy as _
 
-from admission.auth.roles.cdd_configurator import CddConfigurator
 from base.models.entity_version import EntityVersion
+from parcours_doctoral.auth.roles.cdd_configurator import CddConfigurator
+from parcours_doctoral.forms.cdd.cdd_config import CddConfigForm
+from parcours_doctoral.models.cdd_config import CddConfiguration
 from osis_role.contrib.views import PermissionRequiredMixin
 
 __all__ = [
     'CddConfigListView',
     'CddConfigChangeView',
 ]
-
-from parcours_doctoral.forms.cdd.cdd_config import CddConfigForm
-
-from parcours_doctoral.models.cdd_config import CddConfiguration
 
 
 class CddConfigListView(PermissionRequiredMixin, generic.ListView):

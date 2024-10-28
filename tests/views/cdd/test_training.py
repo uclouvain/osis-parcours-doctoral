@@ -37,7 +37,7 @@ from django.utils.translation import gettext_lazy as _, pgettext
 from rest_framework import status
 
 from parcours_doctoral.models.cdd_config import CddConfiguration
-from parcours_doctoral.models.doctoral_training import Activity
+from parcours_doctoral.models.activity import Activity
 from admission.ddd.admission.doctorat.preparation.domain.model.enums import ChoixTypeAdmission
 from parcours_doctoral.ddd.formation.domain.model.enums import (
     CategorieActivite,

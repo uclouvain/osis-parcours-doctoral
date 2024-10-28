@@ -29,7 +29,7 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 
 from parcours_doctoral.models.cdd_config import CddConfiguration
-from parcours_doctoral.models.doctoral_training import Activity
+from parcours_doctoral.models.activity import Activity
 from parcours_doctoral.ddd.formation.domain.model.enums import (
     CategorieActivite,
     ContexteFormation,

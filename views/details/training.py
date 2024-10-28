@@ -36,7 +36,7 @@ from django.views.generic.edit import FormMixin
 
 from parcours_doctoral.forms.training.activity import *
 from parcours_doctoral.forms.training.processus import RefuseForm
-from parcours_doctoral.models.doctoral_training import Activity
+from parcours_doctoral.models.activity import Activity
 from parcours_doctoral.ddd.formation.commands import (
     RefuserActiviteCommand,
     RevenirSurStatutActiviteCommand,

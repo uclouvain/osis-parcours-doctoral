@@ -29,7 +29,7 @@ from django.views.generic.edit import FormMixin
 
 from parcours_doctoral.forms.training.activity import get_category_labels
 from parcours_doctoral.forms.training.processus import BatchActivityForm
-from parcours_doctoral.models.doctoral_training import Activity
+from parcours_doctoral.models.activity import Activity
 from parcours_doctoral.ddd.formation.commands import AccepterActivitesCommand, SoumettreActivitesCommand
 from parcours_doctoral.ddd.formation.domain.model.enums import StatutActivite
 from admission.templatetags.admission import can_read_tab

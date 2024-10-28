@@ -26,7 +26,7 @@
 from django import forms
 from django.utils.translation import gettext_lazy as _
 
-from parcours_doctoral.models.doctoral_training import Activity
+from parcours_doctoral.models.activity import Activity
 
 
 class BatchActivityForm(forms.Form):

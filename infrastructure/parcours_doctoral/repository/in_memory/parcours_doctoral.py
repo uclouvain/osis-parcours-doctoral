@@ -29,7 +29,7 @@ from attr import dataclass
 
 from admission.ddd.admission.doctorat.validation.domain.model.enums import ChoixGenre
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoral, ParcoursDoctoralIdentity
-from parcours_doctoral.ddd.domain.validator.exceptions import DoctoratNonTrouveException
+from parcours_doctoral.ddd.domain.validator.exceptions import ParcoursDoctoralNonTrouveException
 from parcours_doctoral.ddd.dtos import ParcoursDoctoralDTO
 from parcours_doctoral.ddd.epreuve_confirmation.domain.model.epreuve_confirmation import (
     EpreuveConfirmation,
@@ -79,14 +79,14 @@ class ParcoursDoctoralInMemoryRepository(InMemoryGenericRepository, IParcoursDoc
     def get(cls, entity_id: 'ParcoursDoctoralIdentity') -> 'ParcoursDoctoral':
         doctorat = super().get(entity_id)
         if not doctorat:
-            raise DoctoratNonTrouveException
+            raise ParcoursDoctoralNonTrouveException
         return doctorat
 
     @classmethod
     def verifier_existence(cls, entity_id: 'ParcoursDoctoralIdentity') -> None:
         doctorat = super().get(entity_id)
         if not doctorat:
-            raise DoctoratNonTrouveException
+            raise ParcoursDoctoralNonTrouveException
 
     @classmethod
     def get_dto(cls, entity_id: 'ParcoursDoctoralIdentity') -> 'ParcoursDoctoralDTO':

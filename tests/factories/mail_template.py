@@ -26,7 +26,7 @@
 
 import factory
 
-from admission.contrib.models import CddMailTemplate
+from parcours_doctoral.models.cdd_mail_template import CddMailTemplate
 
 
 class CddMailTemplateFactory(factory.django.DjangoModelFactory):

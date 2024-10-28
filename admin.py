@@ -36,19 +36,19 @@ from parcours_doctoral.auth.roles.jury_secretary import JurySecretary
 from parcours_doctoral.ddd.formation.domain.model.enums import CategorieActivite, ContexteFormation
 from parcours_doctoral.models.cdd_config import CddConfiguration
 from parcours_doctoral.models.cdd_mail_template import CddMailTemplate
-from parcours_doctoral.models.doctoral_training import Activity
+from parcours_doctoral.models.activity import Activity
 
 
 class ActivityAdmin(admin.ModelAdmin):
     list_display = ('uuid', 'context', 'get_category', 'ects', 'modified_at', 'status', 'is_course_completed')
-    search_fields = ['doctorate__uuid', 'doctorate__reference']
+    search_fields = ['parcours_doctoral__uuid',]
     list_filter = [
         'context',
         'category',
         'status',
     ]
     fields = [
-        'doctorate',
+        'parcours_doctoral',
         'category',
         'parent',
         'ects',
@@ -81,7 +81,7 @@ class ActivityAdmin(admin.ModelAdmin):
         "can_be_submitted",
     ]
     readonly_fields = [
-        'doctorate',
+        'parcours_doctoral',
         'category',
         'parent',
         "type",

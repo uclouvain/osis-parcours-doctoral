@@ -32,7 +32,10 @@ from django.views.generic import FormView
 from django.views.generic.edit import FormMixin
 from osis_mail_template.models import MailTemplate
 
-from admission.contrib.models import CddMailTemplate
+from parcours_doctoral.forms.cdd.generic_send_mail import SelectCddEmailTemplateForm, BaseEmailTemplateForm
+from parcours_doctoral.mail_templates.confirmation_paper import ADMISSION_EMAIL_CONFIRMATION_PAPER_ON_FAILURE_STUDENT, \
+    ADMISSION_EMAIL_CONFIRMATION_PAPER_ON_RETAKING_STUDENT
+from parcours_doctoral.models.cdd_mail_template import CddMailTemplate
 from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from parcours_doctoral.ddd.epreuve_confirmation.commands import (
     ConfirmerEchecCommand,
@@ -40,14 +43,9 @@ from parcours_doctoral.ddd.epreuve_confirmation.commands import (
     ConfirmerReussiteCommand,
     TeleverserAvisRenouvellementMandatRechercheCommand,
 )
-from admission.forms.doctorate.cdd.generic_send_mail import BaseEmailTemplateForm, SelectCddEmailTemplateForm
 from parcours_doctoral.forms.confirmation import ConfirmationOpinionForm, ConfirmationRetakingForm
 from parcours_doctoral.infrastructure.parcours_doctoral.epreuve_confirmation.domain.service.notification import (
     Notification,
-)
-from admission.mail_templates import (
-    ADMISSION_EMAIL_CONFIRMATION_PAPER_ON_FAILURE_STUDENT,
-    ADMISSION_EMAIL_CONFIRMATION_PAPER_ON_RETAKING_STUDENT,
 )
 from admission.views.doctorate.mixins import DoctorateAdmissionLastConfirmationMixin
 from admission.views.mixins.business_exceptions_form_view_mixin import BusinessExceptionFormViewMixin

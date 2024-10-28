@@ -26,7 +26,7 @@
 
 from django.test import TestCase
 
-from parcours_doctoral.ddd.domain.validator.exceptions import DoctoratNonTrouveException
+from parcours_doctoral.ddd.domain.validator.exceptions import ParcoursDoctoralNonTrouveException
 from parcours_doctoral.ddd.epreuve_confirmation.commands import (
     RecupererDerniereEpreuveConfirmationQuery,
 )
@@ -42,7 +42,7 @@ class TestRecupererDerniereEpreuveConfirmation(TestCase):
         self.message_bus = message_bus_in_memory_instance
 
     def test_should_pas_trouver_si_doctorat_inconnu(self):
-        with self.assertRaises(DoctoratNonTrouveException):
+        with self.assertRaises(ParcoursDoctoralNonTrouveException):
             self.message_bus.invoke(
                 RecupererDerniereEpreuveConfirmationQuery(
                     doctorat_uuid='inconnu',

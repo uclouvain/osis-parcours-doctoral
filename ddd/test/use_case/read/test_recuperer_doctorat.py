@@ -28,7 +28,7 @@ from django.test import TestCase
 
 from parcours_doctoral.ddd.commands import RecupererParcoursDoctoralQuery
 from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
-from parcours_doctoral.ddd.domain.validator.exceptions import DoctoratNonTrouveException
+from parcours_doctoral.ddd.domain.validator.exceptions import ParcoursDoctoralNonTrouveException
 from parcours_doctoral.ddd.dtos import ParcoursDoctoralDTO
 from admission.infrastructure.message_bus_in_memory import message_bus_in_memory_instance
 
@@ -38,7 +38,7 @@ class TestRecupererDoctorat(TestCase):
         self.message_bus = message_bus_in_memory_instance
 
     def test_should_pas_trouver_si_doctorat_inconnu(self):
-        with self.assertRaises(DoctoratNonTrouveException):
+        with self.assertRaises(ParcoursDoctoralNonTrouveException):
             self.message_bus.invoke(
                 RecupererParcoursDoctoralQuery(
                     parcours_doctoral_uuid='inconnu',
