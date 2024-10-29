@@ -988,6 +988,8 @@ components:
           nullable: true
         langue_redaction:
           type: string
+        nom_langue_redaction:
+          type: string
         langue_soutenance:
           type: string
         commentaire:
@@ -1006,6 +1008,7 @@ components:
       - membres
       - formule_defense
       - langue_redaction
+      - nom_langue_redaction
       - langue_soutenance
       - commentaire
       - approbation_pdf
@@ -2461,7 +2464,7 @@ servers:
       - dev
       - qa
       - test
-- url: https://osis.uclouvain.be/api/v1/admission/
+- url: https://osis.uclouvain.be/api/v1/parcours_doctoral/
   description: Production server
 security:
 - Token: []

@@ -60,6 +60,7 @@ class JuryDTO(interface.DTO):
     formule_defense: str
     date_indicative: Optional[datetime.date]
     langue_redaction: str
+    nom_langue_redaction: str
     langue_soutenance: str
     commentaire: str
     situation_comptable: Optional[bool]

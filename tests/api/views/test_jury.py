@@ -52,7 +52,7 @@ class JuryApiTestCase(APITestCase):
             'titre_propose': 'titre api',
             'formule_defense': 'DEUX_TEMPS',
             'date_indicative': '2023-12-25',
-            'langue_redaction': FrenchLanguageFactory().pk,
+            'langue_redaction': FrenchLanguageFactory().code,
             'langue_soutenance': 'FRENCH',
             'commentaire': 'commentaire',
         }

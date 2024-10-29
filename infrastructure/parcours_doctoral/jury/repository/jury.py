@@ -42,6 +42,7 @@ from base.models.person import Person
 from osis_common.ddd.interface import EntityIdentity, ApplicationService, RootEntity
 from parcours_doctoral.models.jury import JuryMember
 from reference.models.country import Country
+from reference.models.language import Language
 
 INSTITUTION_UCL = "UCLouvain"
 
@@ -57,25 +58,31 @@ class JuryRepository(IJuryRepository):
 
     @classmethod
     def _get_queryset(cls):
-        return DoctorateAdmission.objects.only(
-            "uuid",
-            "thesis_language",
-            "thesis_proposed_title",
-            "defense_method",
-            "defense_indicative_date",
-            "defense_language",
-            "comment_about_jury",
-            "accounting_situation",
-            "jury_approval",
-        ).prefetch_related(
-            Prefetch(
-                'jury_members',
-                queryset=JuryMember.objects.select_related(
-                    'promoter__country',
-                    'promoter__person',
-                    'person',
-                    'country',
-                ),
+        return (
+            DoctorateAdmission.objects.only(
+                "uuid",
+                "thesis_language",
+                "thesis_language__code",
+                "thesis_language__name",
+                "thesis_proposed_title",
+                "defense_method",
+                "defense_indicative_date",
+                "defense_language",
+                "comment_about_jury",
+                "accounting_situation",
+                "jury_approval",
+            )
+            .select_related('thesis_language')
+            .prefetch_related(
+                Prefetch(
+                    'jury_members',
+                    queryset=JuryMember.objects.select_related(
+                        'promoter__country',
+                        'promoter__person',
+                        'person',
+                        'country',
+                    ),
+                )
             )
         )
 
@@ -128,7 +135,11 @@ class JuryRepository(IJuryRepository):
             cotutelle_institution=entity.institution_cotutelle,
             defense_method=entity.formule_defense,
             defense_indicative_date=entity.date_indicative,
-            thesis_language=entity.langue_redaction,
+            thesis_language=(
+                Language.objects.get(code=entity.langue_redaction)
+                if entity.langue_redaction
+                else None
+            ),
             defense_language=entity.langue_soutenance,
             comment_about_jury=entity.commentaire,
             accounting_situation=entity.situation_comptable,
@@ -231,6 +242,7 @@ class JuryRepository(IJuryRepository):
             formule_defense=jury.formule_defense,
             date_indicative=jury.date_indicative,
             langue_redaction=jury.langue_redaction,
+            nom_langue_redaction=doctorate.thesis_language.name,
             langue_soutenance=jury.langue_soutenance,
             commentaire=jury.commentaire,
             situation_comptable=jury.situation_comptable,
@@ -318,7 +330,7 @@ class JuryRepository(IJuryRepository):
             institution_cotutelle=doctorate.cotutelle_institution,
             formule_defense=doctorate.defense_method,
             date_indicative=doctorate.defense_indicative_date,
-            langue_redaction=doctorate.thesis_language,
+            langue_redaction=doctorate.thesis_language.code,
             langue_soutenance=doctorate.defense_language,
             commentaire=doctorate.comment_about_jury,
             situation_comptable=doctorate.accounting_situation,
