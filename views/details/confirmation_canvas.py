@@ -57,7 +57,7 @@ class ConfirmationCanvasExportView(LastConfirmationMixin, RedirectView):
 
         file_uuid = admission_pdf_confirmation_canvas(
             admission=self.admission,
-            language=self.admission.candidate.language,
+            language=self.admission.student.language,
             context=self.get_context_data(),
         )
         reading_token = get_remote_token(file_uuid, for_modified_upload=True)

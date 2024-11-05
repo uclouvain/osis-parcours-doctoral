@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -25,7 +25,7 @@
 # ##############################################################################
 from email.message import EmailMessage
 
-from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoral
+from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoral, ParcoursDoctoralIdentity
 from parcours_doctoral.ddd.domain.service.i_historique import IHistorique
 
 
@@ -35,5 +35,5 @@ class HistoriqueInMemory(IHistorique):
         raise NotImplementedError
 
     @classmethod
-    def historiser_initialisation(cls, parcours_doctoral: ParcoursDoctoral):
+    def historiser_initialisation(cls, parcours_doctoral: ParcoursDoctoralIdentity):
         raise NotImplementedError

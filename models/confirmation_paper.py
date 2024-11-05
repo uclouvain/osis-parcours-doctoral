@@ -33,7 +33,7 @@ from osis_document.contrib import FileField
 def confirmation_paper_directory_path(confirmation, filename: str):
     """Return the file upload directory path."""
     return 'parcours_doctoral/{}/{}/confirmation/{}/{}'.format(
-        confirmation.parcours_doctoral.candidate.uuid,
+        confirmation.parcours_doctoral.student.uuid,
         confirmation.parcours_doctoral.uuid,
         confirmation.uuid,
         filename,

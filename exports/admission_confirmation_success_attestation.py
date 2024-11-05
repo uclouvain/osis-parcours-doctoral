@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -59,14 +59,14 @@ def admission_confirmation_success_attestation(task_uuid, language=None):
         .get(task__uuid=task_uuid)
     )
 
-    current_language = language or admission_task.admission.candidate.language
+    current_language = language or admission_task.admission.student.language
 
     with translation.override(current_language):
         # Load additional data
         confirmation_paper = ConfirmationPaper.objects.filter(admission=admission_task.admission).first()
 
         addresses = (
-            PersonAddress.objects.filter(person=admission_task.admission.candidate)
+            PersonAddress.objects.filter(person=admission_task.admission.student)
             .select_related('country')
             .values('street', 'street_number', 'postal_code', 'city', 'country__name', 'country__name_en')
         )

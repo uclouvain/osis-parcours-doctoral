@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -65,7 +65,7 @@ class JuryApiTestCase(APITestCase):
         cls.admission.save()
         AdmissionAcademicCalendarFactory.produce_all_required()
         # Users
-        cls.candidate = cls.admission.candidate
+        cls.candidate = cls.admission.student
         cls.other_candidate_user = CandidateFactory().person.user
         cls.no_role_user = PersonFactory().user
         cls.promoter_user = promoter.person.user
@@ -188,7 +188,7 @@ class JuryMembersListApiTestCase(APITestCase):
         cls.admission.supervision_group = promoter.process
         cls.admission.save()
         # Users
-        cls.candidate = cls.admission.candidate
+        cls.candidate = cls.admission.student
         cls.other_candidate_user = CandidateFactory().person.user
         cls.no_role_user = PersonFactory().user
         cls.promoter_user = promoter.person.user
@@ -318,7 +318,7 @@ class JuryMembersDetailApiTestCase(APITestCase):
         cls.admission.supervision_group = promoter.process
         cls.admission.save()
         # Users
-        cls.candidate = cls.admission.candidate
+        cls.candidate = cls.admission.student
         cls.other_candidate_user = CandidateFactory().person.user
         cls.no_role_user = PersonFactory().user
         cls.promoter_user = promoter.person.user

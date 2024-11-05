@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -59,7 +59,7 @@ class Notification(INotification):
         # Notifier le doctorant via mail
         email_message = EmailNotificationHandler.build(
             EmailNotification(
-                parcours_doctoral_instance.candidate,
+                parcours_doctoral_instance.student,
                 sujet,
                 transform_html_to_text(message),
                 message,
@@ -75,7 +75,7 @@ class Notification(INotification):
                 cc_list.append(cls._format_email(ca_member))
         if cc_list:
             email_message['Cc'] = ','.join(cc_list)
-        EmailNotificationHandler.create(email_message, person=parcours_doctoral_instance.candidate)
+        EmailNotificationHandler.create(email_message, person=parcours_doctoral_instance.student)
 
         return email_message
 
@@ -95,8 +95,8 @@ class Notification(INotification):
     def get_common_tokens(cls, parcours_doctoral: ParcoursDoctoralModel):
         """Return common tokens about a submission"""
         return {
-            "candidate_first_name": parcours_doctoral.candidate.first_name,
-            "candidate_last_name": parcours_doctoral.candidate.last_name,
+            "candidate_first_name": parcours_doctoral.student.first_name,
+            "candidate_last_name": parcours_doctoral.student.last_name,
             "training_title": cls._get_parcours_doctoral_title_translation(parcours_doctoral),
             "admission_link_front": settings.ADMISSION_FRONTEND_LINK.format(context='parcours_doctoral', uuid=parcours_doctoral.uuid),
             "admission_link_back": "{}{}".format(

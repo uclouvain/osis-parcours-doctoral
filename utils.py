@@ -19,7 +19,7 @@ def get_mail_templates_from_admission(admission: DoctorateAdmission):
 
 def get_cached_parcours_doctoral_perm_obj(parcours_doctoral_uuid):
     qs = ParcoursDoctoral.objects.select_related(
-        'candidate',
+        'student',
         'training__academic_year',
     )
     return cache.get_or_set(

@@ -23,10 +23,16 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+import json
+
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import resolve_url
 from django.utils.functional import cached_property
+from django.utils.translation import gettext_lazy as _
 from django.views.generic.base import ContextMixin
 
+from admission.utils import add_messages_into_htmx_response, add_close_modal_into_htmx_response
 from infrastructure.messages_bus import message_bus_instance
 from osis_role.contrib.views import PermissionRequiredMixin
 from parcours_doctoral.ddd.commands import RecupererParcoursDoctoralQuery
@@ -91,7 +97,11 @@ class ParcoursDoctoralViewMixin(LoginRequiredMixin, PermissionRequiredMixin, Con
 
 
 class ParcoursDoctoralFormMixin(ParcoursDoctoralViewMixin):
-
+    message_on_success = _('Your data have been saved.')
+    message_on_failure = _('Some errors have been encountered.')
+    update_parcours_doctoral_author = False
+    default_htmx_trigger_form_extra = {}
+    close_modal_on_htmx_request = True
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -120,8 +130,8 @@ class ParcoursDoctoralFormMixin(ParcoursDoctoralViewMixin):
 
         # Update the last update author of the admission
         author = getattr(self.request.user, 'person')
-        if self.update_admission_author and author:
-            admission = BaseAdmission.objects.get(uuid=self.admission_uuid)
+        if self.update_parcours_doctoral_author and author:
+            admission = ParcoursDoctoral.objects.get(uuid=self.parcours_doctoral_uuid)
             admission.last_update_author = author
             # Additional updates if needed
             self.update_current_admission_on_form_valid(form, admission)

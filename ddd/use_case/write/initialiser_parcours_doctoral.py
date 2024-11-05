@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -30,7 +30,7 @@ from admission.ddd.admission.doctorat.validation.domain.service.proposition_iden
     PropositionIdentityTranslator
 from parcours_doctoral.ddd.commands import InitialiserParcoursDoctoralCommand
 from parcours_doctoral.ddd.domain.service.i_historique import IHistorique
-from parcours_doctoral.ddd.domain.service.parcours_doctoral import ParcoursDoctoralService
+from parcours_doctoral.ddd.domain.service.i_parcours_doctoral import IParcoursDoctoralService
 from parcours_doctoral.ddd.epreuve_confirmation.domain.service.epreuve_confirmation import EpreuveConfirmationService
 from parcours_doctoral.ddd.epreuve_confirmation.repository.i_epreuve_confirmation import IEpreuveConfirmationRepository
 from parcours_doctoral.ddd.repository.i_parcours_doctoral import IParcoursDoctoralRepository
@@ -42,22 +42,20 @@ def initialiser_parcours_doctoral(
     parcours_doctoral_repository: 'IParcoursDoctoralRepository',
     groupe_de_supervision_repository: 'IGroupeDeSupervisionRepository',
     epreuve_confirmation_repository: 'IEpreuveConfirmationRepository',
+    parcours_doctoral_service: 'IParcoursDoctoralService',
     historique: 'IHistorique',
 ) -> 'ParcoursDoctoralIdentity':
     proposition_id = PropositionIdentityTranslator.convertir_depuis_demande(cmd.proposition_uuid)
     proposition = proposition_repository.get(entity_id=proposition_id)
-    groupe_de_supervision = groupe_de_supervision_repository.get_by_proposition_id(entity_id=proposition_id)
 
     # WHEN
     epreuve_confirmation = EpreuveConfirmationService.initier(proposition_id=proposition_id)
-    parcours_doctoral = ParcoursDoctoralService.initier(
-        proposition=proposition,
-        groupe_de_supervision=groupe_de_supervision,
-    )
 
     # THEN
-    parcours_doctoral_repository.save(parcours_doctoral)
+    parcours_doctoral_entity_id = parcours_doctoral_service.initier(
+        proposition=proposition,
+    )
     epreuve_confirmation_repository.save(epreuve_confirmation)
-    historique.historiser_initialisation(parcours_doctoral)
+    historique.historiser_initialisation(parcours_doctoral_entity_id)
 
-    return parcours_doctoral.entity_id
+    return parcours_doctoral_entity_id

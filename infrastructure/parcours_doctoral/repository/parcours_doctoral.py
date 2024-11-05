@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -70,7 +70,7 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
             statut=ChoixStatutParcoursDoctoral[parcours_doctoral.status],
             formation_id=FormationIdentity(parcours_doctoral.training.acronym, parcours_doctoral.training.academic_year.year),
             reference=parcours_doctoral.reference,
-            matricule_doctorant=parcours_doctoral.candidate.global_id,
+            matricule_doctorant=parcours_doctoral.student.global_id,
             bourse_recherche=BourseIdentity(uuid=str(parcours_doctoral.international_scholarship_id))
             if parcours_doctoral.international_scholarship_id
             else None,
@@ -177,16 +177,16 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
         except ParcoursDoctoral.DoesNotExist:
             raise ParcoursDoctoralNonTrouveException
 
-        student: Optional[Student] = Student.objects.filter(person=parcours_doctoral.candidate).first()
+        student: Optional[Student] = Student.objects.filter(person=parcours_doctoral.student).first()
 
         return ParcoursDoctoralDTO(
             uuid=str(entity_id.uuid),
             statut=ChoixStatutParcoursDoctoral[parcours_doctoral.status].name,
             reference=parcours_doctoral.formatted_reference,
-            matricule_doctorant=parcours_doctoral.candidate.global_id,
-            nom_doctorant=parcours_doctoral.candidate.last_name,
-            prenom_doctorant=parcours_doctoral.candidate.first_name,
-            genre_doctorant=parcours_doctoral.candidate.gender,
+            matricule_doctorant=parcours_doctoral.student.global_id,
+            nom_doctorant=parcours_doctoral.student.last_name,
+            prenom_doctorant=parcours_doctoral.student.first_name,
+            genre_doctorant=parcours_doctoral.student.gender,
             annee_formation=parcours_doctoral.training.academic_year.year,
             sigle_formation=parcours_doctoral.training.acronym,
             noma_doctorant=student.registration_id if student else '',

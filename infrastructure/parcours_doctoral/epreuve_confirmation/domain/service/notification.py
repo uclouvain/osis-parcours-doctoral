@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -303,7 +303,7 @@ class Notification(INotification):
             name=_('Create the confirmation paper success attestation (%(reference)s)')
             % {'reference': parcours_doctoral.reference},
             description=_('Create the confirmation paper success attestation as PDF'),
-            person=parcours_doctoral.candidate,
+            person=parcours_doctoral.student,
             time_to_live=5,
         )
         AdmissionTask.objects.create(
@@ -317,11 +317,11 @@ class Notification(INotification):
         # Notify the student > email
         student_email_message = generate_email(
             ADMISSION_EMAIL_CONFIRMATION_PAPER_ON_SUCCESS_STUDENT,
-            parcours_doctoral.candidate.language,
+            parcours_doctoral.student.language,
             common_tokens,
-            recipients=[parcours_doctoral.candidate.email],
+            recipients=[parcours_doctoral.student.email],
         )
-        EmailNotificationHandler.create(student_email_message, person=parcours_doctoral.candidate)
+        EmailNotificationHandler.create(student_email_message, person=parcours_doctoral.student)
 
         # Notify ADRE > email
         adre_email_message = generate_email(

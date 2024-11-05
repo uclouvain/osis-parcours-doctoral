@@ -39,7 +39,7 @@ from parcours_doctoral.ddd.jury.domain.model.enums import FormuleDefense
 def parcours_doctoral_directory_path(parcours_doctoral: 'ParcoursDoctoral', filename: str):
     """Return the file upload directory path."""
     return 'parcours_doctoral/{}/{}/{}'.format(
-        parcours_doctoral.candidate.uuid,
+        parcours_doctoral.student.uuid,
         parcours_doctoral.uuid,
         filename,
     )
@@ -56,7 +56,7 @@ class ParcoursDoctoral(models.Model):
     created_at = models.DateTimeField(verbose_name=_('Created'), auto_now_add=True)
     modified_at = models.DateTimeField(verbose_name=_('Modified'), auto_now=True)
 
-    candidate = models.ForeignKey(
+    student = models.ForeignKey(
         to="base.Person",
         verbose_name=_("Candidate"),
         related_name="%(class)ss",
@@ -76,6 +76,15 @@ class ParcoursDoctoral(models.Model):
         max_length=30,
         default=ChoixStatutParcoursDoctoral.ADMITTED.name,
         verbose_name=_("Post-enrolment status"),
+    )
+
+    last_update_author = models.ForeignKey(
+        to="base.Person",
+        verbose_name=_("Last update author"),
+        on_delete=models.SET_NULL,
+        related_name='+',
+        null=True,
+        blank=True,
     )
 
     # Projet

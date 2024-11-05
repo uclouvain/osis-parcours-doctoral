@@ -27,10 +27,18 @@ from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
 from rules import predicate
 
+from admission.models.enums.actor_type import ActorType
 from osis_role.cache import predicate_cache
 from osis_role.errors import predicate_failed_msg
 from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral, STATUTS_DOCTORAT_EPREUVE_CONFIRMATION_EN_COURS
 from parcours_doctoral.models.parcours_doctoral import ParcoursDoctoral
+
+
+
+@predicate(bind=True)
+@predicate_failed_msg(message=_("You must be the request author to access this admission"))
+def is_parcours_doctoral_student(self, user: User, obj: ParcoursDoctoral):
+    return obj.student == user.person
 
 
 @predicate(bind=True)
@@ -61,10 +69,36 @@ def complementary_training_enabled(self, user: User, obj: ParcoursDoctoral):
 
 
 @predicate(bind=True)
-@predicate_failed_msg(message=_("You must be a member of the doctoral commission to access this admission"))
+@predicate_failed_msg(message=_("You must be a member of the doctoral commission to access this doctoral training"))
 @predicate_cache(cache_key_fn=lambda obj: getattr(obj, 'pk', None))
 def is_part_of_doctoral_commission(self, user: User, obj: ParcoursDoctoral):
     return (
         isinstance(obj, ParcoursDoctoral)
         and obj.training.management_entity_id in self.context['role_qs'].get_entities_ids()
     )
+
+
+@predicate(bind=True)
+@predicate_failed_msg(message=_("You must be the request promoter to access this doctoral training"))
+def is_parcours_doctoral_promoter(self, user: User, obj: ParcoursDoctoral):
+    return obj.supervision_group and user.person.pk in [
+        actor.person_id
+        for actor in obj.supervision_group.actors.all()
+        if actor.supervisionactor.type == ActorType.PROMOTER.name
+    ]
+
+
+@predicate(bind=True)
+@predicate_failed_msg(message=_("You must be the reference promoter to access this doctoral training"))
+def is_parcours_doctoral_reference_promoter(self, user: User, obj: ParcoursDoctoral):
+    return obj.supervision_group and user.person.pk in [
+        actor.person_id
+        for actor in obj.supervision_group.actors.all()
+        if actor.supervisionactor.type == ActorType.PROMOTER.name and actor.supervisionactor.is_reference_promoter
+    ]
+
+
+@predicate(bind=True)
+@predicate_failed_msg(message=_("You must be a member of the committee to access this doctoral training"))
+def is_part_of_committee(self, user: User, obj: ParcoursDoctoral):
+    return obj.supervision_group and user.person.pk in [actor.person_id for actor in obj.supervision_group.actors.all()]

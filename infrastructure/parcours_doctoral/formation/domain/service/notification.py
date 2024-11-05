@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -86,8 +86,8 @@ class Notification(INotification):
     ) -> dict:
         """Return common tokens about a doctorate"""
         return {
-            "student_first_name": parcours_doctoral.candidate.first_name,
-            "student_last_name": parcours_doctoral.candidate.last_name,
+            "student_first_name": parcours_doctoral.student.first_name,
+            "student_last_name": parcours_doctoral.student.last_name,
             "training_title": cls._get_parcours_doctoral_title_translation(parcours_doctoral),
             "admission_link_front": cls.get_admission_link_front(parcours_doctoral.uuid),
             "admission_link_front_doctoral_training": cls.get_admission_link_front(parcours_doctoral.uuid, 'doctoral-training'),
@@ -188,12 +188,12 @@ class Notification(INotification):
         )
         email_message = generate_email(
             mail_template_id,
-            parcours_doctoral_instance.candidate.language,
+            parcours_doctoral_instance.student.language,
             {
                 **common_tokens,
                 'reason': activite.commentaire_gestionnaire,
                 'activity_title': str(Activity.objects.get(uuid=activite.entity_id.uuid)),
             },
-            recipients=[parcours_doctoral_instance.candidate.email],
+            recipients=[parcours_doctoral_instance.student.email],
         )
-        EmailNotificationHandler.create(email_message, person=parcours_doctoral_instance.candidate)
+        EmailNotificationHandler.create(email_message, person=parcours_doctoral_instance.student)

@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -115,10 +115,10 @@ class ConfirmationDecisionMixin(
             # Template is the generic one
             mail_template = MailTemplate.objects.get(
                 identifier=self.identifier,
-                language=self.admission.candidate.language,
+                language=self.admission.student.language,
             )
 
-        with override(language=self.admission.candidate.language):
+        with override(language=self.admission.student.language):
             return {
                 'subject': mail_template.render_subject(tokens),
                 'body': mail_template.body_as_html(tokens),
