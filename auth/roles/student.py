@@ -24,16 +24,8 @@
 #
 # ##############################################################################
 from django.utils.translation import gettext_lazy as _
-from rules import RuleSet
+from rules import RuleSet, always_allow
 
-from admission.auth.predicates.doctorate import (
-    is_admission_reference_promoter,
-    is_admission_request_promoter,
-    is_being_enrolled,
-    is_enrolled,
-    is_part_of_committee_and_invited,
-    is_pre_admission,
-)
 from osis_role.contrib.models import RoleModel
 from parcours_doctoral.auth.predicates import parcours_doctoral
 
@@ -51,20 +43,27 @@ class Student(RoleModel):
     @classmethod
     def rule_set(cls):
         rules = {
-            'view_parcours_doctoral': parcours_doctoral.is_parcours_doctoral_student,
+            'parcours_doctoral.view_list': always_allow,
+            'parcours_doctoral.view_parcours_doctoral': parcours_doctoral.is_parcours_doctoral_student,
+            'parcours_doctoral.view_project': parcours_doctoral.is_parcours_doctoral_student,
+            'parcours_doctoral.view_funding': parcours_doctoral.is_parcours_doctoral_student,
+            'parcours_doctoral.change_funding': parcours_doctoral.is_parcours_doctoral_student,
             # Can edit while the jury is not submitted
-            'view_admission_jury': parcours_doctoral.is_parcours_doctoral_student,
-            'change_admission_jury': parcours_doctoral.is_parcours_doctoral_student & parcours_doctoral.is_jury_in_progress,
-            'view_complementary_training': parcours_doctoral.is_parcours_doctoral_student & parcours_doctoral.complementary_training_enabled,
-            'view_course_enrollment': parcours_doctoral.is_parcours_doctoral_student,
-            'add_training': parcours_doctoral.is_parcours_doctoral_student,
-            'update_training': parcours_doctoral.is_parcours_doctoral_student,
-            'submit_training': parcours_doctoral.is_parcours_doctoral_student,
-            'view_training': parcours_doctoral.is_parcours_doctoral_student,
-            'delete_training': parcours_doctoral.is_parcours_doctoral_student,
+            'parcours_doctoral.view_admission_jury': parcours_doctoral.is_parcours_doctoral_student,
+            'parcours_doctoral.change_admission_jury': parcours_doctoral.is_parcours_doctoral_student
+            & parcours_doctoral.is_jury_in_progress,
+            'parcours_doctoral.view_complementary_training': parcours_doctoral.is_parcours_doctoral_student
+            & parcours_doctoral.complementary_training_enabled,
+            'parcours_doctoral.view_course_enrollment': parcours_doctoral.is_parcours_doctoral_student,
+            'parcours_doctoral.add_training': parcours_doctoral.is_parcours_doctoral_student,
+            'parcours_doctoral.update_training': parcours_doctoral.is_parcours_doctoral_student,
+            'parcours_doctoral.submit_training': parcours_doctoral.is_parcours_doctoral_student,
+            'parcours_doctoral.view_training': parcours_doctoral.is_parcours_doctoral_student,
+            'parcours_doctoral.delete_training': parcours_doctoral.is_parcours_doctoral_student,
             # Once the confirmation paper is in progress, he can
-            'change_admission_confirmation': parcours_doctoral.is_parcours_doctoral_student & parcours_doctoral.confirmation_paper_in_progress,
-            'change_admission_confirmation_extension': parcours_doctoral.is_parcours_doctoral_student
+            'parcours_doctoral.change_admission_confirmation': parcours_doctoral.is_parcours_doctoral_student
+            & parcours_doctoral.confirmation_paper_in_progress,
+            'parcours_doctoral.change_admission_confirmation_extension': parcours_doctoral.is_parcours_doctoral_student
             & parcours_doctoral.confirmation_paper_in_progress,
         }
         return RuleSet(rules)

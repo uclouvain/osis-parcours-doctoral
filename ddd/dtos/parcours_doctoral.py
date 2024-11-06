@@ -31,16 +31,33 @@ import attr
 
 from admission.ddd.admission.dtos.bourse import BourseDTO
 from osis_common.ddd import interface
+from parcours_doctoral.ddd.dtos.formation import FormationDTO
+
+
+@attr.dataclass(frozen=True, slots=True)
+class FinancementDTO(interface.DTO):
+    type: str
+    type_contrat_travail: str
+    eft: Optional[int]
+    bourse_recherche: Optional[BourseDTO]
+    autre_bourse_recherche: str
+    bourse_date_debut: Optional[datetime.date]
+    bourse_date_fin: Optional[datetime.date]
+    bourse_preuve: List[str]
+    duree_prevue: Optional[int]
+    temps_consacre: Optional[int]
+    est_lie_fnrs_fria_fresh_csc: Optional[bool]
+    commentaire: str
 
 
 @attr.dataclass(frozen=True, slots=True)
 class CotutelleDTO(interface.DTO):
-    motivation: Optional[str]
+    motivation: str
     institution_fwb: Optional[bool]
-    institution: Optional[str]
+    institution: str
     autre_institution: Optional[bool]
-    autre_institution_nom: Optional[str]
-    autre_institution_adresse: Optional[str]
+    autre_institution_nom: str
+    autre_institution_adresse: str
     demande_ouverture: List[str]
     convention: List[str]
     autres_documents: List[str]
@@ -48,15 +65,15 @@ class CotutelleDTO(interface.DTO):
 
 @attr.dataclass(frozen=True, slots=True)
 class ProjetDTO(interface.DTO):
-    titre: Optional[str]
-    resume: Optional[str]
-    langue_redaction_these: Optional[str]
+    titre: str
+    resume: str
+    langue_redaction_these: str
     institut_these: Optional[UUID]
     nom_institut_these: str
     sigle_institut_these: str
     lieu_these: str
     projet_doctoral_deja_commence: Optional[bool]
-    projet_doctoral_institution: Optional[str]
+    projet_doctoral_institution: str
     projet_doctoral_date_debut: Optional[datetime.date]
     documents_projet: List[str]
     graphe_gantt: List[str]
@@ -64,10 +81,10 @@ class ProjetDTO(interface.DTO):
     projet_formation_complementaire: List[str]
     lettres_recommandation: List[str]
     doctorat_deja_realise: str
-    institution: Optional[str]
+    institution: str
     domaine_these: str
     date_soutenance: Optional[datetime.date]
-    raison_non_soutenue: Optional[str]
+    raison_non_soutenue: str
 
 
 @attr.dataclass(frozen=True, slots=True)
@@ -76,20 +93,30 @@ class ParcoursDoctoralDTO(interface.DTO):
     reference: str
     statut: str
 
-    sigle_formation: str
-    annee_formation: int
-    intitule_formation: str
+    formation: FormationDTO
 
     projet: ProjetDTO
     cotutelle: Optional[CotutelleDTO]
-
-    titre_these: str
-    type_financement: str
-    bourse_recherche: Optional[BourseDTO]
-    autre_bourse_recherche: Optional[str]
+    financement: FinancementDTO
 
     matricule_doctorant: str
     noma_doctorant: str
     genre_doctorant: str
     prenom_doctorant: str
     nom_doctorant: str
+
+
+@attr.dataclass(slots=True)
+class ParcoursDoctoralRechercheDTO(interface.DTO):
+    uuid: str
+    reference: str
+    statut: str
+
+    formation: FormationDTO
+
+    matricule_doctorant: str
+    genre_doctorant: str
+    prenom_doctorant: str
+    nom_doctorant: str
+
+    cree_le: datetime.datetime

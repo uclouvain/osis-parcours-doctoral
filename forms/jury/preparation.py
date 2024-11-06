@@ -27,9 +27,10 @@ from dal import autocomplete
 from django import forms
 from django.utils.translation import gettext_lazy as _
 
-from parcours_doctoral.ddd.jury.domain.model.enums import FormuleDefense, ChoixLangueRedactionThese
 from admission.forms import DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS
 from base.forms.utils.datefield import CustomDateInput
+from parcours_doctoral.ddd.domain.model.enums import ChoixLangueDefense
+from parcours_doctoral.ddd.jury.domain.model.enums import FormuleDefense
 
 
 class JuryPreparationForm(forms.Form):
@@ -66,8 +67,8 @@ class JuryPreparationForm(forms.Form):
     )
     langue_soutenance = forms.ChoiceField(
         label=_("Defense language"),
-        choices=ChoixLangueRedactionThese.choices(),
-        initial=ChoixLangueRedactionThese.UNDECIDED.name,
+        choices=ChoixLangueDefense.choices(),
+        initial=ChoixLangueDefense.UNDECIDED.name,
         required=False,
     )
     commentaire = forms.CharField(

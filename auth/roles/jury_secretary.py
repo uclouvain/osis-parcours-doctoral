@@ -47,15 +47,15 @@ class JurySecretary(RoleModel):
     @classmethod
     def rule_set(cls):
         ruleset = {
-            'admission.upload_defense_report': rules.always_allow,
-            'admission.view_doctorateadmission': rules.always_allow,
-            'admission.view_admission_person': rules.always_allow,
-            'admission.view_admission_coordinates': rules.always_allow,
-            'admission.view_admission_secondary_studies': rules.always_allow,
-            'admission.view_admission_curriculum': rules.always_allow,
-            'admission.view_admission_project': rules.always_allow,
-            'admission.view_admission_cotutelle': rules.always_allow,
-            'admission.view_admission_supervision': rules.always_allow,
-            'admission.view_admission_jury': rules.always_allow,
+            'parcours_doctoral.upload_defense_report': rules.always_allow,
+            'parcours_doctoral.view_doctorateadmission': rules.always_allow,
+            'parcours_doctoral.view_admission_person': rules.always_allow,
+            'parcours_doctoral.view_admission_coordinates': rules.always_allow,
+            'parcours_doctoral.view_admission_secondary_studies': rules.always_allow,
+            'parcours_doctoral.view_admission_curriculum': rules.always_allow,
+            'parcours_doctoral.view_admission_project': rules.always_allow,
+            'parcours_doctoral.view_admission_cotutelle': rules.always_allow,
+            'parcours_doctoral.view_admission_supervision': rules.always_allow,
+            'parcours_doctoral.view_admission_jury': rules.always_allow,
         }
         return RuleSet(ruleset)

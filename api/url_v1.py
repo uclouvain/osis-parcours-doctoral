@@ -34,21 +34,32 @@ def path(pattern, view, name=None):
 app_name = "parcours_doctoral_api_v1"
 
 urlpatterns = [
+    # Dashboard
+    path('doctorate/dashboard', views.DashboardViewSet),
+    # Lists
+    path('doctorate/list', views.DoctorateListView),
+    path('doctorate/supervised-list', views.SupervisedDoctorateListView),
+    # Doctorate data
+    path('doctorate/<uuid:uuid>', views.DoctorateAPIView),
+    # Project
+    path('doctorate/<uuid:uuid>/project', views.ProjectView),
+    # Funding
+    path('doctorate/<uuid:uuid>/funding', views.FundingViewSet),
     # Submission confirmation
-    path('propositions/doctorate/<uuid:uuid>/confirmation', views.ConfirmationAPIView),
-    path('propositions/doctorate/<uuid:uuid>/confirmation/last', views.LastConfirmationAPIView),
-    path('propositions/doctorate/<uuid:uuid>/confirmation/last/canvas', views.LastConfirmationCanvasAPIView),
-    path('propositions/doctorate/<uuid:uuid>/supervised_confirmation', views.SupervisedConfirmationAPIView),
+    path('doctorate/<uuid:uuid>/confirmation', views.ConfirmationAPIView),
+    path('doctorate/<uuid:uuid>/confirmation/last', views.LastConfirmationAPIView),
+    path('doctorate/<uuid:uuid>/confirmation/last/canvas', views.LastConfirmationCanvasAPIView),
+    path('doctorate/<uuid:uuid>/supervised_confirmation', views.SupervisedConfirmationAPIView),
     # Jury
-    path('propositions/doctorate/<uuid:uuid>/jury/preparation', views.JuryPreparationAPIView),
-    path('propositions/doctorate/<uuid:uuid>/jury/members', views.JuryMembersListAPIView),
-    path('propositions/doctorate/<uuid:uuid>/jury/members/<uuid:member_uuid>', views.JuryMemberDetailAPIView),
+    path('doctorate/<uuid:uuid>/jury/preparation', views.JuryPreparationAPIView),
+    path('doctorate/<uuid:uuid>/jury/members', views.JuryMembersListAPIView),
+    path('doctorate/<uuid:uuid>/jury/members/<uuid:member_uuid>', views.JuryMemberDetailAPIView),
     # Training
-    path('propositions/doctorate/<uuid:uuid>/training/config', views.TrainingConfigView),
-    path('propositions/doctorate/<uuid:uuid>/doctoral-training', views.DoctoralTrainingListView),
-    path('propositions/doctorate/<uuid:uuid>/training/submit', views.TrainingSubmitView),
-    path('propositions/doctorate/<uuid:uuid>/training/assent', views.TrainingAssentView),
-    path('propositions/doctorate/<uuid:uuid>/training/<uuid:activity_id>', views.TrainingView),
-    path('propositions/doctorate/<uuid:uuid>/complementary-training', views.ComplementaryTrainingListView),
-    path('propositions/doctorate/<uuid:uuid>/course-enrollment', views.CourseEnrollmentListView),
+    path('doctorate/<uuid:uuid>/training/config', views.TrainingConfigView),
+    path('doctorate/<uuid:uuid>/doctoral-training', views.DoctoralTrainingListView),
+    path('doctorate/<uuid:uuid>/training/submit', views.TrainingSubmitView),
+    path('doctorate/<uuid:uuid>/training/assent', views.TrainingAssentView),
+    path('doctorate/<uuid:uuid>/training/<uuid:activity_id>', views.TrainingView),
+    path('doctorate/<uuid:uuid>/complementary-training', views.ComplementaryTrainingListView),
+    path('doctorate/<uuid:uuid>/course-enrollment', views.CourseEnrollmentListView),
 ]

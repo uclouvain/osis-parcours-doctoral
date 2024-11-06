@@ -43,7 +43,7 @@ __all__ = [
 
 class ConfirmationDetailView(ParcoursDoctoralViewMixin, TemplateView):
     template_name = 'parcours_doctoral/details/confirmation.html'
-    permission_required = 'admission.view_admission_confirmation'
+    permission_required = 'parcours_doctoral.view_admission_confirmation'
     mandatory_fields_for_evaluation = [
         'date',
         'proces_verbal_ca',

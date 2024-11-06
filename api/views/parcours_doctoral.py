@@ -23,17 +23,33 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from typing import List
+
+from django.db.models import Prefetch
+from osis_signature.models import Actor
 from rest_framework import mixins
-from rest_framework.generics import GenericAPIView
+from rest_framework.generics import GenericAPIView, ListAPIView
 from rest_framework.response import Response
 
-from parcours_doctoral.api import serializers
-from parcours_doctoral.api.schema import ResponseSpecificSchema
-
-from parcours_doctoral.utils import get_cached_parcours_doctoral_perm_obj
 from infrastructure.messages_bus import message_bus_instance
 from osis_role.contrib.views import APIPermissionRequiredMixin
-from parcours_doctoral.ddd.commands import RecupererParcoursDoctoralQuery
+from parcours_doctoral.api import serializers
+from parcours_doctoral.api.permissions import IsSupervisionMember, IsPhDStudent
+from parcours_doctoral.api.schema import ResponseSpecificSchema
+from parcours_doctoral.ddd.commands import (
+    RecupererParcoursDoctoralQuery,
+    ListerParcoursDoctorauxDoctorantQuery,
+    ListerParcoursDoctorauxSupervisesQuery,
+)
+from parcours_doctoral.ddd.dtos import ParcoursDoctoralRechercheDTO
+from parcours_doctoral.models import ParcoursDoctoral
+from parcours_doctoral.utils import get_cached_parcours_doctoral_perm_obj
+
+__all__ = [
+    "DoctorateAPIView",
+    "DoctorateListView",
+    "SupervisedDoctorateListView",
+]
 
 
 class DoctorateSchema(ResponseSpecificSchema):
@@ -52,7 +68,7 @@ class DoctorateAPIView(
     filter_backends = []
     schema = DoctorateSchema()
     permission_mapping = {
-        'GET': 'admission.view_doctorateadmission',
+        'GET': 'parcours_doctoral.view_parcours_doctoral',
     }
 
     def get_permission_object(self):
@@ -68,3 +84,84 @@ class DoctorateAPIView(
             context=self.get_serializer_context(),
         )
         return Response(serializer.data)
+
+
+class BaseListView(APIPermissionRequiredMixin, ListAPIView):
+    name = "list"
+    pagination_class = None
+    filter_backends = []
+    serializer_class = serializers.ParcoursDoctoralRechercheDTOSerializer
+
+    def doctorate_list(self, request) -> List[ParcoursDoctoralRechercheDTO]:
+        raise NotImplementedError
+
+    def permission_object_qs(self, doctorate_list: List[ParcoursDoctoralRechercheDTO]):
+        return ParcoursDoctoral.objects.select_related(
+            'student',
+            'training',
+        ).filter(uuid__in=[doctorate.uuid for doctorate in doctorate_list])
+
+    def list(self, request, **kwargs):
+        doctorate_list = self.doctorate_list(request)
+
+        # Add a _perm_obj to each instance to optimize permission check performance
+        permission_object_qs = self.permission_object_qs(doctorate_list=doctorate_list).in_bulk(field_name='uuid')
+
+        for doctorate in doctorate_list:
+            doctorate._perm_obj = permission_object_qs[doctorate.uuid]
+
+        serializer = serializers.ParcoursDoctoralRechercheDTOSerializer(
+            instance=doctorate_list,
+            context=self.get_serializer_context(),
+            many=True,
+        )
+
+        return Response(serializer.data)
+
+
+class DoctorateListSchema(ResponseSpecificSchema):
+    operation_id_base = '_doctorates'
+    serializer_mapping = {
+        'GET': serializers.ParcoursDoctoralRechercheDTOSerializer,
+    }
+
+
+class DoctorateListView(BaseListView):
+    name = "list"
+    schema = DoctorateListSchema()
+    permission_mapping = {
+        'GET': 'parcours_doctoral.view_list',
+    }
+
+    def doctorate_list(self, request):
+        """List the PhDs of the logged-in user."""
+        return message_bus_instance.invoke(
+            ListerParcoursDoctorauxDoctorantQuery(matricule_doctorant=request.user.person.global_id),
+        )
+
+
+class SupervisedDoctorateListSchema(DoctorateListSchema):
+    operation_id_base = '_supervised_doctorates'
+
+
+class SupervisedDoctorateListView(BaseListView):
+    name = "supervised_list"
+    schema = SupervisedDoctorateListSchema()
+    permission_classes = [IsSupervisionMember]
+    permission_mapping = {
+        'GET': 'parcours_doctoral.view_supervised_list',
+    }
+
+    def permission_object_qs(self, doctorate_list):
+        qs = super().permission_object_qs(doctorate_list)
+        return qs.select_related(
+            'supervision_group',
+        ).prefetch_related(
+            Prefetch('supervision_group__actors', Actor.objects.select_related('supervisionactor').all())
+        )
+
+    def doctorate_list(self, request):
+        """List the supervised PhDs of the logged-in user."""
+        return message_bus_instance.invoke(
+            ListerParcoursDoctorauxSupervisesQuery(matricule_membre=request.user.person.global_id),
+        )

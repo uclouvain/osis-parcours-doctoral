@@ -25,10 +25,11 @@
 # ##############################################################################
 
 import abc
+from typing import List
 
 from admission.ddd.admission.repository.i_proposition import IGlobalPropositionRepository
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoral, ParcoursDoctoralIdentity
-from parcours_doctoral.ddd.dtos import ParcoursDoctoralDTO
+from parcours_doctoral.ddd.dtos import ParcoursDoctoralDTO, ParcoursDoctoralRechercheDTO
 
 
 class IParcoursDoctoralRepository(IGlobalPropositionRepository):
@@ -50,4 +51,13 @@ class IParcoursDoctoralRepository(IGlobalPropositionRepository):
     @classmethod
     @abc.abstractmethod
     def get_dto(cls, entity_id: 'ParcoursDoctoralIdentity') -> 'ParcoursDoctoralDTO':  # type: ignore[override]
+        raise NotImplementedError
+
+    @classmethod
+    @abc.abstractmethod
+    def search_dto(
+        cls,
+        matricule_doctorant: str = None,
+        matricule_membre: str = None,
+    ) -> List['ParcoursDoctoralRechercheDTO']:
         raise NotImplementedError

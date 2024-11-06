@@ -162,3 +162,14 @@ class Historique(IHistorique):
             "{auteur.prenom} {auteur.nom}".format(auteur=auteur),
             tags=["parcours_doctoral", "supervision"],
         )
+
+    @classmethod
+    def historiser_completion_projet(cls, parcours_doctoral: ParcoursDoctoral, matricule_auteur: str):
+        auteur = PersonneConnueUclTranslator().get(matricule_auteur)
+        add_history_entry(
+            parcours_doctoral.entity_id.uuid,
+            "Le parcours doctoral a été modifié (Projet de recherche).",
+            "The doctoral training has been completed (Research project).",
+            "{auteur.prenom} {auteur.nom}".format(auteur=auteur),
+            tags=["parcours_doctoral", "modification"],
+        )

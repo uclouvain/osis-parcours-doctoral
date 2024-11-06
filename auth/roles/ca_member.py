@@ -24,7 +24,7 @@
 #
 # ##############################################################################
 from django.utils.translation import gettext_lazy as _
-from rules import RuleSet
+from rules import RuleSet, always_allow
 
 from osis_role.contrib.models import RoleModel
 from parcours_doctoral.auth.predicates.parcours_doctoral import is_part_of_committee
@@ -46,6 +46,7 @@ class CommitteeMember(RoleModel):
     @classmethod
     def rule_set(cls):
         ruleset = {
+            'parcours_doctoral.view_supervised_list': always_allow,
             # A ca member can view as long as he belongs to the committee
             'parcours_doctoral.view_parcours_doctoral': is_part_of_committee,
             'parcours_doctoral.view_parcours_doctoral_project': is_part_of_committee,

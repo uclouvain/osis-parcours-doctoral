@@ -56,9 +56,9 @@ class TestRecupererDoctorat(TestCase):
 
         self.assertEqual(parcours_doctoral_dto.statut, ChoixStatutParcoursDoctoral.ADMITTED.name)
 
-        self.assertEqual(parcours_doctoral_dto.sigle_formation, 'SC3DP')
-        self.assertEqual(parcours_doctoral_dto.annee_formation, 2022)
-        self.assertEqual(parcours_doctoral_dto.intitule_formation, 'Doctorat en sciences')
+        self.assertEqual(parcours_doctoral_dto.formation.sigle, 'SC3DP')
+        self.assertEqual(parcours_doctoral_dto.formation.annee, 2022)
+        self.assertEqual(parcours_doctoral_dto.formation.intitule, 'Doctorat en sciences')
 
         self.assertEqual(parcours_doctoral_dto.matricule_doctorant, '3')
         self.assertEqual(parcours_doctoral_dto.nom_doctorant, 'Dupond'),

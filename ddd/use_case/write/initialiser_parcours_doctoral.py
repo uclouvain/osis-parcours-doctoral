@@ -23,6 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoralIdentity
 from parcours_doctoral.ddd.repository.i_groupe_de_supervision import \
     IGroupeDeSupervisionRepository
 from admission.ddd.admission.doctorat.validation.domain.service.proposition_identity import \
@@ -44,7 +45,8 @@ def initialiser_parcours_doctoral(
     parcours_doctoral_service: 'IParcoursDoctoralService',
     historique: 'IHistorique',
 ) -> 'ParcoursDoctoralIdentity':
-    proposition_id = PropositionIdentityTranslator.convertir_depuis_demande(cmd.proposition_uuid)
+    proposition_id = ParcoursDoctoralIdentity(uuid=cmd.proposition_uuid)
+
     proposition = proposition_repository.get(entity_id=proposition_id)
 
     # WHEN

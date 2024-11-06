@@ -28,10 +28,12 @@ from typing import List
 from attr import dataclass
 
 from admission.ddd.admission.doctorat.validation.domain.model.enums import ChoixGenre
+from parcours_doctoral.ddd.domain.model.enums import ChoixTypeFinancement
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoral, ParcoursDoctoralIdentity
 from parcours_doctoral.ddd.domain.validator.exceptions import ParcoursDoctoralNonTrouveException
-from parcours_doctoral.ddd.dtos import ParcoursDoctoralDTO
-from parcours_doctoral.ddd.dtos.parcours_doctoral import ProjetDTO, CotutelleDTO
+from parcours_doctoral.ddd.dtos import ParcoursDoctoralDTO, FormationDTO
+from parcours_doctoral.ddd.dtos.parcours_doctoral import ProjetDTO, CotutelleDTO, FinancementDTO
+from parcours_doctoral.ddd.dtos import ParcoursDoctoralRechercheDTO
 from parcours_doctoral.ddd.epreuve_confirmation.domain.model.epreuve_confirmation import (
     EpreuveConfirmation,
 )
@@ -95,8 +97,8 @@ class ParcoursDoctoralInMemoryRepository(InMemoryGenericRepository, IParcoursDoc
         doctorant = next(d for d in cls.doctorants if d.matricule == parcours_doctoral.matricule_doctorant)  # pragma: no branch
         formation = next(f for f in cls.formations if f.sigle == parcours_doctoral.formation_id.sigle)  # pragma: no branch
         bourse_recherche_dto = (
-            BourseInMemoryTranslator.get_dto(uuid=str(parcours_doctoral.bourse_recherche.uuid))
-            if parcours_doctoral.bourse_recherche
+            BourseInMemoryTranslator.get_dto(uuid=str(parcours_doctoral.financement.bourse_recherche.uuid))
+            if parcours_doctoral.financement.bourse_recherche
             else None
         )
 
@@ -107,13 +109,34 @@ class ParcoursDoctoralInMemoryRepository(InMemoryGenericRepository, IParcoursDoc
             matricule_doctorant=parcours_doctoral.matricule_doctorant,
             nom_doctorant=doctorant.nom,
             prenom_doctorant=doctorant.prenom,
-            annee_formation=formation.annee,
-            sigle_formation=formation.sigle,
-            intitule_formation=formation.intitule,
-            titre_these='',
-            type_financement='',
-            bourse_recherche=bourse_recherche_dto,
-            autre_bourse_recherche=parcours_doctoral.autre_bourse_recherche,
+            formation=FormationDTO(
+                annee=formation.annee,
+                sigle=formation.sigle,
+                intitule=formation.intitule,
+                code='',
+                intitule_fr=formation.intitule,
+                intitule_en='',
+                sigle_entite_gestion='',
+                intitule_entite_gestion='',
+                campus=None,
+                type='',
+                code_secteur='',
+                intitule_secteur='',
+            ),
+            financement=FinancementDTO(
+                type=ChoixTypeFinancement[parcours_doctoral.financement.type] if parcours_doctoral.financement.type else None,
+                type_contrat_travail=parcours_doctoral.financement.type_contrat_travail,
+                eft=parcours_doctoral.financement.eft,
+                bourse_recherche=bourse_recherche_dto,
+                autre_bourse_recherche=parcours_doctoral.financement.autre_bourse_recherche,
+                bourse_date_debut=parcours_doctoral.financement.bourse_date_debut,
+                bourse_date_fin=parcours_doctoral.financement.bourse_date_fin,
+                bourse_preuve=parcours_doctoral.financement.bourse_preuve,
+                duree_prevue=parcours_doctoral.financement.duree_prevue,
+                temps_consacre=parcours_doctoral.financement.temps_consacre,
+                est_lie_fnrs_fria_fresh_csc=parcours_doctoral.financement.est_lie_fnrs_fria_fresh_csc,
+                commentaire=parcours_doctoral.financement.commentaire,
+            ),
             noma_doctorant=doctorant.noma,
             genre_doctorant=doctorant.genre.name,
             projet=ProjetDTO(
@@ -149,3 +172,11 @@ class ParcoursDoctoralInMemoryRepository(InMemoryGenericRepository, IParcoursDoc
             ParcoursDoctoralSC3DPAvecPromoteurRefuseEtMembreCADejaApprouveFactoryRejeteeCDDFactory(),
             ParcoursDoctoralSC3DPAvecPromoteursEtMembresCADejaApprouvesFactory(),
         ]
+
+    @classmethod
+    def search_dto(
+        cls,
+        matricule_doctorant: str = None,
+        matricule_membre: str = None,
+    ) -> List['ParcoursDoctoralRechercheDTO']:
+        return []

@@ -98,7 +98,7 @@ class TrainingActivityFormMixin(AdmissionFormMixin, ParcoursDoctoralViewMixin):
         return self.request.resolver_match.namespaces[2]
 
     def get_permission_required(self):
-        return ["admission.change_activity", f"admission.view_{self.namespace.replace('-', '_')}"]
+        return ["parcours_doctoral.change_activity", f"parcours_doctoral.view_{self.namespace.replace('-', '_')}"]
 
     @property
     def category(self) -> str:
@@ -175,8 +175,8 @@ class TrainingActivityDeleteView(AdmissionFormMixin, ParcoursDoctoralViewMixin, 
 
     def get_permission_required(self):
         return [
-            "admission.delete_activity",
-            f"admission.view_{self.request.resolver_match.namespaces[2].replace('-', '_')}",
+            "parcours_doctoral.delete_activity",
+            f"parcours_doctoral.view_{self.request.resolver_match.namespaces[2].replace('-', '_')}",
         ]
 
     def delete(self, request, *args, **kwargs):
@@ -206,7 +206,7 @@ class TrainingActivityActionFormMixin(AdmissionFormMixin, ParcoursDoctoralViewMi
     def get_permission_required(self):
         return [
             self.permission_required,
-            f"admission.view_{self.request.resolver_match.namespaces[2].replace('-', '_')}",
+            f"parcours_doctoral.view_{self.request.resolver_match.namespaces[2].replace('-', '_')}",
         ]
 
     @property
@@ -221,7 +221,7 @@ class TrainingActivityActionFormMixin(AdmissionFormMixin, ParcoursDoctoralViewMi
 
 class TrainingActivityRefuseView(TrainingActivityActionFormMixin, generic.FormView):
     urlpatterns = {'refuse': 'refuse/<uuid:activity_id>'}
-    permission_required = "admission.refuse_activity"
+    permission_required = "parcours_doctoral.refuse_activity"
     template_name = "parcours_doctoral/forms/training/activity_refuse.html"
     form_class = RefuseForm
     avec_modification = False
@@ -246,7 +246,7 @@ class TrainingActivityRequireChangesView(TrainingActivityRefuseView):
 
 class TrainingActivityRestoreView(TrainingActivityActionFormMixin, generic.FormView):
     urlpatterns = {'restore': 'restore/<uuid:activity_id>'}
-    permission_required = "admission.restore_activity"
+    permission_required = "parcours_doctoral.restore_activity"
     template_name = "parcours_doctoral/forms/training/activity_restore.html"
     form_class = Form
 

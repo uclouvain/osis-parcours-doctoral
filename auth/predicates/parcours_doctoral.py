@@ -44,19 +44,19 @@ def is_parcours_doctoral_student(self, user: User, obj: ParcoursDoctoral):
 @predicate(bind=True)
 @predicate_failed_msg(message=_("The jury is not in progress"))
 def is_jury_in_progress(self, user: User, obj: ParcoursDoctoral):
-    return obj.post_enrolment_status == ChoixStatutParcoursDoctoral.PASSED_CONFIRMATION.name
+    return obj.status == ChoixStatutParcoursDoctoral.PASSED_CONFIRMATION.name
 
 
 @predicate(bind=True)
 @predicate_failed_msg(message=_("The confirmation paper is not in progress"))
 def submitted_confirmation_paper(self, user: User, obj: ParcoursDoctoral):
-    return obj.post_enrolment_status == ChoixStatutParcoursDoctoral.SUBMITTED_CONFIRMATION.name
+    return obj.status == ChoixStatutParcoursDoctoral.SUBMITTED_CONFIRMATION.name
 
 
 @predicate(bind=True)
 @predicate_failed_msg(message=_("The confirmation paper is not in progress"))
 def confirmation_paper_in_progress(self, user: User, obj: ParcoursDoctoral):
-    return obj.post_enrolment_status in STATUTS_DOCTORAT_EPREUVE_CONFIRMATION_EN_COURS
+    return obj.status in STATUTS_DOCTORAT_EPREUVE_CONFIRMATION_EN_COURS
 
 
 @predicate(bind=True)

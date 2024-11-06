@@ -76,14 +76,14 @@ class PredicatesTestCase(TestCase):
         ]
 
         for status in valid_status:
-            parcours_doctoral.post_enrolment_status = status
+            parcours_doctoral.status = status
             self.assertTrue(
                 parcours_doctoral_predicates.confirmation_paper_in_progress(parcours_doctoral.student.user, parcours_doctoral),
                 'This status must be accepted: {}'.format(status),
             )
 
         for status in invalid_status:
-            parcours_doctoral.post_enrolment_status = status
+            parcours_doctoral.status = status
             self.assertFalse(
                 parcours_doctoral_predicates.confirmation_paper_in_progress(parcours_doctoral.student.user, parcours_doctoral),
                 'This status must not be accepted: {}'.format(status),
