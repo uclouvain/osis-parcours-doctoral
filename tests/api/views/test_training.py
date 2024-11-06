@@ -77,7 +77,6 @@ class TrainingApiTestCase(QueriesAssertionsMixin, APITestCase):
         cls.reference_promoter = PromoterFactory(is_reference_promoter=True)
         cls.parcours_doctoral = ParcoursDoctoralFactory(
             training__management_entity=cls.commission,
-            admitted=True,
             supervision_group=cls.reference_promoter.process,
         )
         cls.candidate = cls.parcours_doctoral.candidate

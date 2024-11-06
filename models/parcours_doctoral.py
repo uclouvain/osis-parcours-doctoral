@@ -52,6 +52,12 @@ class ParcoursDoctoral(models.Model):
         unique=True,
         db_index=True,
     )
+    admission = models.ForeignKey(
+        to="admission.DoctorateAdmission",
+        verbose_name=pgettext_lazy("parcours_doctoral", "Admission"),
+        related_name="+",
+        on_delete=models.PROTECT,
+    )
 
     created_at = models.DateTimeField(verbose_name=_('Created'), auto_now_add=True)
     modified_at = models.DateTimeField(verbose_name=_('Modified'), auto_now=True)
@@ -76,15 +82,6 @@ class ParcoursDoctoral(models.Model):
         max_length=30,
         default=ChoixStatutParcoursDoctoral.ADMITTED.name,
         verbose_name=_("Post-enrolment status"),
-    )
-
-    last_update_author = models.ForeignKey(
-        to="base.Person",
-        verbose_name=_("Last update author"),
-        on_delete=models.SET_NULL,
-        related_name='+',
-        null=True,
-        blank=True,
     )
 
     # Projet

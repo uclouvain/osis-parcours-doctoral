@@ -27,19 +27,16 @@ from typing import Dict
 
 from django.db import transaction
 from osis_document.api.utils import documents_remote_duplicate
-from osis_signature.models import Process
+from osis_signature.enums import SignatureState
+from osis_signature.models import Process, StateHistory
 
 from admission.ddd.admission.doctorat.preparation.domain.model.proposition import Proposition
-from admission.models import DoctorateAdmission, SupervisionActor as AdmissionSupervisionActor
+from admission.models import DoctorateAdmission
 from admission.models.enums.actor_type import ActorType as AdmissionActorType
 from parcours_doctoral.auth.roles.ca_member import CommitteeMember
 from parcours_doctoral.auth.roles.promoter import Promoter
 from parcours_doctoral.auth.roles.student import Student
-from parcours_doctoral.ddd.domain.model._cotutelle import Cotutelle
-from parcours_doctoral.ddd.domain.model._formation import FormationIdentity
-from parcours_doctoral.ddd.domain.model._projet import Projet
-from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoral, ParcoursDoctoralIdentity
-from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
+from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoralIdentity
 from parcours_doctoral.ddd.domain.service.i_parcours_doctoral import IParcoursDoctoralService
 from parcours_doctoral.models.actor import SupervisionActor
 from parcours_doctoral.models.parcours_doctoral import ParcoursDoctoral as ParcoursDoctoralModel
@@ -62,8 +59,9 @@ class ParcoursDoctoralService(IParcoursDoctoralService):
     def _duplicate_supervision_group(cls, admission: DoctorateAdmission) -> Process:
         process = Process.objects.create()
         actors = []
+        states = []
         for admission_actor in admission.supervision_group.actors.all():
-            actors.append(SupervisionActor(
+            actor = SupervisionActor(
                 process=process,
                 person=admission_actor.person,
                 first_name=admission_actor.first_name,
@@ -73,17 +71,18 @@ class ParcoursDoctoralService(IParcoursDoctoralService):
                 city=admission_actor.city,
                 country=admission_actor.country,
                 language=admission_actor.language,
-                comment=admission_actor.comment,
                 type=admission_actor.type,
                 is_doctor=admission_actor.is_doctor,
-                internal_comment=admission_actor.internal_comment,
                 is_reference_promoter=admission_actor.is_reference_promoter,
                 # # TODO À dupliquer ?
+                # internal_comment=admission_actor.internal_comment,
+                # comment=admission_actor.comment,
                 # pdf_from_candidate
-            ))
+            )
+            actors.append(actor)
+            states.append(StateHistory(actor=actor, state=SignatureState.APPROVED.name))
         SupervisionActor.objects.bulk_create(actors)
-        # TODO Mettre APPROVED ? created_at avec auto_now_add à modifier sinon.
-        # StateHistory.objects.create()
+        StateHistory.objects.bulk_create(states)
         return process
 
     @classmethod
@@ -128,6 +127,7 @@ class ParcoursDoctoralService(IParcoursDoctoralService):
         cls._duplicate_roles(admission)
 
         parcours_doctoral = ParcoursDoctoralModel.objects.create(
+            admission=admission,
             student=admission.student,
             training=admission.training,
             status=admission.status,

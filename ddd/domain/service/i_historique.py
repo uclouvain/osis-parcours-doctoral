@@ -25,7 +25,7 @@
 # ##############################################################################
 from email.message import EmailMessage
 
-from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoral
+from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoral, ParcoursDoctoralIdentity
 from osis_common.ddd import interface
 
 

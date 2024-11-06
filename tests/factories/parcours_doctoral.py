@@ -40,6 +40,7 @@ from admission.ddd.admission.doctorat.preparation.domain.model.enums.checklist i
     ChoixStatutChecklist,
     OngletsChecklist,
 )
+from admission.tests.factories import DoctorateAdmissionFactory
 from admission.tests.factories.accounting import AccountingFactory
 from admission.tests.factories.roles import CandidateFactory
 from admission.tests.factories.utils import generate_proposition_reference
@@ -91,7 +92,8 @@ class ParcoursDoctoralFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = ParcoursDoctoral
 
-    candidate = factory.SubFactory(PersonFactory)
+    student = factory.SubFactory(PersonFactory)
+    admission = factory.SubFactory(DoctorateAdmissionFactory, admitted=True)
     training = factory.SubFactory(
         FormationFactory,
         enrollment_campus__name='Mons',
@@ -102,14 +104,13 @@ class ParcoursDoctoralFactory(factory.django.DjangoModelFactory):
     project_abstract = 'Test'
     project_document = factory.LazyFunction(lambda: [uuid.uuid4()])
     program_proposition = factory.LazyFunction(lambda: [uuid.uuid4()])
-    scholarship_proof = factory.LazyFunction(lambda: [uuid.uuid4()])
     additional_training_project = factory.LazyFunction(lambda: [uuid.uuid4()])
     gantt_graph = factory.LazyFunction(lambda: [uuid.uuid4()])
     recommendation_letters = factory.LazyFunction(lambda: [uuid.uuid4()])
 
     @factory.post_generation
     def create_student(self, create, extracted, **kwargs):
-        StudentFactory(person=self.candidate)
+        StudentFactory(person=self.student)
 
     class Params:
         with_cotutelle = factory.Trait(

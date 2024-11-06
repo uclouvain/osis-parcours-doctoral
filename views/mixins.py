@@ -99,7 +99,6 @@ class ParcoursDoctoralViewMixin(LoginRequiredMixin, PermissionRequiredMixin, Con
 class ParcoursDoctoralFormMixin(ParcoursDoctoralViewMixin):
     message_on_success = _('Your data have been saved.')
     message_on_failure = _('Some errors have been encountered.')
-    update_parcours_doctoral_author = False
     default_htmx_trigger_form_extra = {}
     close_modal_on_htmx_request = True
 
@@ -127,15 +126,6 @@ class ParcoursDoctoralFormMixin(ParcoursDoctoralViewMixin):
 
     def form_valid(self, form):
         messages.success(self.request, str(self.message_on_success))
-
-        # Update the last update author of the admission
-        author = getattr(self.request.user, 'person')
-        if self.update_parcours_doctoral_author and author:
-            admission = ParcoursDoctoral.objects.get(uuid=self.parcours_doctoral_uuid)
-            admission.last_update_author = author
-            # Additional updates if needed
-            self.update_current_admission_on_form_valid(form, admission)
-            admission.save()
 
         if self.request.htmx:
             self.htmx_trigger_form(is_valid=True)
