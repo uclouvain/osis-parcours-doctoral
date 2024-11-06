@@ -88,3 +88,8 @@ class IHistorique(interface.DomainService):
         matricule_auteur: str,
     ):
         raise NotImplementedError
+
+    @classmethod
+    @abstractmethod
+    def historiser_completion_projet(cls, parcours_doctoral: ParcoursDoctoral, matricule_auteur: str):
+        raise NotImplementedError

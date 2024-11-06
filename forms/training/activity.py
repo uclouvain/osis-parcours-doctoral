@@ -660,8 +660,6 @@ class UclCourseForm(ActivityFormMixin, forms.ModelForm):
         self.fields['learning_unit_year'].required = True
         # Filter out disabled contexts
         choices = dict(self.fields['context'].widget.choices)
-        if parcours_doctoral.type == ChoixTypeAdmission.PRE_ADMISSION.name:
-            del choices[ContexteFormation.DOCTORAL_TRAINING.name]
         if not parcours_doctoral.training.management_entity.admission_config.is_complementary_training_enabled:
             del choices[ContexteFormation.COMPLEMENTARY_TRAINING.name]
         self.fields['context'].widget.choices = list(choices.items())

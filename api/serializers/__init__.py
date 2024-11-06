@@ -26,5 +26,7 @@
 
 from .activity import *
 from .confirmation import *
+from .dashboard import *
 from .jury import *
 from .parcours_doctoral import *
+from .funding import *

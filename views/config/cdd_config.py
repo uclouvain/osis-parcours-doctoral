@@ -44,7 +44,7 @@ __all__ = [
 class CddConfigListView(PermissionRequiredMixin, generic.ListView):
     urlpatterns = {'list': ''}
     template_name = 'parcours_doctoral/config/cdd_config_list.html'
-    permission_required = 'admission.change_cddconfiguration'
+    permission_required = 'parcours_doctoral.change_cddconfiguration'
 
     def get_queryset(self):
         managed_cdds = (
@@ -68,7 +68,7 @@ class CddConfigListView(PermissionRequiredMixin, generic.ListView):
 class CddConfigChangeView(PermissionRequiredMixin, SuccessMessageMixin, generic.UpdateView):
     urlpatterns = {'edit': 'edit/<int:pk>'}
     template_name = 'parcours_doctoral/config/cdd_config_edit.html'
-    permission_required = 'admission.change_cddconfiguration'
+    permission_required = 'parcours_doctoral.change_cddconfiguration'
     model = CddConfiguration
     form_class = CddConfigForm
     success_message = _("Configuration saved.")

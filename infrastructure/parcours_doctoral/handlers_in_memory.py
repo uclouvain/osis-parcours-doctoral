@@ -23,19 +23,25 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from admission.infrastructure.admission.doctorat.preparation.repository.in_memory.groupe_de_supervision import \
-    GroupeDeSupervisionInMemoryRepository
-from admission.infrastructure.admission.doctorat.preparation.repository.in_memory.proposition import \
-    PropositionInMemoryRepository
+from admission.infrastructure.admission.doctorat.preparation.repository.in_memory.groupe_de_supervision import (
+    GroupeDeSupervisionInMemoryRepository,
+)
+from admission.infrastructure.admission.doctorat.preparation.repository.in_memory.proposition import (
+    PropositionInMemoryRepository,
+)
 from parcours_doctoral.ddd.commands import *
 from parcours_doctoral.ddd.use_case.read import *
 from parcours_doctoral.ddd.use_case.write import *
-from parcours_doctoral.ddd.use_case.write.initialiser_parcours_doctoral import initialiser_parcours_doctoral
 from parcours_doctoral.infrastructure.parcours_doctoral.domain.service.in_memory.historique import HistoriqueInMemory
-from parcours_doctoral.infrastructure.parcours_doctoral.domain.service.in_memory.notification import NotificationInMemory
-from parcours_doctoral.infrastructure.parcours_doctoral.epreuve_confirmation.repository.in_memory.epreuve_confirmation import \
-    EpreuveConfirmationInMemoryRepository
-from parcours_doctoral.infrastructure.parcours_doctoral.repository.in_memory.parcours_doctoral import ParcoursDoctoralInMemoryRepository
+from parcours_doctoral.infrastructure.parcours_doctoral.domain.service.in_memory.notification import (
+    NotificationInMemory,
+)
+from parcours_doctoral.infrastructure.parcours_doctoral.epreuve_confirmation.repository.in_memory.epreuve_confirmation import (
+    EpreuveConfirmationInMemoryRepository,
+)
+from parcours_doctoral.infrastructure.parcours_doctoral.repository.in_memory.parcours_doctoral import (
+    ParcoursDoctoralInMemoryRepository,
+)
 
 _parcours_doctoral_repository = ParcoursDoctoralInMemoryRepository()
 _epreuve_confirmation_repository = EpreuveConfirmationInMemoryRepository()
@@ -62,6 +68,24 @@ COMMAND_HANDLERS = {
         parcours_doctoral_repository=_parcours_doctoral_repository,
         groupe_de_supervision_repository=_groupe_de_supervision_repository,
         epreuve_confirmation_repository=_epreuve_confirmation_repository,
+        historique=_historique,
+    ),
+    ListerParcoursDoctorauxDoctorantQuery: lambda msg_bus, cmd: lister_parcours_doctoraux_doctorant(
+        cmd,
+        parcours_doctoral_repository=_parcours_doctoral_repository,
+    ),
+    ListerParcoursDoctorauxSupervisesQuery: lambda msg_bus, cmd: lister_parcours_doctoraux_supervises(
+        cmd,
+        parcours_doctoral_repository=_parcours_doctoral_repository,
+    ),
+    ModifierProjetCommand: lambda msg_bus, cmd: modifier_projet(
+        cmd,
+        parcours_doctoral_repository=_parcours_doctoral_repository,
+        historique=_historique,
+    ),
+    ModifierFinancementCommand: lambda msg_bus, cmd: modifier_financement(
+        cmd,
+        parcours_doctoral_repository=_parcours_doctoral_repository,
         historique=_historique,
     ),
 }

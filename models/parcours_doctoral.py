@@ -64,7 +64,7 @@ class ParcoursDoctoral(models.Model):
 
     student = models.ForeignKey(
         to="base.Person",
-        verbose_name=_("Candidate"),
+        verbose_name=_("Student"),
         related_name="%(class)ss",
         on_delete=models.PROTECT,
         editable=False,
@@ -81,7 +81,7 @@ class ParcoursDoctoral(models.Model):
         choices=ChoixStatutParcoursDoctoral.choices(),
         max_length=30,
         default=ChoixStatutParcoursDoctoral.ADMITTED.name,
-        verbose_name=_("Post-enrolment status"),
+        verbose_name=_("Status"),
     )
 
     # Projet
@@ -273,7 +273,7 @@ class ParcoursDoctoral(models.Model):
         upload_to=parcours_doctoral_directory_path,
     )
 
-    # Financement (for confirmation paper)
+    # Financement
     financing_type = models.CharField(
         max_length=255,
         verbose_name=_("Funding type"),
@@ -293,6 +293,51 @@ class ParcoursDoctoral(models.Model):
         related_name="+",
         on_delete=models.PROTECT,
         null=True,
+        blank=True,
+    )
+    financing_work_contract = models.CharField(
+        max_length=255,
+        verbose_name=_("Working contract type"),
+        default='',
+        blank=True,
+    )
+    financing_eft = models.PositiveSmallIntegerField(
+        verbose_name=_("EFT"),
+        blank=True,
+        null=True,
+    )
+    scholarship_start_date = models.DateField(
+        verbose_name=_("Scholarship start date"),
+        null=True,
+        blank=True,
+    )
+    scholarship_end_date = models.DateField(
+        verbose_name=_("Scholarship end date"),
+        null=True,
+        blank=True,
+    )
+    scholarship_proof = FileField(
+        verbose_name=_("Proof of scholarship"),
+        upload_to=parcours_doctoral_directory_path,
+    )
+    planned_duration = models.PositiveSmallIntegerField(
+        verbose_name=_("Planned duration"),
+        blank=True,
+        null=True,
+    )
+    dedicated_time = models.PositiveSmallIntegerField(
+        verbose_name=_("Dedicated time (in EFT)"),
+        blank=True,
+        null=True,
+    )
+    is_fnrs_fria_fresh_csc_linked = models.BooleanField(
+        verbose_name=_("Is your admission request linked with a FNRS, FRIA, FRESH or CSC application?"),
+        null=True,
+        blank=True,
+    )
+    financing_comment = models.TextField(
+        verbose_name=_("Financing comment"),
+        default='',
         blank=True,
     )
 

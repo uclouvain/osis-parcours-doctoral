@@ -23,6 +23,8 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from .campus import CampusDTO
+from .formation import FormationDTO, EntiteGestionDTO
 from .groupe_supervision import (
     AvisDTO,
     CotutelleDTO,
@@ -32,15 +34,19 @@ from .groupe_supervision import (
     MembreCADTO,
     PromoteurDTO,
 )
-from .parcours_doctoral import ParcoursDoctoralDTO
+from .parcours_doctoral import ParcoursDoctoralDTO, ParcoursDoctoralRechercheDTO
 
 __all__ = [
     'AvisDTO',
+    'CampusDTO',
     'CotutelleDTO',
     'DetailSignatureMembreCADTO',
     'DetailSignaturePromoteurDTO',
+    'EntiteGestionDTO',
+    'FormationDTO',
     'GroupeDeSupervisionDTO',
     'MembreCADTO',
     'ParcoursDoctoralDTO',
+    'ParcoursDoctoralRechercheDTO',
     'PromoteurDTO',
 ]

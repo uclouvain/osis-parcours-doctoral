@@ -104,10 +104,6 @@
     </span>
   </div>
   <div class="min-width">
-    {% if admission.type_admission == 'PRE_ADMISSION' %}
-      <span class="bold-text">{{ admission.type_admission|enum_display:'ChoixTypeAdmission' }}</span>
-      <br>
-    {% endif %}
     {% include 'parcours_doctoral/includes/admission_status.html' with display_on_load=True %}
     <br>
     {% if admission.soumise_le %}
@@ -126,13 +122,13 @@
       </span>
       <br>
     {% endif %}
-    {% if admission.type_financement == 'SEARCH_SCHOLARSHIP' %}
-      {% if admission.bourse_recherche %}
+    {% if admission.financement.type == 'SEARCH_SCHOLARSHIP' %}
+      {% if admission.financement.bourse_recherche %}
         <span
             class="label label-success"
-            title="{{ admission.bourse_recherche }}"
+            title="{{ admission.financement.bourse_recherche }}"
         >
-        {{ admission.bourse_recherche.nom_court }}
+        {{ admission.financement.bourse_recherche.nom_court }}
         </span>
       {% else %}
         <span class="label label-success">{% translate 'Scholarship' %}</span>

@@ -73,7 +73,7 @@ class ConfirmationAPIView(APIPermissionRequiredMixin, GenericAPIView):
     pagination_class = None
     filter_backends = []
     permission_mapping = {
-        'GET': 'admission.view_admission_confirmation',
+        'GET': 'parcours_doctoral.view_admission_confirmation',
     }
 
     def get_permission_object(self):
@@ -116,9 +116,9 @@ class LastConfirmationAPIView(APIPermissionRequiredMixin, mixins.RetrieveModelMi
     schema = LastConfirmationSchema()
     filter_backends = []
     permission_mapping = {
-        'GET': 'admission.view_admission_confirmation',
-        'PUT': 'admission.change_admission_confirmation',
-        'POST': 'admission.change_admission_confirmation_extension',
+        'GET': 'parcours_doctoral.view_admission_confirmation',
+        'PUT': 'parcours_doctoral.change_admission_confirmation',
+        'POST': 'parcours_doctoral.change_admission_confirmation_extension',
     }
 
     def get_permission_object(self):
@@ -187,7 +187,7 @@ class LastConfirmationCanvasAPIView(APIPermissionRequiredMixin, mixins.RetrieveM
     schema = LastConfirmationCanvasSchema()
     filter_backends = []
     permission_mapping = {
-        'GET': 'admission.view_admission_confirmation',
+        'GET': 'parcours_doctoral.view_admission_confirmation',
     }
 
     def get_permission_object(self):
@@ -244,7 +244,7 @@ class SupervisedConfirmationAPIView(
     pagination_class = None
     filter_backends = []
     permission_mapping = {
-        'PUT': 'admission.upload_pdf_confirmation',
+        'PUT': 'parcours_doctoral.upload_pdf_confirmation',
     }
 
     def get_permission_object(self):

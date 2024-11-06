@@ -67,7 +67,7 @@ class ConfirmationSuccessDecisionView(
     View,
 ):
     urlpatterns = 'success'
-    permission_required = 'admission.make_confirmation_decision'
+    permission_required = 'parcours_doctoral.make_confirmation_decision'
 
     def post(self, *args, **kwargs):
         try:
@@ -94,7 +94,7 @@ class ConfirmationDecisionMixin(
     BusinessExceptionFormViewMixin,
     FormMixin,
 ):
-    permission_required = 'admission.make_confirmation_decision'
+    permission_required = 'parcours_doctoral.make_confirmation_decision'
     htmx_template_name = 'parcours_doctoral/forms/send_mail_htmx_fields.html'
     template_name = 'parcours_doctoral/forms/confirmation_decision.html'
     identifier = ''
@@ -200,7 +200,7 @@ class ConfirmationOpinionFormView(
     urlpatterns = 'opinion'
     template_name = 'parcours_doctoral/forms/confirmation_opinion.html'
     form_class = ConfirmationOpinionForm
-    permission_required = 'admission.upload_pdf_confirmation'
+    permission_required = 'parcours_doctoral.upload_pdf_confirmation'
 
     def get_initial(self):
         return {

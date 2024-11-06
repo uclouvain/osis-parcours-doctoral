@@ -54,7 +54,7 @@ __all__ = [
 class CddMailTemplateListView(PermissionRequiredMixin, generic.ListView):
     urlpatterns = {'list': ''}
     template_name = 'parcours_doctoral/config/cdd_mail_template_list.html'
-    permission_required = 'admission.change_cddmailtemplate'
+    permission_required = 'parcours_doctoral.change_cddmailtemplate'
 
     def get_queryset(self):
         managed_cdds = CddConfigurator.objects.filter(person=self.request.user.person).values_list(
@@ -85,7 +85,7 @@ class CddMailTemplateChangeView(PermissionRequiredMixin, generic.FormView):
     urlpatterns = {'add': 'add/<str:identifier>', 'edit': 'edit/<str:identifier>/<int:pk>'}
     forms = None
     template_name = 'parcours_doctoral/config/cdd_mail_template_change.html'
-    permission_required = 'admission.change_cddmailtemplate'
+    permission_required = 'parcours_doctoral.change_cddmailtemplate'
 
     def get_forms(self, form_class=None):
         if not self.forms:  # pragma: no branch
@@ -183,7 +183,7 @@ class CddMailTemplateChangeView(PermissionRequiredMixin, generic.FormView):
 class CddMailTemplatePreview(PermissionRequiredMixin, generic.TemplateView):
     urlpatterns = {'preview': 'preview/<str:identifier>/<int:pk>'}
     template_name = 'parcours_doctoral/config/cdd_mail_template_preview.html'
-    permission_required = 'admission.change_cddmailtemplate'
+    permission_required = 'parcours_doctoral.change_cddmailtemplate'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -195,7 +195,7 @@ class CddMailTemplatePreview(PermissionRequiredMixin, generic.TemplateView):
 class CddMailTemplateDeleteView(PermissionRequiredMixin, generic.FormView):
     urlpatterns = {'delete': 'delete/<str:identifier>/<int:pk>'}
     template_name = "parcours_doctoral/config/cdd_mail_template_delete.html"
-    permission_required = 'admission.change_cddmailtemplate'
+    permission_required = 'parcours_doctoral.change_cddmailtemplate'
     form_class = forms.Form
     success_url = reverse_lazy('parcours_doctoral:config:cdd-mail-template:list')
 

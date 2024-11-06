@@ -23,10 +23,13 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from admission.ddd.admission.doctorat.events import InscriptionDoctoraleApprouveeParSicEvent, \
-    AdmissionDoctoraleApprouveeParSicEvent
-from admission.infrastructure.admission.doctorat.preparation.repository.groupe_de_supervision import \
-    GroupeDeSupervisionRepository
+from admission.ddd.admission.doctorat.events import (
+    InscriptionDoctoraleApprouveeParSicEvent,
+    AdmissionDoctoraleApprouveeParSicEvent,
+)
+from admission.infrastructure.admission.doctorat.preparation.repository.groupe_de_supervision import (
+    GroupeDeSupervisionRepository,
+)
 from admission.infrastructure.admission.doctorat.preparation.repository.proposition import PropositionRepository
 from parcours_doctoral.ddd.commands import *
 from parcours_doctoral.ddd.use_case.read import *
@@ -36,7 +39,6 @@ from .domain.service.notification import Notification
 from .epreuve_confirmation.repository.epreuve_confirmation import EpreuveConfirmationRepository
 from .event_handlers import reagir_a_approbation_admission
 from .repository.parcours_doctoral import ParcoursDoctoralRepository
-from ...ddd.use_case.write.initialiser_parcours_doctoral import initialiser_parcours_doctoral
 
 COMMAND_HANDLERS = {
     RecupererParcoursDoctoralQuery: lambda msg_bus, cmd: recuperer_parcours_doctoral(
@@ -55,6 +57,24 @@ COMMAND_HANDLERS = {
         parcours_doctoral_repository=ParcoursDoctoralRepository(),
         groupe_de_supervision_repository=GroupeDeSupervisionRepository(),
         epreuve_confirmation_repository=EpreuveConfirmationRepository(),
+        historique=Historique(),
+    ),
+    ListerParcoursDoctorauxDoctorantQuery: lambda msg_bus, cmd: lister_parcours_doctoraux_doctorant(
+        cmd,
+        parcours_doctoral_repository=ParcoursDoctoralRepository(),
+    ),
+    ListerParcoursDoctorauxSupervisesQuery: lambda msg_bus, cmd: lister_parcours_doctoraux_supervises(
+        cmd,
+        parcours_doctoral_repository=ParcoursDoctoralRepository(),
+    ),
+    ModifierProjetCommand: lambda msg_bus, cmd: modifier_projet(
+        cmd,
+        parcours_doctoral_repository=ParcoursDoctoralRepository(),
+        historique=Historique(),
+    ),
+    ModifierFinancementCommand: lambda msg_bus, cmd: modifier_financement(
+        cmd,
+        parcours_doctoral_repository=ParcoursDoctoralRepository(),
         historique=Historique(),
     ),
 }

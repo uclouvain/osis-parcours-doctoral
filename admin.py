@@ -23,14 +23,20 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+import itertools
+
+from django.conf import settings
 from django.contrib import admin
 from django.db import models
 from django.shortcuts import resolve_url
+from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _, pgettext_lazy
+from django_json_widget.widgets import JSONEditorWidget
 from hijack.contrib.admin import HijackUserAdminMixin
 from osis_mail_template.admin import MailTemplateAdmin
 
 from base.models.entity_version import EntityVersion
+from osis_document.contrib.fields import FileField
 from osis_role.contrib.admin import RoleModelAdmin
 from parcours_doctoral.auth.roles.adre import AdreSecretary
 from parcours_doctoral.auth.roles.ca_member import CommitteeMember
@@ -40,15 +46,18 @@ from parcours_doctoral.auth.roles.jury_secretary import JurySecretary
 from parcours_doctoral.auth.roles.promoter import Promoter
 from parcours_doctoral.auth.roles.student import Student
 from parcours_doctoral.ddd.formation.domain.model.enums import CategorieActivite, ContexteFormation
+from parcours_doctoral.models import ParcoursDoctoral
+from parcours_doctoral.models.activity import Activity
 from parcours_doctoral.models.cdd_config import CddConfiguration
 from parcours_doctoral.models.cdd_mail_template import CddMailTemplate
-from parcours_doctoral.models.activity import Activity
 
 
 @admin.register(Activity)
 class ActivityAdmin(admin.ModelAdmin):
     list_display = ('uuid', 'context', 'get_category', 'ects', 'modified_at', 'status', 'is_course_completed')
-    search_fields = ['parcours_doctoral__uuid',]
+    search_fields = [
+        'parcours_doctoral__uuid',
+    ]
     list_filter = [
         'context',
         'category',
@@ -201,3 +210,66 @@ class CddConfiguratorAdmin(HijackRoleModelAdmin):
 
 
 admin.site.register(CddConfiguration)
+
+
+class ReadOnlyFilesMixin:
+    def get_readonly_fields(self, request, obj=None):
+        # Also mark all FileField as readonly (since we don't have admin widget yet)
+        return [
+            field
+            for field in itertools.chain(
+                self.readonly_fields,
+                (
+                    field.name
+                    for field in self.model._meta.get_fields(include_parents=True)
+                    if isinstance(field, FileField)
+                ),
+            )
+        ]
+
+
+@admin.register(ParcoursDoctoral)
+class ParcoursDoctoralAdmin(ReadOnlyFilesMixin, admin.ModelAdmin):
+    list_display = [
+        'student_fmt',
+        'training',
+        'status',
+        'view_on_portal',
+    ]
+    autocomplete_fields = [
+        'admission',
+        'training',
+        'thesis_institute',
+        'international_scholarship',
+        'thesis_language',
+        'student',
+    ]
+    search_fields = [
+        'student__global_id',
+        'student__last_name',
+        'student__first_name',
+    ]
+    list_select_related = [
+        'student',
+        'training__academic_year',
+    ]
+    list_filter = [
+        'status',
+    ]
+
+    @admin.display(description=_('Student'))
+    def student_fmt(self, obj):
+        return '{} ({global_id})'.format(obj.student, global_id=obj.student.global_id)
+
+    formfield_overrides = {
+        models.JSONField: {'widget': JSONEditorWidget},
+    }
+
+    def has_add_permission(self, request):
+        # Prevent adding from admin site as we lose all business checks
+        return False
+
+    @admin.display(description=_('Search on portal'))
+    def view_on_portal(self, obj):
+        url = f"{settings.OSIS_PORTAL_URL}admin/auth/user/?q={obj.student.global_id}"
+        return mark_safe(f'<a class="button" href="{url}" target="_blank">{_("Student on portal")}</a>')

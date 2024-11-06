@@ -34,23 +34,8 @@ from parcours_doctoral.ddd.domain.model._membre_CA import MembreCAIdentity
 from parcours_doctoral.ddd.domain.model._projet import Projet
 from parcours_doctoral.ddd.domain.model._promoteur import PromoteurIdentity
 from parcours_doctoral.ddd.domain.model._signature_promoteur import SignaturePromoteur
-from parcours_doctoral.ddd.domain.validator import (
-    ShouldMembresCAOntApprouve, ShouldPromoteursOntApprouve,
-    ShouldDemandeSignatureLancee, ShouldGroupeDeSupervisionAvoirUnPromoteurDeReference,
-    ShouldGroupeDeSupervisionAvoirAuMoinsDeuxMembreCA, ShouldSignataireEtreInvite,
-    ShouldSignataireEtreDansGroupeDeSupervision, ShouldSignatairePasDejaInvite,
-    ShouldGroupeDeSupervisionNonCompletPourMembresCA, ShouldGroupeDeSupervisionNonCompletPourPromoteurs
-)
-from parcours_doctoral.ddd.domain.validator._should_cotutelle_etre_completee import ShouldCotutelleEtreComplete
-from parcours_doctoral.ddd.domain.validator._should_membre_CA_etre_dans_groupe_de_supervision import \
-    ShouldMembreCAEtreDansGroupeDeSupervision
-from parcours_doctoral.ddd.domain.validator._should_membre_etre_interne_ou_externe import \
-    ShouldMembreEtreInterneOuExterne
-from parcours_doctoral.ddd.domain.validator._should_premier_promoteur_renseigner_institut_these import \
-    ShouldPromoteurReferenceRenseignerInstitutThese
-from parcours_doctoral.ddd.domain.validator._should_projet_etre_complet import ShouldProjetEtreComplet
-from parcours_doctoral.ddd.domain.validator._should_promoteur_etre_dans_groupe_de_supervision import \
-    ShouldPromoteurEtreDansGroupeDeSupervision
+from parcours_doctoral.ddd.domain.model.enums import ChoixDoctoratDejaRealise
+from parcours_doctoral.ddd.domain.validator import *
 
 
 @attr.dataclass(frozen=True, slots=True)
@@ -269,4 +254,37 @@ class ProjetDoctoralValidatorList(TwoStepsMultipleBusinessExceptionListValidator
                 self.financement,
                 self.experience_precedente_recherche,
             ),
+        ]
+
+
+@attr.dataclass(frozen=True, slots=True)
+class ModifierProjetValidatorList(TwoStepsMultipleBusinessExceptionListValidator):
+    type_financement: Optional[str] = ''
+    type_contrat_travail: Optional[str] = ''
+    doctorat_deja_realise: str = ChoixDoctoratDejaRealise.NO.name
+    institution: Optional[str] = ''
+    domaine_these: Optional[str] = ''
+
+    def get_data_contract_validators(self) -> List[BusinessValidator]:
+        return []
+
+    def get_invariants_validators(self) -> List[BusinessValidator]:
+        return [
+            ShouldTypeContratTravailDependreTypeFinancement(self.type_financement, self.type_contrat_travail),
+            ShouldInstitutionDependreDoctoratRealise(self.doctorat_deja_realise, self.institution),
+            ShouldDomaineDependreDoctoratRealise(self.doctorat_deja_realise, self.domaine_these),
+        ]
+
+
+@attr.dataclass(frozen=True, slots=True)
+class ModifierFinancementValidatorList(TwoStepsMultipleBusinessExceptionListValidator):
+    type: Optional[str] = ''
+    type_contrat_travail: Optional[str] = ''
+
+    def get_data_contract_validators(self) -> List[BusinessValidator]:
+        return []
+
+    def get_invariants_validators(self) -> List[BusinessValidator]:
+        return [
+            ShouldTypeContratTravailDependreTypeFinancement(self.type, self.type_contrat_travail),
         ]

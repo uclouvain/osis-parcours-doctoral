@@ -7,10 +7,233 @@ info:
     name: UCLouvain - OSIS
     url: https://github.com/uclouvain/osis
 paths:
-  /propositions/doctorate/{uuid}/confirmation:
+  /doctorate/dashboard:
+    get:
+      operationId: retrieve_dashboard
+      description: Get the actions links for the application
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      - $ref: '#/components/parameters/Accept-Language'
+      - $ref: '#/components/parameters/X-User-FirstName'
+      - $ref: '#/components/parameters/X-User-LastName'
+      - $ref: '#/components/parameters/X-User-Email'
+      - $ref: '#/components/parameters/X-User-GlobalID'
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Dashboard'
+          description: ''
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+      - doctorate
+  /doctorate/list:
+    get:
+      operationId: list_doctorates
+      description: ''
+      parameters:
+      - $ref: '#/components/parameters/Accept-Language'
+      - $ref: '#/components/parameters/X-User-FirstName'
+      - $ref: '#/components/parameters/X-User-LastName'
+      - $ref: '#/components/parameters/X-User-Email'
+      - $ref: '#/components/parameters/X-User-GlobalID'
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ParcoursDoctoralRechercheDTO'
+          description: ''
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+      - doctorate
+  /doctorate/supervised-list:
+    get:
+      operationId: list_supervised_doctorates
+      description: ''
+      parameters:
+      - $ref: '#/components/parameters/Accept-Language'
+      - $ref: '#/components/parameters/X-User-FirstName'
+      - $ref: '#/components/parameters/X-User-LastName'
+      - $ref: '#/components/parameters/X-User-Email'
+      - $ref: '#/components/parameters/X-User-GlobalID'
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ParcoursDoctoralRechercheDTO'
+          description: ''
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+      - doctorate
+  /doctorate/{uuid}:
+    get:
+      operationId: retrieveParcoursDoctoralDTO
+      description: Get the parcours doctoral
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      - $ref: '#/components/parameters/Accept-Language'
+      - $ref: '#/components/parameters/X-User-FirstName'
+      - $ref: '#/components/parameters/X-User-LastName'
+      - $ref: '#/components/parameters/X-User-Email'
+      - $ref: '#/components/parameters/X-User-GlobalID'
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParcoursDoctoralDTO'
+          description: ''
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+      - doctorate
+  /doctorate/{uuid}/project:
+    get:
+      operationId: retrieve_project
+      description: 'This method is only used to check the permission.
+
+        We have to return some data as the schema expects a 200 status and the deserializer
+        expects some data.'
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      - $ref: '#/components/parameters/Accept-Language'
+      - $ref: '#/components/parameters/X-User-FirstName'
+      - $ref: '#/components/parameters/X-User-LastName'
+      - $ref: '#/components/parameters/X-User-Email'
+      - $ref: '#/components/parameters/X-User-GlobalID'
+      responses:
+        200:
+          content:
+            application/json:
+              schema: {}
+          description: ''
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+      - doctorate
+  /doctorate/{uuid}/funding:
+    get:
+      operationId: retrieve_funding
+      description: 'This method is only used to check the permission.
+
+        We have to return some data as the schema expects a 200 status and the deserializer
+        expects some data.'
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      - $ref: '#/components/parameters/Accept-Language'
+      - $ref: '#/components/parameters/X-User-FirstName'
+      - $ref: '#/components/parameters/X-User-LastName'
+      - $ref: '#/components/parameters/X-User-Email'
+      - $ref: '#/components/parameters/X-User-GlobalID'
+      responses:
+        200:
+          content:
+            application/json:
+              schema: {}
+          description: ''
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+      - doctorate
+    put:
+      operationId: update_funding
+      description: Edit the project
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      - $ref: '#/components/parameters/Accept-Language'
+      - $ref: '#/components/parameters/X-User-FirstName'
+      - $ref: '#/components/parameters/X-User-LastName'
+      - $ref: '#/components/parameters/X-User-Email'
+      - $ref: '#/components/parameters/X-User-GlobalID'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ModifierFinancementCommand'
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParcoursDoctoralIdentityDTO'
+          description: ''
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+      - doctorate
+  /doctorate/{uuid}/confirmation:
     get:
       operationId: retrieve_confirmation_papers
-      description: Get the confirmation papers related to the doctorate
+      description: Get the confirmation papers related to the parcours_doctoral
       parameters:
       - name: uuid
         in: path
@@ -39,11 +262,11 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
       tags:
-      - propositions
-  /propositions/doctorate/{uuid}/confirmation/last:
+      - doctorate
+  /doctorate/{uuid}/confirmation/last:
     get:
       operationId: retrieve_last_confirmation_paper
-      description: Get the last confirmation paper related to the doctorate
+      description: Get the last confirmation paper related to the parcours_doctoral
       parameters:
       - name: uuid
         in: path
@@ -70,11 +293,11 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
       tags:
-      - propositions
+      - doctorate
     post:
       operationId: submit_confirmation_paper_extension_request
       description: Submit the extension request of the last confirmation paper of
-        a doctorate
+        a parcours_doctoral
       parameters:
       - name: uuid
         in: path
@@ -106,10 +329,10 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
       tags:
-      - propositions
+      - doctorate
     put:
       operationId: submit_confirmation_paper
-      description: Submit the confirmation paper related to a doctorate
+      description: Submit the confirmation paper related to a parcours_doctoral
       parameters:
       - name: uuid
         in: path
@@ -141,11 +364,11 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
       tags:
-      - propositions
-  /propositions/doctorate/{uuid}/confirmation/last/canvas:
+      - doctorate
+  /doctorate/{uuid}/confirmation/last/canvas:
     get:
       operationId: retrieve_last_confirmation_paper_canvas
-      description: Get the last confirmation paper canvas related to the doctorate
+      description: Get the last confirmation paper canvas related to the parcours_doctoral
       parameters:
       - name: uuid
         in: path
@@ -172,8 +395,8 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
       tags:
-      - propositions
-  /propositions/doctorate/{uuid}/jury/preparation:
+      - doctorate
+  /doctorate/{uuid}/jury/preparation:
     get:
       operationId: retrieve_jury_preparation
       description: Get the Jury of a doctorate
@@ -203,7 +426,7 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
       tags:
-      - propositions
+      - doctorate
     post:
       operationId: update_jury_preparation
       description: Update the jury preparation information
@@ -238,8 +461,8 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
       tags:
-      - propositions
-  /propositions/doctorate/{uuid}/jury/members:
+      - doctorate
+  /doctorate/{uuid}/jury/members:
     get:
       operationId: list_jury_members
       description: Get the members of a jury
@@ -271,7 +494,7 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
       tags:
-      - propositions
+      - doctorate
     post:
       operationId: create_jury_members
       description: Add a new member to the jury
@@ -306,8 +529,8 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
       tags:
-      - propositions
-  /propositions/doctorate/{uuid}/jury/members/{member_uuid}:
+      - doctorate
+  /doctorate/{uuid}/jury/members/{member_uuid}:
     get:
       operationId: retrieve_jury_member
       description: Get the members of a jury
@@ -343,7 +566,7 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
       tags:
-      - propositions
+      - doctorate
     put:
       operationId: update_jury_member
       description: Update a member of the jury
@@ -384,7 +607,7 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
       tags:
-      - propositions
+      - doctorate
     patch:
       operationId: update_role_jury_member
       description: Update the role of a member of the jury
@@ -425,7 +648,7 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
       tags:
-      - propositions
+      - doctorate
     delete:
       operationId: remove_jury_member
       description: Remove a member
@@ -460,8 +683,8 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
       tags:
-      - propositions
-  /propositions/doctorate/{uuid}/training/config:
+      - doctorate
+  /doctorate/{uuid}/training/config:
     get:
       operationId: retrieveDoctoralTrainingConfig
       description: ''
@@ -491,8 +714,8 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
       tags:
-      - propositions
-  /propositions/doctorate/{uuid}/doctoral-training:
+      - doctorate
+  /doctorate/{uuid}/doctoral-training:
     get:
       operationId: list_doctoral_training
       description: ''
@@ -524,7 +747,7 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
       tags:
-      - propositions
+      - doctorate
     post:
       operationId: create_doctoral_training
       description: ''
@@ -559,8 +782,8 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
       tags:
-      - propositions
-  /propositions/doctorate/{uuid}/training/{activity_id}:
+      - doctorate
+  /doctorate/{uuid}/training/{activity_id}:
     get:
       operationId: retrieve_training
       description: ''
@@ -596,7 +819,7 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
       tags:
-      - propositions
+      - doctorate
     put:
       operationId: update_training
       description: ''
@@ -637,7 +860,7 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
       tags:
-      - propositions
+      - doctorate
     delete:
       operationId: destroy_training
       description: ''
@@ -669,8 +892,8 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
       tags:
-      - propositions
-  /propositions/doctorate/{uuid}/complementary-training:
+      - doctorate
+  /doctorate/{uuid}/complementary-training:
     get:
       operationId: list_complementary_training
       description: ''
@@ -702,8 +925,8 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
       tags:
-      - propositions
-  /propositions/doctorate/{uuid}/course-enrollment:
+      - doctorate
+  /doctorate/{uuid}/course-enrollment:
     get:
       operationId: list_course_enrollment
       description: ''
@@ -735,8 +958,8 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
       tags:
-      - propositions
-  /propositions/doctorate/{uuid}/training/submit:
+      - doctorate
+  /doctorate/{uuid}/training/submit:
     post:
       operationId: submit_training
       description: Submit doctoral training activities.
@@ -771,8 +994,8 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
       tags:
-      - propositions
-  /propositions/doctorate/{uuid}/training/assent:
+      - doctorate
+  /doctorate/{uuid}/training/assent:
     post:
       operationId: assent_training
       description: Assent on a doctoral training activity.
@@ -812,11 +1035,11 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
       tags:
-      - propositions
-  /propositions/doctorate/{uuid}/supervised_confirmation:
+      - doctorate
+  /doctorate/{uuid}/supervised_confirmation:
     put:
       operationId: complete_confirmation_paper_by_promoter
-      description: Complete the confirmation paper related to a doctorate
+      description: Complete the confirmation paper related to a parcours_doctoral
       parameters:
       - name: uuid
         in: path
@@ -848,9 +1071,479 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
       tags:
-      - propositions
+      - doctorate
 components:
   schemas:
+    Dashboard:
+      type: object
+      properties:
+        links:
+          type: object
+          properties:
+            list:
+              $ref: '#/components/schemas/ActionLink'
+            supervised_list:
+              $ref: '#/components/schemas/ActionLink'
+          readOnly: true
+          default: {}
+    ParcoursDoctoralRechercheDTO:
+      type: object
+      properties:
+        uuid:
+          type: string
+        reference:
+          type: string
+        statut:
+          type: string
+        formation:
+          type: object
+          properties:
+            sigle:
+              type: string
+            code:
+              type: string
+            annee:
+              type: integer
+            intitule:
+              type: string
+            intitule_fr:
+              type: string
+            intitule_en:
+              type: string
+            sigle_entite_gestion:
+              type: string
+            intitule_entite_gestion:
+              type: string
+            campus:
+              type: object
+              properties:
+                uuid:
+                  type: string
+                  format: uuid
+                nom:
+                  type: string
+                code_postal:
+                  type: string
+                ville:
+                  type: string
+                pays_iso_code:
+                  type: string
+                nom_pays:
+                  type: string
+                rue:
+                  type: string
+                numero_rue:
+                  type: string
+                boite_postale:
+                  type: string
+                localisation:
+                  type: string
+              required:
+              - uuid
+              - nom
+              - code_postal
+              - ville
+              - pays_iso_code
+              - nom_pays
+              - rue
+              - numero_rue
+              - boite_postale
+              - localisation
+              nullable: true
+            type:
+              type: string
+            code_secteur:
+              type: string
+            intitule_secteur:
+              type: string
+          required:
+          - sigle
+          - code
+          - annee
+          - intitule
+          - intitule_fr
+          - intitule_en
+          - sigle_entite_gestion
+          - intitule_entite_gestion
+          - type
+          - code_secteur
+          - intitule_secteur
+        matricule_doctorant:
+          type: string
+        genre_doctorant:
+          type: string
+        prenom_doctorant:
+          type: string
+        nom_doctorant:
+          type: string
+        cree_le:
+          type: string
+          format: date-time
+        links:
+          type: object
+          properties:
+            retrieve_project:
+              $ref: '#/components/schemas/ActionLink'
+            update_project:
+              $ref: '#/components/schemas/ActionLink'
+            retrieve_funding:
+              $ref: '#/components/schemas/ActionLink'
+            update_funding:
+              $ref: '#/components/schemas/ActionLink'
+            retrieve_confirmation:
+              $ref: '#/components/schemas/ActionLink'
+            update_confirmation:
+              $ref: '#/components/schemas/ActionLink'
+            update_confirmation_extension:
+              $ref: '#/components/schemas/ActionLink'
+            retrieve_doctoral_training:
+              $ref: '#/components/schemas/ActionLink'
+            retrieve_complementary_training:
+              $ref: '#/components/schemas/ActionLink'
+            retrieve_course_enrollment:
+              $ref: '#/components/schemas/ActionLink'
+            add_training:
+              $ref: '#/components/schemas/ActionLink'
+            submit_training:
+              $ref: '#/components/schemas/ActionLink'
+            assent_training:
+              $ref: '#/components/schemas/ActionLink'
+            retrieve_jury_preparation:
+              $ref: '#/components/schemas/ActionLink'
+            update_jury_preparation:
+              $ref: '#/components/schemas/ActionLink'
+            list_jury_members:
+              $ref: '#/components/schemas/ActionLink'
+            create_jury_members:
+              $ref: '#/components/schemas/ActionLink'
+          readOnly: true
+          default: {}
+      required:
+      - uuid
+      - reference
+      - statut
+      - formation
+      - matricule_doctorant
+      - genre_doctorant
+      - prenom_doctorant
+      - nom_doctorant
+      - cree_le
+    ParcoursDoctoralDTO:
+      type: object
+      properties:
+        uuid:
+          type: string
+        reference:
+          type: string
+        statut:
+          type: string
+        formation:
+          type: object
+          properties:
+            sigle:
+              type: string
+            code:
+              type: string
+            annee:
+              type: integer
+            intitule:
+              type: string
+            intitule_fr:
+              type: string
+            intitule_en:
+              type: string
+            sigle_entite_gestion:
+              type: string
+            intitule_entite_gestion:
+              type: string
+            campus:
+              type: object
+              properties:
+                uuid:
+                  type: string
+                  format: uuid
+                nom:
+                  type: string
+                code_postal:
+                  type: string
+                ville:
+                  type: string
+                pays_iso_code:
+                  type: string
+                nom_pays:
+                  type: string
+                rue:
+                  type: string
+                numero_rue:
+                  type: string
+                boite_postale:
+                  type: string
+                localisation:
+                  type: string
+              required:
+              - uuid
+              - nom
+              - code_postal
+              - ville
+              - pays_iso_code
+              - nom_pays
+              - rue
+              - numero_rue
+              - boite_postale
+              - localisation
+              nullable: true
+            type:
+              type: string
+            code_secteur:
+              type: string
+            intitule_secteur:
+              type: string
+          required:
+          - sigle
+          - code
+          - annee
+          - intitule
+          - intitule_fr
+          - intitule_en
+          - sigle_entite_gestion
+          - intitule_entite_gestion
+          - type
+          - code_secteur
+          - intitule_secteur
+        projet:
+          type: object
+          properties:
+            titre:
+              type: string
+            resume:
+              type: string
+            langue_redaction_these:
+              type: string
+            institut_these:
+              type: string
+              format: uuid
+              nullable: true
+            nom_institut_these:
+              type: string
+            sigle_institut_these:
+              type: string
+            lieu_these:
+              type: string
+            projet_doctoral_deja_commence:
+              type: boolean
+              nullable: true
+            projet_doctoral_institution:
+              type: string
+            projet_doctoral_date_debut:
+              type: string
+              format: date
+              nullable: true
+            documents_projet:
+              type: array
+              items:
+                type: string
+            graphe_gantt:
+              type: array
+              items:
+                type: string
+            proposition_programme_doctoral:
+              type: array
+              items:
+                type: string
+            projet_formation_complementaire:
+              type: array
+              items:
+                type: string
+            lettres_recommandation:
+              type: array
+              items:
+                type: string
+            doctorat_deja_realise:
+              type: string
+            institution:
+              type: string
+            domaine_these:
+              type: string
+            date_soutenance:
+              type: string
+              format: date
+              nullable: true
+            raison_non_soutenue:
+              type: string
+          required:
+          - titre
+          - resume
+          - langue_redaction_these
+          - nom_institut_these
+          - sigle_institut_these
+          - lieu_these
+          - projet_doctoral_institution
+          - documents_projet
+          - graphe_gantt
+          - proposition_programme_doctoral
+          - projet_formation_complementaire
+          - lettres_recommandation
+          - doctorat_deja_realise
+          - institution
+          - domaine_these
+          - raison_non_soutenue
+        cotutelle:
+          type: object
+          properties:
+            motivation:
+              type: string
+            institution_fwb:
+              type: boolean
+              nullable: true
+            institution:
+              type: string
+            autre_institution:
+              type: boolean
+              nullable: true
+            autre_institution_nom:
+              type: string
+            autre_institution_adresse:
+              type: string
+            demande_ouverture:
+              type: array
+              items:
+                type: string
+            convention:
+              type: array
+              items:
+                type: string
+            autres_documents:
+              type: array
+              items:
+                type: string
+          required:
+          - motivation
+          - institution
+          - autre_institution_nom
+          - autre_institution_adresse
+          - demande_ouverture
+          - convention
+          - autres_documents
+          nullable: true
+        financement:
+          type: object
+          properties:
+            type:
+              type: string
+            type_contrat_travail:
+              type: string
+            eft:
+              type: integer
+              nullable: true
+            bourse_recherche:
+              type: object
+              properties:
+                uuid:
+                  type: string
+                nom_court:
+                  type: string
+                nom_long:
+                  type: string
+                type:
+                  type: string
+              required:
+              - uuid
+              - nom_court
+              - nom_long
+              - type
+              nullable: true
+            autre_bourse_recherche:
+              type: string
+            bourse_date_debut:
+              type: string
+              format: date
+              nullable: true
+            bourse_date_fin:
+              type: string
+              format: date
+              nullable: true
+            bourse_preuve:
+              type: array
+              items:
+                type: string
+            duree_prevue:
+              type: integer
+              nullable: true
+            temps_consacre:
+              type: integer
+              nullable: true
+            est_lie_fnrs_fria_fresh_csc:
+              type: boolean
+              nullable: true
+            commentaire:
+              type: string
+          required:
+          - type
+          - type_contrat_travail
+          - autre_bourse_recherche
+          - bourse_preuve
+          - commentaire
+        matricule_doctorant:
+          type: string
+        noma_doctorant:
+          type: string
+        genre_doctorant:
+          type: string
+        prenom_doctorant:
+          type: string
+        nom_doctorant:
+          type: string
+        links:
+          type: object
+          properties:
+            retrieve_project:
+              $ref: '#/components/schemas/ActionLink'
+            update_project:
+              $ref: '#/components/schemas/ActionLink'
+            retrieve_funding:
+              $ref: '#/components/schemas/ActionLink'
+            update_funding:
+              $ref: '#/components/schemas/ActionLink'
+            retrieve_confirmation:
+              $ref: '#/components/schemas/ActionLink'
+            update_confirmation:
+              $ref: '#/components/schemas/ActionLink'
+            update_confirmation_extension:
+              $ref: '#/components/schemas/ActionLink'
+            retrieve_doctoral_training:
+              $ref: '#/components/schemas/ActionLink'
+            retrieve_complementary_training:
+              $ref: '#/components/schemas/ActionLink'
+            retrieve_course_enrollment:
+              $ref: '#/components/schemas/ActionLink'
+            add_training:
+              $ref: '#/components/schemas/ActionLink'
+            submit_training:
+              $ref: '#/components/schemas/ActionLink'
+            assent_training:
+              $ref: '#/components/schemas/ActionLink'
+            retrieve_jury_preparation:
+              $ref: '#/components/schemas/ActionLink'
+            update_jury_preparation:
+              $ref: '#/components/schemas/ActionLink'
+            list_jury_members:
+              $ref: '#/components/schemas/ActionLink'
+            create_jury_members:
+              $ref: '#/components/schemas/ActionLink'
+          readOnly: true
+          default: {}
+      required:
+      - uuid
+      - reference
+      - statut
+      - formation
+      - projet
+      - financement
+      - matricule_doctorant
+      - noma_doctorant
+      - genre_doctorant
+      - prenom_doctorant
+      - nom_doctorant
     ConfirmationPaperDTO:
       type: object
       properties:
@@ -1132,8 +1825,8 @@ components:
           readOnly: true
         context:
           $ref: '#/components/schemas/ContexteFormation'
-        doctorate:
-          type: string
+        parcours_doctoral:
+          type: integer
           writeOnly: true
         reference_promoter_assent:
           type: boolean
@@ -1226,8 +1919,8 @@ components:
           readOnly: true
         context:
           $ref: '#/components/schemas/ContexteFormation'
-        doctorate:
-          type: string
+        parcours_doctoral:
+          type: integer
           writeOnly: true
         reference_promoter_assent:
           type: boolean
@@ -1302,8 +1995,8 @@ components:
           readOnly: true
         context:
           $ref: '#/components/schemas/ContexteFormation'
-        doctorate:
-          type: string
+        parcours_doctoral:
+          type: integer
           writeOnly: true
         reference_promoter_assent:
           type: boolean
@@ -1402,8 +2095,8 @@ components:
           readOnly: true
         context:
           $ref: '#/components/schemas/ContexteFormation'
-        doctorate:
-          type: string
+        parcours_doctoral:
+          type: integer
           writeOnly: true
         reference_promoter_assent:
           type: boolean
@@ -1480,8 +2173,8 @@ components:
           readOnly: true
         context:
           $ref: '#/components/schemas/ContexteFormation'
-        doctorate:
-          type: string
+        parcours_doctoral:
+          type: integer
           writeOnly: true
         reference_promoter_assent:
           type: boolean
@@ -1561,8 +2254,8 @@ components:
           readOnly: true
         context:
           $ref: '#/components/schemas/ContexteFormation'
-        doctorate:
-          type: string
+        parcours_doctoral:
+          type: integer
           writeOnly: true
         reference_promoter_assent:
           type: boolean
@@ -1662,8 +2355,8 @@ components:
           readOnly: true
         context:
           $ref: '#/components/schemas/ContexteFormation'
-        doctorate:
-          type: string
+        parcours_doctoral:
+          type: integer
           writeOnly: true
         reference_promoter_assent:
           type: boolean
@@ -1750,8 +2443,8 @@ components:
           readOnly: true
         context:
           $ref: '#/components/schemas/ContexteFormation'
-        doctorate:
-          type: string
+        parcours_doctoral:
+          type: integer
           writeOnly: true
         reference_promoter_assent:
           type: boolean
@@ -1819,8 +2512,8 @@ components:
           readOnly: true
         context:
           $ref: '#/components/schemas/ContexteFormation'
-        doctorate:
-          type: string
+        parcours_doctoral:
+          type: integer
           writeOnly: true
         reference_promoter_assent:
           type: boolean
@@ -1890,8 +2583,8 @@ components:
           readOnly: true
         context:
           $ref: '#/components/schemas/ContexteFormation'
-        doctorate:
-          type: string
+        parcours_doctoral:
+          type: integer
           writeOnly: true
         reference_promoter_assent:
           type: boolean
@@ -1963,8 +2656,8 @@ components:
           readOnly: true
         context:
           $ref: '#/components/schemas/ContexteFormation'
-        doctorate:
-          type: string
+        parcours_doctoral:
+          type: integer
           writeOnly: true
         reference_promoter_assent:
           type: boolean
@@ -2020,8 +2713,8 @@ components:
           readOnly: true
         context:
           $ref: '#/components/schemas/ContexteFormation'
-        doctorate:
-          type: string
+        parcours_doctoral:
+          type: integer
           writeOnly: true
         reference_promoter_assent:
           type: boolean
@@ -2099,8 +2792,8 @@ components:
           readOnly: true
         context:
           $ref: '#/components/schemas/ContexteFormation'
-        doctorate:
-          type: string
+        parcours_doctoral:
+          type: integer
           writeOnly: true
         reference_promoter_assent:
           type: boolean
@@ -2145,8 +2838,8 @@ components:
           readOnly: true
         context:
           $ref: '#/components/schemas/ContexteFormation'
-        doctorate:
-          type: string
+        parcours_doctoral:
+          type: integer
           writeOnly: true
         reference_promoter_assent:
           type: boolean
@@ -2311,6 +3004,52 @@ components:
       required:
       - approbation
       - commentaire
+    ParcoursDoctoralIdentityDTO:
+      type: object
+      properties:
+        uuid:
+          type: string
+          readOnly: true
+    ModifierFinancementCommand:
+      type: object
+      properties:
+        type:
+          type: string
+        type_contrat_travail:
+          type: string
+        eft:
+          type: integer
+          nullable: true
+        bourse_recherche:
+          type: string
+        autre_bourse_recherche:
+          type: string
+        bourse_date_debut:
+          type: string
+          format: date
+          nullable: true
+        bourse_date_fin:
+          type: string
+          format: date
+          nullable: true
+        bourse_preuve:
+          type: array
+          items:
+            type: string
+        duree_prevue:
+          type: integer
+          nullable: true
+        temps_consacre:
+          type: integer
+          nullable: true
+        est_lie_fnrs_fria_fresh_csc:
+          type: boolean
+          nullable: true
+        commentaire:
+          type: string
+      required:
+      - type
+      - bourse_preuve
     SubmitConfirmationPaperCommand:
       type: object
       properties:
@@ -2461,7 +3200,7 @@ servers:
       - dev
       - qa
       - test
-- url: https://osis.uclouvain.be/api/v1/admission/
+- url: https://osis.uclouvain.be/api/v1/parcours_doctoral/
   description: Production server
 security:
 - Token: []

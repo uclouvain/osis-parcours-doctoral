@@ -46,7 +46,7 @@ class ExtensionRequestFormView(
     FormView,
 ):
     template_name = 'parcours_doctoral/forms/extension_request.html'
-    permission_required = 'admission.change_admission_confirmation_extension'
+    permission_required = 'parcours_doctoral.change_admission_confirmation_extension'
     form_class = ExtensionRequestForm
 
     def get_initial(self):

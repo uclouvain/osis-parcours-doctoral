@@ -107,7 +107,7 @@ class DoctoralTrainingActivityView(TrainingListMixin, generic.FormView):  # pyli
 
     urlpatterns = {'doctoral-training': 'doctoral-training'}
     template_name = "parcours_doctoral/cdd/training_list.html"
-    permission_required = "admission.view_doctoral_training"
+    permission_required = "parcours_doctoral.view_doctoral_training"
 
     def get_queryset(self):
         return Activity.objects.for_doctoral_training(self.admission_uuid)
@@ -116,7 +116,7 @@ class DoctoralTrainingActivityView(TrainingListMixin, generic.FormView):  # pyli
 class ComplementaryTrainingView(TrainingListMixin, generic.FormView):  # pylint: disable=too-many-ancestors
     urlpatterns = {'complementary-training': 'complementary-training'}
     template_name = "parcours_doctoral/cdd/complementary_training_list.html"
-    permission_required = 'admission.view_complementary_training'
+    permission_required = 'parcours_doctoral.view_complementary_training'
 
     def get_queryset(self):
         return Activity.objects.for_complementary_training(self.admission_uuid)
@@ -125,7 +125,7 @@ class ComplementaryTrainingView(TrainingListMixin, generic.FormView):  # pylint:
 class CourseEnrollmentView(TrainingListMixin, generic.FormView):  # pylint: disable=too-many-ancestors
     urlpatterns = {'course-enrollment': 'course-enrollment'}
     template_name = "parcours_doctoral/cdd/course_enrollment.html"
-    permission_required = 'admission.view_course_enrollment'
+    permission_required = 'parcours_doctoral.view_course_enrollment'
 
     def get_queryset(self):
         return Activity.objects.for_enrollment_courses(self.admission_uuid)

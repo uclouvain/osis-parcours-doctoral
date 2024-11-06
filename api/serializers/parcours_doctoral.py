@@ -23,9 +23,17 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from parcours_doctoral.api.serializers.fields import PARCOURS_DOCTORAL_ACTION_LINKS
+from rest_framework import serializers
+
 from backoffice.settings.rest_framework.fields import ActionLinksField
 from base.utils.serializers import DTOSerializer
+from parcours_doctoral.api.serializers.fields import PARCOURS_DOCTORAL_ACTION_LINKS
+from parcours_doctoral.ddd.dtos import ParcoursDoctoralDTO
+from parcours_doctoral.ddd.dtos.parcours_doctoral import ParcoursDoctoralRechercheDTO
+
+
+class ParcoursDoctoralIdentityDTOSerializer(serializers.Serializer):
+    uuid = serializers.ReadOnlyField()
 
 
 class ParcoursDoctoralDTOSerializer(DTOSerializer):
@@ -33,6 +41,12 @@ class ParcoursDoctoralDTOSerializer(DTOSerializer):
         actions={
             key: PARCOURS_DOCTORAL_ACTION_LINKS[key]
             for key in [
+                # Project
+                'retrieve_project',
+                'update_project',
+                # Funding
+                'retrieve_funding',
+                'update_funding',
                 # Confirmation
                 'retrieve_confirmation',
                 'update_confirmation',
@@ -53,5 +67,47 @@ class ParcoursDoctoralDTOSerializer(DTOSerializer):
         }
     )
 
-    # class Meta:
-    #     source = DoctoratDTO
+    class Meta:
+        source = ParcoursDoctoralDTO
+
+
+class ParcoursDoctoralRechercheDTOSerializer(DTOSerializer):
+    links = ActionLinksField(
+        actions={
+            **{
+                action: PARCOURS_DOCTORAL_ACTION_LINKS[action]
+                for action in [
+                    # Project
+                    'retrieve_project',
+                    'update_project',
+                    # Funding
+                    'retrieve_funding',
+                    'update_funding',
+                    # Cotutelle
+                    # 'retrieve_cotutelle',
+                    # 'update_cotutelle',
+                    # Supervision
+                    # 'retrieve_supervision',
+                    # Confirmation
+                    'retrieve_confirmation',
+                    'update_confirmation',
+                    'update_confirmation_extension',
+                    # Training
+                    'retrieve_doctoral_training',
+                    'retrieve_complementary_training',
+                    'retrieve_course_enrollment',
+                    'add_training',
+                    'submit_training',
+                    'assent_training',
+                    # Jury
+                    'retrieve_jury_preparation',
+                    'update_jury_preparation',
+                    'list_jury_members',
+                    'create_jury_members',
+                ]
+            },
+        }
+    )
+
+    class Meta:
+        source = ParcoursDoctoralRechercheDTO

@@ -218,4 +218,27 @@ class InstitutTheseObligatoireException(BusinessException):
 
     def __init__(self, **kwargs):
         message = _("Thesis institute must be set.")
+
+
+class DomaineTheseInconsistantException(BusinessException):
+    status_code = "PARCOURS-DOCTORAL-25"
+
+    def __init__(self, **kwargs):
+        message = _("Thesis field should be set when PhD has been set to yes or partial")
+        super().__init__(message, **kwargs)
+
+
+class ContratTravailInconsistantException(BusinessException):
+    status_code = "PARCOURS-DOCTORAL-26"
+
+    def __init__(self, **kwargs):
+        message = _("Work contract should be set when funding type is set to work contract")
+        super().__init__(message, **kwargs)
+
+
+class InstitutionInconsistanteException(BusinessException):
+    status_code = "PARCOURS-DOCTORAL-27"
+
+    def __init__(self, **kwargs):
+        message = _("Institution should be set when PhD has been set to yes or partial")
         super().__init__(message, **kwargs)

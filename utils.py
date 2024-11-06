@@ -10,9 +10,9 @@ from parcours_doctoral.models.parcours_doctoral import ParcoursDoctoral
 
 def get_mail_templates_from_admission(admission: DoctorateAdmission):
     allowed_templates = []
-    if admission.post_enrolment_status != ChoixStatutParcoursDoctoral.ADMISSION_IN_PROGRESS.name:
+    if admission.status != ChoixStatutParcoursDoctoral.ADMISSION_IN_PROGRESS.name:
         allowed_templates.append(ADMISSION_EMAIL_GENERIC_ONCE_ADMITTED)
-        if admission.post_enrolment_status == ChoixStatutParcoursDoctoral.SUBMITTED_CONFIRMATION.name:
+        if admission.status == ChoixStatutParcoursDoctoral.SUBMITTED_CONFIRMATION.name:
             allowed_templates.append(PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_INFO_STUDENT)
     return allowed_templates
 

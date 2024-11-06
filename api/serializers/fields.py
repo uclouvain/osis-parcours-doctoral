@@ -23,8 +23,42 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from rest_framework import serializers
+
+from base.models.entity_version import EntityVersion
+from base.models.enums.entity_type import EntityType
 
 PARCOURS_DOCTORAL_ACTION_LINKS = {
+    # Lists
+    'list': {
+        'path_name': 'parcours_doctoral_api_v1:list',
+        'method': 'GET',
+    },
+    'supervised_list': {
+        'path_name': 'parcours_doctoral_api_v1:supervised_list',
+        'method': 'GET',
+    },
+    # Project tabs
+    'retrieve_project': {
+        'path_name': 'parcours_doctoral_api_v1:project',
+        'method': 'GET',
+        'params': ['uuid'],
+    },
+    'update_project': {
+        'path_name': 'parcours_doctoral_api_v1:project',
+        'method': 'POST',
+        'params': ['uuid'],
+    },
+    'retrieve_funding': {
+        'path_name': 'parcours_doctoral_api_v1:funding',
+        'method': 'GET',
+        'params': ['uuid'],
+    },
+    'update_funding': {
+        'path_name': 'parcours_doctoral_api_v1:funding',
+        'method': 'POST',
+        'params': ['uuid'],
+    },
     # Confirmation exam
     'retrieve_confirmation': {
         'path_name': 'parcours_doctoral_api_v1:confirmation',
@@ -94,3 +128,21 @@ PARCOURS_DOCTORAL_ACTION_LINKS = {
         'params': ['uuid'],
     },
 }
+
+
+class RelatedInstituteField(serializers.CharField, serializers.SlugRelatedField):
+    def __init__(self, **kwargs):
+        kwargs.setdefault('slug_field', 'uuid')
+        kwargs.setdefault('queryset', EntityVersion.objects.filter(entity_type=EntityType.INSTITUTE.name))
+        kwargs.setdefault('allow_null', True)
+        kwargs.setdefault('allow_blank', True)
+        super().__init__(**kwargs)
+
+    def to_internal_value(self, data):
+        if data:
+            return serializers.SlugRelatedField.to_internal_value(self, data)
+
+    def to_representation(self, value):
+        if value:
+            return str(serializers.SlugRelatedField.to_representation(self, value))
+

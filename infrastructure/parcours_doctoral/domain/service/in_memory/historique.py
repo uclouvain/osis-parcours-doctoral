@@ -32,7 +32,12 @@ from parcours_doctoral.ddd.domain.service.i_historique import IHistorique
 
 class HistoriqueInMemory(IHistorique):
     @classmethod
-    def historiser_message_au_doctorant(cls, parcours_doctoral: ParcoursDoctoral, matricule_emetteur: str, message: EmailMessage):
+    def historiser_message_au_doctorant(
+        cls,
+        parcours_doctoral: ParcoursDoctoral,
+        matricule_emetteur: str,
+        message: EmailMessage,
+    ):
         pass
 
     @classmethod
@@ -79,4 +84,8 @@ class HistoriqueInMemory(IHistorique):
         signataire_id: 'SignataireIdentity',
         matricule_auteur: str,
     ):
+        pass
+
+    @classmethod
+    def historiser_completion_projet(cls, parcours_doctoral: ParcoursDoctoral, matricule_auteur: str):
         pass

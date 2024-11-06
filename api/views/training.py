@@ -98,8 +98,8 @@ class DoctoralTrainingListView(APIPermissionRequiredMixin, GenericAPIView):
     lookup_field = 'uuid'
     lookup_url_kwarg = 'activity_id'
     permission_mapping = {
-        'GET': 'admission.view_doctoral_training',
-        'POST': 'admission.add_training',
+        'GET': 'parcours_doctoral.view_doctoral_training',
+        'POST': 'parcours_doctoral.add_training',
     }
 
     def get_permission_object(self):
@@ -132,7 +132,7 @@ class TrainingConfigView(APIPermissionRequiredMixin, RetrieveModelMixin, Generic
     serializer_class = DoctoralTrainingConfigSerializer
     lookup_field = 'uuid'
     permission_mapping = {
-        'GET': 'admission.view_training',
+        'GET': 'parcours_doctoral.view_training',
     }
 
     def get_permission_object(self):
@@ -156,9 +156,9 @@ class TrainingView(APIPermissionRequiredMixin, GenericAPIView):
     lookup_field = 'uuid'
     lookup_url_kwarg = 'activity_id'
     permission_mapping = {
-        'GET': 'admission.view_training',
-        'PUT': 'admission.update_training',
-        'DELETE': 'admission.delete_training',
+        'GET': 'parcours_doctoral.view_training',
+        'PUT': 'parcours_doctoral.update_training',
+        'DELETE': 'parcours_doctoral.delete_training',
     }
 
     def get_permission_object(self):
@@ -205,7 +205,7 @@ class TrainingSubmitView(APIPermissionRequiredMixin, GenericAPIView):
     schema = TrainingBatchSchema()
     lookup_field = 'uuid'
     permission_mapping = {
-        'POST': 'admission.submit_training',
+        'POST': 'parcours_doctoral.submit_training',
     }
 
     def get_permission_object(self):
@@ -260,7 +260,7 @@ class TrainingAssentView(APIPermissionRequiredMixin, GenericAPIView):
     schema = TrainingAssentSchema()
     lookup_field = 'uuid'
     permission_mapping = {
-        'POST': 'admission.assent_training',
+        'POST': 'parcours_doctoral.assent_training',
     }
 
     def get_permission_object(self):
@@ -283,7 +283,7 @@ class ComplementaryTrainingListView(DoctoralTrainingListView):
     name = "complementary-training"
     http_method_names = ['get']
     permission_mapping = {
-        'GET': 'admission.view_complementary_training',
+        'GET': 'parcours_doctoral.view_complementary_training',
     }
 
     def get_queryset(self):
@@ -294,7 +294,7 @@ class CourseEnrollmentListView(DoctoralTrainingListView):
     name = "course-enrollment"
     http_method_names = ['get']
     permission_mapping = {
-        'GET': 'admission.view_course_enrollment',
+        'GET': 'parcours_doctoral.view_course_enrollment',
     }
 
     def get_queryset(self):

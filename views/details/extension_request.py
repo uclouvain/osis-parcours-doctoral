@@ -33,4 +33,4 @@ __all__ = ['ExtensionRequestDetailView']
 
 class ExtensionRequestDetailView(LastConfirmationMixin, TemplateView):
     template_name = 'parcours_doctoral/details/extension_request.html'
-    permission_required = 'admission.view_admission_confirmation'
+    permission_required = 'parcours_doctoral.view_admission_confirmation'

@@ -142,15 +142,15 @@
     {% field_data _("Registration Id") doctorate.noma_doctorant inline=True %}
     {% field_data _("Definitive admission date to doctorate") doctorate.admission_acceptee_le inline=True %}
 
-    {% if doctorate.type_financement == "SEARCH_SCHOLARSHIP" %}
-      {% if doctorate.bourse_recherche %}
-        {% display doctorate.bourse_recherche.nom_court '-' doctorate.bourse_recherche.nom_long as scholarship_name %}
+    {% if doctorate.financement.type == "SEARCH_SCHOLARSHIP" %}
+      {% if doctorate.financement.bourse_recherche %}
+        {% display doctorate.financement.bourse_recherche.nom_court '-' doctorate.financement.bourse_recherche.nom_long as scholarship_name %}
       {% else %}
-        {% display doctorate.autre_bourse_recherche as scholarship_name %}
+        {% display doctorate.financement.autre_bourse_recherche as scholarship_name %}
       {% endif %}
-      {% field_data _("Funding type") doctorate.type_financement|enum_display:"ChoixTypeFinancement"|add:" - "|add:scholarship_name inline=True %}
+      {% field_data _("Funding type") doctorate.financement.type|enum_display:"ChoixTypeFinancement"|add:" - "|add:scholarship_name inline=True %}
     {% else %}
-      {% field_data _("Funding type") doctorate.type_financement|enum_display:"ChoixTypeFinancement" inline=True %}
+      {% field_data _("Funding type") doctorate.financement.type|enum_display:"ChoixTypeFinancement" inline=True %}
     {% endif %}
 
     {% field_data _("Thesis title") admission.project_title inline=True %}

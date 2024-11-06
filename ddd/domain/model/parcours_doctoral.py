@@ -23,17 +23,33 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from typing import Optional
+import uuid
+from datetime import datetime
+from typing import Optional, List
 
 import attr
 
-from parcours_doctoral.ddd.domain.model._cotutelle import Cotutelle
-from parcours_doctoral.ddd.domain.model._projet import Projet
-from parcours_doctoral.ddd.domain.model._formation import FormationIdentity
-from parcours_doctoral.ddd.domain.model.bourse import BourseIdentity
-from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
-from osis_common.ddd import interface
 from parcours_doctoral.ddd.domain.validator.validator_by_business_action import ProjetDoctoralValidatorList
+from osis_common.ddd import interface
+from parcours_doctoral.ddd.domain.model._cotutelle import Cotutelle
+from parcours_doctoral.ddd.domain.model._experience_precedente_recherche import (
+    ExperiencePrecedenteRecherche,
+    aucune_experience_precedente_recherche,
+)
+from parcours_doctoral.ddd.domain.model._financement import Financement
+from parcours_doctoral.ddd.domain.model._formation import FormationIdentity
+from parcours_doctoral.ddd.domain.model._institut import InstitutIdentity
+from parcours_doctoral.ddd.domain.model._projet import Projet
+from parcours_doctoral.ddd.domain.model.bourse import BourseIdentity
+from parcours_doctoral.ddd.domain.model.enums import (
+    ChoixStatutParcoursDoctoral,
+    ChoixTypeFinancement,
+    ChoixDoctoratDejaRealise,
+)
+from parcours_doctoral.ddd.domain.validator.validator_by_business_action import (
+    ModifierProjetValidatorList,
+    ModifierFinancementValidatorList,
+)
 
 
 @attr.dataclass(frozen=True, slots=True)
@@ -48,6 +64,8 @@ class ParcoursDoctoral(interface.RootEntity):
 
     projet: 'Projet'
     cotutelle: 'Cotutelle'
+    financement: 'Financement'
+    experience_precedente_recherche: 'ExperiencePrecedenteRecherche'
 
     formation_id: FormationIdentity
     matricule_doctorant: str
@@ -77,3 +95,195 @@ class ParcoursDoctoral(interface.RootEntity):
 
     def encoder_decision_repassage_epreuve_confirmation(self):
         self.statut = ChoixStatutParcoursDoctoral.CONFIRMATION_TO_BE_REPEATED
+
+    def _modifier_projet(
+        self,
+        titre: str,
+        resume: str,
+        langue_redaction_these: str,
+        institut_these: str,
+        lieu_these: str,
+        deja_commence: Optional[bool],
+        deja_commence_institution: str,
+        date_debut: Optional[datetime.date],
+        documents: List[str],
+        graphe_gantt: List[str],
+        proposition_programme_doctoral: List[str],
+        projet_formation_complementaire: List[str],
+        lettres_recommandation: List[str],
+    ):
+        self.projet = Projet(
+            titre=titre,
+            resume=resume,
+            langue_redaction_these=langue_redaction_these,
+            institut_these=InstitutIdentity(uuid.UUID(institut_these)) if institut_these else None,
+            lieu_these=lieu_these,
+            documents=documents,
+            graphe_gantt=graphe_gantt,
+            proposition_programme_doctoral=proposition_programme_doctoral,
+            projet_formation_complementaire=projet_formation_complementaire,
+            lettres_recommandation=lettres_recommandation,
+            deja_commence=deja_commence,
+            deja_commence_institution=deja_commence_institution,
+            date_debut=date_debut,
+        )
+
+    def _modifier_financement(
+        self,
+        type: str,
+        type_contrat_travail: str,
+        eft: Optional[int],
+        bourse_recherche: Optional[BourseIdentity],
+        autre_bourse_recherche: str,
+        bourse_date_debut: Optional[datetime.date],
+        bourse_date_fin: Optional[datetime.date],
+        bourse_preuve: List[str],
+        duree_prevue: Optional[int],
+        temps_consacre: Optional[int],
+        est_lie_fnrs_fria_fresh_csc: Optional[bool],
+        commentaire: str,
+    ):
+        self.financement = Financement(
+            type=ChoixTypeFinancement[type],
+            type_contrat_travail=type_contrat_travail,
+            eft=eft,
+            bourse_recherche=bourse_recherche,
+            autre_bourse_recherche=autre_bourse_recherche,
+            bourse_date_debut=bourse_date_debut,
+            bourse_date_fin=bourse_date_fin,
+            bourse_preuve=bourse_preuve,
+            duree_prevue=duree_prevue,
+            temps_consacre=temps_consacre,
+            est_lie_fnrs_fria_fresh_csc=est_lie_fnrs_fria_fresh_csc,
+            commentaire=commentaire,
+        )
+
+    def _modifier_experience_precedente(
+        self,
+        doctorat_deja_realise: str,
+        institution: str,
+        domaine_these: str,
+        date_soutenance: Optional[datetime.date],
+        raison_non_soutenue: str,
+    ):
+        if doctorat_deja_realise == ChoixDoctoratDejaRealise.NO.name:
+            self.experience_precedente_recherche = aucune_experience_precedente_recherche
+        else:
+            self.experience_precedente_recherche = ExperiencePrecedenteRecherche(
+                doctorat_deja_realise=ChoixDoctoratDejaRealise[doctorat_deja_realise],
+                institution=institution or '',
+                domaine_these=domaine_these or '',
+                date_soutenance=date_soutenance,
+                raison_non_soutenue=raison_non_soutenue or '',
+            )
+
+    def modifier_projet(
+        self,
+        type_financement: str,
+        type_contrat_travail: str,
+        eft: Optional[int],
+        bourse_recherche: Optional[BourseIdentity],
+        autre_bourse_recherche: str,
+        bourse_date_debut: Optional[datetime.date],
+        bourse_date_fin: Optional[datetime.date],
+        bourse_preuve: List[str],
+        duree_prevue: Optional[int],
+        temps_consacre: Optional[int],
+        est_lie_fnrs_fria_fresh_csc: Optional[bool],
+        commentaire_financement: str,
+        langue_redaction_these: str,
+        institut_these: str,
+        lieu_these: str,
+        titre: str,
+        resume: str,
+        doctorat_deja_realise: str,
+        institution: str,
+        domaine_these: str,
+        date_soutenance: Optional[datetime.date],
+        raison_non_soutenue: str,
+        projet_doctoral_deja_commence: Optional[bool],
+        projet_doctoral_institution: str,
+        projet_doctoral_date_debut: Optional[datetime.date],
+        documents: List[str],
+        graphe_gantt: List[str],
+        proposition_programme_doctoral: List[str],
+        projet_formation_complementaire: List[str],
+        lettres_recommandation: List[str],
+    ) -> None:
+        ModifierProjetValidatorList(
+            type_financement=type_financement,
+            type_contrat_travail=type_contrat_travail,
+            doctorat_deja_realise=doctorat_deja_realise,
+            institution=institution,
+            domaine_these=domaine_these,
+        ).validate()
+        self._modifier_financement(
+            type=type_financement,
+            type_contrat_travail=type_contrat_travail,
+            eft=eft,
+            bourse_recherche=bourse_recherche,
+            autre_bourse_recherche=autre_bourse_recherche,
+            bourse_date_debut=bourse_date_debut,
+            bourse_date_fin=bourse_date_fin,
+            bourse_preuve=bourse_preuve,
+            duree_prevue=duree_prevue,
+            temps_consacre=temps_consacre,
+            est_lie_fnrs_fria_fresh_csc=est_lie_fnrs_fria_fresh_csc,
+            commentaire=commentaire_financement,
+        )
+        self._modifier_projet(
+            titre=titre,
+            resume=resume,
+            langue_redaction_these=langue_redaction_these,
+            institut_these=institut_these,
+            lieu_these=lieu_these,
+            deja_commence=projet_doctoral_deja_commence,
+            deja_commence_institution=projet_doctoral_institution,
+            date_debut=projet_doctoral_date_debut,
+            documents=documents,
+            graphe_gantt=graphe_gantt,
+            proposition_programme_doctoral=proposition_programme_doctoral,
+            projet_formation_complementaire=projet_formation_complementaire,
+            lettres_recommandation=lettres_recommandation,
+        )
+        self._modifier_experience_precedente(
+            doctorat_deja_realise=doctorat_deja_realise,
+            institution=institution,
+            domaine_these=domaine_these,
+            date_soutenance=date_soutenance,
+            raison_non_soutenue=raison_non_soutenue,
+        )
+
+    def modifier_financement(
+        self,
+        type: str,
+        type_contrat_travail: str,
+        eft: Optional[int],
+        bourse_recherche: Optional[BourseIdentity],
+        autre_bourse_recherche: str,
+        bourse_date_debut: Optional[datetime.date],
+        bourse_date_fin: Optional[datetime.date],
+        bourse_preuve: List[str],
+        duree_prevue: Optional[int],
+        temps_consacre: Optional[int],
+        est_lie_fnrs_fria_fresh_csc: Optional[bool],
+        commentaire: str,
+    ) -> None:
+        ModifierFinancementValidatorList(
+            type=type,
+            type_contrat_travail=type_contrat_travail,
+        ).validate()
+        self._modifier_financement(
+            type=type,
+            type_contrat_travail=type_contrat_travail,
+            eft=eft,
+            bourse_recherche=bourse_recherche,
+            autre_bourse_recherche=autre_bourse_recherche,
+            bourse_date_debut=bourse_date_debut,
+            bourse_date_fin=bourse_date_fin,
+            bourse_preuve=bourse_preuve,
+            duree_prevue=duree_prevue,
+            temps_consacre=temps_consacre,
+            est_lie_fnrs_fria_fresh_csc=est_lie_fnrs_fria_fresh_csc,
+            commentaire=commentaire,
+        )

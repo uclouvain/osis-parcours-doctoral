@@ -23,7 +23,8 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from typing import Optional
+import datetime
+from typing import Optional, List
 
 import attr
 
@@ -111,6 +112,7 @@ class RenvoyerInvitationSignatureExterneCommand(interface.CommandRequest):
     uuid_parcours_doctoral: str
     uuid_membre: str
 
+
 @attr.dataclass(frozen=True, slots=True)
 class DesignerPromoteurReferenceCommand(interface.CommandRequest):
     uuid_parcours_doctoral: str
@@ -131,3 +133,66 @@ class SupprimerPromoteurCommand(interface.CommandRequest):
     uuid_promoteur: str
     matricule_auteur: str
 
+
+@attr.dataclass(frozen=True, slots=True)
+class ListerParcoursDoctorauxDoctorantQuery(interface.QueryRequest):
+    matricule_doctorant: str
+
+
+@attr.dataclass(frozen=True, slots=True)
+class ListerParcoursDoctorauxSupervisesQuery(interface.QueryRequest):
+    matricule_membre: str
+
+
+@attr.dataclass(frozen=True, slots=True)
+class ModifierProjetCommand(interface.CommandRequest):
+    uuid: str
+    matricule_auteur: str
+    type_financement: str
+    type_contrat_travail: str
+    eft: Optional[int]
+    bourse_recherche: str
+    autre_bourse_recherche: str
+    bourse_date_debut: Optional[datetime.date]
+    bourse_date_fin: Optional[datetime.date]
+    bourse_preuve: List[str]
+    duree_prevue: Optional[int]
+    temps_consacre: Optional[int]
+    est_lie_fnrs_fria_fresh_csc: Optional[bool]
+    commentaire_financement: str
+    titre_projet: str
+    resume_projet: str
+    documents_projet: List[str]
+    graphe_gantt: List[str]
+    proposition_programme_doctoral: List[str]
+    projet_formation_complementaire: List[str]
+    lettres_recommandation: List[str]
+    langue_redaction_these: str
+    institut_these: str
+    lieu_these: str
+    projet_doctoral_deja_commence: Optional[bool]
+    projet_doctoral_institution: str
+    projet_doctoral_date_debut: Optional[datetime.date]
+    doctorat_deja_realise: str
+    institution: str
+    domaine_these: str
+    date_soutenance: Optional[datetime.date]
+    raison_non_soutenue: str
+
+
+@attr.dataclass(frozen=True, slots=True)
+class ModifierFinancementCommand(interface.CommandRequest):
+    uuid: str
+    matricule_auteur: str
+    type: str
+    type_contrat_travail: Optional[str]
+    eft: Optional[int]
+    bourse_recherche: Optional[str]
+    autre_bourse_recherche: Optional[str]
+    bourse_date_debut: Optional[datetime.date]
+    bourse_date_fin: Optional[datetime.date]
+    bourse_preuve: List[str]
+    duree_prevue: Optional[int]
+    temps_consacre: Optional[int]
+    est_lie_fnrs_fria_fresh_csc: Optional[bool]
+    commentaire: Optional[str]

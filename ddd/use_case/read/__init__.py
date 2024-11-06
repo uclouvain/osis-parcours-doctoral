@@ -23,4 +23,6 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from .lister_parcours_doctoraux_doctorant_service import lister_parcours_doctoraux_doctorant
+from .lister_parcours_doctoraux_supervises_service import lister_parcours_doctoraux_supervises
 from .recuperer_parcours_doctoral_service import recuperer_parcours_doctoral
