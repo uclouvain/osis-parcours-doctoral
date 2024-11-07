@@ -58,7 +58,7 @@ class SelectCddEmailTemplateFormTestCase(TestCase):
 
         cls.cdd_mail_template = CddMailTemplateFactory(
             identifier=cls.identifier,
-            language=cls.parcours_doctoral_with_custom_email_templates.candidate.language,
+            language=cls.parcours_doctoral_with_custom_email_templates.student.language,
             cdd=cls.parcours_doctoral_with_custom_email_templates.training.management_entity,
             name="My custom mail",
         )

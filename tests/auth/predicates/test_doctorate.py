@@ -28,11 +28,11 @@ from unittest import mock
 
 from django.test import TestCase
 
-from admission.tests.factories import DoctorateAdmissionFactory
 from base.tests.factories.entity import EntityFactory
 from parcours_doctoral.auth.predicates import parcours_doctoral
 from parcours_doctoral.auth.roles.cdd_configurator import CddConfigurator
 from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
+from parcours_doctoral.tests.factories.parcours_doctoral import ParcoursDoctoralFactory
 from parcours_doctoral.tests.factories.roles import CddConfiguratorFactory
 
 
@@ -48,7 +48,7 @@ class PredicatesTestCase(TestCase):
 
     def test_is_part_of_doctoral_commission(self):
         doctoral_commission = EntityFactory()
-        request = DoctorateAdmissionFactory(training__management_entity=doctoral_commission)
+        request = ParcoursDoctoralFactory(training__management_entity=doctoral_commission)
         manager1 = CddConfiguratorFactory(entity=doctoral_commission)
         manager2 = CddConfiguratorFactory()
 
@@ -63,7 +63,7 @@ class PredicatesTestCase(TestCase):
         self.assertFalse(parcours_doctoral.is_part_of_doctoral_commission(manager2.person.user, request))
 
     def test_confirmation_paper_in_progress(self):
-        admission = DoctorateAdmissionFactory()
+        parcours_doctoral = ParcoursDoctoralFactory()
 
         valid_status = [
             ChoixStatutParcoursDoctoral.ADMITTED.name,
@@ -76,15 +76,15 @@ class PredicatesTestCase(TestCase):
         ]
 
         for status in valid_status:
-            admission.post_enrolment_status = status
+            parcours_doctoral.post_enrolment_status = status
             self.assertTrue(
-                parcours_doctoral.confirmation_paper_in_progress(admission.candidate.user, admission),
+                parcours_doctoral.confirmation_paper_in_progress(parcours_doctoral.student.user, parcours_doctoral),
                 'This status must be accepted: {}'.format(status),
             )
 
         for status in invalid_status:
-            admission.post_enrolment_status = status
+            parcours_doctoral.post_enrolment_status = status
             self.assertFalse(
-                parcours_doctoral.confirmation_paper_in_progress(admission.candidate.user, admission),
+                parcours_doctoral.confirmation_paper_in_progress(parcours_doctoral.student.user, parcours_doctoral),
                 'This status must not be accepted: {}'.format(status),
             )

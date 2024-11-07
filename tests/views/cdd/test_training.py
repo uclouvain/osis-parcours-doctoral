@@ -38,7 +38,6 @@ from rest_framework import status
 
 from parcours_doctoral.models.cdd_config import CddConfiguration
 from parcours_doctoral.models.activity import Activity
-from admission.ddd.admission.doctorat.preparation.domain.model.enums import ChoixTypeAdmission
 from parcours_doctoral.ddd.formation.domain.model.enums import (
     CategorieActivite,
     ChoixComiteSelection,
@@ -46,7 +45,7 @@ from parcours_doctoral.ddd.formation.domain.model.enums import (
     StatutActivite,
 )
 from parcours_doctoral.forms.training.activity import INSTITUTION_UCL
-from admission.tests.factories.supervision import PromoterFactory
+from parcours_doctoral.tests.factories.supervision import PromoterFactory
 from base.tests.factories.academic_year import AcademicYearFactory
 from base.tests.factories.program_manager import ProgramManagerFactory
 from osis_notification.models import WebNotification
@@ -75,7 +74,7 @@ class DoctorateTrainingActivityViewTestCase(TestCase):
             ects=10,
             parcours_doctoral__supervision_group=cls.reference_promoter.process,
         )
-        cls.namespace = 'admission:parcours_doctoral:doctoral-training'
+        cls.namespace = 'parcours_doctoral:doctoral-training'
         cls.parcours_doctoral = cls.conference.parcours_doctoral
         cls.service = ServiceFactory(parcours_doctoral=cls.parcours_doctoral)
         cls.ucl_course = UclCourseFactory(parcours_doctoral=cls.parcours_doctoral, learning_unit_year__academic_year__current=True)
@@ -165,20 +164,20 @@ class DoctorateTrainingActivityViewTestCase(TestCase):
         self.assertFormError(response, 'form', 'start_date', _("The start date can't be later than the end date"))
 
     def test_training_restricted(self):
-        url = resolve_url(f'admission:parcours_doctoral:doctoral-training', uuid=self.restricted_parcours_doctoral.uuid)
+        url = resolve_url(f'parcours_doctoral:parcours_doctoral:doctoral-training', uuid=self.restricted_parcours_doctoral.uuid)
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-        url = resolve_url(f'admission:parcours_doctoral:complementary-training', uuid=self.restricted_parcours_doctoral.uuid)
+        url = resolve_url(f'parcours_doctoral:parcours_doctoral:complementary-training', uuid=self.restricted_parcours_doctoral.uuid)
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-        url = resolve_url(f'admission:parcours_doctoral:course-enrollment', uuid=self.restricted_parcours_doctoral.uuid)
+        url = resolve_url(f'parcours_doctoral:parcours_doctoral:course-enrollment', uuid=self.restricted_parcours_doctoral.uuid)
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         url = resolve_url(
-            f'admission:parcours_doctoral:course-enrollment:add',
+            f'parcours_doctoral:parcours_doctoral:course-enrollment:add',
             uuid=self.restricted_parcours_doctoral.uuid,
             category="ucl_course",
         )
@@ -189,7 +188,7 @@ class DoctorateTrainingActivityViewTestCase(TestCase):
     @freezegun.freeze_time('2022-11-01')
     def test_complementary_training_course(self):
         url = resolve_url(
-            f'admission:parcours_doctoral:course-enrollment:edit',
+            f'parcours_doctoral:parcours_doctoral:course-enrollment:edit',
             uuid=self.parcours_doctoral.uuid,
             activity_id=self.ucl_course.uuid,
         )
@@ -205,7 +204,7 @@ class DoctorateTrainingActivityViewTestCase(TestCase):
 
     def test_ucl_course(self):
         url = resolve_url(
-            f'admission:parcours_doctoral:complementary-training:add',
+            f'parcours_doctoral:parcours_doctoral:complementary-training:add',
             uuid=self.parcours_doctoral.uuid,
             category='COURSE',
         )

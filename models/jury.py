@@ -29,10 +29,11 @@ from django.db import models
 from django.db.models import CheckConstraint, Q
 from django.utils.translation import gettext_lazy as _, pgettext_lazy
 
-from admission.models.enums.actor_type import ActorType
 from parcours_doctoral.ddd.jury.domain.model.enums import RoleJury, TitreMembre, GenreMembre
 
 __all__ = ['JuryMember']
+
+from parcours_doctoral.models.actor import ActorType
 
 
 class JuryMember(models.Model):
@@ -63,7 +64,7 @@ class JuryMember(models.Model):
 
     # Promoter only
     promoter = models.ForeignKey(
-        'admission.SupervisionActor',
+        'parcours_doctoral.ParcoursDoctoralSupervisionActor',
         verbose_name=_('Supervisor'),
         on_delete=models.PROTECT,
         limit_choices_to={"type": ActorType.PROMOTER.name},

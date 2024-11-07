@@ -31,8 +31,8 @@ from django.shortcuts import resolve_url
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from admission.tests.factories.roles import CandidateFactory
-from admission.tests.factories.supervision import PromoterFactory
+from parcours_doctoral.tests.factories.roles import StudentRoleFactory
+from parcours_doctoral.tests.factories.supervision import PromoterFactory
 from base.models.enums.entity_type import EntityType
 from base.tests.factories.entity_version import EntityVersionFactory
 from base.tests.factories.person import PersonFactory
@@ -44,8 +44,8 @@ class ParcoursDoctoralAPIViewTestCase(APITestCase):
     other_parcours_doctoral: Optional[ParcoursDoctoralFactory] = None
     commission: Optional[EntityVersionFactory] = None
     sector: Optional[EntityVersionFactory] = None
-    student: Optional[CandidateFactory] = None
-    other_student: Optional[CandidateFactory] = None
+    student: Optional[StudentRoleFactory] = None
+    other_student: Optional[StudentRoleFactory] = None
     no_role_user: Optional[User] = None
     parcours_doctoral_url: Optional[str] = None
     other_parcours_doctoral_url: Optional[str] = None
@@ -77,12 +77,12 @@ class ParcoursDoctoralAPIViewTestCase(APITestCase):
             training__management_entity=cls.commission,
         )
         # Users
-        cls.student = cls.parcours_doctoral.candidate
-        cls.other_student = cls.other_parcours_doctoral.candidate
+        cls.student = cls.parcours_doctoral.student
+        cls.other_student = cls.other_parcours_doctoral.student
         cls.no_role_user = PersonFactory().user
 
-        cls.parcours_doctoral_url = resolve_url('admission_api_v1:parcours_doctoral', uuid=cls.parcours_doctoral.uuid)
-        cls.other_parcours_doctoral_url = resolve_url('admission_api_v1:parcours_doctoral', uuid=cls.other_parcours_doctoral.uuid)
+        cls.parcours_doctoral_url = resolve_url('parcours_doctoral_api_v1:parcours_doctoral', uuid=cls.parcours_doctoral.uuid)
+        cls.other_parcours_doctoral_url = resolve_url('parcours_doctoral_api_v1:parcours_doctoral', uuid=cls.other_parcours_doctoral.uuid)
 
     @freezegun.freeze_time('2023-01-01')
     def test_get_parcours_doctoral_student(self):
@@ -117,9 +117,9 @@ class ParcoursDoctoralAPIViewTestCase(APITestCase):
         self.assertEqual(json_response['sigle_formation'], self.parcours_doctoral.parcours_doctoral.acronym)
         self.assertEqual(json_response['annee_formation'], self.parcours_doctoral.parcours_doctoral.academic_year.year)
         self.assertEqual(json_response['intitule_formation'], self.parcours_doctoral.parcours_doctoral.title)
-        self.assertEqual(json_response['matricule_doctorant'], self.parcours_doctoral.candidate.global_id)
-        self.assertEqual(json_response['prenom_doctorant'], self.parcours_doctoral.candidate.first_name)
-        self.assertEqual(json_response['nom_doctorant'], self.parcours_doctoral.candidate.last_name)
+        self.assertEqual(json_response['matricule_doctorant'], self.parcours_doctoral.student.global_id)
+        self.assertEqual(json_response['prenom_doctorant'], self.parcours_doctoral.student.first_name)
+        self.assertEqual(json_response['nom_doctorant'], self.parcours_doctoral.student.last_name)
 
     def test_assert_methods_not_allowed(self):
         self.client.force_authenticate(user=self.student.user)

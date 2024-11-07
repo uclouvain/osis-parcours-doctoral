@@ -32,8 +32,8 @@ from django.test import TestCase
 from osis_mail_template import templates
 from rest_framework import status
 
+from parcours_doctoral.mail_templates import ADMISSION_EMAIL_CONFIRMATION_PAPER_INFO_STUDENT
 from parcours_doctoral.models.cdd_mail_template import CddMailTemplate
-from admission.mail_templates import ADMISSION_EMAIL_MEMBER_REMOVED
 from base.tests.factories.person import PersonFactory
 from base.tests.factories.user import SuperUserFactory, UserFactory
 from parcours_doctoral.tests.factories.roles import CddConfiguratorFactory
@@ -49,7 +49,7 @@ class CddMailTemplatesTestCase(TestCase):
         self.list_url = resolve_url('parcours_doctoral:config:cdd-mail-template:list')
 
         self.cdd_mail_template = CddMailTemplate.objects.create(
-            identifier=ADMISSION_EMAIL_MEMBER_REMOVED,
+            identifier=ADMISSION_EMAIL_CONFIRMATION_PAPER_INFO_STUDENT,
             name="Some name",
             language=settings.LANGUAGE_CODE_EN,
             cdd=self.cdd,
@@ -57,7 +57,7 @@ class CddMailTemplatesTestCase(TestCase):
             body="Body",
         )
         CddMailTemplate(
-            identifier=ADMISSION_EMAIL_MEMBER_REMOVED,
+            identifier=ADMISSION_EMAIL_CONFIRMATION_PAPER_INFO_STUDENT,
             name="Some name",
             language=settings.LANGUAGE_CODE_FR,
             cdd=self.cdd,
@@ -66,21 +66,21 @@ class CddMailTemplatesTestCase(TestCase):
         ).save()
         self.preview_url = resolve_url(
             'parcours_doctoral:config:cdd-mail-template:preview',
-            identifier=ADMISSION_EMAIL_MEMBER_REMOVED,
+            identifier=ADMISSION_EMAIL_CONFIRMATION_PAPER_INFO_STUDENT,
             pk=self.cdd_mail_template.pk,
         )
         self.add_url = resolve_url(
             'parcours_doctoral:config:cdd-mail-template:add',
-            identifier=ADMISSION_EMAIL_MEMBER_REMOVED,
+            identifier=ADMISSION_EMAIL_CONFIRMATION_PAPER_INFO_STUDENT,
         )
         self.edit_url = resolve_url(
             'parcours_doctoral:config:cdd-mail-template:edit',
-            identifier=ADMISSION_EMAIL_MEMBER_REMOVED,
+            identifier=ADMISSION_EMAIL_CONFIRMATION_PAPER_INFO_STUDENT,
             pk=self.cdd_mail_template.pk,
         )
         self.delete_url = resolve_url(
             'parcours_doctoral:config:cdd-mail-template:delete',
-            identifier=ADMISSION_EMAIL_MEMBER_REMOVED,
+            identifier=ADMISSION_EMAIL_CONFIRMATION_PAPER_INFO_STUDENT,
             pk=self.cdd_mail_template.pk,
         )
 
@@ -104,13 +104,13 @@ class CddMailTemplatesTestCase(TestCase):
         self.assertEqual(self.client.get(self.edit_url).status_code, status.HTTP_403_FORBIDDEN)
         self.assertEqual(self.client.get(self.add_url).status_code, status.HTTP_403_FORBIDDEN)
 
-    @patch('admission.models.cdd_mail_template.ALLOWED_CUSTOM_IDENTIFIERS', [ADMISSION_EMAIL_MEMBER_REMOVED])
+    @patch('parcours_doctoral.models.cdd_mail_template.ALLOWED_CUSTOM_IDENTIFIERS', [ADMISSION_EMAIL_CONFIRMATION_PAPER_INFO_STUDENT])
     def test_list_as_cdd(self):
         self.client.force_login(self.cdd_user)
 
         response = self.client.get(self.list_url)
         self.assertContains(response, "Some name", status_code=status.HTTP_200_OK)
-        self.assertContains(response, templates.get_description(ADMISSION_EMAIL_MEMBER_REMOVED))
+        self.assertContains(response, templates.get_description(ADMISSION_EMAIL_CONFIRMATION_PAPER_INFO_STUDENT))
 
     def test_list_as_superuser(self):
         superuser = SuperUserFactory()

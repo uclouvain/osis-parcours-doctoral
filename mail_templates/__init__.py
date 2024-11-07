@@ -30,6 +30,7 @@ PARCOURS_DOCTORAL_TAG = 'Parcours doctoral'
 # When running tests, the test runner try to import it directly, re-registrering the identifiers
 try:
     from .training import *
+    from .confirmation_paper import *
 except DuplicateMailTemplateIdentifier:
     import sys
 

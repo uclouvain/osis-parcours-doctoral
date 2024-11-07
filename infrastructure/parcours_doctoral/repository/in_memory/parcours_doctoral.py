@@ -31,6 +31,7 @@ from admission.ddd.admission.doctorat.validation.domain.model.enums import Choix
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoral, ParcoursDoctoralIdentity
 from parcours_doctoral.ddd.domain.validator.exceptions import ParcoursDoctoralNonTrouveException
 from parcours_doctoral.ddd.dtos import ParcoursDoctoralDTO
+from parcours_doctoral.ddd.dtos.parcours_doctoral import ProjetDTO, CotutelleDTO
 from parcours_doctoral.ddd.epreuve_confirmation.domain.model.epreuve_confirmation import (
     EpreuveConfirmation,
 )
@@ -115,6 +116,29 @@ class ParcoursDoctoralInMemoryRepository(InMemoryGenericRepository, IParcoursDoc
             autre_bourse_recherche=parcours_doctoral.autre_bourse_recherche,
             noma_doctorant=doctorant.noma,
             genre_doctorant=doctorant.genre.name,
+            projet=ProjetDTO(
+                titre='titre',
+                resume='resume',
+                langue_redaction_these='FR',
+                institut_these=None,
+                nom_institut_these='institut',
+                sigle_institut_these='INST',
+                lieu_these='lieu',
+                projet_doctoral_deja_commence=None,
+                projet_doctoral_institution='',
+                projet_doctoral_date_debut=None,
+                documents_projet=[],
+                graphe_gantt=[],
+                proposition_programme_doctoral=[],
+                projet_formation_complementaire=[],
+                lettres_recommandation=[],
+                doctorat_deja_realise='',
+                institution='',
+                domaine_these='domaine',
+                date_soutenance=None,
+                raison_non_soutenue='raison',
+            ),
+            cotutelle=None,
         )
 
     @classmethod

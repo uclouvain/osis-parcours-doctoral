@@ -26,7 +26,10 @@
 
 import factory
 
+from parcours_doctoral.auth.roles.ca_member import CommitteeMember
 from parcours_doctoral.auth.roles.cdd_configurator import CddConfigurator
+from parcours_doctoral.auth.roles.promoter import Promoter
+from parcours_doctoral.auth.roles.student import Student
 
 
 class BaseFactory(factory.django.DjangoModelFactory):
@@ -42,3 +45,21 @@ class CddConfiguratorFactory(BaseFactory):
         organization=None,
     )
     with_child = False
+
+
+class PromoterRoleFactory(BaseFactory):
+    class Meta:
+        model = Promoter
+        django_get_or_create = ('person',)
+
+
+class CaMemberRoleFactory(BaseFactory):
+    class Meta:
+        model = CommitteeMember
+        django_get_or_create = ('person',)
+
+
+class StudentRoleFactory(BaseFactory):
+    class Meta:
+        model = Student
+        django_get_or_create = ('person',)

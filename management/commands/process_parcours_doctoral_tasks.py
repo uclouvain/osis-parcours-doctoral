@@ -30,7 +30,7 @@ from osis_async.models.enums import TaskState
 from osis_async.utils import update_task
 
 from admission.models import AdmissionTask
-from parcours_doctoral.exports.admission_confirmation_success_attestation import \
+from parcours_doctoral.exports.confirmation_success_attestation import \
     admission_confirmation_success_attestation
 
 

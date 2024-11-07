@@ -47,7 +47,7 @@ class ConfirmationPaperTestCase(TestCase):
         self.assertEqual(
             confirmation_paper_directory_path(self.confirmation_paper, 'my_file.pdf'),
             'parcours_doctoral/{}/{}/confirmation/{}/my_file.pdf'.format(
-                self.parcours_doctoral.candidate.uuid,
+                self.parcours_doctoral.student.uuid,
                 self.parcours_doctoral.uuid,
                 self.confirmation_paper.uuid,
             ),
@@ -55,12 +55,12 @@ class ConfirmationPaperTestCase(TestCase):
 
     def test_permission_cache_dropped_on_parcours_doctoral_save(self):
         self.assertEqual(get_cached_parcours_doctoral_perm_obj(self.parcours_doctoral.uuid), self.parcours_doctoral)
-        self.assertIsNotNone(cache.get(f"admission_permission_{self.parcours_doctoral.uuid}"))
+        self.assertIsNotNone(cache.get(f"parcours_doctoral_permission_{self.parcours_doctoral.uuid}"))
         self.parcours_doctoral.doctorate.save()
-        self.assertIsNone(cache.get(f"admission_permission_{self.parcours_doctoral.uuid}"))
+        self.assertIsNone(cache.get(f"parcours_doctoral_permission_{self.parcours_doctoral.uuid}"))
 
-    def test_permission_cache_dropped_on_candidate_save(self):
+    def test_permission_cache_dropped_on_student_save(self):
         self.assertEqual(get_cached_parcours_doctoral_perm_obj(self.parcours_doctoral.uuid), self.parcours_doctoral)
-        self.assertIsNotNone(cache.get(f"admission_permission_{self.parcours_doctoral.uuid}"))
-        self.parcours_doctoral.candidate.save()
-        self.assertIsNone(cache.get(f"admission_permission_{self.parcours_doctoral.uuid}"))
+        self.assertIsNotNone(cache.get(f"parcours_doctoral_permission_{self.parcours_doctoral.uuid}"))
+        self.parcours_doctoral.student.save()
+        self.assertIsNone(cache.get(f"parcours_doctoral_permission_{self.parcours_doctoral.uuid}"))

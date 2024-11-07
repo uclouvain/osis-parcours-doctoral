@@ -33,10 +33,9 @@ from django.test import TestCase, override_settings
 from django.urls import reverse
 from rest_framework.status import HTTP_200_OK, HTTP_302_FOUND, HTTP_403_FORBIDDEN, HTTP_404_NOT_FOUND
 
-from admission.ddd.admission.doctorat.preparation.domain.model.enums import ChoixTypeFinancement, \
-    ChoixTypeContratTravail
 from admission.tests.factories.roles import AdreSecretaryRoleFactory
-from admission.tests.factories.supervision import PromoterFactory, ExternalPromoterFactory
+from parcours_doctoral.ddd.domain.model.enums import ChoixTypeFinancement
+from parcours_doctoral.tests.factories.supervision import PromoterFactory, ExternalPromoterFactory
 from parcours_doctoral.models.confirmation_paper import ConfirmationPaper
 from base.tests.factories.academic_year import AcademicYearFactory
 from base.tests.factories.program_manager import ProgramManagerFactory
@@ -80,7 +79,7 @@ class ConfirmationFormViewTestCase(TestCase):
         ]
         cls.last_confirmation_paper = cls.confirmation_papers[1]
 
-        cls.candidate = cls.parcours_doctoral_without_confirmation_paper.candidate
+        cls.student = cls.parcours_doctoral_without_confirmation_paper.student
 
         cls.manager = ProgramManagerFactory(
             education_group=cls.parcours_doctoral_without_confirmation_paper.training.education_group
@@ -210,13 +209,11 @@ class DoctorateAdmissionConfirmationOpinionFormViewTestCase(TestCase):
             training__academic_year=academic_years[0],
             supervision_group=promoter.process,
             financing_type=ChoixTypeFinancement.WORK_CONTRACT.name,
-            financing_work_contract=ChoixTypeContratTravail.UCLOUVAIN_SCIENTIFIC_STAFF.name,
         )
         cls.parcours_doctoral_with_confirmation_papers = ParcoursDoctoralFactory(
             training__academic_year=academic_years[0],
             supervision_group=promoter.process,
             financing_type=ChoixTypeFinancement.WORK_CONTRACT.name,
-            financing_work_contract=ChoixTypeContratTravail.UCLOUVAIN_SCIENTIFIC_STAFF.name,
         )
         cls.file_uuid = uuid.uuid4()
         cls.confirmation_papers = [
@@ -235,7 +232,7 @@ class DoctorateAdmissionConfirmationOpinionFormViewTestCase(TestCase):
         ]
         cls.last_confirmation_paper = cls.confirmation_papers[1]
 
-        cls.candidate = cls.parcours_doctoral_without_confirmation_paper.candidate
+        cls.student = cls.parcours_doctoral_without_confirmation_paper.student
 
         # User with one cdd
         cls.adre_person = AdreSecretaryRoleFactory().person
@@ -254,8 +251,8 @@ class DoctorateAdmissionConfirmationOpinionFormViewTestCase(TestCase):
         cls.get_remote_token_patcher.stop()
         super().tearDownClass()
 
-    def test_get_confirmation_form_candidate_user(self):
-        self.client.force_login(user=self.candidate.user)
+    def test_get_confirmation_form_student_user(self):
+        self.client.force_login(user=self.student.user)
 
         url = reverse(self.path, args=[self.parcours_doctoral_without_confirmation_paper.uuid])
 

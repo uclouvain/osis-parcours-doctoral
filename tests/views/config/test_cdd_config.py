@@ -32,7 +32,7 @@ from rest_framework import status
 
 from parcours_doctoral.models.cdd_config import CddConfiguration
 from parcours_doctoral.ddd.formation.domain.model.enums import CategorieActivite
-from admission.tests.factories.roles import CddConfiguratorFactory
+from parcours_doctoral.tests.factories.roles import CddConfiguratorFactory
 from base.tests.factories.person import SuperUserPersonFactory
 
 

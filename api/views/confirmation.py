@@ -45,7 +45,7 @@ from admission.ddd.admission.doctorat.preparation.commands import GetGroupeDeSup
 from parcours_doctoral.utils import get_cached_parcours_doctoral_perm_obj
 from infrastructure.messages_bus import message_bus_instance
 from osis_role.contrib.views import APIPermissionRequiredMixin
-from parcours_doctoral.exports.admission_confirmation_canvas import admission_pdf_confirmation_canvas
+from parcours_doctoral.exports.confirmation_canvas import admission_pdf_confirmation_canvas
 
 __all__ = [
     "ConfirmationAPIView",

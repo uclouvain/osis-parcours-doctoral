@@ -25,35 +25,19 @@
 # ##############################################################################
 
 import uuid
-from datetime import datetime
 
 import factory
 
-from admission.models import DoctorateAdmission
-from admission.models.doctorate import DoctorateAdmissionPrerequisiteCourses
-from admission.ddd.admission.doctorat.preparation.domain.model.enums import (
-    ChoixStatutPropositionDoctorale,
-    ChoixTypeFinancement,
-    STATUTS_PROPOSITION_DOCTORALE_NON_SOUMISE,
-)
-from admission.ddd.admission.doctorat.preparation.domain.model.enums.checklist import (
-    ChoixStatutChecklist,
-    OngletsChecklist,
-)
 from admission.tests.factories import DoctorateAdmissionFactory
-from admission.tests.factories.accounting import AccountingFactory
-from admission.tests.factories.roles import CandidateFactory
-from admission.tests.factories.utils import generate_proposition_reference
 from base.models.education_group_year import EducationGroupYear
 from base.models.enums.education_group_types import TrainingType
 from base.tests.factories.academic_year import AcademicYearFactory
 from base.tests.factories.education_group_type import EducationGroupTypeFactory
 from base.tests.factories.education_group_year import EducationGroupYearFactory
 from base.tests.factories.entity import EntityWithVersionFactory
-from base.tests.factories.entity_version import EntityVersionFactory
-from base.tests.factories.learning_unit_year import LearningUnitYearFullFactory
 from base.tests.factories.person import PersonFactory
 from base.tests.factories.student import StudentFactory
+from parcours_doctoral.ddd.domain.model.enums import ChoixTypeFinancement
 from parcours_doctoral.models.parcours_doctoral import ParcoursDoctoral
 from program_management.ddd.domain.program_tree_version import NOT_A_TRANSITION, STANDARD
 from program_management.tests.factories.education_group_version import EducationGroupVersionFactory

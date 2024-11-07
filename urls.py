@@ -24,9 +24,7 @@
 #
 # ##############################################################################
 from django.conf import settings
-from django.conf.urls import url
 
-from admission.tasks import retrieve_digit_tickets_status
 from osis_common.utils.file_router import FileRouter
 
 app_name = 'parcours_doctoral'

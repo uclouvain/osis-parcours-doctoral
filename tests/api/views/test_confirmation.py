@@ -39,8 +39,7 @@ from parcours_doctoral.ddd.epreuve_confirmation.validators.exceptions import (
     EpreuveConfirmationDateIncorrecteException,
     EpreuveConfirmationNonTrouveeException,
 )
-from admission.tests.factories import WriteTokenFactory
-from admission.tests.factories.supervision import PromoterFactory
+from parcours_doctoral.tests.factories.supervision import PromoterFactory
 from base.models.enums.entity_type import EntityType
 from base.tests.factories.entity_version import EntityVersionFactory
 from base.tests.factories.program_manager import ProgramManagerFactory
@@ -75,9 +74,9 @@ class ConfirmationAPIViewTestCase(APITestCase):
             training__management_entity=commission,
             supervision_group=promoter.process,
         )
-        admission = ParcoursDoctoralFactory(
+        parcours_doctoral = ParcoursDoctoralFactory(
             training__management_entity=commission,
-            candidate=cls.parcours_doctoral.candidate,
+            student=cls.parcours_doctoral.student,
         )
         other_parcours_doctoral = ParcoursDoctoralFactory(
             status=ChoixStatutParcoursDoctoral.ADMITTED.name,
@@ -86,29 +85,29 @@ class ConfirmationAPIViewTestCase(APITestCase):
         )
 
         # Users
-        cls.student = cls.parcours_doctoral.candidate
-        cls.other_student = other_parcours_doctoral.candidate
+        cls.student = cls.parcours_doctoral.student
+        cls.other_student = other_parcours_doctoral.student
         cls.promoter = promoter.person.user
         cls.other_promoter = other_promoter.person.user
         cls.manager = ProgramManagerFactory(education_group=cls.parcours_doctoral.training.education_group).person
 
-        cls.parcours_doctoral_url = resolve_url('admission_api_v1:confirmation', uuid=cls.parcours_doctoral.uuid)
-        cls.other_parcours_doctoral_url = resolve_url('admission_api_v1:confirmation', uuid=other_parcours_doctoral.uuid)
-        cls.admission_url = resolve_url('admission_api_v1:confirmation', uuid=admission.uuid)
+        cls.parcours_doctoral_url = resolve_url('parcours_doctoral_api_v1:confirmation', uuid=cls.parcours_doctoral.uuid)
+        cls.other_parcours_doctoral_url = resolve_url('parcours_doctoral_api_v1:confirmation', uuid=other_parcours_doctoral.uuid)
+        cls.parcours_doctoral_url = resolve_url('parcours_doctoral_api_v1:confirmation', uuid=parcours_doctoral.uuid)
 
-        cls.supervised_parcours_doctoral_url = resolve_url('admission_api_v1:supervised_confirmation', uuid=cls.parcours_doctoral.uuid)
+        cls.supervised_parcours_doctoral_url = resolve_url('parcours_doctoral_api_v1:supervised_confirmation', uuid=cls.parcours_doctoral.uuid)
         cls.supervised_other_parcours_doctoral_url = resolve_url(
-            'admission_api_v1:supervised_confirmation',
+            'parcours_doctoral_api_v1:supervised_confirmation',
             uuid=other_parcours_doctoral.uuid,
         )
-        cls.supervised_admission_url = resolve_url('admission_api_v1:supervised_confirmation', uuid=admission.uuid)
+        cls.supervised_parcours_doctoral_url = resolve_url('parcours_doctoral_api_v1:supervised_confirmation', uuid=parcours_doctoral.uuid)
 
     @patch("osis_document.contrib.fields.FileField._confirm_multiple_upload")
     def setUp(self, confirm_upload):
         confirm_upload.side_effect = lambda _, value, __: ["550bf83e-2be9-4c1e-a2cd-1bdfe82e2c92"] if value else []
         self.confirmation_papers = [
             ConfirmationPaperFactory(
-                admission=self.parcours_doctoral,
+                parcours_doctoral=self.parcours_doctoral,
                 confirmation_date=datetime.date(2022, 4, 1),
                 confirmation_deadline=datetime.date(2022, 4, 5),
                 research_report=[WriteTokenFactory().token],
@@ -117,7 +116,7 @@ class ConfirmationAPIViewTestCase(APITestCase):
                 research_mandate_renewal_opinion=[WriteTokenFactory().token],
             ),
             ConfirmationPaperFactory(
-                admission=self.parcours_doctoral,
+                parcours_doctoral=self.parcours_doctoral,
                 confirmation_deadline=datetime.date(2022, 4, 10),
                 research_report=[WriteTokenFactory().token],
                 supervisor_panel_report=[WriteTokenFactory().token],
@@ -170,7 +169,7 @@ class ConfirmationAPIViewTestCase(APITestCase):
 
     def test_get_confirmation_promoter_with_parcours_doctoral_invalid_status(self):
         self.client.force_authenticate(user=self.promoter)
-        response = self.client.get(self.admission_url, format='json')
+        response = self.client.get(self.parcours_doctoral_url, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
@@ -182,7 +181,7 @@ class ConfirmationAPIViewTestCase(APITestCase):
 
     def test_get_confirmation_student_with_parcours_doctoral_invalid_status(self):
         self.client.force_authenticate(user=self.student.user)
-        response = self.client.get(self.admission_url, format='json')
+        response = self.client.get(self.parcours_doctoral_url, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
@@ -231,7 +230,7 @@ class ConfirmationAPIViewTestCase(APITestCase):
     def test_put_confirmation_by_promoter_with_invalid_parcours_doctoral_status(self):
         self.client.force_authenticate(user=self.promoter)
         response = self.client.put(
-            self.supervised_admission_url,
+            self.supervised_parcours_doctoral_url,
             format='json',
             data={
                 'proces_verbal_ca': ['f1'],
@@ -312,9 +311,9 @@ class LastConfirmationAPIViewTestCase(APITestCase):
             training__management_entity=commission,
             supervision_group=promoter.process,
         )
-        admission = ParcoursDoctoralFactory(
+        parcours_doctoral = ParcoursDoctoralFactory(
             training__management_entity=commission,
-            candidate=cls.parcours_doctoral.candidate,
+            student=cls.parcours_doctoral.student,
         )
         other_parcours_doctoral = ParcoursDoctoralFactory(
             status=ChoixStatutParcoursDoctoral.ADMITTED.name,
@@ -322,23 +321,23 @@ class LastConfirmationAPIViewTestCase(APITestCase):
         )
 
         # Users
-        cls.student = cls.parcours_doctoral.candidate
-        cls.other_student = other_parcours_doctoral.candidate
+        cls.student = cls.parcours_doctoral.student
+        cls.other_student = other_parcours_doctoral.student
         cls.manager = ProgramManagerFactory(education_group=cls.parcours_doctoral.training.education_group).person
 
-        cls.parcours_doctoral_url = resolve_url('admission_api_v1:last_confirmation', uuid=cls.parcours_doctoral.uuid)
-        cls.other_parcours_doctoral_url = resolve_url('admission_api_v1:last_confirmation', uuid=other_parcours_doctoral.uuid)
-        cls.admission_url = resolve_url('admission_api_v1:last_confirmation', uuid=admission.uuid)
+        cls.parcours_doctoral_url = resolve_url('parcours_doctoral_api_v1:last_confirmation', uuid=cls.parcours_doctoral.uuid)
+        cls.other_parcours_doctoral_url = resolve_url('parcours_doctoral_api_v1:last_confirmation', uuid=other_parcours_doctoral.uuid)
+        cls.parcours_doctoral_url = resolve_url('parcours_doctoral_api_v1:last_confirmation', uuid=parcours_doctoral.uuid)
 
     def setUp(self):
         self.confirmation_papers = [
             ConfirmationPaperFactory(
-                admission=self.parcours_doctoral,
+                parcours_doctoral=self.parcours_doctoral,
                 confirmation_date=datetime.date(2022, 4, 1),
                 confirmation_deadline=datetime.date(2022, 4, 5),
             ),
             ConfirmationPaperFactory(
-                admission=self.parcours_doctoral,
+                parcours_doctoral=self.parcours_doctoral,
                 confirmation_deadline=datetime.date(2022, 4, 10),
             ),
         ]
@@ -371,7 +370,7 @@ class LastConfirmationAPIViewTestCase(APITestCase):
 
     def test_get_confirmation_with_parcours_doctoral_invalid_status(self):
         self.client.force_authenticate(user=self.student.user)
-        response = self.client.get(self.admission_url, format='json')
+        response = self.client.get(self.parcours_doctoral_url, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
@@ -461,7 +460,7 @@ class LastConfirmationAPIViewTestCase(APITestCase):
     def test_put_confirmation_with_parcours_doctoral_invalid_status(self):
         self.client.force_authenticate(user=self.student.user)
         response = self.client.put(
-            self.admission_url,
+            self.parcours_doctoral_url,
             format='json',
             data={
                 'date': '2022-05-15',
@@ -581,7 +580,7 @@ class LastConfirmationAPIViewTestCase(APITestCase):
     def test_post_confirmation_with_parcours_doctoral_invalid_status(self):
         self.client.force_authenticate(user=self.student.user)
         response = self.client.post(
-            self.admission_url,
+            self.parcours_doctoral_url,
             format='json',
             data={
                 'nouvelle_echeance': '2022-05-15',
@@ -648,9 +647,9 @@ class LastConfirmationCanvasAPIViewTestCase(APITestCase):
         cls.parcours_doctoral = ParcoursDoctoralFactory(
             status=ChoixStatutParcoursDoctoral.ADMITTED.name,
         )
-        admission = ParcoursDoctoralFactory(
+        parcours_doctoral = ParcoursDoctoralFactory(
             training__management_entity=commission,
-            candidate=cls.parcours_doctoral.candidate,
+            student=cls.parcours_doctoral.student,
         )
         other_parcours_doctoral = ParcoursDoctoralFactory(
             status=ChoixStatutParcoursDoctoral.ADMITTED.name,
@@ -658,12 +657,12 @@ class LastConfirmationCanvasAPIViewTestCase(APITestCase):
         )
 
         # Users
-        cls.student = cls.parcours_doctoral.candidate
+        cls.student = cls.parcours_doctoral.student
 
         path_name = 'parcours_doctoral_api_v1:last_confirmation_canvas'
         cls.parcours_doctoral_url = resolve_url(path_name, uuid=cls.parcours_doctoral.uuid)
         cls.other_parcours_doctoral_url = resolve_url(path_name, uuid=other_parcours_doctoral.uuid)
-        cls.admission_url = resolve_url(path_name, uuid=admission.uuid)
+        cls.parcours_doctoral_url = resolve_url(path_name, uuid=parcours_doctoral.uuid)
 
         # Mock osis-document
         cls.confirm_remote_upload_patcher = patch('osis_document.api.utils.confirm_remote_upload')
@@ -701,7 +700,7 @@ class LastConfirmationCanvasAPIViewTestCase(APITestCase):
 
     def setUp(self):
         self.confirmation_paper = ConfirmationPaperFactory(
-            admission=self.parcours_doctoral,
+            parcours_doctoral=self.parcours_doctoral,
             confirmation_date=datetime.date(2022, 4, 1),
             confirmation_deadline=datetime.date(2022, 4, 5),
         )
@@ -738,7 +737,7 @@ class LastConfirmationCanvasAPIViewTestCase(APITestCase):
 
     def test_can_not_get_confirmation_canvas_if_not_parcours_doctoral(self):
         self.client.force_authenticate(user=self.student.user)
-        response = self.client.get(self.admission_url, format='json')
+        response = self.client.get(self.parcours_doctoral_url, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 

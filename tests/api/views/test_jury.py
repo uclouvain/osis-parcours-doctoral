@@ -27,11 +27,8 @@ from django.shortcuts import resolve_url
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from admission.models import DoctorateAdmission
-from admission.tests.factories import ParcoursDoctoralFactory
-from admission.tests.factories.calendar import AdmissionAcademicCalendarFactory
-from admission.tests.factories.roles import CandidateFactory
-from admission.tests.factories.supervision import CaMemberFactory, PromoterFactory
+from parcours_doctoral.tests.factories.roles import StudentRoleFactory
+from parcours_doctoral.tests.factories.supervision import CaMemberFactory, PromoterFactory
 from base.tests.factories.entity import EntityFactory
 from base.tests.factories.person import PersonFactory
 from parcours_doctoral.tests.factories.parcours_doctoral import ParcoursDoctoralFactory
@@ -44,9 +41,8 @@ class JuryApiTestCase(APITestCase):
     def setUpTestData(cls):
         # Data
         doctoral_commission = EntityFactory()
-        cls.admission = DoctorateAdmissionFactory(
+        cls.parcours_doctoral = ParcoursDoctoralFactory(
             training__management_entity=doctoral_commission,
-            passed_confirmation=True,
         )
         cls.updated_data = {
             'titre_propose': 'titre api',
@@ -57,16 +53,15 @@ class JuryApiTestCase(APITestCase):
             'commentaire': 'commentaire',
         }
         # Targeted url
-        cls.url = resolve_url("admission_api_v1:jury-preparation", uuid=cls.admission.uuid)
-        # Create an admission supervision group
+        cls.url = resolve_url("parcours_doctoral_api_v1:jury-preparation", uuid=cls.parcours_doctoral.uuid)
+        # Create an parcours_doctoral supervision group
         promoter = PromoterFactory()
         committee_member = CaMemberFactory(process=promoter.process)
-        cls.admission.supervision_group = promoter.process
-        cls.admission.save()
-        AdmissionAcademicCalendarFactory.produce_all_required()
+        cls.parcours_doctoral.supervision_group = promoter.process
+        cls.parcours_doctoral.save()
         # Users
-        cls.candidate = cls.admission.student
-        cls.other_candidate_user = CandidateFactory().person.user
+        cls.student = cls.parcours_doctoral.student
+        cls.other_student_user = StudentRoleFactory().person.user
         cls.no_role_user = PersonFactory().user
         cls.promoter_user = promoter.person.user
         cls.other_promoter_user = PromoterFactory().person.user
@@ -80,7 +75,7 @@ class JuryApiTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_assert_methods_not_allowed(self):
-        self.client.force_authenticate(user=self.candidate.user)
+        self.client.force_authenticate(user=self.student.user)
         methods_not_allowed = ['delete', 'put', 'patch']
 
         for method in methods_not_allowed:
@@ -97,32 +92,32 @@ class JuryApiTestCase(APITestCase):
         response = self.client.post(self.url, data=self.updated_data, format="json")
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN, response.content)
 
-    def test_jury_get_candidate(self):
-        self.client.force_authenticate(user=self.candidate.user)
+    def test_jury_get_student(self):
+        self.client.force_authenticate(user=self.student.user)
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
-    def test_jury_update_using_api_candidate(self):
-        self.client.force_authenticate(user=self.candidate.user)
-        admission = DoctorateAdmission.objects.get()
-        self.assertEqual(admission.thesis_proposed_title, "Thesis title")
+    def test_jury_update_using_api_student(self):
+        self.client.force_authenticate(user=self.student.user)
+        parcours_doctoral = ParcoursDoctoral.objects.get()
+        self.assertEqual(parcours_doctoral.thesis_proposed_title, "Thesis title")
 
         response = self.client.post(self.url, data=self.updated_data, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
-        admission = DoctorateAdmission.objects.get()
-        self.assertEqual(admission.thesis_proposed_title, "titre api")
+        parcours_doctoral = ParcoursDoctoral.objects.get()
+        self.assertEqual(parcours_doctoral.thesis_proposed_title, "titre api")
 
         response = self.client.get(self.url, format="json")
         self.assertEqual(response.json()['titre_propose'], "titre api")
 
-    def test_jury_get_other_candidate(self):
-        self.client.force_authenticate(user=self.other_candidate_user)
+    def test_jury_get_other_student(self):
+        self.client.force_authenticate(user=self.other_student_user)
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN, response.content)
 
-    def test_jury_update_other_candidate(self):
-        self.client.force_authenticate(user=self.other_candidate_user)
+    def test_jury_update_other_student(self):
+        self.client.force_authenticate(user=self.other_student_user)
         response = self.client.post(self.url, data=self.updated_data, format="json")
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN, response.content)
 
@@ -163,7 +158,7 @@ class JuryMembersListApiTestCase(APITestCase):
         # Data
         doctoral_commission = EntityFactory()
         country = CountryFactory()
-        cls.admission = DoctorateAdmissionFactory(
+        cls.parcours_doctoral = ParcoursDoctoralFactory(
             training__management_entity=doctoral_commission,
             passed_confirmation=True,
         )
@@ -181,15 +176,15 @@ class JuryMembersListApiTestCase(APITestCase):
         }
         AdmissionAcademicCalendarFactory.produce_all_required()
         # Targeted url
-        cls.url = resolve_url("admission_api_v1:jury-members-list", uuid=cls.admission.uuid)
-        # Create an admission supervision group
+        cls.url = resolve_url("parcours_doctoral_api_v1:jury-members-list", uuid=cls.parcours_doctoral.uuid)
+        # Create an parcours_doctoral supervision group
         promoter = PromoterFactory()
         committee_member = CaMemberFactory(process=promoter.process)
-        cls.admission.supervision_group = promoter.process
-        cls.admission.save()
+        cls.parcours_doctoral.supervision_group = promoter.process
+        cls.parcours_doctoral.save()
         # Users
-        cls.candidate = cls.admission.student
-        cls.other_candidate_user = CandidateFactory().person.user
+        cls.student = cls.parcours_doctoral.student
+        cls.other_student_user = CandidateFactory().person.user
         cls.no_role_user = PersonFactory().user
         cls.promoter_user = promoter.person.user
         cls.other_promoter_user = PromoterFactory().person.user
@@ -203,7 +198,7 @@ class JuryMembersListApiTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_assert_methods_not_allowed(self):
-        self.client.force_authenticate(user=self.candidate.user)
+        self.client.force_authenticate(user=self.student.user)
         methods_not_allowed = ['delete', 'put', 'patch']
 
         for method in methods_not_allowed:
@@ -220,21 +215,21 @@ class JuryMembersListApiTestCase(APITestCase):
         response = self.client.post(self.url, data=self.created_data, format="json")
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN, response.content)
 
-    def test_jury_get_candidate(self):
-        self.client.force_authenticate(user=self.candidate.user)
+    def test_jury_get_student(self):
+        self.client.force_authenticate(user=self.student.user)
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
-    def test_jury_create_using_api_candidate(self):
-        self.client.force_authenticate(user=self.candidate.user)
-        admission = DoctorateAdmission.objects.get()
-        self.assertEqual(admission.thesis_proposed_title, "Thesis title")
+    def test_jury_create_using_api_student(self):
+        self.client.force_authenticate(user=self.student.user)
+        parcours_doctoral = ParcoursDoctoral.objects.get()
+        self.assertEqual(parcours_doctoral.thesis_proposed_title, "Thesis title")
 
         response = self.client.post(self.url, data=self.created_data, format="json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
 
-        admission = DoctorateAdmission.objects.get()
-        membre = admission.jury_members.filter(promoter__isnull=True).first()
+        parcours_doctoral = ParcoursDoctoral.objects.get()
+        membre = parcours_doctoral.jury_members.filter(promoter__isnull=True).first()
         self.assertEqual(membre.first_name, "nouveau prenom")
 
         response = self.client.get(self.url, format="json")
@@ -242,13 +237,13 @@ class JuryMembersListApiTestCase(APITestCase):
         self.assertIsNotNone(created_member)
         self.assertEqual(created_member['prenom'], "nouveau prenom")
 
-    def test_jury_get_other_candidate(self):
-        self.client.force_authenticate(user=self.other_candidate_user)
+    def test_jury_get_other_student(self):
+        self.client.force_authenticate(user=self.other_student_user)
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN, response.content)
 
-    def test_jury_post_other_candidate(self):
-        self.client.force_authenticate(user=self.other_candidate_user)
+    def test_jury_post_other_student(self):
+        self.client.force_authenticate(user=self.other_student_user)
         response = self.client.post(self.url, data=self.created_data, format="json")
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN, response.content)
 
@@ -310,16 +305,16 @@ class JuryMembersDetailApiTestCase(APITestCase):
         cls.updated_role_data = {'role': 'PRESIDENT'}
         # Targeted url
         cls.url = resolve_url(
-            "admission_api_v1:jury-member-detail", uuid=cls.admission.uuid, member_uuid=cls.member.uuid
+            "parcours_doctoral_api_v1:jury-member-detail", uuid=cls.parcours_doctoral.uuid, member_uuid=cls.member.uuid
         )
-        # Create an admission supervision group
+        # Create an parcours_doctoral supervision group
         promoter = PromoterFactory()
         committee_member = CaMemberFactory(process=promoter.process)
-        cls.admission.supervision_group = promoter.process
-        cls.admission.save()
+        cls.parcours_doctoral.supervision_group = promoter.process
+        cls.parcours_doctoral.save()
         # Users
-        cls.candidate = cls.admission.student
-        cls.other_candidate_user = CandidateFactory().person.user
+        cls.student = cls.parcours_doctoral.student
+        cls.other_student_user = CandidateFactory().person.user
         cls.no_role_user = PersonFactory().user
         cls.promoter_user = promoter.person.user
         cls.other_promoter_user = PromoterFactory().person.user
@@ -333,7 +328,7 @@ class JuryMembersDetailApiTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_assert_methods_not_allowed(self):
-        self.client.force_authenticate(user=self.candidate.user)
+        self.client.force_authenticate(user=self.student.user)
         methods_not_allowed = ['post']
 
         for method in methods_not_allowed:
@@ -346,10 +341,10 @@ class JuryMembersDetailApiTestCase(APITestCase):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN, response.content)
 
-    def test_get_using_api_candidate(self):
-        self.client.force_authenticate(user=self.candidate.user)
-        admission = DoctorateAdmission.objects.get()
-        self.assertEqual(admission.thesis_proposed_title, "Thesis title")
+    def test_get_using_api_student(self):
+        self.client.force_authenticate(user=self.student.user)
+        parcours_doctoral = ParcoursDoctoral.objects.get()
+        self.assertEqual(parcours_doctoral.thesis_proposed_title, "Thesis title")
 
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
@@ -357,8 +352,8 @@ class JuryMembersDetailApiTestCase(APITestCase):
         membre = JuryMember.objects.get(uuid=self.member.uuid)
         self.assertEqual(membre.first_name, "first_name")
 
-    def test_get_other_candidate(self):
-        self.client.force_authenticate(user=self.other_candidate_user)
+    def test_get_other_student(self):
+        self.client.force_authenticate(user=self.other_student_user)
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN, response.content)
 
@@ -383,10 +378,10 @@ class JuryMembersDetailApiTestCase(APITestCase):
         response = self.client.put(self.url, data=self.udpated_data, format="json")
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN, response.content)
 
-    def test_put_using_api_candidate(self):
-        self.client.force_authenticate(user=self.candidate.user)
-        admission = DoctorateAdmission.objects.get()
-        self.assertEqual(admission.thesis_proposed_title, "Thesis title")
+    def test_put_using_api_student(self):
+        self.client.force_authenticate(user=self.student.user)
+        parcours_doctoral = ParcoursDoctoral.objects.get()
+        self.assertEqual(parcours_doctoral.thesis_proposed_title, "Thesis title")
 
         response = self.client.put(self.url, data=self.udpated_data, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
@@ -394,8 +389,8 @@ class JuryMembersDetailApiTestCase(APITestCase):
         membre = JuryMember.objects.get(uuid=self.member.uuid)
         self.assertEqual(membre.first_name, "nouveau prenom")
 
-    def test_put_other_candidate(self):
-        self.client.force_authenticate(user=self.other_candidate_user)
+    def test_put_other_student(self):
+        self.client.force_authenticate(user=self.other_student_user)
         response = self.client.put(self.url, data=self.udpated_data, format="json")
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN, response.content)
 
@@ -420,10 +415,10 @@ class JuryMembersDetailApiTestCase(APITestCase):
         response = self.client.patch(self.url, data=self.updated_role_data, format="json")
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN, response.content)
 
-    def test_patch_using_api_candidate(self):
-        self.client.force_authenticate(user=self.candidate.user)
-        admission = DoctorateAdmission.objects.get()
-        self.assertEqual(admission.thesis_proposed_title, "Thesis title")
+    def test_patch_using_api_student(self):
+        self.client.force_authenticate(user=self.student.user)
+        parcours_doctoral = ParcoursDoctoral.objects.get()
+        self.assertEqual(parcours_doctoral.thesis_proposed_title, "Thesis title")
 
         response = self.client.patch(self.url, data=self.updated_role_data, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
@@ -431,8 +426,8 @@ class JuryMembersDetailApiTestCase(APITestCase):
         membre = JuryMember.objects.get(uuid=self.member.uuid)
         self.assertEqual(membre.role, "PRESIDENT")
 
-    def test_patch_other_candidate(self):
-        self.client.force_authenticate(user=self.other_candidate_user)
+    def test_patch_other_student(self):
+        self.client.force_authenticate(user=self.other_student_user)
         response = self.client.patch(self.url, data=self.updated_role_data, format="json")
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN, response.content)
 
@@ -457,16 +452,16 @@ class JuryMembersDetailApiTestCase(APITestCase):
         response = self.client.delete(self.url)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN, response.content)
 
-    def test_delete_using_api_candidate(self):
-        self.client.force_authenticate(user=self.candidate.user)
+    def test_delete_using_api_student(self):
+        self.client.force_authenticate(user=self.student.user)
         response = self.client.delete(self.url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
 
         with self.assertRaises(JuryMember.DoesNotExist):
             JuryMember.objects.get(uuid=self.member.uuid)
 
-    def test_delete_other_candidate(self):
-        self.client.force_authenticate(user=self.other_candidate_user)
+    def test_delete_other_student(self):
+        self.client.force_authenticate(user=self.other_student_user)
         response = self.client.delete(self.url)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN, response.content)
 

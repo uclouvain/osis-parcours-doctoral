@@ -31,7 +31,7 @@ from django.test import TestCase, override_settings
 from django.urls import reverse
 from rest_framework.status import HTTP_200_OK, HTTP_404_NOT_FOUND
 
-from admission.tests.factories.supervision import PromoterFactory
+from parcours_doctoral.tests.factories.supervision import PromoterFactory
 from parcours_doctoral.models.confirmation_paper import ConfirmationPaper
 from base.tests.factories.academic_year import AcademicYearFactory
 from base.tests.factories.program_manager import ProgramManagerFactory
@@ -40,7 +40,7 @@ from parcours_doctoral.tests.factories.parcours_doctoral import ParcoursDoctoral
 
 
 @override_settings(OSIS_DOCUMENT_BASE_URL='http://dummyurl')
-class DoctorateAdmissionExtensionRequestFormViewTestCase(TestCase):
+class ExtensionRequestFormViewTestCase(TestCase):
     @classmethod
     def setUpTestData(cls):
         # Create some academic years

@@ -30,10 +30,10 @@ from django.test import TestCase
 from django.urls import reverse
 from rest_framework import status
 
-from admission.tests.factories import DoctorateAdmissionFactory
 from base.tests.factories.academic_year import AcademicYearFactory
 from base.tests.factories.program_manager import ProgramManagerFactory
 from parcours_doctoral.tests.factories.confirmation_paper import ConfirmationPaperFactory
+from parcours_doctoral.tests.factories.parcours_doctoral import ParcoursDoctoralFactory
 
 
 class DoctorateAdmissionExtensionRequestDetailViewTestCase(TestCase):
@@ -42,26 +42,26 @@ class DoctorateAdmissionExtensionRequestDetailViewTestCase(TestCase):
         # Create some academic years
         academic_years = [AcademicYearFactory(year=year) for year in [2021, 2022]]
 
-        # Create admissions
-        cls.admission_without_confirmation_paper = DoctorateAdmissionFactory(
+        # Create parcours_doctorals
+        cls.parcours_doctoral_without_confirmation_paper = ParcoursDoctoralFactory(
             training__academic_year=academic_years[0],
             admitted=True,
         )
-        cls.admission_with_confirmation_papers = DoctorateAdmissionFactory(
-            training=cls.admission_without_confirmation_paper.training,
+        cls.parcours_doctoral_with_confirmation_papers = ParcoursDoctoralFactory(
+            training=cls.parcours_doctoral_without_confirmation_paper.training,
             admitted=True,
         )
 
         # User with one cdd
         cls.cdd_person = ProgramManagerFactory(
-            education_group=cls.admission_without_confirmation_paper.training.education_group
+            education_group=cls.parcours_doctoral_without_confirmation_paper.training.education_group
         ).person
-        cls.detail_path = 'admission:doctorate:extension-request'
+        cls.detail_path = 'parcours_doctoral:extension-request'
 
     def setUp(self):
         self.client.force_login(user=self.cdd_person.user)
         self.confirmation_paper_with_extension_request = ConfirmationPaperFactory(
-            admission=self.admission_with_confirmation_papers,
+            parcours_doctoral=self.parcours_doctoral_with_confirmation_papers,
             confirmation_date=datetime.date(2022, 4, 1),
             confirmation_deadline=datetime.date(2022, 4, 5),
             extended_deadline=datetime.date(2023, 1, 1),
@@ -71,19 +71,19 @@ class DoctorateAdmissionExtensionRequestDetailViewTestCase(TestCase):
         )
 
     def test_extension_request_detail_cdd_user_without_confirmation_paper(self):
-        url = reverse(self.detail_path, args=[self.admission_without_confirmation_paper.uuid])
+        url = reverse(self.detail_path, args=[self.parcours_doctoral_without_confirmation_paper.uuid])
 
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_extension_request_detail_cdd_user_with_confirmation_paper(self):
-        url = reverse(self.detail_path, args=[self.admission_with_confirmation_papers.uuid])
+        url = reverse(self.detail_path, args=[self.parcours_doctoral_with_confirmation_papers.uuid])
 
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(
             response.context.get('doctorate').uuid,
-            str(self.admission_with_confirmation_papers.uuid),
+            str(self.parcours_doctoral_with_confirmation_papers.uuid),
         )
         self.assertEqual(
             response.context.get('confirmation_paper').uuid,

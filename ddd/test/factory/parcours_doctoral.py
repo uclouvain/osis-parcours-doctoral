@@ -28,6 +28,7 @@ import uuid
 import factory
 
 from parcours_doctoral.ddd.domain.model._formation import FormationIdentity
+from parcours_doctoral.ddd.domain.model._projet import Projet
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoral, ParcoursDoctoralIdentity
 from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 
@@ -40,6 +41,19 @@ class _ParcoursDoctoralIdentityFactory(factory.Factory):
     uuid = factory.LazyFunction(lambda: str(uuid.uuid4()))
 
 
+class _ProjetFactory(factory.Factory):
+    class Meta:
+        model = Projet
+        abstract = False
+
+    titre = factory.Faker('word')
+    resume = factory.Faker('sentence')
+    langue_redaction_these = 'FR'
+    institut_these = factory.LazyFunction(lambda: str(uuid.uuid4()))
+    lieu_these = factory.Faker('city')
+    deja_commence = False
+
+
 class _ParcoursDoctoralFactory(factory.Factory):
     class Meta:
         model = ParcoursDoctoral
@@ -47,6 +61,8 @@ class _ParcoursDoctoralFactory(factory.Factory):
 
     entity_id = factory.SubFactory(_ParcoursDoctoralIdentityFactory)
     statut = ChoixStatutParcoursDoctoral.ADMITTED
+    projet = factory.SubFactory(_ProjetFactory)
+    cotutelle = None
 
 
 class ParcoursDoctoralSC3DPMinimaleFactory(_ParcoursDoctoralFactory):

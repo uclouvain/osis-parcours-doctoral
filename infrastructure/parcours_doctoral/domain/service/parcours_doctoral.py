@@ -38,7 +38,7 @@ from parcours_doctoral.auth.roles.promoter import Promoter
 from parcours_doctoral.auth.roles.student import Student
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoralIdentity
 from parcours_doctoral.ddd.domain.service.i_parcours_doctoral import IParcoursDoctoralService
-from parcours_doctoral.models.actor import SupervisionActor
+from parcours_doctoral.models.actor import ParcoursDoctoralSupervisionActor
 from parcours_doctoral.models.parcours_doctoral import ParcoursDoctoral as ParcoursDoctoralModel
 
 
@@ -61,7 +61,7 @@ class ParcoursDoctoralService(IParcoursDoctoralService):
         actors = []
         states = []
         for admission_actor in admission.supervision_group.actors.all():
-            actor = SupervisionActor(
+            actor = ParcoursDoctoralSupervisionActor(
                 process=process,
                 person=admission_actor.person,
                 first_name=admission_actor.first_name,
@@ -81,7 +81,7 @@ class ParcoursDoctoralService(IParcoursDoctoralService):
             )
             actors.append(actor)
             states.append(StateHistory(actor=actor, state=SignatureState.APPROVED.name))
-        SupervisionActor.objects.bulk_create(actors)
+        ParcoursDoctoralSupervisionActor.objects.bulk_create(actors)
         StateHistory.objects.bulk_create(states)
         return process
 

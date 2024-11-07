@@ -26,9 +26,9 @@
 from django.conf import settings
 from django.test import TransactionTestCase
 
-from admission.mail_templates import ADMISSION_EMAIL_GENERIC_ONCE_ADMITTED
 from base.models.enums.entity_type import EntityType
 from base.tests.factories.entity_version import MainEntityVersionFactory, EntityVersionFactory
+from parcours_doctoral.mail_templates import ADMISSION_EMAIL_CONFIRMATION_PAPER_INFO_STUDENT
 from parcours_doctoral.models.cdd_mail_template import CddMailTemplate
 from parcours_doctoral.tests.factories.mail_template import CddMailTemplateFactory
 
@@ -63,7 +63,7 @@ class CDDMailTemplateTestCase(TransactionTestCase):
             subject='Subject',
             body='Body',
             name='Some name',
-            identifier=ADMISSION_EMAIL_GENERIC_ONCE_ADMITTED,
+            identifier=ADMISSION_EMAIL_CONFIRMATION_PAPER_INFO_STUDENT,
             language=settings.LANGUAGE_CODE_FR,
             cdd=self.fac_1_school_1_cdd_1_entity,
         )

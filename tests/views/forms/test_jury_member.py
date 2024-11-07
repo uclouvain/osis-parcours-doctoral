@@ -31,7 +31,7 @@ from django.test import TestCase
 from django.urls import reverse
 from rest_framework.status import HTTP_200_OK, HTTP_404_NOT_FOUND, HTTP_302_FOUND
 
-from admission.tests.factories.supervision import PromoterFactory
+from parcours_doctoral.tests.factories.supervision import PromoterFactory
 from parcours_doctoral.ddd.jury.domain.model.enums import TitreMembre, GenreMembre, RoleJury
 from parcours_doctoral.forms.jury.membre import JuryMembreForm
 from parcours_doctoral.models.jury import JuryMember

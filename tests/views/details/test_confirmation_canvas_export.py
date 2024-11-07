@@ -54,11 +54,9 @@ class DoctorateConfirmationCanvasExportViewTestCase(TestCase):
         # Create parcours_doctorals
         cls.parcours_doctoral_without_confirmation_paper = ParcoursDoctoralFactory(
             training__academic_year=academic_years[0],
-            admitted=True,
         )
         cls.parcours_doctoral_with_confirmation_paper = ParcoursDoctoralFactory(
             training=cls.parcours_doctoral_without_confirmation_paper.training,
-            admitted=True,
         )
         cls.confirmation_paper = ConfirmationPaperFactory(
             parcours_doctoral=cls.parcours_doctoral_with_confirmation_paper,
@@ -71,7 +69,7 @@ class DoctorateConfirmationCanvasExportViewTestCase(TestCase):
         ).person.user
 
         # Targeted path
-        cls.path_name = 'parcours_doctoral:doctorate:confirmation-canvas'
+        cls.path_name = 'parcours_doctoral:confirmation-canvas'
 
         # Mock osis-document
         cls.confirm_remote_upload_patcher = patch('osis_document.api.utils.confirm_remote_upload')

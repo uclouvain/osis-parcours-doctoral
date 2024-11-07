@@ -27,18 +27,24 @@ from django.contrib import admin
 from django.db import models
 from django.shortcuts import resolve_url
 from django.utils.translation import gettext_lazy as _, pgettext_lazy
+from hijack.contrib.admin import HijackUserAdminMixin
 from osis_mail_template.admin import MailTemplateAdmin
 
-from admission.admin import HijackRoleModelAdmin
 from base.models.entity_version import EntityVersion
+from osis_role.contrib.admin import RoleModelAdmin
+from parcours_doctoral.auth.roles.ca_member import CommitteeMember
 from parcours_doctoral.auth.roles.cdd_configurator import CddConfigurator
+from parcours_doctoral.auth.roles.doctorate_reader import DoctorateReader
 from parcours_doctoral.auth.roles.jury_secretary import JurySecretary
+from parcours_doctoral.auth.roles.promoter import Promoter
+from parcours_doctoral.auth.roles.student import Student
 from parcours_doctoral.ddd.formation.domain.model.enums import CategorieActivite, ContexteFormation
 from parcours_doctoral.models.cdd_config import CddConfiguration
 from parcours_doctoral.models.cdd_mail_template import CddMailTemplate
 from parcours_doctoral.models.activity import Activity
 
 
+@admin.register(Activity)
 class ActivityAdmin(admin.ModelAdmin):
     list_display = ('uuid', 'context', 'get_category', 'ects', 'modified_at', 'status', 'is_course_completed')
     search_fields = ['parcours_doctoral__uuid',]
@@ -138,6 +144,7 @@ class ActivityAdmin(admin.ModelAdmin):
         return url + f'#{obj.uuid}'
 
 
+@admin.register(CddMailTemplate)
 class CddMailTemplateAdmin(MailTemplateAdmin):
     list_display = ('name', 'identifier', 'language', 'cdd')
     search_fields = [
@@ -155,6 +162,15 @@ class CddMailTemplateAdmin(MailTemplateAdmin):
         return resolve_url(f'parcours_doctoral:config:cdd-mail-template:preview', identifier=obj.identifier, pk=obj.pk)
 
 
+@admin.register(JurySecretary, Promoter, CommitteeMember, DoctorateReader, Student)
+class HijackRoleModelAdmin(HijackUserAdminMixin, RoleModelAdmin):
+    list_select_related = ['person__user']
+
+    def get_hijack_user(self, obj):
+        return obj.person.user
+
+
+@admin.register(CddConfigurator)
 class CddConfiguratorAdmin(HijackRoleModelAdmin):
     list_display = ('person', 'most_recent_acronym')
     search_fields = [
@@ -183,8 +199,4 @@ class CddConfiguratorAdmin(HijackRoleModelAdmin):
         )
 
 
-admin.site.register(CddMailTemplate, CddMailTemplateAdmin)
-admin.site.register(Activity, ActivityAdmin)
 admin.site.register(CddConfiguration)
-admin.site.register(JurySecretary, HijackRoleModelAdmin)
-admin.site.register(CddConfigurator, CddConfiguratorAdmin)

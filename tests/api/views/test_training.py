@@ -28,8 +28,8 @@ from django.test import override_settings
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from admission.tests.factories.roles import CandidateFactory
-from admission.tests.factories.supervision import PromoterFactory
+from parcours_doctoral.tests.factories.roles import StudentRoleFactory
+from parcours_doctoral.tests.factories.supervision import PromoterFactory
 from parcours_doctoral.models.cdd_config import CddConfiguration
 from parcours_doctoral.models.activity import Activity
 from parcours_doctoral.ddd.formation.domain.model.enums import (
@@ -79,8 +79,8 @@ class TrainingApiTestCase(QueriesAssertionsMixin, APITestCase):
             training__management_entity=cls.commission,
             supervision_group=cls.reference_promoter.process,
         )
-        cls.candidate = cls.parcours_doctoral.candidate
-        cls.other_candidate_user = CandidateFactory(person__first_name="Jim").person.user
+        cls.student = cls.parcours_doctoral.student
+        cls.other_student_user = StudentRoleFactory(person__first_name="Jim").person.user
         cls.no_role_user = PersonFactory(first_name="Joe").user
         cls.url = resolve_url("parcours_doctoral_api_v1:doctoral-training", uuid=cls.parcours_doctoral.uuid)
         cls.activity = ConferenceFactory(doctorate=cls.parcours_doctoral)
@@ -97,15 +97,15 @@ class TrainingApiTestCase(QueriesAssertionsMixin, APITestCase):
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_assert_methods_not_allowed(self):
-        self.client.force_authenticate(user=self.candidate.user)
+        self.client.force_authenticate(user=self.student.user)
         methods_not_allowed = ['delete', 'patch', 'put']
 
         for method in methods_not_allowed:
             response = getattr(self.client, method)(self.url)
             self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
 
-    def test_training_get_with_candidate(self):
-        self.client.force_authenticate(user=self.candidate.user)
+    def test_training_get_with_student(self):
+        self.client.force_authenticate(user=self.student.user)
 
         with self.assertNumQueriesLessThan(8):
             response = self.client.get(self.url)
@@ -131,19 +131,19 @@ class TrainingApiTestCase(QueriesAssertionsMixin, APITestCase):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-    def test_training_get_with_other_candidate(self):
-        self.client.force_authenticate(user=self.other_candidate_user)
+    def test_training_get_with_other_student(self):
+        self.client.force_authenticate(user=self.other_student_user)
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-    def test_training_create_with_candidate(self):
-        self.client.force_authenticate(user=self.candidate.user)
+    def test_training_create_with_student(self):
+        self.client.force_authenticate(user=self.student.user)
 
         response = self.client.post(self.url, self.valid_data_for_conference)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.json())
 
-    def test_training_create_errors_with_candidate(self):
-        self.client.force_authenticate(user=self.candidate.user)
+    def test_training_create_errors_with_student(self):
+        self.client.force_authenticate(user=self.student.user)
 
         data = {
             **self.valid_data_for_conference,
@@ -153,8 +153,8 @@ class TrainingApiTestCase(QueriesAssertionsMixin, APITestCase):
         response = self.client.post(self.url, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.json())
 
-    def test_training_create_child_with_candidate(self):
-        self.client.force_authenticate(user=self.candidate.user)
+    def test_training_create_child_with_student(self):
+        self.client.force_authenticate(user=self.student.user)
         data = {
             'object_type': 'ConferenceCommunication',
             'context': ContexteFormation.DOCTORAL_TRAINING.name,
@@ -170,8 +170,8 @@ class TrainingApiTestCase(QueriesAssertionsMixin, APITestCase):
         response = self.client.post(self.url, data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.json())
 
-    def test_training_get_detail_with_candidate(self):
-        self.client.force_authenticate(user=self.candidate.user)
+    def test_training_get_detail_with_student(self):
+        self.client.force_authenticate(user=self.student.user)
 
         response = self.client.get(self.activity_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -185,8 +185,8 @@ class TrainingApiTestCase(QueriesAssertionsMixin, APITestCase):
         response = self.client.get(activity_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    def test_training_update_with_candidate(self):
-        self.client.force_authenticate(user=self.candidate.user)
+    def test_training_update_with_student(self):
+        self.client.force_authenticate(user=self.student.user)
 
         data = {
             'object_type': 'Conference',
@@ -211,14 +211,14 @@ class TrainingApiTestCase(QueriesAssertionsMixin, APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_training_config(self):
-        self.client.force_authenticate(user=self.candidate.user)
+        self.client.force_authenticate(user=self.student.user)
         config_url = resolve_url("parcours_doctoral_api_v1:training-config", uuid=self.parcours_doctoral.uuid)
         response = self.client.get(config_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_training_should_delete_unsubmitted(self):
         service = ServiceFactory(doctorate=self.parcours_doctoral)
-        self.client.force_authenticate(user=self.candidate.user)
+        self.client.force_authenticate(user=self.student.user)
         url = resolve_url("parcours_doctoral_api_v1:training", uuid=self.parcours_doctoral.uuid, activity_id=service.uuid)
         response = self.client.delete(url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
@@ -226,7 +226,7 @@ class TrainingApiTestCase(QueriesAssertionsMixin, APITestCase):
 
     def test_training_should_not_delete_submitted(self):
         service = ServiceFactory(doctorate=self.parcours_doctoral, status=StatutActivite.SOUMISE.name)
-        self.client.force_authenticate(user=self.candidate.user)
+        self.client.force_authenticate(user=self.student.user)
         url = resolve_url("parcours_doctoral_api_v1:training", uuid=self.parcours_doctoral.uuid, activity_id=service.uuid)
         response = self.client.delete(url)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -237,7 +237,7 @@ class TrainingApiTestCase(QueriesAssertionsMixin, APITestCase):
             doctorate=self.parcours_doctoral,
             status=StatutActivite.SOUMISE.name,
         )
-        self.client.force_authenticate(user=self.candidate.user)
+        self.client.force_authenticate(user=self.student.user)
         url = resolve_url("parcours_doctoral_api_v1:training", uuid=self.parcours_doctoral.uuid, activity_id=communication.parent.uuid)
         response = self.client.delete(url)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -249,20 +249,20 @@ class TrainingApiTestCase(QueriesAssertionsMixin, APITestCase):
             doctorate=self.parcours_doctoral,
             parent=self.activity,
         )
-        self.client.force_authenticate(user=self.candidate.user)
+        self.client.force_authenticate(user=self.student.user)
         response = self.client.delete(self.activity_url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertIsNone(Activity.objects.filter(pk__in=[communication.pk, self.activity.pk]).first())
 
     def test_training_submit(self):
         service = ServiceFactory(doctorate=self.parcours_doctoral)
-        self.client.force_authenticate(user=self.candidate.user)
+        self.client.force_authenticate(user=self.student.user)
         submit_url = resolve_url("parcours_doctoral_api_v1:training-submit", uuid=self.parcours_doctoral.uuid)
         response = self.client.post(submit_url, {'activity_uuids': [service.uuid]})
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_training_submit_with_error(self):
-        self.client.force_authenticate(user=self.candidate.user)
+        self.client.force_authenticate(user=self.student.user)
         service = ServiceFactory(doctorate=self.parcours_doctoral, title="")
         submit_url = resolve_url("parcours_doctoral_api_v1:training-submit", uuid=self.parcours_doctoral.uuid)
         response = self.client.post(submit_url, {'activity_uuids': [service.uuid]})

@@ -32,7 +32,7 @@ from django.urls import reverse
 from rest_framework import status
 
 from admission.ddd.admission.doctorat.preparation.domain.model.doctorat_formation import ENTITY_CDE, ENTITY_CDSS
-from admission.tests.factories.supervision import PromoterFactory
+from parcours_doctoral.tests.factories.supervision import PromoterFactory
 from base.tests.factories.academic_year import AcademicYearFactory
 from base.tests.factories.entity import EntityFactory
 from base.tests.factories.entity_version import EntityVersionFactory
@@ -82,7 +82,7 @@ class ConfirmationDetailViewTestCase(TestCase):
             ),
         ]
 
-        cls.candidate = cls.parcours_doctoral_without_confirmation_paper.candidate
+        cls.student = cls.parcours_doctoral_without_confirmation_paper.student
 
         cls.manager = ProgramManagerFactory(
             education_group=cls.parcours_doctoral_without_confirmation_paper.training.education_group

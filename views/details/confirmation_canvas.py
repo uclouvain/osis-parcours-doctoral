@@ -27,7 +27,7 @@
 from django.views.generic import RedirectView
 
 from admission.ddd.admission.doctorat.preparation.commands import GetGroupeDeSupervisionCommand
-from parcours_doctoral.exports.admission_confirmation_canvas import admission_pdf_confirmation_canvas
+from parcours_doctoral.exports.confirmation_canvas import admission_pdf_confirmation_canvas
 from parcours_doctoral.views.mixins import LastConfirmationMixin
 from infrastructure.messages_bus import message_bus_instance
 

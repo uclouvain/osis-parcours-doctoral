@@ -23,10 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from rest_framework import serializers
-
-from admission.api.serializers.fields import DOCTORATE_ACTION_LINKS
-from parcours_doctoral.ddd.dtos import ParcoursDoctoralDTO
+from parcours_doctoral.api.serializers.fields import PARCOURS_DOCTORAL_ACTION_LINKS
 from backoffice.settings.rest_framework.fields import ActionLinksField
 from base.utils.serializers import DTOSerializer
 
@@ -34,7 +31,7 @@ from base.utils.serializers import DTOSerializer
 class ParcoursDoctoralDTOSerializer(DTOSerializer):
     links = ActionLinksField(
         actions={
-            key: DOCTORATE_ACTION_LINKS[key]
+            key: PARCOURS_DOCTORAL_ACTION_LINKS[key]
             for key in [
                 # Confirmation
                 'retrieve_confirmation',

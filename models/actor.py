@@ -32,7 +32,7 @@ from osis_signature.models import Actor
 
 from parcours_doctoral.models.parcours_doctoral import ParcoursDoctoral
 
-def actor_upload_directory_path(instance: 'SupervisionActor', filename):
+def actor_upload_directory_path(instance: 'ParcoursDoctoralSupervisionActor', filename):
     """Return the file upload directory path."""
     parcours_doctoral = ParcoursDoctoral.objects.select_related('candidate').get(
         supervision_group=instance.process,
@@ -49,7 +49,7 @@ class ActorType(ChoiceEnum):
     CA_MEMBER = _("CA Member")
 
 
-class SupervisionActor(Actor):
+class ParcoursDoctoralSupervisionActor(Actor):
     """This model extends Actor from OSIS-Signature"""
 
     type = models.CharField(

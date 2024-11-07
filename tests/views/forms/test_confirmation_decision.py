@@ -129,7 +129,7 @@ class DoctorateConfirmationDecisionViewTestCase(TestCase):
 
         cls.custom_cdd_mail_template = CddMailTemplateFactory(
             identifier=ADMISSION_EMAIL_CONFIRMATION_PAPER_ON_RETAKING_STUDENT,
-            language=cls.parcours_doctoral_with_confirmation_papers.candidate.language,
+            language=cls.parcours_doctoral_with_confirmation_papers.student.language,
             cdd=cls.parcours_doctoral_with_confirmation_papers.training.management_entity,
             name='My custom mail',
             subject='The email subject',
@@ -197,7 +197,7 @@ class DoctorateConfirmationDecisionViewTestCase(TestCase):
 
         # Check the notifications
         self.assertEqual(EmailNotification.objects.count(), 1)
-        self.assertEqual(EmailNotification.objects.first().person, self.parcours_doctoral_with_confirmation_papers.candidate)
+        self.assertEqual(EmailNotification.objects.first().person, self.parcours_doctoral_with_confirmation_papers.student)
 
     def test_confirmation_success_decision_with_incomplete_confirmation_paper(self):
         url = reverse(self.success_path, args=[self.parcours_doctoral_with_incomplete_confirmation_paper.uuid])
@@ -286,7 +286,7 @@ class DoctorateConfirmationDecisionViewTestCase(TestCase):
         self.assertEqual(parcours_doctoral.status, ChoixStatutParcoursDoctoral.NOT_ALLOWED_TO_CONTINUE.name)
 
         self.assertEqual(EmailNotification.objects.count(), 1)
-        self.assertEqual(EmailNotification.objects.first().person, self.parcours_doctoral_with_confirmation_papers.candidate)
+        self.assertEqual(EmailNotification.objects.first().person, self.parcours_doctoral_with_confirmation_papers.student)
 
     def test_post_confirmation_failure_decision_with_incomplete_confirmation_paper(self):
         url = reverse(self.failure_path, args=[self.parcours_doctoral_with_incomplete_confirmation_paper.uuid])
@@ -390,7 +390,7 @@ class DoctorateConfirmationDecisionViewTestCase(TestCase):
         )
         self.assertEqual(parcours_doctoral.status, ChoixStatutParcoursDoctoral.CONFIRMATION_TO_BE_REPEATED.name)
         self.assertEqual(EmailNotification.objects.count(), 1)
-        self.assertEqual(EmailNotification.objects.first().person, self.parcours_doctoral_with_confirmation_papers.candidate)
+        self.assertEqual(EmailNotification.objects.first().person, self.parcours_doctoral_with_confirmation_papers.student)
 
         confirmation_papers = message_bus_instance.invoke(
             RecupererEpreuvesConfirmationQuery(parcours_doctoral_uuid=parcours_doctoral.uuid)
