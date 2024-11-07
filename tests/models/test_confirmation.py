@@ -53,10 +53,10 @@ class ConfirmationPaperTestCase(TestCase):
             ),
         )
 
-    def test_permission_cache_dropped_on_parcours_doctoral_save(self):
+    def test_permission_cache_dropped_on_training_save(self):
         self.assertEqual(get_cached_parcours_doctoral_perm_obj(self.parcours_doctoral.uuid), self.parcours_doctoral)
         self.assertIsNotNone(cache.get(f"parcours_doctoral_permission_{self.parcours_doctoral.uuid}"))
-        self.parcours_doctoral.doctorate.save()
+        self.parcours_doctoral.training.save()
         self.assertIsNone(cache.get(f"parcours_doctoral_permission_{self.parcours_doctoral.uuid}"))
 
     def test_permission_cache_dropped_on_student_save(self):

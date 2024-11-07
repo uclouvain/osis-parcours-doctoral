@@ -39,6 +39,7 @@ from parcours_doctoral.ddd.epreuve_confirmation.validators.exceptions import (
     EpreuveConfirmationDateIncorrecteException,
     EpreuveConfirmationNonTrouveeException,
 )
+from parcours_doctoral.tests.factories import WriteTokenFactory
 from parcours_doctoral.tests.factories.supervision import PromoterFactory
 from base.models.enums.entity_type import EntityType
 from base.tests.factories.entity_version import EntityVersionFactory

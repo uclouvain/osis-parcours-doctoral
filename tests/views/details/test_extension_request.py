@@ -45,11 +45,9 @@ class DoctorateAdmissionExtensionRequestDetailViewTestCase(TestCase):
         # Create parcours_doctorals
         cls.parcours_doctoral_without_confirmation_paper = ParcoursDoctoralFactory(
             training__academic_year=academic_years[0],
-            admitted=True,
         )
         cls.parcours_doctoral_with_confirmation_papers = ParcoursDoctoralFactory(
             training=cls.parcours_doctoral_without_confirmation_paper.training,
-            admitted=True,
         )
 
         # User with one cdd

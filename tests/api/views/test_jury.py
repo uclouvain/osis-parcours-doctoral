@@ -27,6 +27,8 @@ from django.shortcuts import resolve_url
 from rest_framework import status
 from rest_framework.test import APITestCase
 
+from parcours_doctoral.models import ParcoursDoctoral, JuryMember
+from parcours_doctoral.tests.factories.jury import JuryMemberFactory
 from parcours_doctoral.tests.factories.roles import StudentRoleFactory
 from parcours_doctoral.tests.factories.supervision import CaMemberFactory, PromoterFactory
 from base.tests.factories.entity import EntityFactory
@@ -174,7 +176,6 @@ class JuryMembersListApiTestCase(APITestCase):
             'genre': 'AUTRE',
             'email': 'email@example.org',
         }
-        AdmissionAcademicCalendarFactory.produce_all_required()
         # Targeted url
         cls.url = resolve_url("parcours_doctoral_api_v1:jury-members-list", uuid=cls.parcours_doctoral.uuid)
         # Create an parcours_doctoral supervision group
@@ -184,7 +185,7 @@ class JuryMembersListApiTestCase(APITestCase):
         cls.parcours_doctoral.save()
         # Users
         cls.student = cls.parcours_doctoral.student
-        cls.other_student_user = CandidateFactory().person.user
+        cls.other_student_user = StudentRoleFactory().person.user
         cls.no_role_user = PersonFactory().user
         cls.promoter_user = promoter.person.user
         cls.other_promoter_user = PromoterFactory().person.user
@@ -286,9 +287,7 @@ class JuryMembersDetailApiTestCase(APITestCase):
         country = CountryFactory()
         cls.parcours_doctoral = ParcoursDoctoralFactory(
             training__management_entity=doctoral_commission,
-            passed_confirmation=True,
         )
-        AdmissionAcademicCalendarFactory.produce_all_required()
         cls.member = JuryMemberFactory(parcours_doctoral=cls.parcours_doctoral)
         cls.udpated_data = {
             'matricule': '',
@@ -314,7 +313,7 @@ class JuryMembersDetailApiTestCase(APITestCase):
         cls.parcours_doctoral.save()
         # Users
         cls.student = cls.parcours_doctoral.student
-        cls.other_student_user = CandidateFactory().person.user
+        cls.other_student_user = StudentRoleFactory().person.user
         cls.no_role_user = PersonFactory().user
         cls.promoter_user = promoter.person.user
         cls.other_promoter_user = PromoterFactory().person.user
