@@ -39,7 +39,7 @@ from django.utils.module_loading import import_string
 from django.utils.translation import get_language, gettext as _
 
 from admission.models import AdmissionTask, DoctorateAdmission, SupervisionActor
-from admission.ddd.admission.doctorat.preparation.domain.model.enums import ChoixTypeFinancement
+from parcours_doctoral.ddd.domain.model.enums import ChoixTypeFinancement
 from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoral
 from parcours_doctoral.ddd.epreuve_confirmation.domain.model.epreuve_confirmation import (

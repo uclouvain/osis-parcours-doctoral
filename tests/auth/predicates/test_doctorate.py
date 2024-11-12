@@ -29,7 +29,7 @@ from unittest import mock
 from django.test import TestCase
 
 from base.tests.factories.entity import EntityFactory
-from parcours_doctoral.auth.predicates import parcours_doctoral
+from parcours_doctoral.auth.predicates import parcours_doctoral as parcours_doctoral_predicates
 from parcours_doctoral.auth.roles.cdd_configurator import CddConfigurator
 from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from parcours_doctoral.tests.factories.parcours_doctoral import ParcoursDoctoralFactory
@@ -55,12 +55,12 @@ class PredicatesTestCase(TestCase):
         self.predicate_context_patcher.target.context['role_qs'] = CddConfigurator.objects.filter(
             person=manager1.person
         )
-        self.assertTrue(parcours_doctoral.is_part_of_doctoral_commission(manager1.person.user, request))
+        self.assertTrue(parcours_doctoral_predicates.is_part_of_doctoral_commission(manager1.person.user, request))
 
         self.predicate_context_patcher.target.context['role_qs'] = CddConfigurator.objects.filter(
             person=manager2.person
         )
-        self.assertFalse(parcours_doctoral.is_part_of_doctoral_commission(manager2.person.user, request))
+        self.assertFalse(parcours_doctoral_predicates.is_part_of_doctoral_commission(manager2.person.user, request))
 
     def test_confirmation_paper_in_progress(self):
         parcours_doctoral = ParcoursDoctoralFactory()
@@ -78,13 +78,13 @@ class PredicatesTestCase(TestCase):
         for status in valid_status:
             parcours_doctoral.post_enrolment_status = status
             self.assertTrue(
-                parcours_doctoral.confirmation_paper_in_progress(parcours_doctoral.student.user, parcours_doctoral),
+                parcours_doctoral_predicates.confirmation_paper_in_progress(parcours_doctoral.student.user, parcours_doctoral),
                 'This status must be accepted: {}'.format(status),
             )
 
         for status in invalid_status:
             parcours_doctoral.post_enrolment_status = status
             self.assertFalse(
-                parcours_doctoral.confirmation_paper_in_progress(parcours_doctoral.student.user, parcours_doctoral),
+                parcours_doctoral_predicates.confirmation_paper_in_progress(parcours_doctoral.student.user, parcours_doctoral),
                 'This status must not be accepted: {}'.format(status),
             )

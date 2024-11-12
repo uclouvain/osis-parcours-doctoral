@@ -23,31 +23,19 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from typing import List
+
 import attr
 
-from osis_common.ddd import interface
+from parcours_doctoral.ddd.domain.model._signature_membre_CA import SignatureMembreCA
+from parcours_doctoral.ddd.domain.validator.exceptions import MembreCAManquantException
+from base.ddd.utils.business_validator import BusinessValidator
 
 
 @attr.dataclass(frozen=True, slots=True)
-class RecupererParcoursDoctoralQuery(interface.QueryRequest):
-    parcours_doctoral_uuid: str
+class ShouldGroupeDeSupervisionAvoirAuMoinsDeuxMembreCA(BusinessValidator):
+    signatures_membres_CA: List[SignatureMembreCA]
 
-
-@attr.dataclass(frozen=True, slots=True)
-class InitialiserParcoursDoctoralCommand(interface.CommandRequest):
-    proposition_uuid: str
-
-
-@attr.dataclass(frozen=True, slots=True)
-class EnvoyerMessageDoctorantCommand(interface.CommandRequest):
-    matricule_emetteur: str
-    parcours_doctoral_uuid: str
-    sujet: str
-    message: str
-    cc_promoteurs: bool
-    cc_membres_ca: bool
-
-
-@attr.dataclass(frozen=True, slots=True)
-class GetGroupeDeSupervisionCommand(interface.QueryRequest):
-    uuid_proposition: str
+    def validate(self, *args, **kwargs):
+        if len(self.signatures_membres_CA) < 2:
+            raise MembreCAManquantException

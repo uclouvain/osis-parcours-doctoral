@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2021 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -25,29 +25,17 @@
 # ##############################################################################
 import attr
 
-from osis_common.ddd import interface
+from parcours_doctoral.ddd.domain.validator.exceptions import (
+    GroupeSupervisionCompletPourPromoteursException,
+)
+from base.ddd.utils.business_validator import BusinessValidator
 
 
 @attr.dataclass(frozen=True, slots=True)
-class RecupererParcoursDoctoralQuery(interface.QueryRequest):
-    parcours_doctoral_uuid: str
+class ShouldGroupeDeSupervisionNonCompletPourPromoteurs(BusinessValidator):
+    groupe_de_supervision: 'GroupeDeSupervision'
+    NOMBRE_MAX_PROMOTEURS = 3
 
-
-@attr.dataclass(frozen=True, slots=True)
-class InitialiserParcoursDoctoralCommand(interface.CommandRequest):
-    proposition_uuid: str
-
-
-@attr.dataclass(frozen=True, slots=True)
-class EnvoyerMessageDoctorantCommand(interface.CommandRequest):
-    matricule_emetteur: str
-    parcours_doctoral_uuid: str
-    sujet: str
-    message: str
-    cc_promoteurs: bool
-    cc_membres_ca: bool
-
-
-@attr.dataclass(frozen=True, slots=True)
-class GetGroupeDeSupervisionCommand(interface.QueryRequest):
-    uuid_proposition: str
+    def validate(self, *args, **kwargs):
+        if len(self.groupe_de_supervision.signatures_promoteurs) >= self.NOMBRE_MAX_PROMOTEURS:
+            raise GroupeSupervisionCompletPourPromoteursException

@@ -23,7 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from admission.ddd.admission.doctorat.preparation.domain.model.proposition import Proposition
+from parcours_doctoral.ddd.domain.model.proposition import Proposition
 from osis_common.ddd import interface
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoralIdentity
 

@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2021 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -23,31 +23,31 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from typing import Union
+
 import attr
 
-from osis_common.ddd import interface
+from parcours_doctoral.ddd.domain.model.enums import ChoixEtatSignature
+from parcours_doctoral.ddd.domain.validator.exceptions import (
+    SignataireDejaInviteException,
+)
+from base.ddd.utils.business_validator import BusinessValidator
 
 
 @attr.dataclass(frozen=True, slots=True)
-class RecupererParcoursDoctoralQuery(interface.QueryRequest):
-    parcours_doctoral_uuid: str
+class ShouldSignatairePasDejaInvite(BusinessValidator):
+    groupe_de_supervision: 'GroupeDeSupervision'
+    signataire_id: Union['PromoteurIdentity', 'MembreCAIdentity']
 
-
-@attr.dataclass(frozen=True, slots=True)
-class InitialiserParcoursDoctoralCommand(interface.CommandRequest):
-    proposition_uuid: str
-
-
-@attr.dataclass(frozen=True, slots=True)
-class EnvoyerMessageDoctorantCommand(interface.CommandRequest):
-    matricule_emetteur: str
-    parcours_doctoral_uuid: str
-    sujet: str
-    message: str
-    cc_promoteurs: bool
-    cc_membres_ca: bool
-
-
-@attr.dataclass(frozen=True, slots=True)
-class GetGroupeDeSupervisionCommand(interface.QueryRequest):
-    uuid_proposition: str
+    def validate(self, *args, **kwargs):  # pragma: no cover
+        etats_initiaux = [ChoixEtatSignature.NOT_INVITED, ChoixEtatSignature.DECLINED]
+        if any(
+            signature
+            for signature in self.groupe_de_supervision.signatures_promoteurs
+            if signature.promoteur_id == self.signataire_id and signature.etat not in etats_initiaux
+        ) or any(
+            signature
+            for signature in self.groupe_de_supervision.signatures_membres_CA
+            if signature.membre_CA_id == self.signataire_id and signature.etat not in etats_initiaux
+        ):
+            raise SignataireDejaInviteException

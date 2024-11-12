@@ -33,8 +33,8 @@ from django.utils.translation import get_language, gettext_lazy as _
 
 from admission.models import DoctorateAdmission
 from parcours_doctoral.models.activity import Activity
-from admission.ddd.admission.doctorat.preparation.commands import UUID
-from admission.ddd.admission.doctorat.preparation.domain.model._promoteur import PromoteurIdentity
+from parcours_doctoral.ddd.commands import UUID
+from parcours_doctoral.ddd.domain.model._promoteur import PromoteurIdentity
 from parcours_doctoral.models.parcours_doctoral import ParcoursDoctoral as ParcoursDoctoralModel
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoral
 from parcours_doctoral.ddd.formation.domain.model.activite import Activite

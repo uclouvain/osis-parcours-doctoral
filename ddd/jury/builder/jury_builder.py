@@ -23,7 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from admission.ddd.admission.doctorat.preparation.domain.model._cotutelle import Cotutelle
+from parcours_doctoral.ddd.domain.model._cotutelle import Cotutelle
 from parcours_doctoral.ddd.jury.builder.jury_identity_builder import JuryIdentityBuilder
 from parcours_doctoral.ddd.jury.commands import ModifierJuryCommand
 from parcours_doctoral.ddd.jury.domain.model.jury import Jury

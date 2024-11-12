@@ -25,7 +25,7 @@
 # ##############################################################################
 from typing import List
 
-from admission.ddd.admission.doctorat.preparation.repository.i_groupe_de_supervision import (
+from parcours_doctoral.ddd.repository.i_groupe_de_supervision import (
     IGroupeDeSupervisionRepository,
 )
 from parcours_doctoral.ddd.builder.parcours_doctoral_identity import ParcoursDoctoralIdentityBuilder

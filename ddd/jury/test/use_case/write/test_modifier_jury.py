@@ -27,7 +27,7 @@ import datetime
 
 from django.test import TestCase
 
-from admission.ddd.admission.doctorat.preparation.test.factory.groupe_de_supervision import (
+from parcours_doctoral.ddd.test.factory.groupe_de_supervision import (
     GroupeDeSupervisionSC3DPAvecPromoteurEtMembreEtCotutelleFactory,
 )
 from parcours_doctoral.ddd.jury.commands import ModifierJuryCommand

@@ -41,7 +41,7 @@ from parcours_doctoral.ddd.epreuve_confirmation.commands import (
     SoumettreEpreuveConfirmationCommand,
     SoumettreReportDeDateCommand,
 )
-from admission.ddd.admission.doctorat.preparation.commands import GetGroupeDeSupervisionCommand
+from parcours_doctoral.ddd.commands import GetGroupeDeSupervisionCommand
 from parcours_doctoral.utils import get_cached_parcours_doctoral_perm_obj
 from infrastructure.messages_bus import message_bus_instance
 from osis_role.contrib.views import APIPermissionRequiredMixin

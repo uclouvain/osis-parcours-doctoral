@@ -162,7 +162,6 @@ class JuryMembersListApiTestCase(APITestCase):
         country = CountryFactory()
         cls.parcours_doctoral = ParcoursDoctoralFactory(
             training__management_entity=doctoral_commission,
-            passed_confirmation=True,
         )
         cls.created_data = {
             'matricule': '',

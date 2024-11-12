@@ -23,9 +23,9 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from admission.ddd.admission.doctorat.preparation.repository.i_groupe_de_supervision import \
+from parcours_doctoral.ddd.repository.i_groupe_de_supervision import \
     IGroupeDeSupervisionRepository
-from admission.ddd.admission.doctorat.preparation.repository.i_proposition import IPropositionRepository
+from parcours_doctoral.ddd.repository.i_proposition import IPropositionRepository
 from admission.ddd.admission.doctorat.validation.domain.service.proposition_identity import \
     PropositionIdentityTranslator
 from parcours_doctoral.ddd.commands import InitialiserParcoursDoctoralCommand

@@ -31,7 +31,7 @@ from django.test import TestCase, override_settings
 from django.urls import reverse
 from rest_framework import status
 
-from admission.ddd.admission.doctorat.preparation.domain.model.doctorat_formation import ENTITY_CDE, ENTITY_CDSS
+from parcours_doctoral.ddd.domain.model.doctorat_formation import ENTITY_CDE, ENTITY_CDSS
 from parcours_doctoral.tests.factories.supervision import PromoterFactory
 from base.tests.factories.academic_year import AcademicYearFactory
 from base.tests.factories.entity import EntityFactory

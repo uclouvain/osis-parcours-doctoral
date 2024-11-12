@@ -24,7 +24,7 @@
 #
 # ##############################################################################
 
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import gettext_lazy as _, pgettext_lazy
 
 from base.models.utils.utils import ChoiceEnum
 
@@ -70,3 +70,15 @@ class ChoixTypeFinancement(ChoiceEnum):
     WORK_CONTRACT = _('WORK_CONTRACT')
     SEARCH_SCHOLARSHIP = _('SEARCH_SCHOLARSHIP')
     SELF_FUNDING = _('SELF_FUNDING')
+
+
+class ChoixStatutSignatureGroupeDeSupervision(ChoiceEnum):
+    IN_PROGRESS = _('IN_PROGRESS')
+    SIGNING_IN_PROGRESS = _('SIGNING_IN_PROGRESS')
+
+
+class ChoixEtatSignature(ChoiceEnum):
+    NOT_INVITED = _('NOT_INVITED')  # Pas encore envoyée au signataire
+    INVITED = _('INVITED')  # Envoyée au signataire
+    APPROVED = pgettext_lazy("admission decision", "Approved")  # Approuvée par le signataire
+    DECLINED = pgettext_lazy("admission decision", "Denied")  # Refusée par le signataire
