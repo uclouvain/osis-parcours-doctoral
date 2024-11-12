@@ -23,6 +23,8 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from typing import Optional
+
 import attr
 
 from osis_common.ddd import interface
@@ -51,3 +53,81 @@ class EnvoyerMessageDoctorantCommand(interface.CommandRequest):
 @attr.dataclass(frozen=True, slots=True)
 class GetGroupeDeSupervisionCommand(interface.QueryRequest):
     uuid_proposition: str
+
+
+@attr.dataclass(frozen=True, slots=True)
+class IdentifierPromoteurCommand(interface.CommandRequest):
+    uuid_proposition: str
+    matricule_auteur: str
+    matricule: Optional[str]
+    prenom: Optional[str]
+    nom: Optional[str]
+    email: Optional[str]
+    est_docteur: Optional[bool]
+    institution: Optional[str]
+    ville: Optional[str]
+    pays: Optional[str]
+    langue: Optional[str]
+
+
+@attr.dataclass(frozen=True, slots=True)
+class IdentifierMembreCACommand(interface.CommandRequest):
+    uuid_proposition: str
+    matricule_auteur: str
+    matricule: Optional[str]
+    prenom: Optional[str]
+    nom: Optional[str]
+    email: Optional[str]
+    est_docteur: Optional[bool]
+    institution: Optional[str]
+    ville: Optional[str]
+    pays: Optional[str]
+    langue: Optional[str]
+
+
+@attr.dataclass(frozen=True, slots=True)
+class ModifierMembreSupervisionExterneCommand(interface.CommandRequest):
+    uuid_proposition: str
+    matricule_auteur: str
+    uuid_membre: str
+    prenom: Optional[str]
+    nom: Optional[str]
+    email: Optional[str]
+    est_docteur: Optional[bool]
+    institution: Optional[str]
+    ville: Optional[str]
+    pays: Optional[str]
+    langue: Optional[str]
+
+
+@attr.dataclass(frozen=True, slots=True)
+class DemanderSignaturesCommand(interface.CommandRequest):
+    uuid_proposition: str
+    matricule_auteur: str
+
+
+@attr.dataclass(frozen=True, slots=True)
+class RenvoyerInvitationSignatureExterneCommand(interface.CommandRequest):
+    uuid_proposition: str
+    uuid_membre: str
+
+@attr.dataclass(frozen=True, slots=True)
+class DesignerPromoteurReferenceCommand(interface.CommandRequest):
+    uuid_proposition: str
+    uuid_promoteur: str
+    matricule_auteur: str
+
+
+@attr.dataclass(frozen=True, slots=True)
+class SupprimerMembreCACommand(interface.CommandRequest):
+    uuid_proposition: str
+    uuid_membre_ca: str
+    matricule_auteur: str
+
+
+@attr.dataclass(frozen=True, slots=True)
+class SupprimerPromoteurCommand(interface.CommandRequest):
+    uuid_proposition: str
+    uuid_promoteur: str
+    matricule_auteur: str
+
