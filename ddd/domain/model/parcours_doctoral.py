@@ -27,12 +27,13 @@ from typing import Optional
 
 import attr
 
-from admission.ddd.admission.domain.model.bourse import BourseIdentity
 from parcours_doctoral.ddd.domain.model._cotutelle import Cotutelle
 from parcours_doctoral.ddd.domain.model._projet import Projet
 from parcours_doctoral.ddd.domain.model._formation import FormationIdentity
+from parcours_doctoral.ddd.domain.model.bourse import BourseIdentity
 from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from osis_common.ddd import interface
+from parcours_doctoral.ddd.domain.validator.validator_by_business_action import ProjetDoctoralValidatorList
 
 
 @attr.dataclass(frozen=True, slots=True)
@@ -54,6 +55,16 @@ class ParcoursDoctoral(interface.RootEntity):
     bourse_recherche: Optional[BourseIdentity] = None
     autre_bourse_recherche: Optional[str] = ''
 
+    def verrouiller_parcours_doctoral_pour_signature(self):
+        self.statut = ChoixStatutParcoursDoctoral.EN_ATTENTE_DE_SIGNATURE
+
+    def verifier_projet_doctoral(self):
+        """Vérification de la validité du projet doctoral avant demande des signatures"""
+        ProjetDoctoralValidatorList(
+            self.projet,
+            self.financement,
+            self.experience_precedente_recherche,
+        ).validate()
 
     def soumettre_epreuve_confirmation(self):
         self.statut = ChoixStatutParcoursDoctoral.SUBMITTED_CONFIRMATION

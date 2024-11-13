@@ -43,31 +43,31 @@ from parcours_doctoral.ddd.repository.i_parcours_doctoral import IParcoursDoctor
 
 def demander_signatures(
     cmd: 'DemanderSignaturesCommand',
-    proposition_repository: 'IParcoursDoctoralRepository',
+    parcours_doctoral_repository: 'IParcoursDoctoralRepository',
     groupe_supervision_repository: 'IGroupeDeSupervisionRepository',
     promoteur_translator: 'IPromoteurTranslator',
     historique: 'IHistorique',
     notification: 'INotification',
 ) -> 'ParcoursDoctoralIdentity':
     # GIVEN
-    entity_id = ParcoursDoctoralIdentityBuilder.build_from_uuid(cmd.uuid_proposition)
-    proposition_candidat = proposition_repository.get(entity_id=entity_id)
+    entity_id = ParcoursDoctoralIdentityBuilder.build_from_uuid(cmd.uuid_parcours_doctoral)
+    parcours_doctoral = parcours_doctoral_repository.get(entity_id=entity_id)
     groupe_de_supervision = groupe_supervision_repository.get_by_parcours_doctoral_id(entity_id)
     groupe_de_supervision.verifier_cotutelle()
     CotutellePossedePromoteurExterne().verifier(groupe_de_supervision, promoteur_translator)
     GroupeDeSupervisionPossedeUnPromoteurMinimum().verifier(groupe_de_supervision, promoteur_translator)
-    proposition_candidat.verifier_projet_doctoral()
+    parcours_doctoral.verifier_projet_doctoral()
     groupe_de_supervision.verifier_signataires()
 
     # WHEN
-    proposition_candidat.verrouiller_proposition_pour_signature()
+    parcours_doctoral.verrouiller_parcours_doctoral_pour_signature()
     groupe_de_supervision.verrouiller_groupe_pour_signature()
     groupe_de_supervision.inviter_a_signer()
 
     # THEN
     groupe_supervision_repository.save(groupe_de_supervision)
-    proposition_repository.save(proposition_candidat)
-    notification.envoyer_signatures(proposition_candidat, groupe_de_supervision)
-    historique.historiser_demande_signatures(proposition_candidat, cmd.matricule_auteur)
+    parcours_doctoral_repository.save(parcours_doctoral)
+    notification.envoyer_signatures(parcours_doctoral, groupe_de_supervision)
+    historique.historiser_demande_signatures(parcours_doctoral, cmd.matricule_auteur)
 
-    return proposition_candidat.entity_id
+    return parcours_doctoral.entity_id

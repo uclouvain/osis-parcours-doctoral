@@ -27,12 +27,31 @@ from typing import List, Optional, Union
 
 import attr
 
+from base.ddd.utils.business_validator import BusinessValidator, TwoStepsMultipleBusinessExceptionListValidator
 from parcours_doctoral.ddd.domain.model._cotutelle import Cotutelle
 from parcours_doctoral.ddd.domain.model._institut import InstitutIdentity
 from parcours_doctoral.ddd.domain.model._membre_CA import MembreCAIdentity
+from parcours_doctoral.ddd.domain.model._projet import Projet
 from parcours_doctoral.ddd.domain.model._promoteur import PromoteurIdentity
 from parcours_doctoral.ddd.domain.model._signature_promoteur import SignaturePromoteur
-from base.ddd.utils.business_validator import BusinessValidator, TwoStepsMultipleBusinessExceptionListValidator
+from parcours_doctoral.ddd.domain.model.groupe_de_supervision import GroupeDeSupervision
+from parcours_doctoral.ddd.domain.validator import (
+    ShouldMembresCAOntApprouve, ShouldPromoteursOntApprouve,
+    ShouldDemandeSignatureLancee, ShouldGroupeDeSupervisionAvoirUnPromoteurDeReference,
+    ShouldGroupeDeSupervisionAvoirAuMoinsDeuxMembreCA, ShouldSignataireEtreInvite,
+    ShouldSignataireEtreDansGroupeDeSupervision, ShouldSignatairePasDejaInvite,
+    ShouldGroupeDeSupervisionNonCompletPourMembresCA, ShouldGroupeDeSupervisionNonCompletPourPromoteurs
+)
+from parcours_doctoral.ddd.domain.validator._should_cotutelle_etre_completee import ShouldCotutelleEtreComplete
+from parcours_doctoral.ddd.domain.validator._should_membre_CA_etre_dans_groupe_de_supervision import \
+    ShouldMembreCAEtreDansGroupeDeSupervision
+from parcours_doctoral.ddd.domain.validator._should_membre_etre_interne_ou_externe import \
+    ShouldMembreEtreInterneOuExterne
+from parcours_doctoral.ddd.domain.validator._should_premier_promoteur_renseigner_institut_these import \
+    ShouldPromoteurReferenceRenseignerInstitutThese
+from parcours_doctoral.ddd.domain.validator._should_projet_etre_complet import ShouldProjetEtreComplet
+from parcours_doctoral.ddd.domain.validator._should_promoteur_etre_dans_groupe_de_supervision import \
+    ShouldPromoteurEtreDansGroupeDeSupervision
 
 
 @attr.dataclass(frozen=True, slots=True)
@@ -230,5 +249,25 @@ class ApprobationPromoteurValidatorList(TwoStepsMultipleBusinessExceptionListVal
                 self.promoteur_reference,
                 self.proposition_institut_these,
                 self.institut_these,
+            ),
+        ]
+
+
+@attr.dataclass(frozen=True, slots=True)
+class ProjetDoctoralValidatorList(TwoStepsMultipleBusinessExceptionListValidator):
+    projet: 'Projet'
+    financement: 'Financement'
+    experience_precedente_recherche: 'ExperiencePrecedenteRecherche'
+
+    def get_data_contract_validators(self) -> List[BusinessValidator]:
+        return []
+
+    def get_invariants_validators(self) -> List[BusinessValidator]:
+        return [
+            ShouldProjetEtreComplet(
+                self.type_admission,
+                self.projet,
+                self.financement,
+                self.experience_precedente_recherche,
             ),
         ]

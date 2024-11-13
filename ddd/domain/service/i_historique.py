@@ -23,17 +23,68 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from abc import abstractmethod
 from email.message import EmailMessage
 
+from parcours_doctoral.ddd.domain.model.groupe_de_supervision import GroupeDeSupervision, SignataireIdentity
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoral, ParcoursDoctoralIdentity
 from osis_common.ddd import interface
 
 
 class IHistorique(interface.DomainService):
     @classmethod
+    @abstractmethod
     def historiser_message_au_doctorant(cls, parcours_doctoral: ParcoursDoctoral, matricule_emetteur: str, message: EmailMessage):
         raise NotImplementedError
 
     @classmethod
+    @abstractmethod
     def historiser_initialisation(cls, parcours_doctoral_entity_id: ParcoursDoctoralIdentity):
+        raise NotImplementedError
+
+    @classmethod
+    @abstractmethod
+    def historiser_demande_signatures(cls, parcours_doctoral: ParcoursDoctoral, matricule_auteur: str):
+        raise NotImplementedError
+
+    @classmethod
+    @abstractmethod
+    def historiser_designation_promoteur_reference(
+        cls,
+        parcours_doctoral: ParcoursDoctoral,
+        signataire_id: 'SignataireIdentity',
+        matricule_auteur: str,
+    ):
+        raise NotImplementedError
+
+    @classmethod
+    @abstractmethod
+    def historiser_ajout_membre(
+        cls,
+        parcours_doctoral: ParcoursDoctoral,
+        groupe_de_supervision: GroupeDeSupervision,
+        signataire_id: 'SignataireIdentity',
+        matricule_auteur: str,
+    ):
+        raise NotImplementedError
+
+    @classmethod
+    @abstractmethod
+    def historiser_suppression_membre(
+        cls,
+        parcours_doctoral: ParcoursDoctoral,
+        groupe_de_supervision: GroupeDeSupervision,
+        signataire_id: 'SignataireIdentity',
+        matricule_auteur: str,
+    ):
+        raise NotImplementedError
+
+    @classmethod
+    @abstractmethod
+    def historiser_modification_membre(
+        cls,
+        parcours_doctoral: ParcoursDoctoral,
+        signataire_id: 'SignataireIdentity',
+        matricule_auteur: str,
+    ):
         raise NotImplementedError

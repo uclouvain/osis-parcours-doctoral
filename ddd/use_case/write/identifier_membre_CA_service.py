@@ -43,15 +43,15 @@ from parcours_doctoral.ddd.repository.i_parcours_doctoral import IParcoursDoctor
 
 def identifier_membre_ca(
     cmd: 'IdentifierMembreCACommand',
-    proposition_repository: 'IParcoursDoctoralRepository',
+    parcours_doctoral_repository: 'IParcoursDoctoralRepository',
     groupe_supervision_repository: 'IGroupeDeSupervisionRepository',
     membre_ca_translator: 'IMembreCATranslator',
     historique: 'IHistorique',
 ) -> 'MembreCAIdentity':
     # GIVEN
-    proposition_id = ParcoursDoctoralIdentityBuilder.build_from_uuid(cmd.uuid_proposition)
-    groupe_de_supervision = groupe_supervision_repository.get_by_parcours_doctoral_id(proposition_id)
-    proposition = proposition_repository.get(proposition_id)
+    parcours_doctoral_id = ParcoursDoctoralIdentityBuilder.build_from_uuid(cmd.uuid_parcours_doctoral)
+    groupe_de_supervision = groupe_supervision_repository.get_by_parcours_doctoral_id(parcours_doctoral_id)
+    parcours_doctoral = parcours_doctoral_repository.get(parcours_doctoral_id)
 
     # WHEN
     membre_ca_translator.verifier_existence(matricule=cmd.matricule)
@@ -76,7 +76,6 @@ def identifier_membre_ca(
     # THEN
     membre_ca_id = groupe_supervision_repository.add_member(
         groupe_id=groupe_de_supervision.entity_id,
-        proposition_status=proposition.statut,
         matricule=cmd.matricule,
         type=ActorType.CA_MEMBER,
         first_name=cmd.prenom,
@@ -88,6 +87,6 @@ def identifier_membre_ca(
         country_code=cmd.pays,
         language=cmd.langue,
     )
-    historique.historiser_ajout_membre(proposition, groupe_de_supervision, membre_ca_id, cmd.matricule_auteur)
+    historique.historiser_ajout_membre(parcours_doctoral, groupe_de_supervision, membre_ca_id, cmd.matricule_auteur)
 
     return membre_ca_id  # type: ignore[return-value]

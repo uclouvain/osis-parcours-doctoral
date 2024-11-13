@@ -27,6 +27,7 @@
 from parcours_doctoral.ddd.builder.parcours_doctoral_identity import ParcoursDoctoralIdentityBuilder
 from parcours_doctoral.ddd.commands import ModifierMembreSupervisionExterneCommand
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoralIdentity
+from parcours_doctoral.ddd.domain.service.i_historique import IHistorique
 from parcours_doctoral.ddd.domain.service.i_membre_CA import IMembreCATranslator
 from parcours_doctoral.ddd.domain.service.i_promoteur import IPromoteurTranslator
 from parcours_doctoral.ddd.domain.service.membres_groupe_de_supervision import (
@@ -40,16 +41,16 @@ from parcours_doctoral.ddd.repository.i_parcours_doctoral import IParcoursDoctor
 
 def modifier_membre_supervision_externe(
     cmd: 'ModifierMembreSupervisionExterneCommand',
-    proposition_repository: 'IParcoursDoctoralRepository',
+    parcours_doctoral_repository: 'IParcoursDoctoralRepository',
     groupe_supervision_repository: 'IGroupeDeSupervisionRepository',
     promoteur_translator: 'IPromoteurTranslator',
     membre_ca_translator: 'IMembreCATranslator',
     historique: 'IHistorique',
 ) -> 'ParcoursDoctoralIdentity':
     # GIVEN
-    proposition_id = ParcoursDoctoralIdentityBuilder.build_from_command(cmd)
-    proposition = proposition_repository.get(proposition_id)
-    groupe_de_supervision = groupe_supervision_repository.get_by_parcours_doctoral_id(proposition_id)
+    parcours_doctoral_id = ParcoursDoctoralIdentityBuilder.build_from_command(cmd)
+    parcours_doctoral = parcours_doctoral_repository.get(parcours_doctoral_id)
+    groupe_de_supervision = groupe_supervision_repository.get_by_parcours_doctoral_id(parcours_doctoral_id)
     signataire = groupe_de_supervision.get_signataire(cmd.uuid_membre)
 
     # WHEN
@@ -73,6 +74,6 @@ def modifier_membre_supervision_externe(
         country_code=cmd.pays,
         language=cmd.langue,
     )
-    historique.historiser_modification_membre(proposition, signataire, cmd.matricule_auteur)
+    historique.historiser_modification_membre(parcours_doctoral, signataire, cmd.matricule_auteur)
 
-    return proposition_id
+    return parcours_doctoral_id

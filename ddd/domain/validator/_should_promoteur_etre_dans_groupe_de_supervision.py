@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2021 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -23,35 +23,19 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from email.message import EmailMessage
+import attr
 
-from parcours_doctoral.ddd.domain.model.groupe_de_supervision import GroupeDeSupervision, SignataireIdentity
-from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoral
-from parcours_doctoral.ddd.domain.service.i_notification import INotification
+from parcours_doctoral.ddd.domain.validator.exceptions import (
+    PromoteurNonTrouveException,
+)
+from base.ddd.utils.business_validator import BusinessValidator
 
 
-class NotificationInMemory(INotification):
-    @classmethod
-    def envoyer_message(
-        cls,
-        parcours_doctoral: ParcoursDoctoral,
-        matricule_emetteur: str,
-        matricule_doctorant: str,
-        sujet: str,
-        message: str,
-        cc_promoteurs: bool,
-        cc_membres_ca: bool,
-    ) -> EmailMessage:
-        pass
+@attr.dataclass(frozen=True, slots=True)
+class ShouldPromoteurEtreDansGroupeDeSupervision(BusinessValidator):
+    groupe_de_supervision: 'GroupeDeSupervision'
+    promoteur_id: 'PromoteurIdentity'
 
-    @classmethod
-    def envoyer_signatures(cls, parcours_doctoral: ParcoursDoctoral, groupe_de_supervision: GroupeDeSupervision) -> None:
-        pass
-
-    @classmethod
-    def renvoyer_invitation(cls, parcours_doctoral: ParcoursDoctoral, membre: SignataireIdentity):
-        pass
-
-    @classmethod
-    def notifier_suppression_membre(cls, parcours_doctoral: ParcoursDoctoral, signataire_id: SignataireIdentity) -> None:
-        pass
+    def validate(self, *args, **kwargs):  # pragma: no cover
+        if not any(s for s in self.groupe_de_supervision.signatures_promoteurs if s.promoteur_id == self.promoteur_id):
+            raise PromoteurNonTrouveException

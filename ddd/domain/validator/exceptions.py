@@ -179,3 +179,43 @@ class GroupeDeSupervisionNonTrouveException(BusinessException):
     def __init__(self, **kwargs):
         message = _("Supervision group not found.")
         super().__init__(message, **kwargs)
+
+
+class MembreNonExterneException(BusinessException):
+    status_code = "PARCOURS-DOCTORAL-20"
+
+    def __init__(self, **kwargs):
+        message = _("The member is not external.")
+        super().__init__(message, **kwargs)
+
+
+class CotutelleDoitAvoirAuMoinsUnPromoteurExterneException(BusinessException):
+    status_code = "PARCOURS-DOCTORAL-21"
+
+    def __init__(self, **kwargs):
+        message = _("You must add at least one external supervisor in order to request signatures.")
+        super().__init__(message, **kwargs)
+
+
+class CotutelleNonCompleteException(BusinessException):
+    status_code = "PARCOURS-DOCTORAL-22"
+
+    def __init__(self, **kwargs):
+        message = _("Mandatory fields are missing in the cotutelle.")
+        super().__init__(message, **kwargs)
+
+
+class DetailProjetNonCompleteException(BusinessException):
+    status_code = "PARCOURS-DOCTORAL-23"
+
+    def __init__(self, **kwargs):
+        message = _("Mandatory fields are missing in the project details of the proposition.")
+        super().__init__(message, **kwargs)
+
+
+class InstitutTheseObligatoireException(BusinessException):
+    status_code = "PARCOURS-DOCTORAL-24"
+
+    def __init__(self, **kwargs):
+        message = _("Thesis institute must be set.")
+        super().__init__(message, **kwargs)

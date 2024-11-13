@@ -25,6 +25,7 @@
 # ##############################################################################
 from email.message import EmailMessage
 
+from parcours_doctoral.ddd.domain.model.groupe_de_supervision import SignataireIdentity, GroupeDeSupervision
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoral, ParcoursDoctoralIdentity
 from parcours_doctoral.ddd.domain.service.i_historique import IHistorique
 
@@ -32,8 +33,50 @@ from parcours_doctoral.ddd.domain.service.i_historique import IHistorique
 class HistoriqueInMemory(IHistorique):
     @classmethod
     def historiser_message_au_doctorant(cls, parcours_doctoral: ParcoursDoctoral, matricule_emetteur: str, message: EmailMessage):
-        raise NotImplementedError
+        pass
 
     @classmethod
     def historiser_initialisation(cls, parcours_doctoral: ParcoursDoctoralIdentity):
-        raise NotImplementedError
+        pass
+
+    @classmethod
+    def historiser_demande_signatures(cls, parcours_doctoral: ParcoursDoctoral, matricule_auteur: str):
+        pass
+
+    @classmethod
+    def historiser_designation_promoteur_reference(
+        cls,
+        parcours_doctoral: ParcoursDoctoral,
+        signataire_id: 'SignataireIdentity',
+        matricule_auteur: str,
+    ):
+        pass
+
+    @classmethod
+    def historiser_ajout_membre(
+        cls,
+        parcours_doctoral: ParcoursDoctoral,
+        groupe_de_supervision: GroupeDeSupervision,
+        signataire_id: 'SignataireIdentity',
+        matricule_auteur: str,
+    ):
+        pass
+
+    @classmethod
+    def historiser_suppression_membre(
+        cls,
+        parcours_doctoral: ParcoursDoctoral,
+        groupe_de_supervision: GroupeDeSupervision,
+        signataire_id: 'SignataireIdentity',
+        matricule_auteur: str,
+    ):
+        pass
+
+    @classmethod
+    def historiser_modification_membre(
+        cls,
+        parcours_doctoral: ParcoursDoctoral,
+        signataire_id: 'SignataireIdentity',
+        matricule_auteur: str,
+    ):
+        pass

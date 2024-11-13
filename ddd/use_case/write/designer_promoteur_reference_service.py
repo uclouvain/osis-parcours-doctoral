@@ -36,14 +36,14 @@ from parcours_doctoral.ddd.repository.i_parcours_doctoral import IParcoursDoctor
 
 def designer_promoteur_reference(
     cmd: 'DesignerPromoteurReferenceCommand',
-    proposition_repository: 'IParcoursDoctoralRepository',
+    parcours_doctoral_repository: 'IParcoursDoctoralRepository',
     groupe_supervision_repository: 'IGroupeDeSupervisionRepository',
     historique: 'IHistorique',
 ) -> 'ParcoursDoctoralIdentity':
     # GIVEN
-    proposition_id = ParcoursDoctoralIdentityBuilder.build_from_uuid(cmd.uuid_proposition)
-    proposition = proposition_repository.get(proposition_id)
-    groupe_supervision = groupe_supervision_repository.get_by_parcours_doctoral_id(proposition_id)
+    parcours_doctoral_id = ParcoursDoctoralIdentityBuilder.build_from_uuid(cmd.uuid_parcours_doctoral)
+    parcours_doctoral = parcours_doctoral_repository.get(parcours_doctoral_id)
+    groupe_supervision = groupe_supervision_repository.get_by_parcours_doctoral_id(parcours_doctoral_id)
     promoteur_id = groupe_supervision.get_promoteur(cmd.uuid_promoteur)
 
     # WHEN
@@ -51,6 +51,6 @@ def designer_promoteur_reference(
 
     # THEN
     groupe_supervision_repository.save(groupe_supervision)
-    historique.historiser_designation_promoteur_reference(proposition, promoteur_id, cmd.matricule_auteur)
+    historique.historiser_designation_promoteur_reference(parcours_doctoral, promoteur_id, cmd.matricule_auteur)
 
-    return proposition_id
+    return parcours_doctoral_id

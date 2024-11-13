@@ -36,22 +36,22 @@ from parcours_doctoral.ddd.repository.i_parcours_doctoral import IParcoursDoctor
 
 def supprimer_membre_CA(
     cmd: 'SupprimerMembreCACommand',
-    proposition_repository: 'IParcoursDoctoralRepository',
+    parcours_doctoral_repository: 'IParcoursDoctoralRepository',
     groupe_supervision_repository: 'IGroupeDeSupervisionRepository',
     historique: 'IHistorique',
     notification: 'INotification',
 ) -> 'ParcoursDoctoralIdentity':
     # GIVEN
-    proposition_id = ParcoursDoctoralIdentityBuilder.build_from_uuid(cmd.uuid_proposition)
-    proposition_candidat = proposition_repository.get(entity_id=proposition_id)
-    groupe_supervision = groupe_supervision_repository.get_by_parcours_doctoral_id(proposition_id)
+    parcours_doctoral_id = ParcoursDoctoralIdentityBuilder.build_from_uuid(cmd.uuid_parcours_doctoral)
+    parcours_doctoral = parcours_doctoral_repository.get(entity_id=parcours_doctoral_id)
+    groupe_supervision = groupe_supervision_repository.get_by_parcours_doctoral_id(parcours_doctoral_id)
     membre_ca_id = groupe_supervision.get_membre_CA(cmd.uuid_membre_ca)
 
     # THEN
-    notification.notifier_suppression_membre(proposition_candidat, membre_ca_id)
+    notification.notifier_suppression_membre(parcours_doctoral, membre_ca_id)
     historique.historiser_suppression_membre(
-        proposition_candidat, groupe_supervision, membre_ca_id, cmd.matricule_auteur
+        parcours_doctoral, groupe_supervision, membre_ca_id, cmd.matricule_auteur
     )
     groupe_supervision_repository.remove_member(groupe_supervision.entity_id, membre_ca_id)
 
-    return proposition_id
+    return parcours_doctoral_id

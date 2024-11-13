@@ -27,14 +27,25 @@ from email.message import EmailMessage
 
 from django.conf import settings
 
+from parcours_doctoral.ddd.domain.model._promoteur import PromoteurIdentity
+from parcours_doctoral.ddd.domain.model.groupe_de_supervision import GroupeDeSupervision, SignataireIdentity
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoral, ParcoursDoctoralIdentity
 from parcours_doctoral.ddd.domain.service.i_historique import IHistorique
 from admission.infrastructure.utils import get_message_to_historize
 from infrastructure.shared_kernel.personne_connue_ucl.personne_connue_ucl import PersonneConnueUclTranslator
 from osis_history.utilities import add_history_entry
 
+from parcours_doctoral.infrastructure.parcours_doctoral.domain.service.membre_CA import MembreCATranslator
+from parcours_doctoral.infrastructure.parcours_doctoral.domain.service.promoteur import PromoteurTranslator
+
 
 class Historique(IHistorique):
+    @classmethod
+    def get_signataire(cls, signataire_id):
+        if isinstance(signataire_id, PromoteurIdentity):
+            return PromoteurTranslator.get_dto(signataire_id)
+        return MembreCATranslator.get_dto(signataire_id)
+
     @classmethod
     def historiser_message_au_doctorant(cls, parcours_doctoral: ParcoursDoctoral, matricule_emetteur: str, message: EmailMessage):
         emetteur = PersonneConnueUclTranslator.get(matricule_emetteur)
@@ -57,4 +68,97 @@ class Historique(IHistorique):
             "Doctoral training was initialized.",
             "",
             tags=["parcours_doctoral"],
+        )
+
+    @classmethod
+    def historiser_demande_signatures(cls, parcours_doctoral: ParcoursDoctoral, matricule_auteur: str):
+        auteur = PersonneConnueUclTranslator().get(matricule_auteur)
+        add_history_entry(
+            parcours_doctoral.entity_id.uuid,
+            "Les demandes de signatures ont été envoyées.",
+            "Signing requests have been sent.",
+            "{auteur.prenom} {auteur.nom}".format(auteur=auteur),
+            tags=["parcours_doctoral", "supervision", "status-changed"],
+        )
+
+    @classmethod
+    def historiser_designation_promoteur_reference(
+        cls,
+        parcours_doctoral: ParcoursDoctoral,
+        signataire_id: 'SignataireIdentity',
+        matricule_auteur: str,
+    ):
+        auteur = PersonneConnueUclTranslator().get(matricule_auteur)
+        signataire = cls.get_signataire(signataire_id)
+        add_history_entry(
+            parcours_doctoral.entity_id.uuid,
+            "{membre.prenom} {membre.nom} a été désigné comme promoteur de référence.".format(membre=signataire),
+            "{membre.prenom} {membre.nom} has been designated as lead supervisor.".format(membre=signataire),
+            "{auteur.prenom} {auteur.nom}".format(auteur=auteur),
+            tags=["parcours_doctoral", "supervision"],
+        )
+
+    @classmethod
+    def historiser_ajout_membre(
+        cls,
+        parcours_doctoral: ParcoursDoctoral,
+        groupe_de_supervision: GroupeDeSupervision,
+        signataire_id: 'SignataireIdentity',
+        matricule_auteur: str,
+    ):
+        auteur = PersonneConnueUclTranslator().get(matricule_auteur)
+        signataire = cls.get_signataire(signataire_id)
+        add_history_entry(
+            parcours_doctoral.entity_id.uuid,
+            "{membre.prenom} {membre.nom} a été ajouté en tant que {}.".format(
+                "promoteur" if isinstance(signataire_id, PromoteurIdentity) else "membre du comité d'accompagnement",
+                membre=signataire,
+            ),
+            "{membre.prenom} {membre.nom} has been added as {}.".format(
+                "promoter" if isinstance(signataire_id, PromoteurIdentity) else "CA member",
+                membre=signataire,
+            ),
+            "{auteur.prenom} {auteur.nom}".format(auteur=auteur),
+            tags=["parcours_doctoral", "supervision"],
+        )
+
+    @classmethod
+    def historiser_suppression_membre(
+        cls,
+        parcours_doctoral: ParcoursDoctoral,
+        groupe_de_supervision: GroupeDeSupervision,
+        signataire_id: 'SignataireIdentity',
+        matricule_auteur: str,
+    ):
+        auteur = PersonneConnueUclTranslator().get(matricule_auteur)
+        signataire = cls.get_signataire(signataire_id)
+        add_history_entry(
+            parcours_doctoral.entity_id.uuid,
+            "{membre.prenom} {membre.nom} a été retiré des {}.".format(
+                "promoteurs" if isinstance(signataire_id, PromoteurIdentity) else "membres du comité d'accompagnement",
+                membre=signataire,
+            ),
+            "{membre.prenom} {membre.nom} has been removed from {}.".format(
+                "promoters" if isinstance(signataire_id, PromoteurIdentity) else "CA members",
+                membre=signataire,
+            ),
+            "{auteur.prenom} {auteur.nom}".format(auteur=auteur),
+            tags=["parcours_doctoral", "supervision"],
+        )
+
+    @classmethod
+    def historiser_modification_membre(
+        cls,
+        parcours_doctoral: ParcoursDoctoral,
+        signataire_id: 'SignataireIdentity',
+        matricule_auteur: str,
+    ):
+        auteur = PersonneConnueUclTranslator().get(matricule_auteur)
+        signataire = cls.get_signataire(signataire_id)
+        add_history_entry(
+            parcours_doctoral.entity_id.uuid,
+            "{membre.prenom} {membre.nom} a été modifié.".format(membre=signataire),
+            "{membre.prenom} {membre.nom} has been updated.".format(membre=signataire),
+            "{auteur.prenom} {auteur.nom}".format(auteur=auteur),
+            tags=["parcours_doctoral", "supervision"],
         )

@@ -36,17 +36,17 @@ from parcours_doctoral.ddd.repository.i_parcours_doctoral import IParcoursDoctor
 
 def renvoyer_invitation_signature_externe(
     cmd: 'RenvoyerInvitationSignatureExterneCommand',
-    proposition_repository: 'IParcoursDoctoralRepository',
+    parcours_doctoral_repository: 'IParcoursDoctoralRepository',
     groupe_supervision_repository: 'IGroupeDeSupervisionRepository',
     notification: 'INotification',
 ) -> 'ParcoursDoctoralIdentity':
     # GIVEN
-    proposition_id = ParcoursDoctoralIdentityBuilder.build_from_uuid(cmd.uuid_proposition)
-    proposition_candidat = proposition_repository.get(entity_id=proposition_id)
-    groupe_supervision = groupe_supervision_repository.get_by_parcours_doctoral_id(proposition_id)
+    parcours_doctoral_id = ParcoursDoctoralIdentityBuilder.build_from_uuid(cmd.uuid_parcours_doctoral)
+    parcours_doctoral = parcours_doctoral_repository.get(entity_id=parcours_doctoral_id)
+    groupe_supervision = groupe_supervision_repository.get_by_parcours_doctoral_id(parcours_doctoral_id)
     membre = groupe_supervision.get_signataire(cmd.uuid_membre)
 
     # THEN
-    notification.renvoyer_invitation(proposition_candidat, membre)
+    notification.renvoyer_invitation(parcours_doctoral, membre)
 
-    return proposition_id
+    return parcours_doctoral_id

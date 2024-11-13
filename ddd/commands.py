@@ -52,12 +52,12 @@ class EnvoyerMessageDoctorantCommand(interface.CommandRequest):
 
 @attr.dataclass(frozen=True, slots=True)
 class GetGroupeDeSupervisionCommand(interface.QueryRequest):
-    uuid_proposition: str
+    uuid_parcours_doctoral: str
 
 
 @attr.dataclass(frozen=True, slots=True)
 class IdentifierPromoteurCommand(interface.CommandRequest):
-    uuid_proposition: str
+    uuid_parcours_doctoral: str
     matricule_auteur: str
     matricule: Optional[str]
     prenom: Optional[str]
@@ -72,7 +72,7 @@ class IdentifierPromoteurCommand(interface.CommandRequest):
 
 @attr.dataclass(frozen=True, slots=True)
 class IdentifierMembreCACommand(interface.CommandRequest):
-    uuid_proposition: str
+    uuid_parcours_doctoral: str
     matricule_auteur: str
     matricule: Optional[str]
     prenom: Optional[str]
@@ -87,7 +87,7 @@ class IdentifierMembreCACommand(interface.CommandRequest):
 
 @attr.dataclass(frozen=True, slots=True)
 class ModifierMembreSupervisionExterneCommand(interface.CommandRequest):
-    uuid_proposition: str
+    uuid_parcours_doctoral: str
     matricule_auteur: str
     uuid_membre: str
     prenom: Optional[str]
@@ -102,32 +102,32 @@ class ModifierMembreSupervisionExterneCommand(interface.CommandRequest):
 
 @attr.dataclass(frozen=True, slots=True)
 class DemanderSignaturesCommand(interface.CommandRequest):
-    uuid_proposition: str
+    uuid_parcours_doctoral: str
     matricule_auteur: str
 
 
 @attr.dataclass(frozen=True, slots=True)
 class RenvoyerInvitationSignatureExterneCommand(interface.CommandRequest):
-    uuid_proposition: str
+    uuid_parcours_doctoral: str
     uuid_membre: str
 
 @attr.dataclass(frozen=True, slots=True)
 class DesignerPromoteurReferenceCommand(interface.CommandRequest):
-    uuid_proposition: str
+    uuid_parcours_doctoral: str
     uuid_promoteur: str
     matricule_auteur: str
 
 
 @attr.dataclass(frozen=True, slots=True)
 class SupprimerMembreCACommand(interface.CommandRequest):
-    uuid_proposition: str
+    uuid_parcours_doctoral: str
     uuid_membre_ca: str
     matricule_auteur: str
 
 
 @attr.dataclass(frozen=True, slots=True)
 class SupprimerPromoteurCommand(interface.CommandRequest):
-    uuid_proposition: str
+    uuid_parcours_doctoral: str
     uuid_promoteur: str
     matricule_auteur: str
 

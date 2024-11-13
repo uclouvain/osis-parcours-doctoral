@@ -23,40 +23,31 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from abc import abstractmethod
-from email.message import EmailMessage
+from typing import Optional
 
-from parcours_doctoral.ddd.domain.model.groupe_de_supervision import GroupeDeSupervision, SignataireIdentity
-from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoral
-from osis_common.ddd import interface
+import attr
+
+from parcours_doctoral.ddd.domain.model._cotutelle import Cotutelle, pas_de_cotutelle
+from parcours_doctoral.ddd.domain.validator.exceptions import CotutelleNonCompleteException
+from base.ddd.utils.business_validator import BusinessValidator
 
 
-class INotification(interface.DomainService):
-    @classmethod
-    @abstractmethod
-    def envoyer_message(
-        cls,
-        parcours_doctoral: ParcoursDoctoral,
-        matricule_emetteur: str,
-        matricule_doctorant: str,
-        sujet: str,
-        message: str,
-        cc_promoteurs: bool,
-        cc_membres_ca: bool,
-    ) -> EmailMessage:
-        raise NotImplementedError
+@attr.dataclass(frozen=True, slots=True)
+class ShouldCotutelleEtreComplete(BusinessValidator):
+    cotutelle: Optional['Cotutelle']
 
-    @classmethod
-    @abstractmethod
-    def envoyer_signatures(cls, parcours_doctoral: ParcoursDoctoral, groupe_de_supervision: GroupeDeSupervision) -> None:
-        raise NotImplementedError
-
-    @classmethod
-    @abstractmethod
-    def renvoyer_invitation(cls, parcours_doctoral: ParcoursDoctoral, membre: SignataireIdentity):
-        raise NotImplementedError
-
-    @classmethod
-    @abstractmethod
-    def notifier_suppression_membre(cls, parcours_doctoral: ParcoursDoctoral, signataire_id: SignataireIdentity) -> None:
-        raise NotImplementedError
+    def validate(self, *args, **kwargs):
+        champs_obligatoires = [
+            "motivation",
+            "demande_ouverture",
+        ]
+        champs_obligatoires_completes = self.cotutelle and all(
+            [getattr(self.cotutelle, champ_obligatoire) for champ_obligatoire in champs_obligatoires]
+            + [self.cotutelle.institution_fwb is not None]
+            + [
+                self.cotutelle.institution
+                or (self.cotutelle.autre_institution_nom and self.cotutelle.autre_institution_adresse)
+            ]
+        )
+        if self.cotutelle != pas_de_cotutelle and not champs_obligatoires_completes:
+            raise CotutelleNonCompleteException

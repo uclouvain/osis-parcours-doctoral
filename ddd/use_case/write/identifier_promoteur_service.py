@@ -43,15 +43,15 @@ from parcours_doctoral.ddd.repository.i_parcours_doctoral import IParcoursDoctor
 
 def identifier_promoteur(
     cmd: 'IdentifierPromoteurCommand',
-    proposition_repository: 'IParcoursDoctoralRepository',
+    parcours_doctoral_repository: 'IParcoursDoctoralRepository',
     groupe_supervision_repository: 'IGroupeDeSupervisionRepository',
     promoteur_translator: 'IPromoteurTranslator',
     historique: 'IHistorique',
 ) -> 'PromoteurIdentity':
     # GIVEN
-    proposition_id = ParcoursDoctoralIdentityBuilder.build_from_uuid(cmd.uuid_proposition)
-    groupe_de_supervision = groupe_supervision_repository.get_by_parcours_doctoral_id(proposition_id)
-    proposition = proposition_repository.get(proposition_id)
+    parcours_doctoral_id = ParcoursDoctoralIdentityBuilder.build_from_uuid(cmd.uuid_parcours_doctoral)
+    groupe_de_supervision = groupe_supervision_repository.get_by_parcours_doctoral_id(parcours_doctoral_id)
+    parcours_doctoral = parcours_doctoral_repository.get(parcours_doctoral_id)
 
     # WHEN
     IdentifierPromoteurValidatorList(
@@ -76,7 +76,6 @@ def identifier_promoteur(
     # THEN
     promoteur_id = groupe_supervision_repository.add_member(
         groupe_id=groupe_de_supervision.entity_id,
-        proposition_status=proposition.statut,
         type=ActorType.PROMOTER,
         matricule=cmd.matricule,
         first_name=cmd.prenom,
@@ -88,6 +87,6 @@ def identifier_promoteur(
         country_code=cmd.pays,
         language=cmd.langue,
     )
-    historique.historiser_ajout_membre(proposition, groupe_de_supervision, promoteur_id, cmd.matricule_auteur)
+    historique.historiser_ajout_membre(parcours_doctoral, groupe_de_supervision, promoteur_id, cmd.matricule_auteur)
 
     return promoteur_id  # type: ignore[return-value]
