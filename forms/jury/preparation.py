@@ -27,8 +27,7 @@ from dal import autocomplete
 from django import forms
 from django.utils.translation import gettext_lazy as _
 
-from parcours_doctoral.ddd.domain.model.enums import ChoixLangueRedactionThese
-from parcours_doctoral.ddd.jury.domain.model.enums import FormuleDefense
+from parcours_doctoral.ddd.jury.domain.model.enums import FormuleDefense, ChoixLangueRedactionThese
 from admission.forms import DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS
 from base.forms.utils.datefield import CustomDateInput
 

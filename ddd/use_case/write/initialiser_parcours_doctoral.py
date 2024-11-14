@@ -25,9 +25,8 @@
 # ##############################################################################
 from parcours_doctoral.ddd.repository.i_groupe_de_supervision import \
     IGroupeDeSupervisionRepository
-from parcours_doctoral.ddd.repository.i_parcours_doctoral import IParcoursDoctoralRepository
 from admission.ddd.admission.doctorat.validation.domain.service.proposition_identity import \
-    ParcoursDoctoralIdentityTranslator
+    PropositionIdentityTranslator
 from parcours_doctoral.ddd.commands import InitialiserParcoursDoctoralCommand
 from parcours_doctoral.ddd.domain.service.i_historique import IHistorique
 from parcours_doctoral.ddd.domain.service.i_parcours_doctoral import IParcoursDoctoralService
@@ -45,7 +44,7 @@ def initialiser_parcours_doctoral(
     parcours_doctoral_service: 'IParcoursDoctoralService',
     historique: 'IHistorique',
 ) -> 'ParcoursDoctoralIdentity':
-    proposition_id = ParcoursDoctoralIdentityTranslator.convertir_depuis_demande(cmd.proposition_uuid)
+    proposition_id = PropositionIdentityTranslator.convertir_depuis_demande(cmd.proposition_uuid)
     proposition = proposition_repository.get(entity_id=proposition_id)
 
     # WHEN

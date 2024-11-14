@@ -53,3 +53,10 @@ class FormuleDefense(ChoiceEnum):
         'Method 2 (The private defense and the public defense are organised the same day, and subjected to '
         'an admissibility condition)'
     )
+
+
+class ChoixLangueRedactionThese(ChoiceEnum):
+    FRENCH = _('French')
+    ENGLISH = _('English')
+    OTHER = _('Other')
+    UNDECIDED = _('Undecided')

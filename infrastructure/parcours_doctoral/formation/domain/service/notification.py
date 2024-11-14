@@ -24,6 +24,7 @@
 #
 # ##############################################################################
 from typing import List, Union
+from uuid import UUID
 
 from django.conf import settings
 from django.shortcuts import resolve_url
@@ -33,7 +34,6 @@ from django.utils.translation import get_language, gettext_lazy as _
 
 from admission.models import DoctorateAdmission
 from parcours_doctoral.models.activity import Activity
-from parcours_doctoral.ddd.commands import UUID
 from parcours_doctoral.ddd.domain.model._promoteur import PromoteurIdentity
 from parcours_doctoral.models.parcours_doctoral import ParcoursDoctoral as ParcoursDoctoralModel
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoral

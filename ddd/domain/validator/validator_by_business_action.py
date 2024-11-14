@@ -34,7 +34,6 @@ from parcours_doctoral.ddd.domain.model._membre_CA import MembreCAIdentity
 from parcours_doctoral.ddd.domain.model._projet import Projet
 from parcours_doctoral.ddd.domain.model._promoteur import PromoteurIdentity
 from parcours_doctoral.ddd.domain.model._signature_promoteur import SignaturePromoteur
-from parcours_doctoral.ddd.domain.model.groupe_de_supervision import GroupeDeSupervision
 from parcours_doctoral.ddd.domain.validator import (
     ShouldMembresCAOntApprouve, ShouldPromoteursOntApprouve,
     ShouldDemandeSignatureLancee, ShouldGroupeDeSupervisionAvoirUnPromoteurDeReference,
