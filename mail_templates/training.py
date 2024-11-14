@@ -30,15 +30,15 @@ from parcours_doctoral.mail_templates import PARCOURS_DOCTORAL_TAG
 from osis_mail_template import Token, templates
 
 __all__ = [
-    "ADMISSION_EMAIL_CANDIDATE_DOCTORAL_TRAINING_NEEDS_UPDATE",
-    "ADMISSION_EMAIL_CANDIDATE_DOCTORAL_TRAINING_REFUSED",
-    "ADMISSION_EMAIL_REFERENCE_PROMOTER_DOCTORAL_TRAININGS_SUBMITTED",
-    "ADMISSION_EMAIL_CANDIDATE_COMPLEMENTARY_TRAINING_NEEDS_UPDATE",
-    "ADMISSION_EMAIL_CANDIDATE_COMPLEMENTARY_TRAINING_REFUSED",
-    "ADMISSION_EMAIL_REFERENCE_PROMOTER_COMPLEMENTARY_TRAININGS_SUBMITTED",
-    "ADMISSION_EMAIL_CANDIDATE_COURSE_ENROLLMENT_NEEDS_UPDATE",
-    "ADMISSION_EMAIL_CANDIDATE_COURSE_ENROLLMENT_REFUSED",
-    "ADMISSION_EMAIL_REFERENCE_PROMOTER_COURSE_ENROLLMENTS_SUBMITTED",
+    "PARCOURS_DOCTORAL_EMAIL_CANDIDATE_DOCTORAL_TRAINING_NEEDS_UPDATE",
+    "PARCOURS_DOCTORAL_EMAIL_CANDIDATE_DOCTORAL_TRAINING_REFUSED",
+    "PARCOURS_DOCTORAL_EMAIL_REFERENCE_PROMOTER_DOCTORAL_TRAININGS_SUBMITTED",
+    "PARCOURS_DOCTORAL_EMAIL_CANDIDATE_COMPLEMENTARY_TRAINING_NEEDS_UPDATE",
+    "PARCOURS_DOCTORAL_EMAIL_CANDIDATE_COMPLEMENTARY_TRAINING_REFUSED",
+    "PARCOURS_DOCTORAL_EMAIL_REFERENCE_PROMOTER_COMPLEMENTARY_TRAININGS_SUBMITTED",
+    "PARCOURS_DOCTORAL_EMAIL_CANDIDATE_COURSE_ENROLLMENT_NEEDS_UPDATE",
+    "PARCOURS_DOCTORAL_EMAIL_CANDIDATE_COURSE_ENROLLMENT_REFUSED",
+    "PARCOURS_DOCTORAL_EMAIL_REFERENCE_PROMOTER_COURSE_ENROLLMENTS_SUBMITTED",
 ]
 
 
@@ -68,19 +68,19 @@ doctoral_training_token = [
         example="http://dev.studies.uclouvain.be/somewhere/some-uuid/doctoral-training",
     ),
 ]
-ADMISSION_EMAIL_REFERENCE_PROMOTER_DOCTORAL_TRAININGS_SUBMITTED = (
+PARCOURS_DOCTORAL_EMAIL_REFERENCE_PROMOTER_DOCTORAL_TRAININGS_SUBMITTED = (
     'osis-admission-doctoral-training-submitted-reference-promoter'
 )
 templates.register(
-    ADMISSION_EMAIL_REFERENCE_PROMOTER_DOCTORAL_TRAININGS_SUBMITTED,
+    PARCOURS_DOCTORAL_EMAIL_REFERENCE_PROMOTER_DOCTORAL_TRAININGS_SUBMITTED,
     description=_("Mail sent to reference promoter to inform of the submission of doctoral training activities"),
     tokens=training_common_tokens + doctoral_training_token,
     tag=PARCOURS_DOCTORAL_TAG,
 )
 
-ADMISSION_EMAIL_CANDIDATE_DOCTORAL_TRAINING_REFUSED = 'osis-admission-doctoral-training-refused-candidate'
+PARCOURS_DOCTORAL_EMAIL_CANDIDATE_DOCTORAL_TRAINING_REFUSED = 'osis-admission-doctoral-training-refused-candidate'
 templates.register(
-    ADMISSION_EMAIL_CANDIDATE_DOCTORAL_TRAINING_REFUSED,
+    PARCOURS_DOCTORAL_EMAIL_CANDIDATE_DOCTORAL_TRAINING_REFUSED,
     description=_("Mail sent to the candidate to inform of the refusal of doctoral training activity"),
     tokens=(
         training_common_tokens
@@ -100,9 +100,9 @@ templates.register(
     ),
     tag=PARCOURS_DOCTORAL_TAG,
 )
-ADMISSION_EMAIL_CANDIDATE_DOCTORAL_TRAINING_NEEDS_UPDATE = 'osis-admission-doctoral-training-needs-update-candidate'
+PARCOURS_DOCTORAL_EMAIL_CANDIDATE_DOCTORAL_TRAINING_NEEDS_UPDATE = 'osis-admission-doctoral-training-needs-update-candidate'
 templates.register(
-    ADMISSION_EMAIL_CANDIDATE_DOCTORAL_TRAINING_NEEDS_UPDATE,
+    PARCOURS_DOCTORAL_EMAIL_CANDIDATE_DOCTORAL_TRAINING_NEEDS_UPDATE,
     description=_("Mail sent to the candidate to update a doctoral training activity"),
     tokens=(
         training_common_tokens
@@ -131,19 +131,19 @@ complementary_training_token = [
         example="http://dev.studies.uclouvain.be/somewhere/some-uuid/complementary-training",
     ),
 ]
-ADMISSION_EMAIL_REFERENCE_PROMOTER_COMPLEMENTARY_TRAININGS_SUBMITTED = (
+PARCOURS_DOCTORAL_EMAIL_REFERENCE_PROMOTER_COMPLEMENTARY_TRAININGS_SUBMITTED = (
     'osis-admission-complementary-training-submitted-reference-promoter'
 )
 templates.register(
-    ADMISSION_EMAIL_REFERENCE_PROMOTER_COMPLEMENTARY_TRAININGS_SUBMITTED,
+    PARCOURS_DOCTORAL_EMAIL_REFERENCE_PROMOTER_COMPLEMENTARY_TRAININGS_SUBMITTED,
     description=_("Mail sent to reference promoter to inform of the submission of complementary training activities"),
     tokens=training_common_tokens + complementary_training_token,
     tag=PARCOURS_DOCTORAL_TAG,
 )
 
-ADMISSION_EMAIL_CANDIDATE_COMPLEMENTARY_TRAINING_REFUSED = 'osis-admission-complementary-training-refused-candidate'
+PARCOURS_DOCTORAL_EMAIL_CANDIDATE_COMPLEMENTARY_TRAINING_REFUSED = 'osis-admission-complementary-training-refused-candidate'
 templates.register(
-    ADMISSION_EMAIL_CANDIDATE_COMPLEMENTARY_TRAINING_REFUSED,
+    PARCOURS_DOCTORAL_EMAIL_CANDIDATE_COMPLEMENTARY_TRAINING_REFUSED,
     description=_("Mail sent to the candidate to inform of the refusal of complementary training activity"),
     tokens=training_common_tokens
     + complementary_training_token
@@ -161,11 +161,11 @@ templates.register(
     ],
     tag=PARCOURS_DOCTORAL_TAG,
 )
-ADMISSION_EMAIL_CANDIDATE_COMPLEMENTARY_TRAINING_NEEDS_UPDATE = (
+PARCOURS_DOCTORAL_EMAIL_CANDIDATE_COMPLEMENTARY_TRAINING_NEEDS_UPDATE = (
     'osis-admission-complementary-training-needs-update-candidate'
 )
 templates.register(
-    ADMISSION_EMAIL_CANDIDATE_COMPLEMENTARY_TRAINING_NEEDS_UPDATE,
+    PARCOURS_DOCTORAL_EMAIL_CANDIDATE_COMPLEMENTARY_TRAINING_NEEDS_UPDATE,
     description=_("Mail sent to the candidate to update a complementary training activity"),
     tokens=(
         training_common_tokens
@@ -194,19 +194,19 @@ course_enrollment_token = [
         example="http://dev.studies.uclouvain.be/somewhere/some-uuid/course-enrollment",
     ),
 ]
-ADMISSION_EMAIL_REFERENCE_PROMOTER_COURSE_ENROLLMENTS_SUBMITTED = (
+PARCOURS_DOCTORAL_EMAIL_REFERENCE_PROMOTER_COURSE_ENROLLMENTS_SUBMITTED = (
     'osis-admission-course-enrollment-submitted-reference-promoter'
 )
 templates.register(
-    ADMISSION_EMAIL_REFERENCE_PROMOTER_COURSE_ENROLLMENTS_SUBMITTED,
+    PARCOURS_DOCTORAL_EMAIL_REFERENCE_PROMOTER_COURSE_ENROLLMENTS_SUBMITTED,
     description=_("Mail sent to reference promoter to inform of the submission of course enrollment"),
     tokens=training_common_tokens + course_enrollment_token,
     tag=PARCOURS_DOCTORAL_TAG,
 )
 
-ADMISSION_EMAIL_CANDIDATE_COURSE_ENROLLMENT_REFUSED = 'osis-admission-course-enrollment-refused-candidate'
+PARCOURS_DOCTORAL_EMAIL_CANDIDATE_COURSE_ENROLLMENT_REFUSED = 'osis-admission-course-enrollment-refused-candidate'
 templates.register(
-    ADMISSION_EMAIL_CANDIDATE_COURSE_ENROLLMENT_REFUSED,
+    PARCOURS_DOCTORAL_EMAIL_CANDIDATE_COURSE_ENROLLMENT_REFUSED,
     description=_("Mail sent to the candidate to inform of the refusal of course enrollment"),
     tokens=(
         training_common_tokens
@@ -226,9 +226,9 @@ templates.register(
     ),
     tag=PARCOURS_DOCTORAL_TAG,
 )
-ADMISSION_EMAIL_CANDIDATE_COURSE_ENROLLMENT_NEEDS_UPDATE = 'osis-admission-course-enrollment-needs-update-candidate'
+PARCOURS_DOCTORAL_EMAIL_CANDIDATE_COURSE_ENROLLMENT_NEEDS_UPDATE = 'osis-admission-course-enrollment-needs-update-candidate'
 templates.register(
-    ADMISSION_EMAIL_CANDIDATE_COURSE_ENROLLMENT_NEEDS_UPDATE,
+    PARCOURS_DOCTORAL_EMAIL_CANDIDATE_COURSE_ENROLLMENT_NEEDS_UPDATE,
     description=_("Mail sent to the candidate to update a course enrollment"),
     tokens=(
         training_common_tokens

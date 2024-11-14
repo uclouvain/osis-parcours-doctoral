@@ -26,6 +26,7 @@
 
 import factory
 
+from parcours_doctoral.auth.roles.adre import AdreSecretary
 from parcours_doctoral.auth.roles.ca_member import CommitteeMember
 from parcours_doctoral.auth.roles.cdd_configurator import CddConfigurator
 from parcours_doctoral.auth.roles.promoter import Promoter
@@ -62,4 +63,10 @@ class CaMemberRoleFactory(BaseFactory):
 class StudentRoleFactory(BaseFactory):
     class Meta:
         model = Student
+        django_get_or_create = ('person',)
+
+
+class AdreSecretaryRoleFactory(BaseFactory):
+    class Meta:
+        model = AdreSecretary
         django_get_or_create = ('person',)

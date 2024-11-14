@@ -31,11 +31,13 @@ from admission.auth.predicates.doctorate import (
 from osis_role import role
 from parcours_doctoral.auth.predicates.parcours_doctoral import submitted_confirmation_paper, \
     complementary_training_enabled, is_jury_in_progress
+from parcours_doctoral.auth.roles.adre import AdreSecretary
 from parcours_doctoral.auth.roles.cdd_configurator import CddConfigurator
 from parcours_doctoral.auth.roles.jury_secretary import JurySecretary
 
 role.role_manager.register(CddConfigurator)
 role.role_manager.register(JurySecretary)
+role.role_manager.register(AdreSecretary)
 
 
 def base_program_manager_rules():
