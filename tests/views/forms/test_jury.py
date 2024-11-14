@@ -31,9 +31,8 @@ from django.test import TestCase
 from django.urls import reverse
 from rest_framework.status import HTTP_200_OK, HTTP_404_NOT_FOUND
 
-from parcours_doctoral.ddd.domain.model.enums import ChoixLangueRedactionThese
 from parcours_doctoral.tests.factories.supervision import PromoterFactory
-from parcours_doctoral.ddd.jury.domain.model.enums import FormuleDefense
+from parcours_doctoral.ddd.jury.domain.model.enums import FormuleDefense, ChoixLangueRedactionThese
 from base.tests.factories.academic_year import AcademicYearFactory
 from base.tests.factories.program_manager import ProgramManagerFactory
 from parcours_doctoral.models.parcours_doctoral import ParcoursDoctoral

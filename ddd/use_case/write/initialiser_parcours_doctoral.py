@@ -48,12 +48,12 @@ def initialiser_parcours_doctoral(
     proposition = proposition_repository.get(entity_id=proposition_id)
 
     # WHEN
-    epreuve_confirmation = EpreuveConfirmationService.initier(proposition_id=proposition_id)
-
-    # THEN
     parcours_doctoral_entity_id = parcours_doctoral_service.initier(
         proposition=proposition,
     )
+    epreuve_confirmation = EpreuveConfirmationService.initier(parcours_doctoral_id=parcours_doctoral_entity_id)
+
+    # THEN
     epreuve_confirmation_repository.save(epreuve_confirmation)
     historique.historiser_initialisation(parcours_doctoral_entity_id)
 

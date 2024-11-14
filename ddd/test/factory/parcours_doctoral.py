@@ -27,10 +27,14 @@ import uuid
 
 import factory
 
+from base.tests.factories.person import generate_global_id
 from parcours_doctoral.ddd.domain.model._formation import FormationIdentity
 from parcours_doctoral.ddd.domain.model._projet import Projet
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoral, ParcoursDoctoralIdentity
 from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
+import itertools
+
+REFERENCE_MEMORY_ITERATOR = itertools.count()
 
 
 class _ParcoursDoctoralIdentityFactory(factory.Factory):
@@ -54,12 +58,24 @@ class _ProjetFactory(factory.Factory):
     deja_commence = False
 
 
+class _FormationIdentityFactory(factory.Factory):
+    class Meta:
+        model = FormationIdentity
+        abstract = False
+
+    sigle = factory.Sequence(lambda n: 'SIGLE%02d' % n)
+    annee = factory.fuzzy.FuzzyInteger(1999, 2099)
+
+
 class _ParcoursDoctoralFactory(factory.Factory):
     class Meta:
         model = ParcoursDoctoral
         abstract = False
 
     entity_id = factory.SubFactory(_ParcoursDoctoralIdentityFactory)
+    matricule_doctorant = factory.LazyFunction(generate_global_id)
+    reference = factory.Iterator(REFERENCE_MEMORY_ITERATOR)
+    formation_id = factory.SubFactory(_FormationIdentityFactory)
     statut = ChoixStatutParcoursDoctoral.ADMITTED
     projet = factory.SubFactory(_ProjetFactory)
     cotutelle = None

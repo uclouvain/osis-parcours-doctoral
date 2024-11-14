@@ -28,11 +28,10 @@ from typing import Optional
 from django.test import TestCase
 from django.utils.translation import gettext as _
 
-from parcours_doctoral.ddd.domain.model.doctorat_formation import ENTITY_CDE
 from base.tests.factories.entity import EntityFactory
 from base.tests.factories.entity_version import EntityVersionFactory
 from parcours_doctoral.forms.cdd.generic_send_mail import SelectCddEmailTemplateForm, BaseEmailTemplateForm
-from parcours_doctoral.mail_templates.confirmation_paper import ADMISSION_EMAIL_CONFIRMATION_PAPER_ON_FAILURE_STUDENT
+from parcours_doctoral.mail_templates import PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_ON_FAILURE_STUDENT
 from parcours_doctoral.tests.factories.mail_template import CddMailTemplateFactory
 from parcours_doctoral.tests.factories.parcours_doctoral import ParcoursDoctoralFactory
 
@@ -47,7 +46,7 @@ class SelectCddEmailTemplateFormTestCase(TestCase):
 
     @classmethod
     def setUpTestData(cls):
-        cls.identifier = ADMISSION_EMAIL_CONFIRMATION_PAPER_ON_FAILURE_STUDENT
+        cls.identifier = PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_ON_FAILURE_STUDENT
 
         cls.first_doctoral_commission = EntityFactory()
         EntityVersionFactory(entity=cls.first_doctoral_commission, acronym=ENTITY_CDE)

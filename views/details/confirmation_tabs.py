@@ -33,8 +33,8 @@ from django.views.generic.edit import FormMixin
 from osis_mail_template.models import MailTemplate
 
 from parcours_doctoral.forms.cdd.generic_send_mail import SelectCddEmailTemplateForm, BaseEmailTemplateForm
-from parcours_doctoral.mail_templates.confirmation_paper import ADMISSION_EMAIL_CONFIRMATION_PAPER_ON_FAILURE_STUDENT, \
-    ADMISSION_EMAIL_CONFIRMATION_PAPER_ON_RETAKING_STUDENT
+from parcours_doctoral.mail_templates.confirmation_paper import PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_ON_FAILURE_STUDENT, \
+    PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_ON_RETAKING_STUDENT
 from parcours_doctoral.models.cdd_mail_template import CddMailTemplate
 from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from parcours_doctoral.ddd.epreuve_confirmation.commands import (
@@ -153,7 +153,7 @@ class ConfirmationFailureDecisionView(
 ):
     urlpatterns = 'failure'
     form_class = BaseEmailTemplateForm
-    identifier = ADMISSION_EMAIL_CONFIRMATION_PAPER_ON_FAILURE_STUDENT
+    identifier = PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_ON_FAILURE_STUDENT
     page_title = _('Failure of the confirmation paper')
     message_on_success = _("The status has been changed to %(status)s.") % {
         'status': _(ChoixStatutParcoursDoctoral.NOT_ALLOWED_TO_CONTINUE.value)
@@ -175,7 +175,7 @@ class ConfirmationRetakingDecisionView(
 ):
     urlpatterns = 'retaking'
     form_class = ConfirmationRetakingForm
-    identifier = ADMISSION_EMAIL_CONFIRMATION_PAPER_ON_RETAKING_STUDENT
+    identifier = PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_ON_RETAKING_STUDENT
     page_title = _('Retaking of the confirmation paper')
     message_on_success = _("The status has been changed to %(status)s.") % {
         'status': _(ChoixStatutParcoursDoctoral.CONFIRMATION_TO_BE_REPEATED.value)

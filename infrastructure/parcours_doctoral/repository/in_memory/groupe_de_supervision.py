@@ -27,12 +27,13 @@
 import uuid
 from typing import List, Optional, Union
 
+from parcours_doctoral.ddd.builder.parcours_doctoral_identity import ParcoursDoctoralIdentityBuilder
 from parcours_doctoral.ddd.domain.model._cotutelle import pas_de_cotutelle
 from parcours_doctoral.ddd.domain.model._membre_CA import MembreCAIdentity
 from parcours_doctoral.ddd.domain.model._promoteur import PromoteurIdentity
 from parcours_doctoral.ddd.domain.model._signature_membre_CA import SignatureMembreCA
 from parcours_doctoral.ddd.domain.model._signature_promoteur import SignaturePromoteur
-from parcours_doctoral.ddd.domain.model.enums import ChoixEtatSignature
+from parcours_doctoral.ddd.domain.model.enums import ChoixEtatSignature, ChoixStatutParcoursDoctoral
 from parcours_doctoral.ddd.domain.model.groupe_de_supervision import (
     GroupeDeSupervision,
     GroupeDeSupervisionIdentity,
@@ -125,8 +126,8 @@ class GroupeDeSupervisionInMemoryRepository(InMemoryGenericRepository, IGroupeDe
 
     @classmethod
     def get_cotutelle_dto(cls, uuid_proposition: str) -> 'CotutelleDTO':
-        proposition_id = PropositionIdentityBuilder.build_from_uuid(uuid_proposition)
-        groupe = cls.get_by_proposition_id(proposition_id=proposition_id)
+        parcours_doctoral_id = ParcoursDoctoralIdentityBuilder.build_from_uuid(uuid_proposition)
+        groupe = cls.get_by_parcours_doctoral_id(parcours_doctoral_id=parcours_doctoral_id)
         return CotutelleDTO(
             cotutelle=None if groupe.cotutelle is None else groupe.cotutelle != pas_de_cotutelle,
             motivation=groupe.cotutelle and groupe.cotutelle.motivation or '',
@@ -158,7 +159,7 @@ class GroupeDeSupervisionInMemoryRepository(InMemoryGenericRepository, IGroupeDe
     ) -> 'SignataireIdentity':
         groupe: GroupeDeSupervision = cls.get(groupe_id)
         signature_etat = ChoixEtatSignature.NOT_INVITED
-        if proposition_status != ChoixStatutPropositionDoctorale.EN_BROUILLON:
+        if proposition_status != ChoixStatutParcoursDoctoral.EN_BROUILLON:
             signature_etat = ChoixEtatSignature.INVITED
         if type == ActorType.PROMOTER:
             signataire_id = PromoteurIdentity(str(uuid.uuid4()))

@@ -42,7 +42,7 @@ class TestModifierJury(TestCase):
     def setUp(self) -> None:
         self.message_bus = message_bus_in_memory_instance
         GroupeDeSupervisionInMemoryRepository.entities.append(
-            GroupeDeSupervisionSC3DPAvecPromoteurEtMembreEtCotutelleFactory(proposition_id__uuid='uuid-jury')
+            GroupeDeSupervisionSC3DPAvecPromoteurEtMembreEtCotutelleFactory(parcours_doctoral_id__uuid='uuid-jury')
         )
 
     def tearDown(self) -> None:

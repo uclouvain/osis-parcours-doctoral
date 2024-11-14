@@ -23,12 +23,11 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from admission.infrastructure.admission.doctorat.preparation.repository.in_memory.groupe_de_supervision import \
-    GroupeDeSupervisionInMemoryRepository
 from parcours_doctoral.ddd.formation.commands import *
 from parcours_doctoral.ddd.formation.use_case.write import *
 from .domain.service.in_memory.notification import NotificationInMemory
 from .repository.in_memory.activite import ActiviteInMemoryRepository
+from ..repository.in_memory.groupe_de_supervision import GroupeDeSupervisionInMemoryRepository
 from ..repository.in_memory.parcours_doctoral import ParcoursDoctoralInMemoryRepository
 
 _activite_repository = ActiviteInMemoryRepository()

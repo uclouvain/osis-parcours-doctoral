@@ -32,7 +32,7 @@ from django.views.generic import TemplateView
 from parcours_doctoral.ddd.domain.validator.exceptions import ParcoursDoctoralNonTrouveException
 from parcours_doctoral.ddd.epreuve_confirmation.commands import RecupererEpreuvesConfirmationQuery
 from parcours_doctoral.ddd.epreuve_confirmation.dtos import EpreuveConfirmationDTO
-from parcours_doctoral.mail_templates.confirmation_paper import ADMISSION_EMAIL_CONFIRMATION_PAPER_INFO_STUDENT
+from parcours_doctoral.mail_templates.confirmation_paper import PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_INFO_STUDENT
 from parcours_doctoral.views.mixins import ParcoursDoctoralViewMixin
 from infrastructure.messages_bus import message_bus_instance
 
@@ -67,6 +67,6 @@ class ConfirmationDetailView(ParcoursDoctoralViewMixin, TemplateView):
             context['current_confirmation_paper'] = current_confirmation_paper
 
         context['previous_confirmation_papers'] = all_confirmation_papers
-        context['INFO_TEMPLATE_IDENTIFIER'] = ADMISSION_EMAIL_CONFIRMATION_PAPER_INFO_STUDENT
+        context['INFO_TEMPLATE_IDENTIFIER'] = PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_INFO_STUDENT
 
         return context

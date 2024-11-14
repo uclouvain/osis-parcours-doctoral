@@ -45,15 +45,15 @@ from parcours_doctoral.ddd.formation.domain.model.enums import (
 )
 from parcours_doctoral.ddd.formation.domain.service.i_notification import INotification
 from parcours_doctoral.mail_templates import (
-    ADMISSION_EMAIL_CANDIDATE_COMPLEMENTARY_TRAINING_NEEDS_UPDATE,
-    ADMISSION_EMAIL_CANDIDATE_COMPLEMENTARY_TRAINING_REFUSED,
-    ADMISSION_EMAIL_CANDIDATE_COURSE_ENROLLMENT_NEEDS_UPDATE,
-    ADMISSION_EMAIL_CANDIDATE_COURSE_ENROLLMENT_REFUSED,
-    ADMISSION_EMAIL_CANDIDATE_DOCTORAL_TRAINING_NEEDS_UPDATE,
-    ADMISSION_EMAIL_CANDIDATE_DOCTORAL_TRAINING_REFUSED,
-    ADMISSION_EMAIL_REFERENCE_PROMOTER_COMPLEMENTARY_TRAININGS_SUBMITTED,
-    ADMISSION_EMAIL_REFERENCE_PROMOTER_COURSE_ENROLLMENTS_SUBMITTED,
-    ADMISSION_EMAIL_REFERENCE_PROMOTER_DOCTORAL_TRAININGS_SUBMITTED,
+    PARCOURS_DOCTORAL_EMAIL_CANDIDATE_COMPLEMENTARY_TRAINING_NEEDS_UPDATE,
+    PARCOURS_DOCTORAL_EMAIL_CANDIDATE_COMPLEMENTARY_TRAINING_REFUSED,
+    PARCOURS_DOCTORAL_EMAIL_CANDIDATE_COURSE_ENROLLMENT_NEEDS_UPDATE,
+    PARCOURS_DOCTORAL_EMAIL_CANDIDATE_COURSE_ENROLLMENT_REFUSED,
+    PARCOURS_DOCTORAL_EMAIL_CANDIDATE_DOCTORAL_TRAINING_NEEDS_UPDATE,
+    PARCOURS_DOCTORAL_EMAIL_CANDIDATE_DOCTORAL_TRAINING_REFUSED,
+    PARCOURS_DOCTORAL_EMAIL_REFERENCE_PROMOTER_COMPLEMENTARY_TRAININGS_SUBMITTED,
+    PARCOURS_DOCTORAL_EMAIL_REFERENCE_PROMOTER_COURSE_ENROLLMENTS_SUBMITTED,
+    PARCOURS_DOCTORAL_EMAIL_REFERENCE_PROMOTER_DOCTORAL_TRAININGS_SUBMITTED,
 )
 from base.models.person import Person
 from osis_mail_template import generate_email
@@ -65,7 +65,7 @@ from osis_signature.models import Actor
 class Notification(INotification):
     @classmethod
     def get_admission_link_front(cls, uuid: UUID, tab='') -> str:
-        return settings.ADMISSION_FRONTEND_LINK.format(context='doctorate', uuid=uuid) + tab
+        return settings.PARCOURS_DOCTORAL_FRONTEND_LINK.format(context='doctorate', uuid=uuid) + tab
 
     @classmethod
     def _get_parcours_doctoral_title_translation(cls, parcours_doctoral: Union[ParcoursDoctoral, DoctorateAdmission]) -> Promise:
@@ -96,19 +96,19 @@ class Notification(INotification):
             ),
             "admission_link_front_course_enrollment": cls.get_admission_link_front(parcours_doctoral.uuid, 'course-enrollment'),
             "admission_link_back": "{}{}".format(
-                settings.ADMISSION_BACKEND_LINK_PREFIX,
+                settings.PARCOURS_DOCTORAL_BACKEND_LINK_PREFIX,
                 resolve_url('admission:parcours_doctoral:project', uuid=parcours_doctoral.uuid),
             ),
             "admission_link_back_doctoral_training": "{}{}".format(
-                settings.ADMISSION_BACKEND_LINK_PREFIX,
+                settings.PARCOURS_DOCTORAL_BACKEND_LINK_PREFIX,
                 resolve_url('admission:parcours_doctoral:doctoral-training', uuid=parcours_doctoral.uuid),
             ),
             "admission_link_back_complementary_training": "{}{}".format(
-                settings.ADMISSION_BACKEND_LINK_PREFIX,
+                settings.PARCOURS_DOCTORAL_BACKEND_LINK_PREFIX,
                 resolve_url('admission:parcours_doctoral:complementary-training', uuid=parcours_doctoral.uuid),
             ),
             "admission_link_back_course_enrollment": "{}{}".format(
-                settings.ADMISSION_BACKEND_LINK_PREFIX,
+                settings.PARCOURS_DOCTORAL_BACKEND_LINK_PREFIX,
                 resolve_url('admission:parcours_doctoral:course-enrollment', uuid=parcours_doctoral.uuid),
             ),
             "reference": parcours_doctoral.reference,
@@ -118,20 +118,20 @@ class Notification(INotification):
     def _get_mail_template_ids(cls, activite: Activite):
         if activite.categorie == CategorieActivite.UCL_COURSE:
             return {
-                'submitted': ADMISSION_EMAIL_REFERENCE_PROMOTER_COURSE_ENROLLMENTS_SUBMITTED,
-                'refusal': ADMISSION_EMAIL_CANDIDATE_COURSE_ENROLLMENT_REFUSED,
-                'needs-update': ADMISSION_EMAIL_CANDIDATE_COURSE_ENROLLMENT_NEEDS_UPDATE,
+                'submitted': PARCOURS_DOCTORAL_EMAIL_REFERENCE_PROMOTER_COURSE_ENROLLMENTS_SUBMITTED,
+                'refusal': PARCOURS_DOCTORAL_EMAIL_CANDIDATE_COURSE_ENROLLMENT_REFUSED,
+                'needs-update': PARCOURS_DOCTORAL_EMAIL_CANDIDATE_COURSE_ENROLLMENT_NEEDS_UPDATE,
             }
         elif activite.contexte == ContexteFormation.COMPLEMENTARY_TRAINING:
             return {
-                'submitted': ADMISSION_EMAIL_REFERENCE_PROMOTER_COMPLEMENTARY_TRAININGS_SUBMITTED,
-                'refusal': ADMISSION_EMAIL_CANDIDATE_COMPLEMENTARY_TRAINING_REFUSED,
-                'needs-update': ADMISSION_EMAIL_CANDIDATE_COMPLEMENTARY_TRAINING_NEEDS_UPDATE,
+                'submitted': PARCOURS_DOCTORAL_EMAIL_REFERENCE_PROMOTER_COMPLEMENTARY_TRAININGS_SUBMITTED,
+                'refusal': PARCOURS_DOCTORAL_EMAIL_CANDIDATE_COMPLEMENTARY_TRAINING_REFUSED,
+                'needs-update': PARCOURS_DOCTORAL_EMAIL_CANDIDATE_COMPLEMENTARY_TRAINING_NEEDS_UPDATE,
             }
         return {
-            'submitted': ADMISSION_EMAIL_REFERENCE_PROMOTER_DOCTORAL_TRAININGS_SUBMITTED,
-            'refusal': ADMISSION_EMAIL_CANDIDATE_DOCTORAL_TRAINING_REFUSED,
-            'needs-update': ADMISSION_EMAIL_CANDIDATE_DOCTORAL_TRAINING_NEEDS_UPDATE,
+            'submitted': PARCOURS_DOCTORAL_EMAIL_REFERENCE_PROMOTER_DOCTORAL_TRAININGS_SUBMITTED,
+            'refusal': PARCOURS_DOCTORAL_EMAIL_CANDIDATE_DOCTORAL_TRAINING_REFUSED,
+            'needs-update': PARCOURS_DOCTORAL_EMAIL_CANDIDATE_DOCTORAL_TRAINING_NEEDS_UPDATE,
         }
 
     @classmethod

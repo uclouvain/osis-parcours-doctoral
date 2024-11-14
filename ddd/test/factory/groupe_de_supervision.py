@@ -43,7 +43,7 @@ from parcours_doctoral.ddd.domain.model.groupe_de_supervision import (
     GroupeDeSupervision,
     GroupeDeSupervisionIdentity,
 )
-from parcours_doctoral.ddd.test.factory.parcours_doctoral import _ParcoursDoctoralFactory
+from parcours_doctoral.ddd.test.factory.parcours_doctoral import _ParcoursDoctoralIdentityFactory
 
 
 class _PromoteurIdentityFactory(factory.Factory):
@@ -51,7 +51,7 @@ class _PromoteurIdentityFactory(factory.Factory):
         model = PromoteurIdentity
         abstract = False
 
-    uuid = factory.LazyFunction(uuid.uuid4)
+    uuid = factory.LazyFunction(lambda: str(uuid.uuid4()))
 
 
 class _MembreCAIdentityFactory(factory.Factory):
@@ -59,7 +59,7 @@ class _MembreCAIdentityFactory(factory.Factory):
         model = MembreCAIdentity
         abstract = False
 
-    uuid = factory.LazyFunction(uuid.uuid4)
+    uuid = factory.LazyFunction(lambda: str(uuid.uuid4()))
 
 
 class _SignaturePromoteurFactory(factory.Factory):
@@ -92,7 +92,7 @@ class _GroupeDeSupervisionFactory(factory.Factory):
         abstract = False
 
     entity_id = factory.SubFactory(_GroupeDeSupervisionIdentityFactory)
-    parcours_doctoral_id = factory.SubFactory(_ParcoursDoctoralFactory)
+    parcours_doctoral_id = factory.SubFactory(_ParcoursDoctoralIdentityFactory)
     signatures_promoteurs = factory.LazyFunction(list)
     signatures_membres_CA = factory.LazyFunction(list)
     cotutelle: Optional[Cotutelle] = pas_de_cotutelle
@@ -110,7 +110,7 @@ class _CotutelleFactory(factory.Factory):
 
 
 class GroupeDeSupervisionSC3DPFactory(_GroupeDeSupervisionFactory):
-    parcours_doctoral_id = factory.SubFactory(_ParcoursDoctoralFactory, uuid='uuid-SC3DP')
+    parcours_doctoral_id = factory.SubFactory(_ParcoursDoctoralIdentityFactory, uuid='uuid-SC3DP')
     cotutelle = factory.SubFactory(
         _CotutelleFactory,
         motivation="Runs in family",
@@ -120,16 +120,16 @@ class GroupeDeSupervisionSC3DPFactory(_GroupeDeSupervisionFactory):
 
 
 class GroupeDeSupervisionSC3DPCotutelleIndefinieFactory(_GroupeDeSupervisionFactory):
-    parcours_doctoral_id = factory.SubFactory(_ParcoursDoctoralFactory, uuid='uuid-SC3DP-cotutelle-indefinie')
+    parcours_doctoral_id = factory.SubFactory(_ParcoursDoctoralIdentityFactory, uuid='uuid-SC3DP-cotutelle-indefinie')
     cotutelle = None
 
 
 class GroupeDeSupervisionSC3DPPreAdmissionFactory(_GroupeDeSupervisionFactory):
-    parcours_doctoral_id = factory.SubFactory(_ParcoursDoctoralFactory, uuid='uuid-SC3DP-pre-admission')
+    parcours_doctoral_id = factory.SubFactory(_ParcoursDoctoralIdentityFactory, uuid='uuid-SC3DP-pre-admission')
 
 
 class GroupeDeSupervisionSC3DPAvecPromoteurEtMembreFactory(_GroupeDeSupervisionFactory):
-    parcours_doctoral_id = factory.SubFactory(_ParcoursDoctoralFactory, uuid='uuid-SC3DP-promoteur-membre')
+    parcours_doctoral_id = factory.SubFactory(_ParcoursDoctoralIdentityFactory, uuid='uuid-SC3DP-promoteur-membre')
     signatures_promoteurs = factory.LazyFunction(
         lambda: [_SignaturePromoteurFactory(promoteur_id__uuid='promoteur-SC3DP')]
     )
@@ -142,7 +142,7 @@ class GroupeDeSupervisionSC3DPAvecPromoteurEtMembreFactory(_GroupeDeSupervisionF
 
 
 class GroupeDeSupervisionSC3DPAvecPromoteurEtMembreEtCotutelleFactory(_GroupeDeSupervisionFactory):
-    parcours_doctoral_id = factory.SubFactory(_ParcoursDoctoralFactory, uuid='uuid-SC3DP-promoteur-membre-cotutelle')
+    parcours_doctoral_id = factory.SubFactory(_ParcoursDoctoralIdentityFactory, uuid='uuid-SC3DP-promoteur-membre-cotutelle')
     signatures_promoteurs = factory.LazyFunction(
         lambda: [
             _SignaturePromoteurFactory(promoteur_id__uuid='promoteur-SC3DP-externe'),
@@ -164,7 +164,7 @@ class GroupeDeSupervisionSC3DPAvecPromoteurEtMembreEtCotutelleFactory(_GroupeDeS
 
 
 class GroupeDeSupervisionSC3DPCotutelleSansPromoteurExterneFactory(_GroupeDeSupervisionFactory):
-    parcours_doctoral_id = factory.SubFactory(_ParcoursDoctoralFactory, uuid='uuid-SC3DP-cotutelle-sans-promoteur-externe')
+    parcours_doctoral_id = factory.SubFactory(_ParcoursDoctoralIdentityFactory, uuid='uuid-SC3DP-cotutelle-sans-promoteur-externe')
     signatures_promoteurs = factory.LazyFunction(
         lambda: [_SignaturePromoteurFactory(promoteur_id__uuid='promoteur-SC3DP')]
     )
@@ -183,7 +183,7 @@ class GroupeDeSupervisionSC3DPCotutelleSansPromoteurExterneFactory(_GroupeDeSupe
 
 
 class GroupeDeSupervisionSC3DPCotutelleAvecPromoteurExterneFactory(_GroupeDeSupervisionFactory):
-    parcours_doctoral_id = factory.SubFactory(_ParcoursDoctoralFactory, uuid='uuid-SC3DP-cotutelle-avec-promoteur-externe')
+    parcours_doctoral_id = factory.SubFactory(_ParcoursDoctoralIdentityFactory, uuid='uuid-SC3DP-cotutelle-avec-promoteur-externe')
     signatures_promoteurs = factory.LazyFunction(
         lambda: [
             _SignaturePromoteurFactory(promoteur_id__uuid='promoteur-SC3DP'),
@@ -205,7 +205,7 @@ class GroupeDeSupervisionSC3DPCotutelleAvecPromoteurExterneFactory(_GroupeDeSupe
 
 
 class GroupeDeSupervisionSC3DPAvecPromoteurEtMembreEtProjetIncompletFactory(_GroupeDeSupervisionFactory):
-    parcours_doctoral_id = factory.SubFactory(_ParcoursDoctoralFactory, uuid='uuid-SC3DP-no-project')
+    parcours_doctoral_id = factory.SubFactory(_ParcoursDoctoralIdentityFactory, uuid='uuid-SC3DP-no-project')
     signatures_promoteurs = factory.LazyFunction(
         lambda: [_SignaturePromoteurFactory(promoteur_id__uuid='promoteur-SC3DP')]
     )
@@ -219,7 +219,7 @@ class GroupeDeSupervisionSC3DPAvecPromoteurEtMembreEtProjetIncompletFactory(_Gro
 
 
 class GroupeDeSupervisionSC3DPAvecPromoteurEtMembreEtFinancementIncompletFactory(_GroupeDeSupervisionFactory):
-    parcours_doctoral_id = factory.SubFactory(_ParcoursDoctoralFactory, uuid='uuid-SC3DP-no-financement')
+    parcours_doctoral_id = factory.SubFactory(_ParcoursDoctoralIdentityFactory, uuid='uuid-SC3DP-no-financement')
     signatures_promoteurs = factory.LazyFunction(
         lambda: [_SignaturePromoteurFactory(promoteur_id__uuid='promoteur-SC3DP')]
     )
@@ -233,7 +233,7 @@ class GroupeDeSupervisionSC3DPAvecPromoteurEtMembreEtFinancementIncompletFactory
 
 
 class GroupeDeSupervisionSC3DPAvecMembresInvitesFactory(_GroupeDeSupervisionFactory):
-    parcours_doctoral_id = factory.SubFactory(_ParcoursDoctoralFactory, uuid='uuid-SC3DP-membres-invites')
+    parcours_doctoral_id = factory.SubFactory(_ParcoursDoctoralIdentityFactory, uuid='uuid-SC3DP-membres-invites')
     signatures_promoteurs = factory.LazyFunction(
         lambda: [_SignaturePromoteurFactory(promoteur_id__uuid='promoteur-SC3DP', etat=ChoixEtatSignature.INVITED)]
     )
@@ -246,7 +246,7 @@ class GroupeDeSupervisionSC3DPAvecMembresInvitesFactory(_GroupeDeSupervisionFact
 
 
 class GroupeDeSupervisionSC3DPSansPromoteurFactory(_GroupeDeSupervisionFactory):
-    parcours_doctoral_id = factory.SubFactory(_ParcoursDoctoralFactory, uuid='uuid-SC3DP-sans-promoteur')
+    parcours_doctoral_id = factory.SubFactory(_ParcoursDoctoralIdentityFactory, uuid='uuid-SC3DP-sans-promoteur')
     signatures_promoteurs: List[SignaturePromoteur] = []
     signatures_membres_CA = factory.LazyFunction(
         lambda: [
@@ -257,12 +257,12 @@ class GroupeDeSupervisionSC3DPSansPromoteurFactory(_GroupeDeSupervisionFactory):
 
 
 class GroupeDeSupervisionSC3DPSansPromoteurReferenceFactory(GroupeDeSupervisionSC3DPAvecPromoteurEtMembreFactory):
-    parcours_doctoral_id = factory.SubFactory(_ParcoursDoctoralFactory, uuid='uuid-SC3DP-sans-promoteur-reference')
+    parcours_doctoral_id = factory.SubFactory(_ParcoursDoctoralIdentityFactory, uuid='uuid-SC3DP-sans-promoteur-reference')
     promoteur_reference_id = None
 
 
 class GroupeDeSupervisionSC3DPSansMembresCAFactory(_GroupeDeSupervisionFactory):
-    parcours_doctoral_id = factory.SubFactory(_ParcoursDoctoralFactory, uuid='uuid-SC3DP-sans-membre_CA')
+    parcours_doctoral_id = factory.SubFactory(_ParcoursDoctoralIdentityFactory, uuid='uuid-SC3DP-sans-membre_CA')
     signatures_promoteurs = factory.LazyFunction(
         lambda: [
             _SignaturePromoteurFactory(promoteur_id__uuid='promoteur-SC3DP-unique', etat=ChoixEtatSignature.INVITED),
@@ -272,7 +272,7 @@ class GroupeDeSupervisionSC3DPSansMembresCAFactory(_GroupeDeSupervisionFactory):
 
 
 class GroupeDeSupervisionSC3DPAvecPromoteurDejaApprouveEtAutrePromoteurFactory(_GroupeDeSupervisionFactory):
-    parcours_doctoral_id = factory.SubFactory(_ParcoursDoctoralFactory, uuid='uuid-SC3DP-promoteur-deja-approuve')
+    parcours_doctoral_id = factory.SubFactory(_ParcoursDoctoralIdentityFactory, uuid='uuid-SC3DP-promoteur-deja-approuve')
     signatures_promoteurs = factory.LazyFunction(
         lambda: [
             _SignaturePromoteurFactory(promoteur_id__uuid='promoteur-SC3DP', etat=ChoixEtatSignature.INVITED),
@@ -293,7 +293,7 @@ class GroupeDeSupervisionSC3DPAvecPromoteurDejaApprouveEtAutrePromoteurFactory(_
 
 class GroupeDeSupervisionSC3DPAvecPromoteursEtMembresCADejaApprouvesFactory(_GroupeDeSupervisionFactory):
     parcours_doctoral_id = factory.SubFactory(
-        _ParcoursDoctoralFactory,
+        _ParcoursDoctoralIdentityFactory,
         uuid='uuid-SC3DP-promoteurs-membres-deja-approuves',
     )
     signatures_promoteurs = factory.LazyFunction(
@@ -316,7 +316,7 @@ class GroupeDeSupervisionSC3DPAvecPromoteursEtMembresCADejaApprouvesFactory(_Gro
 
 class GroupeDeSupervisionSC3DPAvecPromoteurRefuseEtMembreCADejaApprouveFactory(_GroupeDeSupervisionFactory):
     parcours_doctoral_id = factory.SubFactory(
-        _ParcoursDoctoralFactory,
+        _ParcoursDoctoralIdentityFactory,
         uuid='uuid-SC3DP-promoteur-refus-membre-deja-approuve',
     )
     signatures_promoteurs = factory.LazyFunction(
@@ -340,7 +340,7 @@ class GroupeDeSupervisionPreSC3DPAvecPromoteursEtMembresCADejaApprouvesFactory(
     GroupeDeSupervisionSC3DPAvecPromoteursEtMembresCADejaApprouvesFactory,
 ):
     parcours_doctoral_id = factory.SubFactory(
-        _ParcoursDoctoralFactory,
+        _ParcoursDoctoralIdentityFactory,
         uuid='uuid-pre-SC3DP-promoteurs-membres-deja-approuves',
     )
 
@@ -349,6 +349,6 @@ class GroupeDeSupervisionConfirmeeSC3DPAvecPromoteursEtMembresCADejaApprouvesFac
     GroupeDeSupervisionSC3DPAvecPromoteursEtMembresCADejaApprouvesFactory,
 ):
     parcours_doctoral_id = factory.SubFactory(
-        _ParcoursDoctoralFactory,
+        _ParcoursDoctoralIdentityFactory,
         uuid='uuid-SC3DP-confirmee',
     )

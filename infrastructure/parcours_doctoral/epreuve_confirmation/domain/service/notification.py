@@ -55,11 +55,11 @@ from osis_mail_template.utils import generate_email, transform_html_to_text
 from osis_notification.contrib.handlers import EmailNotificationHandler, WebNotificationHandler
 from osis_notification.contrib.notification import EmailNotification, WebNotification
 
-from parcours_doctoral.mail_templates.confirmation_paper import ADMISSION_EMAIL_CONFIRMATION_PAPER_SUBMISSION_ADRE, \
-    ADMISSION_EMAIL_CONFIRMATION_PAPER_ON_FAILURE_ADRE, ADMISSION_EMAIL_CONFIRMATION_PAPER_ON_FAILURE_ADRI, \
-    ADMISSION_EMAIL_CONFIRMATION_PAPER_ON_RETAKING_ADRE, ADMISSION_EMAIL_CONFIRMATION_PAPER_ON_RETAKING_ADRI, \
-    ADMISSION_EMAIL_CONFIRMATION_PAPER_ON_SUCCESS_STUDENT, ADMISSION_EMAIL_CONFIRMATION_PAPER_ON_SUCCESS_ADRE, \
-    ADMISSION_EMAIL_CONFIRMATION_PAPER_ON_SUCCESS_ADRI
+from parcours_doctoral.mail_templates.confirmation_paper import PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_SUBMISSION_ADRE, \
+    PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_ON_FAILURE_ADRE, PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_ON_FAILURE_ADRI, \
+    PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_ON_RETAKING_ADRE, PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_ON_RETAKING_ADRI, \
+    PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_ON_SUCCESS_STUDENT, PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_ON_SUCCESS_ADRE, \
+    PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_ON_SUCCESS_ADRI
 
 
 class Notification(INotification):
@@ -85,13 +85,13 @@ class Notification(INotification):
     @classmethod
     def get_admission_link_back(cls, uuid: UUID, tab='project') -> str:
         return "{}{}".format(
-            settings.ADMISSION_BACKEND_LINK_PREFIX,
+            settings.PARCOURS_DOCTORAL_BACKEND_LINK_PREFIX,
             resolve_url('admission:doctorate:{}'.format(tab), uuid=uuid),
         )
 
     @classmethod
     def get_admission_link_front(cls, uuid: UUID, tab='') -> str:
-        return settings.ADMISSION_FRONTEND_LINK.format(context='doctorate', uuid=uuid) + tab
+        return settings.PARCOURS_DOCTORAL_FRONTEND_LINK.format(context='doctorate', uuid=uuid) + tab
 
     @classmethod
     def get_common_tokens(
@@ -159,7 +159,7 @@ class Notification(INotification):
 
             # Notify ADRE : email
             email_message = generate_email(
-                ADMISSION_EMAIL_CONFIRMATION_PAPER_SUBMISSION_ADRE,
+                PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_SUBMISSION_ADRE,
                 settings.LANGUAGE_CODE,
                 common_tokens,
                 recipients=[cls.ADRE_EMAIL],
@@ -233,7 +233,7 @@ class Notification(INotification):
 
         # Notify ADRE > email
         adre_email_message = generate_email(
-            ADMISSION_EMAIL_CONFIRMATION_PAPER_ON_FAILURE_ADRE,
+            PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_ON_FAILURE_ADRE,
             settings.LANGUAGE_CODE,
             common_tokens,
             recipients=[cls.ADRE_EMAIL],
@@ -242,7 +242,7 @@ class Notification(INotification):
 
         # Notify ADRI > email
         adri_email_message = generate_email(
-            ADMISSION_EMAIL_CONFIRMATION_PAPER_ON_FAILURE_ADRI,
+            PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_ON_FAILURE_ADRI,
             settings.LANGUAGE_CODE,
             common_tokens,
             recipients=[cls.ADRI_EMAIL],
@@ -277,7 +277,7 @@ class Notification(INotification):
 
         # Notify ADRE > email
         adre_email_message = generate_email(
-            ADMISSION_EMAIL_CONFIRMATION_PAPER_ON_RETAKING_ADRE,
+            PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_ON_RETAKING_ADRE,
             settings.LANGUAGE_CODE,
             common_tokens,
             recipients=[cls.ADRE_EMAIL],
@@ -286,7 +286,7 @@ class Notification(INotification):
 
         # Notify ADRI > email
         adri_email_message = generate_email(
-            ADMISSION_EMAIL_CONFIRMATION_PAPER_ON_RETAKING_ADRI,
+            PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_ON_RETAKING_ADRI,
             settings.LANGUAGE_CODE,
             common_tokens,
             recipients=[cls.ADRI_EMAIL],
@@ -316,7 +316,7 @@ class Notification(INotification):
 
         # Notify the student > email
         student_email_message = generate_email(
-            ADMISSION_EMAIL_CONFIRMATION_PAPER_ON_SUCCESS_STUDENT,
+            PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_ON_SUCCESS_STUDENT,
             parcours_doctoral.student.language,
             common_tokens,
             recipients=[parcours_doctoral.student.email],
@@ -325,7 +325,7 @@ class Notification(INotification):
 
         # Notify ADRE > email
         adre_email_message = generate_email(
-            ADMISSION_EMAIL_CONFIRMATION_PAPER_ON_SUCCESS_ADRE,
+            PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_ON_SUCCESS_ADRE,
             settings.LANGUAGE_CODE,
             common_tokens,
             recipients=[cls.ADRE_EMAIL],
@@ -334,7 +334,7 @@ class Notification(INotification):
 
         # Notify ADRI > email
         adri_email_message = generate_email(
-            ADMISSION_EMAIL_CONFIRMATION_PAPER_ON_SUCCESS_ADRI,
+            PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_ON_SUCCESS_ADRI,
             settings.LANGUAGE_CODE,
             common_tokens,
             recipients=[cls.ADRI_EMAIL],
