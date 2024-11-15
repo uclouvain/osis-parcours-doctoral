@@ -32,6 +32,8 @@ from base.models.utils.utils import ChoiceEnum
 class ChoixStatutParcoursDoctoral(ChoiceEnum):
     # After enrolment
     ADMITTED = _('ADMITTED')
+    # Groupe de supervision
+    EN_ATTENTE_DE_SIGNATURE = _('Waiting for signature')
     # Confirmation exam
     SUBMITTED_CONFIRMATION = _('SUBMITTED_CONFIRMATION')
     PASSED_CONFIRMATION = _('PASSED_CONFIRMATION')

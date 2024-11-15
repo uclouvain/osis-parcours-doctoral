@@ -46,8 +46,12 @@ from parcours_doctoral.ddd.test.factory.parcours_doctoral import (
     ParcoursDoctoralSC3DPAvecMembresEtCotutelleFactory, ParcoursDoctoralSC3DPAvecMembresInvitesFactory,
     ParcoursDoctoralSC3DPSansPromoteurFactory, ParcoursDoctoralSC3DPSansPromoteurReferenceFactory,
     ParcoursDoctoralSC3DPSansMembreCAFactory, ParcoursDoctoralSC3DPAvecPromoteurDejaApprouveFactory,
-    ParcoursDoctoralSC3DPAvecPromoteurRefuseEtMembreCADejaApprouveFactory, PropositionAdmissionECGE3DPMinimaleFactory,
-    PropositionAdmissionESP3DPMinimaleFactory,
+    ParcoursDoctoralSC3DPAvecPromoteurRefuseEtMembreCADejaApprouveFactory,
+    ParcoursDoctoralSC3DPMinimaleCotutelleAvecPromoteurExterneFactory,
+    ParcoursDoctoralECGE3DPMinimaleFactory, ParcoursDoctoralESP3DPMinimaleFactory,
+    ParcoursDoctoralSC3DPMinimaleSansCotutelleFactory,
+    ParcoursDoctoralSC3DPMinimaleCotutelleSansPromoteurExterneFactory,
+    ParcoursDoctoralSC3DPMinimaleSansDetailProjetFactory, ParcoursDoctoralSC3DPMinimaleSansFinancementFactory,
 )
 from admission.infrastructure.admission.domain.service.in_memory.bourse import BourseInMemoryTranslator
 from base.ddd.utils.in_memory_repository import InMemoryGenericRepository
@@ -129,7 +133,7 @@ class ParcoursDoctoralInMemoryRepository(InMemoryGenericRepository, IParcoursDoc
                 intitule_secteur='',
             ),
             financement=FinancementDTO(
-                type=ChoixTypeFinancement[parcours_doctoral.financement.type] if parcours_doctoral.financement.type else None,
+                type=parcours_doctoral.financement.type.name if parcours_doctoral.financement.type else None,
                 type_contrat_travail=parcours_doctoral.financement.type_contrat_travail,
                 eft=parcours_doctoral.financement.eft,
                 bourse_recherche=bourse_recherche_dto,
@@ -173,8 +177,13 @@ class ParcoursDoctoralInMemoryRepository(InMemoryGenericRepository, IParcoursDoc
     def reset(cls):
         cls.entities = [
             ParcoursDoctoralSC3DPMinimaleFactory(),
-            PropositionAdmissionECGE3DPMinimaleFactory(),
-            PropositionAdmissionESP3DPMinimaleFactory(),
+            ParcoursDoctoralECGE3DPMinimaleFactory(),
+            ParcoursDoctoralESP3DPMinimaleFactory(),
+            ParcoursDoctoralSC3DPMinimaleSansDetailProjetFactory(),
+            ParcoursDoctoralSC3DPMinimaleSansFinancementFactory(),
+            ParcoursDoctoralSC3DPMinimaleSansCotutelleFactory(),
+            ParcoursDoctoralSC3DPMinimaleCotutelleSansPromoteurExterneFactory(),
+            ParcoursDoctoralSC3DPMinimaleCotutelleAvecPromoteurExterneFactory(),
             ParcoursDoctoralPreSC3DPAvecPromoteursEtMembresCADejaApprouvesAccepteeFactory(),
             ParcoursDoctoralSC3DPAvecPromoteurRefuseEtMembreCADejaApprouveFactoryRejeteeCDDFactory(),
             ParcoursDoctoralSC3DPAvecPromoteursEtMembresCADejaApprouvesFactory(),

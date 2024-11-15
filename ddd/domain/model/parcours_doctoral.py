@@ -76,6 +76,10 @@ class ParcoursDoctoral(interface.RootEntity):
     def verrouiller_parcours_doctoral_pour_signature(self):
         self.statut = ChoixStatutParcoursDoctoral.EN_ATTENTE_DE_SIGNATURE
 
+    @property
+    def est_verrouillee_pour_signature(self) -> bool:
+        return self.statut == ChoixStatutParcoursDoctoral.EN_ATTENTE_DE_SIGNATURE
+
     def verifier_projet_doctoral(self):
         """Vérification de la validité du projet doctoral avant demande des signatures"""
         ProjetDoctoralValidatorList(

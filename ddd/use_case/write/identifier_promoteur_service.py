@@ -23,7 +23,6 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from admission.models.enums.actor_type import ActorType
 from parcours_doctoral.ddd.builder.parcours_doctoral_identity import ParcoursDoctoralIdentityBuilder
 from parcours_doctoral.ddd.commands import IdentifierPromoteurCommand
 from parcours_doctoral.ddd.domain.model._promoteur import PromoteurIdentity
@@ -39,6 +38,7 @@ from parcours_doctoral.ddd.repository.i_groupe_de_supervision import (
     IGroupeDeSupervisionRepository,
 )
 from parcours_doctoral.ddd.repository.i_parcours_doctoral import IParcoursDoctoralRepository
+from parcours_doctoral.models import ActorType
 
 
 def identifier_promoteur(
