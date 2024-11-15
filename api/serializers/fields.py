@@ -44,11 +44,6 @@ PARCOURS_DOCTORAL_ACTION_LINKS = {
         'method': 'GET',
         'params': ['uuid'],
     },
-    'update_project': {
-        'path_name': 'parcours_doctoral_api_v1:project',
-        'method': 'POST',
-        'params': ['uuid'],
-    },
     'retrieve_funding': {
         'path_name': 'parcours_doctoral_api_v1:funding',
         'method': 'GET',
@@ -57,6 +52,22 @@ PARCOURS_DOCTORAL_ACTION_LINKS = {
     'update_funding': {
         'path_name': 'parcours_doctoral_api_v1:funding',
         'method': 'POST',
+        'params': ['uuid'],
+    },
+    'retrieve_cotutelle': {
+        'path_name': 'parcours_doctoral_api_v1:cotutelle',
+        'method': 'GET',
+        'params': ['uuid'],
+    },
+    'update_cotutelle': {
+        'path_name': 'parcours_doctoral_api_v1:cotutelle',
+        'method': 'POST',
+        'params': ['uuid'],
+    },
+    # Supervision group
+    'retrieve_supervision': {
+        'path_name': 'parcours_doctoral_api_v1:supervision',
+        'method': 'GET',
         'params': ['uuid'],
     },
     # Confirmation exam

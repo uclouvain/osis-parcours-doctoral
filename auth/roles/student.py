@@ -48,6 +48,9 @@ class Student(RoleModel):
             'parcours_doctoral.view_project': parcours_doctoral.is_parcours_doctoral_student,
             'parcours_doctoral.view_funding': parcours_doctoral.is_parcours_doctoral_student,
             'parcours_doctoral.change_funding': parcours_doctoral.is_parcours_doctoral_student,
+            'parcours_doctoral.view_cotutelle': parcours_doctoral.is_parcours_doctoral_student,
+            'parcours_doctoral.change_cotutelle': parcours_doctoral.is_parcours_doctoral_student,
+            'parcours_doctoral.view_supervision': parcours_doctoral.is_parcours_doctoral_student,
             # Can edit while the jury is not submitted
             'parcours_doctoral.view_admission_jury': parcours_doctoral.is_parcours_doctoral_student,
             'parcours_doctoral.change_admission_jury': parcours_doctoral.is_parcours_doctoral_student

@@ -44,7 +44,11 @@ urlpatterns = [
     # Project
     path('doctorate/<uuid:uuid>/project', views.ProjectView),
     # Funding
-    path('doctorate/<uuid:uuid>/funding', views.FundingViewSet),
+    path('doctorate/<uuid:uuid>/funding', views.FundingApiView),
+    # Cotutelle
+    path('doctorate/<uuid:uuid>/cotutelle', views.CotutelleAPIView),
+    # Supervision
+    path('doctorate/<uuid:uuid>/supervision', views.SupervisionAPIView),
     # Submission confirmation
     path('doctorate/<uuid:uuid>/confirmation', views.ConfirmationAPIView),
     path('doctorate/<uuid:uuid>/confirmation/last', views.LastConfirmationAPIView),

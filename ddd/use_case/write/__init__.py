@@ -26,12 +26,14 @@
 
 from .envoyer_message_au_doctorant_service import envoyer_message_au_doctorant
 from .initialiser_parcours_doctoral import initialiser_parcours_doctoral
+from .modifier_cotutelle_service import modifier_cotutelle
 from .modifier_financement_service import modifier_financement
 from .modifier_projet_service import modifier_projet
 
 __all__ = [
     "envoyer_message_au_doctorant",
     "initialiser_parcours_doctoral",
+    "modifier_cotutelle",
     "modifier_financement",
     "modifier_projet",
 ]

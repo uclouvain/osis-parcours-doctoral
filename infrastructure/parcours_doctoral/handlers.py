@@ -26,8 +26,10 @@
 from admission.infrastructure.admission.doctorat.preparation.repository.groupe_de_supervision import (
     GroupeDeSupervisionRepository,
 )
-from admission.ddd.admission.doctorat.events import InscriptionDoctoraleApprouveeParSicEvent, \
-    AdmissionDoctoraleApprouveeParSicEvent
+from admission.ddd.admission.doctorat.events import (
+    InscriptionDoctoraleApprouveeParSicEvent,
+    AdmissionDoctoraleApprouveeParSicEvent,
+)
 from admission.infrastructure.admission.doctorat.preparation.repository.proposition import PropositionRepository
 from parcours_doctoral.ddd.commands import *
 from parcours_doctoral.ddd.use_case.read import *
@@ -149,6 +151,11 @@ COMMAND_HANDLERS = {
         groupe_supervision_repository=GroupeDeSupervisionRepository(),
         promoteur_translator=PromoteurTranslator(),
         membre_ca_translator=MembreCATranslator(),
+    ),
+    ModifierCotutelleCommand: lambda msg_bus, cmd: modifier_cotutelle(
+        cmd,
+        parcours_doctoral_repository=ParcoursDoctoralRepository(),
+        historique=Historique(),
     ),
 }
 

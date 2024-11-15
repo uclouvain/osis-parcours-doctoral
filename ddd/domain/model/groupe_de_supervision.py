@@ -238,19 +238,19 @@ class GroupeDeSupervision(interface.RootEntity):
         institution: Optional[str],
         autre_institution_nom: Optional[str],
         autre_institution_adresse: Optional[str],
-        demande_ouverture: List[str] = None,
-        convention: List[str] = None,
-        autres_documents: List[str] = None,
+        demande_ouverture: List[str],
+        convention: List[str],
+        autres_documents: List[str],
     ):
         self.cotutelle = Cotutelle(
-            motivation=motivation or '',
+            motivation=motivation,
             institution_fwb=institution_fwb,
-            institution=institution or '',
-            autre_institution_nom=autre_institution_nom or '',
-            autre_institution_adresse=autre_institution_adresse or '',
-            demande_ouverture=demande_ouverture or [],
-            convention=convention or [],
-            autres_documents=autres_documents or [],
+            institution=institution,
+            autre_institution_nom=autre_institution_nom,
+            autre_institution_adresse=autre_institution_adresse,
+            demande_ouverture=demande_ouverture,
+            convention=convention,
+            autres_documents=autres_documents,
         )
 
     def verrouiller_groupe_pour_signature(self):

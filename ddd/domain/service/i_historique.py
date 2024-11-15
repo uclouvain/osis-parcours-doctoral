@@ -34,7 +34,9 @@ from osis_common.ddd import interface
 class IHistorique(interface.DomainService):
     @classmethod
     @abstractmethod
-    def historiser_message_au_doctorant(cls, parcours_doctoral: ParcoursDoctoral, matricule_emetteur: str, message: EmailMessage):
+    def historiser_message_au_doctorant(
+        cls, parcours_doctoral: ParcoursDoctoral, matricule_emetteur: str, message: EmailMessage
+    ):
         raise NotImplementedError
 
     @classmethod
@@ -91,5 +93,14 @@ class IHistorique(interface.DomainService):
 
     @classmethod
     @abstractmethod
-    def historiser_completion_projet(cls, parcours_doctoral: ParcoursDoctoral, matricule_auteur: str):
+    def historiser_modification_projet(cls, parcours_doctoral: ParcoursDoctoral, matricule_auteur: str):
+        raise NotImplementedError
+
+    @classmethod
+    @abstractmethod
+    def historiser_modification_cotutelle(
+        cls,
+        parcours_doctoral_identity: ParcoursDoctoralIdentity,
+        matricule_auteur: str,
+    ):
         raise NotImplementedError

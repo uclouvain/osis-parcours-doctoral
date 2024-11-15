@@ -112,7 +112,6 @@ class GroupeDeSupervisionDTO(interface.DTO):
     signatures_promoteurs: List[DetailSignaturePromoteurDTO] = attr.Factory(list)
     signatures_membres_CA: List[DetailSignatureMembreCADTO] = attr.Factory(list)
     promoteur_reference: Optional[str] = None
-    cotutelle: Optional[CotutelleDTO] = None
 
     @cached_property
     def promoteur_reference_dto(self) -> Optional[PromoteurDTO]:

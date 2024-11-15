@@ -23,43 +23,36 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from parcours_doctoral.ddd.builder.bourse_identity import BourseIdentityBuilder
-from parcours_doctoral.ddd.builder.parcours_doctoral_identity import ParcoursDoctoralIdentityBuilder
-from parcours_doctoral.ddd.commands import ModifierFinancementCommand
-from parcours_doctoral.ddd.commands import ModifierProjetCommand
+
+from parcours_doctoral.ddd.commands import ModifierCotutelleCommand
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoralIdentity
 from parcours_doctoral.ddd.domain.service.i_historique import IHistorique
 from parcours_doctoral.ddd.repository.i_parcours_doctoral import IParcoursDoctoralRepository
 
 
-def modifier_financement(
-    cmd: 'ModifierFinancementCommand',
+def modifier_cotutelle(
+    cmd: 'ModifierCotutelleCommand',
     parcours_doctoral_repository: 'IParcoursDoctoralRepository',
     historique: 'IHistorique',
 ) -> 'ParcoursDoctoralIdentity':
     # GIVEN
-    entity_id = ParcoursDoctoralIdentityBuilder.build_from_uuid(cmd.uuid)
-    parcours_doctoral = parcours_doctoral_repository.get(entity_id=entity_id)
-    bourse_recherche_id = BourseIdentityBuilder.build_from_uuid(cmd.bourse_recherche) if cmd.bourse_recherche else None
+    parcours_doctoral_identity = ParcoursDoctoralIdentity(uuid=cmd.uuid_proposition)
+    parcours_doctoral = parcours_doctoral_repository.get(parcours_doctoral_identity)
 
     # WHEN
-    parcours_doctoral.modifier_financement(
-        type=cmd.type,
-        type_contrat_travail=cmd.type_contrat_travail,
-        eft=cmd.eft,
-        bourse_recherche=bourse_recherche_id,
-        autre_bourse_recherche=cmd.autre_bourse_recherche,
-        bourse_date_debut=cmd.bourse_date_debut,
-        bourse_date_fin=cmd.bourse_date_fin,
-        bourse_preuve=cmd.bourse_preuve,
-        duree_prevue=cmd.duree_prevue,
-        temps_consacre=cmd.temps_consacre,
-        est_lie_fnrs_fria_fresh_csc=cmd.est_lie_fnrs_fria_fresh_csc,
-        commentaire=cmd.commentaire,
+    parcours_doctoral.modifier_cotutelle(
+        motivation=cmd.motivation,
+        institution_fwb=cmd.institution_fwb,
+        institution=cmd.institution,
+        autre_institution_nom=cmd.autre_institution_nom,
+        autre_institution_adresse=cmd.autre_institution_adresse,
+        demande_ouverture=cmd.demande_ouverture,
+        convention=cmd.convention,
+        autres_documents=cmd.autres_documents,
     )
 
     # THEN
     parcours_doctoral_repository.save(parcours_doctoral)
-    historique.historiser_modification_projet(parcours_doctoral, cmd.matricule_auteur)
+    historique.historiser_modification_cotutelle(parcours_doctoral_identity, cmd.matricule_auteur)
 
-    return entity_id
+    return parcours_doctoral_identity

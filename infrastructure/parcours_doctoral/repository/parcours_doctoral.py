@@ -36,7 +36,7 @@ from base.models.enums.entity_type import EntityType
 from base.models.person import Person
 from base.models.student import Student
 from osis_common.ddd.interface import ApplicationService, EntityIdentity, RootEntity
-from parcours_doctoral.ddd.domain.model._cotutelle import Cotutelle
+from parcours_doctoral.ddd.domain.model._cotutelle import Cotutelle, pas_de_cotutelle
 from parcours_doctoral.ddd.domain.model._financement import Financement
 from parcours_doctoral.ddd.domain.model._formation import FormationIdentity
 from parcours_doctoral.ddd.domain.model._institut import InstitutIdentity
@@ -195,6 +195,7 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
                 'phd_already_done_defense_date': entity.experience_precedente_recherche.date_soutenance,
                 'phd_already_done_no_defense_reason': entity.experience_precedente_recherche.raison_non_soutenue,
                 # Cotutelle
+                'cotutelle': bool(entity.cotutelle.motivation),
                 'cotutelle_motivation': entity.cotutelle.motivation,
                 'cotutelle_institution_fwb': entity.cotutelle.institution_fwb,
                 'cotutelle_institution': None if not entity.cotutelle.institution else entity.cotutelle.institution,
@@ -269,25 +270,20 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
             ),
             noma_doctorant=student.registration_id if student else '',
             cotutelle=CotutelleDTO(
+                cotutelle=parcours_doctoral.cotutelle,
                 motivation=parcours_doctoral.cotutelle_motivation,
                 institution_fwb=parcours_doctoral.cotutelle_institution_fwb,
                 institution=str(parcours_doctoral.cotutelle_institution)
                 if parcours_doctoral.cotutelle_institution
                 else "",
-                autre_institution=parcours_doctoral.cotutelle.autre_institution_nom
-                or parcours_doctoral.cotutelle.autre_institution_adresse,
+                autre_institution=bool(parcours_doctoral.cotutelle_other_institution_name
+                or parcours_doctoral.cotutelle_other_institution_address),
                 autre_institution_nom=parcours_doctoral.cotutelle_other_institution_name,
                 autre_institution_adresse=parcours_doctoral.cotutelle_other_institution_address,
-                demande_ouverture=parcours_doctoral.cotutelle_opening_request
-                if parcours_doctoral.cotutelle_opening_request
-                else [],
-                convention=parcours_doctoral.cotutelle_convention if parcours_doctoral.cotutelle_convention else [],
-                autres_documents=parcours_doctoral.cotutelle_other_documents
-                if parcours_doctoral.cotutelle_other_documents
-                else [],
-            )
-            if parcours_doctoral.cotutelle
-            else None,
+                demande_ouverture=parcours_doctoral.cotutelle_opening_request,
+                convention=parcours_doctoral.cotutelle_convention,
+                autres_documents=parcours_doctoral.cotutelle_other_documents,
+            ),
             projet=ProjetDTO(
                 titre=parcours_doctoral.project_title,
                 resume=parcours_doctoral.project_abstract,

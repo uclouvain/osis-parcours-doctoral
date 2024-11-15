@@ -52,6 +52,7 @@ class FinancementDTO(interface.DTO):
 
 @attr.dataclass(frozen=True, slots=True)
 class CotutelleDTO(interface.DTO):
+    cotutelle: Optional[bool]
     motivation: str
     institution_fwb: Optional[bool]
     institution: str
@@ -96,7 +97,7 @@ class ParcoursDoctoralDTO(interface.DTO):
     formation: FormationDTO
 
     projet: ProjetDTO
-    cotutelle: Optional[CotutelleDTO]
+    cotutelle: CotutelleDTO
     financement: FinancementDTO
 
     matricule_doctorant: str

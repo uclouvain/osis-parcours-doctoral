@@ -43,10 +43,14 @@ class ParcoursDoctoralDTOSerializer(DTOSerializer):
             for key in [
                 # Project
                 'retrieve_project',
-                'update_project',
+                # Cotutelle
+                'retrieve_cotutelle',
+                'update_cotutelle',
                 # Funding
                 'retrieve_funding',
                 'update_funding',
+                # Supervision
+                'retrieve_supervision',
                 # Confirmation
                 'retrieve_confirmation',
                 'update_confirmation',
@@ -79,15 +83,14 @@ class ParcoursDoctoralRechercheDTOSerializer(DTOSerializer):
                 for action in [
                     # Project
                     'retrieve_project',
-                    'update_project',
                     # Funding
                     'retrieve_funding',
                     'update_funding',
                     # Cotutelle
-                    # 'retrieve_cotutelle',
-                    # 'update_cotutelle',
+                    'retrieve_cotutelle',
+                    'update_cotutelle',
                     # Supervision
-                    # 'retrieve_supervision',
+                    'retrieve_supervision',
                     # Confirmation
                     'retrieve_confirmation',
                     'update_confirmation',
