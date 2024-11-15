@@ -75,11 +75,6 @@ class IGroupeDeSupervisionRepository(interface.AbstractRepository):
 
     @classmethod
     @abc.abstractmethod
-    def get_cotutelle_dto(cls, uuid_proposition: str) -> 'CotutelleDTO':
-        raise NotImplementedError
-
-    @classmethod
-    @abc.abstractmethod
     def add_member(
         cls,
         groupe_id: 'GroupeDeSupervisionIdentity',
@@ -122,24 +117,3 @@ class IGroupeDeSupervisionRepository(interface.AbstractRepository):
     @abc.abstractmethod
     def get_members(cls, groupe_id: 'GroupeDeSupervisionIdentity') -> List[Union['PromoteurDTO', 'MembreCADTO']]:
         raise NotImplementedError
-
-    @classmethod
-    def get_cotutelle_dto_from_model(cls, cotutelle: Optional[Cotutelle]) -> 'CotutelleDTO':
-        autre_institution = None
-        if cotutelle and (cotutelle.autre_institution_nom or cotutelle.autre_institution_adresse):
-            autre_institution = True
-        elif cotutelle and cotutelle.institution:
-            autre_institution = False
-
-        return CotutelleDTO(
-            cotutelle=None if cotutelle is None else cotutelle != pas_de_cotutelle,
-            motivation=cotutelle and cotutelle.motivation or '',
-            institution_fwb=cotutelle and cotutelle.institution_fwb,
-            institution=cotutelle and cotutelle.institution or '',
-            autre_institution=autre_institution,
-            autre_institution_nom=cotutelle and cotutelle.autre_institution_nom or '',
-            autre_institution_adresse=cotutelle and cotutelle.autre_institution_adresse or '',
-            demande_ouverture=cotutelle and cotutelle.demande_ouverture or [],
-            convention=cotutelle and cotutelle.convention or [],
-            autres_documents=cotutelle and cotutelle.autres_documents or [],
-        )

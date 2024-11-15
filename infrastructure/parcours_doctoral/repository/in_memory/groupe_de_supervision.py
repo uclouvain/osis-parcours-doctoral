@@ -121,23 +121,6 @@ class GroupeDeSupervisionInMemoryRepository(InMemoryGenericRepository, IGroupeDe
             raise GroupeDeSupervisionNonTrouveException
 
     @classmethod
-    def get_cotutelle_dto(cls, uuid_proposition: str) -> 'CotutelleDTO':
-        parcours_doctoral_id = ParcoursDoctoralIdentityBuilder.build_from_uuid(uuid_proposition)
-        groupe = cls.get_by_parcours_doctoral_id(parcours_doctoral_id=parcours_doctoral_id)
-        return CotutelleDTO(
-            cotutelle=None if groupe.cotutelle is None else groupe.cotutelle != pas_de_cotutelle,
-            motivation=groupe.cotutelle and groupe.cotutelle.motivation or '',
-            institution_fwb=groupe.cotutelle and groupe.cotutelle.institution_fwb or None,
-            institution=groupe.cotutelle and groupe.cotutelle.institution or '',
-            demande_ouverture=groupe.cotutelle and groupe.cotutelle.demande_ouverture or [],
-            convention=groupe.cotutelle and groupe.cotutelle.convention or [],
-            autres_documents=groupe.cotutelle and groupe.cotutelle.autres_documents or [],
-            autre_institution=True if groupe.cotutelle and groupe.cotutelle.autre_institution_nom else False,
-            autre_institution_nom=groupe.cotutelle and groupe.cotutelle.autre_institution_nom or '',
-            autre_institution_adresse=groupe.cotutelle and groupe.cotutelle.autre_institution_adresse or '',
-        )
-
-    @classmethod
     def add_member(
         cls,
         groupe_id: 'GroupeDeSupervisionIdentity',

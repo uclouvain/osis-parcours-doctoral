@@ -230,6 +230,105 @@ paths:
           $ref: '#/components/responses/NotFound'
       tags:
       - doctorate
+  /doctorate/{uuid}/cotutelle:
+    get:
+      operationId: retrieve_cotutelle
+      description: 'This method is only used to check the permission.
+
+        We have to return some data as the schema expects a 200 status and the deserializer
+        expects some data.'
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      - $ref: '#/components/parameters/Accept-Language'
+      - $ref: '#/components/parameters/X-User-FirstName'
+      - $ref: '#/components/parameters/X-User-LastName'
+      - $ref: '#/components/parameters/X-User-Email'
+      - $ref: '#/components/parameters/X-User-GlobalID'
+      responses:
+        200:
+          content:
+            application/json:
+              schema: {}
+          description: ''
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+      - doctorate
+    put:
+      operationId: update_cotutelle
+      description: Set the cotutelle of the PhD.
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      - $ref: '#/components/parameters/Accept-Language'
+      - $ref: '#/components/parameters/X-User-FirstName'
+      - $ref: '#/components/parameters/X-User-LastName'
+      - $ref: '#/components/parameters/X-User-Email'
+      - $ref: '#/components/parameters/X-User-GlobalID'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ModifierCotutelleCommand'
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParcoursDoctoralIdentityDTO'
+          description: ''
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+      - doctorate
+  /doctorate/{uuid}/supervision:
+    get:
+      operationId: retrieve_supervision
+      description: Get the supervision group of the PhD
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      - $ref: '#/components/parameters/Accept-Language'
+      - $ref: '#/components/parameters/X-User-FirstName'
+      - $ref: '#/components/parameters/X-User-LastName'
+      - $ref: '#/components/parameters/X-User-Email'
+      - $ref: '#/components/parameters/X-User-GlobalID'
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SupervisionDTO'
+          description: ''
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+      - doctorate
   /doctorate/{uuid}/confirmation:
     get:
       operationId: retrieve_confirmation_papers
@@ -1184,11 +1283,15 @@ components:
           properties:
             retrieve_project:
               $ref: '#/components/schemas/ActionLink'
-            update_project:
-              $ref: '#/components/schemas/ActionLink'
             retrieve_funding:
               $ref: '#/components/schemas/ActionLink'
             update_funding:
+              $ref: '#/components/schemas/ActionLink'
+            retrieve_cotutelle:
+              $ref: '#/components/schemas/ActionLink'
+            update_cotutelle:
+              $ref: '#/components/schemas/ActionLink'
+            retrieve_supervision:
               $ref: '#/components/schemas/ActionLink'
             retrieve_confirmation:
               $ref: '#/components/schemas/ActionLink'
@@ -1390,6 +1493,9 @@ components:
         cotutelle:
           type: object
           properties:
+            cotutelle:
+              type: boolean
+              nullable: true
             motivation:
               type: string
             institution_fwb:
@@ -1424,7 +1530,6 @@ components:
           - demande_ouverture
           - convention
           - autres_documents
-          nullable: true
         financement:
           type: object
           properties:
@@ -1498,11 +1603,15 @@ components:
           properties:
             retrieve_project:
               $ref: '#/components/schemas/ActionLink'
-            update_project:
+            retrieve_cotutelle:
+              $ref: '#/components/schemas/ActionLink'
+            update_cotutelle:
               $ref: '#/components/schemas/ActionLink'
             retrieve_funding:
               $ref: '#/components/schemas/ActionLink'
             update_funding:
+              $ref: '#/components/schemas/ActionLink'
+            retrieve_supervision:
               $ref: '#/components/schemas/ActionLink'
             retrieve_confirmation:
               $ref: '#/components/schemas/ActionLink'
@@ -1538,12 +1647,143 @@ components:
       - statut
       - formation
       - projet
+      - cotutelle
       - financement
       - matricule_doctorant
       - noma_doctorant
       - genre_doctorant
       - prenom_doctorant
       - nom_doctorant
+    SupervisionDTO:
+      type: object
+      properties:
+        signatures_promoteurs:
+          type: array
+          items:
+            type: object
+            properties:
+              promoteur:
+                type: object
+                properties:
+                  uuid:
+                    type: string
+                  matricule:
+                    type: string
+                  nom:
+                    type: string
+                  prenom:
+                    type: string
+                  email:
+                    type: string
+                  est_docteur:
+                    type: boolean
+                  institution:
+                    type: string
+                  ville:
+                    type: string
+                  code_pays:
+                    type: string
+                  pays:
+                    type: string
+                  est_externe:
+                    type: boolean
+                required:
+                - uuid
+                - nom
+                - prenom
+                - email
+                - est_docteur
+                - institution
+                - ville
+                - code_pays
+                - pays
+                - est_externe
+              statut:
+                type: string
+              date:
+                type: string
+                format: date-time
+                nullable: true
+              commentaire_externe:
+                type: string
+              commentaire_interne:
+                type: string
+              motif_refus:
+                type: string
+              pdf:
+                type: array
+                items:
+                  type: string
+            required:
+            - promoteur
+            - statut
+            - pdf
+        signatures_membres_CA:
+          type: array
+          items:
+            type: object
+            properties:
+              membre_CA:
+                type: object
+                properties:
+                  uuid:
+                    type: string
+                  matricule:
+                    type: string
+                  nom:
+                    type: string
+                  prenom:
+                    type: string
+                  email:
+                    type: string
+                  est_docteur:
+                    type: boolean
+                  institution:
+                    type: string
+                  ville:
+                    type: string
+                  code_pays:
+                    type: string
+                  pays:
+                    type: string
+                  est_externe:
+                    type: boolean
+                required:
+                - uuid
+                - nom
+                - prenom
+                - email
+                - est_docteur
+                - institution
+                - ville
+                - code_pays
+                - pays
+                - est_externe
+              statut:
+                type: string
+              date:
+                type: string
+                format: date-time
+                nullable: true
+              commentaire_externe:
+                type: string
+              commentaire_interne:
+                type: string
+              motif_refus:
+                type: string
+              pdf:
+                type: array
+                items:
+                  type: string
+            required:
+            - membre_CA
+            - statut
+            - pdf
+        promoteur_reference:
+          type: string
+      required:
+      - signatures_promoteurs
+      - signatures_membres_CA
     ConfirmationPaperDTO:
       type: object
       properties:
@@ -3050,6 +3290,38 @@ components:
       required:
       - type
       - bourse_preuve
+    ModifierCotutelleCommand:
+      type: object
+      properties:
+        motivation:
+          type: string
+          maxLength: 255
+        institution_fwb:
+          type: boolean
+          nullable: true
+        institution:
+          type: string
+          maxLength: 255
+        autre_institution_nom:
+          type: string
+        autre_institution_adresse:
+          type: string
+        demande_ouverture:
+          type: array
+          items:
+            type: string
+        convention:
+          type: array
+          items:
+            type: string
+        autres_documents:
+          type: array
+          items:
+            type: string
+      required:
+      - demande_ouverture
+      - convention
+      - autres_documents
     SubmitConfirmationPaperCommand:
       type: object
       properties:

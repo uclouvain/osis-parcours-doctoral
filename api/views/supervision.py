@@ -23,7 +23,7 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from rest_framework import mixins, status
+from rest_framework import mixins
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 
@@ -31,58 +31,37 @@ from infrastructure.messages_bus import message_bus_instance
 from parcours_doctoral.api import serializers
 from parcours_doctoral.api.permissions import DoctorateAPIPermissionRequiredMixin
 from parcours_doctoral.api.schema import ResponseSpecificSchema
-from parcours_doctoral.ddd.commands import (
-    ModifierFinancementCommand,
-)
+from parcours_doctoral.ddd.commands import GetGroupeDeSupervisionCommand
 
 __all__ = [
-    "FundingApiView",
+    "SupervisionAPIView",
 ]
 
 
-class FundingSchema(ResponseSpecificSchema):
-    operation_id_base = '_funding'
+class SupervisionSchema(ResponseSpecificSchema):
+    operation_id_base = '_supervision'
     serializer_mapping = {
-        'PUT': (serializers.ModifierFinancementCommandSerializer, serializers.ParcoursDoctoralIdentityDTOSerializer),
+        'GET': serializers.SupervisionDTOSerializer,
     }
 
 
-class FundingApiView(
+class SupervisionAPIView(
     DoctorateAPIPermissionRequiredMixin,
     mixins.RetrieveModelMixin,
-    mixins.UpdateModelMixin,
     GenericAPIView,
 ):
-    name = "funding"
-    schema = FundingSchema()
+    name = "supervision"
+    schema = SupervisionSchema()
     pagination_class = None
     filter_backends = []
     permission_mapping = {
-        'GET': 'parcours_doctoral.view_funding',
-        'PUT': 'parcours_doctoral.change_funding',
+        'GET': 'parcours_doctoral.view_supervision',
     }
 
     def get(self, request, *args, **kwargs):
-        """
-        This method is only used to check the permission.
-        We have to return some data as the schema expects a 200 status and the deserializer expects some data.
-        """
-        return Response(data={})
-
-    def put(self, request, *args, **kwargs):
-        """Edit the project"""
-        serializer = serializers.ModifierFinancementCommandSerializer(data=request.data)
-
-        serializer.is_valid(raise_exception=True)
-
-        result = message_bus_instance.invoke(
-            ModifierFinancementCommand(
-                uuid=self.doctorate_uuid,
-                matricule_auteur=self.request.user.person.global_id,
-                **serializer.data,
-            )
+        """Get the supervision group of the PhD"""
+        supervision = message_bus_instance.invoke(
+            GetGroupeDeSupervisionCommand(uuid_parcours_doctoral=self.doctorate_uuid),
         )
-
-        serializer = serializers.ParcoursDoctoralIdentityDTOSerializer(instance=result)
-
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        serializer = serializers.SupervisionDTOSerializer(instance=supervision)
+        return Response(serializer.data)

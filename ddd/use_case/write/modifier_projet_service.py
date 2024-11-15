@@ -77,6 +77,6 @@ def modifier_projet(
 
     # THEN
     parcours_doctoral_repository.save(parcours_doctoral)
-    historique.historiser_completion_projet(parcours_doctoral, cmd.matricule_auteur)
+    historique.historiser_modification_projet(parcours_doctoral, cmd.matricule_auteur)
 
     return entity_id

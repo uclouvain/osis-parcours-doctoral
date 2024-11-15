@@ -196,3 +196,17 @@ class ModifierFinancementCommand(interface.CommandRequest):
     temps_consacre: Optional[int]
     est_lie_fnrs_fria_fresh_csc: Optional[bool]
     commentaire: Optional[str]
+
+
+@attr.dataclass(frozen=True, slots=True)
+class ModifierCotutelleCommand(interface.CommandRequest):
+    uuid_proposition: str
+    matricule_auteur: str
+    motivation: Optional[str]
+    institution_fwb: Optional[bool]
+    institution: Optional[str]
+    autre_institution_nom: Optional[str]
+    autre_institution_adresse: Optional[str]
+    demande_ouverture: List[str]
+    convention: List[str]
+    autres_documents: List[str]

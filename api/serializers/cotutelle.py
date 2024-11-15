@@ -23,12 +23,22 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from base.utils.serializers import DTOSerializer
+from parcours_doctoral.ddd.commands import ModifierCotutelleCommand
 
-from .activity import *
-from .confirmation import *
-from .cotutelle import *
-from .dashboard import *
-from .jury import *
-from .parcours_doctoral import *
-from .funding import *
-from .supervision import *
+
+__all__ = [
+    'ModifierCotutelleCommandSerializer',
+]
+
+
+class ModifierCotutelleCommandSerializer(DTOSerializer):
+    uuid_proposition = None
+    matricule_auteur = None
+
+    class Meta:
+        source = ModifierCotutelleCommand
+        extra_kwargs = {
+            'motivation': {'max_length': 255},
+            'institution': {'max_length': 255},
+        }

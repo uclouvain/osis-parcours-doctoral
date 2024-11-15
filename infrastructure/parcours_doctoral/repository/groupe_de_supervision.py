@@ -43,7 +43,8 @@ from parcours_doctoral.ddd.domain.model._signature_promoteur import (
 )
 from parcours_doctoral.ddd.domain.model.enums import (
     ChoixEtatSignature,
-    ChoixStatutSignatureGroupeDeSupervision, ChoixStatutParcoursDoctoral,
+    ChoixStatutSignatureGroupeDeSupervision,
+    ChoixStatutParcoursDoctoral,
 )
 from parcours_doctoral.ddd.domain.model.groupe_de_supervision import (
     GroupeDeSupervision,
@@ -71,15 +72,6 @@ class GroupeDeSupervisionRepository(IGroupeDeSupervisionRepository):
                 "uuid",
                 "status",
                 "supervision_group",
-                "cotutelle",
-                "cotutelle_motivation",
-                "cotutelle_institution_fwb",
-                "cotutelle_institution",
-                "cotutelle_other_institution_name",
-                "cotutelle_other_institution_address",
-                "cotutelle_opening_request",
-                "cotutelle_convention",
-                "cotutelle_other_documents",
             )
             .prefetch_related(
                 Prefetch(
@@ -94,20 +86,6 @@ class GroupeDeSupervisionRepository(IGroupeDeSupervisionRepository):
 
     @classmethod
     def _load(cls, proposition):
-        if proposition.cotutelle is not None:
-            cotutelle = Cotutelle(
-                motivation=proposition.cotutelle_motivation,
-                institution_fwb=proposition.cotutelle_institution_fwb,
-                institution=str(proposition.cotutelle_institution) if proposition.cotutelle_institution else "",
-                autre_institution_nom=proposition.cotutelle_other_institution_name,
-                autre_institution_adresse=proposition.cotutelle_other_institution_address,
-                demande_ouverture=proposition.cotutelle_opening_request,
-                convention=proposition.cotutelle_convention,
-                autres_documents=proposition.cotutelle_other_documents,
-            )
-        else:
-            cotutelle = None
-
         if not proposition.supervision_group_id:
             proposition.supervision_group = Process.objects.create()
             proposition.save(update_fields=['supervision_group'])
@@ -151,7 +129,6 @@ class GroupeDeSupervisionRepository(IGroupeDeSupervisionRepository):
                 ),
                 None,
             ),
-            cotutelle=cotutelle,
             statut_signature=None,
             # FIXME
             # statut_signature=ChoixStatutSignatureGroupeDeSupervision.SIGNING_IN_PROGRESS
@@ -167,12 +144,6 @@ class GroupeDeSupervisionRepository(IGroupeDeSupervisionRepository):
     @classmethod
     def get(cls, entity_id: 'GroupeDeSupervisionIdentity') -> 'GroupeDeSupervision':
         raise NotImplementedError
-
-    @classmethod
-    def get_cotutelle_dto(cls, uuid_proposition: str) -> 'CotutelleDTO':
-        proposition_id = ParcoursDoctoralIdentityBuilder.build_from_uuid(uuid_proposition)
-        groupe = cls.get_by_proposition_id(proposition_id=proposition_id)
-        return cls.get_cotutelle_dto_from_model(cotutelle=groupe.cotutelle)
 
     @classmethod
     def search(
@@ -197,9 +168,14 @@ class GroupeDeSupervisionRepository(IGroupeDeSupervisionRepository):
 
     @classmethod
     def save(cls, entity: 'GroupeDeSupervision') -> None:
-        proposition = ParcoursDoctoral.objects.get(uuid=entity.parcours_doctoral_id.uuid)
+        proposition = (
+            ParcoursDoctoral.objects.get(uuid=entity.parcours_doctoral_id.uuid)
+            .select_related('supervision_group')
+            .only('supervision_group')
+        )
         if not proposition.supervision_group_id:
             proposition.supervision_group = groupe = Process.objects.create()
+            proposition.save(update_fields=['supervision_group'])
         else:
             groupe = proposition.supervision_group
 
@@ -212,20 +188,6 @@ class GroupeDeSupervisionRepository(IGroupeDeSupervisionRepository):
         # Update existing actors
         cls._update_members(current_promoteurs, entity.signatures_promoteurs, entity.promoteur_reference_id)
         cls._update_members(current_members, entity.signatures_membres_CA)
-
-        proposition.cotutelle = None if entity.cotutelle is None else bool(entity.cotutelle.motivation)
-        if entity.cotutelle:
-            proposition.cotutelle_motivation = entity.cotutelle.motivation
-            proposition.cotutelle_institution_fwb = entity.cotutelle.institution_fwb
-            proposition.cotutelle_institution = (
-                None if not entity.cotutelle.institution else entity.cotutelle.institution
-            )
-            proposition.cotutelle_other_institution_name = entity.cotutelle.autre_institution_nom
-            proposition.cotutelle_other_institution_address = entity.cotutelle.autre_institution_adresse
-            proposition.cotutelle_opening_request = entity.cotutelle.demande_ouverture
-            proposition.cotutelle_convention = entity.cotutelle.convention
-            proposition.cotutelle_other_documents = entity.cotutelle.autres_documents
-        proposition.save()
 
     @classmethod
     def _update_members(

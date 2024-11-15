@@ -25,9 +25,11 @@
 # ##############################################################################
 
 from .confirmation import *
+from .cotutelle import *
 from .dashboard import *
 from .funding import *
 from .jury import *
 from .parcours_doctoral import *
 from .project import *
 from .training import *
+from .supervision import *

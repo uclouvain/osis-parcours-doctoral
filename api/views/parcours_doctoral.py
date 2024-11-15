@@ -105,7 +105,9 @@ class BaseListView(APIPermissionRequiredMixin, ListAPIView):
         doctorate_list = self.doctorate_list(request)
 
         # Add a _perm_obj to each instance to optimize permission check performance
-        permission_object_qs = self.permission_object_qs(doctorate_list=doctorate_list).in_bulk(field_name='uuid')
+        permission_object_qs = {
+            str(doctorate.uuid): doctorate for doctorate in self.permission_object_qs(doctorate_list=doctorate_list)
+        }
 
         for doctorate in doctorate_list:
             doctorate._perm_obj = permission_object_qs[doctorate.uuid]

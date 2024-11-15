@@ -87,5 +87,13 @@ class HistoriqueInMemory(IHistorique):
         pass
 
     @classmethod
-    def historiser_completion_projet(cls, parcours_doctoral: ParcoursDoctoral, matricule_auteur: str):
+    def historiser_modification_projet(cls, parcours_doctoral: ParcoursDoctoral, matricule_auteur: str):
+        pass
+
+    @classmethod
+    def historiser_modification_cotutelle(
+        cls,
+        parcours_doctoral_identity: ParcoursDoctoralIdentity,
+        matricule_auteur: str,
+    ):
         pass

@@ -291,3 +291,25 @@ class ParcoursDoctoral(interface.RootEntity):
             est_lie_fnrs_fria_fresh_csc=est_lie_fnrs_fria_fresh_csc,
             commentaire=commentaire,
         )
+
+    def modifier_cotutelle(
+        self,
+        motivation: Optional[str],
+        institution_fwb: Optional[bool],
+        institution: Optional[str],
+        autre_institution_nom: Optional[str],
+        autre_institution_adresse: Optional[str],
+        demande_ouverture: List[str],
+        convention: List[str],
+        autres_documents: List[str],
+    ):
+        self.cotutelle = Cotutelle(
+            motivation=motivation,
+            institution_fwb=institution_fwb,
+            institution=institution,
+            autre_institution_nom=autre_institution_nom,
+            autre_institution_adresse=autre_institution_adresse,
+            demande_ouverture=demande_ouverture,
+            convention=convention,
+            autres_documents=autres_documents,
+        )
