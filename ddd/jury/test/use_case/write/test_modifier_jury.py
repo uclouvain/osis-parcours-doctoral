@@ -31,11 +31,10 @@ from parcours_doctoral.ddd.test.factory.groupe_de_supervision import (
     GroupeDeSupervisionSC3DPAvecPromoteurEtMembreEtCotutelleFactory,
 )
 from parcours_doctoral.ddd.jury.commands import ModifierJuryCommand
-from admission.infrastructure.admission.doctorat.preparation.repository.in_memory.groupe_de_supervision import (
-    GroupeDeSupervisionInMemoryRepository,
-)
 from parcours_doctoral.infrastructure.message_bus_in_memory import message_bus_in_memory_instance
 from parcours_doctoral.infrastructure.parcours_doctoral.jury.repository.in_memory.jury import JuryInMemoryRepository
+from parcours_doctoral.infrastructure.parcours_doctoral.repository.in_memory.groupe_de_supervision import \
+    GroupeDeSupervisionInMemoryRepository
 
 
 class TestModifierJury(TestCase):

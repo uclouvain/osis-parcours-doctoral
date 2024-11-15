@@ -48,7 +48,7 @@ def modifier_membre_supervision_externe(
     historique: 'IHistorique',
 ) -> 'ParcoursDoctoralIdentity':
     # GIVEN
-    parcours_doctoral_id = ParcoursDoctoralIdentityBuilder.build_from_command(cmd)
+    parcours_doctoral_id = ParcoursDoctoralIdentityBuilder.build_from_uuid(cmd.uuid_parcours_doctoral)
     parcours_doctoral = parcours_doctoral_repository.get(parcours_doctoral_id)
     groupe_de_supervision = groupe_supervision_repository.get_by_parcours_doctoral_id(parcours_doctoral_id)
     signataire = groupe_de_supervision.get_signataire(cmd.uuid_membre)

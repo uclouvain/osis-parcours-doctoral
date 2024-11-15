@@ -40,10 +40,9 @@ from parcours_doctoral.ddd.jury.use_case.write.modifier_jury_service import modi
 from parcours_doctoral.ddd.jury.use_case.write.modifier_membre_service import modifier_membre
 from parcours_doctoral.ddd.jury.use_case.write.modifier_role_membre import modifier_role_membre
 from parcours_doctoral.ddd.jury.use_case.write.retirer_membre_service import retirer_membre
-from admission.infrastructure.admission.doctorat.preparation.repository.in_memory.groupe_de_supervision import (
-    GroupeDeSupervisionInMemoryRepository,
-)
 from parcours_doctoral.infrastructure.parcours_doctoral.jury.repository.in_memory.jury import JuryInMemoryRepository
+from parcours_doctoral.infrastructure.parcours_doctoral.repository.in_memory.groupe_de_supervision import \
+    GroupeDeSupervisionInMemoryRepository
 
 _jury_repository = JuryInMemoryRepository()
 _groupe_de_supervisition_repository = GroupeDeSupervisionInMemoryRepository()

@@ -66,15 +66,11 @@ from parcours_doctoral.ddd.test.factory.groupe_de_supervision import (
     GroupeDeSupervisionSC3DPSansPromoteurReferenceFactory,
     GroupeDeSupervisionConfirmeeSC3DPAvecPromoteursEtMembresCADejaApprouvesFactory,
 )
-from admission.infrastructure.admission.doctorat.preparation.domain.service.in_memory.membre_CA import (
-    MembreCA,
-    MembreCAInMemoryTranslator,
-)
-from admission.infrastructure.admission.doctorat.preparation.domain.service.in_memory.promoteur import (
-    Promoteur,
-    PromoteurInMemoryTranslator,
-)
 from base.ddd.utils.in_memory_repository import InMemoryGenericRepository
+from parcours_doctoral.infrastructure.parcours_doctoral.domain.service.in_memory.membre_CA import \
+    MembreCAInMemoryTranslator, MembreCA
+from parcours_doctoral.infrastructure.parcours_doctoral.domain.service.in_memory.promoteur import \
+    PromoteurInMemoryTranslator, Promoteur
 from parcours_doctoral.models import ActorType
 
 
@@ -145,7 +141,6 @@ class GroupeDeSupervisionInMemoryRepository(InMemoryGenericRepository, IGroupeDe
     def add_member(
         cls,
         groupe_id: 'GroupeDeSupervisionIdentity',
-        proposition_status: 'ChoixStatutPropositionDoctorale',
         type: ActorType,
         matricule: Optional[str] = '',
         first_name: Optional[str] = '',
@@ -159,8 +154,6 @@ class GroupeDeSupervisionInMemoryRepository(InMemoryGenericRepository, IGroupeDe
     ) -> 'SignataireIdentity':
         groupe: GroupeDeSupervision = cls.get(groupe_id)
         signature_etat = ChoixEtatSignature.NOT_INVITED
-        if proposition_status != ChoixStatutParcoursDoctoral.EN_BROUILLON:
-            signature_etat = ChoixEtatSignature.INVITED
         if type == ActorType.PROMOTER:
             signataire_id = PromoteurIdentity(str(uuid.uuid4()))
             groupe.signatures_promoteurs.append(SignaturePromoteur(promoteur_id=signataire_id, etat=signature_etat))

@@ -40,7 +40,7 @@ def recuperer_groupe_de_supervision(
     membre_ca_translator: 'IMembreCATranslator',
 ) -> 'GroupeDeSupervisionDTO':
     return GroupeDeSupervisionDto().get(
-        uuid_proposition=cmd.uuid_proposition,
+        uuid_parcours_doctoral=cmd.uuid_parcours_doctoral,
         repository=groupe_supervision_repository,
         promoteur_translator=promoteur_translator,
         membre_ca_translator=membre_ca_translator,

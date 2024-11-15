@@ -41,12 +41,12 @@ class GroupeDeSupervisionDto(interface.DomainService):
     @classmethod
     def get(
         cls,
-        uuid_proposition: str,
+        uuid_parcours_doctoral: str,
         repository: 'IGroupeDeSupervisionRepository',
         promoteur_translator: 'IPromoteurTranslator',
         membre_ca_translator: 'IMembreCATranslator',
     ) -> 'GroupeDeSupervisionDTO':
-        groupe = repository.get_by_parcours_doctoral_id(ParcoursDoctoralIdentityBuilder.build_from_uuid(uuid_proposition))
+        groupe = repository.get_by_parcours_doctoral_id(ParcoursDoctoralIdentityBuilder.build_from_uuid(uuid_parcours_doctoral))
         return GroupeDeSupervisionDTO(
             signatures_promoteurs=[
                 DetailSignaturePromoteurDTO(

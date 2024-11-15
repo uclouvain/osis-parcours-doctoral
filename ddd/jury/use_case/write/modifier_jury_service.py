@@ -31,7 +31,6 @@ from parcours_doctoral.ddd.jury.builder.jury_builder import JuryBuilder
 from parcours_doctoral.ddd.jury.commands import ModifierJuryCommand
 from parcours_doctoral.ddd.jury.domain.model.jury import JuryIdentity
 from parcours_doctoral.ddd.jury.repository.i_jury import IJuryRepository
-from parcours_doctoral.ddd.repository.i_parcours_doctoral import IParcoursDoctoralRepository
 
 
 def modifier_jury(

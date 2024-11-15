@@ -249,7 +249,6 @@ class ProjetDoctoralValidatorList(TwoStepsMultipleBusinessExceptionListValidator
     def get_invariants_validators(self) -> List[BusinessValidator]:
         return [
             ShouldProjetEtreComplet(
-                self.type_admission,
                 self.projet,
                 self.financement,
                 self.experience_precedente_recherche,

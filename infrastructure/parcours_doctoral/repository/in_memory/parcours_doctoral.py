@@ -42,7 +42,12 @@ from parcours_doctoral.ddd.test.factory.parcours_doctoral import (
     ParcoursDoctoralPreSC3DPAvecPromoteursEtMembresCADejaApprouvesAccepteeFactory,
     ParcoursDoctoralSC3DPAvecPromoteurRefuseEtMembreCADejaApprouveFactoryRejeteeCDDFactory,
     ParcoursDoctoralSC3DPAvecPromoteursEtMembresCADejaApprouvesFactory,
-    ParcoursDoctoralSC3DPMinimaleFactory,
+    ParcoursDoctoralSC3DPMinimaleFactory, ParcoursDoctoralSC3DPAvecMembresFactory,
+    ParcoursDoctoralSC3DPAvecMembresEtCotutelleFactory, ParcoursDoctoralSC3DPAvecMembresInvitesFactory,
+    ParcoursDoctoralSC3DPSansPromoteurFactory, ParcoursDoctoralSC3DPSansPromoteurReferenceFactory,
+    ParcoursDoctoralSC3DPSansMembreCAFactory, ParcoursDoctoralSC3DPAvecPromoteurDejaApprouveFactory,
+    ParcoursDoctoralSC3DPAvecPromoteurRefuseEtMembreCADejaApprouveFactory, PropositionAdmissionECGE3DPMinimaleFactory,
+    PropositionAdmissionESP3DPMinimaleFactory,
 )
 from admission.infrastructure.admission.domain.service.in_memory.bourse import BourseInMemoryTranslator
 from base.ddd.utils.in_memory_repository import InMemoryGenericRepository
@@ -168,9 +173,19 @@ class ParcoursDoctoralInMemoryRepository(InMemoryGenericRepository, IParcoursDoc
     def reset(cls):
         cls.entities = [
             ParcoursDoctoralSC3DPMinimaleFactory(),
+            PropositionAdmissionECGE3DPMinimaleFactory(),
+            PropositionAdmissionESP3DPMinimaleFactory(),
             ParcoursDoctoralPreSC3DPAvecPromoteursEtMembresCADejaApprouvesAccepteeFactory(),
             ParcoursDoctoralSC3DPAvecPromoteurRefuseEtMembreCADejaApprouveFactoryRejeteeCDDFactory(),
             ParcoursDoctoralSC3DPAvecPromoteursEtMembresCADejaApprouvesFactory(),
+            ParcoursDoctoralSC3DPAvecMembresFactory(),
+            ParcoursDoctoralSC3DPAvecMembresEtCotutelleFactory(),
+            ParcoursDoctoralSC3DPAvecMembresInvitesFactory(),
+            ParcoursDoctoralSC3DPSansPromoteurFactory(),
+            ParcoursDoctoralSC3DPSansPromoteurReferenceFactory(),
+            ParcoursDoctoralSC3DPSansMembreCAFactory(),
+            ParcoursDoctoralSC3DPAvecPromoteurDejaApprouveFactory(),
+            ParcoursDoctoralSC3DPAvecPromoteurRefuseEtMembreCADejaApprouveFactory(),
         ]
 
     @classmethod

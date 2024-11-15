@@ -274,7 +274,6 @@ class GroupeDeSupervisionRepository(IGroupeDeSupervisionRepository):
     def add_member(
         cls,
         groupe_id: 'GroupeDeSupervisionIdentity',
-        proposition_status: 'ChoixStatutPropositionDoctorale',
         type: Optional[ActorType] = None,
         matricule: Optional[str] = '',
         first_name: Optional[str] = '',

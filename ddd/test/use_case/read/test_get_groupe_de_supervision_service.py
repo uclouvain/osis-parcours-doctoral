@@ -32,7 +32,7 @@ from parcours_doctoral.infrastructure.message_bus_in_memory import message_bus_i
 
 class GetGroupeDeSupervisionTestCase(SimpleTestCase):
     def setUp(self):
-        self.cmd = GetGroupeDeSupervisionCommand(uuid_proposition='uuid-SC3DP-promoteur-membre')
+        self.cmd = GetGroupeDeSupervisionCommand(uuid_parcours_doctoral='uuid-SC3DP-promoteur-membre')
         self.message_bus = message_bus_in_memory_instance
 
     def test_get_groupe_de_supervision(self):

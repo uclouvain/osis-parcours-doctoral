@@ -83,7 +83,6 @@ class IGroupeDeSupervisionRepository(interface.AbstractRepository):
     def add_member(
         cls,
         groupe_id: 'GroupeDeSupervisionIdentity',
-        proposition_status: 'ChoixStatutPropositionDoctorale',
         type: ActorType,
         matricule: Optional[str] = '',
         first_name: Optional[str] = '',

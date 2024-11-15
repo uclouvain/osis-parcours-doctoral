@@ -42,8 +42,8 @@ class TitreMembre(ChoiceEnum):
 
 
 class GenreMembre(ChoiceEnum):
-    FEMININ = pgettext_lazy('admission gender', 'Female')
-    MASCULIN = pgettext_lazy('admission gender', 'Male')
+    FEMININ = pgettext_lazy('parcours doctoral gender', 'Female')
+    MASCULIN = pgettext_lazy('parcours doctoral gender', 'Male')
     AUTRE = _('Other')
 
 

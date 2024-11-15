@@ -28,10 +28,12 @@ import uuid
 import factory
 
 from base.tests.factories.person import generate_global_id
+from parcours_doctoral.ddd.domain.model._experience_precedente_recherche import aucune_experience_precedente_recherche
+from parcours_doctoral.ddd.domain.model._financement import Financement
 from parcours_doctoral.ddd.domain.model._formation import FormationIdentity
 from parcours_doctoral.ddd.domain.model._projet import Projet
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoral, ParcoursDoctoralIdentity
-from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
+from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral, ChoixTypeFinancement
 import itertools
 
 REFERENCE_MEMORY_ITERATOR = itertools.count()
@@ -67,6 +69,16 @@ class _FormationIdentityFactory(factory.Factory):
     annee = factory.fuzzy.FuzzyInteger(1999, 2099)
 
 
+class _FinancementFactory(factory.Factory):
+    class Meta:
+        model = Financement
+        abstract = False
+
+    type = ChoixTypeFinancement.SELF_FUNDING
+    duree_prevue = 10
+    temps_consacre = 10
+
+
 class _ParcoursDoctoralFactory(factory.Factory):
     class Meta:
         model = ParcoursDoctoral
@@ -78,6 +90,8 @@ class _ParcoursDoctoralFactory(factory.Factory):
     formation_id = factory.SubFactory(_FormationIdentityFactory)
     statut = ChoixStatutParcoursDoctoral.ADMITTED
     projet = factory.SubFactory(_ProjetFactory)
+    financement = factory.SubFactory(_FinancementFactory)
+    experience_precedente_recherche = aucune_experience_precedente_recherche
     cotutelle = None
 
 
@@ -86,6 +100,18 @@ class ParcoursDoctoralSC3DPMinimaleFactory(_ParcoursDoctoralFactory):
     formation_id = FormationIdentity(sigle='SC3DP', annee=2022)
     matricule_doctorant = '1'
     reference = 'r1'
+
+
+class PropositionAdmissionECGE3DPMinimaleFactory(_ParcoursDoctoralFactory):
+    entity_id = factory.SubFactory(_ParcoursDoctoralIdentityFactory, uuid='uuid-ECGE3DP')
+    formation_id = FormationIdentity(sigle='ECGE3DP', annee=2020)
+    matricule_doctorant = '0123456789'
+
+
+class PropositionAdmissionESP3DPMinimaleFactory(_ParcoursDoctoralFactory):
+    entity_id = factory.SubFactory(_ParcoursDoctoralIdentityFactory, uuid='uuid-ESP3DP')
+    formation_id = FormationIdentity(sigle='ESP3DP', annee=2020)
+    matricule_doctorant = '0123456789'
 
 
 class ParcoursDoctoralPreSC3DPAvecPromoteursEtMembresCADejaApprouvesAccepteeFactory(_ParcoursDoctoralFactory):
@@ -107,3 +133,40 @@ class ParcoursDoctoralSC3DPAvecPromoteursEtMembresCADejaApprouvesFactory(_Parcou
     formation_id = FormationIdentity(sigle='SC3DP', annee=2022)
     matricule_doctorant = '3'
     reference = 'r4'
+
+
+class ParcoursDoctoralSC3DPAvecMembresFactory(ParcoursDoctoralSC3DPMinimaleFactory):
+    entity_id = factory.SubFactory(_ParcoursDoctoralIdentityFactory, uuid='uuid-SC3DP-promoteur-membre')
+
+
+class ParcoursDoctoralSC3DPAvecMembresEtCotutelleFactory(ParcoursDoctoralSC3DPMinimaleFactory):
+    entity_id = factory.SubFactory(_ParcoursDoctoralIdentityFactory, uuid='uuid-SC3DP-promoteur-membre-cotutelle')
+    matricule_doctorant = 'candidat'
+
+
+class ParcoursDoctoralSC3DPAvecMembresInvitesFactory(ParcoursDoctoralSC3DPMinimaleFactory):
+    entity_id = factory.SubFactory(_ParcoursDoctoralIdentityFactory, uuid='uuid-SC3DP-membres-invites')
+
+
+class ParcoursDoctoralSC3DPSansPromoteurFactory(ParcoursDoctoralSC3DPMinimaleFactory):
+    entity_id = factory.SubFactory(_ParcoursDoctoralIdentityFactory, uuid='uuid-SC3DP-sans-promoteur')
+
+
+class ParcoursDoctoralSC3DPSansPromoteurReferenceFactory(ParcoursDoctoralSC3DPMinimaleFactory):
+    entity_id = factory.SubFactory(_ParcoursDoctoralIdentityFactory, uuid='uuid-SC3DP-sans-promoteur-reference')
+
+
+class ParcoursDoctoralSC3DPSansMembreCAFactory(ParcoursDoctoralSC3DPMinimaleFactory):
+    entity_id = factory.SubFactory(_ParcoursDoctoralIdentityFactory, uuid='uuid-SC3DP-sans-membre_CA')
+    matricule_doctorant = '0123456789'
+
+
+class ParcoursDoctoralSC3DPAvecPromoteurDejaApprouveFactory(ParcoursDoctoralSC3DPMinimaleFactory):
+    entity_id = factory.SubFactory(_ParcoursDoctoralIdentityFactory, uuid='uuid-SC3DP-promoteur-deja-approuve')
+
+
+class ParcoursDoctoralSC3DPAvecPromoteurRefuseEtMembreCADejaApprouveFactory(
+    ParcoursDoctoralSC3DPMinimaleFactory
+):
+    entity_id = factory.SubFactory(_ParcoursDoctoralIdentityFactory, uuid='uuid-SC3DP-promoteur-refus-membre-deja-approuve')
+    matricule_doctorant = 'candidat'
