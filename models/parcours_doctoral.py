@@ -26,14 +26,22 @@
 import uuid
 
 from django.db import models
+from django.db.models import Subquery, OuterRef, Case, When, Q, Value, F
+from django.db.models.functions import Concat, Coalesce, NullIf, Mod, Replace
+from django.forms import CharField
 from django.utils.translation import gettext_lazy as _, pgettext_lazy
+from osis_history.models import HistoryEntry
 from osis_signature.contrib.fields import SignatureProcessField
 
+from admission.models.functions import ToChar
+from base.models.entity_version import EntityVersion
+from base.models.enums.education_group_types import TrainingType
 from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral, ChoixLangueDefense, \
     ChoixTypeFinancement, ChoixDoctoratDejaRealise
 from osis_document.contrib import FileField
 
 from parcours_doctoral.ddd.jury.domain.model.enums import FormuleDefense
+from parcours_doctoral.ddd.repository.i_parcours_doctoral import CAMPUS_LETTRE_DOSSIER
 
 
 def parcours_doctoral_directory_path(parcours_doctoral: 'ParcoursDoctoral', filename: str):
@@ -43,6 +51,83 @@ def parcours_doctoral_directory_path(parcours_doctoral: 'ParcoursDoctoral', file
         parcours_doctoral.uuid,
         filename,
     )
+
+
+class ParcoursDoctoralQuerySet(models.QuerySet):
+
+    def annotate_training_management_entity(self):
+        return self.annotate(
+            sigle_entite_gestion=models.Subquery(
+                EntityVersion.objects.filter(entity_id=OuterRef("training__management_entity_id"))
+                .order_by('-start_date')
+                .values("acronym")[:1]
+            )
+        )
+
+    def annotate_last_status_update(self):
+        return self.annotate(
+            status_updated_at=Subquery(
+                HistoryEntry.objects.filter(
+                    object_uuid=OuterRef('uuid'),
+                    tags__contains=['proposition', 'status-changed'],
+                ).values('created')[:1]
+            ),
+        )
+
+    def annotate_with_reference(self, with_management_faculty=True):
+        """
+        Annotate the admission with its reference.
+        Note that the query must previously be annotate with 'training_management_faculty' and 'sigle_entite_gestion'.
+        """
+        return self.annotate(
+            formatted_reference=Concat(
+                # Letter of the campus
+                Case(
+                    *(
+                        When(Q(training__enrollment_campus__name__icontains=name), then=Value(letter))
+                        for name, letter in CAMPUS_LETTRE_DOSSIER.items()
+                    )
+                ),
+                Value('-'),
+                # Management entity acronym
+                Case(
+                    When(
+                        Q(training__education_group_type__name=TrainingType.FORMATION_PHD.name),
+                        then=F('sigle_entite_gestion'),
+                    ),
+                    default=Coalesce(
+                        NullIf(F('training_management_faculty'), Value('')),
+                        F('sigle_entite_gestion'),
+                    ),
+                )
+                if with_management_faculty
+                else F('sigle_entite_gestion'),
+                # Academic year
+                Case(
+                    # Before the submission, use the determined academic year if specified
+                    When(
+                        Q(submitted_at__isnull=True) & Q(determined_academic_year__isnull=False),
+                        then=Mod('determined_academic_year__year', 100),
+                    ),
+                    # Otherwise, use the training academic year
+                    default=Mod('training__academic_year__year', 100),
+                ),
+                Value('-'),
+                # Formatted numero (e.g. 12 -> 000.012)
+                Replace(ToChar(F('reference'), Value('fm9999,0000,0000')), Value(','), Value('.')),
+                output_field=CharField(),
+            )
+        )
+
+    def annotate_with_status_update_date(self):
+        return self.annotate(
+            status_updated_at=Subquery(
+                HistoryEntry.objects.filter(
+                    object_uuid=OuterRef('uuid'),
+                    tags__contains=['proposition', 'status-changed'],
+                ).values('created')[:1]
+            )
+        )
 
 
 class ParcoursDoctoral(models.Model):
@@ -57,6 +142,12 @@ class ParcoursDoctoral(models.Model):
         verbose_name=pgettext_lazy("parcours_doctoral", "Admission"),
         related_name="+",
         on_delete=models.PROTECT,
+    )
+    reference = models.BigIntegerField(
+        verbose_name=_("Reference"),
+        unique=True,
+        editable=False,
+        null=True,
     )
 
     created_at = models.DateTimeField(verbose_name=_('Created'), auto_now_add=True)
@@ -343,6 +434,8 @@ class ParcoursDoctoral(models.Model):
 
     # Supervision
     supervision_group = SignatureProcessField()
+
+    objects = models.Manager.from_queryset(ParcoursDoctoralQuerySet)
 
     class Meta:
         verbose_name = _("Doctorate admission")

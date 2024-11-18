@@ -26,8 +26,9 @@
 from django.utils.translation import gettext_lazy as _
 
 from osis_mail_template import Token, templates
+from parcours_doctoral.mail_templates import PARCOURS_DOCTORAL_TAG
+from parcours_doctoral.mail_templates.tokens import common_tokens
 
-from admission.mail_templates.tokens import common_tokens
 
 __all__ = [
     "PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_INFO_STUDENT",
@@ -44,22 +45,8 @@ __all__ = [
     "CONFIRMATION_PAPER_TEMPLATES_IDENTIFIERS",
 ]
 
-from parcours_doctoral.mail_templates import PARCOURS_DOCTORAL_TAG
 
-parcours_doctoral_common_tokens = common_tokens + [
-    Token(
-        name='student_first_name',
-        description=_("The first name of the student"),
-        example="John",
-    ),
-    Token(
-        name='student_last_name',
-        description=_("The last name of the student"),
-        example="Doe",
-    ),
-]
-
-confirmation_paper_tokens = parcours_doctoral_common_tokens + [
+confirmation_paper_tokens = common_tokens + [
     Token(
         name='confirmation_paper_link_front',
         description=_("Link to the admission confirmation paper panel (front-office)"),
@@ -87,7 +74,7 @@ confirmation_paper_tokens = parcours_doctoral_common_tokens + [
     ),
 ]
 
-PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_SUBMISSION_ADRE = 'osis-admission-confirmation-submission-adre'
+PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_SUBMISSION_ADRE = 'osis-parcours-doctoral-confirmation-submission-adre'
 templates.register(
     PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_SUBMISSION_ADRE,
     description=_("Mail sent to ADRE on first submission of the confirmation paper by the doctoral student"),
@@ -95,7 +82,7 @@ templates.register(
     tag=PARCOURS_DOCTORAL_TAG,
 )
 
-PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_INFO_STUDENT = 'osis-admission-confirmation-info-student'
+PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_INFO_STUDENT = 'osis-parcours-doctoral-confirmation-info-student'
 templates.register(
     PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_INFO_STUDENT,
     description=_("Mail sent to the doctoral student to give him some information about the confirmation paper"),
@@ -103,7 +90,7 @@ templates.register(
     tag=PARCOURS_DOCTORAL_TAG,
 )
 
-PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_ON_SUCCESS_STUDENT = 'osis-admission-confirmation-on-success-student'
+PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_ON_SUCCESS_STUDENT = 'osis-parcours-doctoral-confirmation-on-success-student'
 templates.register(
     PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_ON_SUCCESS_STUDENT,
     description=_(
@@ -113,7 +100,7 @@ templates.register(
     tag=PARCOURS_DOCTORAL_TAG,
 )
 
-PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_ON_SUCCESS_ADRE = 'osis-admission-confirmation-on-success-adre'
+PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_ON_SUCCESS_ADRE = 'osis-parcours-doctoral-confirmation-on-success-adre'
 templates.register(
     PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_ON_SUCCESS_ADRE,
     description=_("Mail sent to ADRE to inform him of the favourable opinion on one confirmation paper"),
@@ -121,7 +108,7 @@ templates.register(
     tag=PARCOURS_DOCTORAL_TAG,
 )
 
-PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_ON_SUCCESS_ADRI = 'osis-admission-confirmation-on-success-adri'
+PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_ON_SUCCESS_ADRI = 'osis-parcours-doctoral-confirmation-on-success-adri'
 templates.register(
     PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_ON_SUCCESS_ADRI,
     description=_("Mail sent to ADRI to inform him of the favourable opinion on one confirmation paper"),
@@ -129,7 +116,7 @@ templates.register(
     tag=PARCOURS_DOCTORAL_TAG,
 )
 
-PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_ON_FAILURE_STUDENT = 'osis-admission-confirmation-on-failure-student'
+PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_ON_FAILURE_STUDENT = 'osis-parcours-doctoral-confirmation-on-failure-student'
 templates.register(
     PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_ON_FAILURE_STUDENT,
     description=_(
@@ -139,7 +126,7 @@ templates.register(
     tag=PARCOURS_DOCTORAL_TAG,
 )
 
-PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_ON_FAILURE_ADRE = 'osis-admission-confirmation-on-failure-adre'
+PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_ON_FAILURE_ADRE = 'osis-parcours-doctoral-confirmation-on-failure-adre'
 templates.register(
     PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_ON_FAILURE_ADRE,
     description=_("Mail sent to ADRE to inform him of the defavourable opinion on one confirmation paper"),
@@ -147,7 +134,7 @@ templates.register(
     tag=PARCOURS_DOCTORAL_TAG,
 )
 
-PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_ON_FAILURE_ADRI = 'osis-admission-confirmation-on-failure-adri'
+PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_ON_FAILURE_ADRI = 'osis-parcours-doctoral-confirmation-on-failure-adri'
 templates.register(
     PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_ON_FAILURE_ADRI,
     description=_("Mail sent to ADRI to inform him of the defavourable opinion on one confirmation paper"),
@@ -155,7 +142,7 @@ templates.register(
     tag=PARCOURS_DOCTORAL_TAG,
 )
 
-PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_ON_RETAKING_STUDENT = 'osis-admission-confirmation-on-retaking-student'
+PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_ON_RETAKING_STUDENT = 'osis-parcours-doctoral-confirmation-on-retaking-student'
 templates.register(
     PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_ON_RETAKING_STUDENT,
     description=_("Mail sent to the doctoral student to inform him of the necessity to retake the confirmation paper"),
@@ -163,7 +150,7 @@ templates.register(
     tag=PARCOURS_DOCTORAL_TAG,
 )
 
-PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_ON_RETAKING_ADRE = 'osis-admission-confirmation-on-retaking-adre'
+PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_ON_RETAKING_ADRE = 'osis-parcours-doctoral-confirmation-on-retaking-adre'
 templates.register(
     PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_ON_RETAKING_ADRE,
     description=_("Mail sent to ADRE to inform him of the necessity to retake one confirmation paper"),
@@ -171,7 +158,7 @@ templates.register(
     tag=PARCOURS_DOCTORAL_TAG,
 )
 
-PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_ON_RETAKING_ADRI = 'osis-admission-confirmation-on-retaking-adri'
+PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_ON_RETAKING_ADRI = 'osis-parcours-doctoral-confirmation-on-retaking-adri'
 templates.register(
     PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_ON_RETAKING_ADRI,
     description=_("Mail sent to ADRI to inform him of the necessity to retake one confirmation paper"),

@@ -25,8 +25,8 @@
 # ##############################################################################
 from django.utils.translation import gettext_lazy as _
 
-from admission.mail_templates.tokens import common_tokens
 from parcours_doctoral.mail_templates import PARCOURS_DOCTORAL_TAG
+from parcours_doctoral.mail_templates.tokens import common_tokens
 from osis_mail_template import Token, templates
 
 __all__ = [
@@ -44,17 +44,7 @@ __all__ = [
 
 training_common_tokens = common_tokens + [
     Token(
-        name='student_first_name',
-        description=_("The first name of the student"),
-        example="John",
-    ),
-    Token(
-        name='student_last_name',
-        description=_("The last name of the student"),
-        example="Doe",
-    ),
-    Token(
-        name='admission_link_back_doctoral_training',
+        name='parcours_doctoral_link_back_doctoral_training',
         description=_("Link to the doctoral training panel (back-office)"),
         example="http://dev.osis.uclouvain.be/somewhere/some-uuid/doctoral-training",
     ),
@@ -63,13 +53,13 @@ training_common_tokens = common_tokens + [
 # PhD training
 doctoral_training_token = [
     Token(
-        name='admission_link_front_doctoral_training',
+        name='parcours_doctoral_link_front_doctoral_training',
         description=_("Link to the doctoral training panel (front-office)"),
         example="http://dev.studies.uclouvain.be/somewhere/some-uuid/doctoral-training",
     ),
 ]
 PARCOURS_DOCTORAL_EMAIL_REFERENCE_PROMOTER_DOCTORAL_TRAININGS_SUBMITTED = (
-    'osis-admission-doctoral-training-submitted-reference-promoter'
+    'osis-parcours-doctoral-doctoral-training-submitted-reference-promoter'
 )
 templates.register(
     PARCOURS_DOCTORAL_EMAIL_REFERENCE_PROMOTER_DOCTORAL_TRAININGS_SUBMITTED,
@@ -78,7 +68,7 @@ templates.register(
     tag=PARCOURS_DOCTORAL_TAG,
 )
 
-PARCOURS_DOCTORAL_EMAIL_CANDIDATE_DOCTORAL_TRAINING_REFUSED = 'osis-admission-doctoral-training-refused-candidate'
+PARCOURS_DOCTORAL_EMAIL_CANDIDATE_DOCTORAL_TRAINING_REFUSED = 'osis-parcours-doctoral-doctoral-training-refused-candidate'
 templates.register(
     PARCOURS_DOCTORAL_EMAIL_CANDIDATE_DOCTORAL_TRAINING_REFUSED,
     description=_("Mail sent to the candidate to inform of the refusal of doctoral training activity"),
@@ -100,7 +90,7 @@ templates.register(
     ),
     tag=PARCOURS_DOCTORAL_TAG,
 )
-PARCOURS_DOCTORAL_EMAIL_CANDIDATE_DOCTORAL_TRAINING_NEEDS_UPDATE = 'osis-admission-doctoral-training-needs-update-candidate'
+PARCOURS_DOCTORAL_EMAIL_CANDIDATE_DOCTORAL_TRAINING_NEEDS_UPDATE = 'osis-parcours-doctoral-doctoral-training-needs-update-candidate'
 templates.register(
     PARCOURS_DOCTORAL_EMAIL_CANDIDATE_DOCTORAL_TRAINING_NEEDS_UPDATE,
     description=_("Mail sent to the candidate to update a doctoral training activity"),
@@ -126,13 +116,13 @@ templates.register(
 # Complementary training
 complementary_training_token = [
     Token(
-        name='admission_link_front_complementary_training',
+        name='parcours_doctoral_link_front_complementary_training',
         description=_("Link to the complementary training panel (front-office)"),
         example="http://dev.studies.uclouvain.be/somewhere/some-uuid/complementary-training",
     ),
 ]
 PARCOURS_DOCTORAL_EMAIL_REFERENCE_PROMOTER_COMPLEMENTARY_TRAININGS_SUBMITTED = (
-    'osis-admission-complementary-training-submitted-reference-promoter'
+    'osis-parcours-doctoral-complementary-training-submitted-reference-promoter'
 )
 templates.register(
     PARCOURS_DOCTORAL_EMAIL_REFERENCE_PROMOTER_COMPLEMENTARY_TRAININGS_SUBMITTED,
@@ -141,7 +131,7 @@ templates.register(
     tag=PARCOURS_DOCTORAL_TAG,
 )
 
-PARCOURS_DOCTORAL_EMAIL_CANDIDATE_COMPLEMENTARY_TRAINING_REFUSED = 'osis-admission-complementary-training-refused-candidate'
+PARCOURS_DOCTORAL_EMAIL_CANDIDATE_COMPLEMENTARY_TRAINING_REFUSED = 'osis-parcours-doctoral-complementary-training-refused-candidate'
 templates.register(
     PARCOURS_DOCTORAL_EMAIL_CANDIDATE_COMPLEMENTARY_TRAINING_REFUSED,
     description=_("Mail sent to the candidate to inform of the refusal of complementary training activity"),
@@ -162,7 +152,7 @@ templates.register(
     tag=PARCOURS_DOCTORAL_TAG,
 )
 PARCOURS_DOCTORAL_EMAIL_CANDIDATE_COMPLEMENTARY_TRAINING_NEEDS_UPDATE = (
-    'osis-admission-complementary-training-needs-update-candidate'
+    'osis-parcours-doctoral-complementary-training-needs-update-candidate'
 )
 templates.register(
     PARCOURS_DOCTORAL_EMAIL_CANDIDATE_COMPLEMENTARY_TRAINING_NEEDS_UPDATE,
@@ -189,13 +179,13 @@ templates.register(
 # Course enrollment
 course_enrollment_token = [
     Token(
-        name='admission_link_front_course_enrollment',
+        name='parcours_doctoral_link_front_course_enrollment',
         description=_("Link to the doctoral training panel (front-office)"),
         example="http://dev.studies.uclouvain.be/somewhere/some-uuid/course-enrollment",
     ),
 ]
 PARCOURS_DOCTORAL_EMAIL_REFERENCE_PROMOTER_COURSE_ENROLLMENTS_SUBMITTED = (
-    'osis-admission-course-enrollment-submitted-reference-promoter'
+    'osis-parcours-doctoral-course-enrollment-submitted-reference-promoter'
 )
 templates.register(
     PARCOURS_DOCTORAL_EMAIL_REFERENCE_PROMOTER_COURSE_ENROLLMENTS_SUBMITTED,
@@ -204,7 +194,7 @@ templates.register(
     tag=PARCOURS_DOCTORAL_TAG,
 )
 
-PARCOURS_DOCTORAL_EMAIL_CANDIDATE_COURSE_ENROLLMENT_REFUSED = 'osis-admission-course-enrollment-refused-candidate'
+PARCOURS_DOCTORAL_EMAIL_CANDIDATE_COURSE_ENROLLMENT_REFUSED = 'osis-parcours-doctoral-course-enrollment-refused-candidate'
 templates.register(
     PARCOURS_DOCTORAL_EMAIL_CANDIDATE_COURSE_ENROLLMENT_REFUSED,
     description=_("Mail sent to the candidate to inform of the refusal of course enrollment"),
@@ -226,7 +216,7 @@ templates.register(
     ),
     tag=PARCOURS_DOCTORAL_TAG,
 )
-PARCOURS_DOCTORAL_EMAIL_CANDIDATE_COURSE_ENROLLMENT_NEEDS_UPDATE = 'osis-admission-course-enrollment-needs-update-candidate'
+PARCOURS_DOCTORAL_EMAIL_CANDIDATE_COURSE_ENROLLMENT_NEEDS_UPDATE = 'osis-parcours-doctoral-course-enrollment-needs-update-candidate'
 templates.register(
     PARCOURS_DOCTORAL_EMAIL_CANDIDATE_COURSE_ENROLLMENT_NEEDS_UPDATE,
     description=_("Mail sent to the candidate to update a course enrollment"),

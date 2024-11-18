@@ -81,6 +81,7 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
         return ParcoursDoctoral(
             entity_id=entity_id,
             statut=ChoixStatutParcoursDoctoral[parcours_doctoral.status],
+            reference=parcours_doctoral.reference,
             formation_id=FormationIdentity(
                 parcours_doctoral.training.acronym,
                 parcours_doctoral.training.academic_year.year,
@@ -92,7 +93,6 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
                 date_soutenance=parcours_doctoral.phd_already_done_defense_date,
                 raison_non_soutenue=parcours_doctoral.phd_already_done_no_defense_reason,
             ),
-            reference='TODO',
             matricule_doctorant=parcours_doctoral.student.global_id,
             cotutelle=Cotutelle(
                 motivation=parcours_doctoral.cotutelle_motivation,
@@ -231,7 +231,7 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
                 'training__education_group_type',
                 'thesis_language',
                 'thesis_institute',
-            ).get(uuid=entity_id.uuid)
+            ).annotate_with_reference().get(uuid=entity_id.uuid)
         except ParcoursDoctoralModel.DoesNotExist:
             raise ParcoursDoctoralNonTrouveException
 
@@ -249,7 +249,7 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
         return ParcoursDoctoralDTO(
             uuid=str(entity_id.uuid),
             statut=ChoixStatutParcoursDoctoral[parcours_doctoral.status].name,
-            reference='TO DO',
+            reference=parcours_doctoral.formatted_reference,
             matricule_doctorant=parcours_doctoral.student.global_id,
             nom_doctorant=parcours_doctoral.student.last_name,
             prenom_doctorant=parcours_doctoral.student.first_name,

@@ -30,7 +30,7 @@ from osis_document.api.utils import documents_remote_duplicate
 from osis_signature.enums import SignatureState
 from osis_signature.models import Process, StateHistory
 
-from parcours_doctoral.ddd.domain.model.proposition import Proposition
+from admission.ddd.admission.doctorat.preparation.domain.model.proposition import Proposition
 from admission.models import DoctorateAdmission
 from admission.models.enums.actor_type import ActorType as AdmissionActorType
 from parcours_doctoral.auth.roles.ca_member import CommitteeMember
@@ -128,6 +128,7 @@ class ParcoursDoctoralService(IParcoursDoctoralService):
 
         parcours_doctoral = ParcoursDoctoralModel.objects.create(
             admission=admission,
+            reference=admission.reference,
             student=admission.student,
             training=admission.training,
             status=admission.status,

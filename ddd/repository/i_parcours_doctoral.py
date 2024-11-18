@@ -32,6 +32,27 @@ from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctora
 from parcours_doctoral.ddd.dtos import ParcoursDoctoralDTO, ParcoursDoctoralRechercheDTO
 
 
+CAMPUS_LETTRE_DOSSIER = {
+    'Bruxelles Saint-Louis': 'B',
+    'Charleroi': 'C',
+    'Louvain-la-Neuve': 'L',
+    'Mons': 'M',
+    'Namur': 'N',
+    'Tournai': 'T',
+    'Bruxelles Woluwe': 'W',
+    'Bruxelles Saint-Gilles': 'G',
+    'Autre site': 'X',
+}
+
+
+def formater_reference(reference: int, nom_campus_inscription: str, sigle_entite_gestion: str, annee: int) -> str:
+    """Formater la référence d'un parcours doctoral"""
+    reference_formatee = '{:08}'.format(reference)
+    reference_formatee = f'{reference_formatee[:4]}.{reference_formatee[4:]}'
+    lettre_campus = CAMPUS_LETTRE_DOSSIER.get(nom_campus_inscription, 'X')
+    return f'{lettre_campus}-{sigle_entite_gestion}{annee % 100}-{reference_formatee}'
+
+
 class IParcoursDoctoralRepository(IGlobalPropositionRepository):
     @classmethod
     @abc.abstractmethod
