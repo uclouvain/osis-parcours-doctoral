@@ -26,9 +26,8 @@
 import uuid
 
 from django.db import models
-from django.db.models import Subquery, OuterRef, Case, When, Q, Value, F
+from django.db.models import Subquery, OuterRef, Case, When, Q, Value, F, CharField
 from django.db.models.functions import Concat, Coalesce, NullIf, Mod, Replace
-from django.forms import CharField
 from django.utils.translation import gettext_lazy as _, pgettext_lazy
 from osis_history.models import HistoryEntry
 from osis_signature.contrib.fields import SignatureProcessField
@@ -74,12 +73,16 @@ class ParcoursDoctoralQuerySet(models.QuerySet):
             ),
         )
 
-    def annotate_with_reference(self, with_management_faculty=True):
+    def annotate_with_reference(self):
         """
         Annotate the admission with its reference.
-        Note that the query must previously be annotate with 'training_management_faculty' and 'sigle_entite_gestion'.
         """
         return self.annotate(
+            sigle_entite_gestion=models.Subquery(
+                EntityVersion.objects.filter(entity_id=OuterRef("training__management_entity_id"))
+                .order_by('-start_date')
+                .values("acronym")[:1]
+            ),
             formatted_reference=Concat(
                 # Letter of the campus
                 Case(
@@ -89,31 +92,11 @@ class ParcoursDoctoralQuerySet(models.QuerySet):
                     )
                 ),
                 Value('-'),
-                # Management entity acronym
-                Case(
-                    When(
-                        Q(training__education_group_type__name=TrainingType.FORMATION_PHD.name),
-                        then=F('sigle_entite_gestion'),
-                    ),
-                    default=Coalesce(
-                        NullIf(F('training_management_faculty'), Value('')),
-                        F('sigle_entite_gestion'),
-                    ),
-                )
-                if with_management_faculty
-                else F('sigle_entite_gestion'),
+                F('sigle_entite_gestion'),
                 # Academic year
-                Case(
-                    # Before the submission, use the determined academic year if specified
-                    When(
-                        Q(submitted_at__isnull=True) & Q(determined_academic_year__isnull=False),
-                        then=Mod('determined_academic_year__year', 100),
-                    ),
-                    # Otherwise, use the training academic year
-                    default=Mod('training__academic_year__year', 100),
-                ),
+                Mod('training__academic_year__year', 100),
                 Value('-'),
-                # Formatted numero (e.g. 12 -> 000.012)
+                # Formatted numero (e.g. 12 -> 0000.0012)
                 Replace(ToChar(F('reference'), Value('fm9999,0000,0000')), Value(','), Value('.')),
                 output_field=CharField(),
             )
@@ -435,7 +418,7 @@ class ParcoursDoctoral(models.Model):
     # Supervision
     supervision_group = SignatureProcessField()
 
-    objects = models.Manager.from_queryset(ParcoursDoctoralQuerySet)
+    objects = models.Manager.from_queryset(ParcoursDoctoralQuerySet)()
 
     class Meta:
         verbose_name = _("Doctorate admission")
@@ -449,7 +432,7 @@ class ParcoursDoctoral(models.Model):
             ('validate_doctoral_training', _("Can validate doctoral training")),
             ('view_admission_jury', _("Can view the information related to the admission jury")),
             ('change_admission_jury', _("Can update the information related to the admission jury")),
-            ('view_admission_confirmation', _("Can view the information related to the confirmation paper")),
+            ('view_confirmation', _("Can view the information related to the confirmation paper")),
             (
                 'change_admission_confirmation',
                 _("Can update the information related to the confirmation paper"),

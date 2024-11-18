@@ -49,9 +49,12 @@ class CommitteeMember(RoleModel):
             'parcours_doctoral.view_supervised_list': always_allow,
             # A ca member can view as long as he belongs to the committee
             'parcours_doctoral.view_parcours_doctoral': is_part_of_committee,
-            'parcours_doctoral.view_parcours_doctoral_project': is_part_of_committee,
-            'parcours_doctoral.view_parcours_doctoral_cotutelle': is_part_of_committee,
-            'parcours_doctoral.view_parcours_doctoral_jury': is_part_of_committee,
+            'parcours_doctoral.view_project': is_part_of_committee,
+            'parcours_doctoral.view_cotutelle': is_part_of_committee,
+            'parcours_doctoral.view_funding': is_part_of_committee,
+            'parcours_doctoral.view_supervision': is_part_of_committee,
+            'parcours_doctoral.view_confirmation': is_part_of_committee,
+            'parcours_doctoral.view_jury': is_part_of_committee,
             'parcours_doctoral.approve_jury': is_part_of_committee,
             'parcours_doctoral.view_parcours_doctoral_supervision': is_part_of_committee,
             # Once the candidate is enrolling, a ca member can

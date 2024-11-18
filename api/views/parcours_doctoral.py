@@ -149,7 +149,6 @@ class SupervisedDoctorateListSchema(DoctorateListSchema):
 class SupervisedDoctorateListView(BaseListView):
     name = "supervised_list"
     schema = SupervisedDoctorateListSchema()
-    permission_classes = [IsSupervisionMember]
     permission_mapping = {
         'GET': 'parcours_doctoral.view_supervised_list',
     }

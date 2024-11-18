@@ -249,6 +249,7 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
         return ParcoursDoctoralDTO(
             uuid=str(entity_id.uuid),
             statut=ChoixStatutParcoursDoctoral[parcours_doctoral.status].name,
+            cree_le=parcours_doctoral.created_at,
             reference=parcours_doctoral.formatted_reference,
             matricule_doctorant=parcours_doctoral.student.global_id,
             nom_doctorant=parcours_doctoral.student.last_name,
@@ -397,7 +398,7 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
             'student',
             'training__academic_year',
             'training__education_group_type',
-        ).order_by('-created_at')
+        ).annotate_with_reference().order_by('-created_at')
 
         if matricule_doctorant:
             doctorates = doctorates.filter(
@@ -427,7 +428,7 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
             results.append(
                 ParcoursDoctoralRechercheDTO(
                     uuid=str(doctorate.uuid),
-                    reference='TO_DEFINE',
+                    reference=doctorate.formatted_reference,
                     statut=doctorate.status,
                     formation=FormationDTO(
                         sigle=doctorate.training.acronym,

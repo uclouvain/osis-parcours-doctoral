@@ -28,11 +28,12 @@ from rest_framework import mixins, status
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 
-from admission.api.schema import ResponseSpecificSchema
-from admission.api.serializers import DoctorateIdentityDTOSerializer
+from parcours_doctoral.api.permissions import DoctorateAPIPermissionRequiredMixin
+from parcours_doctoral.api.schema import ResponseSpecificSchema
 from parcours_doctoral.api.serializers import ConfirmationPaperDTOSerializer, \
     SubmitConfirmationPaperExtensionRequestCommandSerializer, SubmitConfirmationPaperCommandSerializer, \
-    ConfirmationPaperCanvasSerializer, CompleteConfirmationPaperByPromoterCommandSerializer
+    ConfirmationPaperCanvasSerializer, CompleteConfirmationPaperByPromoterCommandSerializer, \
+    ParcoursDoctoralIdentityDTOSerializer
 from parcours_doctoral.ddd.commands import RecupererParcoursDoctoralQuery
 from parcours_doctoral.ddd.epreuve_confirmation.commands import (
     CompleterEpreuveConfirmationParPromoteurCommand,
@@ -67,17 +68,14 @@ class ConfirmationSchema(ResponseSpecificSchema):
         return super().get_operation_id(path, method)
 
 
-class ConfirmationAPIView(APIPermissionRequiredMixin, GenericAPIView):
+class ConfirmationAPIView(DoctorateAPIPermissionRequiredMixin, GenericAPIView):
     name = "confirmation"
     schema = ConfirmationSchema()
     pagination_class = None
     filter_backends = []
     permission_mapping = {
-        'GET': 'parcours_doctoral.view_admission_confirmation',
+        'GET': 'parcours_doctoral.view_confirmation',
     }
-
-    def get_permission_object(self):
-        return get_cached_parcours_doctoral_perm_obj(self.kwargs['uuid'])
 
     def get(self, request, *args, **kwargs):
         """Get the confirmation papers related to the parcours_doctoral"""
@@ -93,11 +91,11 @@ class LastConfirmationSchema(ResponseSpecificSchema):
         'GET': ConfirmationPaperDTOSerializer,
         'POST': (
             SubmitConfirmationPaperExtensionRequestCommandSerializer,
-            DoctorateIdentityDTOSerializer,
+            ParcoursDoctoralIdentityDTOSerializer,
         ),
         'PUT': (
             SubmitConfirmationPaperCommandSerializer,
-            DoctorateIdentityDTOSerializer,
+            ParcoursDoctoralIdentityDTOSerializer,
         ),
     }
 
@@ -111,23 +109,20 @@ class LastConfirmationSchema(ResponseSpecificSchema):
         return super().get_operation_id(path, method)
 
 
-class LastConfirmationAPIView(APIPermissionRequiredMixin, mixins.RetrieveModelMixin, GenericAPIView):
+class LastConfirmationAPIView(DoctorateAPIPermissionRequiredMixin, mixins.RetrieveModelMixin, GenericAPIView):
     name = "last_confirmation"
     schema = LastConfirmationSchema()
     filter_backends = []
     permission_mapping = {
-        'GET': 'parcours_doctoral.view_admission_confirmation',
+        'GET': 'parcours_doctoral.view_confirmation',
         'PUT': 'parcours_doctoral.change_admission_confirmation',
         'POST': 'parcours_doctoral.change_admission_confirmation_extension',
     }
 
-    def get_permission_object(self):
-        return get_cached_parcours_doctoral_perm_obj(self.kwargs['uuid'])
-
     def get(self, request, *args, **kwargs):
         """Get the last confirmation paper related to the parcours_doctoral"""
         confirmation_paper = message_bus_instance.invoke(
-            RecupererDerniereEpreuveConfirmationQuery(parcours_doctoral_uuid=kwargs.get('uuid')),
+            RecupererDerniereEpreuveConfirmationQuery(parcours_doctoral_uuid=self.doctorate_uuid),
         )
         serializer = ConfirmationPaperDTOSerializer(instance=confirmation_paper)
         return Response(serializer.data)
@@ -138,7 +133,7 @@ class LastConfirmationAPIView(APIPermissionRequiredMixin, mixins.RetrieveModelMi
         serializer.is_valid(raise_exception=True)
 
         last_confirmation_paper = message_bus_instance.invoke(
-            RecupererDerniereEpreuveConfirmationQuery(parcours_doctoral_uuid=kwargs.get('uuid')),
+            RecupererDerniereEpreuveConfirmationQuery(parcours_doctoral_uuid=self.doctorate_uuid),
         )
 
         result = message_bus_instance.invoke(
@@ -148,7 +143,7 @@ class LastConfirmationAPIView(APIPermissionRequiredMixin, mixins.RetrieveModelMi
             )
         )
 
-        serializer = DoctorateIdentityDTOSerializer(instance=result)
+        serializer = ParcoursDoctoralIdentityDTOSerializer(instance=result)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -158,7 +153,7 @@ class LastConfirmationAPIView(APIPermissionRequiredMixin, mixins.RetrieveModelMi
         serializer.is_valid(raise_exception=True)
 
         last_confirmation_paper = message_bus_instance.invoke(
-            RecupererDerniereEpreuveConfirmationQuery(parcours_doctoral_uuid=kwargs.get('uuid')),
+            RecupererDerniereEpreuveConfirmationQuery(parcours_doctoral_uuid=self.doctorate_uuid),
         )
 
         result = message_bus_instance.invoke(
@@ -168,7 +163,7 @@ class LastConfirmationAPIView(APIPermissionRequiredMixin, mixins.RetrieveModelMi
             )
         )
 
-        serializer = DoctorateIdentityDTOSerializer(instance=result)
+        serializer = ParcoursDoctoralIdentityDTOSerializer(instance=result)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -182,24 +177,21 @@ class LastConfirmationCanvasSchema(ResponseSpecificSchema):
         return 'retrieve_last_confirmation_paper_canvas'
 
 
-class LastConfirmationCanvasAPIView(APIPermissionRequiredMixin, mixins.RetrieveModelMixin, GenericAPIView):
+class LastConfirmationCanvasAPIView(DoctorateAPIPermissionRequiredMixin, mixins.RetrieveModelMixin, GenericAPIView):
     name = "last_confirmation_canvas"
     schema = LastConfirmationCanvasSchema()
     filter_backends = []
     permission_mapping = {
-        'GET': 'parcours_doctoral.view_admission_confirmation',
+        'GET': 'parcours_doctoral.view_confirmation',
     }
-
-    def get_permission_object(self):
-        return get_cached_parcours_doctoral_perm_obj(self.kwargs['uuid'])
 
     def get(self, request, *args, **kwargs):
         """Get the last confirmation paper canvas related to the parcours_doctoral"""
         parcours_doctoral, confirmation_paper, supervision_group = message_bus_instance.invoke_multiple(
             [
-                RecupererParcoursDoctoralQuery(self.kwargs.get('uuid')),
-                RecupererDerniereEpreuveConfirmationQuery(parcours_doctoral_uuid=kwargs.get('uuid')),
-                GetGroupeDeSupervisionCommand(uuid_proposition=self.kwargs.get('uuid')),
+                RecupererParcoursDoctoralQuery(self.doctorate_uuid),
+                RecupererDerniereEpreuveConfirmationQuery(parcours_doctoral_uuid=self.doctorate_uuid),
+                GetGroupeDeSupervisionCommand(uuid_parcours_doctoral=self.doctorate_uuid),
             ]
         )
         admission = self.get_permission_object()
@@ -226,7 +218,7 @@ class PromoterConfirmationSchema(ResponseSpecificSchema):
     serializer_mapping = {
         'PUT': (
             CompleteConfirmationPaperByPromoterCommandSerializer,
-            DoctorateIdentityDTOSerializer,
+            ParcoursDoctoralIdentityDTOSerializer,
         ),
     }
 
@@ -247,16 +239,13 @@ class SupervisedConfirmationAPIView(
         'PUT': 'parcours_doctoral.upload_pdf_confirmation',
     }
 
-    def get_permission_object(self):
-        return get_cached_parcours_doctoral_perm_obj(self.kwargs['uuid'])
-
     def put(self, request, *args, **kwargs):
         """Complete the confirmation paper related to a parcours_doctoral"""
         serializer = CompleteConfirmationPaperByPromoterCommandSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
         last_confirmation_paper = message_bus_instance.invoke(
-            RecupererDerniereEpreuveConfirmationQuery(parcours_doctoral_uuid=kwargs.get('uuid')),
+            RecupererDerniereEpreuveConfirmationQuery(parcours_doctoral_uuid=self.doctorate_uuid),
         )
 
         result = message_bus_instance.invoke(
@@ -266,6 +255,6 @@ class SupervisedConfirmationAPIView(
             )
         )
 
-        serializer = DoctorateIdentityDTOSerializer(instance=result)
+        serializer = ParcoursDoctoralIdentityDTOSerializer(instance=result)
 
         return Response(serializer.data, status=status.HTTP_200_OK)

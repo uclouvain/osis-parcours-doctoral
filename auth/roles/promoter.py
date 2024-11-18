@@ -61,10 +61,12 @@ class Promoter(RoleModel):
             'parcours_doctoral.fill_thesis': is_parcours_doctoral_promoter,
             'parcours_doctoral.check_publication_authorisation': is_parcours_doctoral_promoter,
             # A promoter can view as long as he is one of the parcours_doctoral promoters
-            'parcours_doctoral.view_parcours_doctoral_project': is_parcours_doctoral_promoter,
-            'parcours_doctoral.view_parcours_doctoral_cotutelle': is_parcours_doctoral_promoter,
-            'parcours_doctoral.view_parcours_doctoral_supervision': is_parcours_doctoral_promoter,
-            'parcours_doctoral.view_parcours_doctoral_jury': is_parcours_doctoral_promoter,
+            'parcours_doctoral.view_project': is_parcours_doctoral_promoter,
+            'parcours_doctoral.view_cotutelle': is_parcours_doctoral_promoter,
+            'parcours_doctoral.view_funding': is_parcours_doctoral_promoter,
+            'parcours_doctoral.view_supervision': is_parcours_doctoral_promoter,
+            'parcours_doctoral.view_jury': is_parcours_doctoral_promoter,
+            'parcours_doctoral.view_confirmation': is_parcours_doctoral_promoter,
             # Once the candidate is enrolling, a promoter can
             'parcours_doctoral.view_parcours_doctoral_confirmation': is_parcours_doctoral_promoter,
             'parcours_doctoral.change_parcours_doctoral_confirmation': is_parcours_doctoral_promoter

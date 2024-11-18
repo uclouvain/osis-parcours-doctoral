@@ -35,21 +35,25 @@ from parcours_doctoral.auth.predicates.parcours_doctoral import (
     complementary_training_enabled,
     is_jury_in_progress,
 )
+from parcours_doctoral.auth.roles.ca_member import CommitteeMember
 from parcours_doctoral.auth.roles.cdd_configurator import CddConfigurator
 from parcours_doctoral.auth.roles.jury_secretary import JurySecretary
+from parcours_doctoral.auth.roles.promoter import Promoter
 from parcours_doctoral.auth.roles.student import Student
 
 role.role_manager.register(CddConfigurator)
 role.role_manager.register(JurySecretary)
 role.role_manager.register(AdreSecretary)
 role.role_manager.register(Student)
+role.role_manager.register(Promoter)
+role.role_manager.register(CommitteeMember)
 
 
 def base_program_manager_rules():
     return {
         # Doctorats
         # --- Confirmation
-        'parcours_doctoral.view_admission_confirmation': is_part_of_education_group & is_enrolled,
+        'parcours_doctoral.view_confirmation': is_part_of_education_group & is_enrolled,
         'parcours_doctoral.change_admission_confirmation': is_part_of_education_group & is_enrolled,
         'parcours_doctoral.change_admission_confirmation_extension': is_part_of_education_group & is_enrolled,
         'parcours_doctoral.make_confirmation_decision': is_part_of_education_group & submitted_confirmation_paper,
