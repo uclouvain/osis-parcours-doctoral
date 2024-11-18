@@ -64,6 +64,7 @@ __namespace__ = {
 from parcours_doctoral.views.mixins import ParcoursDoctoralViewMixin
 
 
+# TODO REMOVE AdmissionFormMixin
 class TrainingActivityFormMixin(AdmissionFormMixin, ParcoursDoctoralViewMixin):
     """Form mixin for an activity"""
 
@@ -136,7 +137,7 @@ class TrainingActivityFormMixin(AdmissionFormMixin, ParcoursDoctoralViewMixin):
         return kwargs
 
     def get_success_url(self):
-        base_url = resolve_url(':'.join(self.request.resolver_match.namespaces), uuid=self.admission_uuid)
+        base_url = resolve_url(':'.join(self.request.resolver_match.namespaces), uuid=self.parcours_doctoral_uuid)
         return f"{base_url}#{self.object.uuid}"
 
 
@@ -186,7 +187,7 @@ class TrainingActivityDeleteView(AdmissionFormMixin, ParcoursDoctoralViewMixin, 
         return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self):
-        return resolve_url(':'.join(self.request.resolver_match.namespaces), uuid=self.admission_uuid)
+        return resolve_url(':'.join(self.request.resolver_match.namespaces), uuid=self.parcours_doctoral_uuid)
 
 
 class TrainingActivityActionFormMixin(AdmissionFormMixin, ParcoursDoctoralViewMixin, SingleObjectMixin, FormMixin):
@@ -215,7 +216,7 @@ class TrainingActivityActionFormMixin(AdmissionFormMixin, ParcoursDoctoralViewMi
         return self.object
 
     def get_success_url(self):
-        base_url = resolve_url(':'.join(self.request.resolver_match.namespaces), uuid=self.admission_uuid)
+        base_url = resolve_url(':'.join(self.request.resolver_match.namespaces), uuid=self.parcours_doctoral_uuid)
         return f"{base_url}#{self.object.uuid}"
 
 
@@ -229,7 +230,7 @@ class TrainingActivityRefuseView(TrainingActivityActionFormMixin, generic.FormVi
     def form_valid(self, form):
         message_bus_instance.invoke(
             RefuserActiviteCommand(
-                parcours_doctoral_uuid=self.admission_uuid,
+                parcours_doctoral_uuid=self.parcours_doctoral_uuid,
                 activite_uuid=self.kwargs['activity_id'],
                 avec_modification=self.avec_modification,
                 remarque=form.cleaned_data['reason'],

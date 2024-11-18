@@ -47,8 +47,7 @@ from parcours_doctoral.forms.confirmation import ConfirmationOpinionForm, Confir
 from parcours_doctoral.infrastructure.parcours_doctoral.epreuve_confirmation.domain.service.notification import (
     Notification,
 )
-from parcours_doctoral.views.mixins import LastConfirmationMixin
-from admission.views.mixins.business_exceptions_form_view_mixin import BusinessExceptionFormViewMixin
+from parcours_doctoral.views.mixins import BusinessExceptionFormViewMixin, LastConfirmationMixin
 from base.ddd.utils.business_validator import MultipleBusinessExceptions
 from infrastructure.messages_bus import message_bus_instance
 from osis_common.utils.htmx import HtmxMixin
@@ -85,7 +84,7 @@ class ConfirmationSuccessDecisionView(
             for exception in multiple_exceptions.exceptions:
                 messages.error(self.request, exception.message)
 
-        return HttpResponseRedirect(reverse('admission:doctorate:confirmation', args=[self.admission_uuid]))
+        return HttpResponseRedirect(reverse('parcours_doctoral:doctorate:confirmation', args=[self.parcours_doctoral_uuid]))
 
 
 class ConfirmationDecisionMixin(
@@ -103,22 +102,22 @@ class ConfirmationDecisionMixin(
     def get_initial(self):
         mail_identifier = self.request.GET.get('template')
 
-        tokens = Notification.get_common_tokens(self.admission, self.last_confirmation_paper)
+        tokens = Notification.get_common_tokens(self.parcours_doctoral, self.last_confirmation_paper)
 
         if mail_identifier and mail_identifier.isnumeric():
             # Template is a custom one
             mail_template = CddMailTemplate.objects.get(
                 pk=mail_identifier,
-                cdd=self.admission.doctorate.management_entity,
+                cdd=self.parcours_doctoral.doctorate.management_entity,
             )
         else:
             # Template is the generic one
             mail_template = MailTemplate.objects.get(
                 identifier=self.identifier,
-                language=self.admission.student.language,
+                language=self.parcours_doctoral.student.language,
             )
 
-        with override(language=self.admission.student.language):
+        with override(language=self.parcours_doctoral.student.language):
             return {
                 'subject': mail_template.render_subject(tokens),
                 'body': mail_template.body_as_html(tokens),
@@ -132,7 +131,7 @@ class ConfirmationDecisionMixin(
 
         context['select_template_form'] = SelectCddEmailTemplateForm(
             identifier=self.identifier,
-            admission=self.admission,
+            parcours_doctoral=self.parcours_doctoral,
             initial={
                 'template': self.request.GET.get('template'),
             },
@@ -144,7 +143,7 @@ class ConfirmationDecisionMixin(
         return context
 
     def get_success_url(self):
-        return reverse('admission:doctorate:confirmation', args=[self.admission_uuid])
+        return reverse('parcours_doctoral:doctorate:confirmation', args=[self.parcours_doctoral_uuid])
 
 
 class ConfirmationFailureDecisionView(
@@ -217,4 +216,4 @@ class ConfirmationOpinionFormView(
         )
 
     def get_success_url(self):
-        return reverse('admission:doctorate:confirmation', args=[self.admission_uuid])
+        return reverse('parcours_doctoral:doctorate:confirmation', args=[self.parcours_doctoral_uuid])

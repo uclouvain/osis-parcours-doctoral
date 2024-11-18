@@ -45,7 +45,7 @@ from parcours_doctoral.ddd.commands import GetGroupeDeSupervisionCommand
 from parcours_doctoral.utils import get_cached_parcours_doctoral_perm_obj
 from infrastructure.messages_bus import message_bus_instance
 from osis_role.contrib.views import APIPermissionRequiredMixin
-from parcours_doctoral.exports.confirmation_canvas import admission_pdf_confirmation_canvas
+from parcours_doctoral.exports.confirmation_canvas import parcours_doctoral_pdf_confirmation_canvas
 
 __all__ = [
     "ConfirmationAPIView",
@@ -204,7 +204,7 @@ class LastConfirmationCanvasAPIView(APIPermissionRequiredMixin, mixins.RetrieveM
         )
         admission = self.get_permission_object()
 
-        uuid = admission_pdf_confirmation_canvas(
+        uuid = parcours_doctoral_pdf_confirmation_canvas(
             admission=admission,
             language=admission.student.language,
             context={

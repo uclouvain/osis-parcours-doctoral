@@ -31,8 +31,7 @@ from parcours_doctoral.ddd.epreuve_confirmation.commands import (
     SoumettreAvisProlongationCommand,
 )
 from parcours_doctoral.forms.extension_request import ExtensionRequestForm
-from parcours_doctoral.views.mixins import LastConfirmationMixin
-from admission.views.mixins.business_exceptions_form_view_mixin import BusinessExceptionFormViewMixin
+from parcours_doctoral.views.mixins import BusinessExceptionFormViewMixin, LastConfirmationMixin
 from infrastructure.messages_bus import message_bus_instance
 
 __all__ = [
@@ -46,7 +45,7 @@ class ExtensionRequestFormView(
     FormView,
 ):
     template_name = 'parcours_doctoral/forms/extension_request.html'
-    permission_required = 'parcours_doctoral.change_admission_confirmation_extension'
+    permission_required = 'parcours_doctoral.change_parcours_doctoral_confirmation_extension'
     form_class = ExtensionRequestForm
 
     def get_initial(self):
@@ -67,4 +66,4 @@ class ExtensionRequestFormView(
         )
 
     def get_success_url(self):
-        return reverse('admission:doctorate:extension-request', args=[self.admission_uuid])
+        return reverse('parcours_doctoral:doctorate:extension-request', args=[self.parcours_doctoral_uuid])

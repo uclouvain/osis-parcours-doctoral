@@ -30,8 +30,7 @@ from django.views.generic import FormView
 from parcours_doctoral.ddd.epreuve_confirmation.commands import (
     ModifierEpreuveConfirmationParCDDCommand,
 )
-from parcours_doctoral.views.mixins import LastConfirmationMixin
-from admission.views.mixins.business_exceptions_form_view_mixin import BusinessExceptionFormViewMixin
+from parcours_doctoral.views.mixins import BusinessExceptionFormViewMixin, LastConfirmationMixin
 from infrastructure.messages_bus import message_bus_instance
 from parcours_doctoral.forms.confirmation import ConfirmationForm
 
@@ -44,9 +43,9 @@ class ConfirmationFormView(
     BusinessExceptionFormViewMixin,
     FormView,
 ):
-    template_name = 'admission/doctorate/forms/confirmation.html'
+    template_name = 'parcours_doctoral/doctorate/forms/confirmation.html'
     form_class = ConfirmationForm
-    permission_required = 'parcours_doctoral.change_admission_confirmation'
+    permission_required = 'parcours_doctoral.change_parcours_doctoral_confirmation'
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -72,4 +71,4 @@ class ConfirmationFormView(
         )
 
     def get_success_url(self):
-        return reverse('admission:doctorate:confirmation', args=[self.admission_uuid])
+        return reverse('parcours_doctoral:doctorate:confirmation', args=[self.parcours_doctoral_uuid])

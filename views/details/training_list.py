@@ -32,8 +32,6 @@ from parcours_doctoral.forms.training.processus import BatchActivityForm
 from parcours_doctoral.models.activity import Activity
 from parcours_doctoral.ddd.formation.commands import AccepterActivitesCommand, SoumettreActivitesCommand
 from parcours_doctoral.ddd.formation.domain.model.enums import StatutActivite
-from admission.templatetags.admission import can_read_tab
-from admission.constants import CONTEXT_DOCTORATE
 
 __all__ = [
     "ComplementaryTrainingView",
@@ -51,14 +49,14 @@ from infrastructure.messages_bus import message_bus_instance
 
 class TrainingRedirectView(ParcoursDoctoralViewMixin, generic.RedirectView):
     urlpatterns = {'training': 'training'}
-    """Redirect depending on the status of CDD and admission type"""
+    """Redirect depending on the status of CDD and parcours_doctoral type"""
 
     def get_redirect_url(self, *args, **kwargs):
-        if can_read_tab(CONTEXT_DOCTORATE, 'doctoral-training', self.admission):
-            return resolve_url('admission:doctorate:doctoral-training', uuid=self.admission_uuid)
-        if can_read_tab(CONTEXT_DOCTORATE, 'complementary-training', self.admission):
-            return resolve_url('admission:doctorate:complementary-training', uuid=self.admission_uuid)
-        return resolve_url('admission:doctorate:course-enrollment', uuid=self.admission_uuid)
+        if self.request.user.has_perm('admission.view_doctoral_training', self.get_permission_object()):
+            return resolve_url('parcours_doctoral:doctorate:doctoral-training', uuid=self.parcours_doctoral_uuid)
+        if self.request.user.has_perm('admission.view_complementary_training', self.get_permission_object()):
+            return resolve_url('parcours_doctoral:doctorate:complementary-training', uuid=self.parcours_doctoral_uuid)
+        return resolve_url('parcours_doctoral:doctorate:course-enrollment', uuid=self.parcours_doctoral_uuid)
 
 
 class TrainingListMixin(ParcoursDoctoralViewMixin, FormMixin):
@@ -67,7 +65,7 @@ class TrainingListMixin(ParcoursDoctoralViewMixin, FormMixin):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['activities'] = self.get_queryset()
-        context['categories'] = get_category_labels(self.admission.doctorate.management_entity_id)
+        context['categories'] = get_category_labels(self.parcours_doctoral.doctorate.management_entity_id)
         context['statuses'] = StatutActivite.choices
         return context
 
@@ -83,12 +81,12 @@ class TrainingListMixin(ParcoursDoctoralViewMixin, FormMixin):
         activity_ids = [activite.uuid for activite in form.cleaned_data['activity_ids']]
         if '_accept' in self.request.POST:
             cmd = AccepterActivitesCommand(
-                parcours_doctoral_uuid=self.admission_uuid,
+                parcours_doctoral_uuid=self.parcours_doctoral_uuid,
                 activite_uuids=activity_ids,
             )
         else:
             cmd = SoumettreActivitesCommand(
-                parcours_doctoral_uuid=self.admission_uuid,
+                parcours_doctoral_uuid=self.parcours_doctoral_uuid,
                 activite_uuids=activity_ids,
             )
         try:
@@ -110,7 +108,7 @@ class DoctoralTrainingActivityView(TrainingListMixin, generic.FormView):  # pyli
     permission_required = "parcours_doctoral.view_doctoral_training"
 
     def get_queryset(self):
-        return Activity.objects.for_doctoral_training(self.admission_uuid)
+        return Activity.objects.for_doctoral_training(self.parcours_doctoral_uuid)
 
 
 class ComplementaryTrainingView(TrainingListMixin, generic.FormView):  # pylint: disable=too-many-ancestors
@@ -119,7 +117,7 @@ class ComplementaryTrainingView(TrainingListMixin, generic.FormView):  # pylint:
     permission_required = 'parcours_doctoral.view_complementary_training'
 
     def get_queryset(self):
-        return Activity.objects.for_complementary_training(self.admission_uuid)
+        return Activity.objects.for_complementary_training(self.parcours_doctoral_uuid)
 
 
 class CourseEnrollmentView(TrainingListMixin, generic.FormView):  # pylint: disable=too-many-ancestors
@@ -128,4 +126,4 @@ class CourseEnrollmentView(TrainingListMixin, generic.FormView):  # pylint: disa
     permission_required = 'parcours_doctoral.view_course_enrollment'
 
     def get_queryset(self):
-        return Activity.objects.for_enrollment_courses(self.admission_uuid)
+        return Activity.objects.for_enrollment_courses(self.parcours_doctoral_uuid)

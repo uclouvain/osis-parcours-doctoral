@@ -27,7 +27,7 @@
 from django.views.generic import RedirectView
 
 from parcours_doctoral.ddd.commands import GetGroupeDeSupervisionCommand
-from parcours_doctoral.exports.confirmation_canvas import admission_pdf_confirmation_canvas
+from parcours_doctoral.exports.confirmation_canvas import parcours_doctoral_pdf_confirmation_canvas
 from parcours_doctoral.views.mixins import LastConfirmationMixin
 from infrastructure.messages_bus import message_bus_instance
 
@@ -37,12 +37,12 @@ __all__ = [
 
 
 class ConfirmationCanvasExportView(LastConfirmationMixin, RedirectView):
-    permission_required = 'parcours_doctoral.view_admission_confirmation'
+    permission_required = 'parcours_doctoral.view_parcours_doctoral_confirmation'
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data()
         context_data['supervision_group'] = message_bus_instance.invoke(
-            GetGroupeDeSupervisionCommand(uuid_proposition=self.admission_uuid),
+            GetGroupeDeSupervisionCommand(uuid_proposition=self.parcours_doctoral_uuid),
         )
         context_data['supervision_people_nb'] = (
             # total actor count
@@ -55,9 +55,9 @@ class ConfirmationCanvasExportView(LastConfirmationMixin, RedirectView):
         from osis_document.utils import get_file_url
         from osis_document.api.utils import get_remote_token
 
-        file_uuid = admission_pdf_confirmation_canvas(
-            admission=self.admission,
-            language=self.admission.student.language,
+        file_uuid = parcours_doctoral_pdf_confirmation_canvas(
+            parcours_doctoral=self.parcours_doctoral,
+            language=self.parcours_doctoral.student.language,
             context=self.get_context_data(),
         )
         reading_token = get_remote_token(file_uuid, for_modified_upload=True)

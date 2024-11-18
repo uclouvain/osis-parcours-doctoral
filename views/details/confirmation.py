@@ -43,7 +43,7 @@ __all__ = [
 
 class ConfirmationDetailView(ParcoursDoctoralViewMixin, TemplateView):
     template_name = 'parcours_doctoral/details/confirmation.html'
-    permission_required = 'parcours_doctoral.view_admission_confirmation'
+    permission_required = 'parcours_doctoral.view_parcours_doctoral_confirmation'
     mandatory_fields_for_evaluation = [
         'date',
         'proces_verbal_ca',
@@ -54,7 +54,7 @@ class ConfirmationDetailView(ParcoursDoctoralViewMixin, TemplateView):
 
         try:
             all_confirmation_papers: List[EpreuveConfirmationDTO] = message_bus_instance.invoke(
-                RecupererEpreuvesConfirmationQuery(parcours_doctoral_uuid=self.admission_uuid),
+                RecupererEpreuvesConfirmationQuery(parcours_doctoral_uuid=self.parcours_doctoral_uuid),
             )
         except ParcoursDoctoralNonTrouveException as e:
             raise Http404(e.message)

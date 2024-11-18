@@ -23,25 +23,16 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-
-from django.utils import translation
-
-from admission.exports.utils import admission_generate_pdf
-from parcours_doctoral.models.confirmation_paper import ConfirmationPaper
+from django import forms
+from django.utils.translation import gettext_lazy as _
 
 
-def parcours_doctoral_pdf_confirmation_canvas(admission, language, context):
-    with translation.override(language=language):
-        # Generate the pdf
-        save_token = admission_generate_pdf(
-            admission=admission,
-            template='parcours_doctoral/exports/confirmation_export.html',
-            filename='confirmation.pdf',
-            context=context,
-        )
-        # Attach the file to the object
-        confirmation_paper = ConfirmationPaper.objects.get(uuid=context.get('confirmation_paper').uuid)
-        confirmation_paper.supervisor_panel_report_canvas = [save_token]
-        confirmation_paper.save()
-        # Return the file UUID
-        return confirmation_paper.supervisor_panel_report_canvas[0]
+class NameMailTemplateForm(forms.Form):
+    name = forms.CharField(label=_("Template title"), max_length=255)
+    cdd = forms.ChoiceField(label=_('CDD'))
+
+    def __init__(self, cdds=None, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+        self.fields['cdd'].choices = [
+            (cdd.id, f"{cdd.most_recent_acronym} - {cdd.most_recent_entity_version.title}") for cdd in cdds
+        ]

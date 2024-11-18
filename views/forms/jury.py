@@ -29,8 +29,7 @@ from django.views.generic import FormView
 
 from parcours_doctoral.ddd.jury.commands import ModifierJuryCommand
 from parcours_doctoral.forms.jury.preparation import JuryPreparationForm
-from parcours_doctoral.views.mixins import ParcoursDoctoralViewMixin
-from admission.views.mixins.business_exceptions_form_view_mixin import BusinessExceptionFormViewMixin
+from parcours_doctoral.views.mixins import BusinessExceptionFormViewMixin, ParcoursDoctoralViewMixin
 from infrastructure.messages_bus import message_bus_instance
 
 __all__ = [
@@ -47,7 +46,7 @@ class JuryPreparationFormView(
 ):
     urlpatterns = 'jury-preparation'
     template_name = 'parcours_doctoral/forms/jury/preparation.html'
-    permission_required = 'parcours_doctoral.change_admission_jury'
+    permission_required = 'parcours_doctoral.change_parcours_doctoral_jury'
     form_class = JuryPreparationForm
 
     def get_initial(self):
@@ -63,10 +62,10 @@ class JuryPreparationFormView(
     def call_command(self, form):
         message_bus_instance.invoke(
             ModifierJuryCommand(
-                uuid_parcours_doctoral=self.admission_uuid,
+                uuid_parcours_doctoral=self.parcours_doctoral_uuid,
                 **form.cleaned_data,
             )
         )
 
     def get_success_url(self):
-        return reverse('admission:doctorate:jury-preparation', args=[self.admission_uuid])
+        return reverse('parcours_doctoral:doctorate:jury-preparation', args=[self.parcours_doctoral_uuid])

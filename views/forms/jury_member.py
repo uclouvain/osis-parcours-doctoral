@@ -52,8 +52,7 @@ from parcours_doctoral.ddd.jury.validator.exceptions import (
     MembreDejaDansJuryException,
 )
 from parcours_doctoral.forms.jury.membre import JuryMembreForm
-from parcours_doctoral.views.mixins import ParcoursDoctoralViewMixin
-from admission.views.mixins.business_exceptions_form_view_mixin import BusinessExceptionFormViewMixin
+from parcours_doctoral.views.mixins import BusinessExceptionFormViewMixin, ParcoursDoctoralViewMixin
 from base.ddd.utils.business_validator import MultipleBusinessExceptions
 from infrastructure.messages_bus import message_bus_instance
 
@@ -77,7 +76,7 @@ class JuryMemberRemoveView(
     View,
 ):
     urlpatterns = 'remove'
-    permission_required = 'parcours_doctoral.change_admission_jury'
+    permission_required = 'parcours_doctoral.change_parcours_doctoral_jury'
 
     def post(self, request, *args, **kwargs):
         try:
@@ -91,7 +90,7 @@ class JuryMemberRemoveView(
             messages.error(self.request, _("Some errors have been encountered."))
             for exception in multiple_exceptions.exceptions:
                 messages.error(self.request, exception.message)
-        return redirect(reverse('admission:doctorate:jury', args=[str(self.kwargs['uuid'])]))
+        return redirect(reverse('parcours_doctoral:doctorate:jury', args=[str(self.kwargs['uuid'])]))
 
 
 class JuryMembreUpdateFormView(
@@ -101,7 +100,7 @@ class JuryMembreUpdateFormView(
 ):
     urlpatterns = 'update'
     template_name = 'parcours_doctoral/forms/jury/member_update.html'
-    permission_required = 'parcours_doctoral.change_admission_jury'
+    permission_required = 'parcours_doctoral.change_parcours_doctoral_jury'
     form_class = JuryMembreForm
     error_mapping = {
         NonDocteurSansJustificationException: "justification_non_docteur",
@@ -120,7 +119,7 @@ class JuryMembreUpdateFormView(
         try:
             return message_bus_instance.invoke(
                 RecupererJuryMembreQuery(
-                    uuid_jury=str(self.admission_uuid),
+                    uuid_jury=str(self.parcours_doctoral_uuid),
                     uuid_membre=str(self.kwargs['member_uuid']),
                 )
             )
@@ -155,14 +154,14 @@ class JuryMembreUpdateFormView(
     def call_command(self, form):
         message_bus_instance.invoke(
             ModifierMembreCommand(
-                uuid_jury=self.admission_uuid,
+                uuid_jury=self.parcours_doctoral_uuid,
                 uuid_membre=self.membre.uuid,
                 **form.cleaned_data,
             )
         )
 
     def get_success_url(self):
-        return reverse('admission:doctorate:jury', args=[self.admission_uuid])
+        return reverse('parcours_doctoral:doctorate:jury', args=[self.parcours_doctoral_uuid])
 
 
 class JuryMemberChangeRoleView(
@@ -172,7 +171,7 @@ class JuryMemberChangeRoleView(
     View,
 ):
     urlpatterns = 'change-role'
-    permission_required = 'parcours_doctoral.change_admission_jury'
+    permission_required = 'parcours_doctoral.change_parcours_doctoral_jury'
 
     def post(self, request, *args, **kwargs):
         form = JuryMembreRoleForm(data=request.POST)
@@ -193,4 +192,4 @@ class JuryMemberChangeRoleView(
             messages.error(self.request, _("Some errors have been encountered."))
             if form.errors:
                 messages.error(self.request, str(form.errors))
-        return redirect(reverse('admission:doctorate:jury', args=[str(self.kwargs['uuid'])]))
+        return redirect(reverse('parcours_doctoral:doctorate:jury', args=[str(self.kwargs['uuid'])]))

@@ -33,7 +33,9 @@ from django.utils.translation import gettext_lazy as _
 from django.views.generic.base import ContextMixin
 
 from admission.utils import add_messages_into_htmx_response, add_close_modal_into_htmx_response
+from base.ddd.utils.business_validator import MultipleBusinessExceptions
 from infrastructure.messages_bus import message_bus_instance
+from osis_common.ddd.interface import BusinessException
 from osis_role.contrib.views import PermissionRequiredMixin
 from parcours_doctoral.ddd.commands import RecupererParcoursDoctoralQuery
 from parcours_doctoral.ddd.dtos import ParcoursDoctoralDTO
@@ -71,29 +73,17 @@ class ParcoursDoctoralViewMixin(LoginRequiredMixin, PermissionRequiredMixin, Con
         context['next_url'] = self.next_url
 
         # TODO À faire dans parcours doctoral ?
-        # # Get the next and previous admissions from the last computed listing
-        # cached_admissions_list = cache.get(BaseAdmissionList.cache_key_for_result(user_id=self.request.user.id))
+        # # Get the next and previous parcours_doctorals from the last computed listing
+        # cached_parcours_doctorals_list = cache.get(BaseAdmissionList.cache_key_for_result(user_id=self.request.user.id))
         #
-        # if cached_admissions_list and self.admission_uuid in cached_admissions_list:
-        #     current_admission = cached_admissions_list[self.admission_uuid]
+        # if cached_parcours_doctorals_list and self.parcours_doctoral_uuid in cached_parcours_doctorals_list:
+        #     current_parcours_doctoral = cached_parcours_doctorals_list[self.parcours_doctoral_uuid]
         #     for key in ['previous', 'next']:
-        #         if current_admission[key]:
-        #             context[f'{key}_admission_url'] = resolve_url('admission:base', uuid=current_admission[key])
+        #         if current_parcours_doctoral[key]:
+        #             context[f'{key}_parcours_doctoral_url'] = resolve_url('parcours_doctoral:base', uuid=current_parcours_doctoral[key])
 
         context['parcours_doctoral'] = self.parcours_doctoral_dto
         return context
-
-    def dispatch(self, request, *args, **kwargs):
-        # TODO Vérifier si on doit avoir la même chose pour parcours doctoral
-        # if (
-        #     request.method == 'GET'
-        #     and self.admission_uuid
-        #     and getattr(request.user, 'person', None)
-        #     and (SicManagement.belong_to(request.user.person) or CentralManager.belong_to(request.user.person))
-        # ):
-        #     AdmissionViewer.add_viewer(person=request.user.person, admission=self.admission)
-
-        return super().dispatch(request, *args, **kwargs)
 
 
 class ParcoursDoctoralFormMixin(ParcoursDoctoralViewMixin):
@@ -120,8 +110,8 @@ class ParcoursDoctoralFormMixin(ParcoursDoctoralViewMixin):
             }
         }
 
-    def update_current_admission_on_form_valid(self, form, admission):
-        """Override this method to update the current admission on form valid."""
+    def update_current_parcours_doctoral_on_form_valid(self, form, parcours_doctoral):
+        """Override this method to update the current parcours_doctoral on form valid."""
         pass
 
     def form_valid(self, form):
@@ -143,7 +133,7 @@ class ParcoursDoctoralFormMixin(ParcoursDoctoralViewMixin):
     def get_checklist_redirect_url(self):
         # If specified, return to the correct checklist tab
         if 'next' in self.request.GET:
-            url = resolve_url(f'admission:{self.current_context}:checklist', uuid=self.admission_uuid)
+            url = resolve_url(f'parcours_doctoral:{self.current_context}:checklist', uuid=self.parcours_doctoral_uuid)
             return f"{url}#{self.request.GET['next']}"
 
     def dispatch(self, request, *args, **kwargs):
@@ -173,3 +163,30 @@ class LastConfirmationMixin(ParcoursDoctoralViewMixin):
         context = super().get_context_data(**kwargs) if hasattr(super(), 'get_context_data') else {}
         context['confirmation_paper'] = self.last_confirmation_paper
         return context
+
+
+class BusinessExceptionFormViewMixin:
+    error_mapping = {}
+
+    def __init__(self, *args, **kwargs):
+        self._error_mapping = {exc.status_code: field for exc, field in self.error_mapping.items()}
+        super().__init__(*args, **kwargs)
+
+    def call_command(self, form):
+        raise NotImplementedError
+
+    def form_valid(self, form):
+        try:
+            self.call_command(form=form)
+        except MultipleBusinessExceptions as multiple_exceptions:
+            for exception in multiple_exceptions.exceptions:
+                status_code = getattr(exception, 'status_code', None)
+                form.add_error(self._error_mapping.get(status_code), exception.message)
+            return self.form_invalid(form=form)
+        except BusinessException as exception:
+            messages.error(self.request, _("Some errors have been encountered."))
+            status_code = getattr(exception, 'status_code', None)
+            form.add_error(self._error_mapping.get(status_code), exception.message)
+            return self.form_invalid(form=form)
+
+        return super().form_valid(form=form)

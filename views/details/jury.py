@@ -40,8 +40,7 @@ from parcours_doctoral.ddd.jury.validator.exceptions import (
     MembreDejaDansJuryException,
 )
 from parcours_doctoral.forms.jury.membre import JuryMembreForm
-from parcours_doctoral.views.mixins import ParcoursDoctoralViewMixin
-from admission.views.mixins.business_exceptions_form_view_mixin import BusinessExceptionFormViewMixin
+from parcours_doctoral.views.mixins import BusinessExceptionFormViewMixin, ParcoursDoctoralViewMixin
 from infrastructure.messages_bus import message_bus_instance
 
 __all__ = [
@@ -54,7 +53,7 @@ __namespace__ = False
 class JuryPreparationDetailView(ParcoursDoctoralViewMixin, TemplateView):
     urlpatterns = 'jury-preparation'
     template_name = 'parcours_doctoral/details/jury/preparation.html'
-    permission_required = 'parcours_doctoral.view_admission_jury'
+    permission_required = 'parcours_doctoral.view_parcours_doctoral_jury'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -70,7 +69,7 @@ class JuryView(
 ):
     urlpatterns = 'jury'
     template_name = 'parcours_doctoral/forms/jury/jury.html'
-    permission_required = 'parcours_doctoral.view_admission_jury'
+    permission_required = 'parcours_doctoral.view_parcours_doctoral_jury'
     form_class = JuryMembreForm
     error_mapping = {
         NonDocteurSansJustificationException: "justification_non_docteur",
@@ -92,17 +91,17 @@ class JuryView(
             membre for membre in self.jury.membres if membre.role == RoleJury.SECRETAIRE.name
         ]
         context['membres'] = [membre for membre in self.jury.membres if membre.role == RoleJury.MEMBRE.name]
-        if not self.request.user.has_perm('parcours_doctoral.change_admission_jury', obj=self.admission):
+        if not self.request.user.has_perm('parcours_doctoral.change_parcours_doctoral_jury', obj=self.parcours_doctoral):
             del context['form']
         return context
 
     def call_command(self, form):
         message_bus_instance.invoke(
             AjouterMembreCommand(
-                uuid_jury=self.admission_uuid,
+                uuid_jury=self.parcours_doctoral_uuid,
                 **form.cleaned_data,
             )
         )
 
     def get_success_url(self):
-        return reverse('admission:doctorate:jury', args=[self.admission_uuid])
+        return reverse('parcours_doctoral:doctorate:jury', args=[self.parcours_doctoral_uuid])
