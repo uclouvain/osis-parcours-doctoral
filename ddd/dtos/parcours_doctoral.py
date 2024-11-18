@@ -94,6 +94,8 @@ class ParcoursDoctoralDTO(interface.DTO):
     reference: str
     statut: str
 
+    cree_le: datetime.datetime
+
     formation: FormationDTO
 
     projet: ProjetDTO

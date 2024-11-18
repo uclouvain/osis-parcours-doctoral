@@ -25,7 +25,6 @@
 # ##############################################################################
 from typing import List
 
-from admission.models import DoctorateAdmission
 from parcours_doctoral.ddd.builder.parcours_doctoral_identity import ParcoursDoctoralIdentityBuilder
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoralIdentity
 from parcours_doctoral.ddd.epreuve_confirmation.builder.epreuve_confirmation_identity import (
@@ -45,6 +44,7 @@ from parcours_doctoral.ddd.epreuve_confirmation.repository.i_epreuve_confirmatio
 from parcours_doctoral.ddd.epreuve_confirmation.validators.exceptions import (
     EpreuveConfirmationNonTrouveeException,
 )
+from parcours_doctoral.models import ParcoursDoctoral
 from parcours_doctoral.models.confirmation_paper import ConfirmationPaper
 
 
@@ -60,26 +60,26 @@ class EpreuveConfirmationRepository(IEpreuveConfirmationRepository):
 
     @classmethod
     def search_by_parcours_doctoral_identity(cls, parcours_doctoral_entity_id: 'ParcoursDoctoralIdentity') -> List['EpreuveConfirmation']:
-        confirmation_papers = ConfirmationPaper.objects.filter(admission__uuid=parcours_doctoral_entity_id.uuid)
+        confirmation_papers = ConfirmationPaper.objects.filter(parcours_doctoral__uuid=parcours_doctoral_entity_id.uuid)
         return [
             cls._load_confirmation(parcours_doctoral_entity_id, confirmation_paper) for confirmation_paper in confirmation_papers
         ]
 
     @classmethod
     def search_dto_by_parcours_doctoral_identity(cls, parcours_doctoral_entity_id: 'ParcoursDoctoralIdentity') -> List['EpreuveConfirmationDTO']:
-        confirmation_papers = ConfirmationPaper.objects.filter(admission__uuid=parcours_doctoral_entity_id.uuid)
+        confirmation_papers = ConfirmationPaper.objects.filter(parcours_doctoral__uuid=parcours_doctoral_entity_id.uuid)
         return [cls._load_confirmation_dto(confirmation_paper) for confirmation_paper in confirmation_papers]
 
     @classmethod
     def get_dto_by_parcours_doctoral_identity(cls, parcours_doctoral_entity_id: 'ParcoursDoctoralIdentity') -> 'EpreuveConfirmationDTO':
-        first_result = ConfirmationPaper.objects.filter(admission__uuid=parcours_doctoral_entity_id.uuid).first()
+        first_result = ConfirmationPaper.objects.filter(parcours_doctoral__uuid=parcours_doctoral_entity_id.uuid).first()
         if not first_result:
             raise EpreuveConfirmationNonTrouveeException
         return cls._load_confirmation_dto(first_result)
 
     @classmethod
     def save(cls, entity: 'EpreuveConfirmation') -> 'EpreuveConfirmationIdentity':
-        related_admission = DoctorateAdmission.objects.get(uuid=entity.parcours_doctoral_id.uuid)
+        related_doctorate = ParcoursDoctoral.objects.get(uuid=entity.parcours_doctoral_id.uuid)
 
         extended_deadline_params = (
             {
@@ -95,7 +95,7 @@ class EpreuveConfirmationRepository(IEpreuveConfirmationRepository):
         ConfirmationPaper.objects.update_or_create(
             uuid=entity.entity_id.uuid,
             defaults={
-                'admission': related_admission,
+                'parcours_doctoral': related_doctorate,
                 'confirmation_date': entity.date,
                 'confirmation_deadline': entity.date_limite,
                 'research_report': entity.rapport_recherche,
@@ -113,12 +113,12 @@ class EpreuveConfirmationRepository(IEpreuveConfirmationRepository):
     @classmethod
     def get(cls, entity_id: 'EpreuveConfirmationIdentity') -> 'EpreuveConfirmation':
         try:
-            confirmation_paper = ConfirmationPaper.objects.select_related('admission').get(uuid=entity_id.uuid)
+            confirmation_paper = ConfirmationPaper.objects.select_related('parcours_doctoral').get(uuid=entity_id.uuid)
         except ConfirmationPaper.DoesNotExist:
             raise EpreuveConfirmationNonTrouveeException
 
         return cls._load_confirmation(
-            entity_id=ParcoursDoctoralIdentityBuilder.build_from_uuid(confirmation_paper.admission.uuid),
+            entity_id=ParcoursDoctoralIdentityBuilder.build_from_uuid(confirmation_paper.parcours_doctoral.uuid),
             confirmation_paper=confirmation_paper,
         )
 

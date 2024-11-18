@@ -172,12 +172,26 @@ class CddMailTemplateAdmin(MailTemplateAdmin):
         return resolve_url(f'parcours_doctoral:config:cdd-mail-template:preview', identifier=obj.identifier, pk=obj.pk)
 
 
-@admin.register(AdreSecretary, JurySecretary, Promoter, CommitteeMember, DoctorateReader, Student)
+@admin.register(AdreSecretary, JurySecretary, DoctorateReader, Student)
 class HijackRoleModelAdmin(HijackUserAdminMixin, RoleModelAdmin):
     list_select_related = ['person__user']
 
     def get_hijack_user(self, obj):
         return obj.person.user
+
+
+@admin.register(CommitteeMember, Promoter)
+class FrontOfficeRoleModelAdmin(RoleModelAdmin):
+    list_display = ('person', 'global_id', 'view_on_portal')
+
+    @admin.display(description=_('Identifier'))
+    def global_id(self, obj):
+        return obj.person.global_id
+
+    @admin.display(description=_('Search on portal'))
+    def view_on_portal(self, obj):
+        url = f"{settings.OSIS_PORTAL_URL}admin/auth/user/?q={obj.person.global_id}"
+        return mark_safe(f'<a class="button" href="{url}" target="_blank">{_("Search on portal")}</a>')
 
 
 @admin.register(CddConfigurator)

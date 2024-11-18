@@ -51,7 +51,7 @@ PARCOURS_DOCTORAL_ACTION_LINKS = {
     },
     'update_funding': {
         'path_name': 'parcours_doctoral_api_v1:funding',
-        'method': 'POST',
+        'method': 'PUT',
         'params': ['uuid'],
     },
     'retrieve_cotutelle': {
@@ -61,7 +61,7 @@ PARCOURS_DOCTORAL_ACTION_LINKS = {
     },
     'update_cotutelle': {
         'path_name': 'parcours_doctoral_api_v1:cotutelle',
-        'method': 'POST',
+        'method': 'PUT',
         'params': ['uuid'],
     },
     # Supervision group

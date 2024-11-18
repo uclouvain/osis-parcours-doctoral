@@ -39,6 +39,7 @@ from django.utils.module_loading import import_string
 from django.utils.translation import get_language, gettext as _
 
 from admission.models import AdmissionTask, DoctorateAdmission, SupervisionActor
+from parcours_doctoral.models import ParcoursDoctoral as ParcoursDoctoralModel
 from parcours_doctoral.ddd.domain.model.enums import ChoixTypeFinancement
 from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoral
@@ -71,7 +72,7 @@ class Notification(INotification):
         return datetime.date.strftime(date, DATE_FORMAT) if date else ''
 
     @classmethod
-    def _get_parcours_doctoral_title_translation(cls, parcours_doctoral: ParcoursDoctoral) -> Promise:
+    def _get_parcours_doctoral_title_translation(cls, parcours_doctoral: ParcoursDoctoralModel) -> Promise:
         """Populate the translations of the parcours_doctoral title and lazy return them"""
         # Create a dict to cache the translations of the parcours_doctoral title
         parcours_doctoral_title = {
@@ -83,20 +84,29 @@ class Notification(INotification):
         return lazy(lambda: parcours_doctoral_title[get_language()], str)()
 
     @classmethod
-    def get_admission_link_back(cls, uuid: UUID, tab='project') -> str:
+    def get_doctorate_link_back(cls, uuid: UUID, tab='project') -> str:
         return "{}{}".format(
             settings.PARCOURS_DOCTORAL_BACKEND_LINK_PREFIX,
-            resolve_url('admission:doctorate:{}'.format(tab), uuid=uuid),
+            '',
+            # resolve_url('parcours_doctoral:{}'.format(tab), uuid=uuid), # TODO when the tabs will be implemented
         )
 
     @classmethod
-    def get_admission_link_front(cls, uuid: UUID, tab='') -> str:
-        return settings.PARCOURS_DOCTORAL_FRONTEND_LINK.format(context='doctorate', uuid=uuid) + tab
+    def get_doctorate_link_front(cls, uuid: UUID, tab='') -> str:
+        return settings.PARCOURS_DOCTORAL_FRONTEND_LINK.format(uuid=uuid) + tab
+
+    @classmethod
+    def _get_doctorate(cls, doctorate_uuid):
+        return ParcoursDoctoralModel.objects.select_related(
+            'international_scholarship',
+            'student',
+            'training',
+        ).get(uuid=doctorate_uuid)
 
     @classmethod
     def get_common_tokens(
         cls,
-        parcours_doctoral: ParcoursDoctoral,
+        parcours_doctoral: ParcoursDoctoralModel,
         confirmation_paper: Union[EpreuveConfirmationDTO, EpreuveConfirmation],
     ) -> dict:
         """Return common tokens about a parcours doctoral"""
@@ -111,13 +121,13 @@ class Notification(INotification):
         )
 
         return {
-            "student_first_name": parcours_doctoral.candidate.first_name,
-            "student_last_name": parcours_doctoral.candidate.last_name,
+            "student_first_name": parcours_doctoral.student.first_name,
+            "student_last_name": parcours_doctoral.student.last_name,
             "training_title": cls._get_parcours_doctoral_title_translation(parcours_doctoral),
-            "admission_link_front": cls.get_admission_link_front(parcours_doctoral.uuid),
-            "admission_link_back": cls.get_admission_link_back(parcours_doctoral.uuid),
-            "confirmation_paper_link_front": cls.get_admission_link_front(parcours_doctoral.uuid, 'confirmation'),
-            "confirmation_paper_link_back": cls.get_admission_link_back(parcours_doctoral.uuid, 'confirmation'),
+            "admission_link_front": cls.get_doctorate_link_front(parcours_doctoral.uuid),
+            "admission_link_back": cls.get_doctorate_link_back(parcours_doctoral.uuid),
+            "confirmation_paper_link_front": cls.get_doctorate_link_front(parcours_doctoral.uuid, 'confirmation'),
+            "confirmation_paper_link_back": cls.get_doctorate_link_back(parcours_doctoral.uuid, 'confirmation'),
             "confirmation_paper_date": cls.format_date(confirmation_paper.date),
             "confirmation_paper_deadline": cls.format_date(confirmation_paper.date_limite),
             "scholarship_grant_acronym": financing_type,
@@ -138,7 +148,7 @@ class Notification(INotification):
 
     @classmethod
     def notifier_soumission(cls, epreuve_confirmation: EpreuveConfirmation) -> None:
-        parcours_doctoral: ParcoursDoctoral = ParcoursDoctoral.objects.get(uuid=epreuve_confirmation.parcours_doctoral_id.uuid)
+        parcours_doctoral = cls._get_doctorate(doctorate_uuid=epreuve_confirmation.parcours_doctoral_id.uuid)
         common_tokens = cls.get_common_tokens(parcours_doctoral, epreuve_confirmation)
 
         if parcours_doctoral.status == ChoixStatutParcoursDoctoral.SUBMITTED_CONFIRMATION.name:
@@ -175,7 +185,7 @@ class Notification(INotification):
 
     @classmethod
     def notifier_completion_par_promoteur(cls, epreuve_confirmation: EpreuveConfirmation) -> None:
-        parcours_doctoral: ParcoursDoctoral = ParcoursDoctoral.objects.get(uuid=epreuve_confirmation.parcours_doctoral_id.uuid)
+        parcours_doctoral = cls._get_doctorate(doctorate_uuid=epreuve_confirmation.parcours_doctoral_id.uuid)
         common_tokens = cls.get_common_tokens(parcours_doctoral, epreuve_confirmation)
 
         # Notify the CDD managers > web notification
@@ -191,7 +201,7 @@ class Notification(INotification):
 
     @classmethod
     def notifier_nouvelle_echeance(cls, epreuve_confirmation: EpreuveConfirmation) -> None:
-        parcours_doctoral: ParcoursDoctoral = ParcoursDoctoral.objects.get(uuid=epreuve_confirmation.parcours_doctoral_id.uuid)
+        parcours_doctoral = cls._get_doctorate(doctorate_uuid=epreuve_confirmation.parcours_doctoral_id.uuid)
         common_tokens = cls.get_common_tokens(parcours_doctoral, epreuve_confirmation)
 
         # Notify the CCD managers > web notification
@@ -212,7 +222,7 @@ class Notification(INotification):
         sujet_notification_candidat: str,
         message_notification_candidat: str,
     ) -> None:
-        parcours_doctoral: ParcoursDoctoral = ParcoursDoctoral.objects.get(uuid=epreuve_confirmation.parcours_doctoral_id.uuid)
+        parcours_doctoral = cls._get_doctorate(doctorate_uuid=epreuve_confirmation.parcours_doctoral_id.uuid)
 
         email_notification = EmailNotification(
             recipient=parcours_doctoral.candidate,
@@ -256,7 +266,7 @@ class Notification(INotification):
         sujet_notification_candidat: str,
         message_notification_candidat: str,
     ) -> None:
-        parcours_doctoral: ParcoursDoctoral = ParcoursDoctoral.objects.get(uuid=epreuve_confirmation.parcours_doctoral_id.uuid)
+        parcours_doctoral = cls._get_doctorate(doctorate_uuid=epreuve_confirmation.parcours_doctoral_id.uuid)
 
         email_notification = EmailNotification(
             recipient=parcours_doctoral.candidate,
@@ -296,7 +306,7 @@ class Notification(INotification):
 
     @classmethod
     def notifier_reussite_epreuve(cls, epreuve_confirmation: EpreuveConfirmation):
-        parcours_doctoral = ParcoursDoctoral.objects.get(uuid=epreuve_confirmation.parcours_doctoral_id.uuid)
+        parcours_doctoral = cls._get_doctorate(doctorate_uuid=epreuve_confirmation.parcours_doctoral_id.uuid)
 
         # Create the async task to generate the success attestation
         task = AsyncTask.objects.create(
