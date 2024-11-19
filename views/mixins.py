@@ -39,6 +39,8 @@ from osis_common.ddd.interface import BusinessException
 from osis_role.contrib.views import PermissionRequiredMixin
 from parcours_doctoral.ddd.commands import RecupererParcoursDoctoralQuery
 from parcours_doctoral.ddd.dtos import ParcoursDoctoralDTO
+from parcours_doctoral.ddd.jury.commands import RecupererJuryQuery
+from parcours_doctoral.ddd.jury.dtos.jury import JuryDTO
 from parcours_doctoral.models.parcours_doctoral import ParcoursDoctoral
 from parcours_doctoral.utils import get_cached_parcours_doctoral_perm_obj
 
@@ -60,6 +62,10 @@ class ParcoursDoctoralViewMixin(LoginRequiredMixin, PermissionRequiredMixin, Con
         return message_bus_instance.invoke(RecupererParcoursDoctoralQuery(
             parcours_doctoral_uuid=self.parcours_doctoral_uuid,
         ))
+
+    @cached_property
+    def jury(self) -> 'JuryDTO':
+        return message_bus_instance.invoke(RecupererJuryQuery(uuid_jury=self.parcours_doctoral_uuid))
 
     @cached_property
     def next_url(self):

@@ -270,6 +270,9 @@ class ParcoursDoctoralAdmin(ReadOnlyFilesMixin, admin.ModelAdmin):
     list_filter = [
         'status',
     ]
+    readonly_fields = [
+        'uuid',
+    ]
 
     @admin.display(description=_('Student'))
     def student_fmt(self, obj):

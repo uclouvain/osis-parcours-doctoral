@@ -1,5 +1,5 @@
 {% extends "parcours_doctoral/tab_layout.html" %}
-{% load i18n admission bootstrap3 static %}
+{% load i18n parcours_doctoral bootstrap3 static %}
 
 {% comment "License" %}
 * OSIS stands for Open Student Information System. It's an application
@@ -29,7 +29,7 @@
   <a class="btn btn-default" href="{% detail_tab_path_from_update view.kwargs.uuid %}">{% trans 'Cancel' %}</a>
   <button class="btn btn-primary" type="submit" form="form">
     <span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span>
-    {% translate 'Save' context 'admission' as save_label %}
+    {% translate 'Save' context 'parcours_doctoral' as save_label %}
     {{ submit_label|default:save_label }}
   </button>
 {% endblock %}
@@ -47,19 +47,12 @@
         <a class="btn btn-default" href="{% detail_tab_path_from_update view.kwargs.uuid %}">{% trans 'Cancel' %}</a>
         <button class="btn btn-primary" type="submit">
           <span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span>
-          {% translate 'Save' context 'admission' as save_label %}
+          {% translate 'Save' context 'parcours_doctoral' as save_label %}
           {{ submit_label|default:save_label }}
         </button>
       </div>
     </form>
   </div>
-{% endblock %}
-
-
-{% block script %}
-  {{ block.super }}
-
-  {{ form.media }}
 {% endblock %}
 
 {% block style %}

@@ -130,7 +130,6 @@ class ParcoursDoctoralService(IParcoursDoctoralService):
             reference=admission.reference,
             student=admission.candidate,
             training=admission.training,
-            status=admission.status,
             project_title=admission.project_title,
             project_abstract=admission.project_abstract,
             thesis_language=admission.thesis_language,

@@ -421,7 +421,7 @@ class ParcoursDoctoral(models.Model):
     objects = models.Manager.from_queryset(ParcoursDoctoralQuerySet)()
 
     class Meta:
-        verbose_name = _("Doctorate admission")
+        verbose_name = _("Doctoral training")
         ordering = ('-created_at',)
         permissions = [
             ('download_jury_approved_pdf', _("Can download jury-approved PDF")),

@@ -1,6 +1,5 @@
-{% extends "admission/tab_layout.html" %}
-{% load academic_year_display %}
-{% load bootstrap3 i18n static admission enums %}
+{% extends "layout.html" %}
+{% load academic_year_display bootstrap3 i18n static parcours_doctoral enums %}
 
 {% comment "License" %}
   * OSIS stands for Open Student Information System. It's an application
@@ -26,19 +25,17 @@
   * see http://www.gnu.org/licenses/.
 {% endcomment %}
 
+{% url base_namespace|add:request.resolver_match.url_name view.kwargs.pk as cancel_url %}
+{% url base_namespace|add:":update:"|add:request.resolver_match.url_name view.kwargs.pk as change_url %}
+
 {% block breadcrumb %}
-  <li>
-    <a href="{% url 'admissions' %}" id="lnk_admissions">
-      {% trans 'Enrolments' %}
-    </a>
-  </li>
-  <li>
-    <a href="{% url 'admission:doctorate:cdd:list' %}" id="lnk_admissions">
-      {% trans 'Doctorate enrolment applications' %}
-    </a>
-  </li>
+{#  <li>#}
+{#    <a href="{% url 'parcours_doctorals' %}" id="lnk_parcours_doctorals">#}
+{#      {% trans 'Enrolments' %}#}
+{#    </a>#}
+{#  </li>#}
   <li class="active">
-    {{ admission.doctorat.intitule }} ({{ admission.reference }})
+    {{ parcours_doctoral.training.intitule }} ({{ parcours_doctoral.reference }})
   </li>
 {% endblock %}
 
@@ -46,157 +43,345 @@
 {% endblock page-header %}
 
 {% block panel-heading %}
-  {% display admission.nom_candidat ',' admission.prenom_candidat as full_candidate_name %}
   <div class="min-width">
-    {% get_image_file_url admission.photo_identite_candidat as id_photo_url %}
-    <img
-        {% if id_photo_url %}
-          src="{{ id_photo_url }}"
-        {% else %}
-          src="{% static 'img/men_unknown.png' %}"
-        {% endif %}
-          alt="{% translate 'Identification photo of the candidate' %}"
-          class="img-thumbnail"
-    />
-  </div>
-  <div>
-    <span>
-      {% if admission.noma_candidat %}
-        <a href="{% url 'consulter_dossier_etudiant' admission.noma_candidat %}" target="_blank">
-          {{ admission.noma_candidat }}
-        </a>
-      {% else %}
-        {% translate 'Unknown noma' %}
-      {% endif %}
-    </span> -
-    <span class="bold-text">{{ full_candidate_name }}</span>
-    {% if admission.nationalite_candidat %}
-      <span>
-        ({{ admission.nationalite_candidat }}, {{ admission.nationalite_ue_candidat|yesno:_('EU,NEU') }})
-      </span>
-    {% endif %}
-    <br>
-    <address style="display: inline">
-      <a href="mailto:{{ admission.adresse_email_candidat }}?subject={{ admission.reference }}" target="_blank">
-        <i class="fa-solid fa-envelope"></i>
-      </a>
-      {{ admission.adresse_email_candidat }}
-    </address>
-    <span class="label label-admission-primary">{{ admission.langue_contact_candidat|formatted_language }}</span>
-    <br>
-    <span class="bold-text">{{ admission.type_demande|enum_display:'TypeDemande' }} - </span>
-    {% url 'admission:access-conditions-url' admission.doctorat.type admission.doctorat.sigle|urlencode:'' admission.doctorat.code as access_conditions_url %}
-    <span>
-        <a href="{{ access_conditions_url }}" target="_blank">{{ admission.doctorat.sigle }}</a> -
-        {{ admission.doctorat.intitule }} ({{ admission.doctorat.campus.nom }})
-        <span class="label label-default">{{ admission.doctorat.annee|display_as_academic_year }}</span>
-    </span>
-    <br>
-    <span class="copy-to-clipboard">
-      {% url "admission:doctorate" admission.uuid as admission_url %}
-      <a href="{{ request.scheme }}://{{ request.get_host }}{{ admission_url }}" class="copy-to-clipboard-element bold-text">{{ admission.reference }}</a>
-      <button
-          class="copy-button"
-          data-html="true"
-      >
-        <i class="far fa-copy"></i>
-      </button>
-    </span>
-  </div>
-  <div class="min-width">
-    {% include 'parcours_doctoral/includes/admission_status.html' with display_on_load=True %}
-    <br>
-    {% if admission.soumise_le %}
-      <span>
-        {% translate 'Submission date:' %} {{ admission.soumise_le|date:'d/m/Y' }}
-      </span>
-      <br>
-    {% endif %}
-    {% if admission.cotutelle %}
-      <span class="label label-info">
-        {% if admission.cotutelle.institution_fwb %}
-          {% translate 'FWB Cotutelle' %}
-        {% else %}
-          {% translate 'Cotutelle' %}
-        {% endif %}
-      </span>
-      <br>
-    {% endif %}
-    {% if admission.financement.type == 'SEARCH_SCHOLARSHIP' %}
-      {% if admission.financement.bourse_recherche %}
-        <span
-            class="label label-success"
-            title="{{ admission.financement.bourse_recherche }}"
-        >
-        {{ admission.financement.bourse_recherche.nom_court }}
-        </span>
-      {% else %}
-        <span class="label label-success">{% translate 'Scholarship' %}</span>
-      {% endif %}
-    {% endif %}
-  </div>
-  <div class="admission-badges min-width">
-    {% if admission.candidat_a_plusieurs_demandes %}
-      <span
-          class="label label-admission-primary"
-          data-lazy-popover-url="{% url base_namespace|add:':other-admissions-list' uuid=view.kwargs.uuid %}"
-          data-title="{% translate 'Other application(s)' %}"
-          tabindex="0"
-          role="button"
-      >
-        {% translate 'Several applications' %}
-      </span>
-    {% endif %}
-  </div>
+{#    {% get_image_file_url parcours_doctoral.photo_identite_candidat as id_photo_url %}#}
+{#    <img#}
+{#        {% if id_photo_url %}#}
+{#          src="{{ id_photo_url }}"#}
+{#        {% else %}#}
+{#          src="{% static 'img/men_unknown.png' %}"#}
+{#        {% endif %}#}
+{#          alt="{% translate 'Identification photo of the candidate' %}"#}
+{#          class="img-thumbnail"#}
+{#    />#}
+{#  </div>#}
+{#  <div>#}
+{#    <span>#}
+{#      {% if parcours_doctoral.noma_candidat %}#}
+{#        <a href="{% url 'consulter_dossier_etudiant' parcours_doctoral.noma_candidat %}" target="_blank">#}
+{#          {{ parcours_doctoral.noma_candidat }}#}
+{#        </a>#}
+{#      {% else %}#}
+{#        {% translate 'Unknown noma' %}#}
+{#      {% endif %}#}
+{#    </span> -#}
+{#    <span class="bold-text">{{ parcours_doctoral.nom_candidat }}, {{ parcours_doctoral.prenom_candidat }}</span>#}
+{#    {% if parcours_doctoral.nationalite_candidat %}#}
+{#      <span>#}
+{#        ({{ parcours_doctoral.nationalite_candidat }}, {{ parcours_doctoral.nationalite_ue_candidat|yesno:_('EU,NEU') }})#}
+{#      </span>#}
+{#    {% endif %}#}
+{#    <br>#}
+{#    <address style="display: inline">#}
+{#      <a href="mailto:{{ parcours_doctoral.adresse_email_candidat }}?subject={{ parcours_doctoral.reference }}" target="_blank">#}
+{#        <i class="fa-solid fa-envelope"></i>#}
+{#      </a>#}
+{#      {{ parcours_doctoral.adresse_email_candidat }}#}
+{#    </address>#}
+{#    <span class="label label-parcours_doctoral-primary">{{ parcours_doctoral.langue_contact_candidat|formatted_language }}</span>#}
+{#    <br>#}
+{#    <span class="bold-text">{{ parcours_doctoral.type_demande|enum_display:'TypeDemande' }} - </span>#}
+{#    {% url 'parcours_doctoral:access-conditions-url' parcours_doctoral.doctorat.type parcours_doctoral.doctorat.sigle|urlencode:'' parcours_doctoral.doctorat.code as access_conditions_url %}#}
+{#    <span>#}
+{#        <a href="{{ access_conditions_url }}" target="_blank">{{ parcours_doctoral.doctorat.sigle }}</a> -#}
+{#        {{ parcours_doctoral.doctorat.intitule }} ({{ parcours_doctoral.doctorat.campus.nom }})#}
+{#        <span class="label label-default">{{ parcours_doctoral.doctorat.annee|display_as_academic_year }}</span>#}
+{#    </span>#}
+{#    <br>#}
+{#    <span class="copy-to-clipboard">#}
+{#      {% url "parcours_doctoral:doctorate" parcours_doctoral.uuid as parcours_doctoral_url %}#}
+{#      <a href="{{ request.scheme }}://{{ request.get_host }}{{ parcours_doctoral_url }}" class="copy-to-clipboard-element bold-text">{{ parcours_doctoral.reference }}</a>#}
+{#      <button#}
+{#          class="copy-button"#}
+{#          data-html="true"#}
+{#      >#}
+{#        <i class="far fa-copy"></i>#}
+{#      </button>#}
+{#    </span>#}
+{#  </div>#}
+{#  <div class="min-width">#}
+{#    {% include 'parcours_doctoral/includes/parcours_doctoral_status.html' with display_on_load=True %}#}
+{#    <br>#}
+{#    {% if parcours_doctoral.soumise_le %}#}
+{#      <span>#}
+{#        {% translate 'Submission date:' %} {{ parcours_doctoral.soumise_le|date:'d/m/Y' }}#}
+{#      </span>#}
+{#      <br>#}
+{#    {% endif %}#}
+{#    {% if parcours_doctoral.cotutelle %}#}
+{#      <span class="label label-info">#}
+{#        {% if parcours_doctoral.cotutelle.institution_fwb %}#}
+{#          {% translate 'FWB Cotutelle' %}#}
+{#        {% else %}#}
+{#          {% translate 'Cotutelle' %}#}
+{#        {% endif %}#}
+{#      </span>#}
+{#      <br>#}
+{#    {% endif %}#}
+{#    {% if parcours_doctoral.financement.type == 'SEARCH_SCHOLARSHIP' %}#}
+{#      {% if parcours_doctoral.financement.bourse_recherche %}#}
+{#        <span#}
+{#            class="label label-success"#}
+{#            title="{{ parcours_doctoral.financement.bourse_recherche }}"#}
+{#        >#}
+{#        {{ parcours_doctoral.financement.bourse_recherche.nom_court }}#}
+{#        </span>#}
+{#      {% else %}#}
+{#        <span class="label label-success">{% translate 'Scholarship' %}</span>#}
+{#      {% endif %}#}
+{#    {% endif %}#}
+{#  </div>#}
+{#  <div class="parcours_doctoral-badges min-width">#}
+{#    {% if parcours_doctoral.candidat_a_plusieurs_demandes %}#}
+{#      <span#}
+{#          class="label label-parcours_doctoral-primary"#}
+{#          data-lazy-popover-url="{% url base_namespace|add:':other-parcours_doctorals-list' uuid=view.kwargs.uuid %}"#}
+{#          data-title="{% translate 'Other application(s)' %}"#}
+{#          tabindex="0"#}
+{#          role="button"#}
+{#      >#}
+{#        {% translate 'Several applications' %}#}
+{#      </span>#}
+{#    {% endif %}#}
+{#  </div>#}
 
 {% endblock %}
 
-{% block script %}
-  {{ block.super }}
-  <script src="{% static 'js/clipboard.js' %}"></script>
+{% block content %}
+  {% if form or force_form %}
+    {% include "parcours_doctoral/modal/prevent_quitting_modal.html" %}
+  {% endif %}
 
+  {% default_tab_context as tab_context %}
+  {% block page-header %}
+    <div class="page-header flex-content">
+      <a
+          href=""
+          class="text-primary"
+      >
+        <span class="fa fa-stream"></span>
+        {% trans "Back to the list" %}
+      </a>
+    </div>
+  {% endblock page-header %}
+
+  <div class="panel panel-default">
+    <div id="parcours_doctoral-panel-header-container" class="panel-heading flex-content">
+      <a
+        title="{% translate 'Previous parcours_doctoral' %}"
+        class="btn btn-default parcours_doctoral-navigation-button {% if not previous_parcours_doctoral_url %} disabled{% endif %}"
+        href="{{ previous_parcours_doctoral_url }}">
+        <i class="fa-solid fa-chevron-left" aria-hidden="true"></i>
+      </a>
+      <div id="parcours_doctoral-panel-header">
+        {% block panel-heading %}
+          <div>
+            {% trans "Candidate:" %} {{ parcours_doctoral.prenom_candidat }} {{ parcours_doctoral.nom_candidat }}
+          </div>
+          <div>
+            {% trans "Status:" %}
+          </div>
+          {% if object.submitted_at %}
+            <div>
+              {% trans "Submission date:" %}
+              {{ object.submitted_at|date:'d/m/Y H:i' }}
+            </div>
+          {% endif %}
+        {% endblock %}
+      </div>
+      <div>
+        {% block actions-group %}
+          <div class="btn-group hidden" id="actions-group-container">
+            <button
+                type="button"
+                class="btn btn-default"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+            >
+              {% trans "Actions" %}
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu pull-right">
+              {% block actions %}
+                {% if form or force_form %}
+                  {# Form -> link to the details page #}
+                  {% if not next_url %}
+                  {% can_read_tab tab_context.active_tab as can_read_tab %}
+                  {% detail_tab_path_from_update view.kwargs.uuid as read_url %}
+                  {% endif %}
+                  <li>
+                    <button class="btn btn-primary" type="submit" form="parcours_doctoral-form" style="width: 100%">
+                      {% translate 'Save' context 'parcours_doctoral' %}
+                    </button>
+                  </li>
+                  {% if next_url or can_read_tab and read_url %}
+                    <li>
+                      <a
+                          class="btn"
+                          href="{% if next_url %}{{ next_url }}{% else %}{{ read_url }}{% endif %}"
+                      >
+                        {% translate 'Cancel' %}
+                      </a>
+                    </li>
+                  {% endif %}
+                {% else %}
+                  {# Details -> link to the form page #}
+                  {% can_update_tab tab_context.active_tab as can_update_tab %}
+                  {% update_tab_path_from_detail view.kwargs.uuid as update_url %}
+                  {% if can_update_tab and update_url %}
+                    <li>
+                      <a href="{{ update_url }}">
+                        {% translate "Update" context 'verb' %}
+                      </a>
+                    </li>
+                  {% endif %}
+                {% endif %}
+              {% endblock %}
+            </ul>
+          </div>
+        {% endblock %}
+      </div>
+      <a
+        title="{% translate 'Next parcours_doctoral' %}"
+        class="btn btn-default parcours_doctoral-navigation-button {% if not next_parcours_doctoral_url %} disabled{% endif %}"
+        href="{{ next_parcours_doctoral_url }}">
+        <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+      </a>
+    </div>
+    <div class="panel-body">
+    {% if not without_menu %}
+      {% parcours_doctoral_tabs %}
+      {% current_subtabs as subtabs_context %}
+    {% endif %}
+      {% if subtabs_context.subtabs|length > 1 %}
+        <div class="row" style="display: flex">
+        <div class="col-md-2 visible-md visible-lg border-right">
+          {% subtabs_bar %}
+        </div>
+        <div class="col-md-10">
+      {% endif %}
+      {% block tab_content %}
+        {% if form.visible_fields or force_form %}
+          {# Display the form if needed #}
+          <form id="parcours_doctoral-form" class="osis-form" method="post" action="">
+            {% csrf_token %}
+            {% block form %}
+              <p>{% trans "This page is currently under construction." %}</p>
+            {% endblock %}
+          </form>
+          <div class="text-right">
+            {% if not next_url %}
+            {% can_read_tab tab_context.active_tab as can_read_tab %}
+            {% detail_tab_path_from_update view.kwargs.uuid as read_url %}
+            {% endif %}
+            <a
+                href="{% if next_url %}{{ next_url }}{% else %}{{ read_url }}{% endif %}"
+                class="btn btn-default"
+                style="margin-left: 10px;"
+                role="button"
+            >
+              {% translate 'Cancel' %}
+            </a>
+            <button class="btn btn-primary" type="submit" form="parcours_doctoral-form">
+              <span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span>
+              {% translate 'Save' context 'parcours_doctoral' %}
+            </button>
+          </div>
+        {% endif %}
+      {% endblock %}
+      {% if children|length > 1 %}
+        </div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+  {% block extra_content %}{% endblock %}
+{% endblock %}
+
+{% block script %}
+  {# Add either form scripts or osis-documents for detail #}
+  {{ block.super }}
+  <script src="{% static 'parcours_doctoral/popover.js' %}"></script>
+  <script src="{% static 'js/clipboard.js' %}"></script>
   <script>
       $(function () {
           writeTextToClipboard('.copy-to-clipboard');
       });
+
+    $(function () {
+      initializePopover();
+      initializeLazyPopover()
+      const actionsGroupContainer = $('#actions-group-container');
+      if (actionsGroupContainer.find('li').length > 0) {
+        actionsGroupContainer.removeClass('hidden');
+      }
+    });
   </script>
+  {% if form %}
+    {{ form.media.js }}
+    <script>
+      $(function () {
+          // Prevent to submit data from form inputs in disabled containers
+          $('form').on('submit', function() {
+              $(this).find('div[disabled] *').prop('disabled', true);
+          })
+      });
+    </script>
+  {% else %}
+    <script src="{% static 'osis_document/osis-document.umd.min.js' %}"></script>
+  {% endif %}
 {% endblock %}
 
 {% block style %}
-  {{ block.super }}
+  <link href="{% static "parcours_doctoral/parcours_doctoral.css" %}" rel="stylesheet"/>
+  {# Add either form styles or osis-documents for detail #}
+  {% if form %}
+    {{ form.media.css }}
+  {% else %}
+    <link href="{% static "osis_document/osis-document.css" %}" rel="stylesheet" />
+  {% endif %}
   <style>
-      #admission-panel-header {
+      p {
+        margin-bottom: 20px;
+      }
+
+      h3 {
+        margin: 1em 0;
+      }
+
+      #parcours_doctoral-panel-header {
           display: flex;
           flex-wrap: nowrap;
           gap: 1em;
           flex: 1;
       }
 
-      #admission-panel-header img {
+      #parcours_doctoral-panel-header img {
           width: 100px;
           height: 100px;
           border-radius: 10%;
           object-fit: cover;
       }
 
-      #admission-panel-header img.flag-icon {
+      #parcours_doctoral-panel-header img.flag-icon {
           width: 1em;
           height: 1em;
       }
 
-      #admission-panel-header > * > * {
+      #parcours_doctoral-panel-header > * > * {
           margin-bottom: 3px;
       }
 
-      #admission-panel-header > div.min-width {
+      #parcours_doctoral-panel-header > div.min-width {
           min-width: max-content;
       }
 
-      #admission-panel-header > div:not(:first-child) {
+      #parcours_doctoral-panel-header > div:not(:first-child) {
           margin-right: auto;
       }
 
-      #admission-panel-header-container {
+      #parcours_doctoral-panel-header-container {
           gap: 1em;
       }
 
@@ -206,32 +391,32 @@
       }
 
       @media only screen and (max-width : 992px) {
-          #admission-panel-header-container {
+          #parcours_doctoral-panel-header-container {
               flex-direction: column;
           }
 
-          #admission-panel-header {
+          #parcours_doctoral-panel-header {
               flex-direction: column;
           }
 
-          #admission-panel-header {
+          #parcours_doctoral-panel-header {
               text-align: center;
           }
 
-          #admission-panel-header > div {
+          #parcours_doctoral-panel-header > div {
               border-bottom: 1px solid #ddd;
               padding-bottom: 1em;
           }
 
-          #admission-panel-header > div:last-child {
+          #parcours_doctoral-panel-header > div:last-child {
               border-bottom: none;
           }
 
-          #admission-panel-header > div:not(:first-child) {
+          #parcours_doctoral-panel-header > div:not(:first-child) {
               margin-right: initial;
           }
 
-          #admission-panel-header > div.min-width {
+          #parcours_doctoral-panel-header > div.min-width {
               width: 100%;
           }
       }

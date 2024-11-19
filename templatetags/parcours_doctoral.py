@@ -23,8 +23,10 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from dataclasses import dataclass
+
 from django import template
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import gettext_lazy as _, pgettext
 
 from parcours_doctoral.ddd.formation.domain.model.enums import (
     CategorieActivite,
@@ -33,6 +35,166 @@ from parcours_doctoral.ddd.formation.domain.model.enums import (
 )
 
 register = template.Library()
+
+
+@dataclass
+class Tab:
+    name: str
+    label: str = ''
+    icon: str = ''
+    badge: str = ''
+
+    def __hash__(self):
+        # Only hash the name, as lazy strings have different memory addresses
+        return hash(self.name)
+
+    def __eq__(self, other):
+        return self.name == other.name
+
+
+TAB_TREE = {
+    # Tab('documents', _('Documents'), 'folder-open'): [
+    #     Tab('documents', _('Documents'), 'folder-open'),
+    # ],
+    # Tab('comments', pgettext('tab', 'Comments'), 'comments'): [
+    #     Tab('comments', pgettext('tab', 'Comments'), 'comments')
+    # ],
+    # Tab('history', pgettext('tab', 'History'), 'history'): [
+    #     Tab('history-all', _('All history')),
+    #     Tab('history', _('Status changes')),
+    # ],
+    # Tab('person', _('Personal data'), 'user'): [
+    #     Tab('person', _('Identification'), 'user'),
+    #     Tab('coordonnees', _('Contact details'), 'user'),
+    # ],
+    # Tab('experience', _('Previous experience'), 'list-alt'): [
+    #     Tab('curriculum', _('Curriculum')),
+    #     Tab('languages', _('Knowledge of languages')),
+    # ],
+    # Tab('doctorate', pgettext('tab', 'PhD project'), 'graduation-cap'): [
+    #     Tab('project', pgettext('tab', 'Research project')),
+    #     Tab('cotutelle', _('Cotutelle')),
+    #     Tab('supervision', _('Supervision')),
+    # ],
+    # Tab('additional-information', _('Additional information'), 'puzzle-piece'): [
+    #     Tab('accounting', _('Accounting')),
+    # ],
+    Tab('confirmation', pgettext('tab', 'Confirmation'), 'award'): [
+        Tab('confirmation', _('Confirmation exam')),
+        Tab('extension-request', _('New deadline')),
+    ],
+    # Tab('training', pgettext('admission', 'Course'), 'book-open-reader'): [
+    #     Tab('doctoral-training', _('PhD training')),
+    #     Tab('complementary-training', _('Complementary training')),
+    #     Tab('course-enrollment', _('Course unit enrolment')),
+    # ],
+    Tab('defense', pgettext('doctorate tab', 'Defense'), 'person-chalkboard'): [
+        Tab('jury-preparation', pgettext('admission tab', 'Defense method')),
+        Tab('jury', _('Jury composition')),
+    ],
+    # Tab('management', pgettext('tab', 'Management'), 'gear'): [
+    #     Tab('send-mail', _('Send a mail')),
+    #     Tab('debug', _('Debug'), 'bug'),
+    # ],
+}
+
+
+def get_active_parent(tab_tree, tab_name):
+    return next(
+        (parent for parent, children in tab_tree.items() if any(child.name == tab_name for child in children)),
+        None,
+    )
+
+@register.simple_tag(takes_context=True)
+def default_tab_context(context):
+    match = context['request'].resolver_match
+    active_tab = match.url_name
+    active_parent = get_active_parent(TAB_TREE, active_tab)
+
+    return {
+        'active_parent': active_parent,
+        'active_tab': active_tab,
+        'parcours_doctoral_uuid': context['view'].kwargs.get('uuid', ''),
+        'namespace': ':'.join(match.namespaces[:2]),
+        'request': context['request'],
+        'view': context['view'],
+    }
+
+
+
+
+
+
+
+
+
+@register.inclusion_tag('admission/includes/admission_tabs_bar.html', takes_context=True)
+def admission_tabs(context):
+    tab_context = default_tab_context(context)
+    admission = context['view'].get_permission_object()
+    current_tab_tree = get_valid_tab_tree(context, admission, TAB_TREES[get_current_context(admission)]).copy()
+    tab_context['tab_tree'] = current_tab_tree
+    return tab_context
+
+
+@register.inclusion_tag('admission/includes/subtabs_bar.html', takes_context=True)
+def subtabs_bar(context):
+    return current_subtabs(context)
+
+
+@register.simple_tag(takes_context=True)
+def current_subtabs(context):
+    tab_context = default_tab_context(context)
+    permission_obj = context['view'].get_permission_object()
+    tab_tree = TAB_TREES[get_current_context(admission=permission_obj)]
+    tab_context['subtabs'] = (
+        [tab for tab in tab_tree[tab_context['active_parent']] if can_read_tab(context, tab.name, permission_obj)]
+        if tab_context['active_parent']
+        else []
+    )
+    return tab_context
+
+
+@register.simple_tag(takes_context=True)
+def has_perm(context, perm, obj=None):
+    if not obj:
+        obj = context['view'].get_permission_object()
+    perm = perm % {'[context]': PERMISSION_BY_ADMISSION_CLASS[type(obj)]}
+    return rules.has_perm(perm, context['request'].user, obj)
+
+
+
+@register.simple_tag(takes_context=True)
+def can_read_tab(context, tab_name, obj=None):
+    """Return true if the specified tab can be opened in reading mode for this admission, otherwise return False"""
+    return has_perm(context, READ_ACTIONS_BY_TAB[tab_name], obj)
+
+
+@register.simple_tag(takes_context=True)
+def can_update_tab(context, tab_name, obj=None):
+    """Return true if the specified tab can be opened in update mode for this admission, otherwise return False"""
+    return has_perm(context, UPDATE_ACTIONS_BY_TAB[tab_name], obj)
+
+
+@register.simple_tag(takes_context=True)
+def detail_tab_path_from_update(context, admission_uuid):
+    """From an update page, get the path of the detail page."""
+    match = context['request'].resolver_match
+    current_tab_name = match.url_name
+    if len(match.namespaces) > 2 and match.namespaces[2] != 'update':
+        current_tab_name = match.namespaces[2]
+    return reverse(
+        '{}:{}'.format(':'.join(match.namespaces[:-1]), current_tab_name),
+        args=[admission_uuid],
+    )
+
+
+
+
+
+
+
+
 
 
 @register.filter
