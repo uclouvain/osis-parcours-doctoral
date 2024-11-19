@@ -79,7 +79,7 @@ class EpreuveConfirmationRepository(IEpreuveConfirmationRepository):
 
     @classmethod
     def save(cls, entity: 'EpreuveConfirmation') -> 'EpreuveConfirmationIdentity':
-        related_doctorate = ParcoursDoctoral.objects.get(uuid=entity.parcours_doctoral_id.uuid)
+        related_parcours_doctoral = ParcoursDoctoral.objects.get(uuid=entity.parcours_doctoral_id.uuid)
 
         extended_deadline_params = (
             {
@@ -95,7 +95,7 @@ class EpreuveConfirmationRepository(IEpreuveConfirmationRepository):
         ConfirmationPaper.objects.update_or_create(
             uuid=entity.entity_id.uuid,
             defaults={
-                'parcours_doctoral': related_doctorate,
+                'parcours_doctoral': related_parcours_doctoral,
                 'confirmation_date': entity.date,
                 'confirmation_deadline': entity.date_limite,
                 'research_report': entity.rapport_recherche,

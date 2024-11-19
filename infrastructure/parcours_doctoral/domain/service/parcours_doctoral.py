@@ -31,7 +31,7 @@ from osis_signature.enums import SignatureState
 from osis_signature.models import Process, StateHistory
 
 from admission.ddd.admission.doctorat.preparation.domain.model.proposition import Proposition
-from admission.models import DoctorateAdmission
+from admission.models import DoctorateAdmission, SupervisionActor
 from admission.models.enums.actor_type import ActorType as AdmissionActorType
 from parcours_doctoral.auth.roles.ca_member import CommitteeMember
 from parcours_doctoral.auth.roles.promoter import Promoter
@@ -52,36 +52,33 @@ class ParcoursDoctoralService(IParcoursDoctoralService):
         'cotutelle_opening_request',
         'cotutelle_convention',
         'cotutelle_other_documents',
-        'jury_approval',
     ]
 
     @classmethod
     def _duplicate_supervision_group(cls, admission: DoctorateAdmission) -> Process:
         process = Process.objects.create()
-        actors = []
         states = []
-        for admission_actor in admission.supervision_group.actors.all():
-            actor = ParcoursDoctoralSupervisionActor(
+        for admission_actor in SupervisionActor.objects.select_related('person', 'country').filter(
+            process__uuid=admission.supervision_group.uuid,
+        ):
+            actor = ParcoursDoctoralSupervisionActor.objects.create(
                 process=process,
                 person=admission_actor.person,
-                first_name=admission_actor.first_name,
-                last_name=admission_actor.last_name,
-                email=admission_actor.email,
-                institute=admission_actor.institute,
-                city=admission_actor.city,
-                country=admission_actor.country,
-                language=admission_actor.language,
+                first_name=admission_actor.first_name if not admission_actor.person else '',
+                last_name=admission_actor.last_name if not admission_actor.person else '',
+                email=admission_actor.email if not admission_actor.person else '',
+                institute=admission_actor.institute if not admission_actor.person else '',
+                city=admission_actor.city if not admission_actor.person else '',
+                country=admission_actor.country if not admission_actor.person else None,
+                language=admission_actor.language if not admission_actor.person else '',
                 type=admission_actor.type,
                 is_doctor=admission_actor.is_doctor,
                 is_reference_promoter=admission_actor.is_reference_promoter,
                 # # TODO À dupliquer ?
                 # internal_comment=admission_actor.internal_comment,
                 # comment=admission_actor.comment,
-                # pdf_from_candidate
             )
-            actors.append(actor)
             states.append(StateHistory(actor=actor, state=SignatureState.APPROVED.name))
-        ParcoursDoctoralSupervisionActor.objects.bulk_create(actors)
         StateHistory.objects.bulk_create(states)
         return process
 
@@ -92,7 +89,9 @@ class ParcoursDoctoralService(IParcoursDoctoralService):
 
         promoters = []
         ca_members = []
-        for admission_actor in admission.supervision_group.actors.all():
+        for admission_actor in SupervisionActor.objects.select_related('person', 'country').filter(
+            process__uuid=admission.supervision_group.uuid,
+        ):
             if admission_actor.type == AdmissionActorType.PROMOTER.name:
                 promoters.append(Promoter(person=admission_actor.person))
             else:
@@ -109,7 +108,7 @@ class ParcoursDoctoralService(IParcoursDoctoralService):
         ]
         uploaded_paths = {
             # TODO Better path name?
-            file_uuid: f'parcours_doctoral/{admission.candidate.uuid}/{parcours_doctoral.uuid}/duplicates_from_admission/'
+            str(file_uuid): f'parcours_doctoral/{admission.candidate.uuid}/{parcours_doctoral.uuid}/duplicates_from_admission/'
             for file_uuid in files_uuids
         }
 
@@ -129,7 +128,7 @@ class ParcoursDoctoralService(IParcoursDoctoralService):
         parcours_doctoral = ParcoursDoctoralModel.objects.create(
             admission=admission,
             reference=admission.reference,
-            student=admission.student,
+            student=admission.candidate,
             training=admission.training,
             status=admission.status,
             project_title=admission.project_title,
@@ -151,12 +150,6 @@ class ParcoursDoctoralService(IParcoursDoctoralService):
             cotutelle_institution=admission.cotutelle_institution,
             cotutelle_other_institution_name=admission.cotutelle_other_institution_name,
             cotutelle_other_institution_address=admission.cotutelle_other_institution_address,
-            thesis_proposed_title=admission.thesis_proposed_title,
-            defense_method=admission.defense_method,
-            defense_indicative_date=admission.defense_indicative_date,
-            defense_language=admission.defense_language,
-            comment_about_jury=admission.comment_about_jury,
-            accounting_situation=admission.accounting_situation,
             financing_type=admission.financing_type,
             other_international_scholarship=admission.other_international_scholarship,
             international_scholarship=admission.international_scholarship,
@@ -165,7 +158,11 @@ class ParcoursDoctoralService(IParcoursDoctoralService):
 
         uploaded_files = cls._duplicate_uploaded_files(admission, parcours_doctoral)
         for field in cls.FILES_FIELDS:
-            setattr(parcours_doctoral, field, uploaded_files[getattr(admission, field)])
+            try:
+                file_uuid = str(getattr(admission, field)[0])
+            except IndexError:
+                continue
+            setattr(parcours_doctoral, field, uploaded_files.get(file_uuid))
         parcours_doctoral.save(update_fields=cls.FILES_FIELDS)
 
         return ParcoursDoctoralIdentity(uuid=str(parcours_doctoral.uuid))

@@ -50,6 +50,8 @@ from parcours_doctoral.infrastructure.parcours_doctoral.domain.service.in_memory
 from parcours_doctoral.infrastructure.parcours_doctoral.domain.service.in_memory.notification import (
     NotificationInMemory,
 )
+from parcours_doctoral.infrastructure.parcours_doctoral.domain.service.in_memory.parcours_doctoral import \
+    ParcoursDoctoralInMemoryService
 from parcours_doctoral.infrastructure.parcours_doctoral.domain.service.in_memory.promoteur import (
     PromoteurInMemoryTranslator,
 )
@@ -64,6 +66,7 @@ from parcours_doctoral.infrastructure.parcours_doctoral.repository.in_memory.par
 )
 
 _parcours_doctoral_repository = ParcoursDoctoralInMemoryRepository()
+_parcours_doctoral_service = ParcoursDoctoralInMemoryService()()
 _epreuve_confirmation_repository = EpreuveConfirmationInMemoryRepository()
 _proposition_repository = PropositionInMemoryRepository()
 _groupe_de_supervision_repository = GroupeDeSupervisionInMemoryRepository()
@@ -90,6 +93,7 @@ COMMAND_HANDLERS = {
         parcours_doctoral_repository=_parcours_doctoral_repository,
         groupe_de_supervision_repository=_groupe_de_supervision_repository,
         epreuve_confirmation_repository=_epreuve_confirmation_repository,
+        parcours_doctoral_service=_parcours_doctoral_service,
         historique=_historique,
     ),
     ListerParcoursDoctorauxDoctorantQuery: lambda msg_bus, cmd: lister_parcours_doctoraux_doctorant(

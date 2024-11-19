@@ -17,7 +17,7 @@ class Migration(migrations.Migration):
     dependencies = [
         ("reference", "0018_country_active"),
         ("base", "0707_django_4_migration"),
-        ("admission", "0234_parcours_doctoral_refactoring"),
+        ("admission", "0235_parcours_doctoral_refactoring"),
         ("osis_signature", "0003_external_actor"),
     ]
 

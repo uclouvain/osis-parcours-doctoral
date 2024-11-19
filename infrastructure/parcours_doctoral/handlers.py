@@ -37,6 +37,7 @@ from parcours_doctoral.ddd.use_case.write import *
 from .domain.service.historique import Historique
 from .domain.service.membre_CA import MembreCATranslator
 from .domain.service.notification import Notification
+from .domain.service.parcours_doctoral import ParcoursDoctoralService
 from .domain.service.promoteur import PromoteurTranslator
 from .epreuve_confirmation.repository.epreuve_confirmation import EpreuveConfirmationRepository
 from .event_handlers import reagir_a_approbation_admission
@@ -70,6 +71,7 @@ COMMAND_HANDLERS = {
         parcours_doctoral_repository=ParcoursDoctoralRepository(),
         groupe_de_supervision_repository=GroupeDeSupervisionRepository(),
         epreuve_confirmation_repository=EpreuveConfirmationRepository(),
+        parcours_doctoral_service=ParcoursDoctoralService(),
         historique=Historique(),
     ),
     ListerParcoursDoctorauxDoctorantQuery: lambda msg_bus, cmd: lister_parcours_doctoraux_doctorant(
