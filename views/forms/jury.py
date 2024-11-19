@@ -46,7 +46,7 @@ class JuryPreparationFormView(
 ):
     urlpatterns = 'jury-preparation'
     template_name = 'parcours_doctoral/forms/jury/preparation.html'
-    permission_required = 'parcours_doctoral.change_parcours_doctoral_jury'
+    permission_required = 'parcours_doctoral.change_jury'
     form_class = JuryPreparationForm
 
     def get_initial(self):

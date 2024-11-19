@@ -53,8 +53,8 @@ class Student(RoleModel):
             'parcours_doctoral.view_supervision': parcours_doctoral.is_parcours_doctoral_student,
             'parcours_doctoral.view_confirmation': parcours_doctoral.is_parcours_doctoral_student,
             # Can edit while the jury is not submitted
-            'parcours_doctoral.view_admission_jury': parcours_doctoral.is_parcours_doctoral_student,
-            'parcours_doctoral.change_admission_jury': parcours_doctoral.is_parcours_doctoral_student
+            'parcours_doctoral.view_jury': parcours_doctoral.is_parcours_doctoral_student,
+            'parcours_doctoral.change_jury': parcours_doctoral.is_parcours_doctoral_student
             & parcours_doctoral.is_jury_in_progress,
             'parcours_doctoral.view_complementary_training': parcours_doctoral.is_parcours_doctoral_student
             & parcours_doctoral.complementary_training_enabled,
@@ -65,9 +65,9 @@ class Student(RoleModel):
             'parcours_doctoral.view_training': parcours_doctoral.is_parcours_doctoral_student,
             'parcours_doctoral.delete_training': parcours_doctoral.is_parcours_doctoral_student,
             # Once the confirmation paper is in progress, he can
-            'parcours_doctoral.change_admission_confirmation': parcours_doctoral.is_parcours_doctoral_student
+            'parcours_doctoral.change_confirmation': parcours_doctoral.is_parcours_doctoral_student
             & parcours_doctoral.confirmation_paper_in_progress,
-            'parcours_doctoral.change_admission_confirmation_extension': parcours_doctoral.is_parcours_doctoral_student
+            'parcours_doctoral.change_confirmation_extension': parcours_doctoral.is_parcours_doctoral_student
             & parcours_doctoral.confirmation_paper_in_progress,
         }
         return RuleSet(rules)

@@ -56,8 +56,6 @@ class CommitteeMember(RoleModel):
             'parcours_doctoral.view_confirmation': is_part_of_committee,
             'parcours_doctoral.view_jury': is_part_of_committee,
             'parcours_doctoral.approve_jury': is_part_of_committee,
-            'parcours_doctoral.view_parcours_doctoral_supervision': is_part_of_committee,
-            # Once the candidate is enrolling, a ca member can
-            'parcours_doctoral.view_parcours_doctoral_confirmation': is_part_of_committee,
+            'parcours_doctoral.view_supervision': is_part_of_committee,
         }
         return RuleSet(ruleset)

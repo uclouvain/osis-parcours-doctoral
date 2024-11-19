@@ -53,7 +53,7 @@ __namespace__ = False
 class JuryPreparationDetailView(ParcoursDoctoralViewMixin, TemplateView):
     urlpatterns = 'jury-preparation'
     template_name = 'parcours_doctoral/details/jury/preparation.html'
-    permission_required = 'parcours_doctoral.view_parcours_doctoral_jury'
+    permission_required = 'parcours_doctoral.view_jury'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -69,7 +69,7 @@ class JuryView(
 ):
     urlpatterns = 'jury'
     template_name = 'parcours_doctoral/forms/jury/jury.html'
-    permission_required = 'parcours_doctoral.view_parcours_doctoral_jury'
+    permission_required = 'parcours_doctoral.view_jury'
     form_class = JuryMembreForm
     error_mapping = {
         NonDocteurSansJustificationException: "justification_non_docteur",
@@ -91,7 +91,7 @@ class JuryView(
             membre for membre in self.jury.membres if membre.role == RoleJury.SECRETAIRE.name
         ]
         context['membres'] = [membre for membre in self.jury.membres if membre.role == RoleJury.MEMBRE.name]
-        if not self.request.user.has_perm('parcours_doctoral.change_parcours_doctoral_jury', obj=self.parcours_doctoral):
+        if not self.request.user.has_perm('parcours_doctoral.change_jury', obj=self.parcours_doctoral):
             del context['form']
         return context
 

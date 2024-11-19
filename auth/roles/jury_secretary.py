@@ -49,13 +49,13 @@ class JurySecretary(RoleModel):
         ruleset = {
             'parcours_doctoral.upload_defense_report': rules.always_allow,
             'parcours_doctoral.view_doctorateadmission': rules.always_allow,
-            'parcours_doctoral.view_admission_person': rules.always_allow,
-            'parcours_doctoral.view_admission_coordinates': rules.always_allow,
-            'parcours_doctoral.view_admission_secondary_studies': rules.always_allow,
-            'parcours_doctoral.view_admission_curriculum': rules.always_allow,
-            'parcours_doctoral.view_admission_project': rules.always_allow,
-            'parcours_doctoral.view_admission_cotutelle': rules.always_allow,
-            'parcours_doctoral.view_admission_supervision': rules.always_allow,
-            'parcours_doctoral.view_admission_jury': rules.always_allow,
+            'parcours_doctoral.view_person': rules.always_allow,
+            'parcours_doctoral.view_coordinates': rules.always_allow,
+            'parcours_doctoral.view_secondary_studies': rules.always_allow,
+            'parcours_doctoral.view_curriculum': rules.always_allow,
+            'parcours_doctoral.view_project': rules.always_allow,
+            'parcours_doctoral.view_cotutelle': rules.always_allow,
+            'parcours_doctoral.view_supervision': rules.always_allow,
+            'parcours_doctoral.view_jury': rules.always_allow,
         }
         return RuleSet(ruleset)

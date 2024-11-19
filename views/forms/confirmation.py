@@ -45,7 +45,7 @@ class ConfirmationFormView(
 ):
     template_name = 'parcours_doctoral/doctorate/forms/confirmation.html'
     form_class = ConfirmationForm
-    permission_required = 'parcours_doctoral.change_parcours_doctoral_confirmation'
+    permission_required = 'parcours_doctoral.change_confirmation'
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()

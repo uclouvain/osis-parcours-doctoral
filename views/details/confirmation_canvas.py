@@ -37,7 +37,7 @@ __all__ = [
 
 
 class ConfirmationCanvasExportView(LastConfirmationMixin, RedirectView):
-    permission_required = 'parcours_doctoral.view_parcours_doctoral_confirmation'
+    permission_required = 'parcours_doctoral.view_confirmation'
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data()

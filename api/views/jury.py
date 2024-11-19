@@ -76,8 +76,8 @@ class JuryPreparationAPIView(
     pagination_class = None
     filter_backends = []
     permission_mapping = {
-        'GET': 'parcours_doctoral.view_admission_jury',
-        'POST': 'parcours_doctoral.change_admission_jury',
+        'GET': 'parcours_doctoral.view_jury',
+        'POST': 'parcours_doctoral.change_jury',
     }
 
     def get_permission_object(self):
@@ -130,8 +130,8 @@ class JuryMembersListAPIView(
     pagination_class = None
     filter_backends = []
     permission_mapping = {
-        'GET': 'parcours_doctoral.view_admission_jury',
-        'POST': 'parcours_doctoral.change_admission_jury',
+        'GET': 'parcours_doctoral.view_jury',
+        'POST': 'parcours_doctoral.change_jury',
     }
 
     def get_permission_object(self):
@@ -187,10 +187,10 @@ class JuryMemberDetailAPIView(
     pagination_class = None
     filter_backends = []
     permission_mapping = {
-        'GET': 'parcours_doctoral.view_admission_jury',
-        'PUT': 'parcours_doctoral.change_admission_jury',
-        'PATCH': 'parcours_doctoral.change_admission_jury',
-        'DELETE': 'parcours_doctoral.change_admission_jury',
+        'GET': 'parcours_doctoral.view_jury',
+        'PUT': 'parcours_doctoral.change_jury',
+        'PATCH': 'parcours_doctoral.change_jury',
+        'DELETE': 'parcours_doctoral.change_jury',
     }
 
     def get_permission_object(self):

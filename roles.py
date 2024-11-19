@@ -54,8 +54,8 @@ def base_program_manager_rules():
         # Doctorats
         # --- Confirmation
         'parcours_doctoral.view_confirmation': is_part_of_education_group & is_enrolled,
-        'parcours_doctoral.change_admission_confirmation': is_part_of_education_group & is_enrolled,
-        'parcours_doctoral.change_admission_confirmation_extension': is_part_of_education_group & is_enrolled,
+        'parcours_doctoral.change_confirmation': is_part_of_education_group & is_enrolled,
+        'parcours_doctoral.change_confirmation_extension': is_part_of_education_group & is_enrolled,
         'parcours_doctoral.make_confirmation_decision': is_part_of_education_group & submitted_confirmation_paper,
         'parcours_doctoral.send_message': is_part_of_education_group & is_enrolled,
         # -- Formation doctorale
@@ -68,8 +68,8 @@ def base_program_manager_rules():
         'parcours_doctoral.refuse_activity': is_part_of_education_group & is_enrolled,
         'parcours_doctoral.restore_activity': is_part_of_education_group & is_enrolled,
         # -- Jury
-        'parcours_doctoral.view_admission_jury': is_part_of_education_group & is_enrolled & is_jury_in_progress,
-        'parcours_doctoral.change_admission_jury': is_part_of_education_group & is_enrolled & is_jury_in_progress,
+        'parcours_doctoral.view_jury': is_part_of_education_group & is_enrolled & is_jury_in_progress,
+        'parcours_doctoral.change_jury': is_part_of_education_group & is_enrolled & is_jury_in_progress,
         # -- Défense
         # -- Soutenance
     }

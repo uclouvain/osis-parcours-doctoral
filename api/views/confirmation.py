@@ -115,8 +115,8 @@ class LastConfirmationAPIView(DoctorateAPIPermissionRequiredMixin, mixins.Retrie
     filter_backends = []
     permission_mapping = {
         'GET': 'parcours_doctoral.view_confirmation',
-        'PUT': 'parcours_doctoral.change_admission_confirmation',
-        'POST': 'parcours_doctoral.change_admission_confirmation_extension',
+        'PUT': 'parcours_doctoral.change_confirmation',
+        'POST': 'parcours_doctoral.change_confirmation_extension',
     }
 
     def get(self, request, *args, **kwargs):

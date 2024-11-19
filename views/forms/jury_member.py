@@ -76,7 +76,7 @@ class JuryMemberRemoveView(
     View,
 ):
     urlpatterns = 'remove'
-    permission_required = 'parcours_doctoral.change_parcours_doctoral_jury'
+    permission_required = 'parcours_doctoral.change_jury'
 
     def post(self, request, *args, **kwargs):
         try:
@@ -100,7 +100,7 @@ class JuryMembreUpdateFormView(
 ):
     urlpatterns = 'update'
     template_name = 'parcours_doctoral/forms/jury/member_update.html'
-    permission_required = 'parcours_doctoral.change_parcours_doctoral_jury'
+    permission_required = 'parcours_doctoral.change_jury'
     form_class = JuryMembreForm
     error_mapping = {
         NonDocteurSansJustificationException: "justification_non_docteur",
@@ -171,7 +171,7 @@ class JuryMemberChangeRoleView(
     View,
 ):
     urlpatterns = 'change-role'
-    permission_required = 'parcours_doctoral.change_parcours_doctoral_jury'
+    permission_required = 'parcours_doctoral.change_jury'
 
     def post(self, request, *args, **kwargs):
         form = JuryMembreRoleForm(data=request.POST)
