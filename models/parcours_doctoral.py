@@ -27,18 +27,23 @@ import uuid
 
 from django.db import models
 from django.db.models import Subquery, OuterRef, Case, When, Q, Value, F, CharField
-from django.db.models.functions import Concat, Coalesce, NullIf, Mod, Replace
+from django.db.models.functions import Concat, Mod, Replace
 from django.utils.translation import gettext_lazy as _, pgettext_lazy
 from osis_history.models import HistoryEntry
 from osis_signature.contrib.fields import SignatureProcessField
 
 from admission.models.functions import ToChar
 from base.models.entity_version import EntityVersion
-from base.models.enums.education_group_types import TrainingType
-from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral, ChoixLangueDefense, \
-    ChoixTypeFinancement, ChoixDoctoratDejaRealise
 from osis_document.contrib import FileField
-
+from parcours_doctoral.ddd.domain.model.enums import (
+    ChoixStatutParcoursDoctoral,
+    ChoixLangueDefense,
+    ChoixTypeFinancement,
+    ChoixDoctoratDejaRealise,
+    ChoixCommissionProximiteCDEouCLSM,
+    ChoixCommissionProximiteCDSS,
+    ChoixSousDomaineSciences,
+)
 from parcours_doctoral.ddd.jury.domain.model.enums import FormuleDefense
 from parcours_doctoral.ddd.repository.i_parcours_doctoral import CAMPUS_LETTRE_DOSSIER
 
@@ -53,7 +58,6 @@ def parcours_doctoral_directory_path(parcours_doctoral: 'ParcoursDoctoral', file
 
 
 class ParcoursDoctoralQuerySet(models.QuerySet):
-
     def annotate_training_management_entity(self):
         return self.annotate(
             sigle_entite_gestion=models.Subquery(
@@ -78,11 +82,6 @@ class ParcoursDoctoralQuerySet(models.QuerySet):
         Annotate the admission with its reference.
         """
         return self.annotate(
-            sigle_entite_gestion=models.Subquery(
-                EntityVersion.objects.filter(entity_id=OuterRef("training__management_entity_id"))
-                .order_by('-start_date')
-                .values("acronym")[:1]
-            ),
             formatted_reference=Concat(
                 # Letter of the campus
                 Case(
@@ -149,6 +148,16 @@ class ParcoursDoctoral(models.Model):
         verbose_name=pgettext_lazy("parcours_doctoral", "Course"),
         related_name="+",
         on_delete=models.CASCADE,
+    )
+
+    proximity_commission = models.CharField(
+        max_length=255,
+        verbose_name=_("Proximity commission"),
+        choices=ChoixCommissionProximiteCDEouCLSM.choices()
+        + ChoixCommissionProximiteCDSS.choices()
+        + ChoixSousDomaineSciences.choices(),
+        default='',
+        blank=True,
     )
 
     status = models.CharField(

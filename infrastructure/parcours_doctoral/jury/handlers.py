@@ -59,7 +59,6 @@ COMMAND_HANDLERS = {
     ModifierJuryCommand: lambda msg_bus, cmd: modifier_jury(
         cmd,
         jury_repository=_jury_repository,
-        groupe_de_supervision_repository=_groupe_de_supervisition_repository,
     ),
     AjouterMembreCommand: lambda msg_bus, cmd: ajouter_membre(
         cmd,

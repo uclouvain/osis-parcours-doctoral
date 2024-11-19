@@ -68,9 +68,6 @@ class JuryFactory(factory.Factory):
 
     titre_propose = 'titre_propose'
 
-    cotutelle = False
-    institution_cotutelle = ''
-
     membres = factory.LazyFunction(lambda: [])
 
     formule_defense = 'DEUX_TEMPS'

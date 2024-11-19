@@ -26,15 +26,14 @@
 import abc
 from typing import List, Optional, Union
 
-from parcours_doctoral.ddd.domain.model._cotutelle import Cotutelle, pas_de_cotutelle
+from osis_common.ddd import interface
+from osis_common.ddd.interface import ApplicationService
 from parcours_doctoral.ddd.domain.model.groupe_de_supervision import (
     GroupeDeSupervision,
     GroupeDeSupervisionIdentity,
     SignataireIdentity,
 )
-from parcours_doctoral.ddd.dtos import CotutelleDTO, MembreCADTO, PromoteurDTO
-from osis_common.ddd import interface
-from osis_common.ddd.interface import ApplicationService
+from parcours_doctoral.ddd.dtos import MembreCADTO, PromoteurDTO
 from parcours_doctoral.models import ActorType
 
 

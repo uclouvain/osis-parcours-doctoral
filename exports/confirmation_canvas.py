@@ -30,11 +30,11 @@ from admission.exports.utils import admission_generate_pdf
 from parcours_doctoral.models.confirmation_paper import ConfirmationPaper
 
 
-def parcours_doctoral_pdf_confirmation_canvas(admission, language, context):
+def parcours_doctoral_pdf_confirmation_canvas(doctorate, language, context):
     with translation.override(language=language):
         # Generate the pdf
         save_token = admission_generate_pdf(
-            admission=admission,
+            admission=doctorate,
             template='parcours_doctoral/exports/confirmation_export.html',
             filename='confirmation.pdf',
             context=context,

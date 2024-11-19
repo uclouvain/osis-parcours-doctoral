@@ -29,12 +29,13 @@ from typing import List, Optional, Union
 from django.db.models import F, Prefetch
 from django.db.models.functions import Coalesce
 from django.utils.translation import get_language, gettext_lazy as _
-from osis_signature.enums import SignatureState
+from osis_signature.models import Actor, Process, StateHistory
 
+from base.models.person import Person
+from osis_role.contrib.permissions import _get_roles_assigned_to_user
 from parcours_doctoral.auth.roles.ca_member import CommitteeMember
 from parcours_doctoral.auth.roles.promoter import Promoter
 from parcours_doctoral.ddd.builder.parcours_doctoral_identity import ParcoursDoctoralIdentityBuilder
-from parcours_doctoral.ddd.domain.model._cotutelle import Cotutelle
 from parcours_doctoral.ddd.domain.model._membre_CA import MembreCAIdentity
 from parcours_doctoral.ddd.domain.model._promoteur import PromoteurIdentity
 from parcours_doctoral.ddd.domain.model._signature_membre_CA import SignatureMembreCA
@@ -43,22 +44,16 @@ from parcours_doctoral.ddd.domain.model._signature_promoteur import (
 )
 from parcours_doctoral.ddd.domain.model.enums import (
     ChoixEtatSignature,
-    ChoixStatutSignatureGroupeDeSupervision,
-    ChoixStatutParcoursDoctoral,
 )
 from parcours_doctoral.ddd.domain.model.groupe_de_supervision import (
     GroupeDeSupervision,
     GroupeDeSupervisionIdentity,
     SignataireIdentity,
 )
-from parcours_doctoral.ddd.dtos import CotutelleDTO, MembreCADTO, PromoteurDTO
+from parcours_doctoral.ddd.dtos import MembreCADTO, PromoteurDTO
 from parcours_doctoral.ddd.repository.i_groupe_de_supervision import (
     IGroupeDeSupervisionRepository,
 )
-from base.models.person import Person
-from osis_role.contrib.permissions import _get_roles_assigned_to_user
-from osis_signature.models import Actor, Process, StateHistory
-
 from parcours_doctoral.models import ActorType, ParcoursDoctoralSupervisionActor, ParcoursDoctoral
 from reference.models.country import Country
 

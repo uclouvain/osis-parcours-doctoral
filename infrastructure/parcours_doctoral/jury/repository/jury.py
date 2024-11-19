@@ -43,6 +43,7 @@ from osis_common.ddd.interface import EntityIdentity, ApplicationService, RootEn
 from parcours_doctoral.models.jury import JuryMember
 from parcours_doctoral.models.parcours_doctoral import ParcoursDoctoral
 from reference.models.country import Country
+from reference.models.language import Language
 
 INSTITUTION_UCL = "UCLouvain"
 
@@ -123,13 +124,14 @@ class JuryRepository(IJuryRepository):
     @classmethod
     @transaction.atomic
     def save(cls, entity: 'Jury') -> 'JuryIdentity':
+        thesis_language = (
+            Language.objects.filter(code=entity.langue_redaction).first() if entity.langue_redaction else None
+        )
         ParcoursDoctoral.objects.filter(uuid=str(entity.entity_id.uuid)).update(
             thesis_proposed_title=entity.titre_propose,
-            cotutelle=entity.cotutelle,
-            cotutelle_institution=entity.institution_cotutelle,
             defense_method=entity.formule_defense,
             defense_indicative_date=entity.date_indicative,
-            thesis_language=entity.langue_redaction,
+            thesis_language=thesis_language,
             defense_language=entity.langue_soutenance,
             comment_about_jury=entity.commentaire,
             accounting_situation=entity.situation_comptable,
@@ -209,8 +211,6 @@ class JuryRepository(IJuryRepository):
         return JuryDTO(
             uuid=jury.entity_id.uuid,
             titre_propose=jury.titre_propose,
-            cotutelle=jury.cotutelle,
-            institution_cotutelle=jury.institution_cotutelle,
             membres=[
                 MembreJuryDTO(
                     uuid=membre.uuid,
@@ -315,11 +315,9 @@ class JuryRepository(IJuryRepository):
         return Jury(
             entity_id=JuryIdentity(uuid=str(parcours_doctoral.uuid)),
             titre_propose=parcours_doctoral.thesis_proposed_title,
-            cotutelle=parcours_doctoral.cotutelle,
-            institution_cotutelle=parcours_doctoral.cotutelle_institution,
             formule_defense=parcours_doctoral.defense_method,
             date_indicative=parcours_doctoral.defense_indicative_date,
-            langue_redaction=parcours_doctoral.thesis_language,
+            langue_redaction=parcours_doctoral.thesis_language.code if parcours_doctoral.thesis_language else '',
             langue_soutenance=parcours_doctoral.defense_language,
             commentaire=parcours_doctoral.comment_about_jury,
             situation_comptable=parcours_doctoral.accounting_situation,

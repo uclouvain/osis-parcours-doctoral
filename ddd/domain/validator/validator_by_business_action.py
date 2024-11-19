@@ -242,6 +242,7 @@ class ProjetDoctoralValidatorList(TwoStepsMultipleBusinessExceptionListValidator
     projet: 'Projet'
     financement: 'Financement'
     experience_precedente_recherche: 'ExperiencePrecedenteRecherche'
+    cotutelle: 'Cotutelle'
 
     def get_data_contract_validators(self) -> List[BusinessValidator]:
         return []
@@ -253,6 +254,7 @@ class ProjetDoctoralValidatorList(TwoStepsMultipleBusinessExceptionListValidator
                 self.financement,
                 self.experience_precedente_recherche,
             ),
+            ShouldCotutelleEtreComplete(self.cotutelle),
         ]
 
 

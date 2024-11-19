@@ -52,9 +52,13 @@ class VerifierPropositionProjetDoctoral(interface.DomainService):
     ) -> None:
         execute_functions_and_aggregate_exceptions(
             parcours_doctoral_candidat.verifier_projet_doctoral,
-            groupe_de_supervision.verifier_cotutelle,
             partial(GroupeDeSupervisionPossedeUnPromoteurMinimum.verifier, groupe_de_supervision, promoteur_translator),
-            partial(CotutellePossedePromoteurExterne.verifier, groupe_de_supervision, promoteur_translator),
+            partial(
+                CotutellePossedePromoteurExterne.verifier,
+                parcours_doctoral_candidat,
+                groupe_de_supervision,
+                promoteur_translator,
+            ),
             groupe_de_supervision.verifier_signataires,
             partial(
                 VerifierQuestionsSpecifiques.verifier_onglet_choix_formation,

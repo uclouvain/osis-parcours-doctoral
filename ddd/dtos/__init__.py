@@ -27,7 +27,6 @@ from .campus import CampusDTO
 from .formation import FormationDTO, EntiteGestionDTO
 from .groupe_supervision import (
     AvisDTO,
-    CotutelleDTO,
     DetailSignatureMembreCADTO,
     DetailSignaturePromoteurDTO,
     GroupeDeSupervisionDTO,
@@ -39,7 +38,6 @@ from .parcours_doctoral import ParcoursDoctoralDTO, ParcoursDoctoralRechercheDTO
 __all__ = [
     'AvisDTO',
     'CampusDTO',
-    'CotutelleDTO',
     'DetailSignatureMembreCADTO',
     'DetailSignaturePromoteurDTO',
     'EntiteGestionDTO',

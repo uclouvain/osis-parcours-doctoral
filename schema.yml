@@ -419,7 +419,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DoctorateIdentityDTO'
+                $ref: '#/components/schemas/ParcoursDoctoralIdentityDTO'
           description: ''
         '400':
           $ref: '#/components/responses/BadRequest'
@@ -454,7 +454,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DoctorateIdentityDTO'
+                $ref: '#/components/schemas/ParcoursDoctoralIdentityDTO'
           description: ''
         '400':
           $ref: '#/components/responses/BadRequest'
@@ -1161,7 +1161,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DoctorateIdentityDTO'
+                $ref: '#/components/schemas/ParcoursDoctoralIdentityDTO'
           description: ''
         '400':
           $ref: '#/components/responses/BadRequest'
@@ -1209,10 +1209,32 @@ components:
               type: string
             intitule_en:
               type: string
-            sigle_entite_gestion:
-              type: string
-            intitule_entite_gestion:
-              type: string
+            entite_gestion:
+              type: object
+              properties:
+                sigle:
+                  type: string
+                intitule:
+                  type: string
+                lieu:
+                  type: string
+                code_postal:
+                  type: string
+                ville:
+                  type: string
+                pays:
+                  type: string
+                numero_telephone:
+                  type: string
+                code_secteur:
+                  type: string
+                intitule_secteur:
+                  type: string
+              required:
+              - sigle
+              - intitule
+              - code_secteur
+              - intitule_secteur
             campus:
               type: object
               properties:
@@ -1251,10 +1273,6 @@ components:
               nullable: true
             type:
               type: string
-            code_secteur:
-              type: string
-            intitule_secteur:
-              type: string
           required:
           - sigle
           - code
@@ -1262,11 +1280,8 @@ components:
           - intitule
           - intitule_fr
           - intitule_en
-          - sigle_entite_gestion
-          - intitule_entite_gestion
+          - entite_gestion
           - type
-          - code_secteur
-          - intitule_secteur
         matricule_doctorant:
           type: string
         genre_doctorant:
@@ -1340,6 +1355,9 @@ components:
           type: string
         statut:
           type: string
+        cree_le:
+          type: string
+          format: date-time
         formation:
           type: object
           properties:
@@ -1355,10 +1373,32 @@ components:
               type: string
             intitule_en:
               type: string
-            sigle_entite_gestion:
-              type: string
-            intitule_entite_gestion:
-              type: string
+            entite_gestion:
+              type: object
+              properties:
+                sigle:
+                  type: string
+                intitule:
+                  type: string
+                lieu:
+                  type: string
+                code_postal:
+                  type: string
+                ville:
+                  type: string
+                pays:
+                  type: string
+                numero_telephone:
+                  type: string
+                code_secteur:
+                  type: string
+                intitule_secteur:
+                  type: string
+              required:
+              - sigle
+              - intitule
+              - code_secteur
+              - intitule_secteur
             campus:
               type: object
               properties:
@@ -1397,10 +1437,6 @@ components:
               nullable: true
             type:
               type: string
-            code_secteur:
-              type: string
-            intitule_secteur:
-              type: string
           required:
           - sigle
           - code
@@ -1408,11 +1444,8 @@ components:
           - intitule
           - intitule_fr
           - intitule_en
-          - sigle_entite_gestion
-          - intitule_entite_gestion
+          - entite_gestion
           - type
-          - code_secteur
-          - intitule_secteur
         projet:
           type: object
           properties:
@@ -1421,6 +1454,8 @@ components:
             resume:
               type: string
             langue_redaction_these:
+              type: string
+            nom_langue_redaction_these:
               type: string
             institut_these:
               type: string
@@ -1477,6 +1512,7 @@ components:
           - titre
           - resume
           - langue_redaction_these
+          - nom_langue_redaction_these
           - nom_institut_these
           - sigle_institut_these
           - lieu_these
@@ -1598,6 +1634,8 @@ components:
           type: string
         nom_doctorant:
           type: string
+        commission_proximite:
+          type: string
         links:
           type: object
           properties:
@@ -1645,6 +1683,7 @@ components:
       - uuid
       - reference
       - statut
+      - cree_le
       - formation
       - projet
       - cotutelle
@@ -1654,6 +1693,7 @@ components:
       - genre_doctorant
       - prenom_doctorant
       - nom_doctorant
+      - commission_proximite
     SupervisionDTO:
       type: object
       properties:
@@ -1863,11 +1903,6 @@ components:
           type: string
         titre_propose:
           type: string
-        cotutelle:
-          type: boolean
-          nullable: true
-        institution_cotutelle:
-          type: string
         membres:
           type: array
           items:
@@ -1935,7 +1970,6 @@ components:
       required:
       - uuid
       - titre_propose
-      - institution_cotutelle
       - membres
       - formule_defense
       - langue_redaction
@@ -3145,7 +3179,7 @@ components:
       - PRIVATE_DEFENSE
       - PUBLIC_DEFENSE
       type: string
-    DoctorateIdentityDTO:
+    ParcoursDoctoralIdentityDTO:
       type: object
       properties:
         uuid:
@@ -3244,12 +3278,6 @@ components:
       required:
       - approbation
       - commentaire
-    ParcoursDoctoralIdentityDTO:
-      type: object
-      properties:
-        uuid:
-          type: string
-          readOnly: true
     ModifierFinancementCommand:
       type: object
       properties:

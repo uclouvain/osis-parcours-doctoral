@@ -53,8 +53,6 @@ class TestRecupererJury(TestCase):
         )
         self.assertEqual(jury_dto.uuid, 'uuid-jury')
         self.assertEqual(jury_dto.titre_propose, 'titre_propose')
-        self.assertIs(jury_dto.cotutelle, False)
-        self.assertEqual(jury_dto.institution_cotutelle, '')
         self.assertEqual(len(jury_dto.membres), 2)
         self.assertEqual(jury_dto.formule_defense, 'DEUX_TEMPS')
         self.assertEqual(jury_dto.date_indicative, datetime.date(2022, 1, 1))

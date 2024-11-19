@@ -1,5 +1,5 @@
-{% extends "admission/exports/base_pdf.html" %}
-{% load i18n enums admission strings %}
+{% extends "parcours_doctoral/exports/base_pdf.html" %}
+{% load i18n doctorate_enums parcours_doctoral strings %}
 
 {% block extra_head %}
   <style>
@@ -140,20 +140,20 @@
     {% concat doctorate.nom_doctorant " " doctorate.prenom_doctorant as full_name %}
     {% field_data student_title full_name inline=True %}
     {% field_data _("Registration Id") doctorate.noma_doctorant inline=True %}
-    {% field_data _("Definitive admission date to doctorate") doctorate.admission_acceptee_le inline=True %}
+    {% field_data _("Definitive admission date to doctorate") doctorate.cree_le inline=True %}
 
     {% if doctorate.financement.type == "SEARCH_SCHOLARSHIP" %}
       {% if doctorate.financement.bourse_recherche %}
-        {% display doctorate.financement.bourse_recherche.nom_court '-' doctorate.financement.bourse_recherche.nom_long as scholarship_name %}
+        {% concat doctorate.financement.type|enum_display:"ChoixTypeFinancement" " - " doctorate.financement.bourse_recherche.nom_complet as funding_type_value %}
       {% else %}
-        {% display doctorate.financement.autre_bourse_recherche as scholarship_name %}
+        {% concat doctorate.financement.type|enum_display:"ChoixTypeFinancement" " - " doctorate.financement.autre_bourse_recherche as funding_type_value %}
       {% endif %}
-      {% field_data _("Funding type") doctorate.financement.type|enum_display:"ChoixTypeFinancement"|add:" - "|add:scholarship_name inline=True %}
+      {% field_data _("Funding type") funding_type_value inline=True %}
     {% else %}
       {% field_data _("Funding type") doctorate.financement.type|enum_display:"ChoixTypeFinancement" inline=True %}
     {% endif %}
 
-    {% field_data _("Thesis title") admission.project_title inline=True %}
+    {% field_data _("Thesis title") doctorate.projet.titre inline=True %}
 
     <div class="to-complete">
       <strong>
@@ -255,14 +255,15 @@
       <p>
         {% translate "The <strong>additional training</strong> has been completed: yes / no." %}<br>
         {% translate "The current training is attached to this document." %}
+        [SEULEMENT_SI_REQUIS]
       </p>
     {% endif %}
 
     <div style="display: flex; margin: 2em 0;">
-      <span>{% translate "Done in" %}</span>
-      <span class="solid-line" style="flex: 2;"></span>
-      <span>{% translate ", on" %}</span>
-      <span class="solid-line" style="flex: 1;"></span>
+      <div>{% translate "Done in" %}</div>
+      <div class="solid-line" style="flex: 2;"></div>
+      <div>{% translate ", on" %}</div>
+      <div class="solid-line" style="flex: 1;"></div>
     </div>
 
 
@@ -281,7 +282,8 @@
           <tr>
             <td>
             <span>
-              {{ signature_promoteur.promoteur.titre }} {{ signature_promoteur.promoteur.prenom }} {{ signature_promoteur.promoteur.nom }}
+              {% if member.est_docteur %}{% trans "Dr" %} {% endif %}
+              {{ signature_promoteur.promoteur.prenom }} {{ signature_promoteur.promoteur.nom }}
             </span>
             </td>
             {% if forloop.first %}
@@ -295,7 +297,8 @@
           <tr>
             <td>
             <span>
-              {{ signature_membre_ca.membre_CA.titre }} {{ signature_membre_ca.membre_CA.prenom }} {{ signature_membre_ca.membre_CA.nom }}
+              {% if member.est_docteur %}{% trans "Dr" %} {% endif %}
+              {{ signature_membre_ca.membre_CA.prenom }} {{ signature_membre_ca.membre_CA.nom }}
             </span>
             </td>
           </tr>
@@ -313,7 +316,7 @@
         {# TODO only if an additional training is required #}
         {% if True %}
           <li>
-            {% translate "Achieved additional training" %}
+            {% translate "Achieved additional training" %} [SEULEMENT_SI_REQUIS]
           </li>
         {% endif %}
       </ul>

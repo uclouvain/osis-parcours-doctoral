@@ -23,10 +23,6 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from parcours_doctoral.ddd.repository.i_groupe_de_supervision import (
-    IGroupeDeSupervisionRepository,
-)
-from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoralIdentity
 from parcours_doctoral.ddd.jury.builder.jury_builder import JuryBuilder
 from parcours_doctoral.ddd.jury.commands import ModifierJuryCommand
 from parcours_doctoral.ddd.jury.domain.model.jury import JuryIdentity
@@ -36,14 +32,9 @@ from parcours_doctoral.ddd.jury.repository.i_jury import IJuryRepository
 def modifier_jury(
     cmd: 'ModifierJuryCommand',
     jury_repository: 'IJuryRepository',
-    groupe_de_supervision_repository: 'IGroupeDeSupervisionRepository',
 ) -> 'JuryIdentity':
     # GIVEN
-    groupe_de_supervision = groupe_de_supervision_repository.get_by_parcours_doctoral_id(
-        ParcoursDoctoralIdentity(uuid=cmd.uuid_parcours_doctoral)
-    )
-    cotutelle = groupe_de_supervision.cotutelle
-    jury = JuryBuilder.build(cmd, cotutelle)
+    jury = JuryBuilder.build(cmd)
 
     # WHEN
     jury.validate()

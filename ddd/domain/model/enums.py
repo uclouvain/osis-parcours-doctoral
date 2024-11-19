@@ -23,10 +23,12 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+import itertools
 
 from django.utils.translation import gettext_lazy as _, pgettext_lazy
 
 from base.models.utils.utils import ChoiceEnum
+from parcours_doctoral.utils.enums import build_enum_from_choices, build_enum_from_enums
 
 
 class ChoixStatutParcoursDoctoral(ChoiceEnum):
@@ -84,3 +86,36 @@ class ChoixEtatSignature(ChoiceEnum):
     INVITED = _('INVITED')  # Envoyée au signataire
     APPROVED = pgettext_lazy("admission decision", "Approved")  # Approuvée par le signataire
     DECLINED = pgettext_lazy("admission decision", "Denied")  # Refusée par le signataire
+
+
+class ChoixCommissionProximiteCDEouCLSM(ChoiceEnum):
+    ECONOMY = _('ECONOMY')
+    MANAGEMENT = _('MANAGEMENT')
+
+
+class ChoixCommissionProximiteCDSS(ChoiceEnum):
+    ECLI = _("Proximity commission for experimental and clinical research (ECLI)")
+    GIM = _("Proximity Commission for Genetics and Immunology (GIM)")
+    NRSC = _("Proximity Commission for Neuroscience (NRSC)")
+    BCM = _("Proximity commission for cellular and molecular biology, biochemistry (BCM)")
+    SPSS = _("Proximity commission for public health, health and society (SPSS)")
+    DENT = _("Proximity Commission for Dental Sciences (DENT)")
+    DFAR = _("Proximity Commission for Pharmaceutical Sciences (DFAR)")
+    MOTR = _("Proximity Commission for Motricity Sciences (MOTR)")
+
+
+class ChoixSousDomaineSciences(ChoiceEnum):
+    PHYSICS = _("PHYSICS")
+    CHEMISTRY = _("CHEMISTRY")
+    MATHEMATICS = _("MATHEMATICS")
+    STATISTICS = _("STATISTICS")
+    BIOLOGY = _("BIOLOGY")
+    GEOGRAPHY = _("GEOGRAPHY")
+
+
+ChoixCommissionProximite = build_enum_from_enums(
+    'ChoixCommissionProximite',
+    ChoixCommissionProximiteCDEouCLSM,
+    ChoixCommissionProximiteCDSS,
+    ChoixSousDomaineSciences,
+)

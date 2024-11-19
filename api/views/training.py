@@ -45,7 +45,7 @@ from parcours_doctoral.ddd.formation.commands import (
     SoumettreActivitesCommand,
     SupprimerActiviteCommand,
 )
-from parcours_doctoral.utils import get_cached_parcours_doctoral_perm_obj
+from parcours_doctoral.utils.cache import get_cached_parcours_doctoral_perm_obj
 from base.ddd.utils.business_validator import MultipleBusinessExceptions
 from infrastructure.messages_bus import message_bus_instance
 from osis_role.contrib.views import APIPermissionRequiredMixin

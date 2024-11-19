@@ -23,18 +23,19 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+import itertools
 import uuid
 
 import factory
 
 from base.tests.factories.person import generate_global_id
+from parcours_doctoral.ddd.domain.model._cotutelle import Cotutelle, pas_de_cotutelle
 from parcours_doctoral.ddd.domain.model._experience_precedente_recherche import aucune_experience_precedente_recherche
 from parcours_doctoral.ddd.domain.model._financement import Financement, financement_non_rempli
 from parcours_doctoral.ddd.domain.model._formation import FormationIdentity
 from parcours_doctoral.ddd.domain.model._projet import Projet, projet_non_rempli
-from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoral, ParcoursDoctoralIdentity
 from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral, ChoixTypeFinancement
-import itertools
+from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoral, ParcoursDoctoralIdentity
 
 REFERENCE_MEMORY_ITERATOR = itertools.count()
 
@@ -45,6 +46,15 @@ class _ParcoursDoctoralIdentityFactory(factory.Factory):
         abstract = False
 
     uuid = factory.LazyFunction(lambda: str(uuid.uuid4()))
+
+
+
+class _CotutelleFactory(factory.Factory):
+    demande_ouverture = factory.LazyFunction(lambda: [str(uuid.uuid4())])
+
+    class Meta:
+        model = Cotutelle
+        abstract = False
 
 
 class _ProjetFactory(factory.Factory):
@@ -102,6 +112,12 @@ class ParcoursDoctoralSC3DPMinimaleFactory(_ParcoursDoctoralFactory):
     formation_id = FormationIdentity(sigle='SC3DP', annee=2022)
     matricule_doctorant = '1'
     reference = 'r1'
+    cotutelle = factory.SubFactory(
+        _CotutelleFactory,
+        motivation="Runs in family",
+        institution_fwb=False,
+        institution="MIT",
+    )
 
 
 class ParcoursDoctoralECGE3DPMinimaleFactory(_ParcoursDoctoralFactory):
@@ -119,23 +135,38 @@ class ParcoursDoctoralESP3DPMinimaleFactory(_ParcoursDoctoralFactory):
 class ParcoursDoctoralSC3DPMinimaleSansDetailProjetFactory(ParcoursDoctoralSC3DPMinimaleFactory):
     entity_id = factory.SubFactory(_ParcoursDoctoralIdentityFactory, uuid='uuid-SC3DP-no-project')
     projet = projet_non_rempli
+    cotutelle = pas_de_cotutelle
 
 
 class ParcoursDoctoralSC3DPMinimaleSansFinancementFactory(ParcoursDoctoralSC3DPMinimaleFactory):
     entity_id = factory.SubFactory(_ParcoursDoctoralIdentityFactory, uuid='uuid-SC3DP-no-financement')
     financement = financement_non_rempli
+    cotutelle = pas_de_cotutelle
 
 
 class ParcoursDoctoralSC3DPMinimaleSansCotutelleFactory(ParcoursDoctoralSC3DPMinimaleFactory):
     entity_id = factory.SubFactory(_ParcoursDoctoralIdentityFactory, uuid='uuid-SC3DP-cotutelle-indefinie')
+    cotutelle = None
 
 
 class ParcoursDoctoralSC3DPMinimaleCotutelleSansPromoteurExterneFactory(ParcoursDoctoralSC3DPMinimaleFactory):
     entity_id = factory.SubFactory(_ParcoursDoctoralIdentityFactory, uuid='uuid-SC3DP-cotutelle-sans-promoteur-externe')
+    cotutelle = factory.SubFactory(
+        _CotutelleFactory,
+        motivation="Runs in family",
+        institution_fwb=False,
+        institution="MIT",
+    )
 
 
 class ParcoursDoctoralSC3DPMinimaleCotutelleAvecPromoteurExterneFactory(ParcoursDoctoralSC3DPMinimaleFactory):
     entity_id = factory.SubFactory(_ParcoursDoctoralIdentityFactory, uuid='uuid-SC3DP-cotutelle-avec-promoteur-externe')
+    cotutelle = factory.SubFactory(
+        _CotutelleFactory,
+        motivation="Runs in family",
+        institution_fwb=False,
+        institution="MIT",
+    )
 
 
 class ParcoursDoctoralPreSC3DPAvecPromoteursEtMembresCADejaApprouvesAccepteeFactory(_ParcoursDoctoralFactory):
@@ -143,6 +174,7 @@ class ParcoursDoctoralPreSC3DPAvecPromoteursEtMembresCADejaApprouvesAccepteeFact
     formation_id = FormationIdentity(sigle='SC3DP', annee=2022)
     matricule_doctorant = '1'
     reference = 'r2'
+    cotutelle = pas_de_cotutelle
 
 
 class ParcoursDoctoralSC3DPAvecPromoteurRefuseEtMembreCADejaApprouveFactoryRejeteeCDDFactory(_ParcoursDoctoralFactory):
@@ -150,6 +182,7 @@ class ParcoursDoctoralSC3DPAvecPromoteurRefuseEtMembreCADejaApprouveFactoryRejet
     formation_id = FormationIdentity(sigle='SC3DP', annee=2022)
     matricule_doctorant = '2'
     reference = 'r3'
+    cotutelle = pas_de_cotutelle
 
 
 class ParcoursDoctoralSC3DPAvecPromoteursEtMembresCADejaApprouvesFactory(_ParcoursDoctoralFactory):
@@ -166,6 +199,12 @@ class ParcoursDoctoralSC3DPAvecMembresFactory(ParcoursDoctoralSC3DPMinimaleFacto
 class ParcoursDoctoralSC3DPAvecMembresEtCotutelleFactory(ParcoursDoctoralSC3DPMinimaleFactory):
     entity_id = factory.SubFactory(_ParcoursDoctoralIdentityFactory, uuid='uuid-SC3DP-promoteur-membre-cotutelle')
     matricule_doctorant = 'candidat'
+    cotutelle = factory.SubFactory(
+        _CotutelleFactory,
+        motivation="Runs in family",
+        institution_fwb=False,
+        institution="MIT",
+    )
 
 
 class ParcoursDoctoralSC3DPAvecMembresInvitesFactory(ParcoursDoctoralSC3DPMinimaleFactory):
@@ -187,6 +226,7 @@ class ParcoursDoctoralSC3DPSansMembreCAFactory(ParcoursDoctoralSC3DPMinimaleFact
 
 class ParcoursDoctoralSC3DPAvecPromoteurDejaApprouveFactory(ParcoursDoctoralSC3DPMinimaleFactory):
     entity_id = factory.SubFactory(_ParcoursDoctoralIdentityFactory, uuid='uuid-SC3DP-promoteur-deja-approuve')
+    cotutelle = pas_de_cotutelle
 
 
 class ParcoursDoctoralSC3DPAvecPromoteurRefuseEtMembreCADejaApprouveFactory(

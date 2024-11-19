@@ -28,7 +28,7 @@ from typing import List, Optional, Union
 
 import attr
 
-from parcours_doctoral.ddd.domain.model._cotutelle import Cotutelle
+from osis_common.ddd import interface
 from parcours_doctoral.ddd.domain.model._institut import InstitutIdentity
 from parcours_doctoral.ddd.domain.model._membre_CA import MembreCAIdentity
 from parcours_doctoral.ddd.domain.model._promoteur import PromoteurIdentity
@@ -40,6 +40,7 @@ from parcours_doctoral.ddd.domain.model.enums import (
     ChoixEtatSignature,
     ChoixStatutSignatureGroupeDeSupervision,
 )
+from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoralIdentity
 from parcours_doctoral.ddd.domain.validator import ShouldSignaturesPasEtreEnvoyees
 from parcours_doctoral.ddd.domain.validator.exceptions import (
     MembreCANonTrouveException,
@@ -50,15 +51,12 @@ from parcours_doctoral.ddd.domain.validator.validator_by_business_action import 
     ApprobationPromoteurValidatorList,
     ApprobationValidatorList,
     ApprouverValidatorList,
-    CotutelleValidatorList,
     DesignerPromoteurReferenceValidatorList,
     InviterASignerValidatorList,
     SignatairesValidatorList,
     SupprimerMembreCAValidatorList,
     SupprimerPromoteurValidatorList,
 )
-from osis_common.ddd import interface
-from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoralIdentity
 
 SignataireIdentity = Union[PromoteurIdentity, MembreCAIdentity]
 
@@ -74,7 +72,6 @@ class GroupeDeSupervision(interface.RootEntity):
     parcours_doctoral_id: 'ParcoursDoctoralIdentity'
     signatures_promoteurs: List['SignaturePromoteur'] = attr.Factory(list)
     signatures_membres_CA: List['SignatureMembreCA'] = attr.Factory(list)
-    cotutelle: Optional['Cotutelle'] = None
     statut_signature: ChoixStatutSignatureGroupeDeSupervision = ChoixStatutSignatureGroupeDeSupervision.IN_PROGRESS
     promoteur_reference_id: Optional['PromoteurIdentity'] = None
 
@@ -227,31 +224,6 @@ class GroupeDeSupervision(interface.RootEntity):
 
     def verifier_tout_le_monde_a_approuve(self):
         ApprobationValidatorList(groupe_de_supervision=self).validate()
-
-    def verifier_cotutelle(self):
-        CotutelleValidatorList(cotutelle=self.cotutelle).validate()
-
-    def definir_cotutelle(
-        self,
-        motivation: Optional[str],
-        institution_fwb: Optional[bool],
-        institution: Optional[str],
-        autre_institution_nom: Optional[str],
-        autre_institution_adresse: Optional[str],
-        demande_ouverture: List[str],
-        convention: List[str],
-        autres_documents: List[str],
-    ):
-        self.cotutelle = Cotutelle(
-            motivation=motivation,
-            institution_fwb=institution_fwb,
-            institution=institution,
-            autre_institution_nom=autre_institution_nom,
-            autre_institution_adresse=autre_institution_adresse,
-            demande_ouverture=demande_ouverture,
-            convention=convention,
-            autres_documents=autres_documents,
-        )
 
     def verrouiller_groupe_pour_signature(self):
         self.statut_signature = ChoixStatutSignatureGroupeDeSupervision.SIGNING_IN_PROGRESS

@@ -31,7 +31,7 @@ from admission.ddd.admission.doctorat.validation.domain.model.enums import Choix
 from parcours_doctoral.ddd.domain.model.enums import ChoixTypeFinancement
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoral, ParcoursDoctoralIdentity
 from parcours_doctoral.ddd.domain.validator.exceptions import ParcoursDoctoralNonTrouveException
-from parcours_doctoral.ddd.dtos import ParcoursDoctoralDTO, FormationDTO
+from parcours_doctoral.ddd.dtos import ParcoursDoctoralDTO, FormationDTO, EntiteGestionDTO
 from parcours_doctoral.ddd.dtos.parcours_doctoral import ProjetDTO, CotutelleDTO, FinancementDTO
 from parcours_doctoral.ddd.dtos import ParcoursDoctoralRechercheDTO
 from parcours_doctoral.ddd.epreuve_confirmation.domain.model.epreuve_confirmation import (
@@ -125,12 +125,19 @@ class ParcoursDoctoralInMemoryRepository(InMemoryGenericRepository, IParcoursDoc
                 code='',
                 intitule_fr=formation.intitule,
                 intitule_en='',
-                sigle_entite_gestion='',
-                intitule_entite_gestion='',
+                entite_gestion=EntiteGestionDTO(
+                    sigle='',
+                    intitule='',
+                    lieu='',
+                    code_postal='',
+                    ville='',
+                    pays='',
+                    numero_telephone='',
+                    code_secteur='',
+                    intitule_secteur='',
+                ),
                 campus=None,
                 type='',
-                code_secteur='',
-                intitule_secteur='',
             ),
             financement=FinancementDTO(
                 type=parcours_doctoral.financement.type.name if parcours_doctoral.financement.type else None,
@@ -152,6 +159,7 @@ class ParcoursDoctoralInMemoryRepository(InMemoryGenericRepository, IParcoursDoc
                 titre='titre',
                 resume='resume',
                 langue_redaction_these='FR',
+                nom_langue_redaction_these='Francais',
                 institut_these=None,
                 nom_institut_these='institut',
                 sigle_institut_these='INST',

@@ -77,8 +77,6 @@ class JuryIdentity(interface.EntityIdentity):
 class Jury(interface.RootEntity):
     entity_id: 'JuryIdentity'
     titre_propose: str
-    cotutelle: bool
-    institution_cotutelle: str
     formule_defense: str
     date_indicative: datetime.date
     langue_redaction: str
