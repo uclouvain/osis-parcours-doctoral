@@ -43,7 +43,7 @@ from parcours_doctoral.ddd.commands import (
 )
 from parcours_doctoral.ddd.dtos import ParcoursDoctoralRechercheDTO
 from parcours_doctoral.models import ParcoursDoctoral
-from parcours_doctoral.utils import get_cached_parcours_doctoral_perm_obj
+from parcours_doctoral.utils.cache import get_cached_parcours_doctoral_perm_obj
 
 __all__ = [
     "DoctorateAPIView",

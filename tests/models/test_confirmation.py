@@ -28,7 +28,7 @@ import datetime
 from django.core.cache import cache
 from django.test import TestCase
 
-from parcours_doctoral.utils import get_cached_parcours_doctoral_perm_obj
+from parcours_doctoral.utils.cache import get_cached_parcours_doctoral_perm_obj
 from parcours_doctoral.models.confirmation_paper import confirmation_paper_directory_path
 from parcours_doctoral.tests.factories.confirmation_paper import ConfirmationPaperFactory
 from parcours_doctoral.tests.factories.parcours_doctoral import ParcoursDoctoralFactory

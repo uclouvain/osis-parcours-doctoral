@@ -65,8 +65,6 @@ class TestModifierJury(TestCase):
         jury = JuryInMemoryRepository.entities[0]
         self.assertEqual(jury.entity_id.uuid, 'uuid-jury')
         self.assertEqual(jury.titre_propose, 'autre_titre')
-        self.assertIs(jury.cotutelle, True)
-        self.assertEqual(jury.institution_cotutelle, 'MIT')
         self.assertEqual(len(jury.membres), 2)
         self.assertEqual(jury.formule_defense, 'UN_JOUR')
         self.assertEqual(jury.date_indicative, datetime.date(2022, 6, 1))

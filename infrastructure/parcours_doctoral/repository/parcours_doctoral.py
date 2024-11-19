@@ -36,22 +36,25 @@ from base.models.enums.entity_type import EntityType
 from base.models.person import Person
 from base.models.student import Student
 from osis_common.ddd.interface import ApplicationService, EntityIdentity, RootEntity
-from parcours_doctoral.ddd.domain.model._cotutelle import Cotutelle, pas_de_cotutelle
+from parcours_doctoral.ddd.domain.model._cotutelle import Cotutelle
+from parcours_doctoral.ddd.domain.model._experience_precedente_recherche import ExperiencePrecedenteRecherche
 from parcours_doctoral.ddd.domain.model._financement import Financement
 from parcours_doctoral.ddd.domain.model._formation import FormationIdentity
 from parcours_doctoral.ddd.domain.model._institut import InstitutIdentity
 from parcours_doctoral.ddd.domain.model._projet import Projet
-from parcours_doctoral.ddd.domain.model._experience_precedente_recherche import ExperiencePrecedenteRecherche
 from parcours_doctoral.ddd.domain.model.bourse import BourseIdentity
-from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral, ChoixTypeFinancement, \
-    ChoixDoctoratDejaRealise
+from parcours_doctoral.ddd.domain.model.enums import (
+    ChoixStatutParcoursDoctoral,
+    ChoixTypeFinancement,
+    ChoixDoctoratDejaRealise,
+)
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoral, ParcoursDoctoralIdentity
 from parcours_doctoral.ddd.domain.validator.exceptions import ParcoursDoctoralNonTrouveException
 from parcours_doctoral.ddd.dtos import ParcoursDoctoralDTO
 from parcours_doctoral.ddd.dtos import ParcoursDoctoralRechercheDTO, CampusDTO
 from parcours_doctoral.ddd.dtos.formation import FormationDTO, EntiteGestionDTO
 from parcours_doctoral.ddd.dtos.parcours_doctoral import CotutelleDTO, ProjetDTO, FinancementDTO
-from parcours_doctoral.ddd.repository.i_parcours_doctoral import IParcoursDoctoralRepository
+from parcours_doctoral.ddd.repository.i_parcours_doctoral import IParcoursDoctoralRepository, formater_reference
 from parcours_doctoral.models.parcours_doctoral import ParcoursDoctoral as ParcoursDoctoralModel
 from program_management.models.education_group_version import EducationGroupVersion
 from reference.models.language import Language
@@ -224,14 +227,19 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
     @classmethod
     def get_dto(cls, entity_id: 'ParcoursDoctoralIdentity') -> 'ParcoursDoctoralDTO':
         try:
-            parcours_doctoral: ParcoursDoctoralModel = ParcoursDoctoralModel.objects.select_related(
-                'student',
-                'international_scholarship',
-                'training__academic_year',
-                'training__education_group_type',
-                'thesis_language',
-                'thesis_institute',
-            ).annotate_with_reference().get(uuid=entity_id.uuid)
+            parcours_doctoral: ParcoursDoctoralModel = (
+                ParcoursDoctoralModel.objects.select_related(
+                    'student',
+                    'international_scholarship',
+                    'training__academic_year',
+                    'training__education_group_type',
+                    'thesis_language',
+                    'thesis_institute',
+                )
+                .annotate_training_management_entity()
+                .annotate_with_reference()
+                .get(uuid=entity_id.uuid)
+            )
         except ParcoursDoctoralModel.DoesNotExist:
             raise ParcoursDoctoralNonTrouveException
 
@@ -242,9 +250,7 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
         campuses = cls.get_teaching_campuses_dtos([parcours_doctoral.training_id])
 
         management_entities = cls.get_management_entities_dtos([parcours_doctoral.training.management_entity_id])
-        management_entity = (
-            management_entities.get(parcours_doctoral.training.management_entity_id) or EntiteGestionDTO()
-        )
+        management_entity = management_entities.get(parcours_doctoral.training.management_entity_id)
 
         return ParcoursDoctoralDTO(
             uuid=str(entity_id.uuid),
@@ -255,6 +261,7 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
             nom_doctorant=parcours_doctoral.student.last_name,
             prenom_doctorant=parcours_doctoral.student.first_name,
             genre_doctorant=parcours_doctoral.student.gender,
+            commission_proximite=parcours_doctoral.proximity_commission,
             formation=FormationDTO(
                 sigle=parcours_doctoral.training.acronym,
                 code=parcours_doctoral.training.partial_acronym,
@@ -262,12 +269,9 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
                 intitule=getattr(parcours_doctoral.training, i18n_fields_names['training_title']),
                 intitule_fr=parcours_doctoral.training.title,
                 intitule_en=parcours_doctoral.training.title_english,
-                sigle_entite_gestion=management_entity.sigle,
-                intitule_entite_gestion=management_entity.intitule,
+                entite_gestion=management_entity,
                 campus=campuses.get(parcours_doctoral.training_id),
                 type=parcours_doctoral.training.education_group_type.name,
-                code_secteur=management_entity.sigle_secteur,
-                intitule_secteur=management_entity.intitule_secteur,
             ),
             noma_doctorant=student.registration_id if student else '',
             cotutelle=CotutelleDTO(
@@ -277,8 +281,10 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
                 institution=str(parcours_doctoral.cotutelle_institution)
                 if parcours_doctoral.cotutelle_institution
                 else "",
-                autre_institution=bool(parcours_doctoral.cotutelle_other_institution_name
-                or parcours_doctoral.cotutelle_other_institution_address),
+                autre_institution=bool(
+                    parcours_doctoral.cotutelle_other_institution_name
+                    or parcours_doctoral.cotutelle_other_institution_address
+                ),
                 autre_institution_nom=parcours_doctoral.cotutelle_other_institution_name,
                 autre_institution_adresse=parcours_doctoral.cotutelle_other_institution_address,
                 demande_ouverture=parcours_doctoral.cotutelle_opening_request,
@@ -294,6 +300,12 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
                 projet_formation_complementaire=parcours_doctoral.additional_training_project,
                 lettres_recommandation=parcours_doctoral.recommendation_letters,
                 langue_redaction_these=parcours_doctoral.thesis_language.code
+                if parcours_doctoral.thesis_language
+                else '',
+                nom_langue_redaction_these=getattr(
+                    parcours_doctoral.thesis_language,
+                    i18n_fields_names['language_name'],
+                )
                 if parcours_doctoral.thesis_language
                 else '',
                 institut_these=parcours_doctoral.thesis_institute and parcours_doctoral.thesis_institute.uuid,
@@ -359,29 +371,59 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
             'acronym',
             'entity_type',
             'title',
+            'entity__postal_code',
+            'entity__location',
+            'entity__city',
+            'entity__country__iso_code',
+            'entity__phone',
             entity_id__in=management_entities_ids,
         )
         qs = cte.queryset().with_cte(cte)
 
-        return {
-            entity['children'][-1]: EntiteGestionDTO(
-                intitule=entity['title_path'][-1],
-                sigle=entity['acronym_path'][-1],
-                sigle_secteur=entity['acronym'],
-                intitule_secteur=entity['title'],
+        sector_by_management_entity = {}
+        management_entity_by_entity_id = {}
+
+        for entity in qs:
+            if entity['entity_type'] == EntityType.SECTOR.name:
+                sector_by_management_entity[entity['children'][-1]] = entity
+
+            management_entity_by_entity_id[entity['entity_id']] = entity
+
+        management_entities = {}
+
+        for management_entity_id in management_entities_ids:
+            management_entity = management_entity_by_entity_id.get(management_entity_id)
+
+            sector_entity = sector_by_management_entity.get(management_entity_id)
+
+            management_entities[management_entity_id] = (
+                EntiteGestionDTO(
+                    intitule=management_entity['title'],
+                    sigle=management_entity['acronym'],
+                    code_secteur=sector_entity['acronym'] if sector_entity else '',
+                    intitule_secteur=sector_entity['title'] if sector_entity else '',
+                    lieu=management_entity['entity__location'],
+                    code_postal=management_entity['entity__postal_code'],
+                    ville=management_entity['entity__city'],
+                    pays=management_entity['entity__country__iso_code'],
+                    numero_telephone=management_entity['entity__phone'],
+                )
+                if management_entity
+                else EntiteGestionDTO()
             )
-            for entity in qs
-            if entity['entity_type'] == EntityType.SECTOR.name
-        }
+
+        return management_entities
 
     @classmethod
     def _get_i18n_fields_names(cls):
         return {
             settings.LANGUAGE_CODE_FR: {
                 'training_title': 'title',
+                'language_name': 'name',
             },
             settings.LANGUAGE_CODE_EN: {
                 'training_title': 'title_english',
+                'language_name': 'name_en',
             },
         }[get_language()]
 
@@ -394,11 +436,16 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
         if not matricule_doctorant and not matricule_membre:
             return []
 
-        doctorates: QuerySet[ParcoursDoctoralModel] = ParcoursDoctoralModel.objects.select_related(
-            'student',
-            'training__academic_year',
-            'training__education_group_type',
-        ).annotate_with_reference().order_by('-created_at')
+        doctorates: QuerySet[ParcoursDoctoralModel] = (
+            ParcoursDoctoralModel.objects.select_related(
+                'student',
+                'training__academic_year',
+                'training__education_group_type',
+            )
+            .annotate_training_management_entity()
+            .annotate_with_reference()
+            .order_by('-created_at')
+        )
 
         if matricule_doctorant:
             doctorates = doctorates.filter(
@@ -421,10 +468,7 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
         i18n_fields_names = cls._get_i18n_fields_names()
 
         results = []
-        default_entity = EntiteGestionDTO()
         for doctorate in doctorates:
-            management_entity = management_entities.get(doctorate.training.management_entity_id) or default_entity
-
             results.append(
                 ParcoursDoctoralRechercheDTO(
                     uuid=str(doctorate.uuid),
@@ -437,12 +481,9 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
                         intitule=getattr(doctorate.training, i18n_fields_names['training_title']),
                         intitule_fr=doctorate.training.title,
                         intitule_en=doctorate.training.title_english,
-                        sigle_entite_gestion=management_entity.sigle,
-                        intitule_entite_gestion=management_entity.intitule,
+                        entite_gestion=management_entities.get(doctorate.training.management_entity_id),
                         campus=campuses.get(doctorate.training_id),
                         type=doctorate.training.education_group_type.name,
-                        code_secteur=management_entity.sigle_secteur,
-                        intitule_secteur=management_entity.intitule_secteur,
                     ),
                     matricule_doctorant=doctorate.student.global_id,
                     genre_doctorant=doctorate.student.gender,

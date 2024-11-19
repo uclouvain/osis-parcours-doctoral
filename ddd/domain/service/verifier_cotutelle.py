@@ -23,19 +23,21 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from osis_common.ddd import interface
 from parcours_doctoral.ddd.domain.model._cotutelle import pas_de_cotutelle
 from parcours_doctoral.ddd.domain.model.groupe_de_supervision import GroupeDeSupervision
+from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoral
 from parcours_doctoral.ddd.domain.service.i_promoteur import IPromoteurTranslator
 from parcours_doctoral.ddd.domain.validator.exceptions import (
     CotutelleDoitAvoirAuMoinsUnPromoteurExterneException,
 )
-from osis_common.ddd import interface
 
 
 class CotutellePossedePromoteurExterne(interface.DomainService):
     @classmethod
     def verifier(
         cls,
+        parcours_doctoral: 'ParcoursDoctoral',
         groupe_de_supervision: 'GroupeDeSupervision',
         promoteur_translator: 'IPromoteurTranslator',
     ) -> None:
@@ -43,5 +45,5 @@ class CotutellePossedePromoteurExterne(interface.DomainService):
             promoteur_translator.est_externe(signature_promoteur.promoteur_id)
             for signature_promoteur in groupe_de_supervision.signatures_promoteurs
         )
-        if groupe_de_supervision.cotutelle and groupe_de_supervision.cotutelle != pas_de_cotutelle and aucun_externe:
+        if parcours_doctoral.cotutelle and parcours_doctoral.cotutelle != pas_de_cotutelle and aucun_externe:
             raise CotutelleDoitAvoirAuMoinsUnPromoteurExterneException

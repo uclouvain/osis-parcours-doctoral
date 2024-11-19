@@ -69,6 +69,7 @@ class ProjetDTO(interface.DTO):
     titre: str
     resume: str
     langue_redaction_these: str
+    nom_langue_redaction_these: str
     institut_these: Optional[UUID]
     nom_institut_these: str
     sigle_institut_these: str
@@ -107,6 +108,7 @@ class ParcoursDoctoralDTO(interface.DTO):
     genre_doctorant: str
     prenom_doctorant: str
     nom_doctorant: str
+    commission_proximite: str
 
 
 @attr.dataclass(slots=True)

@@ -27,7 +27,14 @@ from dataclasses import dataclass
 
 from django import template
 from django.utils.translation import gettext_lazy as _, pgettext
+import re
 
+from django import template
+from django.utils.safestring import mark_safe
+from django.utils.translation import gettext_lazy as _
+
+from parcours_doctoral.constants import CAMPUSES_UUIDS
+from parcours_doctoral.ddd.dtos import CampusDTO
 from parcours_doctoral.ddd.formation.domain.model.enums import (
     CategorieActivite,
     ChoixTypeEpreuve,
@@ -279,4 +286,94 @@ def training_categories(activities):
         'categories': categories,
         'added': added,
         'validated': validated,
+    }
+
+
+@register.filter
+def phone_spaced(phone, with_optional_zero=False):
+    if not phone:
+        return ""
+    # Taken from https://github.com/daviddrysdale/python-phonenumbers/blob/dev/python/phonenumbers/data/region_BE.py#L14
+    if with_optional_zero and phone[0] == "0":
+        return "(0)" + re.sub('(\\d{2})(\\d{2})(\\d{2})(\\d{2})', '\\1 \\2 \\3 \\4', phone[1:])
+    return re.sub('(\\d{3})(\\d{2})(\\d{2})(\\d{2})', '\\1 \\2 \\3 \\4', phone)
+
+
+@register.simple_tag
+def footer_campus(campus: CampusDTO):
+    campuses = {
+        'LOUVAIN-LA-NEUVE': {
+            CAMPUSES_UUIDS['AUTRE_SITE_UUID'],
+            CAMPUSES_UUIDS['LOUVAIN_LA_NEUVE_UUID'],
+        },
+        'BRUXELLES': {
+            CAMPUSES_UUIDS['BRUXELLES_WOLUWE_UUID'],
+            CAMPUSES_UUIDS['BRUXELLES_SAINT_LOUIS_UUID'],
+            CAMPUSES_UUIDS['BRUXELLES_SAINT_GILLES_UUID'],
+        },
+        'MONS': {
+            CAMPUSES_UUIDS['MONS_UUID'],
+        },
+        'TOURNAI': {
+            CAMPUSES_UUIDS['TOURNAI_UUID'],
+        },
+        'CHARLEROI': {
+            CAMPUSES_UUIDS['CHARLEROI_UUID'],
+        },
+        'NAMUR': {
+            CAMPUSES_UUIDS['NAMUR_UUID'],
+        },
+    }
+
+    return mark_safe(' | '.join(
+        f'<strong>{campus_name}</strong>' if campus.uuid in campuses[campus_name] else campus_name
+        for campus_name in campuses
+    ))
+
+
+@register.inclusion_tag('parcours_doctoral/includes/field_data.html', takes_context=True)
+def field_data(
+    context,
+    name,
+    data=None,
+    css_class=None,
+    hide_empty=False,
+    translate_data=False,
+    inline=False,
+    html_tag='',
+    tooltip=None,
+):
+    if context.get('all_inline') is True:
+        inline = True
+
+    if isinstance(data, list):
+        if context.get('hide_files') is True:
+            data = None
+            hide_empty = True
+        elif context.get('load_files') is False:
+            data = _('Specified') if data else _('Incomplete field')
+        elif data:
+            template_string = "{% load osis_document %}{% document_visualizer files for_modified_upload=True %}"
+            template_context = {'files': data}
+            data = template.Template(template_string).render(template.Context(template_context))
+        else:
+            data = ''
+    elif type(data) == bool:
+        data = _('Yes') if data else _('No')
+    elif translate_data is True:
+        data = _(data)
+
+    if inline is True:
+        if name and name[-1] not in ':?!.':
+            name = _("%(label)s:") % {'label': name}
+        css_class = (css_class + ' inline-field-data') if css_class else 'inline-field-data'
+
+    return {
+        'name': name,
+        'data': data,
+        'css_class': css_class,
+        'hide_empty': hide_empty,
+        'html_tag': html_tag,
+        'inline': inline,
+        'tooltip': tooltip,
     }

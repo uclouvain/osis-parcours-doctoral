@@ -27,7 +27,7 @@ from rest_framework.permissions import BasePermission
 
 from osis_role.contrib.views import APIPermissionRequiredMixin
 from parcours_doctoral.models import ParcoursDoctoral
-from parcours_doctoral.utils import get_cached_parcours_doctoral_perm_obj
+from parcours_doctoral.utils.cache import get_cached_parcours_doctoral_perm_obj
 
 
 class IsSupervisionMember(BasePermission):

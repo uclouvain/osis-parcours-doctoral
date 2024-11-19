@@ -89,8 +89,6 @@ class JuryInMemoryRepository(InMemoryGenericRepository, IJuryRepository):
         return JuryDTO(
             uuid=jury.entity_id.uuid,
             titre_propose=jury.titre_propose,
-            cotutelle=jury.cotutelle,
-            institution_cotutelle=jury.institution_cotutelle,
             membres=[
                 MembreJuryDTO(
                     uuid=membre.uuid,

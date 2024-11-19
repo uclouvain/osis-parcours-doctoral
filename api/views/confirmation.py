@@ -43,7 +43,7 @@ from parcours_doctoral.ddd.epreuve_confirmation.commands import (
     SoumettreReportDeDateCommand,
 )
 from parcours_doctoral.ddd.commands import GetGroupeDeSupervisionCommand
-from parcours_doctoral.utils import get_cached_parcours_doctoral_perm_obj
+from parcours_doctoral.utils.cache import get_cached_parcours_doctoral_perm_obj
 from infrastructure.messages_bus import message_bus_instance
 from osis_role.contrib.views import APIPermissionRequiredMixin
 from parcours_doctoral.exports.confirmation_canvas import parcours_doctoral_pdf_confirmation_canvas
@@ -194,13 +194,13 @@ class LastConfirmationCanvasAPIView(DoctorateAPIPermissionRequiredMixin, mixins.
                 GetGroupeDeSupervisionCommand(uuid_parcours_doctoral=self.doctorate_uuid),
             ]
         )
-        admission = self.get_permission_object()
+        doctorate = self.get_permission_object()
 
         uuid = parcours_doctoral_pdf_confirmation_canvas(
-            admission=admission,
-            language=admission.student.language,
+            doctorate=doctorate,
+            language=doctorate.student.language,
             context={
-                'parcours_doctoral': parcours_doctoral,
+                'doctorate': parcours_doctoral,
                 'confirmation_paper': confirmation_paper,
                 'supervision_group': supervision_group,
                 'supervision_people_nb': (
@@ -227,7 +227,7 @@ class PromoterConfirmationSchema(ResponseSpecificSchema):
 
 
 class SupervisedConfirmationAPIView(
-    APIPermissionRequiredMixin,
+    DoctorateAPIPermissionRequiredMixin,
     mixins.UpdateModelMixin,
     GenericAPIView,
 ):

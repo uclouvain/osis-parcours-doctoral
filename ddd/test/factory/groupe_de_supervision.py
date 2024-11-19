@@ -24,11 +24,10 @@
 #
 # ##############################################################################
 import uuid
-from typing import List, Optional
+from typing import List
 
 import factory
 
-from parcours_doctoral.ddd.domain.model._cotutelle import Cotutelle, pas_de_cotutelle
 from parcours_doctoral.ddd.domain.model._membre_CA import MembreCAIdentity
 from parcours_doctoral.ddd.domain.model._promoteur import PromoteurIdentity
 from parcours_doctoral.ddd.domain.model._signature_membre_CA import SignatureMembreCA
@@ -95,33 +94,17 @@ class _GroupeDeSupervisionFactory(factory.Factory):
     parcours_doctoral_id = factory.SubFactory(_ParcoursDoctoralIdentityFactory)
     signatures_promoteurs = factory.LazyFunction(list)
     signatures_membres_CA = factory.LazyFunction(list)
-    cotutelle: Optional[Cotutelle] = pas_de_cotutelle
     promoteur_reference_id = factory.LazyAttribute(
         lambda o: getattr(next(iter(o.signatures_promoteurs), None), 'promoteur_id', None)
     )
 
 
-class _CotutelleFactory(factory.Factory):
-    demande_ouverture = factory.LazyFunction(lambda: [str(uuid.uuid4())])
-
-    class Meta:
-        model = Cotutelle
-        abstract = False
-
-
 class GroupeDeSupervisionSC3DPFactory(_GroupeDeSupervisionFactory):
     parcours_doctoral_id = factory.SubFactory(_ParcoursDoctoralIdentityFactory, uuid='uuid-SC3DP')
-    cotutelle = factory.SubFactory(
-        _CotutelleFactory,
-        motivation="Runs in family",
-        institution_fwb=False,
-        institution="MIT",
-    )
 
 
 class GroupeDeSupervisionSC3DPCotutelleIndefinieFactory(_GroupeDeSupervisionFactory):
     parcours_doctoral_id = factory.SubFactory(_ParcoursDoctoralIdentityFactory, uuid='uuid-SC3DP-cotutelle-indefinie')
-    cotutelle = None
 
 
 class GroupeDeSupervisionSC3DPPreAdmissionFactory(_GroupeDeSupervisionFactory):
@@ -155,12 +138,6 @@ class GroupeDeSupervisionSC3DPAvecPromoteurEtMembreEtCotutelleFactory(_GroupeDeS
             _SignatureMembreCAFactory(membre_CA_id__uuid='membre-ca-SC3DP2', etat=ChoixEtatSignature.INVITED),
         ]
     )
-    cotutelle = factory.SubFactory(
-        _CotutelleFactory,
-        motivation="Runs in family",
-        institution_fwb=False,
-        institution="MIT",
-    )
 
 
 class GroupeDeSupervisionSC3DPCotutelleSansPromoteurExterneFactory(_GroupeDeSupervisionFactory):
@@ -173,12 +150,6 @@ class GroupeDeSupervisionSC3DPCotutelleSansPromoteurExterneFactory(_GroupeDeSupe
             _SignatureMembreCAFactory(membre_CA_id__uuid='membre-ca-SC3DP', etat=ChoixEtatSignature.INVITED),
             _SignatureMembreCAFactory(membre_CA_id__uuid='membre-ca-SC3DP2', etat=ChoixEtatSignature.INVITED),
         ]
-    )
-    cotutelle = factory.SubFactory(
-        _CotutelleFactory,
-        motivation="Runs in family",
-        institution_fwb=False,
-        institution="MIT",
     )
 
 
@@ -196,12 +167,6 @@ class GroupeDeSupervisionSC3DPCotutelleAvecPromoteurExterneFactory(_GroupeDeSupe
             _SignatureMembreCAFactory(membre_CA_id__uuid='membre-ca-SC3DP2', etat=ChoixEtatSignature.INVITED),
         ]
     )
-    cotutelle = factory.SubFactory(
-        _CotutelleFactory,
-        motivation="Runs in family",
-        institution_fwb=False,
-        institution="MIT",
-    )
 
 
 class GroupeDeSupervisionSC3DPAvecPromoteurEtMembreEtProjetIncompletFactory(_GroupeDeSupervisionFactory):
@@ -215,7 +180,6 @@ class GroupeDeSupervisionSC3DPAvecPromoteurEtMembreEtProjetIncompletFactory(_Gro
             _SignatureMembreCAFactory(membre_CA_id__uuid='membre-ca-SC3DP2', etat=ChoixEtatSignature.INVITED),
         ]
     )
-    cotutelle = pas_de_cotutelle
 
 
 class GroupeDeSupervisionSC3DPAvecPromoteurEtMembreEtFinancementIncompletFactory(_GroupeDeSupervisionFactory):
@@ -229,7 +193,6 @@ class GroupeDeSupervisionSC3DPAvecPromoteurEtMembreEtFinancementIncompletFactory
             _SignatureMembreCAFactory(membre_CA_id__uuid='membre-ca-SC3DP2', etat=ChoixEtatSignature.INVITED),
         ]
     )
-    cotutelle = pas_de_cotutelle
 
 
 class GroupeDeSupervisionSC3DPAvecMembresInvitesFactory(_GroupeDeSupervisionFactory):
@@ -288,7 +251,6 @@ class GroupeDeSupervisionSC3DPAvecPromoteurDejaApprouveEtAutrePromoteurFactory(_
             _SignatureMembreCAFactory(membre_CA_id__uuid='membre-ca-SC3DP2', etat=ChoixEtatSignature.INVITED),
         ]
     )
-    cotutelle = pas_de_cotutelle
 
 
 class GroupeDeSupervisionSC3DPAvecPromoteursEtMembresCADejaApprouvesFactory(_GroupeDeSupervisionFactory):
@@ -310,7 +272,6 @@ class GroupeDeSupervisionSC3DPAvecPromoteursEtMembresCADejaApprouvesFactory(_Gro
             _SignatureMembreCAFactory(membre_CA_id__uuid='membre-ca-SC3DP2', etat=ChoixEtatSignature.APPROVED),
         ]
     )
-    cotutelle = pas_de_cotutelle
     statut_signature = ChoixStatutSignatureGroupeDeSupervision.SIGNING_IN_PROGRESS
 
 
@@ -333,7 +294,6 @@ class GroupeDeSupervisionSC3DPAvecPromoteurRefuseEtMembreCADejaApprouveFactory(_
             _SignatureMembreCAFactory(membre_CA_id__uuid='membre-ca-SC3DP2', etat=ChoixEtatSignature.APPROVED),
         ]
     )
-    cotutelle = pas_de_cotutelle
 
 
 class GroupeDeSupervisionPreSC3DPAvecPromoteursEtMembresCADejaApprouvesFactory(

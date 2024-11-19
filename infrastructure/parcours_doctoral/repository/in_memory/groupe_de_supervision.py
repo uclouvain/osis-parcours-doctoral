@@ -27,13 +27,12 @@
 import uuid
 from typing import List, Optional, Union
 
-from parcours_doctoral.ddd.builder.parcours_doctoral_identity import ParcoursDoctoralIdentityBuilder
-from parcours_doctoral.ddd.domain.model._cotutelle import pas_de_cotutelle
+from base.ddd.utils.in_memory_repository import InMemoryGenericRepository
 from parcours_doctoral.ddd.domain.model._membre_CA import MembreCAIdentity
 from parcours_doctoral.ddd.domain.model._promoteur import PromoteurIdentity
 from parcours_doctoral.ddd.domain.model._signature_membre_CA import SignatureMembreCA
 from parcours_doctoral.ddd.domain.model._signature_promoteur import SignaturePromoteur
-from parcours_doctoral.ddd.domain.model.enums import ChoixEtatSignature, ChoixStatutParcoursDoctoral
+from parcours_doctoral.ddd.domain.model.enums import ChoixEtatSignature
 from parcours_doctoral.ddd.domain.model.groupe_de_supervision import (
     GroupeDeSupervision,
     GroupeDeSupervisionIdentity,
@@ -42,7 +41,7 @@ from parcours_doctoral.ddd.domain.model.groupe_de_supervision import (
 from parcours_doctoral.ddd.domain.validator.exceptions import (
     GroupeDeSupervisionNonTrouveException,
 )
-from parcours_doctoral.ddd.dtos import CotutelleDTO, MembreCADTO, PromoteurDTO
+from parcours_doctoral.ddd.dtos import MembreCADTO, PromoteurDTO
 from parcours_doctoral.ddd.repository.i_groupe_de_supervision import (
     IGroupeDeSupervisionRepository,
 )
@@ -66,11 +65,14 @@ from parcours_doctoral.ddd.test.factory.groupe_de_supervision import (
     GroupeDeSupervisionSC3DPSansPromoteurReferenceFactory,
     GroupeDeSupervisionConfirmeeSC3DPAvecPromoteursEtMembresCADejaApprouvesFactory,
 )
-from base.ddd.utils.in_memory_repository import InMemoryGenericRepository
-from parcours_doctoral.infrastructure.parcours_doctoral.domain.service.in_memory.membre_CA import \
-    MembreCAInMemoryTranslator, MembreCA
-from parcours_doctoral.infrastructure.parcours_doctoral.domain.service.in_memory.promoteur import \
-    PromoteurInMemoryTranslator, Promoteur
+from parcours_doctoral.infrastructure.parcours_doctoral.domain.service.in_memory.membre_CA import (
+    MembreCAInMemoryTranslator,
+    MembreCA,
+)
+from parcours_doctoral.infrastructure.parcours_doctoral.domain.service.in_memory.promoteur import (
+    PromoteurInMemoryTranslator,
+    Promoteur,
+)
 from parcours_doctoral.models import ActorType
 
 

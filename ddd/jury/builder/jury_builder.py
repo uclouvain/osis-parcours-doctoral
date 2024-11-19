@@ -23,7 +23,6 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from parcours_doctoral.ddd.domain.model._cotutelle import Cotutelle
 from parcours_doctoral.ddd.jury.builder.jury_identity_builder import JuryIdentityBuilder
 from parcours_doctoral.ddd.jury.commands import ModifierJuryCommand
 from parcours_doctoral.ddd.jury.domain.model.jury import Jury
@@ -43,7 +42,6 @@ class JuryBuilder(interface.RootEntityBuilder):
     def build(
         cls,
         cmd: 'ModifierJuryCommand',
-        cotutelle: 'Cotutelle',
     ) -> 'Jury':
         entity_id = JuryIdentityBuilder.build_from_uuid(cmd.uuid_parcours_doctoral)
         return Jury(
@@ -54,6 +52,4 @@ class JuryBuilder(interface.RootEntityBuilder):
             langue_redaction=cmd.langue_redaction,
             langue_soutenance=cmd.langue_soutenance,
             commentaire=cmd.commentaire,
-            cotutelle=cotutelle.institution is not None,
-            institution_cotutelle=cotutelle.institution,
         )

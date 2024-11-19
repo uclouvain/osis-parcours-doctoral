@@ -29,7 +29,6 @@ from typing import Optional, List
 
 import attr
 
-from parcours_doctoral.ddd.domain.validator.validator_by_business_action import ProjetDoctoralValidatorList
 from osis_common.ddd import interface
 from parcours_doctoral.ddd.domain.model._cotutelle import Cotutelle
 from parcours_doctoral.ddd.domain.model._experience_precedente_recherche import (
@@ -50,6 +49,7 @@ from parcours_doctoral.ddd.domain.validator.validator_by_business_action import 
     ModifierProjetValidatorList,
     ModifierFinancementValidatorList,
 )
+from parcours_doctoral.ddd.domain.validator.validator_by_business_action import ProjetDoctoralValidatorList
 
 
 @attr.dataclass(frozen=True, slots=True)
@@ -86,6 +86,7 @@ class ParcoursDoctoral(interface.RootEntity):
             self.projet,
             self.financement,
             self.experience_precedente_recherche,
+            self.cotutelle,
         ).validate()
 
     def soumettre_epreuve_confirmation(self):

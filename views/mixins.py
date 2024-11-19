@@ -42,7 +42,7 @@ from parcours_doctoral.ddd.dtos import ParcoursDoctoralDTO
 from parcours_doctoral.ddd.jury.commands import RecupererJuryQuery
 from parcours_doctoral.ddd.jury.dtos.jury import JuryDTO
 from parcours_doctoral.models.parcours_doctoral import ParcoursDoctoral
-from parcours_doctoral.utils import get_cached_parcours_doctoral_perm_obj
+from parcours_doctoral.utils.cache import get_cached_parcours_doctoral_perm_obj
 
 
 class ParcoursDoctoralViewMixin(LoginRequiredMixin, PermissionRequiredMixin, ContextMixin):
@@ -88,7 +88,7 @@ class ParcoursDoctoralViewMixin(LoginRequiredMixin, PermissionRequiredMixin, Con
         #         if current_parcours_doctoral[key]:
         #             context[f'{key}_parcours_doctoral_url'] = resolve_url('parcours_doctoral:base', uuid=current_parcours_doctoral[key])
 
-        context['parcours_doctoral'] = self.parcours_doctoral_dto
+        context['doctorate'] = self.parcours_doctoral_dto
         return context
 
 

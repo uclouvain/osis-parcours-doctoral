@@ -52,8 +52,6 @@ class MembreJuryDTO(interface.DTO):
 class JuryDTO(interface.DTO):
     uuid: str
     titre_propose: str
-    cotutelle: Optional[bool]
-    institution_cotutelle: str
 
     membres: List[MembreJuryDTO]
 

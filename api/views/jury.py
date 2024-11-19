@@ -28,6 +28,7 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 
 from admission.api.schema import ResponseSpecificSchema
+from parcours_doctoral.api.permissions import DoctorateAPIPermissionRequiredMixin
 from parcours_doctoral.api.serializers import ModifierRoleMembreCommandSerializer, JuryIdentityDTOSerializer, \
     MembreJuryDTOSerializer, ModifierMembreCommandSerializer, AjouterMembreCommandSerializer, \
     MembreJuryIdentityDTOSerializer, JuryDTOSerializer, ModifierJuryCommandSerializer
@@ -40,7 +41,7 @@ from parcours_doctoral.ddd.jury.commands import (
     ModifierRoleMembreCommand,
     RecupererJuryMembreQuery,
 )
-from parcours_doctoral.utils import get_cached_parcours_doctoral_perm_obj
+from parcours_doctoral.utils.cache import get_cached_parcours_doctoral_perm_obj
 from infrastructure.messages_bus import message_bus_instance
 from osis_role.contrib.views import APIPermissionRequiredMixin
 
@@ -66,7 +67,7 @@ class JuryPreparationSchema(ResponseSpecificSchema):
 
 
 class JuryPreparationAPIView(
-    APIPermissionRequiredMixin,
+    DoctorateAPIPermissionRequiredMixin,
     mixins.RetrieveModelMixin,
     mixins.UpdateModelMixin,
     GenericAPIView,
@@ -79,9 +80,6 @@ class JuryPreparationAPIView(
         'GET': 'parcours_doctoral.view_jury',
         'POST': 'parcours_doctoral.change_jury',
     }
-
-    def get_permission_object(self):
-        return get_cached_parcours_doctoral_perm_obj(self.kwargs['uuid'])
 
     def get(self, request, *args, **kwargs):
         """Get the Jury of a doctorate"""
@@ -100,7 +98,6 @@ class JuryPreparationAPIView(
                 **serializer.data,
             )
         )
-        self.get_permission_object().update_detailed_status(request.user.person)
         serializer = JuryIdentityDTOSerializer(instance=result)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -120,7 +117,7 @@ class JuryMembersListSchema(ResponseSpecificSchema):
 
 
 class JuryMembersListAPIView(
-    APIPermissionRequiredMixin,
+    DoctorateAPIPermissionRequiredMixin,
     mixins.ListModelMixin,
     mixins.CreateModelMixin,
     GenericAPIView,
@@ -133,9 +130,6 @@ class JuryMembersListAPIView(
         'GET': 'parcours_doctoral.view_jury',
         'POST': 'parcours_doctoral.change_jury',
     }
-
-    def get_permission_object(self):
-        return get_cached_parcours_doctoral_perm_obj(self.kwargs['uuid'])
 
     def get(self, request, *args, **kwargs):
         """Get the members of a jury"""
@@ -154,7 +148,6 @@ class JuryMembersListAPIView(
                 **serializer.data,
             )
         )
-        self.get_permission_object().update_detailed_status(request.user.person)
         return Response({'uuid': result}, status=status.HTTP_201_CREATED)
 
 
@@ -177,7 +170,7 @@ class JuryMemberDetailSchema(ResponseSpecificSchema):
 
 
 class JuryMemberDetailAPIView(
-    APIPermissionRequiredMixin,
+    DoctorateAPIPermissionRequiredMixin,
     mixins.UpdateModelMixin,
     mixins.DestroyModelMixin,
     GenericAPIView,
@@ -192,9 +185,6 @@ class JuryMemberDetailAPIView(
         'PATCH': 'parcours_doctoral.change_jury',
         'DELETE': 'parcours_doctoral.change_jury',
     }
-
-    def get_permission_object(self):
-        return get_cached_parcours_doctoral_perm_obj(self.kwargs['uuid'])
 
     def get(self, request, *args, **kwargs):
         """Get the members of a jury"""
@@ -219,7 +209,6 @@ class JuryMemberDetailAPIView(
                 **serializer.data,
             )
         )
-        self.get_permission_object().update_detailed_status(request.user.person)
         serializer = JuryIdentityDTOSerializer(instance=result)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -235,7 +224,6 @@ class JuryMemberDetailAPIView(
                 **serializer.data,
             )
         )
-        self.get_permission_object().update_detailed_status(request.user.person)
         serializer = JuryIdentityDTOSerializer(instance=result)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -247,5 +235,4 @@ class JuryMemberDetailAPIView(
                 uuid_membre=str(self.kwargs['member_uuid']),
             )
         )
-        self.get_permission_object().update_detailed_status(request.user.person)
         return Response(status=status.HTTP_204_NO_CONTENT)
