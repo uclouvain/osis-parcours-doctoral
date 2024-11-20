@@ -23,42 +23,25 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from rest_framework.generics import RetrieveAPIView
 
-import rules
-from django.db import models
-from django.utils.translation import gettext_lazy as _
-from rules import RuleSet
-
-from base.models.entity import Entity
-from base.models.enums.organization_type import MAIN
-from osis_role.contrib.models import EntityRoleModel
+from admission.ddd.admission.enums import TypeBourse
+from admission.models import Scholarship
+from parcours_doctoral.api.schema import AuthorizationAwareSchema
+from parcours_doctoral.api.serializers import ScholarshipSerializer
 
 
-class CddConfigurator(EntityRoleModel):
-    """
-    Configurateur CDD
+__all__ = [
+    'RetrieveScholarshipView',
+]
 
-    Le configurateur CDD met à jour les tables de configuration pour sa CDD
-    (menus "Configuration de la CDD" et "Templates d'email de CDD").
-    """
 
-    entity = models.ForeignKey(
-        Entity,
-        on_delete=models.CASCADE,
-        related_name='+',
-        limit_choices_to={'organization__type': MAIN},
-    )
+class RetrieveScholarshipView(RetrieveAPIView):
+    """Retrieves a scholarship"""
 
-    class Meta:
-        verbose_name = _("Role: CDD configurator")
-        verbose_name_plural = _("Role: CDD configurators")
-        group_name = "cdd_configurators"
-
-    @classmethod
-    def rule_set(cls):
-        ruleset = {
-            'base.can_access_student_path': rules.always_allow,
-            'parcours_doctoral.change_cddconfiguration': rules.always_allow,
-            'parcours_doctoral.change_cddmailtemplate': rules.always_allow,
-        }
-        return RuleSet(ruleset)
+    name = 'retrieve-scholarship'
+    schema = AuthorizationAwareSchema()
+    filter_backends = []
+    serializer_class = ScholarshipSerializer
+    queryset = Scholarship.objects.filter(type=TypeBourse.BOURSE_INTERNATIONALE_DOCTORAT.name)
+    lookup_field = 'uuid'

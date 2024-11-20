@@ -83,7 +83,7 @@ class JuryPreparationAPIView(
 
     def get(self, request, *args, **kwargs):
         """Get the Jury of a doctorate"""
-        jury = message_bus_instance.invoke(RecupererJuryQuery(uuid_jury=kwargs.get('uuid')))
+        jury = message_bus_instance.invoke(RecupererJuryQuery(uuid_jury=self.doctorate_uuid))
         serializer = JuryDTOSerializer(instance=jury)
         return Response(serializer.data)
 
@@ -94,7 +94,7 @@ class JuryPreparationAPIView(
 
         result = message_bus_instance.invoke(
             ModifierJuryCommand(
-                uuid_parcours_doctoral=str(self.kwargs['uuid']),
+                uuid_parcours_doctoral=str(self.doctorate_uuid),
                 **serializer.data,
             )
         )
@@ -133,7 +133,7 @@ class JuryMembersListAPIView(
 
     def get(self, request, *args, **kwargs):
         """Get the members of a jury"""
-        jury = message_bus_instance.invoke(RecupererJuryQuery(uuid_jury=kwargs.get('uuid')))
+        jury = message_bus_instance.invoke(RecupererJuryQuery(uuid_jury=self.doctorate_uuid))
         serializer = MembreJuryDTOSerializer(instance=jury.membres, many=True)
         return Response(serializer.data)
 
@@ -144,7 +144,7 @@ class JuryMembersListAPIView(
 
         result = message_bus_instance.invoke(
             AjouterMembreCommand(
-                uuid_jury=str(self.kwargs['uuid']),
+                uuid_jury=str(self.doctorate_uuid),
                 **serializer.data,
             )
         )
@@ -190,7 +190,7 @@ class JuryMemberDetailAPIView(
         """Get the members of a jury"""
         membre = message_bus_instance.invoke(
             RecupererJuryMembreQuery(
-                uuid_jury=str(self.kwargs['uuid']),
+                uuid_jury=str(self.doctorate_uuid),
                 uuid_membre=str(self.kwargs['member_uuid']),
             )
         )
@@ -204,7 +204,7 @@ class JuryMemberDetailAPIView(
 
         result = message_bus_instance.invoke(
             ModifierMembreCommand(
-                uuid_jury=str(self.kwargs['uuid']),
+                uuid_jury=str(self.doctorate_uuid),
                 uuid_membre=str(self.kwargs['member_uuid']),
                 **serializer.data,
             )
@@ -219,7 +219,7 @@ class JuryMemberDetailAPIView(
 
         result = message_bus_instance.invoke(
             ModifierRoleMembreCommand(
-                uuid_jury=str(self.kwargs['uuid']),
+                uuid_jury=str(self.doctorate_uuid),
                 uuid_membre=str(self.kwargs['member_uuid']),
                 **serializer.data,
             )
@@ -231,7 +231,7 @@ class JuryMemberDetailAPIView(
         """Remove a member"""
         message_bus_instance.invoke(
             RetirerMembreCommand(
-                uuid_jury=str(self.kwargs['uuid']),
+                uuid_jury=str(self.doctorate_uuid),
                 uuid_membre=str(self.kwargs['member_uuid']),
             )
         )

@@ -60,7 +60,7 @@ def base_program_manager_rules():
         'parcours_doctoral.send_message': is_part_of_education_group & is_enrolled,
         # -- Formation doctorale
         'parcours_doctoral.view_training': is_part_of_education_group & is_enrolled,
-        'parcours_doctoral.view_doctoral_training': is_part_of_education_group & is_enrolled & ~is_pre_admission,
+        'parcours_doctoral.view_doctorate_training': is_part_of_education_group & is_enrolled & ~is_pre_admission,
         'parcours_doctoral.view_complementary_training': is_part_of_education_group & complementary_training_enabled,
         'parcours_doctoral.view_course_enrollment': is_part_of_education_group & is_enrolled,
         'parcours_doctoral.change_activity': is_part_of_education_group & is_enrolled,

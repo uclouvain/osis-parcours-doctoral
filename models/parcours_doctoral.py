@@ -25,6 +25,7 @@
 # ##############################################################################
 import uuid
 
+from django.core.cache import cache
 from django.db import models
 from django.db.models import Subquery, OuterRef, Case, When, Q, Value, F, CharField
 from django.db.models.functions import Concat, Mod, Replace
@@ -447,3 +448,7 @@ class ParcoursDoctoral(models.Model):
                 _("Can update the information related to the confirmation paper"),
             ),
         ]
+
+    def save(self, *args, **kwargs) -> None:
+        super().save(*args, **kwargs)
+        cache.delete('parcours_doctoral_permission_{}'.format(self.uuid))

@@ -56,7 +56,7 @@ class ParcoursDoctoralDTOSerializer(DTOSerializer):
                 'update_confirmation',
                 'update_confirmation_extension',
                 # Training
-                'retrieve_doctoral_training',
+                'retrieve_doctorate_training',
                 'retrieve_complementary_training',
                 'retrieve_course_enrollment',
                 'add_training',
@@ -96,7 +96,7 @@ class ParcoursDoctoralRechercheDTOSerializer(DTOSerializer):
                     'update_confirmation',
                     'update_confirmation_extension',
                     # Training
-                    'retrieve_doctoral_training',
+                    'retrieve_doctorate_training',
                     'retrieve_complementary_training',
                     'retrieve_course_enrollment',
                     'add_training',

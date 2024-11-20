@@ -52,7 +52,7 @@ class TrainingRedirectView(ParcoursDoctoralViewMixin, generic.RedirectView):
     """Redirect depending on the status of CDD and parcours_doctoral type"""
 
     def get_redirect_url(self, *args, **kwargs):
-        if self.request.user.has_perm('admission.view_doctoral_training', self.get_permission_object()):
+        if self.request.user.has_perm('admission.view_doctorate_training', self.get_permission_object()):
             return resolve_url('parcours_doctoral:doctorate:doctoral-training', uuid=self.parcours_doctoral_uuid)
         if self.request.user.has_perm('admission.view_complementary_training', self.get_permission_object()):
             return resolve_url('parcours_doctoral:doctorate:complementary-training', uuid=self.parcours_doctoral_uuid)
@@ -105,7 +105,7 @@ class DoctoralTrainingActivityView(TrainingListMixin, generic.FormView):  # pyli
 
     urlpatterns = {'doctoral-training': 'doctoral-training'}
     template_name = "parcours_doctoral/cdd/training_list.html"
-    permission_required = "parcours_doctoral.view_doctoral_training"
+    permission_required = "parcours_doctoral.view_doctorate_training"
 
     def get_queryset(self):
         return Activity.objects.for_doctoral_training(self.parcours_doctoral_uuid)

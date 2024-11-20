@@ -1058,6 +1058,231 @@ paths:
           $ref: '#/components/responses/NotFound'
       tags:
       - doctorate
+  /references/scholarship/{uuid}:
+    get:
+      operationId: retrieveScholarship
+      description: Retrieves a scholarship
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        description: A UUID string identifying this Bourse.
+        schema:
+          type: string
+      - $ref: '#/components/parameters/Accept-Language'
+      - $ref: '#/components/parameters/X-User-FirstName'
+      - $ref: '#/components/parameters/X-User-LastName'
+      - $ref: '#/components/parameters/X-User-Email'
+      - $ref: '#/components/parameters/X-User-GlobalID'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Scholarship'
+          description: ''
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+      - references
+  /autocomplete/tutor:
+    get:
+      operationId: listTutors
+      description: Autocomplete tutors
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      - name: search
+        required: true
+        in: query
+        description: The term to search the persons on (first or last name, or global
+          id)
+        schema:
+          type: string
+      - $ref: '#/components/parameters/Accept-Language'
+      - $ref: '#/components/parameters/X-User-FirstName'
+      - $ref: '#/components/parameters/X-User-LastName'
+      - $ref: '#/components/parameters/X-User-Email'
+      - $ref: '#/components/parameters/X-User-GlobalID'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - count
+                - results
+                properties:
+                  count:
+                    type: integer
+                    example: 123
+                  next:
+                    type: string
+                    nullable: true
+                    format: uri
+                    example: http://api.example.org/accounts/?offset=400&limit=100
+                  previous:
+                    type: string
+                    nullable: true
+                    format: uri
+                    example: http://api.example.org/accounts/?offset=200&limit=100
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Tutor'
+          description: ''
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+      - autocomplete
+  /autocomplete/person:
+    get:
+      operationId: listPeople
+      description: Autocomplete person
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      - name: search
+        required: true
+        in: query
+        description: The term to search the persons on (first or last name, or global
+          id)
+        schema:
+          type: string
+      - $ref: '#/components/parameters/Accept-Language'
+      - $ref: '#/components/parameters/X-User-FirstName'
+      - $ref: '#/components/parameters/X-User-LastName'
+      - $ref: '#/components/parameters/X-User-Email'
+      - $ref: '#/components/parameters/X-User-GlobalID'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - count
+                - results
+                properties:
+                  count:
+                    type: integer
+                    example: 123
+                  next:
+                    type: string
+                    nullable: true
+                    format: uri
+                    example: http://api.example.org/accounts/?offset=400&limit=100
+                  previous:
+                    type: string
+                    nullable: true
+                    format: uri
+                    example: http://api.example.org/accounts/?offset=200&limit=100
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Person'
+          description: ''
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+      - autocomplete
+  /autocomplete/scholarship:
+    get:
+      operationId: listScholarships
+      description: Autocomplete scholarships
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: The term to search the scholarship on (short or long name)
+        schema:
+          type: string
+      - $ref: '#/components/parameters/Accept-Language'
+      - $ref: '#/components/parameters/X-User-FirstName'
+      - $ref: '#/components/parameters/X-User-LastName'
+      - $ref: '#/components/parameters/X-User-Email'
+      - $ref: '#/components/parameters/X-User-GlobalID'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - count
+                - results
+                properties:
+                  count:
+                    type: integer
+                    example: 123
+                  next:
+                    type: string
+                    nullable: true
+                    format: uri
+                    example: http://api.example.org/accounts/?offset=400&limit=100
+                  previous:
+                    type: string
+                    nullable: true
+                    format: uri
+                    example: http://api.example.org/accounts/?offset=200&limit=100
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Scholarship'
+          description: ''
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+      - autocomplete
   /doctorate/{uuid}/training/submit:
     post:
       operationId: submit_training
@@ -1314,7 +1539,7 @@ components:
               $ref: '#/components/schemas/ActionLink'
             update_confirmation_extension:
               $ref: '#/components/schemas/ActionLink'
-            retrieve_doctoral_training:
+            retrieve_doctorate_training:
               $ref: '#/components/schemas/ActionLink'
             retrieve_complementary_training:
               $ref: '#/components/schemas/ActionLink'
@@ -1657,7 +1882,7 @@ components:
               $ref: '#/components/schemas/ActionLink'
             update_confirmation_extension:
               $ref: '#/components/schemas/ActionLink'
-            retrieve_doctoral_training:
+            retrieve_doctorate_training:
               $ref: '#/components/schemas/ActionLink'
             retrieve_complementary_training:
               $ref: '#/components/schemas/ActionLink'
@@ -3179,6 +3404,53 @@ components:
       - PRIVATE_DEFENSE
       - PUBLIC_DEFENSE
       type: string
+    Scholarship:
+      type: object
+      properties:
+        uuid:
+          type: string
+          readOnly: true
+        short_name:
+          type: string
+          maxLength: 50
+        long_name:
+          type: string
+          maxLength: 255
+        type:
+          enum:
+          - DOUBLE_TRIPLE_DIPLOMATION
+          - BOURSE_INTERNATIONALE_DOCTORAT
+          - BOURSE_INTERNATIONALE_FORMATION_GENERALE
+          - ERASMUS_MUNDUS
+          type: string
+      required:
+      - short_name
+      - type
+    Tutor:
+      type: object
+      properties:
+        first_name:
+          type: string
+          readOnly: true
+        last_name:
+          type: string
+          readOnly: true
+        global_id:
+          type: string
+          readOnly: true
+    Person:
+      type: object
+      properties:
+        first_name:
+          type: string
+          maxLength: 50
+        last_name:
+          type: string
+          maxLength: 50
+        global_id:
+          type: string
+          nullable: true
+          maxLength: 10
     ParcoursDoctoralIdentityDTO:
       type: object
       properties:

@@ -161,6 +161,9 @@ class CddMailTemplateAdmin(MailTemplateAdmin):
         'cdd__acronym',
         'idenfier',
     ]
+    autocomplete_fields = [
+        'cdd',
+    ]
     list_filter = [
         'cdd',
         'language',
@@ -202,6 +205,9 @@ class CddConfiguratorAdmin(HijackRoleModelAdmin):
         'person__last_name',
         'entity__entityversion__acronym',
     ]
+    autocomplete_fields = [
+        'entity',
+    ]
 
     @admin.display(description=pgettext_lazy('admission', 'Entity'))
     def most_recent_acronym(self, obj):
@@ -223,7 +229,11 @@ class CddConfiguratorAdmin(HijackRoleModelAdmin):
         )
 
 
-admin.site.register(CddConfiguration)
+@admin.register(CddConfiguration)
+class CddConfigurationAdmin(admin.ModelAdmin):
+    autocomplete_fields = [
+        'cdd',
+    ]
 
 
 class ReadOnlyFilesMixin:

@@ -31,7 +31,8 @@ from rest_framework.response import Response
 from rest_framework.schemas.openapi import AutoSchema
 from rest_framework.settings import api_settings
 
-from admission.api.schema import AuthorizationAwareSchema, AuthorizationAwareSchemaMixin, ChoicesEnumSchema
+from parcours_doctoral.api.permissions import DoctorateAPIPermissionRequiredMixin
+from parcours_doctoral.api.schema import AuthorizationAwareSchemaMixin, AuthorizationAwareSchema, ChoicesEnumSchema
 from parcours_doctoral.api.serializers.activity import (
     DoctoralTrainingActivitySerializer,
     DoctoralTrainingAssentSerializer,
@@ -45,10 +46,8 @@ from parcours_doctoral.ddd.formation.commands import (
     SoumettreActivitesCommand,
     SupprimerActiviteCommand,
 )
-from parcours_doctoral.utils.cache import get_cached_parcours_doctoral_perm_obj
 from base.ddd.utils.business_validator import MultipleBusinessExceptions
 from infrastructure.messages_bus import message_bus_instance
-from osis_role.contrib.views import APIPermissionRequiredMixin
 
 __all__ = [
     "DoctoralTrainingListView",
@@ -89,7 +88,7 @@ class TrainingListSchema(ChoicesEnumSchema):
         return components
 
 
-class DoctoralTrainingListView(APIPermissionRequiredMixin, GenericAPIView):
+class DoctoralTrainingListView(DoctorateAPIPermissionRequiredMixin, GenericAPIView):
     name = "doctoral-training"
     pagination_class = None
     filter_backends = []
@@ -98,33 +97,30 @@ class DoctoralTrainingListView(APIPermissionRequiredMixin, GenericAPIView):
     lookup_field = 'uuid'
     lookup_url_kwarg = 'activity_id'
     permission_mapping = {
-        'GET': 'parcours_doctoral.view_doctoral_training',
+        'GET': 'parcours_doctoral.view_doctorate_training',
         'POST': 'parcours_doctoral.add_training',
     }
 
-    def get_permission_object(self):
-        return get_cached_parcours_doctoral_perm_obj(self.kwargs['uuid'])
-
     def get_queryset(self):
-        return Activity.objects.for_doctoral_training(self.kwargs['uuid'])
+        return Activity.objects.for_doctoral_training(self.doctorate_uuid)
 
     def get(self, request, *args, **kwargs):
         serializer = self.get_serializer(self.get_queryset(), many=True)
         return Response(serializer.data)
 
     def post(self, request, *args, **kwargs):
-        admission = self.get_permission_object()
+        doctorate = self.get_permission_object()
         data = {
             **request.data,
-            'doctorate': admission.pk,
+            'doctorate': doctorate.pk,
         }
-        serializer = DoctoralTrainingActivitySerializer(admission=admission, data=data)
+        serializer = DoctoralTrainingActivitySerializer(parcours_doctoral=doctorate, data=data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
-class TrainingConfigView(APIPermissionRequiredMixin, RetrieveModelMixin, GenericAPIView):
+class TrainingConfigView(DoctorateAPIPermissionRequiredMixin, RetrieveModelMixin, GenericAPIView):
     name = "training-config"
     schema = AuthorizationAwareSchema()
     pagination_class = None
@@ -135,9 +131,6 @@ class TrainingConfigView(APIPermissionRequiredMixin, RetrieveModelMixin, Generic
         'GET': 'parcours_doctoral.view_training',
     }
 
-    def get_permission_object(self):
-        return get_cached_parcours_doctoral_perm_obj(self.kwargs['uuid'])
-
     def get_object(self):
         management_entity_id = self.get_permission_object().training.management_entity_id
         return CddConfiguration.objects.get_or_create(cdd_id=management_entity_id)[0]
@@ -147,7 +140,7 @@ class TrainingConfigView(APIPermissionRequiredMixin, RetrieveModelMixin, Generic
         return Response(serializer.data)
 
 
-class TrainingView(APIPermissionRequiredMixin, GenericAPIView):
+class TrainingView(DoctorateAPIPermissionRequiredMixin, GenericAPIView):
     name = "training"
     pagination_class = None
     filter_backends = []
@@ -161,19 +154,16 @@ class TrainingView(APIPermissionRequiredMixin, GenericAPIView):
         'DELETE': 'parcours_doctoral.delete_training',
     }
 
-    def get_permission_object(self):
-        return get_cached_parcours_doctoral_perm_obj(self.kwargs['uuid'])
-
     def get_queryset(self):
         return (
-            Activity.objects.filter(parcours_doctoral__uuid=self.kwargs['uuid'])
+            Activity.objects.filter(parcours_doctoral__uuid=self.doctorate_uuid)
             .prefetch_related('children')
             .select_related('learning_unit_year')
         )
 
     def get(self, request, *args, **kwargs):
         instance = self.get_object()
-        serializer = DoctoralTrainingActivitySerializer(instance, admission=self.get_permission_object())
+        serializer = DoctoralTrainingActivitySerializer(instance, parcours_doctoral=self.get_permission_object())
         return Response(serializer.data)
 
     def put(self, request, *args, **kwargs):
@@ -182,7 +172,7 @@ class TrainingView(APIPermissionRequiredMixin, GenericAPIView):
             **request.data,
             'doctorate': self.get_permission_object().pk,
         }
-        serializer = DoctoralTrainingActivitySerializer(instance, admission=self.get_permission_object(), data=data)
+        serializer = DoctoralTrainingActivitySerializer(instance, parcours_doctoral=self.get_permission_object(), data=data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
@@ -197,7 +187,7 @@ class TrainingBatchSchema(AuthorizationAwareSchemaMixin, AutoSchema):
         return "submit_training"
 
 
-class TrainingSubmitView(APIPermissionRequiredMixin, GenericAPIView):
+class TrainingSubmitView(DoctorateAPIPermissionRequiredMixin, GenericAPIView):
     name = "training-submit"
     pagination_class = None
     filter_backends = []
@@ -208,15 +198,12 @@ class TrainingSubmitView(APIPermissionRequiredMixin, GenericAPIView):
         'POST': 'parcours_doctoral.submit_training',
     }
 
-    def get_permission_object(self):
-        return get_cached_parcours_doctoral_perm_obj(self.kwargs['uuid'])
-
     def post(self, request, *args, **kwargs):
         """Submit doctoral training activities."""
         serializer = DoctoralTrainingBatchSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         cmd = SoumettreActivitesCommand(
-            parcours_doctoral_uuid=self.kwargs['uuid'],
+            parcours_doctoral_uuid=self.doctorate_uuid,
             activite_uuids=serializer.data['activity_uuids'],
         )
         try:
@@ -252,7 +239,7 @@ class TrainingAssentSchema(AuthorizationAwareSchemaMixin, AutoSchema):
         ]
 
 
-class TrainingAssentView(APIPermissionRequiredMixin, GenericAPIView):
+class TrainingAssentView(DoctorateAPIPermissionRequiredMixin, GenericAPIView):
     name = "training-assent"
     pagination_class = None
     filter_backends = []
@@ -263,15 +250,12 @@ class TrainingAssentView(APIPermissionRequiredMixin, GenericAPIView):
         'POST': 'parcours_doctoral.assent_training',
     }
 
-    def get_permission_object(self):
-        return get_cached_parcours_doctoral_perm_obj(self.kwargs['uuid'])
-
     def post(self, request, *args, **kwargs):
         """Assent on a doctoral training activity."""
         serializer = DoctoralTrainingAssentSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         cmd = DonnerAvisSurActiviteCommand(
-            parcours_doctoral_uuid=self.kwargs['uuid'],
+            parcours_doctoral_uuid=self.doctorate_uuid,
             activite_uuid=self.request.GET['activity_id'],
             **serializer.data,
         )
@@ -287,7 +271,7 @@ class ComplementaryTrainingListView(DoctoralTrainingListView):
     }
 
     def get_queryset(self):
-        return Activity.objects.for_complementary_training(self.kwargs['uuid'])
+        return Activity.objects.for_complementary_training(self.doctorate_uuid)
 
 
 class CourseEnrollmentListView(DoctoralTrainingListView):
@@ -298,4 +282,4 @@ class CourseEnrollmentListView(DoctoralTrainingListView):
     }
 
     def get_queryset(self):
-        return Activity.objects.for_enrollment_courses(self.kwargs['uuid'])
+        return Activity.objects.for_enrollment_courses(self.doctorate_uuid)

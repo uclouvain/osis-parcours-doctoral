@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -23,13 +23,21 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from rest_framework.serializers import ModelSerializer
 
-from .activity import *
-from .confirmation import *
-from .cotutelle import *
-from .dashboard import *
-from .funding import *
-from .jury import *
-from .parcours_doctoral import *
-from .scholarship import *
-from .supervision import *
+from admission.models import Scholarship
+
+__all__ = [
+    'ScholarshipSerializer',
+]
+
+
+class ScholarshipSerializer(ModelSerializer):
+    class Meta:
+        model = Scholarship
+        fields = [
+            'uuid',
+            'short_name',
+            'long_name',
+            'type',
+        ]

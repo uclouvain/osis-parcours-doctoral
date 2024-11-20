@@ -53,7 +53,7 @@ READ_ACTIONS_BY_TAB = {
     'send-mail': 'parcours_doctoral.send_message',
     # Training
     'training': 'parcours_doctoral.view_training',
-    'doctoral-training': 'parcours_doctoral.view_doctoral_training',
+    'doctoral-training': 'parcours_doctoral.view_doctorate_training',
     'complementary-training': 'parcours_doctoral.view_complementary_training',
     'course-enrollment': 'parcours_doctoral.view_course_enrollment',
     # Jury

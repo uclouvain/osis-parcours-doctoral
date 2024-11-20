@@ -102,7 +102,7 @@ PARCOURS_DOCTORAL_ACTION_LINKS = {
         'method': 'POST',
         'params': ['uuid'],
     },
-    'retrieve_doctoral_training': {
+    'retrieve_doctorate_training': {
         'path_name': 'parcours_doctoral_api_v1:doctoral-training',
         'method': 'GET',
         'params': ['uuid'],

@@ -33,7 +33,6 @@ from django.utils.translation import gettext_lazy as _
 from admission.mail_templates import (
     ADMISSION_EMAIL_GENERIC_ONCE_ADMITTED,
 )
-from base.models.enums.entity_type import DOCTORAL_COMMISSION
 from osis_mail_template.models import MailTemplateManager, check_mail_template_identifier
 from osis_mail_template.utils import MissingTokenDict, transform_html_to_text
 
@@ -42,6 +41,7 @@ from parcours_doctoral.mail_templates.confirmation_paper import (
     PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_ON_FAILURE_STUDENT,
     PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_ON_RETAKING_STUDENT,
 )
+from base.models.enums.organization_type import MAIN
 
 ALLOWED_CUSTOM_IDENTIFIERS = [
     ADMISSION_EMAIL_GENERIC_ONCE_ADMITTED,
@@ -104,7 +104,7 @@ class CddMailTemplate(models.Model):
     cdd = models.ForeignKey(
         'base.Entity',
         on_delete=models.CASCADE,
-        limit_choices_to={'entityversion__entity_type': DOCTORAL_COMMISSION},
+        limit_choices_to={'organization__type': MAIN},
         related_name='+',
     )
 

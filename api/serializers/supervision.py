@@ -23,16 +23,35 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from rest_framework.serializers import ModelSerializer, ReadOnlyField
 
+from base.models.person import Person
 from base.utils.serializers import DTOSerializer
 from parcours_doctoral.ddd.dtos import GroupeDeSupervisionDTO
 
-
 __all__ = [
     'SupervisionDTOSerializer',
+    'PersonSerializer',
+    'TutorSerializer',
 ]
 
 
 class SupervisionDTOSerializer(DTOSerializer):
     class Meta:
         source = GroupeDeSupervisionDTO
+
+
+class PersonSerializer(ModelSerializer):
+    class Meta:
+        model = Person
+        fields = (
+            'first_name',
+            'last_name',
+            'global_id',
+        )
+
+
+class TutorSerializer(PersonSerializer):
+    first_name = ReadOnlyField(source='person.first_name')
+    last_name = ReadOnlyField(source='person.last_name')
+    global_id = ReadOnlyField(source='person.global_id')

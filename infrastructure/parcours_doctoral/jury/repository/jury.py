@@ -28,8 +28,6 @@ from typing import Optional, List
 from django.db import transaction
 from django.db.models import Prefetch, Q
 
-from admission.models import SupervisionActor
-from admission.models.enums.actor_type import ActorType
 from parcours_doctoral.ddd.jury.domain.model.enums import RoleJury
 from parcours_doctoral.ddd.jury.domain.model.jury import Jury, JuryIdentity, MembreJury
 from parcours_doctoral.ddd.jury.dtos.jury import JuryDTO, MembreJuryDTO
@@ -40,6 +38,7 @@ from parcours_doctoral.ddd.jury.validator.exceptions import (
 )
 from base.models.person import Person
 from osis_common.ddd.interface import EntityIdentity, ApplicationService, RootEntity
+from parcours_doctoral.models import ParcoursDoctoralSupervisionActor, ActorType
 from parcours_doctoral.models.jury import JuryMember
 from parcours_doctoral.models.parcours_doctoral import ParcoursDoctoral
 from reference.models.country import Country
@@ -142,7 +141,7 @@ class JuryRepository(IJuryRepository):
             parcours_doctoral = ParcoursDoctoral.objects.get(uuid=entity.entity_id.uuid)
             for membre in entity.membres:
                 if membre.est_promoteur:
-                    promoter = SupervisionActor.objects.get(id=membre.matricule)
+                    promoter = ParcoursDoctoralSupervisionActor.objects.get(id=membre.matricule)
                     JuryMember.objects.update_or_create(
                         uuid=membre.uuid,
                         parcours_doctoral=parcours_doctoral,

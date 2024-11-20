@@ -29,13 +29,13 @@ from django.db import models
 from django.utils import translation
 from django.utils.translation import gettext_lazy as _
 
-from parcours_doctoral.ddd.formation.domain.model.enums import CategorieActivite
 from admission.forms.translation_field import (
     TextareaArrayField,
     TranslatedTextareasWidget,
     TranslatedValueField,
 )
-from base.models.enums.entity_type import DOCTORAL_COMMISSION
+from base.models.enums.organization_type import MAIN
+from parcours_doctoral.ddd.formation.domain.model.enums import CategorieActivite
 
 
 def default_category_labels():
@@ -233,7 +233,7 @@ class CddConfiguration(models.Model):
     cdd = models.OneToOneField(
         'base.Entity',
         on_delete=models.CASCADE,
-        limit_choices_to={'entityversion__entity_type': DOCTORAL_COMMISSION},
+        limit_choices_to={'organization__type': MAIN},
         related_name='admission_config',
     )
     is_complementary_training_enabled = models.BooleanField(
