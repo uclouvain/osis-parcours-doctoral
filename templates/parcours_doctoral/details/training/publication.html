@@ -1,4 +1,4 @@
-{% load i18n osis_document admission parcours_doctoral enums %}
+{% load i18n osis_document parcours_doctoral enums %}
 
 {% comment "License" %}
   * OSIS stands for Open Student Information System. It's an application
@@ -55,7 +55,7 @@
       </p>
       {% if activity.keywords %}
         <p>
-          <strong>{% trans "Keywords" context 'admission' %} :</strong> {{ activity.keywords }}
+          <strong>{% trans "Keywords" context 'parcours_doctoral' %} :</strong> {{ activity.keywords }}
         </p>
       {% endif %}
       {% if activity.publication_status %}

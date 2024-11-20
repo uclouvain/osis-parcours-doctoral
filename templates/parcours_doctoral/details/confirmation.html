@@ -1,6 +1,6 @@
 {% extends "parcours_doctoral/details/tab_layout.html" %}
 {% load enums %}
-{% load i18n admission %}
+{% load i18n parcours_doctoral %}
 {% load osis_document %}
 
 {% comment "License" %}
@@ -31,8 +31,8 @@
   {% default_tab_context as tab_context %}
   {% update_tab_path_from_detail view.kwargs.uuid as update_url %}
   {% can_update_tab tab_context.active_tab as can_update_tab %}
-  {% has_perm 'admission.make_confirmation_decision' as can_make_decision %}
-  {% has_perm 'admission.upload_pdf_confirmation' as can_upload_renewal_opinion %}
+  {% has_perm 'parcours_doctoral.make_confirmation_decision' as can_make_decision %}
+  {% has_perm 'parcours_doctoral.upload_pdf_confirmation' as can_upload_renewal_opinion %}
 
   {% if can_update_tab and update_url or can_make_decision or can_upload_renewal_opinion  %}
     <div class="btn-group">
@@ -56,18 +56,18 @@
         {% endif %}
         {% if can_upload_renewal_opinion %}
           <li>
-            <a href="{% url "admission:doctorate:confirmation:opinion" doctorate.uuid %}">
+            <a href="{% url "parcours_doctoral:confirmation:opinion" doctorate.uuid %}">
               {% trans "Upload the opinion on the renewal of the research mandate" %}
             </a>
           </li>
         {% endif %}
         {% if can_make_decision %}
           <li role="separator" class="divider"></li>
-          <li>
-            <a href="{% url 'admission:doctorate:send-mail' uuid=uuid %}?template={{ INFO_TEMPLATE_IDENTIFIER }}&cc_promoteurs=True">
-              {% trans "Send an information email" %}
-            </a>
-          </li>
+{#          <li>#}
+{#            <a href="{% url 'parcours_doctoral:send-mail' uuid=uuid %}?template={{ INFO_TEMPLATE_IDENTIFIER }}&cc_promoteurs=True">#}
+{#              {% trans "Send an information email" %}#}
+{#            </a>#}
+{#          </li>#}
           <li role="separator" class="divider"></li>
           {% if can_be_evaluated %}
             <li>
@@ -76,12 +76,12 @@
               </a>
             </li>
             <li>
-              <a href="{% url 'admission:doctorate:confirmation:failure' uuid %}">
+              <a href="{% url 'parcours_doctoral:confirmation:failure' uuid %}">
                 {% trans "Failure of the test" %}
               </a>
             </li>
             <li>
-              <a href="{% url 'admission:doctorate:confirmation:retaking' uuid %}">
+              <a href="{% url 'parcours_doctoral:confirmation:retaking' uuid %}">
                 {% trans "Retaking of the test" %}
               </a>
             </li>
@@ -107,12 +107,12 @@
 {% block tab_content %}
   <h3>{% trans "Confirmation exam" %}</h3>
   <div>
-    {% field_data _("Definitive admission date:") doctorate.admission_acceptee_le 'inline-field-data' %}
+    {% field_data _("Definitive parcours_doctoral date:") doctorate.parcours_doctoral_acceptee_le 'inline-field-data' %}
     {% field_data _("Confirmation deadline:") current_confirmation_paper.date_limite 'inline-field-data' %}
     {% field_data _("Confirmation exam date:") current_confirmation_paper.date 'inline-field-data' %}
     {% field_data _("Research report") current_confirmation_paper.rapport_recherche %}
     <p>
-      <a href="{% url 'admission:doctorate:confirmation-canvas' uuid %}" target="_blank">
+      <a href="{% url 'parcours_doctoral:confirmation-canvas' uuid %}" target="_blank">
         {% trans "Canvas of the supervisory panel report to download" %}
       </a>
     </p>

@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2021 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -23,29 +23,17 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from .campus import CampusDTO
-from .formation import FormationDTO, EntiteGestionDTO
-from .groupe_supervision import (
-    AvisDTO,
-    DetailSignatureMembreCADTO,
-    DetailSignaturePromoteurDTO,
-    GroupeDeSupervisionDTO,
-    MembreCADTO,
-    PromoteurDTO,
-)
-from .parcours_doctoral import CotutelleDTO, ParcoursDoctoralDTO, ParcoursDoctoralRechercheDTO
+from parcours_doctoral.ddd.builder.parcours_doctoral_identity import ParcoursDoctoralIdentityBuilder
+from parcours_doctoral.ddd.commands import GetCotutelleQuery
+from parcours_doctoral.ddd.dtos import CotutelleDTO
+from parcours_doctoral.ddd.repository.i_parcours_doctoral import IParcoursDoctoralRepository
 
-__all__ = [
-    'AvisDTO',
-    'CampusDTO',
-    'CotutelleDTO',
-    'DetailSignatureMembreCADTO',
-    'DetailSignaturePromoteurDTO',
-    'EntiteGestionDTO',
-    'FormationDTO',
-    'GroupeDeSupervisionDTO',
-    'MembreCADTO',
-    'ParcoursDoctoralDTO',
-    'ParcoursDoctoralRechercheDTO',
-    'PromoteurDTO',
-]
+
+def get_cotutelle(
+    cmd: 'GetCotutelleQuery',
+    parcours_doctoral_repository: 'IParcoursDoctoralRepository',
+) -> 'CotutelleDTO':
+    # GIVEN
+    parcours_doctoral_id = ParcoursDoctoralIdentityBuilder.build_from_uuid(cmd.uuid_parcours_doctoral)
+    # THEN
+    return parcours_doctoral_repository.get_cotutelle_dto(parcours_doctoral_id)

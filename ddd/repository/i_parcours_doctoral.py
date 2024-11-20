@@ -29,8 +29,7 @@ from typing import List
 
 from admission.ddd.admission.repository.i_proposition import IGlobalPropositionRepository
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoral, ParcoursDoctoralIdentity
-from parcours_doctoral.ddd.dtos import ParcoursDoctoralDTO, ParcoursDoctoralRechercheDTO
-
+from parcours_doctoral.ddd.dtos import ParcoursDoctoralDTO, ParcoursDoctoralRechercheDTO, CotutelleDTO
 
 CAMPUS_LETTRE_DOSSIER = {
     'Bruxelles Saint-Louis': 'B',
@@ -72,6 +71,11 @@ class IParcoursDoctoralRepository(IGlobalPropositionRepository):
     @classmethod
     @abc.abstractmethod
     def get_dto(cls, entity_id: 'ParcoursDoctoralIdentity') -> 'ParcoursDoctoralDTO':  # type: ignore[override]
+        raise NotImplementedError
+
+    @classmethod
+    @abc.abstractmethod
+    def get_cotutelle_dto(cls, entity_id: 'ParcoursDoctoralIdentity') -> 'CotutelleDTO':
         raise NotImplementedError
 
     @classmethod

@@ -1,4 +1,4 @@
-{% load i18n osis_document admission enums %}
+{% load i18n osis_document parcours_doctoral enums %}
 
 {% comment "License" %}
   * OSIS stands for Open Student Information System. It's an application
@@ -145,7 +145,7 @@
         {% endif %}
         <li>
           <a href="{{ delete_url }}">
-            {% trans "Delete" context 'admission' %}
+            {% trans "Delete" context 'parcours_doctoral' %}
           </a>
         </li>
       </ul>

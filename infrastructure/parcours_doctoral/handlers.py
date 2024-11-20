@@ -43,6 +43,7 @@ from .epreuve_confirmation.repository.epreuve_confirmation import EpreuveConfirm
 from .event_handlers import reagir_a_approbation_admission
 from .repository.groupe_de_supervision import GroupeDeSupervisionRepository
 from .repository.parcours_doctoral import ParcoursDoctoralRepository
+from ...ddd.use_case.read.get_cotutelle_service import get_cotutelle
 from ...ddd.use_case.read.recuperer_groupe_de_supervision_service import recuperer_groupe_de_supervision
 from ...ddd.use_case.write.demander_signatures_service import demander_signatures
 from ...ddd.use_case.write.designer_promoteur_reference_service import designer_promoteur_reference
@@ -56,6 +57,10 @@ from ...ddd.use_case.write.supprimer_promoteur_service import supprimer_promoteu
 
 COMMAND_HANDLERS = {
     RecupererParcoursDoctoralQuery: lambda msg_bus, cmd: recuperer_parcours_doctoral(
+        cmd,
+        parcours_doctoral_repository=ParcoursDoctoralRepository(),
+    ),
+    GetCotutelleQuery: lambda msg_bus, cmd: get_cotutelle(
         cmd,
         parcours_doctoral_repository=ParcoursDoctoralRepository(),
     ),

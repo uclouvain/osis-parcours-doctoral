@@ -28,6 +28,7 @@ from admission.infrastructure.admission.doctorat.preparation.repository.in_memor
 )
 from parcours_doctoral.ddd.commands import *
 from parcours_doctoral.ddd.use_case.read import *
+from parcours_doctoral.ddd.use_case.read.get_cotutelle_service import get_cotutelle
 from parcours_doctoral.ddd.use_case.read.recuperer_groupe_de_supervision_service import recuperer_groupe_de_supervision
 from parcours_doctoral.ddd.use_case.write import *
 from parcours_doctoral.ddd.use_case.write.demander_signatures_service import demander_signatures
@@ -78,6 +79,10 @@ _promoteur_translator = PromoteurInMemoryTranslator()
 
 COMMAND_HANDLERS = {
     RecupererParcoursDoctoralQuery: lambda msg_bus, cmd: recuperer_parcours_doctoral(
+        cmd,
+        parcours_doctoral_repository=_parcours_doctoral_repository,
+    ),
+    GetCotutelleQuery: lambda msg_bus, cmd: get_cotutelle(
         cmd,
         parcours_doctoral_repository=_parcours_doctoral_repository,
     ),

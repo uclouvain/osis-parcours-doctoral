@@ -27,6 +27,7 @@ import json
 
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import Http404
 from django.shortcuts import resolve_url
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
@@ -37,8 +38,13 @@ from base.ddd.utils.business_validator import MultipleBusinessExceptions
 from infrastructure.messages_bus import message_bus_instance
 from osis_common.ddd.interface import BusinessException
 from osis_role.contrib.views import PermissionRequiredMixin
-from parcours_doctoral.ddd.commands import RecupererParcoursDoctoralQuery
+from parcours_doctoral.ddd.commands import RecupererParcoursDoctoralQuery, GetCotutelleQuery
+from parcours_doctoral.ddd.domain.validator.exceptions import ParcoursDoctoralNonTrouveException
 from parcours_doctoral.ddd.dtos import ParcoursDoctoralDTO
+from parcours_doctoral.ddd.dtos.parcours_doctoral import CotutelleDTO
+from parcours_doctoral.ddd.epreuve_confirmation.commands import RecupererDerniereEpreuveConfirmationQuery
+from parcours_doctoral.ddd.epreuve_confirmation.dtos import EpreuveConfirmationDTO
+from parcours_doctoral.ddd.epreuve_confirmation.validators.exceptions import EpreuveConfirmationNonTrouveeException
 from parcours_doctoral.ddd.jury.commands import RecupererJuryQuery
 from parcours_doctoral.ddd.jury.dtos.jury import JuryDTO
 from parcours_doctoral.models.parcours_doctoral import ParcoursDoctoral
@@ -66,6 +72,10 @@ class ParcoursDoctoralViewMixin(LoginRequiredMixin, PermissionRequiredMixin, Con
     @cached_property
     def jury(self) -> 'JuryDTO':
         return message_bus_instance.invoke(RecupererJuryQuery(uuid_jury=self.parcours_doctoral_uuid))
+
+    @cached_property
+    def cotutelle(self) -> 'CotutelleDTO':
+        return message_bus_instance.invoke(GetCotutelleQuery(uuid_parcours_doctoral=self.parcours_doctoral_uuid))
 
     @cached_property
     def next_url(self):
@@ -165,6 +175,18 @@ class ParcoursDoctoralFormMixin(ParcoursDoctoralViewMixin):
 
 
 class LastConfirmationMixin(ParcoursDoctoralViewMixin):
+    @cached_property
+    def last_confirmation_paper(self) -> EpreuveConfirmationDTO:
+        try:
+            last_confirmation_paper = message_bus_instance.invoke(
+                RecupererDerniereEpreuveConfirmationQuery(self.parcours_doctoral_uuid)
+            )
+            if not last_confirmation_paper:
+                raise Http404(_('Confirmation exam not found.'))
+            return last_confirmation_paper
+        except (ParcoursDoctoralNonTrouveException, EpreuveConfirmationNonTrouveeException) as e:
+            raise Http404(e.message)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs) if hasattr(super(), 'get_context_data') else {}
         context['confirmation_paper'] = self.last_confirmation_paper

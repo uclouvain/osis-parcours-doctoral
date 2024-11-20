@@ -344,6 +344,10 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
         )
 
     @classmethod
+    def get_cotutelle_dto(cls, entity_id: 'ParcoursDoctoralIdentity') -> 'CotutelleDTO':
+        return cls.get_dto(entity_id).cotutelle
+
+    @classmethod
     def get_teaching_campuses_dtos(cls, training_ids: List[int]) -> Dict[int, CampusDTO]:
         if not training_ids:
             return {}

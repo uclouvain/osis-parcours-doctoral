@@ -182,6 +182,10 @@ class ParcoursDoctoralInMemoryRepository(InMemoryGenericRepository, IParcoursDoc
         )
 
     @classmethod
+    def get_cotutelle_dto(cls, entity_id: 'ParcoursDoctoralIdentity') -> 'CotutelleDTO':
+        return cls.get_dto(entity_id).cotutelle
+
+    @classmethod
     def reset(cls):
         cls.entities = [
             ParcoursDoctoralSC3DPMinimaleFactory(),
