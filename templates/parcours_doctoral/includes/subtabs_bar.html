@@ -1,4 +1,5 @@
-{% load i18n enums admission %}
+{% load i18n parcours_doctoral %}
+
 {% comment "License" %}
 * OSIS stands for Open Student Information System. It's an application
 * designed to manage the core business of higher education institutions,
@@ -23,7 +24,12 @@
 * see http://www.gnu.org/licenses/.
 {% endcomment %}
 
-<span id="admission-status" hx-swap-oob="true">
-  {% translate 'Status:' %} <span class="label label-admission-primary">{{ admission.statut|enum_display:'ChoixStatutPropositionDoctorale' }}</span>
-  {{ admission.date_changement_statut|date:'d/m/Y' }}
-</span>
+<ul class="nav nav-pills nav-stacked nav-grey">
+  {% for child in subtabs %}
+    {% if child.name == active_tab %}
+      {% include 'parcours_doctoral/includes/tab_entry.html' with tab_name=child.name tab_label=child.label is_active=True %}
+    {% else %}
+      {% include 'parcours_doctoral/includes/tab_entry.html' with tab_name=child.name tab_label=child.label %}
+    {% endif %}
+  {% endfor %}
+</ul>

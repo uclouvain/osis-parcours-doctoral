@@ -39,114 +39,6 @@
   </li>
 {% endblock %}
 
-{% block page-header %}
-{% endblock page-header %}
-
-{% block panel-heading %}
-  <div class="min-width">
-{#    {% get_image_file_url parcours_doctoral.photo_identite_candidat as id_photo_url %}#}
-{#    <img#}
-{#        {% if id_photo_url %}#}
-{#          src="{{ id_photo_url }}"#}
-{#        {% else %}#}
-{#          src="{% static 'img/men_unknown.png' %}"#}
-{#        {% endif %}#}
-{#          alt="{% translate 'Identification photo of the candidate' %}"#}
-{#          class="img-thumbnail"#}
-{#    />#}
-{#  </div>#}
-{#  <div>#}
-{#    <span>#}
-{#      {% if parcours_doctoral.noma_candidat %}#}
-{#        <a href="{% url 'consulter_dossier_etudiant' parcours_doctoral.noma_candidat %}" target="_blank">#}
-{#          {{ parcours_doctoral.noma_candidat }}#}
-{#        </a>#}
-{#      {% else %}#}
-{#        {% translate 'Unknown noma' %}#}
-{#      {% endif %}#}
-{#    </span> -#}
-{#    <span class="bold-text">{{ parcours_doctoral.nom_candidat }}, {{ parcours_doctoral.prenom_candidat }}</span>#}
-{#    {% if parcours_doctoral.nationalite_candidat %}#}
-{#      <span>#}
-{#        ({{ parcours_doctoral.nationalite_candidat }}, {{ parcours_doctoral.nationalite_ue_candidat|yesno:_('EU,NEU') }})#}
-{#      </span>#}
-{#    {% endif %}#}
-{#    <br>#}
-{#    <address style="display: inline">#}
-{#      <a href="mailto:{{ parcours_doctoral.adresse_email_candidat }}?subject={{ parcours_doctoral.reference }}" target="_blank">#}
-{#        <i class="fa-solid fa-envelope"></i>#}
-{#      </a>#}
-{#      {{ parcours_doctoral.adresse_email_candidat }}#}
-{#    </address>#}
-{#    <span class="label label-parcours_doctoral-primary">{{ parcours_doctoral.langue_contact_candidat|formatted_language }}</span>#}
-{#    <br>#}
-{#    <span class="bold-text">{{ parcours_doctoral.type_demande|enum_display:'TypeDemande' }} - </span>#}
-{#    {% url 'parcours_doctoral:access-conditions-url' parcours_doctoral.doctorat.type parcours_doctoral.doctorat.sigle|urlencode:'' parcours_doctoral.doctorat.code as access_conditions_url %}#}
-{#    <span>#}
-{#        <a href="{{ access_conditions_url }}" target="_blank">{{ parcours_doctoral.doctorat.sigle }}</a> -#}
-{#        {{ parcours_doctoral.doctorat.intitule }} ({{ parcours_doctoral.doctorat.campus.nom }})#}
-{#        <span class="label label-default">{{ parcours_doctoral.doctorat.annee|display_as_academic_year }}</span>#}
-{#    </span>#}
-{#    <br>#}
-{#    <span class="copy-to-clipboard">#}
-{#      {% url "parcours_doctoral:doctorate" parcours_doctoral.uuid as parcours_doctoral_url %}#}
-{#      <a href="{{ request.scheme }}://{{ request.get_host }}{{ parcours_doctoral_url }}" class="copy-to-clipboard-element bold-text">{{ parcours_doctoral.reference }}</a>#}
-{#      <button#}
-{#          class="copy-button"#}
-{#          data-html="true"#}
-{#      >#}
-{#        <i class="far fa-copy"></i>#}
-{#      </button>#}
-{#    </span>#}
-{#  </div>#}
-{#  <div class="min-width">#}
-{#    {% include 'parcours_doctoral/includes/parcours_doctoral_status.html' with display_on_load=True %}#}
-{#    <br>#}
-{#    {% if parcours_doctoral.soumise_le %}#}
-{#      <span>#}
-{#        {% translate 'Submission date:' %} {{ parcours_doctoral.soumise_le|date:'d/m/Y' }}#}
-{#      </span>#}
-{#      <br>#}
-{#    {% endif %}#}
-{#    {% if parcours_doctoral.cotutelle %}#}
-{#      <span class="label label-info">#}
-{#        {% if parcours_doctoral.cotutelle.institution_fwb %}#}
-{#          {% translate 'FWB Cotutelle' %}#}
-{#        {% else %}#}
-{#          {% translate 'Cotutelle' %}#}
-{#        {% endif %}#}
-{#      </span>#}
-{#      <br>#}
-{#    {% endif %}#}
-{#    {% if parcours_doctoral.financement.type == 'SEARCH_SCHOLARSHIP' %}#}
-{#      {% if parcours_doctoral.financement.bourse_recherche %}#}
-{#        <span#}
-{#            class="label label-success"#}
-{#            title="{{ parcours_doctoral.financement.bourse_recherche }}"#}
-{#        >#}
-{#        {{ parcours_doctoral.financement.bourse_recherche.nom_court }}#}
-{#        </span>#}
-{#      {% else %}#}
-{#        <span class="label label-success">{% translate 'Scholarship' %}</span>#}
-{#      {% endif %}#}
-{#    {% endif %}#}
-{#  </div>#}
-{#  <div class="parcours_doctoral-badges min-width">#}
-{#    {% if parcours_doctoral.candidat_a_plusieurs_demandes %}#}
-{#      <span#}
-{#          class="label label-parcours_doctoral-primary"#}
-{#          data-lazy-popover-url="{% url base_namespace|add:':other-parcours_doctorals-list' uuid=view.kwargs.uuid %}"#}
-{#          data-title="{% translate 'Other application(s)' %}"#}
-{#          tabindex="0"#}
-{#          role="button"#}
-{#      >#}
-{#        {% translate 'Several applications' %}#}
-{#      </span>#}
-{#    {% endif %}#}
-{#  </div>#}
-
-{% endblock %}
-
 {% block content %}
   {% if form or force_form %}
     {% include "parcours_doctoral/modal/prevent_quitting_modal.html" %}
@@ -167,26 +59,115 @@
 
   <div class="panel panel-default">
     <div id="parcours_doctoral-panel-header-container" class="panel-heading flex-content">
-      <a
-        title="{% translate 'Previous parcours_doctoral' %}"
-        class="btn btn-default parcours_doctoral-navigation-button {% if not previous_parcours_doctoral_url %} disabled{% endif %}"
-        href="{{ previous_parcours_doctoral_url }}">
-        <i class="fa-solid fa-chevron-left" aria-hidden="true"></i>
-      </a>
+{#      <a#}
+{#        title="{% translate 'Previous parcours_doctoral' %}"#}
+{#        class="btn btn-default parcours_doctoral-navigation-button {% if not previous_parcours_doctoral_url %} disabled{% endif %}"#}
+{#        href="{{ previous_parcours_doctoral_url }}">#}
+{#        <i class="fa-solid fa-chevron-left" aria-hidden="true"></i>#}
+{#      </a>#}
       <div id="parcours_doctoral-panel-header">
         {% block panel-heading %}
-          <div>
-            {% trans "Candidate:" %} {{ parcours_doctoral.prenom_candidat }} {{ parcours_doctoral.nom_candidat }}
-          </div>
-          <div>
-            {% trans "Status:" %}
-          </div>
-          {% if object.submitted_at %}
-            <div>
-              {% trans "Submission date:" %}
-              {{ object.submitted_at|date:'d/m/Y H:i' }}
-            </div>
-          {% endif %}
+            <div class="min-width">
+{#              {% get_image_file_url parcours_doctoral.photo_identite_candidat as id_photo_url %}#}
+{#              <img#}
+{#                  {% if id_photo_url %}#}
+{#                    src="{{ id_photo_url }}"#}
+{#                  {% else %}#}
+{#                    src="{% static 'img/men_unknown.png' %}"#}
+{#                  {% endif %}#}
+{#                    alt="{% translate 'Identification photo of the candidate' %}"#}
+{#                    class="img-thumbnail"#}
+{#              />#}
+{#            </div>#}
+{#            <div>#}
+{#              <span>#}
+{#                {% if parcours_doctoral.noma_candidat %}#}
+{#                  <a href="{% url 'consulter_dossier_etudiant' parcours_doctoral.noma_candidat %}" target="_blank">#}
+{#                    {{ parcours_doctoral.noma_candidat }}#}
+{#                  </a>#}
+{#                {% else %}#}
+{#                  {% translate 'Unknown noma' %}#}
+{#                {% endif %}#}
+{#              </span> -#}
+{#              <span class="bold-text">{{ parcours_doctoral.nom_candidat }}, {{ parcours_doctoral.prenom_candidat }}</span>#}
+{#              {% if parcours_doctoral.nationalite_candidat %}#}
+{#                <span>#}
+{#                  ({{ parcours_doctoral.nationalite_candidat }}, {{ parcours_doctoral.nationalite_ue_candidat|yesno:_('EU,NEU') }})#}
+{#                </span>#}
+{#              {% endif %}#}
+{#              <br>#}
+{#              <address style="display: inline">#}
+{#                <a href="mailto:{{ parcours_doctoral.adresse_email_candidat }}?subject={{ parcours_doctoral.reference }}" target="_blank">#}
+{#                  <i class="fa-solid fa-envelope"></i>#}
+{#                </a>#}
+{#                {{ parcours_doctoral.adresse_email_candidat }}#}
+{#              </address>#}
+{#              <span class="label label-parcours_doctoral-primary">{{ parcours_doctoral.langue_contact_candidat|formatted_language }}</span>#}
+{#              <br>#}
+{#              <span class="bold-text">{{ parcours_doctoral.type_demande|enum_display:'TypeDemande' }} - </span>#}
+{#              {% url 'parcours_doctoral:access-conditions-url' parcours_doctoral.doctorat.type parcours_doctoral.doctorat.sigle|urlencode:'' parcours_doctoral.doctorat.code as access_conditions_url %}#}
+{#              <span>#}
+{#                  <a href="{{ access_conditions_url }}" target="_blank">{{ parcours_doctoral.doctorat.sigle }}</a> -#}
+{#                  {{ parcours_doctoral.doctorat.intitule }} ({{ parcours_doctoral.doctorat.campus.nom }})#}
+{#                  <span class="label label-default">{{ parcours_doctoral.doctorat.annee|display_as_academic_year }}</span>#}
+{#              </span>#}
+{#              <br>#}
+{#              <span class="copy-to-clipboard">#}
+{#                {% url "parcours_doctoral:doctorate" parcours_doctoral.uuid as parcours_doctoral_url %}#}
+{#                <a href="{{ request.scheme }}://{{ request.get_host }}{{ parcours_doctoral_url }}" class="copy-to-clipboard-element bold-text">{{ parcours_doctoral.reference }}</a>#}
+{#                <button#}
+{#                    class="copy-button"#}
+{#                    data-html="true"#}
+{#                >#}
+{#                  <i class="far fa-copy"></i>#}
+{#                </button>#}
+{#              </span>#}
+{#            </div>#}
+{#            <div class="min-width">#}
+{#              {% include 'parcours_doctoral/includes/parcours_doctoral_status.html' with display_on_load=True %}#}
+{#              <br>#}
+{#              {% if parcours_doctoral.soumise_le %}#}
+{#                <span>#}
+{#                  {% translate 'Submission date:' %} {{ parcours_doctoral.soumise_le|date:'d/m/Y' }}#}
+{#                </span>#}
+{#                <br>#}
+{#              {% endif %}#}
+{#              {% if parcours_doctoral.cotutelle %}#}
+{#                <span class="label label-info">#}
+{#                  {% if parcours_doctoral.cotutelle.institution_fwb %}#}
+{#                    {% translate 'FWB Cotutelle' %}#}
+{#                  {% else %}#}
+{#                    {% translate 'Cotutelle' %}#}
+{#                  {% endif %}#}
+{#                </span>#}
+{#                <br>#}
+{#              {% endif %}#}
+{#              {% if parcours_doctoral.financement.type == 'SEARCH_SCHOLARSHIP' %}#}
+{#                {% if parcours_doctoral.financement.bourse_recherche %}#}
+{#                  <span#}
+{#                      class="label label-success"#}
+{#                      title="{{ parcours_doctoral.financement.bourse_recherche }}"#}
+{#                  >#}
+{#                  {{ parcours_doctoral.financement.bourse_recherche.nom_court }}#}
+{#                  </span>#}
+{#                {% else %}#}
+{#                  <span class="label label-success">{% translate 'Scholarship' %}</span>#}
+{#                {% endif %}#}
+{#              {% endif %}#}
+{#            </div>#}
+{#            <div class="parcours_doctoral-badges min-width">#}
+{#              {% if parcours_doctoral.candidat_a_plusieurs_demandes %}#}
+{#                <span#}
+{#                    class="label label-parcours_doctoral-primary"#}
+{#                    data-lazy-popover-url="{% url base_namespace|add:':other-parcours_doctorals-list' uuid=view.kwargs.uuid %}"#}
+{#                    data-title="{% translate 'Other application(s)' %}"#}
+{#                    tabindex="0"#}
+{#                    role="button"#}
+{#                >#}
+{#                  {% translate 'Several applications' %}#}
+{#                </span>#}
+{#              {% endif %}#}
+{#            </div>#}
         {% endblock %}
       </div>
       <div>
@@ -242,12 +223,12 @@
           </div>
         {% endblock %}
       </div>
-      <a
-        title="{% translate 'Next parcours_doctoral' %}"
-        class="btn btn-default parcours_doctoral-navigation-button {% if not next_parcours_doctoral_url %} disabled{% endif %}"
-        href="{{ next_parcours_doctoral_url }}">
-        <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
-      </a>
+{#      <a#}
+{#        title="{% translate 'Next parcours_doctoral' %}"#}
+{#        class="btn btn-default parcours_doctoral-navigation-button {% if not next_parcours_doctoral_url %} disabled{% endif %}"#}
+{#        href="{{ next_parcours_doctoral_url }}">#}
+{#        <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>#}
+{#      </a>#}
     </div>
     <div class="panel-body">
     {% if not without_menu %}

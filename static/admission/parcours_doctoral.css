@@ -287,7 +287,7 @@ fieldset.custom-fieldset > legend {
   opacity: 1;
 }
 
-.label-parcours_doctoral-primary {
+.label-parcours-doctoral-primary {
   background-color: #269abc;
 }
 
@@ -429,7 +429,7 @@ select#match + .select2-container {
 }
 
 @media (min-width: 992px) {
-  .parcours_doctoral-modal-lg {
+  .parcours-doctoral-modal-lg {
     width: 90%;
     min-width: 900px;
   }
@@ -505,8 +505,8 @@ a.no-link {
   pointer-events: all !important;
 }
 
-.parcours_doctoral-collapse-button[aria-expanded="false"] i.fa-chevron-up,
-.parcours_doctoral-collapse-button[aria-expanded="true"] i.fa-chevron-down {
+.parcours-doctoral-collapse-button[aria-expanded="false"] i.fa-chevron-up,
+.parcours-doctoral-collapse-button[aria-expanded="true"] i.fa-chevron-down {
   display: none;
 }
 
