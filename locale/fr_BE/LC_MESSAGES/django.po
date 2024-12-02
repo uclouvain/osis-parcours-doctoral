@@ -201,9 +201,6 @@ msgstr "Sous-type d'activité"
 msgid "Activity type"
 msgstr "Type d'activité"
 
-msgid "Actor"
-msgstr "Acteur"
-
 msgid "Actors as list items"
 msgstr "Acteurs en tant qu'éléments de liste"
 
@@ -313,9 +310,6 @@ msgstr "Un membre externe doit avoir un email."
 
 msgid "An external member must have an institute."
 msgstr "Un membre externe doit avoir une institution."
-
-msgid "Application numero"
-msgstr "Numéro de demande"
 
 msgid "Application status"
 msgstr "État de la demande"
@@ -549,7 +543,7 @@ msgstr "Proposition de formation complémentaire"
 msgid "Configuration saved."
 msgstr "Configuration enregistrée."
 
-msgctxt "admission"
+msgctxt "parcours_doctoral"
 msgid "Configure"
 msgstr "Configurer"
 
@@ -600,9 +594,6 @@ msgstr ""
 
 msgid "Context"
 msgstr "Contexte"
-
-msgid "Cotutelle"
-msgstr "Cotutelle"
 
 msgid "Cotutelle request document"
 msgstr "Demande d'ouverture de cotutelle"
@@ -718,15 +709,15 @@ msgctxt "parcours_doctoral"
 msgid "Defense method"
 msgstr "Formule de défense"
 
-msgid "Definitive admission date to doctorate"
+msgctxt "parcours_doctoral tab"
+msgid "Defense method"
+msgstr "Formule de défense"
+
+msgid "Definitive doctoral training date to doctorate"
 msgstr "Date de l'admission définitive au doctorat"
 
-msgid "Definitive admission date:"
-msgstr "Date de l'admission définitive :"
-
-msgctxt "admission"
-msgid "Delete"
-msgstr "Supprimer"
+msgid "Definitive doctoral training date:"
+msgstr "Date définitive du parcours doctoral:"
 
 msgctxt "parcours_doctoral"
 msgid "Delete"
@@ -778,13 +769,6 @@ msgstr "N'est pas porteur du titre de docteur"
 
 msgid "Done in"
 msgstr "Fait à"
-
-msgctxt "doctorate-header-list"
-msgid "Dossier status"
-msgstr "État de la demande"
-
-msgid "Dossier submission date"
-msgstr "Date de soumission du dossier"
 
 msgid "Dr"
 msgstr "Dr."
@@ -875,9 +859,6 @@ msgstr "Demande de prolongation non définie."
 msgid "FREE_COURSE"
 msgstr "Cours libre"
 
-msgid "Fac decision"
-msgstr "Décision fac."
-
 msgid "Failure of the confirmation paper"
 msgstr "Échec de l'épreuve de confirmation"
 
@@ -946,9 +927,6 @@ msgstr "HTML"
 
 msgid "Has your PhD project already started?"
 msgstr "Votre projet doctoral a-t-il déjà commencé ?"
-
-msgid "Hide the states of the checklist"
-msgstr "Cacher les états de la checklist"
 
 msgid "INVITED"
 msgstr "Invité"
@@ -1073,12 +1051,6 @@ msgstr "Mots-clés"
 
 msgid "Language"
 msgstr "Langue"
-
-msgid "Last modification"
-msgstr "Dernière modification"
-
-msgid "Last name / First name"
-msgstr "Nom / Prénom"
 
 msgid "Last name / First name / Email"
 msgstr "Nom / Prénom / E-mail"
@@ -1401,9 +1373,6 @@ msgstr "Nom"
 msgid "Name in the language of the manifestation"
 msgstr "Nom dans la langue de la manifestation"
 
-msgid "Nationality"
-msgstr "Nationalité"
-
 msgid "Negative assessment by lead supervisor"
 msgstr "Avis négatif du promoteur de référence"
 
@@ -1425,6 +1394,7 @@ msgstr "Raison de non-soutenance"
 msgid "No doctoral training"
 msgstr "Pas de formation doctorale"
 
+msgctxt "parcours_doctoral"
 msgid "No doctorate found."
 msgstr "Aucun doctorat trouvé."
 
@@ -1594,9 +1564,6 @@ msgstr ""
 msgid "Poster"
 msgstr "Poster"
 
-msgid "Pre-admission"
-msgstr "Pré-admission"
-
 msgid "Presentation date"
 msgstr "Date de l'exposé"
 
@@ -1626,9 +1593,6 @@ msgstr "Epreuves de confirmation passées"
 
 msgid "Previous doctorate"
 msgstr "Doctorat précédent"
-
-msgid "Produce xls"
-msgstr "Produire un fichier xls"
 
 msgid "Professor"
 msgstr "Professeur"
@@ -1873,9 +1837,6 @@ msgstr ""
 "Types d'activité pour la catégorie Service institutionnel, didactique et "
 "d'expertise scientifique"
 
-msgid "SIC decision"
-msgstr "Décision SIC"
-
 msgid "SIGNING_IN_PROGRESS"
 msgstr "Signatures en cours"
 
@@ -1888,20 +1849,12 @@ msgstr "Statistiques"
 msgid "SUBMITTED_CONFIRMATION"
 msgstr "Confirmation soumise"
 
-msgctxt "admission"
-msgid "Save"
-msgstr "Enregistrer"
-
 msgctxt "parcours_doctoral"
 msgid "Save"
 msgstr "Enregistrer"
 
 msgid "Save and view result"
 msgstr "Enregistrer et voir le résultat"
-
-msgctxt "doctorate-header-list"
-msgid "Scholarship"
-msgstr "Bourse"
 
 msgid "Scholarship end date"
 msgstr "Date de fin de la bourse"
@@ -1970,9 +1923,6 @@ msgstr "Désigner comme secrétaire"
 msgid "Show details"
 msgstr "Voir le détail"
 
-msgid "Show the states of the checklist"
-msgstr "Afficher les états de la checklist"
-
 msgid "Signatures"
 msgstr "Signatures"
 
@@ -2010,10 +1960,6 @@ msgstr "Étudiant"
 msgid "Subject"
 msgstr "Sujet"
 
-msgctxt "doctorate-header-list"
-msgid "Submission date"
-msgstr "Date soumission"
-
 msgid "Submit"
 msgstr "Soumettre"
 
@@ -2023,9 +1969,9 @@ msgstr "Soumettre les activités sélectionnées"
 msgid "Submit selected courses"
 msgstr "Soumettre les cours sélectionnées"
 
-msgctxt "admission"
+msgctxt "parcours_doctoral"
 msgid "Submitted"
-msgstr "Soumis pour publication"
+msgstr "Soumis"
 
 msgid "Submitted for publication"
 msgstr "Soumis pour publication"
@@ -2164,6 +2110,11 @@ msgctxt "male gender"
 msgid "The doctoral student"
 msgstr "Le doctorant"
 
+msgctxt "parcours_doctoral"
+msgid "The doctoral training must be in the 'waiting for signature' status."
+msgstr ""
+"Le parcours doctoral doit être dans le statut 'en attente de signature'."
+
 msgid "The first name of the recipient"
 msgstr "Le prénom du destinataire"
 
@@ -2204,9 +2155,6 @@ msgstr ""
 
 msgid "The opinion about the extension request is not completed."
 msgstr "L'avis relatif à la demande d'une nouvelle échéance n'est pas complet."
-
-msgid "The proposition must be in the 'waiting for signature' status."
-msgstr "La proposition doit être dans le statut 'en attente de signature'."
 
 msgid "The public comment about the approval/refusal"
 msgstr "Le commentaire public de la décision"
@@ -2355,7 +2303,7 @@ msgstr ""
 msgid "Token"
 msgstr "Token"
 
-msgctxt "admission"
+msgctxt "parcours_doctoral"
 msgid "Tokens that can be used for replacement"
 msgstr "Tokens pouvant être utilisés"
 
