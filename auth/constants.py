@@ -27,25 +27,25 @@
 # Association between a read-only tab name (path name) and a permission
 READ_ACTIONS_BY_TAB = {
     # Personal data
-    'coordonnees': 'parcours_doctoral.view_parcours_doctoral_coordinates',
-    'cotutelle': 'parcours_doctoral.view_parcours_doctoral_cotutelle',
-    'person': 'parcours_doctoral.view_parcours_doctoral_person',
+    'coordonnees': 'parcours_doctoral.view_coordinates',
+    'cotutelle': 'parcours_doctoral.view_cotutelle',
+    'person': 'parcours_doctoral.view_person',
     # Training choice
-    'training-choice': 'parcours_doctoral.view_parcours_doctoral_training_choice',
+    'training-choice': 'parcours_doctoral.view_training_choice',
     # Previous experience
-    'curriculum': 'parcours_doctoral.view_parcours_doctoral_curriculum',
+    'curriculum': 'parcours_doctoral.view_curriculum',
     'educational': '',
     'educational_create': '',
     'non_educational': '',
     'non_educational_create': '',
-    'education': 'parcours_doctoral.view_parcours_doctoral_secondary_studies',
-    'languages': 'parcours_doctoral.view_parcours_doctoral_languages',
+    'education': 'parcours_doctoral.view_secondary_studies',
+    'languages': 'parcours_doctoral.view_languages',
     # Project
-    'project': 'parcours_doctoral.view_parcours_doctoral_project',
-    'supervision': 'parcours_doctoral.view_parcours_doctoral_supervision',
+    'project': 'parcours_doctoral.view_project',
+    'supervision': 'parcours_doctoral.view_supervision',
     # Confirmation exam
-    'confirmation': 'parcours_doctoral.view_parcours_doctoral_confirmation',
-    'extension-request': 'parcours_doctoral.view_parcours_doctoral_confirmation',
+    'confirmation': 'parcours_doctoral.view_confirmation',
+    'extension-request': 'parcours_doctoral.view_confirmation',
     # History
     'history': 'parcours_doctoral.view_historyentry',
     'history-all': 'parcours_doctoral.view_historyentry',
@@ -57,8 +57,8 @@ READ_ACTIONS_BY_TAB = {
     'complementary-training': 'parcours_doctoral.view_complementary_training',
     'course-enrollment': 'parcours_doctoral.view_course_enrollment',
     # Jury
-    'jury-preparation': 'parcours_doctoral.view_parcours_doctoral_jury',
-    'jury': 'parcours_doctoral.view_parcours_doctoral_jury',
+    'jury-preparation': 'parcours_doctoral.view_jury',
+    'jury': 'parcours_doctoral.view_jury',
     # Management
     'internal-note': 'parcours_doctoral.view_internalnote',
     'debug': 'parcours_doctoral.view_debug_info',
@@ -71,25 +71,25 @@ READ_ACTIONS_BY_TAB = {
 # Association between a write-only tab name (path name) and a permission
 UPDATE_ACTIONS_BY_TAB = {
     # Personal data
-    'coordonnees': 'parcours_doctoral.change_parcours_doctoral_coordinates',
-    'cotutelle': 'parcours_doctoral.change_parcours_doctoral_cotutelle',
-    'person': 'parcours_doctoral.change_parcours_doctoral_person',
+    'coordonnees': 'parcours_doctoral.change_coordinates',
+    'cotutelle': 'parcours_doctoral.change_cotutelle',
+    'person': 'parcours_doctoral.change_person',
     # Training choice
-    'training-choice': 'parcours_doctoral.change_parcours_doctoral_training_choice',
+    'training-choice': 'parcours_doctoral.change_training_choice',
     # Previous experience
-    'curriculum': 'parcours_doctoral.change_parcours_doctoral_curriculum',
+    'curriculum': 'parcours_doctoral.change_curriculum',
     'educational': '',
     'educational_create': '',
     'non_educational': '',
     'non_educational_create': '',
-    'education': 'parcours_doctoral.change_parcours_doctoral_secondary_studies',
-    'languages': 'parcours_doctoral.change_parcours_doctoral_languages',
+    'education': 'parcours_doctoral.change_secondary_studies',
+    'languages': 'parcours_doctoral.change_languages',
     # Project
-    'project': 'parcours_doctoral.change_parcours_doctoral_project',
-    'supervision': 'parcours_doctoral.change_parcours_doctoral_supervision',
+    'project': 'parcours_doctoral.change_project',
+    'supervision': 'parcours_doctoral.change_supervision',
     # Confirmation exam
-    'confirmation': 'parcours_doctoral.change_parcours_doctoral_confirmation',
-    'extension-request': 'parcours_doctoral.change_parcours_doctoral_confirmation_extension',
+    'confirmation': 'parcours_doctoral.change_confirmation',
+    'extension-request': 'parcours_doctoral.change_confirmation_extension',
     # Mails
     'send-mail': 'parcours_doctoral.send_message',
     # Training
@@ -101,6 +101,6 @@ UPDATE_ACTIONS_BY_TAB = {
     'documents': 'parcours_doctoral.view_documents_management',
     'checklist': 'parcours_doctoral.view_checklist',
     # Jury
-    'jury-preparation': 'parcours_doctoral.change_parcours_doctoral_jury',
-    'jury': 'parcours_doctoral.change_parcours_doctoral_jury',
+    'jury-preparation': 'parcours_doctoral.change_jury',
+    'jury': 'parcours_doctoral.change_jury',
 }
