@@ -30,6 +30,7 @@ from inspect import getfullargspec
 
 from django import template
 from django.conf import settings
+from django.core.validators import EMPTY_VALUES
 from django.urls import NoReverseMatch, reverse
 from django.utils.safestring import SafeString, mark_safe
 from django.utils.translation import get_language
@@ -624,3 +625,9 @@ def bootstrap_field_with_tooltip(field, classes='', show_help=False, html_toolti
         'html_tooltip': html_tooltip,
         'label': label,
     }
+
+
+@register.filter(is_safe=False)
+def default_if_none_or_empty(value, arg):
+    """If value is None or empty, use given default."""
+    return value if value not in EMPTY_VALUES else arg

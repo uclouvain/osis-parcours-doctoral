@@ -168,9 +168,6 @@ msgstr ""
 msgid "Activity type"
 msgstr ""
 
-msgid "Actor"
-msgstr ""
-
 msgid "Actors as list items"
 msgstr ""
 
@@ -277,9 +274,6 @@ msgstr ""
 msgid "An external member must have an institute."
 msgstr ""
 
-msgid "Application numero"
-msgstr ""
-
 msgid "Application status"
 msgstr ""
 
@@ -367,7 +361,8 @@ msgid "COMMUNICATION"
 msgstr "Oral communication (excluding conference)"
 
 msgid "COMMUNICATION types"
-msgstr "Activity types for the oral communication category (excluding conference)"
+msgstr ""
+"Activity types for the oral communication category (excluding conference)"
 
 msgid "COMPLEMENTARY_TRAINING"
 msgstr "Further training"
@@ -511,7 +506,7 @@ msgstr ""
 msgid "Configuration saved."
 msgstr ""
 
-msgctxt "admission"
+msgctxt "parcours_doctoral"
 msgid "Configure"
 msgstr ""
 
@@ -558,9 +553,6 @@ msgid ""
 msgstr ""
 
 msgid "Context"
-msgstr ""
-
-msgid "Cotutelle"
 msgstr ""
 
 msgid "Cotutelle request document"
@@ -674,14 +666,14 @@ msgctxt "parcours_doctoral"
 msgid "Defense method"
 msgstr ""
 
-msgid "Definitive admission date to doctorate"
+msgctxt "parcours_doctoral tab"
+msgid "Defense method"
 msgstr ""
 
-msgid "Definitive admission date:"
+msgid "Definitive doctoral training date to doctorate"
 msgstr ""
 
-msgctxt "admission"
-msgid "Delete"
+msgid "Definitive doctoral training date:"
 msgstr ""
 
 msgctxt "parcours_doctoral"
@@ -733,13 +725,6 @@ msgid "Does not have a doctor title"
 msgstr ""
 
 msgid "Done in"
-msgstr ""
-
-msgctxt "doctorate-header-list"
-msgid "Dossier status"
-msgstr ""
-
-msgid "Dossier submission date"
 msgstr ""
 
 msgid "Dr"
@@ -831,9 +816,6 @@ msgstr ""
 msgid "FREE_COURSE"
 msgstr "Open course"
 
-msgid "Fac decision"
-msgstr ""
-
 msgid "Failure of the confirmation paper"
 msgstr ""
 
@@ -895,9 +877,6 @@ msgid "HTML"
 msgstr ""
 
 msgid "Has your PhD project already started?"
-msgstr ""
-
-msgid "Hide the states of the checklist"
 msgstr ""
 
 msgid "INVITED"
@@ -1009,12 +988,6 @@ msgid "Keywords"
 msgstr ""
 
 msgid "Language"
-msgstr ""
-
-msgid "Last modification"
-msgstr ""
-
-msgid "Last name / First name"
 msgstr ""
 
 msgid "Last name / First name / Email"
@@ -1285,9 +1258,6 @@ msgstr ""
 msgid "Name in the language of the manifestation"
 msgstr ""
 
-msgid "Nationality"
-msgstr ""
-
 msgid "Negative assessment by lead supervisor"
 msgstr ""
 
@@ -1309,6 +1279,7 @@ msgstr ""
 msgid "No doctoral training"
 msgstr ""
 
+msgctxt "parcours_doctoral"
 msgid "No doctorate found."
 msgstr ""
 
@@ -1470,9 +1441,6 @@ msgstr ""
 msgid "Poster"
 msgstr ""
 
-msgid "Pre-admission"
-msgstr ""
-
 msgid "Presentation date"
 msgstr ""
 
@@ -1501,9 +1469,6 @@ msgid "Previous confirmation exams"
 msgstr ""
 
 msgid "Previous doctorate"
-msgstr ""
-
-msgid "Produce xls"
 msgstr ""
 
 msgid "Professor"
@@ -1742,9 +1707,6 @@ msgstr "Services"
 msgid "SERVICE types"
 msgstr "Activity types for the service category"
 
-msgid "SIC decision"
-msgstr ""
-
 msgid "SIGNING_IN_PROGRESS"
 msgstr "Signing in progress"
 
@@ -1757,19 +1719,11 @@ msgstr "Statistics"
 msgid "SUBMITTED_CONFIRMATION"
 msgstr "Submitted confirmation"
 
-msgctxt "admission"
-msgid "Save"
-msgstr ""
-
 msgctxt "parcours_doctoral"
 msgid "Save"
 msgstr ""
 
 msgid "Save and view result"
-msgstr ""
-
-msgctxt "doctorate-header-list"
-msgid "Scholarship"
 msgstr ""
 
 msgid "Scholarship end date"
@@ -1839,9 +1793,6 @@ msgstr ""
 msgid "Show details"
 msgstr ""
 
-msgid "Show the states of the checklist"
-msgstr ""
-
 msgid "Signatures"
 msgstr ""
 
@@ -1879,10 +1830,6 @@ msgstr ""
 msgid "Subject"
 msgstr ""
 
-msgctxt "doctorate-header-list"
-msgid "Submission date"
-msgstr ""
-
 msgid "Submit"
 msgstr ""
 
@@ -1892,7 +1839,7 @@ msgstr ""
 msgid "Submit selected courses"
 msgstr ""
 
-msgctxt "admission"
+msgctxt "parcours_doctoral"
 msgid "Submitted"
 msgstr ""
 
@@ -2010,6 +1957,10 @@ msgctxt "male gender"
 msgid "The doctoral student"
 msgstr ""
 
+msgctxt "parcours_doctoral"
+msgid "The doctoral training must be in the 'waiting for signature' status."
+msgstr ""
+
 msgid "The first name of the recipient"
 msgstr ""
 
@@ -2047,9 +1998,6 @@ msgid ""
 msgstr ""
 
 msgid "The opinion about the extension request is not completed."
-msgstr ""
-
-msgid "The proposition must be in the 'waiting for signature' status."
 msgstr ""
 
 msgid "The public comment about the approval/refusal"
@@ -2184,7 +2132,7 @@ msgstr ""
 msgid "Token"
 msgstr ""
 
-msgctxt "admission"
+msgctxt "parcours_doctoral"
 msgid "Tokens that can be used for replacement"
 msgstr ""
 
