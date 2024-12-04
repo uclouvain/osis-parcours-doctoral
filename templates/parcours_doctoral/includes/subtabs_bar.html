@@ -24,12 +24,12 @@
 * see http://www.gnu.org/licenses/.
 {% endcomment %}
 
-<ul class="nav nav-pills nav-stacked nav-grey">
+<ul class="nav nav-pills flex-column">
   {% for child in subtabs %}
     {% if child.name == active_tab %}
-      {% include 'parcours_doctoral/includes/tab_entry.html' with tab_name=child.name tab_label=child.label is_active=True %}
+      {% include 'parcours_doctoral/includes/tab_entry.html' with tab_name=child.name tab_label=child.label is_subtab=True is_active=True %}
     {% else %}
-      {% include 'parcours_doctoral/includes/tab_entry.html' with tab_name=child.name tab_label=child.label %}
+      {% include 'parcours_doctoral/includes/tab_entry.html' with tab_name=child.name tab_label=child.label is_subtab=True %}
     {% endif %}
   {% endfor %}
 </ul>
