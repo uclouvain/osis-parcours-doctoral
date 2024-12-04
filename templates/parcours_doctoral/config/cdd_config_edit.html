@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
-{% load bootstrap3 i18n dictionnary %}
+{% load django_bootstrap5 i18n dictionnary %}
 
 {% comment "License" %}
   * OSIS stands for Open Student Information System. It's an application
@@ -29,9 +29,9 @@
   {% blocktrans with name=object.cdd trimmed asvar title %}
     Change <em>{{ name }}</em> configuration
   {% endblocktrans %}
-  <li>{% trans 'Admission' %}</li>
-  <li><a href="{% url 'parcours_doctoral:config:cdd-config:list' %}">{% trans 'CDD configuration' %}</a></li>
-  <li class="active">{{ title|safe }}</li>
+  <li class="breadcrumb-item">{% trans 'Admission' %}</li>
+  <li class="breadcrumb-item"><a href="{% url 'parcours_doctoral:config:cdd-config:list' %}">{% trans 'CDD configuration' %}</a></li>
+  <li class="breadcrumb-item active">{{ title|safe }}</li>
 {% endblock %}
 
 {% block content %}
@@ -46,11 +46,11 @@
       {% csrf_token %}
       {% bootstrap_form form %}
       <button class="btn btn-primary">
-        <span class="glyphicon glyphicon-save" aria-hidden="true"></span>
+        <span class="fa-solid fa-floppy-disk" aria-hidden="true"></span>
         {% trans "Save" context 'parcours_doctoral' %}
       </button>
-      <a href="{% url 'parcours_doctoral:config:cdd-config:list' %}" class="btn btn-default">
-        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+      <a href="{% url 'parcours_doctoral:config:cdd-config:list' %}" class="btn btn-default border border-dark-subtle">
+        <span class="fa-solid fa-xmark" aria-hidden="true"></span>
         {% trans "Cancel" %}
       </a>
     </form>

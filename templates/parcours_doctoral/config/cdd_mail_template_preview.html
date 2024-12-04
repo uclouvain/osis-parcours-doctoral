@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
-{% load bootstrap3 %}
+{% load django_bootstrap5 %}
 {% load i18n %}
 
 {% comment "License" %}
@@ -27,8 +27,8 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-  <li><a href="{% url 'parcours_doctoral:config:cdd-mail-template:list' %}">{% trans 'Custom mail templates' %}</a></li>
-  <li class="active">{{ instances.0.name }}</li>
+  <li class="breadcrumb-item"><a href="{% url 'parcours_doctoral:config:cdd-mail-template:list' %}">{% trans 'Custom mail templates' %}</a></li>
+  <li class="breadcrumb-item active">{{ instances.0.name }}</li>
 {% endblock %}
 
 {% block content %}
@@ -41,27 +41,21 @@
   </div>
   {% for instance in instances %}
     <h2>{{ instance.get_language_display }}</h2>
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h3 class="panel-title">{% trans "Subject" %}</h3>
-      </div>
-      <div class="panel-body">
+    <div class="card">
+      <div class="card-body">
+        <h3 class="card-title">{% trans "Subject" %}</h3>
         {{ instance.render_subject }}
       </div>
     </div>
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h3 class="panel-title">{% trans "HTML" %}</h3>
-      </div>
-      <div class="panel-body">
+    <div class="card">
+      <div class="card-body">
+        <h3 class="card-title">{% trans "HTML" %}</h3>
         {{ instance.body_as_html|safe }}
       </div>
     </div>
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h3 class="panel-title">{% trans "Plain text" %}</h3>
-      </div>
-      <div class="panel-body">
+    <div class="card">
+      <div class="card-body">
+        <h3 class="card-title">{% trans "Plain text" %}</h3>
         <samp>
           {{ instance.body_as_plain|linebreaks }}
         </samp>
@@ -71,8 +65,8 @@
 
   {% url 'parcours_doctoral:config:cdd-mail-template:edit' identifier=instances.0.identifier pk=instances.0.pk as change_url %}
   <a href="{{ change_url }}" class="btn btn-primary"><span class="fa fa-edit"></span> {% trans "Edit" %}</a>
-  <a href="{% url 'parcours_doctoral:config:cdd-mail-template:list' %}" class="btn btn-default">
-    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+  <a href="{% url 'parcours_doctoral:config:cdd-mail-template:list' %}" class="btn btn-default border border-dark-subtle">
+    <span class="fa-solid fa-xmark" aria-hidden="true"></span>
     {% trans "Cancel" %}
   </a>
 {% endblock %}

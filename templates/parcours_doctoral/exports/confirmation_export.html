@@ -1,6 +1,30 @@
 {% extends "parcours_doctoral/exports/base_pdf.html" %}
 {% load i18n doctorate_enums parcours_doctoral strings %}
 
+{% comment "License" %}
+* OSIS stands for Open Student Information System. It's an application
+* designed to manage the core business of higher education institutions,
+* such as universities, faculties, institutes and professional schools.
+* The core business involves the administration of students, teachers,
+* courses, programs and so on.
+*
+* Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* A copy of this license - GNU General Public License - is available
+* at the root of the source code of this program.  If not,
+* see http://www.gnu.org/licenses/.
+{% endcomment %}
+
 {% block extra_head %}
   <style>
     #title {
@@ -140,7 +164,7 @@
     {% concat parcours_doctoral.nom_doctorant " " parcours_doctoral.prenom_doctorant as full_name %}
     {% field_data student_title full_name inline=True %}
     {% field_data _("Registration Id") parcours_doctoral.noma_doctorant inline=True %}
-    {% field_data _("Definitive doctoral training date to doctorate") parcours_doctoral.cree_le inline=True %}
+    {% field_data _("Definitive admission date to doctorate") parcours_doctoral.cree_le inline=True %}
 
     {% if parcours_doctoral.financement.type == "SEARCH_SCHOLARSHIP" %}
       {% if parcours_doctoral.financement.bourse_recherche %}
