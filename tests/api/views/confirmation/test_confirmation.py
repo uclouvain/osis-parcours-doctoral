@@ -70,13 +70,6 @@ class ConfirmationAPIViewTestCase(APITestCase):
         cls.committee_member_user = CaMemberFactory(process=cls.process).person.user
         cls.other_committee_member_user = CaMemberFactory().person.user
 
-        cls.doctorate = ParcoursDoctoralFactory(
-            supervision_group=cls.process,
-            student=cls.student,
-        )
-
-        cls.url = resolve_url('parcours_doctoral_api_v1:confirmation', uuid=cls.doctorate.uuid)
-
     def setUp(self):
         patcher = mock.patch(
             "osis_document.contrib.fields.FileField._confirm_multiple_upload",
@@ -84,6 +77,12 @@ class ConfirmationAPIViewTestCase(APITestCase):
         )
         patcher.start()
         self.addCleanup(patcher.stop)
+
+        self.doctorate = ParcoursDoctoralFactory(
+            supervision_group=self.process,
+            student=self.student,
+        )
+        self.url = resolve_url('parcours_doctoral_api_v1:confirmation', uuid=self.doctorate.uuid)
 
     def test_assert_methods_not_allowed(self):
         self.client.force_authenticate(user=self.student.user)
@@ -139,7 +138,7 @@ class ConfirmationAPIViewTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_get_confirmation_with_several_confirmation_papers(self):
-        self.client.force_login(user=self.student.user)
+        self.client.force_authenticate(user=self.student.user)
 
         with freezegun.freeze_time('2022-01-01'):
             first_paper: ConfirmationPaper = ConfirmationPaperFactory(
