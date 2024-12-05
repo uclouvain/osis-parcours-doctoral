@@ -1,5 +1,5 @@
 {% extends "parcours_doctoral/details/tab_layout.html" %}
-{% load i18n static parcours_doctoral parcours_doctoral enums bootstrap3 %}
+{% load i18n static parcours_doctoral parcours_doctoral enums django_bootstrap5 %}
 
 {% comment "License" %}
   * OSIS stands for Open Student Information System. It's an application
@@ -28,7 +28,7 @@
 
 {% block actions-group %}
   {% url "parcours_doctoral:course-enrollment:add" uuid=view.kwargs.uuid category='UCL_COURSE' as add_url %}
-  <a href="{{ add_url }}" class="btn btn-default">
+  <a href="{{ add_url }}" class="btn btn-default border border-dark-subtle">
     {% trans "Enroll in a course" %}
   </a>
 {% endblock %}
@@ -42,15 +42,15 @@
 
   <h4>{% trans "Course units" context 'parcours_doctoral' %}</h4>
   {% if activities %}
-    <div class="filter-status form-group">
+    <div class="filter-status mb-3">
       <strong>{% trans "Status" context 'parcours_doctoral' %}</strong>
-      <div class="btn-group btn-group-sm" role="radiogroup">
-        <button type="button" class="btn btn-default active" data-status="all">
+      <div class="btn-group btn-group-sm flex-wrap" role="radiogroup">
+        <button type="button" class="btn btn-default border border-dark-subtle active" data-status="all">
           {% trans "All" context "filters" %}
         </button>
         {% for status_name, status_label in statuses %}
           <button type="button"
-                  class="btn btn-default btn-{{ status_name|status_as_class }}"
+                  class="btn border border-dark-subtle btn-{{ status_name|status_as_class }}"
                   data-status="{{ status_name }}"
           >{{ status_label }}</button>
         {% endfor %}
@@ -73,8 +73,8 @@
           {% include "parcours_doctoral/details/training/"|add:template_name %}
         {% endif %}
       {% endfor %}
-      <button class="btn btn-default" type="submit" name="_submit">{% trans "Submit selected courses" %}</button>
-      <button class="btn btn-default" type="submit" name="_accept">{% trans "Validate selected courses" %}</button>
+      <button class="btn btn-default border border-dark-subtle" type="submit" name="_submit">{% trans "Submit selected courses" %}</button>
+      <button class="btn btn-default border border-dark-subtle" type="submit" name="_accept">{% trans "Validate selected courses" %}</button>
     </form>
   {% else %}
     {% trans "This student has not created any course yet." %}
@@ -85,46 +85,18 @@
 {% endblock %}
 
 
-
 {% block style %}
   {{ block.super }}
-  <style>
-    .panel {
-      margin-bottom: 2em;
-    }
-
-    .panel-heading .panel-title {
-      line-height: 1.3em;
-    }
-
-    .panel-heading .panel-title > a {
-      float: left;
-      font-size: 1.5em;
-      padding-right: .3em;
-    }
-
-    .panel-heading .panel-title > a:focus,
-    .panel-heading .panel-title > a:hover {
-      text-decoration: none;
-    }
-
-    .panel-heading .panel-title > a:after {
-      font-family: 'Glyphicons Halflings';
-      content: "\e114";
-    }
-
-    .panel-heading .panel-title > a.collapsed:after {
-      content: "\e080";
-    }
-  </style>
+  <link href="{% static "parcours_doctoral/training.css" %}" rel="stylesheet" />
 {% endblock %}
 
 
 {% block script %}
+  {{ block.super }}
   <script src="{% static 'osis_document/osis-document.umd.min.js' %}"></script>
   <script>
     $(function () {
-      $('[data-toggle="popover"]').popover();
+      $('[data-bs-toggle="popover"]').popover();
 
       // Open the right panel depending on location hash
       if (document.location.hash) {
@@ -146,7 +118,7 @@
 
       function apply_filters () {
         const reStatus = new RegExp(`\\b${current_filter_status}\\b`);
-        $('#activities .panel').each(function () {
+        $('#activities .card').each(function () {
           $(this).show();
           if ((current_filter_status !== ALL_VALUES && !$(this).data('status').match(reStatus))) {
             $(this).hide();

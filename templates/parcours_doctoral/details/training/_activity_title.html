@@ -24,47 +24,37 @@
   * see http://www.gnu.org/licenses/.
 {% endcomment %}
 
-{% display activity.ects|default:""|floatformat:"-2" " ECTS" as ects %}
-
 {% if template_name == "communication.html" %}
-  {% display '(' activity.city "," activity.country "," activity.start_date|date:"d/m/Y" ")" as location_period %}
-  {% display activity.type ':' activity.subtype '-' activity.title '-' location_period "-" ects %}
+  {{ activity.type }} : {{ activity.subtype }} - {{ activity.title }} - ({{ activity.city }}, {{ activity.country }}, {{ activity.start_date|date:"d/m/Y" }}) - {{ activity.ects|format_ects }}
 {% elif template_name == "conference.html" %}
-  {% display activity.type ':' activity.title as title_details %}
-  {% display '(' activity.city "," activity.country "," period ")" as location_period %}
-  {% display title_details " " location_period "-" ects %}
+  {{ activity.type }} : {{ activity.title }} ({{ activity.city }}, {{ activity.country }}, {{ period }}) - {{ activity.ects|format_ects }}
 {% elif template_name == "conference_communication.html" %}
-  {% display activity.type ':' activity.title "-" ects %}
+  {{ activity.type }} : {{ activity.title }} - {{ activity.ects|format_ects }}
 {% elif template_name == "conference_publication.html" %}
-  {% display activity.type "-" ects %}
+  {{ activity.type }} - {{ activity.ects|format_ects }}
 {% elif template_name == "course.html" %}
-  {% display '(' activity.subtitle ')' as code %}
-  {% display activity.type ':' activity.title " " code "-" ects %}
+  {{ activity.type }} : {{ activity.title }} ({{ activity.subtitle }}) - {{ activity.ects|format_ects }}
 {% elif template_name == "paper.html" %}
-  {% display activity.type|enum_display:'ChoixTypeEpreuve' "-" ects %}
+  {{ activity.type|enum_display:'ChoixTypeEpreuve' }} - {{ activity.ects|format_ects }}
 {% elif template_name == "publication.html" %}
-  {% display '(' activity.start_date|date:'d/m/Y' ")" as title_details %}
-  {% display activity.type " " title_details "-" ects %}
+  {{ activity.type }} ({{ activity.start_date|date:'d/m/Y'}}) - {{ activity.ects|format_ects }}
 {% elif template_name == "residency.html" %}
-  {% display activity.type %}
-  {% display '(' activity.city "," activity.country "," period ")" "-" ects %}
+  {{ activity.type }} ({{ activity.city }}, {{ activity.country }}, {{ period }}) - {{ activity.ects|format_ects }}
 {% elif template_name == "residency_communication.html" %}
-  {% display '(' activity.city "," activity.country "," activity.start_date|date:"d/m/Y" ")" as location_period %}
-  {% display activity.type ':' activity.subtype '-' activity.title ' ' location_period "-" ects %}
+  {{ activity.type }} : {{ activity.subtype }} - {{ activity.title }} ({{ activity.city }}, {{ activity.country }}, {{ activity.start_date|date:"d/m/Y" }}) - {{ activity.ects|format_ects }}
 {% elif template_name == "seminar.html" %}
   {% if activity.start_date and activity.end_date %}
     {% blocktrans with start=activity.start_date|date:"d/m/Y" end=activity.end_date|date:"d/m/Y" asvar period trimmed %}
       from {{ start }} to {{ end }}
     {% endblocktrans %}
   {% endif %}
-  {% display activity.type ':' activity.title '-' period "-" ects %}
+  {{ activity.type }} : {{ activity.title }} - {{ period }} - {{ activity.ects|format_ects }}
 {% elif template_name == "seminar_communication.html" %}
-  {% display activity.start_date|date:"d/m/Y" as period %}
-  {% display activity.title ' ' location '-' period %}
+  {{ activity.title }} {{ location }} - {{ activity.start_date|date:"d/m/Y"}}
 {% elif template_name == "service.html" %}
-  {% display activity.type ':' activity.title '-' period "-" ects %}
+  {{ activity.type }} : {{ activity.title }} - {{ period }} - {{ activity.ects|format_ects }}
 {% elif template_name == "ucl_course.html" %}
-  {% display activity.learning_unit_year.complete_title_i18n "-" activity.learning_unit_year.academic_year "-" activity.context|enum_display:'ContexteFormation' '-' ects %}
+  {{ activity.learning_unit_year.complete_title_i18n }} - {{ activity.learning_unit_year.academic_year }} - {{ activity.context|enum_display:'ContexteFormation' }} - {{ activity.ects|format_ects }}
 {% elif template_name == "vae.html" %}
-  {% display activity.title '-' ects %}
+  {{ activity.title }} - {{ activity.ects|format_ects }}
 {% endif %}

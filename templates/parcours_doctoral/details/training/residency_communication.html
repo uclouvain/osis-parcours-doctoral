@@ -28,36 +28,32 @@
   {% firstof '<a href="'|safe|add:activity.website|add:'" target="_blank">'|safe|add:activity.website|add:'</a>'|safe "" as website %}
 {% endif %}
 
-{% display activity.ects|default:""|floatformat:"-2" " ECTS" as ects %}
-{% display '(' activity.city "," activity.country "," activity.start_date|date:"d/m/Y" ")" as location_period %}
-
 <div
-  class="subpanel panel-{{ activity|status_as_class }}"
+  class="subpanel card card-{{ activity|status_as_class }}"
   data-status="{{ activity.status }}"
   data-type="{{ activity.category }}"
 >
-  <div class="panel-heading" role="tab" id="h-{{ activity.uuid }}">
-    <h3 class="panel-title">
+  <div class="card-header" role="tab" id="h-{{ activity.uuid }}">
+    <h3 class="card-title d-flex align-items-start gap-3">
       {% include "parcours_doctoral/details/training/_panel_title.html" %}
-      {% include "parcours_doctoral/details/training/_activity_title.html" %}
       <div class="clearfix"></div>
     </h3>
   </div>
   <div
     id="a-{{ activity.uuid }}"
-    class="panel-collapse collapse"
+    class="card-body panel-collapse collapse"
     role="tabpanel"
     aria-labelledby="h-{{ activity.uuid }}"
   >
-    <div class="panel-body">
+    <div>
       <p>
         <strong class="d-block">{% trans "Description" %}</strong>
-        {% display activity.title "-" activity.subtitle "-" activity.is_online|format_is_online "-" website %}
+        {{ activity.title }} - {{ activity.subtitle }} - {{ activity.is_online|format_is_online }} - {{ website }}
         <br />
-        {% display activity.organizing_institution "," activity.city "," activity.country %}
+        {{ activity.organizing_institution }}, {{ activity.city }}, {{ activity.country }}
       </p>
       {% if activity.summary %}
-        <div class="form-group">
+        <div class="mb-3">
           <strong class="d-block">{% trans "Summary of the communication" %}</strong>
           {% document_visualizer activity.summary for_modified_upload=True %}
         </div>
@@ -77,13 +73,13 @@
         {% endif %}
       </div>
       {% if activity.participating_proof %}
-        <div class="form-group">
+        <div class="mb-3">
           <strong class="d-block">{% trans "Attestation of the communication" %}</strong>
           {% document_visualizer activity.participating_proof for_modified_upload=True %}
         </div>
       {% endif %}
       {% if activity.comment %}
-        <div class="form-group">
+        <div class="mb-3">
           <strong class="d-block">{% trans "Comments" %}</strong>
           {{ activity.comment|linebreaks }}
         </div>
