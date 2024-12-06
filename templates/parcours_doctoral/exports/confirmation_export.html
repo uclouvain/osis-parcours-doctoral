@@ -3,37 +3,6 @@
 
 {% block extra_head %}
   <style>
-    #title {
-      margin-bottom: 3em;
-    }
-
-    #title h1, #title h2 {
-      font-size: 1em;
-      text-align: center;
-    }
-
-    #title h1 {
-      color: #5db3e6 !important;
-      text-transform: uppercase;
-      font-weight: bold;
-    }
-
-    #title h2 {
-      color: #515151 !important;
-      font-style: italic;
-    }
-
-    dl {
-      margin-bottom: 10px;
-    }
-
-    dd {
-      margin-left: 5px;
-    }
-
-    .to-complete {
-      display: flex;
-    }
 
     .to-complete dd {
       flex: 1;
@@ -140,7 +109,7 @@
     {% concat parcours_doctoral.nom_doctorant " " parcours_doctoral.prenom_doctorant as full_name %}
     {% field_data student_title full_name inline=True %}
     {% field_data _("Registration Id") parcours_doctoral.noma_doctorant inline=True %}
-    {% field_data _("Definitive doctoral training date to doctorate") parcours_doctoral.cree_le inline=True %}
+    {% field_data _("Definitive admission date to doctorate") parcours_doctoral.cree_le inline=True %}
 
     {% if parcours_doctoral.financement.type == "SEARCH_SCHOLARSHIP" %}
       {% if parcours_doctoral.financement.bourse_recherche %}

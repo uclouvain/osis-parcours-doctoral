@@ -36,6 +36,8 @@ from django.utils.safestring import SafeString, mark_safe
 from django.utils.translation import get_language
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import pgettext
+
+from base.models.organization import Organization
 from osis_document.api.utils import get_remote_metadata, get_remote_token
 from reference.models.language import Language
 
@@ -631,3 +633,18 @@ def bootstrap_field_with_tooltip(field, classes='', show_help=False, html_toolti
 def default_if_none_or_empty(value, arg):
     """If value is None or empty, use given default."""
     return value if value not in EMPTY_VALUES else arg
+
+
+@register.simple_tag
+def get_superior_institute_name(institute_uuid):
+    if institute_uuid:
+        try:
+            return Organization.objects.only('name').get(uuid=institute_uuid).name
+        except Organization.DoesNotExist:
+            pass
+    return ''
+
+
+@register.filter(name='range')
+def get_range(number):
+    return range(1, number + 1)
