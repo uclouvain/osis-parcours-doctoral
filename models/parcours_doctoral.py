@@ -25,13 +25,6 @@
 # ##############################################################################
 import uuid
 
-from admission.models.functions import ToChar
-from base.models.education_group_year import EducationGroupYear
-from base.models.entity_version import EntityVersion
-from base.models.enums.education_group_categories import Categories
-from base.models.enums.education_group_types import TrainingType
-from base.models.person import Person
-from base.models.student import Student
 from django.core.cache import cache
 from django.db import models
 from django.db.models import Case, CharField, F, OuterRef, Q, Subquery, Value, When
@@ -43,9 +36,16 @@ from django.utils.translation import pgettext_lazy
 from osis_document.contrib import FileField
 from osis_history.models import HistoryEntry
 from osis_signature.contrib.fields import SignatureProcessField
-from program_management.models.education_group_version import EducationGroupVersion
 
+from admission.models.functions import ToChar
+from base.models.education_group_year import EducationGroupYear
+from base.models.entity_version import EntityVersion
+from base.models.enums.education_group_categories import Categories
+from base.models.enums.education_group_types import TrainingType
+from base.models.person import Person
+from base.models.student import Student
 from parcours_doctoral.ddd.domain.model.enums import (
+    STATUTS_DOCTORAT_EN_COURS_DE_CREATION,
     ChoixCommissionProximiteCDEouCLSM,
     ChoixCommissionProximiteCDSS,
     ChoixDoctoratDejaRealise,
@@ -56,6 +56,7 @@ from parcours_doctoral.ddd.domain.model.enums import (
 )
 from parcours_doctoral.ddd.jury.domain.model.enums import FormuleDefense
 from parcours_doctoral.ddd.repository.i_parcours_doctoral import CAMPUS_LETTRE_DOSSIER
+from program_management.models.education_group_version import EducationGroupVersion
 
 __all__ = [
     'ParcoursDoctoral',
@@ -206,8 +207,7 @@ class ParcoursDoctoral(models.Model):
 
     status = models.CharField(
         choices=ChoixStatutParcoursDoctoral.choices(),
-        max_length=30,
-        default=ChoixStatutParcoursDoctoral.ADMITTED.name,
+        max_length=64,
         verbose_name=_("Status"),
     )
 
@@ -491,6 +491,10 @@ class ParcoursDoctoral(models.Model):
                 _("Can update the information related to the confirmation paper"),
             ),
         ]
+
+    @property
+    def is_initialized(self):
+        return self.status not in STATUTS_DOCTORAT_EN_COURS_DE_CREATION
 
     def save(self, *args, **kwargs) -> None:
         super().save(*args, **kwargs)

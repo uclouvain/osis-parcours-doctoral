@@ -24,7 +24,6 @@
 #
 # ##############################################################################
 from admission.mail_templates import ADMISSION_EMAIL_GENERIC_ONCE_ADMITTED
-
 from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from parcours_doctoral.mail_templates.confirmation_paper import (
     PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_INFO_STUDENT,
@@ -34,6 +33,6 @@ from parcours_doctoral.models import ParcoursDoctoral
 
 def get_mail_templates_from_doctorate(parcours_doctoral: ParcoursDoctoral):
     allowed_templates = [ADMISSION_EMAIL_GENERIC_ONCE_ADMITTED]
-    if parcours_doctoral.status == ChoixStatutParcoursDoctoral.SUBMITTED_CONFIRMATION.name:
+    if parcours_doctoral.status == ChoixStatutParcoursDoctoral.CONFIRMATION_SOUMISE.name:
         allowed_templates.append(PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_INFO_STUDENT)
     return allowed_templates
