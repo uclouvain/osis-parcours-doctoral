@@ -67,11 +67,14 @@ class ExternalDoctorateAPIView(APIView):
     def initial(self, request, *args, **kwargs):
         super().initial(request, *args, **kwargs)
 
+        doctorate = self.get_permission_object()
+
         # Load actor from token
         if (
-            not self.actor
+            not doctorate.is_initialized
+            or not self.actor
             # must be part of supervision group
-            or self.actor.process_id != self.get_permission_object().supervision_group_id
+            or self.actor.process_id != doctorate.supervision_group_id
             # must be not older than 7 days
             or self.actor.states.last().created_at
             < now()

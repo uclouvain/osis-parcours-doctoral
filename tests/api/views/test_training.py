@@ -32,6 +32,7 @@ from django.test import override_settings
 from rest_framework import status
 from rest_framework.test import APITestCase
 
+from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from parcours_doctoral.ddd.formation.domain.model.enums import (
     CategorieActivite,
     ContexteFormation,
@@ -88,17 +89,18 @@ class TrainingApiTestCase(QueriesAssertionsMixin, APITestCase):
         cls.student = cls.parcours_doctoral.student
         cls.other_student_user = StudentRoleFactory(person__first_name="Jim").person.user
         cls.no_role_user = PersonFactory(first_name="Joe").user
-        cls.url = resolve_url("parcours_doctoral_api_v1:doctoral-training", uuid=cls.parcours_doctoral.uuid)
+        cls.training_base_url = 'parcours_doctoral_api_v1:doctoral-training'
+        cls.url = resolve_url(cls.training_base_url, uuid=cls.parcours_doctoral.uuid)
         cls.activity = ConferenceFactory(parcours_doctoral=cls.parcours_doctoral)
         cls.activity_url = resolve_url(
             "parcours_doctoral_api_v1:training",
             uuid=cls.parcours_doctoral.uuid,
             activity_id=cls.activity.uuid,
         )
-        cls.complementary_url = resolve_url(
-            "parcours_doctoral_api_v1:complementary-training", uuid=cls.parcours_doctoral.uuid
-        )
-        cls.enrollment_url = resolve_url("parcours_doctoral_api_v1:course-enrollment", uuid=cls.parcours_doctoral.uuid)
+        cls.complementary_base_url = 'parcours_doctoral_api_v1:complementary-training'
+        cls.complementary_url = resolve_url(cls.complementary_base_url, uuid=cls.parcours_doctoral.uuid)
+        cls.enrollment_base_url = 'parcours_doctoral_api_v1:course-enrollment'
+        cls.enrollment_url = resolve_url(cls.enrollment_base_url, uuid=cls.parcours_doctoral.uuid)
 
     def test_user_not_logged_assert_not_authorized(self):
         response = self.client.get(self.url)
@@ -111,6 +113,40 @@ class TrainingApiTestCase(QueriesAssertionsMixin, APITestCase):
         for method in methods_not_allowed:
             response = getattr(self.client, method)(self.url)
             self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    def test_get_of_in_creation_doctorate_is_forbidden(self):
+        self.client.force_authenticate(user=self.student.user)
+
+        in_creation_doctorate = ParcoursDoctoralFactory(
+            supervision_group=self.parcours_doctoral.supervision_group,
+            student=self.student,
+            status=ChoixStatutParcoursDoctoral.EN_COURS_DE_CREATION_PAR_GESTIONNAIRE.name,
+        )
+
+        training_url = resolve_url(self.training_base_url, uuid=in_creation_doctorate.uuid)
+        complementary_url = resolve_url(self.complementary_base_url, uuid=in_creation_doctorate.uuid)
+        enrollment_url = resolve_url(self.enrollment_base_url, uuid=in_creation_doctorate.uuid)
+
+        response = self.client.get(training_url)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        response = self.client.get(complementary_url)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        response = self.client.get(enrollment_url)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        in_creation_doctorate.status = ChoixStatutParcoursDoctoral.EN_ATTENTE_INJECTION_EPC.name
+        in_creation_doctorate.save()
+
+        response = self.client.get(training_url)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        response = self.client.get(complementary_url)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        response = self.client.get(enrollment_url)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_training_get_with_student(self):
         self.client.force_authenticate(user=self.student.user)
