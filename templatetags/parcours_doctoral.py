@@ -38,7 +38,6 @@ from django.utils.translation import get_language
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import pgettext
 from osis_document.api.utils import get_remote_metadata, get_remote_token
-from reference.models.language import Language
 
 from parcours_doctoral.auth.constants import READ_ACTIONS_BY_TAB, UPDATE_ACTIONS_BY_TAB
 from parcours_doctoral.constants import CAMPUSES_UUIDS
@@ -50,6 +49,7 @@ from parcours_doctoral.ddd.formation.domain.model.enums import (
 )
 from parcours_doctoral.ddd.repository.i_parcours_doctoral import formater_reference
 from parcours_doctoral.models import ParcoursDoctoral
+from reference.models.language import Language
 
 register = template.Library()
 

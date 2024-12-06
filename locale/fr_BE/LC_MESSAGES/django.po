@@ -152,7 +152,7 @@ msgstr "Un promoteur ne peut pas être modifié dans le jury."
 msgid "ACCEPTEE"
 msgstr "Acceptée"
 
-msgid "ADMITTED"
+msgid "ADMIS"
 msgstr "Admis"
 
 msgid "Abstract"
@@ -414,11 +414,17 @@ msgstr "Types d'activité pour une communication dans la catégorie Conférence"
 msgid "CONFERENCE types"
 msgstr "Types d'activité pour la catégorie Conférence"
 
+msgid "CONFIRMATION_A_REPRESENTER"
+msgstr "Confirmation à représenter"
+
 msgid "CONFIRMATION_PAPER"
 msgstr "Épreuve de confirmation"
 
-msgid "CONFIRMATION_TO_BE_REPEATED"
-msgstr "Confirmation à représenter"
+msgid "CONFIRMATION_REUSSIE"
+msgstr "Epreuve de confirmation réussie"
+
+msgid "CONFIRMATION_SOUMISE"
+msgstr "Confirmation soumise"
 
 msgctxt "CategorieActivite"
 msgid "COURSE"
@@ -797,6 +803,15 @@ msgstr "ECTS doit être positif"
 
 msgid "EFT"
 msgstr "EFT"
+
+msgid "EN_ATTENTE_DE_SIGNATURE"
+msgstr "En attente de signature"
+
+msgid "EN_ATTENTE_INJECTION_EPC"
+msgstr "En attente d'injection EPC"
+
+msgid "EN_COURS_DE_CREATION_PAR_GESTIONNAIRE"
+msgstr "En cours de création par un gestionnaire"
 
 msgid "Edit"
 msgstr "Modifier"
@@ -1358,11 +1373,11 @@ msgstr "Sans objet"
 msgid "NO"
 msgstr "Non"
 
+msgid "NON_AUTORISE_A_POURSUIVRE"
+msgstr "Non autorisé à poursuivre"
+
 msgid "NON_SOUMISE"
 msgstr "Non soumise"
-
-msgid "NOT_ALLOWED_TO_CONTINUE"
-msgstr "Non autorisé à poursuivre"
 
 msgid "NOT_INVITED"
 msgstr "Pas encore invité à signer"
@@ -1475,9 +1490,6 @@ msgstr "Épreuve"
 
 msgid "PARTIAL"
 msgstr "En partie"
-
-msgid "PASSED_CONFIRMATION"
-msgstr "Epreuve de confirmation réussie"
 
 msgid "PDF file"
 msgstr "Fichier PDF"
@@ -1846,9 +1858,6 @@ msgstr "Soumise"
 msgid "STATISTICS"
 msgstr "Statistiques"
 
-msgid "SUBMITTED_CONFIRMATION"
-msgstr "Confirmation soumise"
-
 msgctxt "parcours_doctoral"
 msgid "Save"
 msgstr "Enregistrer"
@@ -2115,6 +2124,9 @@ msgid "The doctoral training must be in the 'waiting for signature' status."
 msgstr ""
 "Le parcours doctoral doit être dans le statut 'en attente de signature'."
 
+msgid "The doctorate is not initialized"
+msgstr "Le doctorat n'est pas initialisé"
+
 msgid "The first name of the recipient"
 msgstr "Le prénom du destinataire"
 
@@ -2371,9 +2383,6 @@ msgstr "Validé"
 msgid "WORK_CONTRACT"
 msgstr "Contrat de travail"
 
-msgid "Waiting for signature"
-msgstr "En attente de signature"
-
 msgid ""
 "We congratulate you on your successful completion of the paper and wish you "
 "every success in your doctoral training."
@@ -2441,8 +2450,10 @@ msgstr ""
 "Vous devez être le promoteur de référence pour accéder à cette formation "
 "doctorale"
 
-msgid "You must be the request author to access this admission"
-msgstr "Vous devez être l'auteur de la demande pour accéder à cette admission"
+msgid "You must be the request author to access this doctoral training"
+msgstr ""
+"Vous devez être l'auteur de la demande pour accéder à cette formation "
+"doctorale"
 
 msgid "You must be the request promoter to access this doctoral training"
 msgstr ""

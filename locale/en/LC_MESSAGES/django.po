@@ -119,7 +119,7 @@ msgstr ""
 msgid "ACCEPTEE"
 msgstr "Accepted"
 
-msgid "ADMITTED"
+msgid "ADMIS"
 msgstr "Admitted"
 
 msgid "Abstract"
@@ -377,11 +377,17 @@ msgstr "Activity types for a communication in the conference category"
 msgid "CONFERENCE types"
 msgstr "Activity tpes for the conference category"
 
+msgid "CONFIRMATION_A_REPRESENTER"
+msgstr "Repeat confirmation exam"
+
 msgid "CONFIRMATION_PAPER"
 msgstr "Confirmation exam"
 
-msgid "CONFIRMATION_TO_BE_REPEATED"
-msgstr "Repeat confirmation exam"
+msgid "CONFIRMATION_REUSSIE"
+msgstr "Passed confirmation exam"
+
+msgid "CONFIRMATION_SOUMISE"
+msgstr "Submitted confirmation"
 
 msgctxt "CategorieActivite"
 msgid "COURSE"
@@ -754,6 +760,15 @@ msgstr ""
 
 msgid "EFT"
 msgstr ""
+
+msgid "EN_ATTENTE_DE_SIGNATURE"
+msgstr "Waiting for signature"
+
+msgid "EN_ATTENTE_INJECTION_EPC"
+msgstr "Waiting for EPC injection"
+
+msgid "EN_COURS_DE_CREATION_PAR_GESTIONNAIRE"
+msgstr "Being created by a manager"
 
 msgid "Edit"
 msgstr ""
@@ -1243,11 +1258,11 @@ msgstr ""
 msgid "NO"
 msgstr "No"
 
+msgid "NON_AUTORISE_A_POURSUIVRE"
+msgstr "Not allowed to continue"
+
 msgid "NON_SOUMISE"
 msgstr "Not submitted"
-
-msgid "NOT_ALLOWED_TO_CONTINUE"
-msgstr "Not allowed to continue"
 
 msgid "NOT_INVITED"
 msgstr "Not invited to sign"
@@ -1359,9 +1374,6 @@ msgstr "Examination"
 
 msgid "PARTIAL"
 msgstr "Partially"
-
-msgid "PASSED_CONFIRMATION"
-msgstr "Passed confirmation exam"
 
 msgid "PDF file"
 msgstr ""
@@ -1716,9 +1728,6 @@ msgstr "Submitted"
 msgid "STATISTICS"
 msgstr "Statistics"
 
-msgid "SUBMITTED_CONFIRMATION"
-msgstr "Submitted confirmation"
-
 msgctxt "parcours_doctoral"
 msgid "Save"
 msgstr ""
@@ -1961,6 +1970,9 @@ msgctxt "parcours_doctoral"
 msgid "The doctoral training must be in the 'waiting for signature' status."
 msgstr ""
 
+msgid "The doctorate is not initialized"
+msgstr ""
+
 msgid "The first name of the recipient"
 msgstr ""
 
@@ -2200,9 +2212,6 @@ msgstr ""
 msgid "WORK_CONTRACT"
 msgstr "Work contract"
 
-msgid "Waiting for signature"
-msgstr ""
-
 msgid ""
 "We congratulate you on your successful completion of the paper and wish you "
 "every success in your doctoral training."
@@ -2255,7 +2264,7 @@ msgstr ""
 msgid "You must be the reference promoter to access this doctoral training"
 msgstr ""
 
-msgid "You must be the request author to access this admission"
+msgid "You must be the request author to access this doctoral training"
 msgstr ""
 
 msgid "You must be the request promoter to access this doctoral training"

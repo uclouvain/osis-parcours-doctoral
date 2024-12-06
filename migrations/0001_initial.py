@@ -104,12 +104,12 @@ class Migration(migrations.Migration):
                         choices=[
                             ("ADMITTED", "ADMITTED"),
                             ("EN_ATTENTE_DE_SIGNATURE", "Waiting for signature"),
-                            ("SUBMITTED_CONFIRMATION", "SUBMITTED_CONFIRMATION"),
-                            ("PASSED_CONFIRMATION", "PASSED_CONFIRMATION"),
-                            ("NOT_ALLOWED_TO_CONTINUE", "NOT_ALLOWED_TO_CONTINUE"),
+                            ("CONFIRMATION_SOUMISE", "CONFIRMATION_SOUMISE"),
+                            ("CONFIRMATION_REUSSIE", "CONFIRMATION_REUSSIE"),
+                            ("NON_AUTORISE_A_POURSUIVRE", "NON_AUTORISE_A_POURSUIVRE"),
                             (
-                                "CONFIRMATION_TO_BE_REPEATED",
-                                "CONFIRMATION_TO_BE_REPEATED",
+                                "CONFIRMATION_A_REPRESENTER",
+                                "CONFIRMATION_A_REPRESENTER",
                             ),
                             ("JURY_SOUMIS", "JURY_SOUMIS"),
                             ("JURY_APPROUVE_CA", "JURY_APPROUVE_CA"),

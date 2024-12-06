@@ -30,8 +30,6 @@ from email import message_from_string
 from typing import List, Optional
 from unittest.mock import patch
 
-from base.tests.factories.academic_year import AcademicYearFactory
-from base.tests.factories.program_manager import ProgramManagerFactory
 from django.core.cache import cache
 from django.test import TestCase, override_settings
 from django.urls import reverse
@@ -39,6 +37,8 @@ from osis_async.models.enums import TaskState
 from osis_notification.models import EmailNotification
 from rest_framework import status
 
+from base.tests.factories.academic_year import AcademicYearFactory
+from base.tests.factories.program_manager import ProgramManagerFactory
 from infrastructure.messages_bus import message_bus_instance
 from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from parcours_doctoral.ddd.epreuve_confirmation.commands import (
@@ -109,15 +109,15 @@ class DoctorateConfirmationDecisionViewTestCase(TestCase):
         # Create parcours_doctorals
         cls.parcours_doctoral_without_confirmation_paper = ParcoursDoctoralFactory(
             training__academic_year=academic_years[0],
-            status=ChoixStatutParcoursDoctoral.SUBMITTED_CONFIRMATION.name,
+            status=ChoixStatutParcoursDoctoral.CONFIRMATION_SOUMISE.name,
         )
         cls.parcours_doctoral_with_confirmation_papers = ParcoursDoctoralFactory(
             training=cls.parcours_doctoral_without_confirmation_paper.training,
-            status=ChoixStatutParcoursDoctoral.SUBMITTED_CONFIRMATION.name,
+            status=ChoixStatutParcoursDoctoral.CONFIRMATION_SOUMISE.name,
         )
         cls.parcours_doctoral_with_incomplete_confirmation_paper = ParcoursDoctoralFactory(
             training=cls.parcours_doctoral_without_confirmation_paper.training,
-            status=ChoixStatutParcoursDoctoral.SUBMITTED_CONFIRMATION.name,
+            status=ChoixStatutParcoursDoctoral.CONFIRMATION_SOUMISE.name,
         )
         cls.file_uuid = uuid.uuid4()
         cls.confirmation_papers = [
@@ -193,7 +193,7 @@ class DoctorateConfirmationDecisionViewTestCase(TestCase):
         parcours_doctoral: ParcoursDoctoral = ParcoursDoctoral.objects.get(
             uuid=self.parcours_doctoral_with_confirmation_papers.uuid
         )
-        self.assertEqual(parcours_doctoral.status, ChoixStatutParcoursDoctoral.PASSED_CONFIRMATION.name)
+        self.assertEqual(parcours_doctoral.status, ChoixStatutParcoursDoctoral.CONFIRMATION_REUSSIE.name)
 
         parcours_doctoral_task: ParcoursDoctoralTask = ParcoursDoctoralTask.objects.filter(
             parcours_doctoral=parcours_doctoral
@@ -241,7 +241,7 @@ class DoctorateConfirmationDecisionViewTestCase(TestCase):
         parcours_doctoral: ParcoursDoctoral = ParcoursDoctoral.objects.get(
             uuid=self.parcours_doctoral_with_incomplete_confirmation_paper.uuid
         )
-        self.assertEqual(parcours_doctoral.status, ChoixStatutParcoursDoctoral.SUBMITTED_CONFIRMATION.name)
+        self.assertEqual(parcours_doctoral.status, ChoixStatutParcoursDoctoral.CONFIRMATION_SOUMISE.name)
 
     def test_get_confirmation_failure_decision_without_confirmation_paper(self):
         url = reverse(self.failure_path, args=[self.parcours_doctoral_without_confirmation_paper.uuid])
@@ -310,7 +310,7 @@ class DoctorateConfirmationDecisionViewTestCase(TestCase):
         parcours_doctoral: ParcoursDoctoral = ParcoursDoctoral.objects.get(
             uuid=self.parcours_doctoral_with_confirmation_papers.uuid
         )
-        self.assertEqual(parcours_doctoral.status, ChoixStatutParcoursDoctoral.NOT_ALLOWED_TO_CONTINUE.name)
+        self.assertEqual(parcours_doctoral.status, ChoixStatutParcoursDoctoral.NON_AUTORISE_A_POURSUIVRE.name)
 
         # Check the notifications
         email_notifications = EmailNotification.objects.all()
@@ -349,7 +349,7 @@ class DoctorateConfirmationDecisionViewTestCase(TestCase):
         parcours_doctoral: ParcoursDoctoral = ParcoursDoctoral.objects.get(
             uuid=self.parcours_doctoral_with_incomplete_confirmation_paper.uuid
         )
-        self.assertEqual(parcours_doctoral.status, ChoixStatutParcoursDoctoral.SUBMITTED_CONFIRMATION.name)
+        self.assertEqual(parcours_doctoral.status, ChoixStatutParcoursDoctoral.CONFIRMATION_SOUMISE.name)
 
     def test_post_confirmation_failure_decision_with_incomplete_form(self):
         url = reverse(self.failure_path, args=[self.parcours_doctoral_with_confirmation_papers.uuid])
@@ -427,7 +427,7 @@ class DoctorateConfirmationDecisionViewTestCase(TestCase):
         parcours_doctoral: ParcoursDoctoral = ParcoursDoctoral.objects.get(
             uuid=self.parcours_doctoral_with_confirmation_papers.uuid
         )
-        self.assertEqual(parcours_doctoral.status, ChoixStatutParcoursDoctoral.CONFIRMATION_TO_BE_REPEATED.name)
+        self.assertEqual(parcours_doctoral.status, ChoixStatutParcoursDoctoral.CONFIRMATION_A_REPRESENTER.name)
 
         # Check the notifications
         email_notifications = EmailNotification.objects.all()
@@ -474,7 +474,7 @@ class DoctorateConfirmationDecisionViewTestCase(TestCase):
         parcours_doctoral: ParcoursDoctoral = ParcoursDoctoral.objects.get(
             uuid=self.parcours_doctoral_with_incomplete_confirmation_paper.uuid
         )
-        self.assertEqual(parcours_doctoral.status, ChoixStatutParcoursDoctoral.SUBMITTED_CONFIRMATION.name)
+        self.assertEqual(parcours_doctoral.status, ChoixStatutParcoursDoctoral.CONFIRMATION_SOUMISE.name)
 
         confirmation_papers = message_bus_instance.invoke(
             RecupererEpreuvesConfirmationQuery(parcours_doctoral_uuid=parcours_doctoral.uuid)

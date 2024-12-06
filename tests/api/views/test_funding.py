@@ -38,7 +38,7 @@ from django.shortcuts import resolve_url
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from parcours_doctoral.ddd.domain.model.enums import ChoixTypeFinancement
+from parcours_doctoral.ddd.domain.model.enums import ChoixTypeFinancement, ChoixStatutParcoursDoctoral
 from parcours_doctoral.tests.factories.parcours_doctoral import ParcoursDoctoralFactory
 from parcours_doctoral.tests.factories.roles import StudentRoleFactory
 from parcours_doctoral.tests.factories.supervision import (
@@ -103,6 +103,29 @@ class FundingApiViewTestCase(APITestCase):
         self.client.force_authenticate(user=self.no_role_user)
         response = self.client.get(self.url, format='json')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_get_funding_of_in_creation_doctorate_is_forbidden(self):
+        self.doctorate.status = ChoixStatutParcoursDoctoral.EN_COURS_DE_CREATION_PAR_GESTIONNAIRE.name
+        self.doctorate.save()
+
+        users = [
+            self.promoter_user,
+            self.committee_member_user,
+            self.student.user,
+        ]
+
+        for user in users:
+            self.client.force_authenticate(user=user)
+            response = self.client.get(self.url)
+            self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        self.doctorate.status = ChoixStatutParcoursDoctoral.EN_ATTENTE_INJECTION_EPC.name
+        self.doctorate.save()
+
+        for user in users:
+            self.client.force_authenticate(user=user)
+            response = self.client.get(self.url)
+            self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_get_funding_with_student(self):
         self.client.force_authenticate(user=self.student.user)
