@@ -25,16 +25,16 @@
 # ##############################################################################
 from typing import Dict
 
-from admission.ddd.admission.doctorat.preparation.domain.model.proposition import (
-    Proposition,
-)
-from admission.models import DoctorateAdmission, SupervisionActor
-from admission.models.enums.actor_type import ActorType as AdmissionActorType
 from django.db import transaction
 from osis_document.api.utils import documents_remote_duplicate
 from osis_signature.enums import SignatureState
 from osis_signature.models import Process, StateHistory
 
+from admission.ddd.admission.doctorat.preparation.domain.model.proposition import (
+    Proposition,
+)
+from admission.models import DoctorateAdmission, SupervisionActor
+from admission.models.enums.actor_type import ActorType as AdmissionActorType
 from parcours_doctoral.auth.roles.ca_member import CommitteeMember
 from parcours_doctoral.auth.roles.promoter import Promoter
 from parcours_doctoral.auth.roles.student import Student
@@ -93,9 +93,6 @@ class ParcoursDoctoralService(IParcoursDoctoralService):
 
     @classmethod
     def _duplicate_roles(cls, admission: DoctorateAdmission) -> None:
-        if not Student.objects.filter(person=admission.candidate).exists():
-            Student.objects.create(person=admission.candidate)
-
         promoters = []
         ca_members = []
         for admission_actor in SupervisionActor.objects.select_related('person', 'country').filter(
@@ -105,8 +102,8 @@ class ParcoursDoctoralService(IParcoursDoctoralService):
                 promoters.append(Promoter(person=admission_actor.person))
             else:
                 ca_members.append(CommitteeMember(person=admission_actor.person))
-        Promoter.objects.bulk_create(promoters)
-        CommitteeMember.objects.bulk_create(ca_members)
+        Promoter.objects.bulk_create(promoters, ignore_conflicts=True)
+        CommitteeMember.objects.bulk_create(ca_members, ignore_conflicts=True)
 
     @classmethod
     def _duplicate_uploaded_files(

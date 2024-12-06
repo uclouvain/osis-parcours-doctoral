@@ -26,9 +26,9 @@
 
 from unittest import mock
 
-from base.tests.factories.entity import EntityFactory
 from django.test import TestCase
 
+from base.tests.factories.entity import EntityFactory
 from parcours_doctoral.auth.predicates import (
     parcours_doctoral as parcours_doctoral_predicates,
 )
@@ -68,13 +68,13 @@ class PredicatesTestCase(TestCase):
         parcours_doctoral = ParcoursDoctoralFactory()
 
         valid_status = [
-            ChoixStatutParcoursDoctoral.ADMITTED.name,
-            ChoixStatutParcoursDoctoral.SUBMITTED_CONFIRMATION.name,
-            ChoixStatutParcoursDoctoral.CONFIRMATION_TO_BE_REPEATED.name,
+            ChoixStatutParcoursDoctoral.ADMIS.name,
+            ChoixStatutParcoursDoctoral.CONFIRMATION_SOUMISE.name,
+            ChoixStatutParcoursDoctoral.CONFIRMATION_A_REPRESENTER.name,
         ]
         invalid_status = [
-            ChoixStatutParcoursDoctoral.PASSED_CONFIRMATION.name,
-            ChoixStatutParcoursDoctoral.NOT_ALLOWED_TO_CONTINUE.name,
+            ChoixStatutParcoursDoctoral.CONFIRMATION_REUSSIE.name,
+            ChoixStatutParcoursDoctoral.NON_AUTORISE_A_POURSUIVRE.name,
         ]
 
         for status in valid_status:
@@ -93,4 +93,58 @@ class PredicatesTestCase(TestCase):
                     parcours_doctoral.student.user, parcours_doctoral
                 ),
                 'This status must not be accepted: {}'.format(status),
+            )
+
+    def test_is_initialized(self):
+        parcours_doctoral = ParcoursDoctoralFactory()
+
+        invalid_statuses = [
+            ChoixStatutParcoursDoctoral.EN_ATTENTE_INJECTION_EPC.name,
+            ChoixStatutParcoursDoctoral.EN_COURS_DE_CREATION_PAR_GESTIONNAIRE.name,
+        ]
+
+        for status in invalid_statuses:
+            parcours_doctoral.status = status
+            self.assertFalse(
+                parcours_doctoral_predicates.is_initialized(parcours_doctoral.student.user, parcours_doctoral),
+                'This status must not be accepted: {}'.format(status),
+            )
+
+        valid_statuses = ChoixStatutParcoursDoctoral.get_names_except(*invalid_statuses)
+
+        for status in valid_statuses:
+            parcours_doctoral.status = status
+            self.assertTrue(
+                parcours_doctoral_predicates.is_initialized(parcours_doctoral.student.user, parcours_doctoral),
+                'This status must be accepted: {}'.format(status),
+            )
+
+    def test_is_parcours_doctoral_student(self):
+        parcours_doctoral = ParcoursDoctoralFactory()
+
+        invalid_statuses = [
+            ChoixStatutParcoursDoctoral.EN_ATTENTE_INJECTION_EPC.name,
+            ChoixStatutParcoursDoctoral.EN_COURS_DE_CREATION_PAR_GESTIONNAIRE.name,
+        ]
+
+        for status in invalid_statuses:
+            parcours_doctoral.status = status
+            self.assertFalse(
+                parcours_doctoral_predicates.is_parcours_doctoral_student(
+                    parcours_doctoral.student.user,
+                    parcours_doctoral,
+                ),
+                'This status must not be accepted: {}'.format(status),
+            )
+
+        valid_statuses = ChoixStatutParcoursDoctoral.get_names_except(*invalid_statuses)
+
+        for status in valid_statuses:
+            parcours_doctoral.status = status
+            self.assertTrue(
+                parcours_doctoral_predicates.is_parcours_doctoral_student(
+                    parcours_doctoral.student.user,
+                    parcours_doctoral,
+                ),
+                'This status must be accepted: {}'.format(status),
             )

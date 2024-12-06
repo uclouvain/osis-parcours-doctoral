@@ -27,8 +27,8 @@ import itertools
 import uuid
 
 import factory
-from base.tests.factories.person import generate_global_id
 
+from base.tests.factories.person import generate_global_id
 from parcours_doctoral.ddd.domain.model._cotutelle import Cotutelle, pas_de_cotutelle
 from parcours_doctoral.ddd.domain.model._experience_precedente_recherche import (
     aucune_experience_precedente_recherche,
@@ -110,7 +110,7 @@ class _ParcoursDoctoralFactory(factory.Factory):
     matricule_doctorant = factory.LazyFunction(generate_global_id)
     reference = factory.Iterator(REFERENCE_MEMORY_ITERATOR)
     formation_id = factory.SubFactory(_FormationIdentityFactory)
-    statut = ChoixStatutParcoursDoctoral.ADMITTED
+    statut = ChoixStatutParcoursDoctoral.ADMIS
     projet = factory.SubFactory(_ProjetFactory)
     financement = factory.SubFactory(_FinancementFactory)
     experience_precedente_recherche = aucune_experience_precedente_recherche

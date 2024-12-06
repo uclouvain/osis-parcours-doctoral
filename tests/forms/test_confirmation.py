@@ -46,7 +46,7 @@ class ConfirmationTestCase(TestCase):
         self.assertIn('date', form.errors)
 
     def test_form_validation_with_no_data_when_admitted(self):
-        form = ConfirmationForm(data={}, parcours_doctoral_status=ChoixStatutParcoursDoctoral.ADMITTED.name)
+        form = ConfirmationForm(data={}, parcours_doctoral_status=ChoixStatutParcoursDoctoral.ADMIS.name)
 
         self.assertFalse(form.is_valid())
 
