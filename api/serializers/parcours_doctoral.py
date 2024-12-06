@@ -23,10 +23,10 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from backoffice.settings.rest_framework.fields import ActionLinksField
-from base.utils.serializers import DTOSerializer
 from rest_framework import serializers
 
+from backoffice.settings.rest_framework.fields import ActionLinksField
+from base.utils.serializers import DTOSerializer
 from parcours_doctoral.api.serializers.fields import PARCOURS_DOCTORAL_ACTION_LINKS
 from parcours_doctoral.ddd.dtos import ParcoursDoctoralDTO
 from parcours_doctoral.ddd.dtos.parcours_doctoral import ParcoursDoctoralRechercheDTO
@@ -51,6 +51,7 @@ class ParcoursDoctoralDTOSerializer(DTOSerializer):
                 'update_funding',
                 # Supervision
                 'retrieve_supervision',
+                'retrieve_supervision_canvas',
                 # Confirmation
                 'retrieve_confirmation',
                 'update_confirmation',
@@ -91,6 +92,7 @@ class ParcoursDoctoralRechercheDTOSerializer(DTOSerializer):
                     'update_cotutelle',
                     # Supervision
                     'retrieve_supervision',
+                    'retrieve_supervision_canvas',
                     # Confirmation
                     'retrieve_confirmation',
                     'update_confirmation',

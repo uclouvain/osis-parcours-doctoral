@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Parcours Doctoral API
-  version: 1.0.1
+  version: 1.0.2
   description: This API delivers data for the Parcours Doctoral project.
   contact:
     name: UCLouvain - OSIS
@@ -320,6 +320,37 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SupervisionDTO'
+          description: ''
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+      - doctorate
+  /doctorate/{uuid}/supervision_canvas:
+    get:
+      operationId: retrieve_supervision_canvas
+      description: Get the supervision group of the PhD
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      - $ref: '#/components/parameters/Accept-Language'
+      - $ref: '#/components/parameters/X-User-FirstName'
+      - $ref: '#/components/parameters/X-User-LastName'
+      - $ref: '#/components/parameters/X-User-Email'
+      - $ref: '#/components/parameters/X-User-GlobalID'
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SupervisionCanvas'
           description: ''
         '400':
           $ref: '#/components/responses/BadRequest'
@@ -1566,6 +1597,8 @@ components:
               $ref: '#/components/schemas/ActionLink'
             retrieve_supervision:
               $ref: '#/components/schemas/ActionLink'
+            retrieve_supervision_canvas:
+              $ref: '#/components/schemas/ActionLink'
             retrieve_confirmation:
               $ref: '#/components/schemas/ActionLink'
             update_confirmation:
@@ -1914,6 +1947,8 @@ components:
               $ref: '#/components/schemas/ActionLink'
             retrieve_supervision:
               $ref: '#/components/schemas/ActionLink'
+            retrieve_supervision_canvas:
+              $ref: '#/components/schemas/ActionLink'
             retrieve_confirmation:
               $ref: '#/components/schemas/ActionLink'
             update_confirmation:
@@ -2088,6 +2123,13 @@ components:
       required:
       - signatures_promoteurs
       - signatures_membres_CA
+    SupervisionCanvas:
+      type: object
+      properties:
+        url:
+          type: string
+      required:
+      - url
     ExternalSupervisionDTO:
       type: object
       properties:

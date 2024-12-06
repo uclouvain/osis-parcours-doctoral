@@ -24,14 +24,15 @@
 #
 # ##############################################################################
 
-from backoffice.settings.rest_framework.fields import ActionLinksField
-from base.models.utils.utils import ChoiceEnum
 from rest_framework import status
 from rest_framework.schemas.openapi import AutoSchema, SchemaGenerator
 from rest_framework.schemas.utils import is_list_view
 from rest_framework.serializers import Serializer
 
-PARCOURS_DOCTORAL_SDK_VERSION = "1.0.1"
+from backoffice.settings.rest_framework.fields import ActionLinksField
+from base.models.utils.utils import ChoiceEnum
+
+PARCOURS_DOCTORAL_SDK_VERSION = "1.0.2"
 
 
 class ParcoursDoctoralSchemaGenerator(SchemaGenerator):

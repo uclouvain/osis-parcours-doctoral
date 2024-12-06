@@ -38,8 +38,8 @@ from django.utils.translation import get_language
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import pgettext
 from osis_document.api.utils import get_remote_metadata, get_remote_token
-from reference.models.language import Language
 
+from base.models.organization import Organization
 from parcours_doctoral.auth.constants import READ_ACTIONS_BY_TAB, UPDATE_ACTIONS_BY_TAB
 from parcours_doctoral.constants import CAMPUSES_UUIDS
 from parcours_doctoral.ddd.dtos import CampusDTO
@@ -50,6 +50,7 @@ from parcours_doctoral.ddd.formation.domain.model.enums import (
 )
 from parcours_doctoral.ddd.repository.i_parcours_doctoral import formater_reference
 from parcours_doctoral.models import ParcoursDoctoral
+from reference.models.language import Language
 
 register = template.Library()
 
@@ -523,3 +524,13 @@ def format_ects(ects):
         ects = ""
     ects = floatformat(ects, -2)
     return f"{ects} ECTS"
+
+
+@register.simple_tag
+def get_superior_institute_name(institute_uuid):
+    if institute_uuid:
+        try:
+            return Organization.objects.only('name').get(uuid=institute_uuid).name
+        except Organization.DoesNotExist:
+            pass
+    return ''

@@ -24,9 +24,9 @@
 #
 # ##############################################################################
 from django.utils.translation import gettext_lazy as _
-from osis_role.contrib.models import RoleModel
 from rules import RuleSet, always_allow
 
+from osis_role.contrib.models import RoleModel
 from parcours_doctoral.auth.predicates import parcours_doctoral
 
 
@@ -51,6 +51,7 @@ class Student(RoleModel):
             'parcours_doctoral.view_cotutelle': parcours_doctoral.is_parcours_doctoral_student,
             'parcours_doctoral.change_cotutelle': parcours_doctoral.is_parcours_doctoral_student,
             'parcours_doctoral.view_supervision': parcours_doctoral.is_parcours_doctoral_student,
+            'parcours_doctoral.view_supervision_canvas': parcours_doctoral.is_parcours_doctoral_student,
             'parcours_doctoral.view_confirmation': parcours_doctoral.is_parcours_doctoral_student,
             # Can edit while the jury is not submitted
             'parcours_doctoral.view_jury': parcours_doctoral.is_parcours_doctoral_student,
