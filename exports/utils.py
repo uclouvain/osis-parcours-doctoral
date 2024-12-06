@@ -26,9 +26,11 @@
 
 from django.template.loader import render_to_string
 from django.utils import translation
-from osis_common.utils.url_fetcher import django_url_fetcher
+from django.utils.translation import override
 from osis_document.api.utils import change_remote_metadata
 from weasyprint import HTML
+
+from osis_common.utils.url_fetcher import django_url_fetcher
 
 
 def get_pdf_from_template(template_name, stylesheets, context) -> bytes:
@@ -41,10 +43,16 @@ def get_pdf_from_template(template_name, stylesheets, context) -> bytes:
 
 
 def parcours_doctoral_generate_pdf(
-    parcours_doctoral, template, filename, context=None, stylesheets=None, author='', language=None
+    parcours_doctoral,
+    template,
+    filename,
+    context=None,
+    stylesheets=None,
+    author='',
+    language=None,
 ):
     """
-    Generate a pdf given an admission task and a template
+    Generate a pdf.
 
     :param parcours_doctoral: ParcoursDoctoral to generate a PDF for
     :param template: Name of the template used to generate PDF
@@ -61,7 +69,9 @@ def parcours_doctoral_generate_pdf(
         if language is not None:
             translation.activate(language)
         result = get_pdf_from_template(
-            template, stylesheets or [], {'parcours_doctoral': parcours_doctoral, **(context or {})}
+            template,
+            stylesheets or [],
+            {'parcours_doctoral': parcours_doctoral, **(context or {})},
         )
     finally:
         translation.activate(current_language)
@@ -70,3 +80,35 @@ def parcours_doctoral_generate_pdf(
     if author:
         change_remote_metadata(token=token, metadata={'author': author})
     return token
+
+
+def generate_temporary_pdf(
+    parcours_doctoral,
+    template,
+    filename,
+    context=None,
+    stylesheets=None,
+    language=None,
+):
+    """
+    Generate a temporary pdf.
+
+    :param parcours_doctoral: ParcoursDoctoral to generate a PDF for
+    :param template: Name of the template used to generate PDF
+    :param context: Extra context variables given to the template
+    :param filename: Filename
+    :param stylesheets: Stylesheets
+    :return: URL of the temporary file
+    """
+    from osis_document.utils import get_file_url, save_raw_content_remotely
+
+    with override(language or translation.get_language()):
+        result = get_pdf_from_template(
+            template,
+            stylesheets or [],
+            {'parcours_doctoral': parcours_doctoral, **(context or {})},
+        )
+
+    token = save_raw_content_remotely(result, filename, 'application/pdf')
+
+    return get_file_url(token)
