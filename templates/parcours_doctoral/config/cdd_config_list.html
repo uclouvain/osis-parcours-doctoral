@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends "bootstrap5/layout.html" %}
 {% load static %}
 {% load i18n %}
 
@@ -27,14 +27,14 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-  <li class="breadcrumb-item">{% trans 'Admission' %}</li>
-  <li class="breadcrumb-item active">{% trans 'CDD configuration' %}</li>
+  <li class="breadcrumb-item"><a href="{% url 'parcours_doctoral:config:home' %}">{% trans 'CDD configuration' %}</a></li>
+  <li class="breadcrumb-item active">{% trans 'Doctoral training configuration' %}</li>
 {% endblock %}
 
 {% block content %}
   <div class="page-header">
     <h2>
-      {% trans 'CDD configuration' %}
+      {% trans 'Doctoral training configuration' %}
     </h2>
   </div>
   <ul class="list-group">

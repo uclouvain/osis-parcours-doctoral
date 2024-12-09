@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends "bootstrap5/layout.html" %}
 {% load static %}
 {% load i18n %}
 
@@ -27,8 +27,8 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-  <li class="breadcrumb-item">{% trans 'Admission' %}</li>
-  <li class="breadcrumb-item active">{% trans 'Custom mail templates' %}</li>
+  <li class="breadcrumb-item"><a href="{% url 'parcours_doctoral:config:home' %}">{% trans 'CDD configuration' %}</a></li>
+  <li class="breadcrumb-item active">{% trans 'CDD Mail template' %}</li>
 {% endblock %}
 
 {% block content %}
