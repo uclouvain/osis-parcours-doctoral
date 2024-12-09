@@ -77,7 +77,7 @@ class ParcoursDoctorauxFilterForm(forms.Form):
         required=False,
     )
 
-    etats = forms.MultipleChoiceField(
+    statuts = forms.MultipleChoiceField(
         choices=ChoixStatutParcoursDoctoral.choices(),
         initial=ChoixStatutParcoursDoctoral.get_names(),
         label=_('Application status'),

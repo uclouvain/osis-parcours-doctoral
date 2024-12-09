@@ -23,7 +23,8 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from typing import List, Optional
+from datetime import date
+from typing import List, Optional, Tuple
 
 from admission.views import PaginatedList
 
@@ -43,8 +44,18 @@ class ListerTousParcoursDoctorauxInMemory(IListerTousParcoursDoctoraux):
         numero: Optional[int] = None,
         noma: Optional[str] = '',
         matricule_etudiant: Optional[str] = '',
-        etats: Optional[List[str]] = None,
         formation: Optional[str] = '',
+        annee: Optional[int] = None,
+        matricule_promoteur: Optional[str] = '',
+        matricule_president_jury: Optional[str] = '',
+        cdds: Optional[List[str]] = None,
+        commission_proximite: Optional[str] = '',
+        type_financement: Optional[str] = '',
+        bourse_recherche: Optional[str] = '',
+        fnrs_fria_fresh: Optional[bool] = None,
+        instituts_secteurs: Optional[List[str]] = None,
+        statuts: Optional[List] = None,
+        dates: Optional[List[Tuple[str, Optional[date], Optional[date]]]] = None,
         tri_inverse: bool = False,
         champ_tri: Optional[str] = None,
         page: Optional[int] = None,

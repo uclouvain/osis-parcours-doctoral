@@ -23,6 +23,8 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from rules import always_allow
+
 from osis_role import role
 
 from parcours_doctoral.auth.predicates.parcours_doctoral import (
@@ -48,6 +50,7 @@ role.role_manager.register(CommitteeMember)
 
 PROGRAM_MANAGER_RULES = {
     # Doctorats
+    'parcours_doctoral.view_parcours_doctoral': always_allow,
     # --- Confirmation
     'parcours_doctoral.view_confirmation': is_part_of_education_group,
     'parcours_doctoral.change_confirmation': is_part_of_education_group,
