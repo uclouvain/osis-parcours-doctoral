@@ -24,22 +24,33 @@
 #
 # ##############################################################################
 
-from typing import List
-
+from admission.views import PaginatedList
 from parcours_doctoral.ddd.commands import ListerTousParcoursDoctorauxQuery
-from parcours_doctoral.ddd.dtos import ParcoursDoctoralDTO
+from parcours_doctoral.ddd.domain.service.i_filtrer_tous_parcours_doctoraux import IListerTousParcoursDoctoraux
+from parcours_doctoral.ddd.dtos import ParcoursDoctoralRechercheDTO
 
 
 def lister_parcours_doctoraux(
     cmd: 'ListerTousParcoursDoctorauxQuery',
     lister_tous_parcours_doctoraux_service: 'IListerTousParcoursDoctoraux',
-) -> 'List[ParcoursDoctoralDTO]':
+) -> 'PaginatedList[ParcoursDoctoralRechercheDTO]':
     return lister_tous_parcours_doctoraux_service.filtrer(
         numero=cmd.numero,
         noma=cmd.noma,
         matricule_etudiant=cmd.matricule_etudiant,
-        etats=cmd.etats,
         formation=cmd.formation,
+        annee_academique=cmd.annee_academique,
+        matricule_promoteur=cmd.matricule_promoteur,
+        matricule_president_jury=cmd.matricule_president_jury,
+        cdds=cmd.cdds,
+        commission_proximite=cmd.commission_proximite,
+        type_financement=cmd.type_financement,
+        bourse_recherche=cmd.bourse_recherche,
+        fnrs_fria_fresh=cmd.fnrs_fria_fresh,
+        instituts_secteurs=cmd.instituts_secteurs,
+        statuts=cmd.statuts,
+        dates=cmd.dates,
+        sigles_formations=cmd.sigles_formations,
         tri_inverse=cmd.tri_inverse,
         champ_tri=cmd.champ_tri,
         page=cmd.page,

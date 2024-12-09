@@ -40,7 +40,7 @@ from osis_common.utils.htmx import HtmxMixin
 
 from infrastructure.messages_bus import message_bus_instance
 from parcours_doctoral.ddd.commands import ListerTousParcoursDoctorauxQuery
-from parcours_doctoral.forms.list import ParcoursDoctorauxFilterForm
+from parcours_doctoral.forms.list import ParcoursDoctorauxFilterForm, IntervalDateFormSet
 
 __all__ = [
     "ParcoursDoctoralList",
@@ -63,6 +63,7 @@ class ParcoursDoctoralList(LoginRequiredMixin, PermissionRequiredMixin, HtmxMixi
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.form = None
+        self.date_formset = None
         self.filters = {}
 
     @property
@@ -89,6 +90,7 @@ class ParcoursDoctoralList(LoginRequiredMixin, PermissionRequiredMixin, HtmxMixi
 
     def get_context_data(self, **kwargs):
         kwargs['form'] = self.form
+        kwargs['date_formset'] = self.date_formset
         kwargs['filter_form'] = self.form
         kwargs['htmx_template_name'] = self.htmx_template_name
         kwargs['default_form_values'] = {field.id_for_label: field.initial for field in self.form if field.initial}
@@ -108,12 +110,19 @@ class ParcoursDoctoralList(LoginRequiredMixin, PermissionRequiredMixin, HtmxMixi
         return {
             'data': self.query_params,
             'load_labels': not self.request.htmx,
+            'user': self.request.user,
         }
 
     def get(self, request, *args, **kwargs):
         self.form = self.get_form()
 
-        if not self.form.is_valid():
+        self.date_formset = IntervalDateFormSet(
+            data=self.query_params,
+        )
+
+        self.date_formset.is_valid()
+
+        if not self.form.is_valid() or not self.date_formset.is_valid():
             self.object_list = []
             response = self.form_invalid(form=self.form)
             if self.request.htmx:
@@ -125,6 +134,19 @@ class ParcoursDoctoralList(LoginRequiredMixin, PermissionRequiredMixin, HtmxMixi
             cache.set(self.cache_key, self.request.GET, timeout=self.parameters_cache_timeout)
 
         self.filters = self.form.cleaned_data
+
+        self.filters['dates'] = []
+        for date_form in self.date_formset:
+            if not date_form.is_valid():
+                continue
+            cleaned_data = date_form.cleaned_data
+            self.filters['dates'].append(
+                (
+                    cleaned_data['type_date'],
+                    cleaned_data['date_debut'],
+                    cleaned_data['date_fin'],
+                ),
+            )
 
         self.filters.pop('liste_travail', None)
 

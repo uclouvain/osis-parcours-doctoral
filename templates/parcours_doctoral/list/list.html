@@ -54,15 +54,40 @@
         <div class="row">
           <div class="col-md-11">
             <div class="row">
-              {% bootstrap_field filter_form.numero form_group_class="form-group col-md-2" %}
-              {% bootstrap_field filter_form.noma form_group_class="form-group col-md-2" %}
-              {% bootstrap_field filter_form.matricule_etudiant form_group_class="form-group col-md-3" %}
-              {% bootstrap_field filter_form.etats form_group_class="form-group col-md-3" %}
+              {% bootstrap_field filter_form.annee_academique form_group_class='form-group col-md-3' %}
+              {% bootstrap_field filter_form.numero form_group_class='form-group col-md-3' %}
+              {% bootstrap_field filter_form.matricule_etudiant form_group_class='form-group col-md-3' %}
+              {% bootstrap_field filter_form.statuts form_group_class='form-group col-md-3' %}
             </div>
             <div class="row">
-              {% bootstrap_field filter_form.formation form_group_class="form-group col-md-3" %}
+              {% bootstrap_field filter_form.instituts_secteurs form_group_class='form-group col-md-3' %}
+              {% bootstrap_field filter_form.cdds form_group_class='form-group col-md-3' %}
+              {% bootstrap_field filter_form.commission_proximite form_group_class='form-group col-md-3' %}
+              {% bootstrap_field filter_form.sigles_formations form_group_class='form-group col-md-3' %}
+{#              {% bootstrap_field filter_form.formation form_group_class='form-group col-md-4' %}#}
+            </div>
+            <div class="row">
+              {% bootstrap_field filter_form.matricule_promoteur form_group_class='form-group col-md-3' %}
+              {% bootstrap_field filter_form.matricule_president_jury form_group_class='form-group col-md-3' %}
+              {% bootstrap_field filter_form.type_financement form_group_class='form-group col-md-3' %}
+              {% bootstrap_field filter_form.bourse_recherche form_group_class='form-group col-md-3' %}
+            </div>
+            <div class="row">
+              {% bootstrap_field filter_form.fnrs_fria_fresh form_group_class='form-group col-md-3' %}
+              <div class="col-md-6">
+                {% bootstrap_form date_formset.management_form %}
+                <fieldset>
+                  <legend>{% trans "Date" %}</legend>
+                  <div class="date-formset-container">
+                  {% for date_form in date_formset %}
+                    {% include "parcours_doctoral/list/date_form.html" with form=date_form %}
+                  {% endfor %}
+                  </div>
+                </fieldset>
+              </div>
             </div>
           </div>
+
           <div class="col-md-1">
             <label class="control-label">&nbsp;</label>
             <div class="text-right">
@@ -88,6 +113,12 @@
           </div>
         </div>
       </form>
+
+      <div class="hidden">
+        <div id="empty-date-form">
+          {% include "parcours_doctoral/list/date_form.html" with form=date_formset.empty_form  %}
+        </div>
+      </div>
 
       <hr>
 
@@ -171,8 +202,9 @@
 
   {{ filter_form.media }}
 
-  <script src="{% static 'parcours_doctoral/mask.js' %}"></script>
+  <script src="{% static 'parcours_doctoral/js/mask.js' %}"></script>
   <script src="{% static 'parcours_doctoral/popover.js' %}"></script>
+  <script src="{% static 'js/jquery.formset.js' %}"></script>
 
   <script>
     {# Prevent to save the DOM in cache when using htmx requests #}
@@ -216,6 +248,38 @@
       $(document).on('change', '#id_taille_page', function (evt) {
         $('#search_form button[type=submit]').click();
       });
+
+      {# Manage the reference field #}
+      const $reference = $('#id_numero');
+      $reference.mask(getReferenceMask($reference.val()), {
+          translation: {
+              'S': { pattern: /[a-zA-Z]/, optional: true },
+          },
+          onKeyPress: function (cep, e, field, options) {
+              $reference.mask(getReferenceMask(cep), options);
+          },
+      });
+
+
+      {#$('.datepicker:visible').datepicker();#}
+
+      {# Manage the date formset #}
+      $('.date-form-container').formset({
+        formTemplate: $('#empty-date-form'),
+        addContainerClass: 'date-formset-container',
+        addCssClass: 'add-row btn btn-primary',
+        addText: '<span class="fa fa-solid fa-circle-plus" aria-hidden="true"></span> {% translate 'Add date filter' %}',
+        deleteText: '<span class="fa fa-solid fa-circle-minus text-danger" aria-hidden="true"></span>',
+        deleteContainerClass: 'delete-date-button-container',
+          added: function(form) {
+            form.find('.datepicker').each(function() {
+              $(this).datepicker({
+                  dateFormat: 'dd/mm/yy',
+              });
+            })
+          },
+      });
+
     });
   </script>
 

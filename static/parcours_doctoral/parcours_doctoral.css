@@ -526,3 +526,18 @@ a.no-link {
 .multi-widget ul label {
   font-weight: normal;
 }
+
+.dot {
+	height: 1em;
+	width: 1em;
+	display: inline-block;
+	border-radius: 50%;
+}
+
+.dot.red-dot {
+    background: rgb(200, 50, 50);
+}
+
+.dot.green-dot {
+    background: rgb(50, 200, 50);
+}

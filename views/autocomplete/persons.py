@@ -26,18 +26,24 @@
 from dal import autocomplete
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.postgres.search import SearchVector
-from django.db.models import Exists, F, OuterRef, Q
+from django.db.models import F, Q
+
+from base.models.person import Person
+from parcours_doctoral.auth.roles.promoter import Promoter
+from parcours_doctoral.auth.roles.student import Student
 
 __all__ = [
+    'PersonsAutocomplete',
+    'PromotersAutocomplete',
     'StudentsAutocomplete',
 ]
 
 __namespace__ = False
 
-from parcours_doctoral.auth.roles.student import Student
 
+class PersonsAutocomplete(LoginRequiredMixin, autocomplete.Select2QuerySetView):
+    url_patterns = 'persons'
 
-class PersonsAutocomplete(LoginRequiredMixin):
     def get_results(self, context):
         return [
             {
@@ -47,8 +53,30 @@ class PersonsAutocomplete(LoginRequiredMixin):
             for person in context['object_list']
         ]
 
+    def get_queryset(self):
+        q = self.request.GET.get('q', '')
 
-class StudentsAutocomplete(PersonsAutocomplete, autocomplete.Select2QuerySetView):
+        return (
+            Person.objects.annotate(
+                name=SearchVector(
+                    'first_name',
+                    'last_name',
+                ),
+            )
+            .filter(Q(name=q) | Q(global_id__contains=q))
+            .order_by('last_name', 'first_name')
+            .values(
+                first_name=F('first_name'),
+                last_name=F('last_name'),
+                global_id=F('global_id'),
+            )
+            .distinct()
+            if q
+            else []
+        )
+
+
+class StudentsAutocomplete(PersonsAutocomplete):
     urlpatterns = 'students'
 
     def get_queryset(self):
@@ -61,12 +89,33 @@ class StudentsAutocomplete(PersonsAutocomplete, autocomplete.Select2QuerySetView
                     'person__last_name',
                 ),
             )
-            .filter(
-                Q(name=q)
-                | Q(person__email__icontains=q)
-                | Q(person__private_email__icontains=q)
-                | Q(person__student__registration_id__icontains=q)
+            .filter(Q(name=q) | Q(person__global_id__contains=q) | Q(person__student__registration_id__icontains=q))
+            .order_by('person__last_name', 'person__first_name')
+            .values(
+                first_name=F('person__first_name'),
+                last_name=F('person__last_name'),
+                global_id=F('person__global_id'),
             )
+            .distinct()
+            if q
+            else []
+        )
+
+
+class PromotersAutocomplete(PersonsAutocomplete):
+    urlpatterns = 'promoters'
+
+    def get_queryset(self):
+        q = self.request.GET.get('q', '')
+
+        return (
+            Promoter.objects.annotate(
+                name=SearchVector(
+                    'person__first_name',
+                    'person__last_name',
+                ),
+            )
+            .filter(Q(name=q) | Q(person__global_id__contains=q))
             .order_by('person__last_name', 'person__first_name')
             .values(
                 first_name=F('person__first_name'),

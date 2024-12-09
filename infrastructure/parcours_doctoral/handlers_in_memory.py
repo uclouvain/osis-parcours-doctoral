@@ -67,7 +67,7 @@ from parcours_doctoral.ddd.use_case.write.supprimer_promoteur_service import (
 from parcours_doctoral.infrastructure.parcours_doctoral.domain.service.in_memory.historique import (
     HistoriqueInMemory,
 )
-from parcours_doctoral.infrastructure.parcours_doctoral.domain.service.in_memory.lister_toutes_demandes import (
+from parcours_doctoral.infrastructure.parcours_doctoral.domain.service.in_memory.lister_tous_parcours_doctoraux import (
     ListerTousParcoursDoctorauxInMemory,
 )
 from parcours_doctoral.infrastructure.parcours_doctoral.domain.service.in_memory.membre_CA import (

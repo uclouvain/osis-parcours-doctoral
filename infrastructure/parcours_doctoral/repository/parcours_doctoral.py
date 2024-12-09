@@ -474,6 +474,7 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
             'training__academic_year',
             'training__education_group_type',
             'training__enrollment_campus',
+            'international_scholarship',
         ).order_by('-created_at')
 
         if matricule_doctorant:
@@ -526,6 +527,12 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
                     prenom_doctorant=doctorate.student.first_name,
                     nom_doctorant=doctorate.student.last_name,
                     cree_le=doctorate.created_at,
+                    code_bourse=doctorate.international_scholarship.short_name
+                    or doctorate.other_international_scholarship,
+                    cotutelle=doctorate.cotutelle,
+                    formation_complementaire=False,  # TODO
+                    en_regle_inscription=False,  # TODO
+                    total_credits_valides=0,  # TODO
                 )
             )
 

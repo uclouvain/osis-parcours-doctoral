@@ -75,6 +75,10 @@ class ChoixTypeFinancement(ChoiceEnum):
     SELF_FUNDING = _('SELF_FUNDING')
 
 
+class BourseRecherche(ChoiceEnum):
+    OTHER = _('OTHER')
+
+
 class ChoixStatutSignatureGroupeDeSupervision(ChoiceEnum):
     IN_PROGRESS = _('IN_PROGRESS')
     SIGNING_IN_PROGRESS = _('SIGNING_IN_PROGRESS')
@@ -120,3 +124,12 @@ CHOIX_COMMISSION_PROXIMITE = {
         ChoixSousDomaineSciences,
     )
 }
+
+
+class ChoixEtapeParcoursDoctoral(ChoiceEnum):
+    ADMISSION = _('ADMISSION')
+    CONFIRMATION = _('CONFIRMATION')
+    DECISION_DE_RECEVABILITE = _('DECISION_DE_RECEVABILITE')
+    DEFENSE_PRIVEE = _('DEFENSE_PRIVEE')
+    SOUTENANCE_PUBLIQUE = _('SOUTENANCE_PUBLIQUE')
+    ABANDON_ECHEC = _('ABANDON_ECHEC')

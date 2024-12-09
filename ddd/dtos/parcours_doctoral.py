@@ -131,4 +131,10 @@ class ParcoursDoctoralRechercheDTO(interface.DTO):
     prenom_doctorant: str
     nom_doctorant: str
 
+    code_bourse: str
+    cotutelle: bool
+    formation_complementaire: bool
+    en_regle_inscription: bool
+    total_credits_valides: int
+
     cree_le: datetime.datetime
