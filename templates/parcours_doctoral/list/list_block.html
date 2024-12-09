@@ -1,4 +1,4 @@
-{% load enums i18n bootstrap3 parcours_doctoral %}
+{% load enums i18n django_bootstrap5 parcours_doctoral %}
 
 {% comment "License" %}
 * OSIS stands for Open Student Information System. It's an application
@@ -33,24 +33,24 @@
         {{ start_index }} to {{ end_index }} of {{ total_counts }} doctoral trainings
       {% endblocktrans %}
     </p>
-    <div id="list-actions" class="text-right">
-      {% bootstrap_field filter_form.taille_page show_label=False form_group_class="fit-content" show_help=False %}
+    <div id="list-actions" class="text-end">
+      {% bootstrap_field filter_form.taille_page show_label=False wrapper_class="fit-content" show_help=False %}
       <span>{% trans "items per page" %}</span>
-      <div class="btn-group">
+      <div class="dropdown">
         <button
             id="dLabel"
-            class="btn btn-default visible-lg-inline-block"
+            class="btn btn-default border border-dark-subtle visible-lg-inline-block dropdown-toggle"
             type="button"
-            data-toggle="dropdown"
+            data-bs-toggle="dropdown"
             aria-haspopup="true"
             aria-expanded="false"
             title="{% trans 'Export' %}"
         >
-          <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
-          <span class="caret"></span>
+          <span class="fa-solid fa-download" aria-hidden="true"></span>
+          <i class="fa-solid fa-caret-down"></i>
         </button>
-        <ul class="dropdown-menu dropdown-menu-right">
-          Export en cours de développement
+        <ul class="dropdown-menu dropdown-menu-end">
+          <li><a class="dropdown-item" href="#">Export en cours de développement</a></li>
         </ul>
       </div>
     </div>
