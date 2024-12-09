@@ -24,24 +24,14 @@
 #
 # ##############################################################################
 
-from parcours_doctoral.ddd.commands import ListerTousParcoursDoctorauxQuery
-from parcours_doctoral.ddd.domain.service.i_filtrer_tous_parcours_doctoraux import (
-    IListerTousParcoursDoctoraux,
-)
+from parcours_doctoral.exports.utils import generate_temporary_pdf
 
 
-def lister_parcours_doctoraux(
-    cmd: 'ListerTousParcoursDoctorauxQuery',
-    lister_tous_parcours_doctoraux_service: 'IListerTousParcoursDoctoraux',
-):
-    return lister_tous_parcours_doctoraux_service.filtrer(
-        numero=cmd.numero,
-        noma=cmd.noma,
-        matricule_etudiant=cmd.matricule_etudiant,
-        etats=cmd.etats,
-        formation=cmd.formation,
-        tri_inverse=cmd.tri_inverse,
-        champ_tri=cmd.champ_tri,
-        page=cmd.page,
-        taille_page=cmd.taille_page,
+def supervision_canvas_pdf(parcours_doctoral, language):
+    # Generate the url of the temporary pdf
+    return generate_temporary_pdf(
+        parcours_doctoral=parcours_doctoral,
+        template='parcours_doctoral/exports/supervision_canvas.html',
+        filename='supervision.pdf',
+        language=language,
     )

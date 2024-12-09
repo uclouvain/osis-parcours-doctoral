@@ -23,9 +23,10 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from rest_framework import serializers
+
 from base.models.entity_version import EntityVersion
 from base.models.enums.entity_type import EntityType
-from rest_framework import serializers
 
 PARCOURS_DOCTORAL_ACTION_LINKS = {
     # Lists
@@ -66,6 +67,11 @@ PARCOURS_DOCTORAL_ACTION_LINKS = {
     # Supervision group
     'retrieve_supervision': {
         'path_name': 'parcours_doctoral_api_v1:supervision',
+        'method': 'GET',
+        'params': ['uuid'],
+    },
+    'retrieve_supervision_canvas': {
+        'path_name': 'parcours_doctoral_api_v1:supervision_canvas',
         'method': 'GET',
         'params': ['uuid'],
     },
