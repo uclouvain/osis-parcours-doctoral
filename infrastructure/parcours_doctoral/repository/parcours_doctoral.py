@@ -25,19 +25,16 @@
 # ##############################################################################
 from typing import Dict, List, Optional
 
+from django.conf import settings
+from django.db.models import QuerySet
+from django.utils.translation import get_language
+
 from admission.infrastructure.admission.domain.service.bourse import BourseTranslator
 from base.models.education_group_year import EducationGroupYear
 from base.models.entity_version import EntityVersion
 from base.models.enums.entity_type import EntityType
 from base.models.person import Person
-from base.models.student import Student
-from django.conf import settings
-from django.db.models import QuerySet
-from django.utils.translation import get_language
 from osis_common.ddd.interface import ApplicationService, EntityIdentity, RootEntity
-from program_management.models.education_group_version import EducationGroupVersion
-from reference.models.language import Language
-
 from parcours_doctoral.ddd.domain.model._cotutelle import Cotutelle
 from parcours_doctoral.ddd.domain.model._experience_precedente_recherche import (
     ExperiencePrecedenteRecherche,
@@ -77,6 +74,8 @@ from parcours_doctoral.ddd.repository.i_parcours_doctoral import (
 from parcours_doctoral.models.parcours_doctoral import (
     ParcoursDoctoral as ParcoursDoctoralModel,
 )
+from program_management.models.education_group_version import EducationGroupVersion
+from reference.models.language import Language
 
 
 class ParcoursDoctoralRepository(IParcoursDoctoralRepository):

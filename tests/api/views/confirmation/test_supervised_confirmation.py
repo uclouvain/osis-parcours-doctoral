@@ -28,12 +28,12 @@ from unittest import mock
 from uuid import uuid4
 
 import freezegun
-from base.tests.factories.person import PersonFactory
-from base.tests.factories.program_manager import ProgramManagerFactory
 from django.shortcuts import resolve_url
 from rest_framework import status
 from rest_framework.test import APITestCase
 
+from base.tests.factories.person import PersonFactory
+from base.tests.factories.program_manager import ProgramManagerFactory
 from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from parcours_doctoral.ddd.epreuve_confirmation.validators.exceptions import (
     EpreuveConfirmationNonTrouveeException,
@@ -171,6 +171,7 @@ class SupervisedConfirmationAPIViewTestCase(APITestCase):
         old_confirmation_paper = ConfirmationPaperFactory(
             parcours_doctoral=self.doctorate,
             confirmation_date=datetime.date(2020, 4, 2),
+            is_active=False,
         )
 
         response = self.client.put(self.url, data=default_data, format='json')

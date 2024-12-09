@@ -26,8 +26,8 @@
 from typing import Optional
 
 import attr
-from osis_common.ddd import interface
 
+from osis_common.ddd import interface
 from parcours_doctoral.ddd.dtos.campus import CampusDTO
 
 
@@ -58,6 +58,24 @@ class FormationDTO(interface.DTO):
 
     def __str__(self):
         return f'{self.sigle} - {self.intitule or self.intitule_fr} ({self.campus})'
+
+    @property
+    def nom_complet(self):
+        return f'{self.sigle} - {self.intitule or self.intitule_fr}'
+
+
+@attr.dataclass(frozen=True, slots=True)
+class FormationRechercheBODTO(interface.DTO):
+    sigle: str
+    code: str
+    annee: int
+    intitule: str
+    intitule_fr: str
+    intitule_en: str
+    type: str
+
+    def __str__(self):
+        return self.nom_complet
 
     @property
     def nom_complet(self):

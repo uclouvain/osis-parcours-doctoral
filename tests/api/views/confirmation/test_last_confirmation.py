@@ -28,13 +28,13 @@ from unittest import mock
 from uuid import uuid4
 
 import freezegun
-from base.tests.factories.person import PersonFactory
-from base.tests.factories.program_manager import ProgramManagerFactory
 from django.shortcuts import resolve_url
 from osis_notification.models import WebNotification
 from rest_framework import status
 from rest_framework.test import APITestCase
 
+from base.tests.factories.person import PersonFactory
+from base.tests.factories.program_manager import ProgramManagerFactory
 from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from parcours_doctoral.ddd.epreuve_confirmation.validators.exceptions import (
     EpreuveConfirmationDateIncorrecteException,
@@ -262,6 +262,9 @@ class LastConfirmationAPIViewTestCase(APITestCase):
 
     def test_get_last_confirmation_with_several_confirmation_papers(self):
         self.client.force_authenticate(user=self.student.user)
+
+        self.confirmation_paper.is_active = False
+        self.confirmation_paper.save()
 
         with freezegun.freeze_time('2023-04-01'):
             new_confirmation_paper = ConfirmationPaperFactory(

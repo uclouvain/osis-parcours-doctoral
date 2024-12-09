@@ -322,13 +322,13 @@ fieldset.custom-fieldset > legend {
 }
 
 .panel-default-badge-success{
-    color: #fff !important;
-    background-color: #28a745 !important;
+  color: #fff !important;
+  background-color: #28a745 !important;
 }
 
 .panel-default-badge-primary{
-    color: #fff !important;
-    background-color: #337ab7 !important;
+  color: #fff !important;
+  background-color: #337ab7 !important;
 }
 
 
@@ -525,4 +525,19 @@ a.no-link {
 
 .multi-widget ul label {
   font-weight: normal;
+}
+
+.dot {
+  height: 1em;
+  width: 1em;
+  display: inline-block;
+  border-radius: 50%;
+}
+
+.dot.red-dot {
+  background: rgb(200, 50, 50);
+}
+
+.dot.green-dot {
+  background: rgb(50, 200, 50);
 }

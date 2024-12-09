@@ -27,8 +27,8 @@ import datetime
 from typing import List, Optional
 
 import attr
-from osis_common.ddd import interface
 
+from osis_common.ddd import interface
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import (
     ParcoursDoctoralIdentity,
 )
@@ -59,6 +59,8 @@ class EpreuveConfirmation(interface.RootEntity):
 
     date: Optional[datetime.date] = None
     rapport_recherche: List[str] = attr.Factory(list)
+
+    est_active: bool = True
 
     demande_prolongation: Optional['DemandeProlongation'] = None
 
@@ -158,3 +160,6 @@ class EpreuveConfirmation(interface.RootEntity):
         avis_renouvellement_mandat_recherche: List[str],
     ):
         self.avis_renouvellement_mandat_recherche = avis_renouvellement_mandat_recherche
+
+    def archiver(self):
+        self.est_active = False

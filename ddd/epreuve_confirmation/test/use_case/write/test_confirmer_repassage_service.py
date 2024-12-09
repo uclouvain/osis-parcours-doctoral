@@ -24,16 +24,18 @@
 #
 # ##############################################################################
 import datetime
+from typing import List
 
-from base.ddd.utils.business_validator import MultipleBusinessExceptions
 from django.test import TestCase
 
+from base.ddd.utils.business_validator import MultipleBusinessExceptions
 from parcours_doctoral.ddd.commands import RecupererParcoursDoctoralQuery
 from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from parcours_doctoral.ddd.epreuve_confirmation.commands import (
     ConfirmerRepassageCommand,
     RecupererEpreuvesConfirmationQuery,
 )
+from parcours_doctoral.ddd.epreuve_confirmation.dtos import EpreuveConfirmationDTO
 from parcours_doctoral.ddd.epreuve_confirmation.validators.exceptions import (
     EpreuveConfirmationNonCompleteePourEvaluationException,
     EpreuveConfirmationNonTrouveeException,
@@ -77,14 +79,24 @@ class TestConfirmerRepassage(TestCase):
 
         self.assertEqual(parcours_doctoral.statut, ChoixStatutParcoursDoctoral.CONFIRMATION_TO_BE_REPEATED.name)
 
+        epreuves_confirmation_parcours_doctoral: List[EpreuveConfirmationDTO] = message_bus_in_memory_instance.invoke(
+            RecupererEpreuvesConfirmationQuery(parcours_doctoral_uuid=parcours_doctoral_id.uuid)
+        )
+
+        epreuve_archivee = next(
+            (epreuve for epreuve in epreuves_confirmation_parcours_doctoral if epreuve.uuid == 'c2'),
+            None,
+        )
+
+        self.assertFalse(epreuve_archivee.est_active)
+
         epreuve_confirmation_creee = next(
             (
                 epreuve
-                for epreuve in message_bus_in_memory_instance.invoke(
-                    RecupererEpreuvesConfirmationQuery(parcours_doctoral_uuid=parcours_doctoral_id.uuid)
-                )
+                for epreuve in epreuves_confirmation_parcours_doctoral
                 if epreuve.date_limite == datetime.date(2023, 7, 14)
             ),
             None,
         )
         self.assertIsNotNone(epreuve_confirmation_creee)
+        self.assertTrue(epreuve_confirmation_creee.est_active)

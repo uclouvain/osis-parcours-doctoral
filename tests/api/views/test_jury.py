@@ -23,23 +23,23 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from base.tests.factories.entity import EntityFactory
-from base.tests.factories.person import PersonFactory
 from django.shortcuts import resolve_url
-from reference.tests.factories.country import CountryFactory
-from reference.tests.factories.language import FrenchLanguageFactory
 from rest_framework import status
 from rest_framework.test import APITestCase
 
+from base.tests.factories.entity import EntityFactory
+from base.tests.factories.person import PersonFactory
 from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from parcours_doctoral.models import JuryMember, ParcoursDoctoral
-from parcours_doctoral.tests.factories.jury import JuryMemberFactory
+from parcours_doctoral.tests.factories.jury import ExternalJuryMemberFactory
 from parcours_doctoral.tests.factories.parcours_doctoral import ParcoursDoctoralFactory
 from parcours_doctoral.tests.factories.roles import StudentRoleFactory
 from parcours_doctoral.tests.factories.supervision import (
     CaMemberFactory,
     PromoterFactory,
 )
+from reference.tests.factories.country import CountryFactory
+from reference.tests.factories.language import FrenchLanguageFactory
 
 
 class JuryApiTestCase(APITestCase):
@@ -302,7 +302,7 @@ class JuryMembersDetailApiTestCase(APITestCase):
             training__management_entity=doctoral_commission,
             thesis_proposed_title='Thesis title',
         )
-        cls.member = JuryMemberFactory(parcours_doctoral=cls.parcours_doctoral)
+        cls.member = ExternalJuryMemberFactory(parcours_doctoral=cls.parcours_doctoral)
         cls.udpated_data = {
             'matricule': '',
             'institution': 'institution',

@@ -44,43 +44,82 @@
         {% bootstrap_form_errors filter_form %}
       </div>
       <form
-          id="search_form"
-          action="{{ request.path }}"
-          method="get"
-          hx-boost="true"
-          hx-target="#table_doctorate_parcours_doctoral"
-          hx-indicator="#htmx-overlay"
+        id="search_form"
+        action="{{ request.path }}"
+        method="get"
+        hx-boost="true"
+        hx-target="#table_doctorate_parcours_doctoral"
+        hx-indicator="#htmx-overlay"
       >
         <div class="row">
-          <div class="col-md-11">
+          <div id="filters" class="col-md-11">
             <div class="row">
-              {% bootstrap_field filter_form.numero form_group_class="form-group col-md-2" %}
-              {% bootstrap_field filter_form.noma form_group_class="form-group col-md-2" %}
-              {% bootstrap_field filter_form.matricule_etudiant form_group_class="form-group col-md-3" %}
-              {% bootstrap_field filter_form.etats form_group_class="form-group col-md-3" %}
+              {% bootstrap_field filter_form.annee_academique form_group_class='form-group col-md-3' %}
+              {% bootstrap_field filter_form.numero form_group_class='form-group col-md-3' %}
+              {% bootstrap_field filter_form.matricule_doctorant form_group_class='form-group col-md-3' %}
+              {% bootstrap_field filter_form.statuts form_group_class='form-group col-md-3' %}
             </div>
             <div class="row">
-              {% bootstrap_field filter_form.formation form_group_class="form-group col-md-3" %}
+              {% bootstrap_field filter_form.instituts_secteurs form_group_class='form-group col-md-3' %}
+              {% bootstrap_field filter_form.cdds form_group_class='form-group col-md-3' %}
+              {% bootstrap_field filter_form.commission_proximite form_group_class='form-group col-md-3' %}
+              {% bootstrap_field filter_form.sigles_formations form_group_class='form-group col-md-3' %}
+            </div>
+            <div class="row">
+              {% bootstrap_field filter_form.uuid_promoteur form_group_class='form-group col-md-3' %}
+              {% bootstrap_field filter_form.uuid_president_jury form_group_class='form-group col-md-3' %}
+              {% bootstrap_field filter_form.type_financement form_group_class='form-group col-md-3' %}
+              {% bootstrap_field filter_form.bourse_recherche form_group_class='form-group col-md-3 scholarship-container' %}
+            </div>
+            <div class="row">
+              {% bootstrap_field filter_form.type_admission form_group_class='form-group col-md-3' %}
+              {% bootstrap_field filter_form.fnrs_fria_fresh form_group_class='form-group col-md-3' %}
+              <div class="col-md-6">
+                {% bootstrap_form date_formset.management_form %}
+                <fieldset
+                  id="date-fieldset"
+                  class="custom-fieldset"
+                >
+                  <legend
+                    data-toggle="collapse"
+                    href="#date-formset-container"
+                    aria-expanded="true"
+                  >
+                    {% trans "Date" %}
+                    <span class="fa fa-chevron-down"></span>
+                    <span class="fa fa-chevron-up"></span>
+                  </legend>
+                  <div
+                    id="date-formset-container"
+                    class="date-formset-container collapse in"
+                  >
+                    {% for date_form in date_formset %}
+                      {% include "parcours_doctoral/list/date_form.html" with form=date_form %}
+                    {% endfor %}
+                  </div>
+                </fieldset>
+              </div>
             </div>
           </div>
+
           <div class="col-md-1">
             <label class="control-label">&nbsp;</label>
             <div class="text-right">
               <button
-                  type="submit"
-                  id="bt_submit_parcours_doctoral_doctorate_groups_search"
-                  class="btn btn-primary"
-                  role="button"
-                  aria-label="{% trans 'Search' context 'verb' %}"
+                type="submit"
+                id="bt_submit_parcours_doctoral_doctorate_groups_search"
+                class="btn btn-primary"
+                role="button"
+                aria-label="{% trans 'Search' context 'verb' %}"
               >
                 <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
               </button>
               <button
-                  type="reset"
-                  id="bt_reset_parcours_doctoral_doctorate_groups_search"
-                  class="btn btn-default"
-                  role="button"
-                  aria-label="{% trans 'Reset' %}"
+                type="reset"
+                id="bt_reset_parcours_doctoral_doctorate_groups_search"
+                class="btn btn-default"
+                role="button"
+                aria-label="{% trans 'Reset' %}"
               >
                 <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
               </button>
@@ -88,6 +127,10 @@
           </div>
         </div>
       </form>
+
+      <div class="hidden">
+        {% include "parcours_doctoral/list/date_form.html" with form=date_formset.empty_form id="empty-date-form" class="formset-custom-template" %}
+      </div>
 
       <hr>
 
@@ -100,67 +143,52 @@
 {% endblock %}
 
 {% block style %}
-
   {{ block.super }}
 
   <link rel="stylesheet" href="{% static 'parcours_doctoral/parcours_doctoral.css' %}" type='text/css'>
   <link rel="stylesheet" href="{% static 'css/bootstrap-datepicker3.min.css' %}" type='text/css'>
   <style>
 
+      /* Customize the form inputs */
+      #search_form .select2-container {
+          min-width: unset;
+      }
 
-    /* Customize the form inputs */
-    #search_form fieldset {
-      padding-bottom: 1em;
-    }
+      #search_form .select2-selection__rendered {
+          white-space: break-spaces;
+      }
 
-    #search_form fieldset > legend {
-      font-size: 1em;
-      padding: 0 5px;
-      width: inherit;
-      border: none;
-      font-weight: bold;
-      margin-bottom: 0.5em;
-    }
+      /* Customize input and buttons above the list */
+      #list-actions {
+          display: flex;
+          justify-content: right;
+          align-items: center;
+          gap: 10px;
+      }
 
-    #search_form .select2-container {
-      min-width: unset;
-    }
+      #list-actions > * {
+          width: fit-content;
+      }
 
-    #search_form .select2-selection__rendered {
-      white-space: break-spaces;
-    }
+      #table_doctorate_parcours_doctoral td {
+          vertical-align: middle;
+      }
 
-    /* Customize input and buttons above the list */
-    #list-actions {
-      display: flex;
-      justify-content: right;
-      align-items: center;
-      gap: 10px;
-    }
+      #date-formset-container {
+          padding-bottom: 0.5em;
+      }
 
-    #list-actions > * {
-      width: fit-content;
-    }
+      #date-fieldset legend {
+          padding: 0 5px;
+      }
 
-    summary {
-      display: list-item;
-    }
+      #date-fieldset legend[aria-expanded="true"] .fa-chevron-down, #date-fieldset legend[aria-expanded="false"] .fa-chevron-up {
+          display: none;
+      }
 
-    #additional-filters {
-      margin-top: 1em;
-    }
-
-    details select {
-      box-sizing: border-box;
-    }
-
-    #table_doctorate_parcours_doctoral td {
-      vertical-align: middle;
-    }
-
-    .popover {
-      min-width: max-content;
-    }
+      #date-fieldset legend[aria-expanded="false"] .fa-chevron-down, #date-fieldset legend[aria-expanded="true"] .fa-chevron-up {
+          display: initial;
+      }
 
   </style>
 {% endblock %}
@@ -170,53 +198,101 @@
   {{ block.super }}
 
   {{ filter_form.media }}
+  {{ date_formset.media }}
 
-  <script src="{% static 'parcours_doctoral/mask.js' %}"></script>
+  <script src="{% static 'parcours_doctoral/js/mask.js' %}"></script>
   <script src="{% static 'parcours_doctoral/popover.js' %}"></script>
+  <script src="{% static 'js/jquery.formset.js' %}"></script>
 
   <script>
-    {# Prevent to save the DOM in cache when using htmx requests #}
-    htmx.config.refreshOnHistoryMiss = true;
-    htmx.config.historyCacheSize = 0;
+      {# Prevent to save the DOM in cache when using htmx requests #}
+      htmx.config.refreshOnHistoryMiss = true;
+      htmx.config.historyCacheSize = 0;
 
-    $(document).ready(function () {
-        const main_container = document.getElementById('main');
-        const defaultFormValues = {{ default_form_values|safe }};
+      $(document).ready(function () {
+          const main_container = document.getElementById('main');
+          const dateFormsetContainer = $('#date-formset-container');
+          const dateFormContainer = $('.date-form-container');
+          const defaultFormValues = {{ default_form_values|safe }};
 
-      {# Clear inputs when the form is reset #}
-      const formFields = $('#parcours_doctoral-search :input:not([type=button], [type=submit], [type=reset], [type=hidden])');
-      $('#search_form').on('reset', function (evt) {
-        $.each(formFields, function (index, field) {
-            const defaultValue = defaultFormValues[field.id];
-            if (field.type === 'checkbox' || field.type === 'radio') {
-                const isChecked = !!defaultFormValues[field.id] && (Array.isArray(defaultValue) ? defaultValue.includes(field.value) : defaultValue === field.value);
-                $(this).prop('checked', isChecked).change();
-                $(this).parents('label').toggleClass('active', isChecked);
-            } else {
-              $(this).val(defaultValue || null).change();
-            }
-        });
-        evt.preventDefault();
-        $('#search_form button[type=submit]').click();
-        return false;
+          {# Clear inputs when the form is reset #}
+          const formFields = $('#search_form :input:not([type=button], [type=submit], [type=reset], [type=hidden])');
+          $('#search_form').on('reset', function (evt) {
+              $.each(formFields, function (index, field) {
+                  const defaultValue = defaultFormValues[field.id];
+                  if (field.type === 'checkbox' || field.type === 'radio') {
+                      const isChecked = !!defaultFormValues[field.id] && (Array.isArray(defaultValue) ? defaultValue.includes(field.value) : defaultValue === field.value);
+                      $(this).prop('checked', isChecked).change();
+                      $(this).parents('label').toggleClass('active', isChecked);
+                  } else {
+                      $(this).val(defaultValue || null).change();
+                  }
+              });
+              dateFormsetContainer.find('.delete-row').click();
+              evt.preventDefault();
+              $('#search_form button[type=submit]').click();
+              return false;
+          });
+
+          {# Display / hide the form errors #}
+          $('#parcours_doctoral-search').on('htmx:beforeSend', function (evt) {
+              $('#form_errors').html('');
+          });
+
+          $('#parcours_doctoral-search').on('htmx:afterSwap', function(evt) {
+              if(evt.target.classList.contains('scroll-to-top')) {
+                  main_container.scrollIntoView(true);
+              };
+          });
+
+          {# Select the pagination #}
+          $(document).on('change', '#id_taille_page', function (evt) {
+              $('#search_form button[type=submit]').click();
+          });
+
+          {# Manage the reference field #}
+          const $reference = $('#id_numero');
+          $reference.mask(getReferenceMask($reference.val()), {
+              translation: {
+                  'S': { pattern: /[a-zA-Z]/, optional: true },
+              },
+              onKeyPress: function (cep, e, field, options) {
+                  $reference.mask(getReferenceMask(cep), options);
+              },
+          });
+
+          $('.scholarship-container').dependsOn({
+              '#id_type_financement': { values: ['SEARCH_SCHOLARSHIP'] },
+          }, { duration: 0, valueOnDisable: '', });
+
+          {# Manage the date fields #}
+          function initialize_datepickers(container=dateFormsetContainer) {
+              container.find('.datepicker').datepicker('destroy').datepicker({
+                  dateFormat: 'dd/mm/yy',
+              });
+          }
+
+          initialize_datepickers();
+
+          {# Manage the date formset #}
+          dateFormContainer.formset({
+              prefix: 'date_form',
+              formTemplate: $('#empty-date-form'),
+              addContainerClass: 'date-formset-container',
+              addCssClass: 'add-row btn btn-primary',
+              addText: '<span class="fa fa-solid fa-circle-plus" aria-hidden="true"></span> {% translate 'Add date filter' %}',
+              deleteText: '<span class="fa fa-solid fa-circle-minus text-danger" aria-hidden="true"></span>',
+              deleteContainerClass: 'delete-date-button-container',
+              added: function(form) {
+                  initialize_datepickers(form);
+              },
+              removed: function(form) {
+                  // We need to reinitialize the date-pickers because jquery formset update the ids of the inputs
+                  initialize_datepickers();
+              },
+          });
+
       });
-
-      {# Display / hide the form errors #}
-      $('#parcours_doctoral-search').on('htmx:beforeSend', function (evt) {
-        $('#form_errors').html('');
-      });
-
-      $('#parcours_doctoral-search').on('htmx:afterSwap', function(evt) {
-        if(evt.target.classList.contains('scroll-to-top')) {
-          main_container.scrollIntoView(true);
-        };
-      });
-
-      {# Select the pagination #}
-      $(document).on('change', '#id_taille_page', function (evt) {
-        $('#search_form button[type=submit]').click();
-      });
-    });
   </script>
 
 {% endblock %}

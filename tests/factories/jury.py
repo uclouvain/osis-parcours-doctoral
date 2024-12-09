@@ -25,22 +25,45 @@
 # ##############################################################################
 import factory
 
+from base.tests.factories.person import PersonFactory
 from parcours_doctoral.ddd.jury.domain.model.enums import (
     GenreMembre,
     RoleJury,
     TitreMembre,
 )
 from parcours_doctoral.models.jury import JuryMember
+from parcours_doctoral.tests.factories.supervision import (
+    ExternalPromoterFactory,
+    PromoterFactory,
+)
 
 
-class JuryMemberFactory(factory.django.DjangoModelFactory):
+class _JuryMemberFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = JuryMember
 
     parcours_doctoral = factory.SubFactory(
-        'parcours_doctoral.tests.factories.parcours_doctoral.ParcoursDoctoralFactory', passed_confirmation=True
+        'parcours_doctoral.tests.factories.parcours_doctoral.ParcoursDoctoralFactory',
     )
     role = RoleJury.MEMBRE.name
+    other_institute = ''
+    promoter = None
+    person = None
+    institute = ''
+    country = None
+    last_name = ''
+    first_name = ''
+    title = ''
+    non_doctor_reason = ''
+    gender = ''
+    email = ''
+
+
+class JuryMemberFactory(_JuryMemberFactory):
+    person = factory.SubFactory(PersonFactory)
+
+
+class ExternalJuryMemberFactory(_JuryMemberFactory):
     other_institute = ''
     promoter = None
     person = None
@@ -52,3 +75,11 @@ class JuryMemberFactory(factory.django.DjangoModelFactory):
     non_doctor_reason = ''
     gender = GenreMembre.AUTRE.name
     email = 'email@example.org'
+
+
+class JuryMemberWithInternalPromoterFactory(_JuryMemberFactory):
+    promoter = factory.SubFactory(PromoterFactory)
+
+
+class JuryMemberWithExternalPromoterFactory(_JuryMemberFactory):
+    promoter = factory.SubFactory(ExternalPromoterFactory)

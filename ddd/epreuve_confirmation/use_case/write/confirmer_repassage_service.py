@@ -60,6 +60,7 @@ def confirmer_repassage(
 
     # WHEN
     epreuve_confirmation.verifier_pour_encodage_decision()
+    epreuve_confirmation.archiver()
     parcours_doctoral.encoder_decision_repassage_epreuve_confirmation()
     nouvelle_epreuve_confirmation = EpreuveConfirmationService.initier(
         parcours_doctoral_id=parcours_doctoral.entity_id,

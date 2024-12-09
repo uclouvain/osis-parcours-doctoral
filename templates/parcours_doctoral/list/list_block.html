@@ -1,4 +1,4 @@
-{% load enums i18n bootstrap3 parcours_doctoral %}
+{% load doctorate_enums i18n bootstrap3 parcours_doctoral %}
 
 {% comment "License" %}
 * OSIS stands for Open Student Information System. It's an application
@@ -66,19 +66,39 @@
           hx-target="#table_doctorate_parcours_doctoral"
       >
         {% translate 'Course' context 'parcours_doctoral' as course_label %}
-        {% sortable_header_div 'reference' _('Doctoral training numero') %}
-        {% sortable_header_div 'nom_etudiant' _('Name') %}
+        {% translate 'Status' context 'parcours_doctoral filter' as status_label %}
+        {% translate 'Additional training' context 'parcours_doctoral filter' as additional_training_label %}
+        {% sortable_header_div 'reference' _('Dossier numero') %}
+        {% sortable_header_div 'nom_etudiant' _('Last name / First name') %}
+        {% sortable_header_div 'bourse' _('Scholarship holder') %}
         {% sortable_header_div 'formation' course_label %}
-        {% sortable_header_div 'statut' _('Doctoral training status') %}
+        {% sortable_header_div 'statut' status_label %}
+        {% sortable_header_div 'date_admission' _('Admission date') %}
+        {% sortable_header_div 'pre_admission' _('Pre-admission') %}
+        {% sortable_header_div 'cotutelle' _('Cotutelle') %}
+        {% sortable_header_div 'formation_complementaire' additional_training_label  %}
+        {% sortable_header_div 'en_regle_inscription' _('In order of registration') %}
+        {% sortable_header_div 'total_credits_valides' _('Validated credits total') %}
+
       </tr>
     </thead>
     <tbody>
       {% for parcours_doctoral in object_list %}
         <tr>
           <td><a href="{% url 'parcours_doctoral:base' parcours_doctoral.uuid %}">{{ parcours_doctoral.reference }}</a></td>
-          <td>{{ parcours_doctoral.prenom_doctorant }} {{ parcours_doctoral.nom_doctorant }} </td>
-          <td>{{ parcours_doctoral.formation.intitule }}</td>
-          <td>{{ parcours_doctoral.statut|enum_display:'ChoixStatutPropositionGenerale' }}</td>
+          <td>{{ parcours_doctoral.nom_doctorant }}, {{ parcours_doctoral.prenom_doctorant }} </td>
+          <td>{{ parcours_doctoral.code_bourse }}</td>
+          <td>{{ parcours_doctoral.formation.nom_complet }}</td>
+          <td>{{ parcours_doctoral.statut|enum_display:'ChoixStatutParcoursDoctoral' }}</td>
+          <td>{{ parcours_doctoral.cree_le|date:"d/m/Y" }}</td>
+          <td><span class="dot {% if parcours_doctoral.pre_admission %}green-dot{% else %}red-dot{% endif %}"></span></td>
+          <td><span class="dot {% if parcours_doctoral.cotutelle %}green-dot{% else %}red-dot{% endif %}"></span></td>
+          <td><span class="dot {% if parcours_doctoral.formation_complementaire %}green-dot{% else %}red-dot{% endif %}"></span></td>
+          <td>
+            {# <span class="dot {% if parcours_doctoral.en_regle_inscription %}green-dot{% else %}red-dot{% endif %}"></span> #}
+            (TODO)
+          </td>
+          <td>{{ parcours_doctoral.total_credits_valides }}</td>
         </tr>
       {% endfor %}
     </tbody>

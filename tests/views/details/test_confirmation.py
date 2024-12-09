@@ -27,14 +27,14 @@
 import datetime
 from typing import List, Optional
 
-from base.tests.factories.academic_year import AcademicYearFactory
-from base.tests.factories.entity import EntityFactory
-from base.tests.factories.entity_version import EntityVersionFactory
-from base.tests.factories.program_manager import ProgramManagerFactory
 from django.test import TestCase, override_settings
 from django.urls import reverse
 from rest_framework import status
 
+from base.tests.factories.academic_year import AcademicYearFactory
+from base.tests.factories.entity import EntityFactory
+from base.tests.factories.entity_version import EntityVersionFactory
+from base.tests.factories.program_manager import ProgramManagerFactory
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import ENTITY_CDE, ENTITY_CDSS
 from parcours_doctoral.tests.factories.confirmation_paper import (
     ConfirmationPaperFactory,
@@ -77,10 +77,12 @@ class ConfirmationDetailViewTestCase(TestCase):
                 parcours_doctoral=cls.parcours_doctoral_with_confirmation_papers,
                 confirmation_date=datetime.date(2022, 4, 1),
                 confirmation_deadline=datetime.date(2022, 4, 5),
+                is_active=False,
             ),
             ConfirmationPaperFactory(
                 parcours_doctoral=cls.parcours_doctoral_with_confirmation_papers,
                 confirmation_deadline=datetime.date(2022, 4, 5),
+                is_active=True,
             ),
         ]
 

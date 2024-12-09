@@ -26,14 +26,13 @@
 import datetime
 import uuid
 
-from base.tests.factories.academic_year import AcademicYearFactory
-from base.tests.factories.program_manager import ProgramManagerFactory
 from django.shortcuts import resolve_url
 from django.test import TestCase
 from django.urls import reverse
-from reference.tests.factories.country import CountryFactory
 from rest_framework.status import HTTP_200_OK, HTTP_302_FOUND, HTTP_404_NOT_FOUND
 
+from base.tests.factories.academic_year import AcademicYearFactory
+from base.tests.factories.program_manager import ProgramManagerFactory
 from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from parcours_doctoral.ddd.jury.domain.model.enums import (
     GenreMembre,
@@ -42,9 +41,10 @@ from parcours_doctoral.ddd.jury.domain.model.enums import (
 )
 from parcours_doctoral.forms.jury.membre import JuryMembreForm
 from parcours_doctoral.models.jury import JuryMember
-from parcours_doctoral.tests.factories.jury import JuryMemberFactory
+from parcours_doctoral.tests.factories.jury import ExternalJuryMemberFactory
 from parcours_doctoral.tests.factories.parcours_doctoral import ParcoursDoctoralFactory
 from parcours_doctoral.tests.factories.supervision import PromoterFactory
+from reference.tests.factories.country import CountryFactory
 
 
 class DoctorateAdmissionJuryMemberUpdateFormViewTestCase(TestCase):
@@ -63,7 +63,7 @@ class DoctorateAdmissionJuryMemberUpdateFormViewTestCase(TestCase):
         )
 
         # Create member
-        cls.membre = JuryMemberFactory(parcours_doctoral=cls.parcours_doctoral)
+        cls.membre = ExternalJuryMemberFactory(parcours_doctoral=cls.parcours_doctoral)
         cls.country = CountryFactory()
 
         # User with one cdd
@@ -173,7 +173,7 @@ class DoctorateAdmissionJuryMemberDeleteFormViewTestCase(TestCase):
         )
 
         # Create member
-        cls.membre = JuryMemberFactory(parcours_doctoral=cls.parcours_doctoral)
+        cls.membre = ExternalJuryMemberFactory(parcours_doctoral=cls.parcours_doctoral)
         cls.country = CountryFactory()
 
         # User with one cdd
@@ -227,7 +227,7 @@ class DoctorateAdmissionJuryMemberChangeRoleFormViewTestCase(TestCase):
         )
 
         # Create member
-        cls.membre = JuryMemberFactory(parcours_doctoral=cls.parcours_doctoral)
+        cls.membre = ExternalJuryMemberFactory(parcours_doctoral=cls.parcours_doctoral)
         cls.country = CountryFactory()
 
         # User with one cdd
