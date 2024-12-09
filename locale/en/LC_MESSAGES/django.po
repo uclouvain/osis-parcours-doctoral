@@ -250,6 +250,12 @@ msgstr "All supervisory panel members must have approved the proposition."
 msgid "All supervisors must have approved the proposition."
 msgstr ""
 
+msgid "Allow you to manage emails sent by CDD managers based on the CDD"
+msgstr ""
+
+msgid "Allow you to manage the doctoral training activities"
+msgstr ""
+
 msgid "Already a member."
 msgstr "Already a member of the supervisory panel."
 
@@ -707,6 +713,9 @@ msgid "Doctor"
 msgstr ""
 
 msgid "Doctoral training"
+msgstr ""
+
+msgid "Doctoral training configuration"
 msgstr ""
 
 msgid "Doctoral training numero"

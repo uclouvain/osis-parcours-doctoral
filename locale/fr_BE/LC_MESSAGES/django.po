@@ -287,6 +287,12 @@ msgstr ""
 msgid "All supervisors must have approved the proposition."
 msgstr "Tous les promoteurs doivent approuver la proposition."
 
+msgid "Allow you to manage emails sent by CDD managers based on the CDD"
+msgstr "Permet d’administrer par CDD les mails envoyés par les gestionnaires CDD"
+
+msgid "Allow you to manage the doctoral training activities"
+msgstr "Permet d’administrer les activités de formation doctorale"
+
 msgid "Already a member."
 msgstr "Déjà membre."
 
@@ -751,6 +757,9 @@ msgstr "Docteur"
 
 msgid "Doctoral training"
 msgstr "Formation doctorale"
+
+msgid "Doctoral training configuration"
+msgstr "Configuration formation doctorale"
 
 msgid "Doctoral training numero"
 msgstr "Numéro de la formation doctorale"
