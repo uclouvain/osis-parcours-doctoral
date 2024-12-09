@@ -23,12 +23,12 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from base.forms.utils.datefield import CustomDateInput
 from django import forms
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 from osis_document.contrib import FileUploadField
 
+from base.forms.utils.datefield import CustomDateInput
 from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from parcours_doctoral.forms.cdd.generic_send_mail import BaseEmailTemplateForm
 
@@ -65,7 +65,7 @@ class ConfirmationForm(ConfirmationOpinionForm):
 
     def __init__(self, parcours_doctoral_status=None, **kwargs):
         super().__init__(**kwargs)
-        if parcours_doctoral_status == ChoixStatutParcoursDoctoral.ADMITTED.name:
+        if parcours_doctoral_status == ChoixStatutParcoursDoctoral.ADMIS.name:
             self.fields['date'].required = False
 
     def clean(self):

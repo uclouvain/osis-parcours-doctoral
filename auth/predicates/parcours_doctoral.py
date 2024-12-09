@@ -25,10 +25,10 @@
 # ##############################################################################
 from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
-from osis_role.cache import predicate_cache
-from osis_role.errors import predicate_failed_msg
 from rules import predicate
 
+from osis_role.cache import predicate_cache
+from osis_role.errors import predicate_failed_msg
 from parcours_doctoral.ddd.domain.model.enums import (
     STATUTS_DOCTORAT_EPREUVE_CONFIRMATION_EN_COURS,
     ChoixStatutParcoursDoctoral,
@@ -49,21 +49,27 @@ def _build_queryset_cache_key_from_role_qs(role_qs, suffix):
 
 
 @predicate(bind=True)
-@predicate_failed_msg(message=_("You must be the request author to access this admission"))
+@predicate_failed_msg(message=_("You must be the request author to access this doctoral training"))
 def is_parcours_doctoral_student(self, user: User, obj: ParcoursDoctoral):
-    return obj.student == user.person
+    return obj.student == user.person and obj.is_initialized
+
+
+@predicate(bind=True)
+@predicate_failed_msg(message=_("The doctorate is not initialized"))
+def is_initialized(self, user: User, obj: ParcoursDoctoral):
+    return obj.is_initialized
 
 
 @predicate(bind=True)
 @predicate_failed_msg(message=_("The jury is not in progress"))
 def is_jury_in_progress(self, user: User, obj: ParcoursDoctoral):
-    return obj.status == ChoixStatutParcoursDoctoral.PASSED_CONFIRMATION.name
+    return obj.status == ChoixStatutParcoursDoctoral.CONFIRMATION_REUSSIE.name
 
 
 @predicate(bind=True)
 @predicate_failed_msg(message=_("The confirmation paper is not in progress"))
 def submitted_confirmation_paper(self, user: User, obj: ParcoursDoctoral):
-    return obj.status == ChoixStatutParcoursDoctoral.SUBMITTED_CONFIRMATION.name
+    return obj.status == ChoixStatutParcoursDoctoral.CONFIRMATION_SOUMISE.name
 
 
 @predicate(bind=True)
@@ -94,28 +100,42 @@ def is_part_of_doctoral_commission(self, user: User, obj: ParcoursDoctoral):
 @predicate(bind=True)
 @predicate_failed_msg(message=_("You must be the request promoter to access this doctoral training"))
 def is_parcours_doctoral_promoter(self, user: User, obj: ParcoursDoctoral):
-    return obj.supervision_group and user.person.pk in [
-        actor.person_id
-        for actor in obj.supervision_group.actors.all()
-        if actor.parcoursdoctoralsupervisionactor.type == ActorType.PROMOTER.name
-    ]
+    return (
+        obj.is_initialized
+        and obj.supervision_group
+        and user.person.pk
+        in [
+            actor.person_id
+            for actor in obj.supervision_group.actors.all()
+            if actor.parcoursdoctoralsupervisionactor.type == ActorType.PROMOTER.name
+        ]
+    )
 
 
 @predicate(bind=True)
 @predicate_failed_msg(message=_("You must be the reference promoter to access this doctoral training"))
 def is_parcours_doctoral_reference_promoter(self, user: User, obj: ParcoursDoctoral):
-    return obj.supervision_group and user.person.pk in [
-        actor.person_id
-        for actor in obj.supervision_group.actors.all()
-        if actor.parcoursdoctoralsupervisionactor.type == ActorType.PROMOTER.name
-        and actor.parcoursdoctoralsupervisionactor.is_reference_promoter
-    ]
+    return (
+        obj.is_initialized
+        and obj.supervision_group
+        and user.person.pk
+        in [
+            actor.person_id
+            for actor in obj.supervision_group.actors.all()
+            if actor.parcoursdoctoralsupervisionactor.type == ActorType.PROMOTER.name
+            and actor.parcoursdoctoralsupervisionactor.is_reference_promoter
+        ]
+    )
 
 
 @predicate(bind=True)
 @predicate_failed_msg(message=_("You must be a member of the committee to access this doctoral training"))
 def is_part_of_committee(self, user: User, obj: ParcoursDoctoral):
-    return obj.supervision_group and user.person.pk in [actor.person_id for actor in obj.supervision_group.actors.all()]
+    return (
+        obj.is_initialized
+        and obj.supervision_group
+        and user.person.pk in [actor.person_id for actor in obj.supervision_group.actors.all()]
+    )
 
 
 @predicate(bind=True)

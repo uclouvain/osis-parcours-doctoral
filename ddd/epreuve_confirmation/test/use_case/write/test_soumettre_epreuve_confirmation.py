@@ -25,9 +25,9 @@
 # ##############################################################################
 import datetime
 
-from base.ddd.utils.business_validator import MultipleBusinessExceptions
 from django.test import TestCase
 
+from base.ddd.utils.business_validator import MultipleBusinessExceptions
 from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from parcours_doctoral.ddd.epreuve_confirmation.builder.epreuve_confirmation_identity import (
     EpreuveConfirmationIdentityBuilder,
@@ -121,4 +121,4 @@ class TestSoumettreEpreuveConfirmation(TestCase):
         self.assertEqual(epreuve_confirmation_mise_a_jour.proces_verbal_ca, ['mon_fichier_2'])
         self.assertEqual(epreuve_confirmation_mise_a_jour.avis_renouvellement_mandat_recherche, ['mon_fichier_3'])
 
-        self.assertEqual(parcours_doctoral.statut, ChoixStatutParcoursDoctoral.SUBMITTED_CONFIRMATION)
+        self.assertEqual(parcours_doctoral.statut, ChoixStatutParcoursDoctoral.CONFIRMATION_SOUMISE)
