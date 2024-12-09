@@ -23,14 +23,17 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from typing import List, Optional
+from datetime import date
+from typing import List, Optional, Tuple
 
 from admission.views import PaginatedList
-
 from parcours_doctoral.ddd.domain.service.i_filtrer_tous_parcours_doctoraux import (
     IListerTousParcoursDoctoraux,
 )
-from parcours_doctoral.ddd.dtos import ParcoursDoctoralRechercheDTO
+from parcours_doctoral.ddd.dtos import (
+    ParcoursDoctoralRechercheBODTO,
+    ParcoursDoctoralRechercheDTO,
+)
 from parcours_doctoral.infrastructure.parcours_doctoral.repository.in_memory.parcours_doctoral import (
     ParcoursDoctoralInMemoryRepository,
 )
@@ -42,18 +45,30 @@ class ListerTousParcoursDoctorauxInMemory(IListerTousParcoursDoctoraux):
         cls,
         numero: Optional[int] = None,
         noma: Optional[str] = '',
-        matricule_etudiant: Optional[str] = '',
-        etats: Optional[List[str]] = None,
-        formation: Optional[str] = '',
+        matricule_doctorant: Optional[str] = '',
+        type_admission: Optional[str] = '',
+        annee_academique: Optional[int] = None,
+        uuid_promoteur: Optional[str] = '',
+        uuid_president_jury: Optional[str] = '',
+        cdds: Optional[List[str]] = None,
+        commission_proximite: Optional[str] = '',
+        type_financement: Optional[str] = '',
+        bourse_recherche: Optional[str] = '',
+        fnrs_fria_fresh: Optional[bool] = None,
+        instituts_secteurs: Optional[List[str]] = None,
+        statuts: Optional[List] = None,
+        dates: Optional[List[Tuple[str, Optional[date], Optional[date]]]] = None,
+        sigles_formations: Optional[List[str]] = None,
         tri_inverse: bool = False,
         champ_tri: Optional[str] = None,
         page: Optional[int] = None,
         taille_page: Optional[int] = None,
-    ) -> PaginatedList[ParcoursDoctoralRechercheDTO]:
+        demandeur: Optional[str] = '',
+    ) -> PaginatedList[ParcoursDoctoralRechercheBODTO]:
 
         result = PaginatedList(id_attribute='uuid')
 
-        for parcours_doctoral in ParcoursDoctoralInMemoryRepository.search_dto(matricule_etudiant=matricule_etudiant):
+        for parcours_doctoral in ParcoursDoctoralInMemoryRepository.search_dto(matricule_doctorant=matricule_doctorant):
             result.append(parcours_doctoral)
 
         return result

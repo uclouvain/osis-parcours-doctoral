@@ -25,10 +25,6 @@
 # ##############################################################################
 import datetime
 
-from admission.utils import add_messages_into_htmx_response
-from admission.views import ListPaginator
-from base.templatetags.pagination_bs5 import DEFAULT_PAGINATOR_SIZE
-from base.views.common import display_error_messages
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.core.cache import cache
 from django.core.exceptions import NON_FIELD_ERRORS
@@ -36,11 +32,18 @@ from django.utils.functional import cached_property
 from django.utils.translation import gettext as _
 from django.views.generic import ListView
 from django.views.generic.edit import FormMixin
-from osis_common.utils.htmx import HtmxMixin
 
+from admission.utils import add_messages_into_htmx_response
+from admission.views import ListPaginator
+from base.templatetags.pagination_bs5 import DEFAULT_PAGINATOR_SIZE
+from base.views.common import display_error_messages
 from infrastructure.messages_bus import message_bus_instance
+from osis_common.utils.htmx import HtmxMixin
 from parcours_doctoral.ddd.commands import ListerTousParcoursDoctorauxQuery
-from parcours_doctoral.forms.list import ParcoursDoctorauxFilterForm
+from parcours_doctoral.forms.list import (
+    IntervalDateFormSet,
+    ParcoursDoctorauxFilterForm,
+)
 
 __all__ = [
     "ParcoursDoctoralList",
@@ -63,6 +66,7 @@ class ParcoursDoctoralList(LoginRequiredMixin, PermissionRequiredMixin, HtmxMixi
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.form = None
+        self.date_formset = None
         self.filters = {}
 
     @property
@@ -74,14 +78,15 @@ class ParcoursDoctoralList(LoginRequiredMixin, PermissionRequiredMixin, HtmxMixi
         return f"cache_parcours_doctoral_filter_result_{user_id}"
 
     @staticmethod
-    def htmx_render_form_errors(request, form):
+    def htmx_render_form_errors(request, form, prefix=''):
         """Display the form errors through the django messages."""
         display_error_messages(
             request=request,
             messages_to_display=[
-                '{} - {}'.format(
-                    form.fields.get(field_name).label if field_name != NON_FIELD_ERRORS else _('General'),
-                    ' '.join(errors),
+                '{prefix}{field_name}{errors}'.format(
+                    prefix=prefix + ' - ' if prefix else '',
+                    field_name=form.fields.get(field_name).label + ' - ' if field_name != NON_FIELD_ERRORS else '',
+                    errors=' '.join(errors),
                 )
                 for field_name, errors in form.errors.items()
             ],
@@ -89,6 +94,7 @@ class ParcoursDoctoralList(LoginRequiredMixin, PermissionRequiredMixin, HtmxMixi
 
     def get_context_data(self, **kwargs):
         kwargs['form'] = self.form
+        kwargs['date_formset'] = self.date_formset
         kwargs['filter_form'] = self.form
         kwargs['htmx_template_name'] = self.htmx_template_name
         kwargs['default_form_values'] = {field.id_for_label: field.initial for field in self.form if field.initial}
@@ -108,17 +114,38 @@ class ParcoursDoctoralList(LoginRequiredMixin, PermissionRequiredMixin, HtmxMixi
         return {
             'data': self.query_params,
             'load_labels': not self.request.htmx,
+            'user': self.request.user,
         }
 
     def get(self, request, *args, **kwargs):
         self.form = self.get_form()
 
-        if not self.form.is_valid():
+        self.date_formset = IntervalDateFormSet(
+            data=self.query_params,
+            prefix='date_form',
+        )
+
+        form_is_valid = self.form.is_valid()
+        formset_is_valid = self.date_formset.is_valid()
+
+        if not form_is_valid or not formset_is_valid:
             self.object_list = []
             response = self.form_invalid(form=self.form)
-            if self.request.htmx:
+
+            if not form_is_valid:
                 self.htmx_render_form_errors(self.request, self.form)
+            if not formset_is_valid:
+                for index, date_form in enumerate(self.date_formset, start=1):
+                    if not date_form.is_valid():
+                        self.htmx_render_form_errors(
+                            self.request,
+                            date_form,
+                            prefix=_('Date - Filter #%s') % index,
+                        )
+
+            if self.request.htmx:
                 add_messages_into_htmx_response(request=self.request, response=response)
+
             return response
 
         if self.request.GET:
@@ -126,7 +153,16 @@ class ParcoursDoctoralList(LoginRequiredMixin, PermissionRequiredMixin, HtmxMixi
 
         self.filters = self.form.cleaned_data
 
-        self.filters.pop('liste_travail', None)
+        self.filters['dates'] = []
+        for date_form in self.date_formset:
+            cleaned_data = date_form.cleaned_data
+            self.filters['dates'].append(
+                (
+                    cleaned_data['type_date'],
+                    cleaned_data['date_debut'],
+                    cleaned_data['date_fin'],
+                ),
+            )
 
         if self.query_params:
             # Add page number to kwargs to pass it to the paginator
@@ -154,5 +190,6 @@ class ParcoursDoctoralList(LoginRequiredMixin, PermissionRequiredMixin, HtmxMixi
         return message_bus_instance.invoke(
             self.filtering_query_class(
                 **self.filters,
+                demandeur=self.request.user.person.uuid,
             )
         )

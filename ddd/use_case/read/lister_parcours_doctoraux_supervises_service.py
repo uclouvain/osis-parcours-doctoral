@@ -25,10 +25,7 @@
 # ##############################################################################
 from typing import List
 
-from parcours_doctoral.ddd.commands import (
-    ListerParcoursDoctorauxDoctorantQuery,
-    ListerParcoursDoctorauxSupervisesQuery,
-)
+from parcours_doctoral.ddd.commands import ListerParcoursDoctorauxSupervisesQuery
 from parcours_doctoral.ddd.dtos import ParcoursDoctoralRechercheDTO
 from parcours_doctoral.ddd.repository.i_parcours_doctoral import (
     IParcoursDoctoralRepository,

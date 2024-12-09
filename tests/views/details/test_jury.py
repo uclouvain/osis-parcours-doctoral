@@ -41,7 +41,7 @@ from parcours_doctoral.ddd.jury.domain.model.enums import (
 )
 from parcours_doctoral.forms.jury.membre import JuryMembreForm
 from parcours_doctoral.models.jury import JuryMember
-from parcours_doctoral.tests.factories.jury import JuryMemberFactory
+from parcours_doctoral.tests.factories.jury import ExternalJuryMemberFactory
 from parcours_doctoral.tests.factories.parcours_doctoral import ParcoursDoctoralFactory
 from parcours_doctoral.tests.factories.supervision import PromoterFactory
 from reference.tests.factories.country import CountryFactory
@@ -105,7 +105,7 @@ class JuryViewTestCase(TestCase):
         )
 
         # Create member
-        cls.membre = JuryMemberFactory(parcours_doctoral=cls.parcours_doctoral)
+        cls.membre = ExternalJuryMemberFactory(parcours_doctoral=cls.parcours_doctoral)
         cls.country = CountryFactory()
 
         # User with one cdd

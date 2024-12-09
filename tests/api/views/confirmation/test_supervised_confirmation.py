@@ -193,6 +193,7 @@ class SupervisedConfirmationAPIViewTestCase(APITestCase):
         old_confirmation_paper = ConfirmationPaperFactory(
             parcours_doctoral=self.doctorate,
             confirmation_date=datetime.date(2020, 4, 2),
+            is_active=False,
         )
 
         response = self.client.put(self.url, data=default_data, format='json')

@@ -27,7 +27,17 @@ import uuid
 
 from django.core.cache import cache
 from django.db import models
-from django.db.models import Case, CharField, F, OuterRef, Q, Subquery, Value, When
+from django.db.models import (
+    Case,
+    CharField,
+    F,
+    IntegerField,
+    OuterRef,
+    Q,
+    Subquery,
+    Value,
+    When,
+)
 from django.db.models.functions import Coalesce, Concat, JSONObject, Mod, Replace
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -155,6 +165,23 @@ class ParcoursDoctoralQuerySet(models.QuerySet):
                 Replace(ToChar(F('reference'), Value('fm9999,0000,0000')), Value(','), Value('.')),
                 output_field=CharField(),
             )
+        )
+
+    def annotate_ordered_enum(self, field_name, ordering_field_name, enum_class):
+        """
+        Annotate the queryset with an equivalent numeric version of an enum field.
+        :param field_name: The name of the enum field
+        :param ordering_field_name: The name of the output field
+        :param enum_class: The enum class
+        :return: The annotated queryset
+        """
+        return self.annotate(
+            **{
+                ordering_field_name: Case(
+                    *(When(**{field_name: member.name}, then=i) for i, member in enumerate(enum_class)),
+                    output_field=IntegerField(),
+                )
+            },
         )
 
 

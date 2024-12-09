@@ -293,6 +293,9 @@ class LastConfirmationAPIViewTestCase(APITestCase):
     def test_get_last_confirmation_with_several_confirmation_papers(self):
         self.client.force_authenticate(user=self.student.user)
 
+        self.confirmation_paper.is_active = False
+        self.confirmation_paper.save()
+
         with freezegun.freeze_time('2023-04-01'):
             new_confirmation_paper = ConfirmationPaperFactory(
                 parcours_doctoral=self.doctorate,

@@ -28,7 +28,6 @@ from abc import ABCMeta
 from typing import List
 
 from osis_common.ddd import interface
-
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import (
     ParcoursDoctoral,
     ParcoursDoctoralIdentity,
@@ -90,7 +89,7 @@ class IParcoursDoctoralRepository(interface.AbstractRepository, metaclass=ABCMet
     @abc.abstractmethod
     def search_dto(
         cls,
-        matricule_etudiant: str = None,
+        matricule_doctorant: str = None,
         matricule_membre: str = None,
     ) -> List['ParcoursDoctoralRechercheDTO']:
         raise NotImplementedError

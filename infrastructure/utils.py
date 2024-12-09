@@ -26,15 +26,20 @@
 
 from email.message import EmailMessage
 
+from django.conf import settings
+from django.contrib.auth.models import User
+from django.db.models import Func, Q
+from django.utils import translation
+from django.utils.translation import gettext_lazy as _
+
 from base.models.entity_version import (
     PEDAGOGICAL_ENTITY_ADDED_EXCEPTIONS,
     EntityVersion,
 )
 from base.models.enums.entity_type import PEDAGOGICAL_ENTITY_TYPES
-from django.conf import settings
-from django.db.models import Func, Q
-from django.utils import translation
-from django.utils.translation import gettext_lazy as _
+from education_group.contrib.models import EducationGroupRoleModel
+from osis_role.contrib.models import EntityRoleModel
+from osis_role.contrib.permissions import _get_relevant_roles
 
 FORMATTED_EMAIL_FOR_HISTORY = """{sender_label} : {sender}
 {recipient_label} : {recipient}
@@ -90,3 +95,29 @@ def get_entities_with_descendants_ids(entities_acronyms):
         qs = cte.queryset().with_cte(cte).annotate(level=Func('parents', function='cardinality'))
         return set(qs.values_list('entity_id', flat=True))
     return set()
+
+
+def filter_doctorate_queryset_according_to_roles(queryset, person_uuid):
+    user = User.objects.filter(person__uuid=person_uuid).first()
+
+    roles = _get_relevant_roles(user, 'parcours_doctoral.view_parcours_doctoral')
+
+    # Filter managed entities
+    entities_conditions = Q()
+    for entity_aware_role in [r for r in roles if issubclass(r, EntityRoleModel)]:
+        entities_conditions |= Q(
+            training__management_entity_id__in=entity_aware_role.objects.filter(
+                person__uuid=person_uuid
+            ).get_entities_ids()
+        )
+
+    # Filter managed education groups
+    education_group_conditions = Q()
+    for education_aware_role in [r for r in roles if issubclass(r, EducationGroupRoleModel)]:
+        education_group_conditions |= Q(
+            training__education_group_id__in=education_aware_role.objects.filter(person__uuid=person_uuid).values_list(
+                'education_group_id'
+            )
+        )
+
+    return queryset.filter(entities_conditions, education_group_conditions)

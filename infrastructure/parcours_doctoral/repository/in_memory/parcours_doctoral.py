@@ -25,15 +25,14 @@
 # ##############################################################################
 from typing import List
 
+from attr import dataclass
+from django.utils import timezone
+
 from admission.ddd.admission.doctorat.validation.domain.model.enums import ChoixGenre
 from admission.infrastructure.admission.domain.service.in_memory.bourse import (
     BourseInMemoryTranslator,
 )
-from attr import dataclass
 from base.ddd.utils.in_memory_repository import InMemoryGenericRepository
-from django.utils import timezone
-
-from parcours_doctoral.ddd.domain.model.enums import ChoixTypeFinancement
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import (
     ParcoursDoctoral,
     ParcoursDoctoralIdentity,
@@ -51,9 +50,6 @@ from parcours_doctoral.ddd.dtos.parcours_doctoral import (
     CotutelleDTO,
     FinancementDTO,
     ProjetDTO,
-)
-from parcours_doctoral.ddd.epreuve_confirmation.domain.model.epreuve_confirmation import (
-    EpreuveConfirmation,
 )
 from parcours_doctoral.ddd.repository.i_parcours_doctoral import (
     IParcoursDoctoralRepository,
@@ -293,11 +289,11 @@ class ParcoursDoctoralInMemoryRepository(InMemoryGenericRepository, IParcoursDoc
     @classmethod
     def search_dto(
         cls,
-        matricule_etudiant: str = None,
+        matricule_doctorant: str = None,
         matricule_membre: str = None,
     ) -> List['ParcoursDoctoralRechercheDTO']:
         return [
             cls._get_search_dto(parcours_doctoral)
             for parcours_doctoral in cls.entities
-            if parcours_doctoral.matricule_doctorant == matricule_etudiant
+            if parcours_doctoral.matricule_doctorant == matricule_doctorant
         ]

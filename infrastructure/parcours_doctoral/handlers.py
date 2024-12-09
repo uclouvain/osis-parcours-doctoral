@@ -30,7 +30,6 @@ from admission.ddd.admission.doctorat.events import (
 from admission.infrastructure.admission.doctorat.preparation.repository.proposition import (
     PropositionRepository,
 )
-
 from parcours_doctoral.ddd.commands import *
 from parcours_doctoral.ddd.use_case.read import *
 from parcours_doctoral.ddd.use_case.write import *
@@ -60,7 +59,7 @@ from ...ddd.use_case.write.renvoyer_invitation_signature_externe_service import 
 from ...ddd.use_case.write.supprimer_membre_CA_service import supprimer_membre_CA
 from ...ddd.use_case.write.supprimer_promoteur_service import supprimer_promoteur
 from .domain.service.historique import Historique
-from .domain.service.lister_toutes_demandes import ListerTousParcoursDoctoraux
+from .domain.service.lister_tous_parcours_doctoraux import ListerTousParcoursDoctoraux
 from .domain.service.membre_CA import MembreCATranslator
 from .domain.service.notification import Notification
 from .domain.service.parcours_doctoral import ParcoursDoctoralService
