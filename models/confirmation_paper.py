@@ -58,6 +58,11 @@ class ConfirmationPaper(models.Model):
         auto_now_add=True,
     )
 
+    is_active = models.BooleanField(
+        verbose_name=_("Is active"),
+        default=True,
+    )
+
     parcours_doctoral = models.ForeignKey(
         'parcours_doctoral.ParcoursDoctoral',
         verbose_name=_("Doctorate"),
@@ -128,3 +133,10 @@ class ConfirmationPaper(models.Model):
 
     class Meta:
         ordering = ["-created_at"]
+        constraints = [
+            models.UniqueConstraint(
+                'parcours_doctoral',
+                condition=models.Q(is_active=True),
+                name='unique_active_confirmation_by_doctorate',
+            )
+        ]

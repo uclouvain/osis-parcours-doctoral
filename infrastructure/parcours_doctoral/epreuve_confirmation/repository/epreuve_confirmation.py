@@ -87,7 +87,8 @@ class EpreuveConfirmationRepository(IEpreuveConfirmationRepository):
         cls, parcours_doctoral_entity_id: 'ParcoursDoctoralIdentity'
     ) -> 'EpreuveConfirmationDTO':
         first_result = ConfirmationPaper.objects.filter(
-            parcours_doctoral__uuid=parcours_doctoral_entity_id.uuid
+            parcours_doctoral__uuid=parcours_doctoral_entity_id.uuid,
+            is_active=True,
         ).first()
         if not first_result:
             raise EpreuveConfirmationNonTrouveeException
@@ -120,6 +121,7 @@ class EpreuveConfirmationRepository(IEpreuveConfirmationRepository):
                 'research_mandate_renewal_opinion': entity.avis_renouvellement_mandat_recherche,
                 'certificate_of_failure': entity.attestation_echec,
                 'certificate_of_achievement': entity.attestation_reussite,
+                'is_active': entity.est_active,
                 **extended_deadline_params,
             },
         )
@@ -189,4 +191,5 @@ class EpreuveConfirmationRepository(IEpreuveConfirmationRepository):
             attestation_echec=confirmation_paper.certificate_of_failure,
             canevas_proces_verbal_ca=confirmation_paper.supervisor_panel_report_canvas,
             avis_renouvellement_mandat_recherche=confirmation_paper.research_mandate_renewal_opinion,
+            est_active=confirmation_paper.is_active,
         )

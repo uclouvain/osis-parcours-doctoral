@@ -26,18 +26,25 @@
 from dal import autocomplete
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.postgres.search import SearchVector
-from django.db.models import Exists, F, OuterRef, Q
+from django.db.models import F, Q, Case, When
+
+from base.models.person import Person
+from parcours_doctoral.auth.roles.student import Student
+from parcours_doctoral.models import ParcoursDoctoralSupervisionActor, JuryMember
 
 __all__ = [
+    'JuryMembersAutocomplete',
+    'PersonsAutocomplete',
+    'SupervisionActorsAutocomplete',
     'StudentsAutocomplete',
 ]
 
 __namespace__ = False
 
-from parcours_doctoral.auth.roles.student import Student
 
+class PersonsAutocomplete(LoginRequiredMixin, autocomplete.Select2QuerySetView):
+    url_patterns = 'persons'
 
-class PersonsAutocomplete(LoginRequiredMixin):
     def get_results(self, context):
         return [
             {
@@ -47,8 +54,30 @@ class PersonsAutocomplete(LoginRequiredMixin):
             for person in context['object_list']
         ]
 
+    def get_queryset(self):
+        q = self.request.GET.get('q', '')
 
-class StudentsAutocomplete(PersonsAutocomplete, autocomplete.Select2QuerySetView):
+        return (
+            Person.objects.annotate(
+                name=SearchVector(
+                    'first_name',
+                    'last_name',
+                ),
+            )
+            .filter(Q(name=q) | Q(global_id__contains=q))
+            .order_by('last_name', 'first_name')
+            .values(
+                first_name=F('first_name'),
+                last_name=F('last_name'),
+                global_id=F('global_id'),
+            )
+            .distinct()
+            if q
+            else []
+        )
+
+
+class StudentsAutocomplete(PersonsAutocomplete):
     urlpatterns = 'students'
 
     def get_queryset(self):
@@ -61,12 +90,7 @@ class StudentsAutocomplete(PersonsAutocomplete, autocomplete.Select2QuerySetView
                     'person__last_name',
                 ),
             )
-            .filter(
-                Q(name=q)
-                | Q(person__email__icontains=q)
-                | Q(person__private_email__icontains=q)
-                | Q(person__student__registration_id__icontains=q)
-            )
+            .filter(Q(name=q) | Q(person__global_id__contains=q) | Q(person__student__registration_id__icontains=q))
             .order_by('person__last_name', 'person__first_name')
             .values(
                 first_name=F('person__first_name'),
@@ -76,4 +100,98 @@ class StudentsAutocomplete(PersonsAutocomplete, autocomplete.Select2QuerySetView
             .distinct()
             if q
             else []
+        )
+
+
+class SupervisionActorsAutocomplete(LoginRequiredMixin, autocomplete.Select2QuerySetView):
+    urlpatterns = 'supervision-actors'
+
+    def get_results(self, context):
+        return [
+            {
+                'id': actor.get('uuid'),
+                'text': ', '.join([actor.get('current_last_name'), actor.get('current_first_name')]),
+            }
+            for actor in context['object_list']
+        ]
+
+    def get_queryset(self):
+        if not self.q:
+            return []
+
+        actor_type = self.forwarded.get('actor_type')
+
+        qs = (
+            ParcoursDoctoralSupervisionActor.objects.annotate(
+                current_first_name=Case(
+                    When(person__isnull=True, then=F('first_name')),
+                    default=F('person__first_name'),
+                ),
+                current_last_name=Case(
+                    When(person__isnull=True, then=F('last_name')),
+                    default=F('person__last_name'),
+                ),
+                name=SearchVector(
+                    'current_first_name',
+                    'current_last_name',
+                ),
+            )
+            .filter(Q(name=self.q) | Q(person__global_id__contains=self.q))
+            .order_by('current_last_name', 'current_first_name')
+        )
+
+        if actor_type:
+            qs = qs.filter(type=actor_type)
+
+        return qs.values(
+            'uuid',
+            'current_first_name',
+            'current_last_name',
+        )
+
+
+class JuryMembersAutocomplete(LoginRequiredMixin, autocomplete.Select2QuerySetView):
+    urlpatterns = 'jury-members'
+
+    def get_results(self, context):
+        return [
+            {
+                'id': actor.get('uuid'),
+                'text': ', '.join([actor.get('current_last_name'), actor.get('current_first_name')]),
+            }
+            for actor in context['object_list']
+        ]
+
+    def get_queryset(self):
+        if not self.q:
+            return []
+
+        role = self.forwarded.get('role')
+
+        qs = (
+            JuryMember.objects.annotate(
+                current_first_name=Case(
+                    When(person__isnull=True, then=F('first_name')),
+                    default=F('person__first_name'),
+                ),
+                current_last_name=Case(
+                    When(person__isnull=True, then=F('last_name')),
+                    default=F('person__last_name'),
+                ),
+                name=SearchVector(
+                    'current_first_name',
+                    'current_last_name',
+                ),
+            )
+            .filter(Q(name=self.q) | Q(person__global_id__contains=self.q))
+            .order_by('current_last_name', 'current_first_name')
+        )
+
+        if role:
+            qs = qs.filter(role=role)
+
+        return qs.values(
+            'uuid',
+            'current_first_name',
+            'current_last_name',
         )

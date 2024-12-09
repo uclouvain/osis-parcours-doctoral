@@ -24,12 +24,12 @@
 #
 # ##############################################################################
 from abc import abstractmethod
-from typing import List, Optional
+from datetime import date
+from typing import List, Optional, Tuple
 
 from admission.views import PaginatedList
 from osis_common.ddd import interface
-
-from parcours_doctoral.ddd.dtos import ParcoursDoctoralRechercheDTO
+from parcours_doctoral.ddd.dtos import ParcoursDoctoralRechercheBODTO
 
 
 class IListerTousParcoursDoctoraux(interface.DomainService):
@@ -40,11 +40,23 @@ class IListerTousParcoursDoctoraux(interface.DomainService):
         numero: Optional[int] = None,
         noma: Optional[str] = '',
         matricule_etudiant: Optional[str] = '',
-        etats: Optional[List[str]] = None,
+        type_admission: Optional[str] = '',
         formation: Optional[str] = '',
+        annee_academique: Optional[int] = None,
+        uuid_promoteur: Optional[str] = '',
+        uuid_president_jury: Optional[str] = '',
+        cdds: Optional[List[str]] = None,
+        commission_proximite: Optional[str] = '',
+        type_financement: Optional[str] = '',
+        bourse_recherche: Optional[str] = '',
+        fnrs_fria_fresh: Optional[bool] = None,
+        instituts_secteurs: Optional[List[str]] = None,
+        statuts: Optional[List] = None,
+        dates: Optional[List[Tuple[str, Optional[date], Optional[date]]]] = None,
+        sigles_formations: Optional[List[str]] = None,
         tri_inverse: bool = False,
         champ_tri: Optional[str] = None,
         page: Optional[int] = None,
         taille_page: Optional[int] = None,
-    ) -> PaginatedList[ParcoursDoctoralRechercheDTO]:
+    ) -> PaginatedList[ParcoursDoctoralRechercheBODTO]:
         raise NotImplementedError

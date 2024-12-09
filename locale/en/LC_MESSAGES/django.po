@@ -116,8 +116,14 @@ msgstr ""
 msgid "A promoter can not be updated from the jury."
 msgstr ""
 
+msgid "ABANDON_ECHEC"
+msgstr ""
+
 msgid "ACCEPTEE"
 msgstr "Accepted"
+
+msgid "ADMISSION"
+msgstr ""
 
 msgid "ADMITTED"
 msgstr "Admitted"
@@ -139,6 +145,9 @@ msgid "Accepted"
 msgstr ""
 
 msgid "Achieved additional training"
+msgstr ""
+
+msgid "Acronym / Title"
 msgstr ""
 
 msgid "Actions"
@@ -223,7 +232,13 @@ msgstr ""
 msgid "Add an activity"
 msgstr ""
 
+msgid "Add date filter"
+msgstr ""
+
 msgid "Add validation of prior experience (VAE)"
+msgstr ""
+
+msgid "Additional training"
 msgstr ""
 
 msgid "Admission"
@@ -231,6 +246,13 @@ msgstr ""
 
 msgctxt "parcours_doctoral"
 msgid "Admission"
+msgstr ""
+
+msgid "Admission date"
+msgstr ""
+
+msgctxt "doctorate-filter"
+msgid "Admission type"
 msgstr ""
 
 #, python-format
@@ -241,6 +263,10 @@ msgid ""
 msgstr ""
 
 msgctxt "filters"
+msgid "All"
+msgstr ""
+
+msgctxt "filters feminine"
 msgid "All"
 msgstr ""
 
@@ -376,6 +402,11 @@ msgstr "Activity types for a communication in the conference category"
 
 msgid "CONFERENCE types"
 msgstr "Activity tpes for the conference category"
+
+#, fuzzy
+#| msgid "CONFIRMATION_PAPER"
+msgid "CONFIRMATION"
+msgstr "Confirmation exam"
 
 msgid "CONFIRMATION_PAPER"
 msgstr "Confirmation exam"
@@ -555,6 +586,9 @@ msgstr ""
 msgid "Context"
 msgstr ""
 
+msgid "Cotutelle"
+msgstr ""
+
 msgid "Cotutelle request document"
 msgstr ""
 
@@ -594,6 +628,10 @@ msgctxt "parcours_doctoral"
 msgid "Course units"
 msgstr ""
 
+msgctxt "doctorate"
+msgid "Courses"
+msgstr ""
+
 msgid "Courses taken"
 msgstr ""
 
@@ -627,10 +665,26 @@ msgstr ""
 msgid "Custom mail templates"
 msgstr ""
 
+msgid "DECISION_DE_RECEVABILITE"
+msgstr ""
+
+msgid "DEFENSE_PRIVEE"
+msgstr ""
+
 msgid "DOCTORAL_TRAINING"
 msgstr "PhD training"
 
+msgid "Date"
+msgstr ""
+
+#, python-format
+msgid "Date - Filter #%s"
+msgstr ""
+
 msgid "Date of the confirmation paper (DD/MM/YYYY)"
+msgstr ""
+
+msgid "Date type"
 msgstr ""
 
 msgid "Deadline extended"
@@ -706,13 +760,13 @@ msgstr ""
 msgid "Doctor"
 msgstr ""
 
+msgid "Doctoral commissions"
+msgstr ""
+
 msgid "Doctoral training"
 msgstr ""
 
 msgid "Doctoral training numero"
-msgstr ""
-
-msgid "Doctoral training status"
 msgstr ""
 
 msgid "Doctoral trainings"
@@ -813,6 +867,9 @@ msgstr ""
 msgid "Extension request not defined."
 msgstr ""
 
+msgid "FNRS, FRIA, FRESH"
+msgstr ""
+
 msgid "FREE_COURSE"
 msgstr "Open course"
 
@@ -849,6 +906,9 @@ msgstr ""
 msgid "French"
 msgstr ""
 
+msgid "From"
+msgstr ""
+
 msgid "Funding type"
 msgstr ""
 
@@ -859,9 +919,6 @@ msgid "Gantt chart"
 msgstr ""
 
 msgid "Gender"
-msgstr ""
-
-msgid "General"
 msgstr ""
 
 msgid "Generate the PDF recap"
@@ -912,6 +969,9 @@ msgid ""
 "specified."
 msgstr ""
 
+msgid "In order of registration"
+msgstr ""
+
 msgid "In person"
 msgstr ""
 
@@ -927,6 +987,9 @@ msgctxt "jury"
 msgid "Institute"
 msgstr ""
 
+msgid "Institute / Sector"
+msgstr ""
+
 msgid "Institution"
 msgstr ""
 
@@ -940,6 +1003,9 @@ msgid "Internal comment"
 msgstr ""
 
 msgid "International scholarship"
+msgstr ""
+
+msgid "Is active"
 msgstr ""
 
 msgid ""
@@ -973,6 +1039,9 @@ msgstr ""
 msgid "Jury approval"
 msgstr ""
 
+msgid "Jury chair"
+msgstr ""
+
 msgid "Jury composition"
 msgstr ""
 
@@ -990,10 +1059,13 @@ msgstr ""
 msgid "Language"
 msgstr ""
 
-msgid "Last name / First name / Email"
+msgid "Last name / First name"
 msgstr ""
 
 msgid "Last name / First name / Global id"
+msgstr ""
+
+msgid "Last name / First name / NOMA"
 msgstr ""
 
 msgid "Lead supervisor approval"
@@ -1286,9 +1358,6 @@ msgstr ""
 msgid "No jury found."
 msgstr ""
 
-msgid "Noma"
-msgstr ""
-
 msgid "Non doctor reason"
 msgstr ""
 
@@ -1296,6 +1365,9 @@ msgid "Number of days participating"
 msgstr ""
 
 msgid "Number of values mismatch"
+msgstr ""
+
+msgid "OTHER"
 msgstr ""
 
 msgid "One choice per line, leave the \"Other\" value out"
@@ -1438,7 +1510,13 @@ msgid ""
 "for your activities choice."
 msgstr ""
 
+msgid "Please select at least one date."
+msgstr ""
+
 msgid "Poster"
+msgstr ""
+
+msgid "Pre-admission"
 msgstr ""
 
 msgid "Presentation date"
@@ -1595,6 +1673,9 @@ msgstr ""
 msgid "Registration Id"
 msgstr ""
 
+msgid "Related doctorate"
+msgstr ""
+
 msgctxt "parcours_doctoral"
 msgid "Remove"
 msgstr ""
@@ -1617,6 +1698,9 @@ msgid "Require changes for \"%(object)s\""
 msgstr ""
 
 msgid "Research report"
+msgstr ""
+
+msgid "Research scholarship"
 msgstr ""
 
 msgid "Research seminar"
@@ -1713,6 +1797,9 @@ msgstr "Signing in progress"
 msgid "SOUMISE"
 msgstr "Submitted"
 
+msgid "SOUTENANCE_PUBLIQUE"
+msgstr ""
+
 msgid "STATISTICS"
 msgstr "Statistics"
 
@@ -1727,6 +1814,9 @@ msgid "Save and view result"
 msgstr ""
 
 msgid "Scholarship end date"
+msgstr ""
+
+msgid "Scholarship holder"
 msgstr ""
 
 msgid "Scholarship start date"
@@ -1859,6 +1949,10 @@ msgstr ""
 msgid "Supervision group not found."
 msgstr ""
 
+msgid "Supervisor"
+msgstr ""
+
+msgctxt "gender"
 msgid "Supervisor"
 msgstr ""
 
@@ -2124,6 +2218,9 @@ msgstr ""
 msgid "Title of the training"
 msgstr ""
 
+msgid "To"
+msgstr ""
+
 msgid ""
 "To be uploaded in your dossier on the doctoral platform as soon as possible "
 "after the confirmation test"
@@ -2196,6 +2293,9 @@ msgstr ""
 msgid "Validated"
 msgstr ""
 
+msgid "Validated credits total"
+msgstr ""
+
 msgid "WORK_CONTRACT"
 msgstr "Work contract"
 
@@ -2222,6 +2322,9 @@ msgstr ""
 
 msgid "YES"
 msgstr "Yes"
+
+msgid "Year"
+msgstr ""
 
 msgid "Yes"
 msgstr ""

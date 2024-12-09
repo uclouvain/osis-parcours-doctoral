@@ -23,14 +23,20 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-import datetime
-from typing import List, Optional
+from datetime import date
+from typing import List, Optional, Tuple, Dict
 
-from admission.views import PaginatedList
 from django.conf import settings
-from django.db.models import Q
+from django.db.models import Q, Exists, Sum, OuterRef
+from django.db.models.functions import Coalesce
 from django.utils.translation import get_language
 
+from admission.ddd.admission.doctorat.preparation.domain.model.enums import (
+    BourseRecherche,
+    ChoixStatutPropositionDoctorale,
+)
+from admission.views import PaginatedList
+from parcours_doctoral.ddd.domain.model.enums import ChoixEtapeParcoursDoctoral
 from parcours_doctoral.ddd.domain.service.i_filtrer_tous_parcours_doctoraux import (
     IListerTousParcoursDoctoraux,
 )
@@ -38,32 +44,70 @@ from parcours_doctoral.ddd.dtos import (
     CampusDTO,
     EntiteGestionDTO,
     FormationDTO,
-    ParcoursDoctoralRechercheDTO,
+    ParcoursDoctoralRechercheBODTO,
 )
-from parcours_doctoral.models import ParcoursDoctoral
+from parcours_doctoral.ddd.formation.domain.model.enums import StatutActivite
+from parcours_doctoral.infrastructure.utils import get_entities_with_descendants_ids
+from parcours_doctoral.models import ParcoursDoctoral, Activity
 
 
 class ListerTousParcoursDoctoraux(IListerTousParcoursDoctoraux):
+    DATE_FIELD_BY_DATE_TYPE = {
+        ChoixEtapeParcoursDoctoral.ADMISSION.name: 'created_at',
+        ChoixEtapeParcoursDoctoral.CONFIRMATION.name: 'confirmationpaper__confirmation_date',
+    }
+    ADDITIONAL_DATE_CONDITION_BY_DATE_TYPE = {
+        ChoixEtapeParcoursDoctoral.CONFIRMATION.name: {
+            'confirmationpaper__is_active': True,
+        }
+    }
+
     @classmethod
     def filtrer(
         cls,
         numero: Optional[int] = None,
         noma: Optional[str] = '',
         matricule_etudiant: Optional[str] = '',
-        etats: Optional[List[str]] = None,
+        type_admission: Optional[str] = '',
+        statuts: Optional[List[str]] = None,
         formation: Optional[str] = '',
+        annee_academique: Optional[int] = None,
+        uuid_promoteur: Optional[str] = '',
+        uuid_president_jury: Optional[str] = '',
+        cdds: Optional[List[str]] = None,
+        commission_proximite: Optional[str] = '',
+        type_financement: Optional[str] = '',
+        bourse_recherche: Optional[str] = '',
+        fnrs_fria_fresh: Optional[bool] = None,
+        instituts_secteurs: Optional[List[str]] = None,
+        dates: Optional[List[Tuple[str, Optional[date], Optional[date]]]] = None,
+        sigles_formations: Optional[List[str]] = None,
         tri_inverse: bool = False,
         champ_tri: Optional[str] = None,
         page: Optional[int] = None,
         taille_page: Optional[int] = None,
-    ) -> PaginatedList[ParcoursDoctoralRechercheDTO]:
+    ) -> PaginatedList[ParcoursDoctoralRechercheBODTO]:
         language_is_french = get_language() == settings.LANGUAGE_CODE_FR
 
         qs = (
             ParcoursDoctoral.objects.annotate_training_management_entity()
             .annotate_with_reference()
             .annotate_campus_info()
+            .annotate(
+                scholarship=Coalesce('international_scholarship__short_name', 'other_international_scholarship'),
+            )
+            .annotate(
+                follows_an_additional_training=Exists(
+                    Activity.objects.for_complementary_training_filter().filter(parcours_doctoral_id=OuterRef('pk'))
+                ),
+                validated_credits_number=Sum(
+                    'activity__ects',
+                    filter=Q(activity__status=StatutActivite.ACCEPTEE.name),
+                    default=0,
+                ),
+            )
             .select_related(
+                'admission',
                 'student',
                 'training__academic_year',
                 'training__enrollment_campus',
@@ -74,30 +118,97 @@ class ListerTousParcoursDoctoraux(IListerTousParcoursDoctoraux):
         # Add filters
         if numero:
             qs = qs.filter(reference=numero)
+
         if noma:
             qs = qs.filter(student__student__registration_id=noma)
+
         if matricule_etudiant:
             qs = qs.filter(student__global_id=matricule_etudiant)
+
+        if type_admission:
+            qs = qs.filter(admission__type=type_admission)
+
         if formation:
             terms = formation.split()
             training_filters = Q()
             for term in terms:
-                if term.endswith('-1'):
-                    training_filters &= Q(est_premiere_annee=True)
-                    term = term[:-2]
                 # The term can be a part of the acronym or of the training title
                 training_filters &= Q(Q(training__acronym__icontains=term) | Q(training__title__icontains=term))
             qs = qs.filter(training_filters)
-        if etats:
-            qs = qs.filter(status__in=etats)
+
+        if sigles_formations:
+            qs = qs.filter(training__acronym__in=sigles_formations)
+
+        if statuts:
+            qs = qs.filter(status__in=statuts)
+
+        if annee_academique:
+            qs = qs.filter(training__academic_year__year=annee_academique)
+
+        if uuid_promoteur:
+            qs = qs.filter(supervision_group__actors__uuid=uuid_promoteur)
+
+        if uuid_president_jury:
+            qs = qs.filter(jury_members__uuid=uuid_president_jury)
+
+        if cdds:
+            related_entities = get_entities_with_descendants_ids(cdds)
+
+            if instituts_secteurs:
+                related_entities &= get_entities_with_descendants_ids(instituts_secteurs)
+
+            qs = qs.filter(training__management_entity_id__in=related_entities)
+
+        elif instituts_secteurs:
+            qs = qs.filter(training__management_entity_id__in=get_entities_with_descendants_ids(instituts_secteurs))
+
+        if commission_proximite:
+            qs = qs.filter(proximity_commission=commission_proximite)
+
+        if type_financement:
+            qs = qs.filter(financing_type=type_financement)
+
+        if bourse_recherche == BourseRecherche.OTHER.name:
+            qs = qs.exclude(other_international_scholarship='')
+        elif bourse_recherche:
+            qs = qs.filter(international_scholarship=bourse_recherche)
+
+        if fnrs_fria_fresh is not None:
+            qs = qs.filter(is_fnrs_fria_fresh_csc_linked=fnrs_fria_fresh)
+
+        if dates:
+            date_filters: Dict = {}
+
+            for date_type, date_start, date_end in dates:
+                date_field = cls.DATE_FIELD_BY_DATE_TYPE[date_type]
+                if date_start:
+                    date_filters[f'{date_field}__gte'] = date_start
+                if date_end:
+                    date_filters[f'{date_field}__lte'] = date_end
+
+                additional_condition = cls.ADDITIONAL_DATE_CONDITION_BY_DATE_TYPE.get(date_type)
+                if additional_condition:
+                    date_filters.update(additional_condition)
+
+            qs = qs.filter(**date_filters)
 
         field_order = []
         if champ_tri:
+            if champ_tri == 'statut':
+                qs = qs.annotate_ordered_enum('status', 'ordered_status', ChoixStatutPropositionDoctorale)
+
             field_order = {
                 'reference': ['formatted_reference'],
                 'nom_etudiant': ['student__last_name', 'student__first_name'],
                 'formation': ['training__acronym'],
-                'statut': ['status'],
+                'bourse': ['scholarship'],
+                'statut': ['ordered_status'],
+                'date_admission': ['created_at'],
+                'pre_admission': ['admission__type'],
+                'cotutelle': ['cotutelle'],
+                'formation_complementaire': ['follows_an_additional_training'],
+                'en_regle_inscription': [''],  # TODO
+                'total_credits_valides': ['validated_credits_number'],
             }[champ_tri]
 
             if tri_inverse:
@@ -121,9 +232,11 @@ class ListerTousParcoursDoctoraux(IListerTousParcoursDoctoraux):
 
     @classmethod
     def load_dto_from_model(
-        cls, parcours_doctoral: ParcoursDoctoral, language_is_french: bool
-    ) -> ParcoursDoctoralRechercheDTO:
-        return ParcoursDoctoralRechercheDTO(
+        cls,
+        parcours_doctoral: ParcoursDoctoral,
+        language_is_french: bool,
+    ) -> ParcoursDoctoralRechercheBODTO:
+        return ParcoursDoctoralRechercheBODTO(
             uuid=parcours_doctoral.uuid,
             statut=parcours_doctoral.status,
             reference=parcours_doctoral.formatted_reference,  # From annotation
@@ -158,5 +271,11 @@ class ListerTousParcoursDoctoraux(IListerTousParcoursDoctoraux):
                 # TODO
                 entite_gestion=EntiteGestionDTO(),
             ),
+            type_admission=parcours_doctoral.admission.type,
             cree_le=parcours_doctoral.created_at,
+            code_bourse=parcours_doctoral.scholarship,  # From annotation
+            cotutelle=parcours_doctoral.cotutelle,
+            formation_complementaire=parcours_doctoral.follows_an_additional_training,
+            en_regle_inscription=False,  # TODO
+            total_credits_valides=parcours_doctoral.validated_credits_number,
         )

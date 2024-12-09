@@ -90,7 +90,7 @@ class IParcoursDoctoralRepository(interface.AbstractRepository, metaclass=ABCMet
     @abc.abstractmethod
     def search_dto(
         cls,
-        matricule_etudiant: str = None,
+        matricule_doctorant: str = None,
         matricule_membre: str = None,
     ) -> List['ParcoursDoctoralRechercheDTO']:
         raise NotImplementedError

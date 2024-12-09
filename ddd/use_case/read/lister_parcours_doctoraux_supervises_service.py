@@ -26,7 +26,6 @@
 from typing import List
 
 from parcours_doctoral.ddd.commands import (
-    ListerParcoursDoctorauxDoctorantQuery,
     ListerParcoursDoctorauxSupervisesQuery,
 )
 from parcours_doctoral.ddd.dtos import ParcoursDoctoralRechercheDTO

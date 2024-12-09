@@ -179,3 +179,10 @@ class JuryMember(models.Model):
                 name='admission_jurymember_constraint',
             ),
         ]
+
+    @property
+    def complete_name(self):
+        if self.person_id:
+            return f"{self.person.last_name}, {self.person.first_name}"
+        else:
+            return f"{self.last_name}, {self.first_name}"
