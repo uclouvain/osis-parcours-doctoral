@@ -27,7 +27,8 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-  <li><a href="{% url 'parcours_doctoral:config:cdd-mail-template:list' %}">{% trans 'Custom mail templates' %}</a></li>
+  <li><a href="{% url 'parcours_doctoral:config:home' %}">{% trans 'CDD configuration' %}</a></li>
+  <li><a href="{% url 'parcours_doctoral:config:cdd-mail-template:list' %}">{% trans 'CDD Mail template' %}</a></li>
   <li class="active">{{ instances.0.name }}</li>
 {% endblock %}
 
