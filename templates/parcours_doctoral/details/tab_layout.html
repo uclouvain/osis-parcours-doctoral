@@ -34,23 +34,23 @@
     <div class="btn-group">
       <button
           type="button"
-          class="btn btn-default"
-          data-toggle="dropdown"
+          class="btn btn-default border border-dark-subtle"
+          data-bs-toggle="dropdown"
           aria-haspopup="true"
           aria-expanded="false"
       >
         {% trans "Actions" %}
-        <span class="caret"></span>
+        <i class="fa-solid fa-caret-down"></i>
       </button>
-      <ul class="dropdown-menu pull-right">
+      <ul class="dropdown-menu float-end">
         {% block actions %}
           <li>
-            <a href="{{ update_url }}">
+            <a class="dropdown-item" href="{{ update_url }}">
               {% trans "Update" context 'verb' %}
             </a>
           </li>
           <li>
-            <a href="{{ pdf_recap_url }}" target="_blank" >
+            <a class="dropdown-item" href="{{ pdf_recap_url }}" target="_blank" >
               {% translate "Generate the PDF recap" %}
             </a>
           </li>

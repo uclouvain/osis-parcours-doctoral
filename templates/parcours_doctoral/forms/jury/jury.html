@@ -1,5 +1,5 @@
 {% extends "parcours_doctoral/forms/tab_layout.html" %}
-{% load i18n parcours_doctoral enums bootstrap3 %}
+{% load i18n parcours_doctoral enums django_bootstrap5 %}
 
 {% comment "License" %}
 * OSIS stands for Open Student Information System. It's an application
@@ -31,39 +31,50 @@
 {% block tab_content %}
   <h3>{% trans "Jury composition" %}</h3>
 
-  {% translate 'President' context 'jury' as president_label %}
-  {% panel president_label %}
-    <div class="list-group">
-    {% for membre in membre_president %}
-      <div class="list-group-item membre-container">{% include "parcours_doctoral/forms/jury/includes/member.html" %}</div>
-    {% empty %}
-      <div class="list-group-item">{% trans "You need to set a member as president." %}</div>
-    {% endfor %}
+  <div class="card">
+    <div class="card-body">
+      <h4 class="card-title">{% translate 'President' context 'jury' %}</h4>
+      <div class="list-group">
+        {% for membre in membre_president %}
+          <div class="list-group-item membre-container">{% include "parcours_doctoral/forms/jury/includes/member.html" %}</div>
+        {% empty %}
+          <div class="list-group-item">{% trans "You need to set a member as president." %}</div>
+        {% endfor %}
+      </div>
     </div>
-  {% endpanel %}
+  </div>
 
-  {% panel _("Secretary") %}
-    <div class="list-group">
-    {% for membre in membre_secretaire %}
-      <div class="list-group-item membre-container">{% include "parcours_doctoral/forms/jury/includes/member.html" %}</div>
-    {% empty %}
-      <div class="list-group-item">{% trans "You need to set a member as secretary." %}</div>
-    {% endfor %}
+  <div class="card">
+    <div class="card-body">
+      <h4 class="card-title">{% translate 'Secretary' %}</h4>
+      <div class="list-group">
+        {% for membre in membre_secretaire %}
+          <div class="list-group-item membre-container">{% include "parcours_doctoral/forms/jury/includes/member.html" %}</div>
+        {% empty %}
+          <div class="list-group-item">{% trans "You need to set a member as secretary." %}</div>
+        {% endfor %}
+      </div>
     </div>
-  {% endpanel %}
+  </div>
 
-  {% panel _("Members") %}
-    <div class="list-group">
-    {% for membre in membres %}
-      <div class="list-group-item membre-container">{% include "parcours_doctoral/forms/jury/includes/member.html" %}</div>
-    {% endfor %}
+  <div class="card">
+    <div class="card-body">
+      <h4 class="card-title">{% translate 'Members' %}</h4>
+      <div class="list-group">
+        {% for membre in membres %}
+          <div class="list-group-item membre-container">{% include "parcours_doctoral/forms/jury/includes/member.html" %}</div>
+        {% endfor %}
+      </div>
     </div>
-  {% endpanel %}
+  </div>
 
   {% if form %}
-  {% panel _("Add a new member") %}
-    {% include "parcours_doctoral/forms/jury/includes/member_form.html" %}
-  {% endpanel %}
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">{% translate 'Add a new member' %}</h4>
+        {% include "parcours_doctoral/forms/jury/includes/member_form.html" %}
+      </div>
+    </div>
   {% endif %}
 
 {% endblock %}
