@@ -96,17 +96,16 @@ class ParcoursDoctoralService(IParcoursDoctoralService):
         if not Student.objects.filter(person=admission.candidate).exists():
             Student.objects.create(person=admission.candidate)
 
-        promoters = []
-        ca_members = []
         for admission_actor in SupervisionActor.objects.select_related('person', 'country').filter(
             process__uuid=admission.supervision_group.uuid,
         ):
+            if not admission_actor.person:
+                continue
+            # Will be improved in the future (bulk creation + unicity check)
             if admission_actor.type == AdmissionActorType.PROMOTER.name:
-                promoters.append(Promoter(person=admission_actor.person))
+                Promoter.objects.get_or_create(person=admission_actor.person)
             else:
-                ca_members.append(CommitteeMember(person=admission_actor.person))
-        Promoter.objects.bulk_create(promoters)
-        CommitteeMember.objects.bulk_create(ca_members)
+                CommitteeMember.objects.get_or_create(person=admission_actor.person)
 
     @classmethod
     def _duplicate_uploaded_files(
