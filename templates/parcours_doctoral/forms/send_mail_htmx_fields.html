@@ -1,4 +1,4 @@
-{% load static bootstrap3 %}
+{% load static django_bootstrap5 %}
 
 {% comment "License" %}
   * OSIS stands for Open Student Information System. It's an application
@@ -25,7 +25,7 @@
 {% endcomment %}
 
 <div id="sendmail-form-content">
-  {% bootstrap_form_errors form %}
+  {% bootstrap_form_errors form type='non_fields' %}
   {% bootstrap_field form.subject %}
   {% bootstrap_field form.body %}
   <script src="{% static 'ckeditor/ckeditor-init.js' %}" type="text/javascript"></script>

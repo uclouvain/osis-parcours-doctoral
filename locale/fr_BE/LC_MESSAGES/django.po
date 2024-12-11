@@ -713,11 +713,11 @@ msgctxt "parcours_doctoral tab"
 msgid "Defense method"
 msgstr "Formule de défense"
 
-msgid "Definitive doctoral training date to doctorate"
+msgid "Definitive admission date to doctorate"
 msgstr "Date de l'admission définitive au doctorat"
 
-msgid "Definitive doctoral training date:"
-msgstr "Date définitive du parcours doctoral:"
+msgid "Definitive admission date:"
+msgstr "Date de l'admission définitive au doctorat:"
 
 msgctxt "parcours_doctoral"
 msgid "Delete"
@@ -2316,6 +2316,7 @@ msgstr "Activités de formation"
 msgid "Training activity"
 msgstr "Activité for formation"
 
+msgctxt "doctorate"
 msgid "Type"
 msgstr "Type"
 

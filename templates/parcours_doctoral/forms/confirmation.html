@@ -1,5 +1,5 @@
 {% extends "parcours_doctoral/forms/tab_layout.html" %}
-{% load i18n parcours_doctoral bootstrap3 static %}
+{% load i18n parcours_doctoral django_bootstrap5 static %}
 
 {% comment "License" %}
 * OSIS stands for Open Student Information System. It's an application
@@ -30,9 +30,9 @@
 {% endblock %}
 
 {% block form_content %}
-{#  {% field_data _("Definitive parcours_doctoral date:") parcours_doctoral.parcours_doctoral_acceptee_le 'inline-field-data' %}#}
-  {% bootstrap_field form.date_limite form_group_class="form-group min_field" %}
-  {% bootstrap_field form.date form_group_class="form-group min_field" %}
+{#  {% field_data _("Definitive admission date:") parcours_doctoral.admission_acceptee_le 'inline-field-data' %}#}
+  {% bootstrap_field form.date_limite wrapper_class="form-group min_field" %}
+  {% bootstrap_field form.date wrapper_class="form-group min_field" %}
   {% bootstrap_field form.rapport_recherche %}
   <p>
     <a href="{% url 'parcours_doctoral:confirmation-canvas' view.kwargs.uuid %}" target="_blank">
