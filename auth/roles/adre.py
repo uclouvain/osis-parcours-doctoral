@@ -46,6 +46,7 @@ class AdreSecretary(RoleModel):
     @classmethod
     def rule_set(cls):
         ruleset = {
+            'base.can_access_student_path': rules.always_allow,
             # Doctorate
             'parcours_doctoral.view_parcours_doctoral': rules.always_allow,
             'parcours_doctoral.download_jury_approved_pdf': rules.always_allow,

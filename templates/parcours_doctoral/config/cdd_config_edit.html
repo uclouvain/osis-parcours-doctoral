@@ -29,8 +29,8 @@
   {% blocktrans with name=object.cdd trimmed asvar title %}
     Change <em>{{ name }}</em> configuration
   {% endblocktrans %}
-  <li>{% trans 'Admission' %}</li>
-  <li><a href="{% url 'parcours_doctoral:config:cdd-config:list' %}">{% trans 'CDD configuration' %}</a></li>
+  <li><a href="{% url 'parcours_doctoral:config:home' %}">{% trans 'CDD configuration' %}</a></li>
+  <li><a href="{% url 'parcours_doctoral:config:cdd-config:list' %}">{% trans 'Doctoral training configuration' %}</a></li>
   <li class="active">{{ title|safe }}</li>
 {% endblock %}
 
