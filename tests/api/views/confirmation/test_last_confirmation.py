@@ -247,7 +247,7 @@ class LastConfirmationAPIViewTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_get_last_confirmation_with_no_confirmation_paper(self):
-        self.client.force_login(user=self.student.user)
+        self.client.force_authenticate(user=self.student.user)
 
         self.confirmation_paper.delete()
 

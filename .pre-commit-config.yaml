@@ -10,7 +10,7 @@ repos:
     rev: 5.13.2
     hooks:
       - id: isort
-        args: ["--profile", "black", "--filter-files"]
+        args: ["--profile", "black", "--filter-files", "--src", "..", "--virtual-env", "../venv"]
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.6.0
@@ -32,7 +32,7 @@ repos:
       - id: diff-quality
         name: pycodestyle
         language: system
-        entry: diff-quality --violations=pycodestyle --compare-branch=origin/dev --fail-under=100 --options="--ignore=E501"
+        entry: diff-quality --violations=pycodestyle --compare-branch=origin/dev --fail-under=100 --options="--ignore=E501,W503"
         types: [ python ]
         pass_filenames: false
 
