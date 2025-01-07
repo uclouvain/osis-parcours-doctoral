@@ -26,13 +26,11 @@
 from typing import List
 
 from admission.ddd.admission.doctorat.validation.domain.model.enums import ChoixGenre
-from admission.infrastructure.admission.domain.service.in_memory.bourse import (
-    BourseInMemoryTranslator,
-)
 from attr import dataclass
 from base.ddd.utils.in_memory_repository import InMemoryGenericRepository
 from django.utils import timezone
 
+from infrastructure.reference.domain.service.in_memory.bourse import BourseInMemoryTranslator
 from parcours_doctoral.ddd.domain.model.enums import ChoixTypeFinancement
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import (
     ParcoursDoctoral,

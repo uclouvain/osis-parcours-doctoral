@@ -27,7 +27,6 @@ import datetime
 from uuid import uuid4
 
 import freezegun
-from admission.tests.factories.scholarship import DoctorateScholarshipFactory
 from base.models.enums.entity_type import EntityType
 from base.tests.factories.entity_version import EntityVersionFactory
 from base.tests.factories.person import PersonFactory
@@ -44,6 +43,7 @@ from parcours_doctoral.ddd.domain.model.enums import (
 from parcours_doctoral.tests.factories.parcours_doctoral import ParcoursDoctoralFactory
 from parcours_doctoral.tests.factories.supervision import PromoterFactory
 from parcours_doctoral.tests.mixins import CheckActionLinksMixin
+from reference.tests.factories.scholarship import DoctorateScholarshipFactory
 
 
 class ParcoursDoctoralAPIViewTestCase(CheckActionLinksMixin, APITestCase):

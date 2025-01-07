@@ -23,15 +23,12 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from admission.tests.factories.scholarship import (
-    DoctorateScholarshipFactory,
-    DoubleDegreeScholarshipFactory,
-    ErasmusMundusScholarshipFactory,
-    InternationalScholarshipFactory,
-)
-from base.tests.factories.user import UserFactory
 from django.shortcuts import resolve_url
 from rest_framework.test import APITestCase
+
+from base.tests.factories.user import UserFactory
+from reference.tests.factories.scholarship import DoubleDegreeScholarshipFactory, InternationalScholarshipFactory, \
+    ErasmusMundusScholarshipFactory, DoctorateScholarshipFactory
 
 
 class AutocompleteScholarshipViewTestCase(APITestCase):

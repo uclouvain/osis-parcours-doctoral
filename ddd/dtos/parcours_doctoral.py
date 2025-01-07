@@ -28,10 +28,11 @@ from typing import List, Optional
 from uuid import UUID
 
 import attr
+
+from ddd.logic.reference.dtos.bourse import BourseDTO
 from osis_common.ddd import interface
 
 from parcours_doctoral.ddd.domain.model.enums import CHOIX_COMMISSION_PROXIMITE
-from parcours_doctoral.ddd.dtos.bourse import BourseDTO
 from parcours_doctoral.ddd.dtos.formation import FormationDTO
 
 

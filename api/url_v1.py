@@ -68,10 +68,7 @@ urlpatterns = [
     path('doctorate/<uuid:uuid>/training/<uuid:activity_id>', views.TrainingView),
     path('doctorate/<uuid:uuid>/complementary-training', views.ComplementaryTrainingListView),
     path('doctorate/<uuid:uuid>/course-enrollment', views.CourseEnrollmentListView),
-    # References
-    path('references/scholarship/<uuid:uuid>', views.RetrieveScholarshipView),
     # Autocomplete
     path('autocomplete/tutor', views.AutocompleteTutorView),
     path('autocomplete/person', views.AutocompletePersonView),
-    path('autocomplete/scholarship', views.AutocompleteScholarshipView),
 ]

@@ -32,5 +32,4 @@ from .external import *
 from .funding import *
 from .jury import *
 from .parcours_doctoral import *
-from .scholarship import *
 from .supervision import *

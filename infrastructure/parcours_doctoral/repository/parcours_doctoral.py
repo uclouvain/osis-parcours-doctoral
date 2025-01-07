@@ -25,7 +25,6 @@
 # ##############################################################################
 from typing import Dict, List, Optional
 
-from admission.infrastructure.admission.domain.service.bourse import BourseTranslator
 from base.models.education_group_year import EducationGroupYear
 from base.models.entity_version import EntityVersion
 from base.models.enums.entity_type import EntityType
@@ -34,6 +33,9 @@ from base.models.student import Student
 from django.conf import settings
 from django.db.models import QuerySet
 from django.utils.translation import get_language
+
+from ddd.logic.reference.domain.model.bourse import BourseIdentity
+from infrastructure.reference.domain.service.bourse import BourseTranslator
 from osis_common.ddd.interface import ApplicationService, EntityIdentity, RootEntity
 from program_management.models.education_group_version import EducationGroupVersion
 from reference.models.language import Language
@@ -46,7 +48,6 @@ from parcours_doctoral.ddd.domain.model._financement import Financement
 from parcours_doctoral.ddd.domain.model._formation import FormationIdentity
 from parcours_doctoral.ddd.domain.model._institut import InstitutIdentity
 from parcours_doctoral.ddd.domain.model._projet import Projet
-from parcours_doctoral.ddd.domain.model.bourse import BourseIdentity
 from parcours_doctoral.ddd.domain.model.enums import (
     ChoixDoctoratDejaRealise,
     ChoixStatutParcoursDoctoral,

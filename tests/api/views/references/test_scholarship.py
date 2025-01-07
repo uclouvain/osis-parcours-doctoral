@@ -26,13 +26,11 @@
 
 import uuid
 
-from admission.tests.factories.scholarship import (
-    DoctorateScholarshipFactory,
-    DoubleDegreeScholarshipFactory,
-)
-from base.tests.factories.user import UserFactory
 from django.shortcuts import resolve_url
 from rest_framework.test import APITestCase
+
+from base.tests.factories.user import UserFactory
+from reference.tests.factories.scholarship import DoubleDegreeScholarshipFactory, DoctorateScholarshipFactory
 
 
 class RetrieveScholarshipViewTestCase(APITestCase):

@@ -23,7 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from parcours_doctoral.ddd.builder.bourse_identity import BourseIdentityBuilder
+from ddd.logic.reference.domain.builder.bourse_identity import BourseIdentityBuilder
 from parcours_doctoral.ddd.builder.parcours_doctoral_identity import (
     ParcoursDoctoralIdentityBuilder,
 )

@@ -28,6 +28,8 @@ from datetime import datetime
 from typing import List, Optional
 
 import attr
+
+from ddd.logic.reference.domain.model.bourse import BourseIdentity
 from osis_common.ddd import interface
 
 from parcours_doctoral.ddd.domain.model._cotutelle import Cotutelle
@@ -39,7 +41,6 @@ from parcours_doctoral.ddd.domain.model._financement import Financement
 from parcours_doctoral.ddd.domain.model._formation import FormationIdentity
 from parcours_doctoral.ddd.domain.model._institut import InstitutIdentity
 from parcours_doctoral.ddd.domain.model._projet import Projet
-from parcours_doctoral.ddd.domain.model.bourse import BourseIdentity
 from parcours_doctoral.ddd.domain.model.enums import (
     ChoixDoctoratDejaRealise,
     ChoixStatutParcoursDoctoral,

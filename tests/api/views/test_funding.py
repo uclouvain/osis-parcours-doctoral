@@ -31,7 +31,6 @@ import freezegun
 from admission.ddd.admission.doctorat.preparation.domain.model.enums import (
     ChoixTypeContratTravail,
 )
-from admission.tests.factories.scholarship import DoctorateScholarshipFactory
 from base.tests.factories.organization import OrganizationFactory
 from base.tests.factories.person import PersonFactory
 from django.shortcuts import resolve_url
@@ -45,6 +44,7 @@ from parcours_doctoral.tests.factories.supervision import (
     CaMemberFactory,
     PromoterFactory,
 )
+from reference.tests.factories.scholarship import DoctorateScholarshipFactory
 
 
 @freezegun.freeze_time('2023-01-01')

@@ -27,9 +27,10 @@ from datetime import date
 from typing import List, Optional
 
 import attr
+
+from ddd.logic.reference.domain.model.bourse import BourseIdentity
 from osis_common.ddd import interface
 
-from parcours_doctoral.ddd.domain.model.bourse import BourseIdentity
 from parcours_doctoral.ddd.domain.model.enums import ChoixTypeFinancement
 
 
