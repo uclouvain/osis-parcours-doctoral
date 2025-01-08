@@ -33,6 +33,5 @@ from .funding import *
 from .jury import *
 from .parcours_doctoral import *
 from .project import *
-from .references import *
 from .supervision import *
 from .training import *
