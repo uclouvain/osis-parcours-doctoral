@@ -247,6 +247,9 @@ msgstr ""
 msgid "All CA members must have approved the proposition."
 msgstr "All supervisory panel members must have approved the proposition."
 
+msgid "All history"
+msgstr ""
+
 msgid "All supervisors must have approved the proposition."
 msgstr ""
 
@@ -877,6 +880,10 @@ msgid "HTML"
 msgstr ""
 
 msgid "Has your PhD project already started?"
+msgstr ""
+
+msgctxt "tab"
+msgid "History"
 msgstr ""
 
 msgid "INVITED"
@@ -1816,6 +1823,9 @@ msgstr ""
 
 msgctxt "parcours_doctoral"
 msgid "Status"
+msgstr ""
+
+msgid "Status changes"
 msgstr ""
 
 msgid "Status of the doctoral training"
