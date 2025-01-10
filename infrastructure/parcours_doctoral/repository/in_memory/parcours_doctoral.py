@@ -141,6 +141,7 @@ class ParcoursDoctoralInMemoryRepository(InMemoryGenericRepository, IParcoursDoc
 
         return ParcoursDoctoralDTO(
             uuid=str(entity_id.uuid),
+            uuid_admission='',
             statut=parcours_doctoral.statut.name,
             date_changement_statut=None,
             reference=str(parcours_doctoral.reference),

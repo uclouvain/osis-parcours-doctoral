@@ -114,6 +114,12 @@
                 <i class="far fa-copy"></i>
               </button>
             </span>
+            <a
+              href="{% url 'admission:doctorate' parcours_doctoral.uuid_admission %}"
+              target="_blank"
+            >
+              <span class="badge bg-secondary">{% translate 'Admission' %}</span>
+            </a>
           </div>
           <div class="min-width">
             {% include 'parcours_doctoral/includes/parcours_doctoral_status.html' with display_on_load=True %}

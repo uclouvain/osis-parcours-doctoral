@@ -218,6 +218,7 @@ class ParcoursDoctoralAPIViewTestCase(CheckActionLinksMixin, APITestCase):
 
         # Global
         self.assertEqual(json_response['uuid'], str(self.doctorate.uuid))
+        self.assertEqual(json_response['uuid_admission'], str(self.doctorate.admission.uuid))
         self.assertEqual(json_response['reference'], f'M-CDA22-{self.doctorate.reference_str}')
         self.assertEqual(json_response['statut'], self.doctorate.status)
         self.assertEqual(json_response['matricule_doctorant'], self.doctorate.student.global_id)
