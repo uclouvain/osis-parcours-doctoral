@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -25,13 +25,6 @@
 # ##############################################################################
 import uuid
 
-from admission.models.functions import ToChar
-from base.models.education_group_year import EducationGroupYear
-from base.models.entity_version import EntityVersion
-from base.models.enums.education_group_categories import Categories
-from base.models.enums.education_group_types import TrainingType
-from base.models.person import Person
-from base.models.student import Student
 from django.core.cache import cache
 from django.db import models
 from django.db.models import Case, CharField, F, OuterRef, Q, Subquery, Value, When
@@ -43,8 +36,14 @@ from django.utils.translation import pgettext_lazy
 from osis_document.contrib import FileField
 from osis_history.models import HistoryEntry
 from osis_signature.contrib.fields import SignatureProcessField
-from program_management.models.education_group_version import EducationGroupVersion
 
+from admission.models.functions import ToChar
+from base.models.education_group_year import EducationGroupYear
+from base.models.entity_version import EntityVersion
+from base.models.enums.education_group_categories import Categories
+from base.models.enums.education_group_types import TrainingType
+from base.models.person import Person
+from base.models.student import Student
 from parcours_doctoral.ddd.domain.model.enums import (
     ChoixCommissionProximiteCDEouCLSM,
     ChoixCommissionProximiteCDSS,
@@ -56,6 +55,7 @@ from parcours_doctoral.ddd.domain.model.enums import (
 )
 from parcours_doctoral.ddd.jury.domain.model.enums import FormuleDefense
 from parcours_doctoral.ddd.repository.i_parcours_doctoral import CAMPUS_LETTRE_DOSSIER
+from program_management.models.education_group_version import EducationGroupVersion
 
 __all__ = [
     'ParcoursDoctoral',
@@ -415,7 +415,7 @@ class ParcoursDoctoral(models.Model):
         blank=True,
     )
     international_scholarship = models.ForeignKey(
-        to="admission.Scholarship",
+        to="reference.Scholarship",
         verbose_name=_("International scholarship"),
         related_name="+",
         on_delete=models.PROTECT,

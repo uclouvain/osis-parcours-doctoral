@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -25,14 +25,14 @@
 # ##############################################################################
 from typing import List
 
-from admission.ddd.admission.doctorat.validation.domain.model.enums import ChoixGenre
-from admission.infrastructure.admission.domain.service.in_memory.bourse import (
-    BourseInMemoryTranslator,
-)
 from attr import dataclass
-from base.ddd.utils.in_memory_repository import InMemoryGenericRepository
 from django.utils import timezone
 
+from admission.ddd.admission.doctorat.validation.domain.model.enums import ChoixGenre
+from base.ddd.utils.in_memory_repository import InMemoryGenericRepository
+from infrastructure.reference.domain.service.in_memory.bourse import (
+    BourseInMemoryTranslator,
+)
 from parcours_doctoral.ddd.domain.model.enums import ChoixTypeFinancement
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import (
     ParcoursDoctoral,
