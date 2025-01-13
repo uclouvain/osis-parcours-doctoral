@@ -463,7 +463,7 @@ class ParcoursDoctoral(models.Model):
         blank=True,
     )
     international_scholarship = models.ForeignKey(
-        to="admission.Scholarship",
+        to="reference.Scholarship",
         verbose_name=_("International scholarship"),
         related_name="+",
         on_delete=models.PROTECT,

@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -23,22 +23,19 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from admission.ddd.admission.enums import TypeBourse
-from admission.models import Scholarship
-from base.auth.roles.tutor import Tutor
-from base.models.person import Person
-from base.models.student import Student
 from django.db.models import Exists, F, OuterRef, Q
 from rest_framework.filters import BaseFilterBackend
 from rest_framework.generics import ListAPIView
 
+from base.auth.roles.tutor import Tutor
+from base.models.person import Person
+from base.models.student import Student
 from parcours_doctoral.api import serializers
 from parcours_doctoral.api.schema import AuthorizationAwareSchema
 
 __all__ = [
     "AutocompleteTutorView",
     "AutocompletePersonView",
-    "AutocompleteScholarshipView",
 ]
 
 
@@ -65,42 +62,6 @@ class PersonSearchingBackend(BaseFilterBackend):
                 },
             },
         ]
-
-
-class ScholarshipSearchBackend(BaseFilterBackend):
-    searching_param = 'search'
-
-    def filter_queryset(self, request, queryset, view):
-        search_term = request.GET.get(self.searching_param, '')
-
-        return queryset.filter(Q(short_name__icontains=search_term) | Q(long_name__icontains=search_term))
-
-    def get_schema_operation_parameters(self, view):  # pragma: no cover
-        return [
-            {
-                'name': self.searching_param,
-                'required': False,
-                'in': 'query',
-                'description': 'The term to search the scholarship on (short or long name)',
-                'schema': {
-                    'type': 'string',
-                },
-            },
-        ]
-
-
-class AutocompleteScholarshipView(ListAPIView):
-    """Autocomplete scholarships"""
-
-    name = 'scholarships'
-    schema = AuthorizationAwareSchema()
-    filter_backends = [ScholarshipSearchBackend]
-    serializer_class = serializers.ScholarshipSerializer
-    queryset = (
-        Scholarship.objects.filter(type=TypeBourse.BOURSE_INTERNATIONALE_DOCTORAT.name)
-        .exclude(disabled=True)
-        .order_by('long_name', 'short_name')
-    )
 
 
 class AutocompleteTutorView(ListAPIView):

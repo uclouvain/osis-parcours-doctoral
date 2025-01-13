@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Parcours Doctoral API
-  version: 1.0.2
+  version: 1.0.3
   description: This API delivers data for the Parcours Doctoral project.
   contact:
     name: UCLouvain - OSIS
@@ -1122,37 +1122,6 @@ paths:
           $ref: '#/components/responses/NotFound'
       tags:
       - doctorate
-  /references/scholarship/{uuid}:
-    get:
-      operationId: retrieveScholarship
-      description: Retrieves a scholarship
-      parameters:
-      - name: uuid
-        in: path
-        required: true
-        description: A UUID string identifying this Bourse.
-        schema:
-          type: string
-      - $ref: '#/components/parameters/Accept-Language'
-      - $ref: '#/components/parameters/X-User-FirstName'
-      - $ref: '#/components/parameters/X-User-LastName'
-      - $ref: '#/components/parameters/X-User-Email'
-      - $ref: '#/components/parameters/X-User-GlobalID'
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Scholarship'
-          description: ''
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '404':
-          $ref: '#/components/responses/NotFound'
-      tags:
-      - references
   /autocomplete/tutor:
     get:
       operationId: listTutors
@@ -1274,70 +1243,6 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/Person'
-          description: ''
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '404':
-          $ref: '#/components/responses/NotFound'
-      tags:
-      - autocomplete
-  /autocomplete/scholarship:
-    get:
-      operationId: listScholarships
-      description: Autocomplete scholarships
-      parameters:
-      - name: limit
-        required: false
-        in: query
-        description: Number of results to return per page.
-        schema:
-          type: integer
-      - name: offset
-        required: false
-        in: query
-        description: The initial index from which to return the results.
-        schema:
-          type: integer
-      - name: search
-        required: false
-        in: query
-        description: The term to search the scholarship on (short or long name)
-        schema:
-          type: string
-      - $ref: '#/components/parameters/Accept-Language'
-      - $ref: '#/components/parameters/X-User-FirstName'
-      - $ref: '#/components/parameters/X-User-LastName'
-      - $ref: '#/components/parameters/X-User-Email'
-      - $ref: '#/components/parameters/X-User-GlobalID'
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                - count
-                - results
-                properties:
-                  count:
-                    type: integer
-                    example: 123
-                  next:
-                    type: string
-                    nullable: true
-                    format: uri
-                    example: http://api.example.org/accounts/?offset=400&limit=100
-                  previous:
-                    type: string
-                    nullable: true
-                    format: uri
-                    example: http://api.example.org/accounts/?offset=200&limit=100
-                  results:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/Scholarship'
           description: ''
         '400':
           $ref: '#/components/responses/BadRequest'
@@ -1880,10 +1785,13 @@ components:
                   type: string
                 nom_long:
                   type: string
+                type:
+                  type: string
               required:
               - uuid
               - nom_court
               - nom_long
+              - type
               nullable: true
             autre_bourse_recherche:
               type: string
@@ -3741,20 +3649,6 @@ components:
       - PRIVATE_DEFENSE
       - PUBLIC_DEFENSE
       type: string
-    Scholarship:
-      type: object
-      properties:
-        uuid:
-          type: string
-          readOnly: true
-        short_name:
-          type: string
-          maxLength: 50
-        long_name:
-          type: string
-          maxLength: 255
-      required:
-      - short_name
     Tutor:
       type: object
       properties:
