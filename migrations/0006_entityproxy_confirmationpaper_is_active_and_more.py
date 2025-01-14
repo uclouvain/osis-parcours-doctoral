@@ -7,7 +7,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ("base", "0707_django_4_migration"),
-        ("parcours_doctoral", "0002_mail_templates"),
+        ("parcours_doctoral", "0005_promoter_unique_constraint_data_structure"),
     ]
 
     operations = [

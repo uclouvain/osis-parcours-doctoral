@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -23,17 +23,18 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from typing import List
-
-from parcours_doctoral.ddd.commands import ListerParcoursDoctorauxSupervisesQuery
-from parcours_doctoral.ddd.dtos import ParcoursDoctoralRechercheEtudiantDTO
-from parcours_doctoral.ddd.repository.i_parcours_doctoral import (
-    IParcoursDoctoralRepository,
+from parcours_doctoral.ddd.read_view.queries import ListerTousParcoursDoctorauxQuery
+from parcours_doctoral.ddd.read_view.use_case import *
+from parcours_doctoral.infrastructure.parcours_doctoral.read_view.repository.in_memory.liste_parcours_doctoraux import (
+    ListeParcoursDoctorauxInMemoryRepository,
 )
 
+_lister_tous_parcours_doctoraux_in_memory_repository = ListeParcoursDoctorauxInMemoryRepository()
 
-def lister_parcours_doctoraux_supervises(
-    cmd: 'ListerParcoursDoctorauxSupervisesQuery',
-    parcours_doctoral_repository: 'IParcoursDoctoralRepository',
-) -> List[ParcoursDoctoralRechercheEtudiantDTO]:
-    return parcours_doctoral_repository.search_dto(matricule_membre=cmd.matricule_membre)
+
+COMMAND_HANDLERS = {
+    ListerTousParcoursDoctorauxQuery: lambda msg_bus, cmd: lister_parcours_doctoraux(
+        cmd,
+        lister_tous_parcours_doctoraux_service=_lister_tous_parcours_doctoraux_in_memory_repository,
+    ),
+}

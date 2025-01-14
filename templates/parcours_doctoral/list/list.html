@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends "bootstrap5/layout.html" %}
 {% load django_bootstrap5 i18n osis_role pagination static enums parcours_doctoral %}
 
 {% comment "License" %}
@@ -44,8 +44,8 @@
     <h2 class="d-inline-block">{% trans "Doctoral trainings" %}</h2>
   </div>
 
-  <div id="parcours_doctoral-search" class="panel panel-default">
-    <div class="panel-body">
+  <div id="parcours_doctoral-search" class="card">
+    <div class="card-body">
       <div id="form_errors">
         {% bootstrap_form_errors filter_form type='non_fields' %}
       </div>

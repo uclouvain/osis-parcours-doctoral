@@ -44,7 +44,7 @@ from parcours_doctoral.ddd.dtos import (
     EntiteGestionDTO,
     FormationDTO,
     ParcoursDoctoralDTO,
-    ParcoursDoctoralRechercheDTO,
+    ParcoursDoctoralRechercheEtudiantDTO,
 )
 from parcours_doctoral.ddd.dtos.parcours_doctoral import (
     CotutelleDTO,
@@ -250,11 +250,11 @@ class ParcoursDoctoralInMemoryRepository(InMemoryGenericRepository, IParcoursDoc
         ]
 
     @classmethod
-    def _get_search_dto(cls, parcours_doctoral: 'ParcoursDoctoral') -> 'ParcoursDoctoralRechercheDTO':
+    def _get_search_dto(cls, parcours_doctoral: 'ParcoursDoctoral') -> 'ParcoursDoctoralRechercheEtudiantDTO':
         doctorant = next(d for d in cls.doctorants if d.matricule == parcours_doctoral.matricule_doctorant)
         formation = next(f for f in cls.formations if f.sigle == parcours_doctoral.formation_id.sigle)
 
-        return ParcoursDoctoralRechercheDTO(
+        return ParcoursDoctoralRechercheEtudiantDTO(
             uuid=parcours_doctoral.entity_id.uuid,
             reference=str(parcours_doctoral.reference),
             statut=parcours_doctoral.statut.name,
@@ -291,7 +291,7 @@ class ParcoursDoctoralInMemoryRepository(InMemoryGenericRepository, IParcoursDoc
         cls,
         matricule_doctorant: str = None,
         matricule_membre: str = None,
-    ) -> List['ParcoursDoctoralRechercheDTO']:
+    ) -> List['ParcoursDoctoralRechercheEtudiantDTO']:
         return [
             cls._get_search_dto(parcours_doctoral)
             for parcours_doctoral in cls.entities

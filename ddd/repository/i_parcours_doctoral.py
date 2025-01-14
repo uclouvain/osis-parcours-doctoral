@@ -35,7 +35,7 @@ from parcours_doctoral.ddd.domain.model.parcours_doctoral import (
 from parcours_doctoral.ddd.dtos import (
     CotutelleDTO,
     ParcoursDoctoralDTO,
-    ParcoursDoctoralRechercheDTO,
+    ParcoursDoctoralRechercheEtudiantDTO,
 )
 
 CAMPUS_LETTRE_DOSSIER = {
@@ -91,5 +91,5 @@ class IParcoursDoctoralRepository(interface.AbstractRepository, metaclass=ABCMet
         cls,
         matricule_doctorant: str = None,
         matricule_membre: str = None,
-    ) -> List['ParcoursDoctoralRechercheDTO']:
+    ) -> List['ParcoursDoctoralRechercheEtudiantDTO']:
         raise NotImplementedError

@@ -24,37 +24,11 @@
 #
 # ##############################################################################
 import datetime
-from typing import List, Optional, Tuple
+from typing import List, Optional
 
 import attr
 
 from osis_common.ddd import interface
-
-
-@attr.dataclass(frozen=True, slots=True)
-class ListerTousParcoursDoctorauxQuery(interface.QueryRequest):
-    tri_inverse: bool = False
-    champ_tri: Optional[str] = None
-    page: Optional[int] = None
-    taille_page: Optional[int] = None
-
-    annee_academique: Optional[int] = None
-    type_admission: Optional[str] = ''
-    numero: Optional[int] = None
-    noma: Optional[str] = ''
-    matricule_doctorant: Optional[str] = ''
-    uuid_promoteur: Optional[str] = ''
-    uuid_president_jury: Optional[str] = ''
-    sigles_formations: Optional[List[str]] = None
-    cdds: Optional[List[str]] = None
-    commission_proximite: Optional[str] = ''
-    type_financement: Optional[str] = ''
-    bourse_recherche: Optional[str] = ''
-    fnrs_fria_fresh: Optional[bool] = None
-    instituts_secteurs: Optional[List[str]] = None
-    statuts: Optional[List] = None
-    dates: Optional[List[Tuple[str, Optional[datetime.date], Optional[datetime.date]]]] = None
-    demandeur: Optional[str] = ''
 
 
 @attr.dataclass(frozen=True, slots=True)

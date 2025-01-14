@@ -428,8 +428,8 @@ class IntervalDateForm(forms.Form):
     def clean(self):
         cleaned_data = super().clean()
 
-        start_date = cleaned_data['date_debut']
-        end_date = cleaned_data['date_fin']
+        start_date = cleaned_data.get('date_debut')
+        end_date = cleaned_data.get('date_fin')
 
         if not start_date and not end_date:
             raise forms.ValidationError(_('Please select at least one date.'))

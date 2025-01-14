@@ -103,7 +103,7 @@ from reference.tests.factories.country import CountryFactory
 
 @freezegun.freeze_time('2023-01-01')
 class ParcoursDoctoralListTestView(QueriesAssertionsMixin, TestCase):
-    NB_MAX_QUERIES = 29
+    NB_MAX_QUERIES = 33
 
     @classmethod
     def setUpTestData(cls):

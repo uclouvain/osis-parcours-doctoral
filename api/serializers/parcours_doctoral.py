@@ -29,7 +29,9 @@ from backoffice.settings.rest_framework.fields import ActionLinksField
 from base.utils.serializers import DTOSerializer
 from parcours_doctoral.api.serializers.fields import PARCOURS_DOCTORAL_ACTION_LINKS
 from parcours_doctoral.ddd.dtos import ParcoursDoctoralDTO
-from parcours_doctoral.ddd.dtos.parcours_doctoral import ParcoursDoctoralRechercheDTO
+from parcours_doctoral.ddd.dtos.parcours_doctoral import (
+    ParcoursDoctoralRechercheEtudiantDTO,
+)
 
 
 class ParcoursDoctoralIdentityDTOSerializer(serializers.Serializer):
@@ -115,4 +117,4 @@ class ParcoursDoctoralRechercheDTOSerializer(DTOSerializer):
     )
 
     class Meta:
-        source = ParcoursDoctoralRechercheDTO
+        source = ParcoursDoctoralRechercheEtudiantDTO

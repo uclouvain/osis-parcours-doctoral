@@ -37,6 +37,7 @@ from django.utils.safestring import SafeString, mark_safe
 from django.utils.translation import get_language
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import pgettext
+from django_bootstrap5.renderers import FieldRenderer
 from osis_document.api.utils import get_remote_metadata, get_remote_token
 
 from base.models.organization import Organization
@@ -510,6 +511,16 @@ def bootstrap_field_with_tooltip(field, classes='', show_help=False, html_toolti
         'html_tooltip': html_tooltip,
         'label': label,
     }
+
+
+class FieldWithoutWrapperRenderer(FieldRenderer):
+    def render(self):
+        return self.get_field_html()
+
+
+@register.simple_tag
+def bootstrap_field_without_wrapper(field):
+    return FieldWithoutWrapperRenderer(field).render()
 
 
 @register.filter(is_safe=False)
