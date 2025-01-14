@@ -33,11 +33,11 @@ from admission.infrastructure.admission.doctorat.preparation.repository.proposit
 from parcours_doctoral.ddd.commands import *
 from parcours_doctoral.ddd.use_case.read import *
 from parcours_doctoral.ddd.use_case.write import *
+from parcours_doctoral.infrastructure.parcours_doctoral.read_view.handlers import (
+    COMMAND_HANDLERS as READ_VIEW_COMMAND_HANDLERS,
+)
 
 from ...ddd.use_case.read.get_cotutelle_service import get_cotutelle
-from ...ddd.use_case.read.lister_parcours_doctoraux_service import (
-    lister_parcours_doctoraux,
-)
 from ...ddd.use_case.read.recuperer_groupe_de_supervision_service import (
     recuperer_groupe_de_supervision,
 )
@@ -59,7 +59,6 @@ from ...ddd.use_case.write.renvoyer_invitation_signature_externe_service import 
 from ...ddd.use_case.write.supprimer_membre_CA_service import supprimer_membre_CA
 from ...ddd.use_case.write.supprimer_promoteur_service import supprimer_promoteur
 from .domain.service.historique import Historique
-from .domain.service.lister_tous_parcours_doctoraux import ListerTousParcoursDoctoraux
 from .domain.service.membre_CA import MembreCATranslator
 from .domain.service.notification import Notification
 from .domain.service.parcours_doctoral import ParcoursDoctoralService
@@ -178,10 +177,7 @@ COMMAND_HANDLERS = {
         parcours_doctoral_repository=ParcoursDoctoralRepository(),
         historique=Historique(),
     ),
-    ListerTousParcoursDoctorauxQuery: lambda msg_bus, cmd: lister_parcours_doctoraux(
-        cmd,
-        lister_tous_parcours_doctoraux_service=ListerTousParcoursDoctoraux(),
-    ),
+    **READ_VIEW_COMMAND_HANDLERS,
 }
 
 EVENT_HANDLERS = {

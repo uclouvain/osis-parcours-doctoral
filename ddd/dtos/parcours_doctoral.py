@@ -32,7 +32,7 @@ import attr
 from osis_common.ddd import interface
 from parcours_doctoral.ddd.domain.model.enums import CHOIX_COMMISSION_PROXIMITE
 from parcours_doctoral.ddd.dtos.bourse import BourseDTO
-from parcours_doctoral.ddd.dtos.formation import FormationDTO, FormationRechercheBODTO
+from parcours_doctoral.ddd.dtos.formation import FormationDTO
 
 
 @attr.dataclass(frozen=True, slots=True)
@@ -119,30 +119,7 @@ class ParcoursDoctoralDTO(interface.DTO):
 
 
 @attr.dataclass(slots=True)
-class ParcoursDoctoralRechercheBODTO(interface.DTO):
-    uuid: str
-    reference: str
-    statut: str
-    type_admission: str
-
-    formation: FormationRechercheBODTO
-
-    matricule_doctorant: str
-    genre_doctorant: str
-    prenom_doctorant: str
-    nom_doctorant: str
-
-    code_bourse: str
-    cotutelle: bool
-    formation_complementaire: bool
-    en_regle_inscription: bool
-    total_credits_valides: int
-
-    cree_le: datetime.datetime
-
-
-@attr.dataclass(slots=True)
-class ParcoursDoctoralRechercheDTO(interface.DTO):
+class ParcoursDoctoralRechercheEtudiantDTO(interface.DTO):
     uuid: str
     reference: str
     statut: str

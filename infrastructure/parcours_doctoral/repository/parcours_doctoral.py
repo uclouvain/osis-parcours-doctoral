@@ -59,7 +59,7 @@ from parcours_doctoral.ddd.domain.validator.exceptions import (
 from parcours_doctoral.ddd.dtos import (
     CampusDTO,
     ParcoursDoctoralDTO,
-    ParcoursDoctoralRechercheDTO,
+    ParcoursDoctoralRechercheEtudiantDTO,
 )
 from parcours_doctoral.ddd.dtos.formation import EntiteGestionDTO, FormationDTO
 from parcours_doctoral.ddd.dtos.parcours_doctoral import (
@@ -464,7 +464,7 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
         cls,
         matricule_doctorant: str = None,
         matricule_membre: str = None,
-    ) -> List['ParcoursDoctoralRechercheDTO']:
+    ) -> List['ParcoursDoctoralRechercheEtudiantDTO']:
         if not matricule_doctorant and not matricule_membre:
             return []
 
@@ -505,7 +505,7 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
                 sigle_entite_gestion=management_entity.sigle,
             )
             results.append(
-                ParcoursDoctoralRechercheDTO(
+                ParcoursDoctoralRechercheEtudiantDTO(
                     uuid=str(doctorate.uuid),
                     reference=formatted_reference,
                     statut=doctorate.status,

@@ -62,21 +62,3 @@ class FormationDTO(interface.DTO):
     @property
     def nom_complet(self):
         return f'{self.sigle} - {self.intitule or self.intitule_fr}'
-
-
-@attr.dataclass(frozen=True, slots=True)
-class FormationRechercheBODTO(interface.DTO):
-    sigle: str
-    code: str
-    annee: int
-    intitule: str
-    intitule_fr: str
-    intitule_en: str
-    type: str
-
-    def __str__(self):
-        return self.nom_complet
-
-    @property
-    def nom_complet(self):
-        return f'{self.sigle} - {self.intitule or self.intitule_fr}'

@@ -23,17 +23,26 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from typing import List
 
-from parcours_doctoral.ddd.commands import ListerParcoursDoctorauxSupervisesQuery
-from parcours_doctoral.ddd.dtos import ParcoursDoctoralRechercheEtudiantDTO
-from parcours_doctoral.ddd.repository.i_parcours_doctoral import (
-    IParcoursDoctoralRepository,
+from django.test import TestCase
+
+from parcours_doctoral.ddd.read_view.queries import ListerTousParcoursDoctorauxQuery
+from parcours_doctoral.infrastructure.message_bus_in_memory import (
+    message_bus_in_memory_instance,
+)
+from parcours_doctoral.infrastructure.parcours_doctoral.repository.in_memory.parcours_doctoral import (
+    ParcoursDoctoralInMemoryRepository,
 )
 
 
-def lister_parcours_doctoraux_supervises(
-    cmd: 'ListerParcoursDoctorauxSupervisesQuery',
-    parcours_doctoral_repository: 'IParcoursDoctoralRepository',
-) -> List[ParcoursDoctoralRechercheEtudiantDTO]:
-    return parcours_doctoral_repository.search_dto(matricule_membre=cmd.matricule_membre)
+class TestListerTousParcoursDoctoral(TestCase):
+    def setUp(self) -> None:
+        self.cmd = ListerTousParcoursDoctorauxQuery(matricule_doctorant='1')
+        self.message_bus = message_bus_in_memory_instance
+        ParcoursDoctoralInMemoryRepository.reset()
+
+    def test_should_rechercher_par_matricule(self):
+        propositions = self.message_bus.invoke(self.cmd)
+        self.assertEqual(len(propositions), 12)
+        for proposition in propositions:
+            self.assertEqual(proposition.matricule_doctorant, '1')

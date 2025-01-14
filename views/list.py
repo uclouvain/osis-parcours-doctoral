@@ -39,7 +39,7 @@ from base.templatetags.pagination_bs5 import DEFAULT_PAGINATOR_SIZE
 from base.views.common import display_error_messages
 from infrastructure.messages_bus import message_bus_instance
 from osis_common.utils.htmx import HtmxMixin
-from parcours_doctoral.ddd.commands import ListerTousParcoursDoctorauxQuery
+from parcours_doctoral.ddd.read_view.queries import ListerTousParcoursDoctorauxQuery
 from parcours_doctoral.forms.list import (
     IntervalDateFormSet,
     ParcoursDoctorauxFilterForm,

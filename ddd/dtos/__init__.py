@@ -36,8 +36,7 @@ from .groupe_supervision import (
 from .parcours_doctoral import (
     CotutelleDTO,
     ParcoursDoctoralDTO,
-    ParcoursDoctoralRechercheBODTO,
-    ParcoursDoctoralRechercheDTO,
+    ParcoursDoctoralRechercheEtudiantDTO,
 )
 
 __all__ = [
@@ -51,7 +50,6 @@ __all__ = [
     'GroupeDeSupervisionDTO',
     'MembreCADTO',
     'ParcoursDoctoralDTO',
-    'ParcoursDoctoralRechercheDTO',
-    'ParcoursDoctoralRechercheBODTO',
+    'ParcoursDoctoralRechercheEtudiantDTO',
     'PromoteurDTO',
 ]
