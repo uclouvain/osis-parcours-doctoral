@@ -38,7 +38,7 @@ from admission.ddd.admission.doctorat.preparation.domain.model.enums import (
 from admission.forms import DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS
 from admission.models.enums.actor_type import ActorType
 from base.auth.roles.program_manager import ProgramManager
-from base.forms.utils import autocomplete
+from base.forms.utils import autocomplete, FIELD_REQUIRED_MESSAGE, EMPTY_CHOICE
 from base.forms.utils.datefield import DatePickerInput
 from base.forms.widgets import Select2MultipleCheckboxesWidget
 from base.models.academic_year import AcademicYear
@@ -67,6 +67,8 @@ from parcours_doctoral.ddd.domain.model.parcours_doctoral import (
     SIGLE_SCIENCES,
 )
 from parcours_doctoral.ddd.jury.domain.model.enums import RoleJury
+from parcours_doctoral.forms.fields import SelectWithDisabledOptions
+from parcours_doctoral.infrastructure.parcours_doctoral.read_view.repository.tableau_bord import TableauBordRepository
 from parcours_doctoral.models import JuryMember, ParcoursDoctoralSupervisionActor
 from parcours_doctoral.models.entity_proxy import EntityProxy
 from reference.models.enums.scholarship_type import ScholarshipType
@@ -81,6 +83,7 @@ class ParcoursDoctorauxFilterForm(forms.Form):
     annee_academique = forms.TypedChoiceField(
         label=_('Year'),
         coerce=int,
+        required=False,
     )
 
     numero = forms.RegexField(
@@ -209,6 +212,19 @@ class ParcoursDoctorauxFilterForm(forms.Form):
         widget=autocomplete.Select2Multiple(),
     )
 
+    indicateur_tableau_bord = forms.ChoiceField(
+        label=_('Dashboard indicator'),
+        required=False,
+        choices=[EMPTY_CHOICE[0]]
+        + [
+            [category.libelle, [[indicator.id.name, indicator.libelle] for indicator in category.indicateurs]]
+            for category in TableauBordRepository.categories_doctorat
+        ],
+        widget=SelectWithDisabledOptions(
+            enabled_options={*TableauBordRepository.DOCTORATE_DJANGO_FILTER_BY_INDICATOR, ''},
+        ),
+    )
+
     taille_page = forms.TypedChoiceField(
         label=_("Page size"),
         choices=((size, size) for size in PAGINATOR_SIZE_LIST),
@@ -317,7 +333,9 @@ class ParcoursDoctorauxFilterForm(forms.Form):
 
     def get_academic_year_choices(self):
         academic_years = AcademicYear.objects.all().order_by('-year')
-        return [(academic_year.year, format_to_academic_year(academic_year.year)) for academic_year in academic_years]
+        return [ALL_FEMININE_EMPTY_CHOICE[0]] + [
+            (academic_year.year, format_to_academic_year(academic_year.year)) for academic_year in academic_years
+        ]
 
     def get_scholarship_choices(self):
         doctorate_scholarships = Scholarship.objects.filter(
@@ -425,6 +443,12 @@ class ParcoursDoctorauxFilterForm(forms.Form):
         if sector_institutes_values:
             for value in sector_institutes_values:
                 cleaned_data['secteurs' if value in self.sectors_acronyms else 'instituts'].append(value)
+
+        # The academic year is not required if we use a doctorate dashboard indicator
+        dashboard_indicator = cleaned_data.get('indicateur_tableau_bord')
+
+        if not dashboard_indicator and not cleaned_data.get('annee_academique'):
+            self.add_error('annee_academique', FIELD_REQUIRED_MESSAGE)
 
         return cleaned_data
 

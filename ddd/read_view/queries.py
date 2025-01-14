@@ -54,5 +54,12 @@ class ListerTousParcoursDoctorauxQuery(interface.QueryRequest):
     instituts: Optional[List[str]] = None
     secteurs: Optional[List[str]] = None
     statuts: Optional[List] = None
+    indicateur_tableau_bord: Optional[str] = ''
     dates: Optional[List[Tuple[str, Optional[datetime.date], Optional[datetime.date]]]] = None
     demandeur: Optional[str] = ''
+
+
+@attr.dataclass(frozen=True, slots=True)
+class RecupererInformationsTableauBordQuery(interface.QueryRequest):
+    commission_proximite: Optional[str] = ''
+    cdds: Optional[List[str]] = None
