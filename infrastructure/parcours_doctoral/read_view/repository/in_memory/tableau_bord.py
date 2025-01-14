@@ -23,12 +23,16 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from typing import Dict
 
-from .lister_parcours_doctoraux_service import lister_parcours_doctoraux
-from .recuperer_informations_tableau_bord_service import recuperer_informations_tableau_bord
+from parcours_doctoral.ddd.read_view.domain.enums.tableau_bord import IndicateurTableauBordEnum
+from parcours_doctoral.ddd.read_view.repository.i_tableau_bord import ITableauBordRepository
 
 
-__all__ = [
-    'lister_parcours_doctoraux',
-    'recuperer_informations_tableau_bord',
-]
+class TableauBordInMemoryRepository(ITableauBordRepository):
+    @classmethod
+    def _get_valeurs_indicateurs(cls) -> Dict[str, int]:
+        return {
+            indicator.name: 0
+            for indicator in IndicateurTableauBordEnum
+        }

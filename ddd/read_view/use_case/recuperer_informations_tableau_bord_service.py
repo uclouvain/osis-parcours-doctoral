@@ -23,12 +23,13 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from parcours_doctoral.ddd.read_view.queries import RecupererInformationsTableauBordQuery
+from parcours_doctoral.ddd.read_view.dto.tableau_bord import TableauBordDTO
+from parcours_doctoral.ddd.read_view.repository.i_tableau_bord import ITableauBordRepository
 
-from .lister_parcours_doctoraux_service import lister_parcours_doctoraux
-from .recuperer_informations_tableau_bord_service import recuperer_informations_tableau_bord
 
-
-__all__ = [
-    'lister_parcours_doctoraux',
-    'recuperer_informations_tableau_bord',
-]
+def recuperer_informations_tableau_bord(
+    cmd: 'RecupererInformationsTableauBordQuery',
+    tableau_bord_repository: 'ITableauBordRepository',
+) -> 'TableauBordDTO':
+    return tableau_bord_repository.get()

@@ -26,6 +26,7 @@
 from admission.infrastructure.admission.doctorat.preparation.repository.in_memory.proposition import (
     PropositionInMemoryRepository,
 )
+
 from parcours_doctoral.ddd.commands import *
 from parcours_doctoral.ddd.use_case.read import *
 from parcours_doctoral.ddd.use_case.read.get_cotutelle_service import get_cotutelle

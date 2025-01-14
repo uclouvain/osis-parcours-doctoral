@@ -31,7 +31,7 @@ from django.core.cache import cache
 from django.core.exceptions import NON_FIELD_ERRORS
 from django.forms import MultipleHiddenInput
 from django.shortcuts import reverse
-from django.test import RequestFactory, TestCase, override_settings
+from django.test import RequestFactory, TestCase
 from django.utils.translation import gettext
 
 from admission.ddd.admission.doctorat.preparation.domain.model.enums import (
@@ -67,6 +67,7 @@ from parcours_doctoral.ddd.formation.domain.model.enums import (
     ContexteFormation,
     StatutActivite,
 )
+from parcours_doctoral.ddd.read_view.domain.enums.tableau_bord import IndicateurTableauBordEnum
 from parcours_doctoral.forms.list import ALL_FEMININE_EMPTY_CHOICE
 from parcours_doctoral.models import ParcoursDoctoral
 from parcours_doctoral.models.entity_proxy import EntityProxy
@@ -267,7 +268,8 @@ class ParcoursDoctoralListTestView(QueriesAssertionsMixin, TestCase):
         self.maxDiff = None
         self.assertEqual(form['annee_academique'].value(), 2022)
         self.assertEqual(
-            form.fields['annee_academique'].choices, [(year, f'{year}-{str(year + 1)[2:]}') for year in academic_years]
+            form.fields['annee_academique'].choices,
+            [ALL_FEMININE_EMPTY_CHOICE[0]] + [(year, f'{year}-{str(year + 1)[2:]}') for year in academic_years]
         )
 
         # numero
@@ -364,6 +366,9 @@ class ParcoursDoctoralListTestView(QueriesAssertionsMixin, TestCase):
             form.fields['instituts_secteurs'].choices,
             [(entity_acronym, entity_acronym) for entity_acronym in entities],
         )
+
+        # indicateur_tableau_bord
+        self.assertEqual(form['indicateur_tableau_bord'].value(), None)
 
         # taille_page
         self.assertEqual(form['taille_page'].value(), 50)
@@ -537,7 +542,9 @@ class ParcoursDoctoralListTestView(QueriesAssertionsMixin, TestCase):
         messages = [m.message for m in list(response.context['messages'])]
 
         self.assertIn(
-            f'{gettext("Year")} - {form.fields["annee_academique"].error_messages["invalid_choice"] % {"value": 1}}',
+            f'{gettext("Year")} - '
+            f'{form.fields["annee_academique"].error_messages["invalid_choice"] % {"value": 1}} '
+            f'{form.fields["annee_academique"].error_messages["required"]}',
             messages,
         )
 
@@ -784,6 +791,19 @@ class ParcoursDoctoralListTestView(QueriesAssertionsMixin, TestCase):
         self.assertEqual(len(response.context['object_list']), 0)
 
         response = self._do_request(fnrs_fria_fresh=False)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.context['object_list']), 1)
+
+    def test_filter_by_dashboard_indicator_criteria(self):
+        self.client.force_login(user=self.program_manager.user)
+
+        response = self._do_request(indicateur_tableau_bord=IndicateurTableauBordEnum.CONFIRMATION_SOUMISE.name)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.context['object_list']), 0)
+
+        response = self._do_request(indicateur_tableau_bord=IndicateurTableauBordEnum.JURY_VALIDE_CA.name)
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.context['object_list']), 1)

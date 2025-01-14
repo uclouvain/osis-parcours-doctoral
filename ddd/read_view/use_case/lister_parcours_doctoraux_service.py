@@ -55,6 +55,7 @@ def lister_parcours_doctoraux(
         statuts=cmd.statuts,
         dates=cmd.dates,
         sigles_formations=cmd.sigles_formations,
+        indicateur_tableau_bord=cmd.indicateur_tableau_bord,
         tri_inverse=cmd.tri_inverse,
         champ_tri=cmd.champ_tri,
         page=cmd.page,

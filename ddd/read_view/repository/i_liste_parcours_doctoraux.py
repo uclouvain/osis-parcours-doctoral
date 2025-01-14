@@ -55,6 +55,7 @@ class IListeParcoursDoctorauxRepository(interface.ReadModelRepository):
         statuts: Optional[List] = None,
         dates: Optional[List[Tuple[str, Optional[date], Optional[date]]]] = None,
         sigles_formations: Optional[List[str]] = None,
+        indicateur_tableau_bord: Optional[str] = '',
         tri_inverse: bool = False,
         champ_tri: Optional[str] = None,
         page: Optional[int] = None,

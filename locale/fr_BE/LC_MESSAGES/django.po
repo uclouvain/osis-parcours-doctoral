@@ -324,6 +324,10 @@ msgstr "Formation complémentaire"
 msgid "Admission"
 msgstr "Admission"
 
+msgctxt "dashboard-category"
+msgid "Admission"
+msgstr "Admission"
+
 msgctxt "parcours_doctoral"
 msgid "Admission"
 msgstr "Admission"
@@ -334,6 +338,9 @@ msgstr "Date d'admission"
 msgctxt "doctorate-filter"
 msgid "Admission type"
 msgstr "Type d'admission"
+
+msgid "Advanced filters"
+msgstr "Filtres avancés"
 
 #, python-format
 msgid ""
@@ -449,6 +456,14 @@ msgstr "Annexes :"
 
 msgid "Attestation of the communication"
 msgstr "Attestation de communication"
+
+msgctxt "dashboard-indicator admission"
+msgid "Authorized SIC"
+msgstr "Autorisé SIC"
+
+msgctxt "dashboard-indicator pre-admission"
+msgid "Authorized SIC"
+msgstr "Autorisé SIC"
 
 msgid "Authors"
 msgstr "Auteurs et autrices"
@@ -680,6 +695,10 @@ msgstr "Confirmer et envoyer le message"
 msgid "Confirm restoring activity to submitted"
 msgstr "Confirmer la remise au statut soumise de cette activité"
 
+msgctxt "dashboard-category"
+msgid "Confirmation"
+msgstr "Confirmation"
+
 msgctxt "tab"
 msgid "Confirmation"
 msgstr "Confirmation"
@@ -813,6 +832,12 @@ msgstr "Défense privée"
 msgid "DOCTORAL_TRAINING"
 msgstr "Formation doctorale"
 
+msgid "Dashboard"
+msgstr "Tableau de bord"
+
+msgid "Dashboard indicator"
+msgstr "Indicateur du tableau de bord"
+
 msgid "Date"
 msgstr "Date"
 
@@ -823,8 +848,24 @@ msgstr "Date - Filtre #%s"
 msgid "Date of the confirmation paper (DD/MM/YYYY)"
 msgstr "Date de l'épreuve de confirmation (JJ/MM/AAAA)"
 
+msgctxt "dashboard-indicator confirmation"
+msgid "Date postponement"
+msgstr "Report de date"
+
 msgid "Date type"
 msgstr "Type de date"
+
+msgctxt "dashboard-indicator thesis-distribution"
+msgid "Deadline 15 days"
+msgstr "Echéance 15 jours"
+
+msgctxt "dashboard-indicator confirmation"
+msgid "Deadline 2 months"
+msgstr "Echéance 2 mois"
+
+msgctxt "dashboard-indicator pre-admission"
+msgid "Deadline 3 months"
+msgstr "Échéance 3 mois"
 
 msgid "Deadline extended"
 msgstr "Nouvelle échéance"
@@ -923,6 +964,10 @@ msgctxt "male gender"
 msgid "Doctoral student"
 msgstr "Doctorant"
 
+msgid "Doctoral training"
+msgstr "Formation doctorale"
+
+msgctxt "dashboard-category"
 msgid "Doctoral training"
 msgstr "Formation doctorale"
 
@@ -1291,6 +1336,10 @@ msgstr "Demande d'ouverture de cotutelle"
 
 msgid "Journal or publishing house name"
 msgstr "Nom de la revue ou de la maison d'édition"
+
+msgctxt "dashboard-category"
+msgid "Jury"
+msgstr "Jury"
 
 msgid "Jury approval"
 msgstr "Approbation du jury"
@@ -1698,6 +1747,14 @@ msgstr "Aucun invité"
 msgid "Non doctor reason"
 msgstr "Justification"
 
+msgctxt "dashboard-indicator admission"
+msgid "Not in order of registration"
+msgstr "Pas en ordre d’inscription"
+
+msgctxt "dashboard-indicator pre-admission"
+msgid "Not in order of registration"
+msgstr "Pas en ordre d’inscription"
+
 msgid "Number of days participating"
 msgstr "Nombre de jours de participation"
 
@@ -1726,6 +1783,9 @@ msgstr "Événement en ligne"
 
 msgid "Online or in person"
 msgstr "En ligne ou en présentiel"
+
+msgid "Open the related list"
+msgstr "Ouvrir la liste associée"
 
 msgid "Opinion of the CA following the format provided by the CDD"
 msgstr "Avis du comité d'accompagnement suivant le format fourni par la CDD"
@@ -1883,6 +1943,10 @@ msgstr "Poster"
 msgid "Pre-admission"
 msgstr "Pré-admission"
 
+msgctxt "dashboard-category"
+msgid "Pre-admission"
+msgstr "Pré-admission"
+
 msgid "Presentation date"
 msgstr "Date de l'exposé"
 
@@ -1912,6 +1976,14 @@ msgstr "Epreuves de confirmation passées"
 
 msgid "Previous doctorate"
 msgstr "Doctorat précédent"
+
+msgctxt "dashboard-category"
+msgid "Private defense (formula 1)"
+msgstr "Défense privée (formule 1)"
+
+msgctxt "dashboard-category"
+msgid "Private defense / Public defense (formula 2)"
+msgstr "Défense privée / Soutenance (formule 2)"
 
 msgid "Professor"
 msgstr "Professeur"
@@ -2004,6 +2076,10 @@ msgstr "Commission de proximité de recherche expérimentale et clinique (ECLI)"
 msgid "Proximity commission for public health, health and society (SPSS)"
 msgstr "Commission de proximité de santé publique, santé et société (SPSS)"
 
+msgctxt "dashboard-category"
+msgid "Public defense (formula 1)"
+msgstr "Soutenance publique (formule 1)"
+
 msgid "Publication date"
 msgstr "Date de publication"
 
@@ -2036,6 +2112,10 @@ msgstr ""
 msgid "Reason for exceeding the deadline"
 msgstr "Motif du dépassement de l’échéance"
 
+msgctxt "dashboard-category"
+msgid "Recevability (formula 2)"
+msgstr "Recevabilité (formule 2)"
+
 msgid "Recipient"
 msgstr "Destinataire"
 
@@ -2057,6 +2137,18 @@ msgstr "Refuser l'activité"
 
 msgid "Registration Id"
 msgstr "Noma"
+
+msgctxt "dashboard-indicator jury"
+msgid "Rejected by ADRE"
+msgstr "Rejet ADRE"
+
+msgctxt "dashboard-indicator thesis-distribution"
+msgid "Rejected by ADRE"
+msgstr "Rejet ADRE"
+
+msgctxt "dashboard-indicator thesis-distribution"
+msgid "Rejected by SCEB"
+msgstr "Rejet SCEB"
 
 msgid "Related doctorate"
 msgstr "Doctorat associé"
@@ -2356,8 +2448,60 @@ msgctxt "parcours_doctoral"
 msgid "Submitted"
 msgstr "Soumis"
 
+msgctxt "dashboard-indicator confirmation"
+msgid "Submitted PV"
+msgstr "PV téléversé"
+
+msgctxt "dashboard-indicator formula-1-private-defense"
+msgid "Submitted PV"
+msgstr "PV téléversé"
+
+msgctxt "dashboard-indicator formula-1-public-defense"
+msgid "Submitted PV"
+msgstr "PV téléversé"
+
+msgctxt "dashboard-indicator formula-2-admissibility"
+msgid "Submitted PV"
+msgstr "PV téléversé"
+
+msgctxt "dashboard-indicator formula-2-defense"
+msgid "Submitted PV (private defense)"
+msgstr "PV téléversé (dans tuile Défense)"
+
+msgctxt "dashboard-indicator formula-2-defense"
+msgid "Submitted PV (public defense)"
+msgstr "PV téléversé (dans tuile Soutenance)"
+
+msgctxt "dashboard-indicator formula-2-admissibility"
+msgid "Submitted admissibility"
+msgstr "Recevabilité soumise"
+
+msgctxt "dashboard-indicator confirmation"
+msgid "Submitted confirmation"
+msgstr "Confirmation soumise"
+
+msgctxt "dashboard-indicator admission"
+msgid "Submitted dossiers"
+msgstr "Dossiers soumis"
+
+msgctxt "dashboard-indicator pre-admission"
+msgid "Submitted dossiers"
+msgstr "Dossiers soumis"
+
 msgid "Submitted for publication"
 msgstr "Soumis pour publication"
+
+msgctxt "dashboard-indicator formula-1-private-defense"
+msgid "Submitted private defense"
+msgstr "Défense soumise"
+
+msgctxt "dashboard-indicator formula-2-defense"
+msgid "Submitted private defense / Submitted public defense"
+msgstr "Défense soumise / Soutenance soumise"
+
+msgctxt "dashboard-indicator formula-1-public-defense"
+msgid "Submitted public defense"
+msgstr "Soutenance soumise"
 
 msgid "Successful test"
 msgstr "Epreuve réussie"
@@ -2603,6 +2747,10 @@ msgstr "Il n'y a pas de demande de nouvelle échéance."
 msgid "Thesis defense"
 msgstr "Défense et soutenance"
 
+msgctxt "dashboard-category"
+msgid "Thesis distribution authorisation"
+msgstr "Autorisation de diffusion de thèse"
+
 msgid "Thesis field"
 msgstr "Domaine de la thèse"
 
@@ -2804,6 +2952,18 @@ msgstr "Valider les cours sélectionnées"
 
 msgid "Validated"
 msgstr "Validé"
+
+msgctxt "dashboard-indicator jury"
+msgid "Validated by ADRE"
+msgstr "Validé ADRE"
+
+msgctxt "dashboard-indicator jury"
+msgid "Validated by CA"
+msgstr "Validé CA"
+
+msgctxt "dashboard-indicator training"
+msgid "Validated by promoter"
+msgstr "Validé promoteur"
 
 msgid "Validated credits total"
 msgstr "Total crédits validés"

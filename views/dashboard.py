@@ -24,11 +24,28 @@
 #
 # ##############################################################################
 
-from .lister_parcours_doctoraux_service import lister_parcours_doctoraux
-from .recuperer_informations_tableau_bord_service import recuperer_informations_tableau_bord
+from django.views.generic import TemplateView
 
+from infrastructure.messages_bus import message_bus_instance
+from osis_role.contrib.views import PermissionRequiredMixin
+from parcours_doctoral.ddd.read_view.queries import RecupererInformationsTableauBordQuery
 
 __all__ = [
-    'lister_parcours_doctoraux',
-    'recuperer_informations_tableau_bord',
+    'DashboardView',
 ]
+
+
+class DashboardView(PermissionRequiredMixin, TemplateView):
+    permission_required = 'parcours_doctoral.view_parcours_doctoral'
+    template_name = 'parcours_doctoral/dashboard.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        dashboard = message_bus_instance.invoke(
+            RecupererInformationsTableauBordQuery(),
+        )
+
+        context['dashboard'] = dashboard
+
+        return context

@@ -23,12 +23,26 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from typing import List
 
-from .lister_parcours_doctoraux_service import lister_parcours_doctoraux
-from .recuperer_informations_tableau_bord_service import recuperer_informations_tableau_bord
+import attr
+
+from osis_common.ddd import interface
+from parcours_doctoral.ddd.read_view.domain.enums.tableau_bord import (
+    IndicateurTableauBordEnum,
+    CategorieTableauBordEnum, TypeCategorieTableauBord,
+)
 
 
-__all__ = [
-    'lister_parcours_doctoraux',
-    'recuperer_informations_tableau_bord',
-]
+@attr.dataclass(slots=True, frozen=True)
+class IndicateurTableauBord(interface.ValueObject):
+    id: IndicateurTableauBordEnum
+    libelle: str
+
+
+@attr.dataclass(slots=True, frozen=True)
+class CategorieTableauBord(interface.RootEntity):
+    id: CategorieTableauBordEnum
+    type: TypeCategorieTableauBord
+    libelle: str
+    indicateurs: List[IndicateurTableauBord]

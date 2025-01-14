@@ -53,5 +53,11 @@ class ListerTousParcoursDoctorauxQuery(interface.QueryRequest):
     fnrs_fria_fresh: Optional[bool] = None
     instituts_secteurs: Optional[List[str]] = None
     statuts: Optional[List] = None
+    indicateur_tableau_bord: Optional[str] = ''
     dates: Optional[List[Tuple[str, Optional[datetime.date], Optional[datetime.date]]]] = None
     demandeur: Optional[str] = ''
+
+
+@attr.dataclass(frozen=True, slots=True)
+class RecupererInformationsTableauBordQuery(interface.QueryRequest):
+    pass
