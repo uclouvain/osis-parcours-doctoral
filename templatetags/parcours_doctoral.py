@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -28,6 +28,7 @@ from dataclasses import dataclass
 from functools import wraps
 from inspect import getfullargspec
 
+import attr
 from django import template
 from django.conf import settings
 from django.core.validators import EMPTY_VALUES
@@ -40,6 +41,8 @@ from django.utils.translation import pgettext
 from django_bootstrap5.renderers import FieldRenderer
 from osis_document.api.utils import get_remote_metadata, get_remote_token
 
+from admission.utils import format_school_title, get_superior_institute_queryset
+from base.models.entity_version import EntityVersion
 from base.models.organization import Organization
 from parcours_doctoral.auth.constants import READ_ACTIONS_BY_TAB, UPDATE_ACTIONS_BY_TAB
 from parcours_doctoral.constants import CAMPUSES_UUIDS
@@ -50,6 +53,7 @@ from parcours_doctoral.ddd.formation.domain.model.enums import (
     StatutActivite,
 )
 from parcours_doctoral.ddd.repository.i_parcours_doctoral import formater_reference
+from parcours_doctoral.forms.supervision import MemberSupervisionForm
 from parcours_doctoral.models import ParcoursDoctoral
 from reference.models.language import Language
 
@@ -94,14 +98,14 @@ TAB_TREE = {
     #     Tab('curriculum', _('Curriculum')),
     #     Tab('languages', _('Knowledge of languages')),
     # ],
-    # Tab('doctorate', pgettext('tab', 'PhD project'), 'graduation-cap'): [
-    #     Tab('project', pgettext('tab', 'Research project')),
-    #     Tab('cotutelle', _('Cotutelle')),
-    #     Tab('supervision', _('Supervision')),
-    # ],
     # Tab('additional-information', _('Additional information'), 'puzzle-piece'): [
     #     Tab('accounting', _('Accounting')),
     # ],
+    Tab('doctorate', pgettext('tab', 'PhD project'), 'graduation-cap'): [
+        Tab('project', pgettext('tab', 'Research project')),
+        Tab('cotutelle', _('Cotutelle')),
+        Tab('supervision', _('Supervision')),
+    ],
     Tab('confirmation', pgettext('tab', 'Confirmation'), 'award'): [
         Tab('confirmation', _('Confirmation exam')),
         Tab('extension-request', _('New deadline')),
@@ -545,3 +549,25 @@ def get_superior_institute_name(institute_uuid):
         except Organization.DoesNotExist:
             pass
     return ''
+
+
+@register.filter
+def superior_institute_name(organization_uuid):
+    if not organization_uuid:
+        return ''
+    try:
+        institute = get_superior_institute_queryset().get(organization_uuid=organization_uuid)
+    except EntityVersion.DoesNotExist:
+        return organization_uuid
+    return mark_safe(format_school_title(institute))
+
+
+@register.simple_tag(takes_context=True)
+def edit_external_member_form(context, membre):
+    """Get an edit form"""
+    initial = attr.asdict(membre)
+    initial['pays'] = initial['code_pays']
+    return MemberSupervisionForm(
+        prefix=f"member-{membre.uuid}",
+        initial=initial,
+    )

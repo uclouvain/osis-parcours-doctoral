@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -26,8 +26,7 @@
 from typing import Dict, List, Optional
 
 from django.conf import settings
-from django.db.models import QuerySet
-from django.db.models.expressions import F
+from django.db.models import F, QuerySet
 from django.utils.translation import get_language
 
 from admission.infrastructure.admission.domain.service.bourse import BourseTranslator
@@ -266,6 +265,7 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
                 .annotate(
                     admission_uuid=F('admission__uuid'),
                 )
+                .annotate_intitule_secteur_formation()
                 .get(uuid=entity_id.uuid)
             )
         except ParcoursDoctoralModel.DoesNotExist:
@@ -292,6 +292,8 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
             prenom_doctorant=parcours_doctoral.student.first_name,
             genre_doctorant=parcours_doctoral.student.gender,
             commission_proximite=parcours_doctoral.proximity_commission,
+            intitule_secteur_formation=parcours_doctoral.intitule_secteur_formation,  # from annotation
+            justification=parcours_doctoral.justification,
             formation=FormationDTO(
                 sigle=parcours_doctoral.training.acronym,
                 code=parcours_doctoral.training.partial_acronym,

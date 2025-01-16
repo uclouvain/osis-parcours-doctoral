@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -24,15 +24,18 @@
 #
 # ##############################################################################
 from email.message import EmailMessage
+from typing import Optional
 
-from admission.infrastructure.utils import get_message_to_historize
 from django.conf import settings
+from django.utils import translation
 from osis_history.utilities import add_history_entry
 
+from admission.infrastructure.utils import get_message_to_historize
 from infrastructure.shared_kernel.personne_connue_ucl.personne_connue_ucl import (
     PersonneConnueUclTranslator,
 )
 from parcours_doctoral.ddd.domain.model._promoteur import PromoteurIdentity
+from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from parcours_doctoral.ddd.domain.model.groupe_de_supervision import (
     GroupeDeSupervision,
     SignataireIdentity,
@@ -42,6 +45,7 @@ from parcours_doctoral.ddd.domain.model.parcours_doctoral import (
     ParcoursDoctoralIdentity,
 )
 from parcours_doctoral.ddd.domain.service.i_historique import IHistorique
+from parcours_doctoral.ddd.dtos import AvisDTO
 from parcours_doctoral.infrastructure.parcours_doctoral.domain.service.membre_CA import (
     MembreCATranslator,
 )
@@ -200,4 +204,70 @@ class Historique(IHistorique):
             "The doctoral training has been completed (Research project).",
             "{auteur.prenom} {auteur.nom}".format(auteur=auteur),
             tags=["parcours_doctoral", "modification"],
+        )
+
+    @classmethod
+    def historiser_avis(
+        cls,
+        parcours_doctoral: ParcoursDoctoral,
+        signataire_id: 'SignataireIdentity',
+        avis: AvisDTO,
+        statut_original_parcours_doctoral: 'ChoixStatutParcoursDoctoral',
+        matricule_auteur: Optional[str] = '',
+    ):
+        signataire = cls.get_signataire(signataire_id)
+        if matricule_auteur:
+            auteur = PersonneConnueUclTranslator().get(matricule_auteur)
+        else:
+            auteur = signataire
+
+        # Basculer en français pour la traduction de l'état
+        with translation.override(settings.LANGUAGE_CODE_FR):
+            message_fr = "{signataire.prenom} {signataire.nom} a {action} la parcours_doctoral {via_pdf}en tant que {role}".format(
+                signataire=signataire,
+                action="refusé" if avis.motif_refus else "approuvé",
+                via_pdf="via PDF " if avis.pdf else "",
+                role=(
+                    "promoteur" if isinstance(signataire_id, PromoteurIdentity) else "membre du comité d'accompagnement"
+                ),
+            )
+            details = []
+            if avis.motif_refus:
+                details.append("motif : {}".format(avis.motif_refus))
+            if avis.commentaire_externe:
+                details.append("commentaire : {}".format(avis.commentaire_externe))
+            if details:
+                details = " ({})".format(' ; '.join(details))
+                message_fr += details
+
+        # Anglais
+        with translation.override(settings.LANGUAGE_CODE_EN):
+            message_en = (
+                "{signataire.prenom} {signataire.nom} has {action} the parcours_doctoral {via_pdf}as {role}".format(
+                    signataire=signataire,
+                    action="refused" if avis.motif_refus else "approved",
+                    via_pdf="via PDF " if avis.pdf else "",
+                    role="promoter" if isinstance(signataire_id, PromoteurIdentity) else "supervisory panel member",
+                )
+            )
+            details = []
+            if avis.motif_refus:
+                details.append("reason : {}".format(avis.motif_refus))
+            if avis.commentaire_externe:
+                details.append("comment : {}".format(avis.commentaire_externe))
+            if details:
+                details = " ({})".format('; '.join(details))
+                message_en += details
+
+        tags = ["parcours_doctoral", "supervision"]
+
+        if statut_original_parcours_doctoral != parcours_doctoral.statut:
+            tags.append("status-changed")
+
+        add_history_entry(
+            parcours_doctoral.entity_id.uuid,
+            message_fr,
+            message_en,
+            "{auteur.prenom} {auteur.nom}".format(auteur=auteur),
+            tags=tags,
         )

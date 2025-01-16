@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -40,6 +40,9 @@ from parcours_doctoral.infrastructure.parcours_doctoral.read_view.handlers impor
 from ...ddd.use_case.read.get_cotutelle_service import get_cotutelle
 from ...ddd.use_case.read.recuperer_groupe_de_supervision_service import (
     recuperer_groupe_de_supervision,
+)
+from ...ddd.use_case.write.approuver_membre_par_pdf_service import (
+    approuver_membre_par_pdf,
 )
 from ...ddd.use_case.write.demander_signatures_service import demander_signatures
 from ...ddd.use_case.write.designer_promoteur_reference_service import (
@@ -166,7 +169,7 @@ COMMAND_HANDLERS = {
         historique=Historique(),
         notification=Notification(),
     ),
-    GetGroupeDeSupervisionCommand: lambda msg_bus, cmd: recuperer_groupe_de_supervision(
+    GetGroupeDeSupervisionQuery: lambda msg_bus, cmd: recuperer_groupe_de_supervision(
         cmd,
         groupe_supervision_repository=GroupeDeSupervisionRepository(),
         promoteur_translator=PromoteurTranslator(),
@@ -175,6 +178,12 @@ COMMAND_HANDLERS = {
     ModifierCotutelleCommand: lambda msg_bus, cmd: modifier_cotutelle(
         cmd,
         parcours_doctoral_repository=ParcoursDoctoralRepository(),
+        historique=Historique(),
+    ),
+    ApprouverMembreParPdfCommand: lambda msg_bus, cmd: approuver_membre_par_pdf(
+        cmd,
+        parcours_doctoral_repository=ParcoursDoctoralRepository(),
+        groupe_supervision_repository=GroupeDeSupervisionRepository(),
         historique=Historique(),
     ),
     **READ_VIEW_COMMAND_HANDLERS,

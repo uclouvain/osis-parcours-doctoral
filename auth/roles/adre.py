@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -26,8 +26,9 @@
 
 import rules
 from django.utils.translation import gettext_lazy as _
-from osis_role.contrib.models import RoleModel
 from rules import RuleSet
+
+from osis_role.contrib.models import RoleModel
 
 
 class AdreSecretary(RoleModel):
@@ -61,10 +62,14 @@ class AdreSecretary(RoleModel):
             'parcours_doctoral.view_curriculum': rules.always_allow,
             'parcours_doctoral.view_project': rules.always_allow,
             'parcours_doctoral.view_cotutelle': rules.always_allow,
-            'parcours_doctoral.view_supervision': rules.always_allow,
             'parcours_doctoral.view_jury': rules.always_allow,
             'parcours_doctoral.view_languages': rules.always_allow,
             'parcours_doctoral.view_confirmation': rules.always_allow,
+            'parcours_doctoral.view_supervision': rules.always_allow,
+            'parcours_doctoral.add_supervision_member': rules.always_allow,
+            'parcours_doctoral.edit_external_supervision_member': rules.always_allow,
+            'parcours_doctoral.remove_supervision_member': rules.always_allow,
+            'parcours_doctoral.approve_member_by_pdf': rules.always_allow,
             'parcours_doctoral.upload_pdf_confirmation': rules.always_allow,
             'parcours_doctoral.view_historyentry': rules.always_allow,
             'parcours_doctoral.send_message': rules.always_allow,

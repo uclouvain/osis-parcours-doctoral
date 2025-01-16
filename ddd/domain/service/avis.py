@@ -23,20 +23,17 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from typing import List
 
-from django.test import SimpleTestCase
-
-from parcours_doctoral.ddd.commands import GetGroupeDeSupervisionQuery
-from parcours_doctoral.infrastructure.message_bus_in_memory import (
-    message_bus_in_memory_instance,
-)
+from osis_common.ddd import interface
+from parcours_doctoral.ddd.domain.model.enums import ChoixEtatSignature
+from parcours_doctoral.ddd.dtos import AvisDTO
 
 
-class GetGroupeDeSupervisionTestCase(SimpleTestCase):
-    def setUp(self):
-        self.cmd = GetGroupeDeSupervisionQuery(uuid_parcours_doctoral='uuid-SC3DP-promoteur-membre')
-        self.message_bus = message_bus_in_memory_instance
-
-    def test_get_groupe_de_supervision(self):
-        results = self.message_bus.invoke(self.cmd)
-        self.assertIsNotNone(results)
+class Avis(interface.DomainService):
+    @classmethod
+    def construire_avis_pdf(cls, pdf: List[str]) -> AvisDTO:
+        return AvisDTO(
+            etat=ChoixEtatSignature.APPROVED.name,
+            pdf=pdf,
+        )

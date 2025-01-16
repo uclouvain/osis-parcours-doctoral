@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -27,7 +27,7 @@
 from django.views.generic import RedirectView
 
 from infrastructure.messages_bus import message_bus_instance
-from parcours_doctoral.ddd.commands import GetGroupeDeSupervisionCommand
+from parcours_doctoral.ddd.commands import GetGroupeDeSupervisionQuery
 from parcours_doctoral.exports.confirmation_canvas import (
     parcours_doctoral_pdf_confirmation_canvas,
 )
@@ -44,7 +44,7 @@ class ConfirmationCanvasExportView(LastConfirmationMixin, RedirectView):
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data()
         context_data['supervision_group'] = message_bus_instance.invoke(
-            GetGroupeDeSupervisionCommand(uuid_parcours_doctoral=self.parcours_doctoral_uuid),
+            GetGroupeDeSupervisionQuery(uuid_parcours_doctoral=self.parcours_doctoral_uuid),
         )
         context_data['supervision_people_nb'] = (
             # total actor count

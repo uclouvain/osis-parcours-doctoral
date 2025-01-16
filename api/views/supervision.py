@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -34,7 +34,7 @@ from parcours_doctoral.api import serializers
 from parcours_doctoral.api.permissions import DoctorateAPIPermissionRequiredMixin
 from parcours_doctoral.api.schema import ResponseSpecificSchema
 from parcours_doctoral.ddd.commands import (
-    GetGroupeDeSupervisionCommand,
+    GetGroupeDeSupervisionQuery,
     RecupererParcoursDoctoralQuery,
 )
 from parcours_doctoral.exports.supervision_canvas import supervision_canvas_pdf
@@ -68,7 +68,7 @@ class SupervisionAPIView(
     def get(self, request, *args, **kwargs):
         """Get the supervision group of the PhD"""
         supervision = message_bus_instance.invoke(
-            GetGroupeDeSupervisionCommand(uuid_parcours_doctoral=self.doctorate_uuid),
+            GetGroupeDeSupervisionQuery(uuid_parcours_doctoral=self.doctorate_uuid),
         )
         serializer = serializers.SupervisionDTOSerializer(instance=supervision)
         return Response(serializer.data)
