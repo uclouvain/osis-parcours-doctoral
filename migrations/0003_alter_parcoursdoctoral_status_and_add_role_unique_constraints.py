@@ -34,12 +34,12 @@ class Migration(migrations.Migration):
                 verbose_name="Status",
             ),
         ),
-        migrations.AddConstraint(
-            model_name="committeemember",
-            constraint=models.UniqueConstraint(fields=("person",), name="unique_committee_member_person"),
-        ),
-        migrations.AddConstraint(
-            model_name="promoter",
-            constraint=models.UniqueConstraint(fields=("person",), name="unique_promoter_person"),
-        ),
+        # migrations.AddConstraint(
+        #     model_name="committeemember",
+        #     constraint=models.UniqueConstraint(fields=("person",), name="unique_committee_member_person"),
+        # ),
+        # migrations.AddConstraint(
+        #     model_name="promoter",
+        #     constraint=models.UniqueConstraint(fields=("person",), name="unique_promoter_person"),
+        # ),
     ]
