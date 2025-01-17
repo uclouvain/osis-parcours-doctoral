@@ -27,16 +27,14 @@ import datetime
 from uuid import uuid4
 
 import freezegun
+from django.shortcuts import resolve_url
+from rest_framework import status
+from rest_framework.test import APITestCase
+
 from admission.tests.factories.scholarship import DoctorateScholarshipFactory
 from base.models.enums.entity_type import EntityType
 from base.tests.factories.entity_version import EntityVersionFactory
 from base.tests.factories.person import PersonFactory
-from django.shortcuts import resolve_url
-from reference.tests.factories.country import CountryFactory
-from reference.tests.factories.language import LanguageFactory
-from rest_framework import status
-from rest_framework.test import APITestCase
-
 from parcours_doctoral.ddd.domain.model.enums import (
     ChoixDoctoratDejaRealise,
     ChoixTypeFinancement, ChoixStatutParcoursDoctoral,
@@ -44,6 +42,8 @@ from parcours_doctoral.ddd.domain.model.enums import (
 from parcours_doctoral.tests.factories.parcours_doctoral import ParcoursDoctoralFactory
 from parcours_doctoral.tests.factories.supervision import PromoterFactory
 from parcours_doctoral.tests.mixins import CheckActionLinksMixin
+from reference.tests.factories.country import CountryFactory
+from reference.tests.factories.language import LanguageFactory
 
 
 class ParcoursDoctoralAPIViewTestCase(CheckActionLinksMixin, APITestCase):
@@ -195,6 +195,7 @@ class ParcoursDoctoralAPIViewTestCase(CheckActionLinksMixin, APITestCase):
                 'retrieve_funding',
                 'update_funding',
                 'retrieve_supervision',
+                'retrieve_supervision_canvas',
                 'retrieve_confirmation',
                 'retrieve_doctorate_training',
                 'retrieve_course_enrollment',

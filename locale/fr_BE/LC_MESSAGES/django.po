@@ -26,8 +26,17 @@ msgstr "%(added)s ECTS ajoutés dont %(validated)s validés par la CDD."
 msgid "%(label)s:"
 msgstr "%(label)s :"
 
+msgid "(if applicable):"
+msgstr "(le cas échéant) :"
+
+msgid "(or attach a confirmation email):"
+msgstr "(ou joindre un courriel de confirmation) :"
+
 msgid ", on"
 msgstr ", le"
+
+msgid ":"
+msgstr " :"
 
 #, python-format
 msgid ""
@@ -127,6 +136,30 @@ msgstr ""
 "<h2>Supprimer le template d'email personnalisé \"%(name)s\" ?</h2><p>Êtes-"
 "vous sûr de vouloir supprimer ce template d'email personnalisé ? Cette "
 "action est irréversible.</p>"
+
+msgid ""
+"<span class=\"bold-text\">Name, signature</span> <span class=\"bold-text "
+"font-italic\">and date</span> of <span class=\"bold-text underline-"
+"text\">all outgoing members</span> of the supervisory panel - including the "
+"promoter(s) if applicable (<span class=\"font-italic\">or attach a "
+"confirmation email</span>)"
+msgstr ""
+"<span class=\"bold-text\">Nom, signature</span> <span class=\"bold-text "
+"font-italic\">et date</span> de <span class=\"bold-text underline-"
+"text\">tous et toutes les membres sortant·es</span> du comité d'accompagnement - en ce compris le, la ou "
+"les promoteur·rices le cas échéant (<span class=\"font-italic\">ou joindre un courrier de "
+"confirmation</span>)"
+
+msgid ""
+"<span class=\"bold-text\">Signature</span> <span class=\"bold-text "
+"font-italic\">and date</span> of the <span class=\"bold-text underline-"
+"text\">doctoral student</span> (<span class=\"font-italic\">or attach a "
+"confirmation email</span>)"
+msgstr ""
+"<span class=\"bold-text\">Signature</span> <span class=\"bold-text "
+"font-italic\">et date</span> du ou de la <span class=\"bold-text underline-"
+"text\">doctorant·e</span> (<span class=\"font-italic\">ou joindre un courrier "
+"de confirmation</span>)"
 
 msgid "A comment is required."
 msgstr "Un commentaire est requis."
@@ -755,6 +788,9 @@ msgstr "Souhaitez-vous passer la demande dans l'état \"%(status)s\" ?"
 msgid "Doctor"
 msgstr "Docteur"
 
+msgid "Doctoral student"
+msgstr "Doctorant·e"
+
 msgid "Doctoral training"
 msgstr "Formation doctorale"
 
@@ -827,6 +863,9 @@ msgctxt "admission"
 msgid "Email"
 msgstr "Email"
 
+msgid "Email:"
+msgstr "E-mail :"
+
 msgid "Enable complementary training tab"
 msgstr "Activer l'onglet Formation complémentaire"
 
@@ -889,6 +928,9 @@ msgstr "Commentaire sur le financement"
 
 msgid "First name"
 msgstr "Prénom"
+
+msgid "First name:"
+msgstr "Prénom :"
 
 msgctxt "female gender"
 msgid ""
@@ -1011,6 +1053,9 @@ msgstr ""
 "L'institution doit être renseignée quand le doctorat a déjà été réalisé "
 "partiellement ou complètement"
 
+msgid "Institution:"
+msgstr "Institution :"
+
 msgid "Internal comment"
 msgstr "Commentaire interne"
 
@@ -1072,6 +1117,9 @@ msgstr "Nom / Prénom / E-mail"
 
 msgid "Last name / First name / Global id"
 msgstr "Nom / Prénom / Identifiant global"
+
+msgid "Last name:"
+msgstr "Nom :"
 
 msgid "Lead supervisor approval"
 msgstr "Avis positif du promoteur de référence"
@@ -1313,6 +1361,10 @@ msgid "Mandatory fields are missing in the project details of the proposition."
 msgstr ""
 "Les champs requis des details du projet de la proposition sont manquants."
 
+#, python-format
+msgid "Member %(ca_member_index)s"
+msgstr "Membre %(ca_member_index)s"
+
 msgid "Member of supervision group already invited."
 msgstr "Membre du groupe de supervision déjà invité."
 
@@ -1353,6 +1405,9 @@ msgid ""
 msgstr ""
 "Formule 2 (La défense et la soutenance sont organisées le même jour, et "
 "soumises à une condition de recevabilité)"
+
+msgid "Modification request of the supervisory panel"
+msgstr "Demande de modification du comité d'accompagnement"
 
 msgid "Modified"
 msgstr "Modifié"
@@ -1618,6 +1673,9 @@ msgstr "Projet"
 msgid "Project title"
 msgstr "Sujet"
 
+msgid "Promoter"
+msgstr "Promoteur·rice"
+
 msgid "Promotion"
 msgstr "Promotion"
 
@@ -1644,6 +1702,9 @@ msgstr "Preuve de publication"
 
 msgid "Proof of scholarship"
 msgstr "Preuve d'octroi de la bourse"
+
+msgid "Proposed changes to the supervisory panel and justification:"
+msgstr "Modification du comité d’accompagnement proposée et justification :"
 
 msgid "Proposed new deadline"
 msgstr "Nouvelle échéance proposée"
@@ -1932,6 +1993,9 @@ msgstr "Désigner comme secrétaire"
 msgid "Show details"
 msgstr "Voir le détail"
 
+msgid "Signature and date"
+msgstr "Signature et date"
+
 msgid "Signatures"
 msgstr "Signatures"
 
@@ -2025,6 +2089,13 @@ msgid ""
 msgstr ""
 "La formation doctorale doit être complétée avant de soumettre les modalités "
 "de défense et la proposition de jury"
+
+msgid ""
+"The <span class=\"text-uppercase underline-text bold-text\">new</span> "
+"supervisory panel would be made up as follows:"
+msgstr ""
+"Le <span class=\"text-uppercase underline-text bold-text\">nouveau</span> "
+"comité d'accompagnement serait composé de manière suivante :"
 
 msgid "The <strong>additional training</strong> has been completed: yes / no."
 msgstr ""
@@ -2228,6 +2299,10 @@ msgstr "Lieu de la thèse"
 msgid "Thesis title"
 msgstr "Titre de la thèse"
 
+#, python-format
+msgid "Thesis with cotutelle with %(institute_name)s"
+msgstr "Thèse réalisée en cotutelle avec %(institute_name)s"
+
 msgid "This activity and its potential subactivities will be discontinued"
 msgstr "Cette activité et ses potentielles sous-activités seront supprimées"
 
@@ -2299,11 +2374,24 @@ msgctxt "admission"
 msgid "Title"
 msgstr "Titre"
 
+msgid "Title (Prof., Dr):"
+msgstr "Titre (Prof., Dr) :"
+
 msgid "Title of the communication"
 msgstr "Titre de la communication"
 
 msgid "Title of the training"
 msgstr "Intitulé de la formation"
+
+msgid ""
+"To be sent to the CDD secretariat <br> (To help you to fill this form, "
+"please read the UCLouvain Doctoral Regulations and the special provisions of "
+"your PhD Field Committee (CDD))."
+msgstr ""
+"A transmettre au secrétariat de la CDD <br> "
+"(Afin de vous aider à compléter ce formulaire, vous êtes "
+"invité.e à prendre connaissance du Règlement doctoral de l’UCLouvain "
+"et des dispositions particulières de votre Commissions doctorale de domaine (CDD))."
 
 msgid ""
 "To be uploaded in your dossier on the doctoral platform as soon as possible "

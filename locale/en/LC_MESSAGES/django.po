@@ -25,7 +25,16 @@ msgstr ""
 msgid "%(label)s:"
 msgstr ""
 
+msgid "(if applicable):"
+msgstr ""
+
+msgid "(or attach a confirmation email):"
+msgstr ""
+
 msgid ", on"
+msgstr ""
+
+msgid ":"
 msgstr ""
 
 #, python-format
@@ -95,6 +104,21 @@ msgstr ""
 msgid ""
 "<h2>Delete \"%(name)s\" custom mail template?</h2> <p>Are you sure you want "
 "to delete the custom mail template? This cannot be undone.</p>"
+msgstr ""
+
+msgid ""
+"<span class=\"bold-text\">Name, signature</span> <span class=\"bold-text "
+"font-italic\">and date</span> of <span class=\"bold-text underline-"
+"text\">all outgoing members</span> of the supervisory panel - including the "
+"promoter(s) if applicable (<span class=\"font-italic\">or attach a "
+"confirmation email</span>)"
+msgstr ""
+
+msgid ""
+"<span class=\"bold-text\">Signature</span> <span class=\"bold-text font-"
+"italic\">and date</span> of the <span class=\"bold-text underline-"
+"text\">doctoral student</span> (<span class=\"font-italic\">or attach a "
+"confirmation email</span>)"
 msgstr ""
 
 msgid "A comment is required."
@@ -712,6 +736,9 @@ msgstr ""
 msgid "Doctor"
 msgstr ""
 
+msgid "Doctoral student"
+msgstr ""
+
 msgid "Doctoral training"
 msgstr ""
 
@@ -784,6 +811,9 @@ msgctxt "admission"
 msgid "Email"
 msgstr ""
 
+msgid "Email:"
+msgstr ""
+
 msgid "Enable complementary training tab"
 msgstr ""
 
@@ -845,6 +875,9 @@ msgid "Financing comment"
 msgstr ""
 
 msgid "First name"
+msgstr ""
+
+msgid "First name:"
 msgstr ""
 
 msgctxt "female gender"
@@ -951,6 +984,9 @@ msgstr ""
 msgid "Institution should be set when PhD has been set to yes or partial"
 msgstr ""
 
+msgid "Institution:"
+msgstr ""
+
 msgid "Internal comment"
 msgstr ""
 
@@ -1009,6 +1045,9 @@ msgid "Last name / First name / Email"
 msgstr ""
 
 msgid "Last name / First name / Global id"
+msgstr ""
+
+msgid "Last name:"
 msgstr ""
 
 msgid "Lead supervisor approval"
@@ -1202,6 +1241,10 @@ msgstr ""
 msgid "Mandatory fields are missing in the project details of the proposition."
 msgstr ""
 
+#, python-format
+msgid "Member %(ca_member_index)s"
+msgstr ""
+
 msgid "Member of supervision group already invited."
 msgstr ""
 
@@ -1237,6 +1280,9 @@ msgstr ""
 msgid ""
 "Method 2 (The private defense and the public defense are organised the same "
 "day, and subjected to an admissibility condition)"
+msgstr ""
+
+msgid "Modification request of the supervisory panel"
 msgstr ""
 
 msgid "Modified"
@@ -1495,6 +1541,9 @@ msgstr ""
 msgid "Project title"
 msgstr ""
 
+msgid "Promoter"
+msgstr ""
+
 msgid "Promotion"
 msgstr ""
 
@@ -1520,6 +1569,9 @@ msgid "Proof of publication"
 msgstr ""
 
 msgid "Proof of scholarship"
+msgstr ""
+
+msgid "Proposed changes to the supervisory panel and justification:"
 msgstr ""
 
 msgid "Proposed new deadline"
@@ -1802,6 +1854,9 @@ msgstr ""
 msgid "Show details"
 msgstr ""
 
+msgid "Signature and date"
+msgstr ""
+
 msgid "Signatures"
 msgstr ""
 
@@ -1892,6 +1947,11 @@ msgstr ""
 msgid ""
 "The \"doctoral training\" must be completed before submitting the defense "
 "preparation and the jury proposition."
+msgstr ""
+
+msgid ""
+"The <span class=\"text-uppercase underline-text bold-text\">new</span> "
+"supervisory panel would be made up as follows:"
 msgstr ""
 
 msgid "The <strong>additional training</strong> has been completed: yes / no."
@@ -2068,6 +2128,10 @@ msgstr ""
 msgid "Thesis title"
 msgstr ""
 
+#, python-format
+msgid "Thesis with cotutelle with %(institute_name)s"
+msgstr ""
+
 msgid "This activity and its potential subactivities will be discontinued"
 msgstr ""
 
@@ -2130,10 +2194,19 @@ msgctxt "admission"
 msgid "Title"
 msgstr ""
 
+msgid "Title (Prof., Dr):"
+msgstr ""
+
 msgid "Title of the communication"
 msgstr ""
 
 msgid "Title of the training"
+msgstr ""
+
+msgid ""
+"To be sent to the CDD secretariat <br> (To help you to fill this form, "
+"please read the UCLouvain Doctoral Regulations and the special provisions of "
+"your PhD Field Committee (CDD))."
 msgstr ""
 
 msgid ""

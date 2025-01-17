@@ -1,0 +1,213 @@
+{% extends "parcours_doctoral/exports/base_pdf.html" %}
+{% load i18n doctorate_enums parcours_doctoral strings range %}
+
+{% comment "License" %}
+  * OSIS stands for Open Student Information System. It's an application
+  * designed to manage the core business of higher education institutions,
+  * such as universities, faculties, institutes and professional schools.
+  * The core business involves the administration of students, teachers,
+  * courses, programs and so on.
+  *
+  * Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+  *
+  * This program is free software: you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License as published by
+  * the Free Software Foundation, either version 3 of the License, or
+  * (at your option) any later version.
+  *
+  * This program is distributed in the hope that it will be useful,
+  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  * GNU General Public License for more details.
+  *
+  * A copy of this license - GNU General Public License - is available
+  * at the root of the source code of this program.  If not,
+  * see http://www.gnu.org/licenses/.
+{% endcomment %}
+
+{% block extra_head %}
+  <style>
+      p {
+          margin-top: 1.5em;
+      }
+
+      .as-field-data {
+          margin-bottom: 10px;
+          display: block;
+      }
+
+      .dotted-line {
+          border: none;
+          border-bottom: 1px solid black;
+          margin-top: 0;
+          height: 1em;
+      }
+
+      .dotted-line {
+          border-bottom-style: dotted;
+      }
+
+      .complete-after {
+          overflow: hidden;
+          position: relative;
+      }
+
+      .complete-after:after {
+          content: "";
+          width: 100%;
+          position: absolute;
+          bottom: 0;
+          border-bottom: 1px dashed black;
+          margin: 5px;
+      }
+
+      .complete-after.solid-line:after {
+          border-bottom-style: solid;
+      }
+
+      .font-italic {
+          font-style: italic;
+      }
+
+      #justification {
+          margin-top: 2em;
+          border: 1px solid black;
+          padding: 5px;
+          line-height: 1em;
+      }
+
+      #justification hr {
+          margin: 0.5em;
+      }
+
+      #justification p {
+          margin: 0;
+      }
+
+      .ca-member {
+          line-height: 1.4em;
+      }
+
+      .ca-member > * {
+          margin-top: 0 !important;
+          margin-bottom: 0 !important;
+          padding-top: 0 !important;
+          padding-bottom: 0 !important;
+      }
+  </style>
+{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <div id="title">
+      <h1>{% translate "Modification request of the supervisory panel" %}</h1>
+      <h2>
+        {% blocktranslate trimmed %}
+          To be sent to the CDD secretariat <br>
+          (To help you to fill this form, please read the UCLouvain Doctoral Regulations and the
+          special provisions of your PhD Field Committee (CDD)).
+        {% endblocktranslate %}
+      </h2>
+    </div>
+
+    {% if parcours_doctoral.genre_doctorant == "F" %}
+      {% translate "The doctoral student" as student_title context "female gender" %}
+    {% else %}
+      {% translate "The doctoral student" as student_title context "male gender" %}
+    {% endif %}
+    {% concat "<span class='bold-text text-uppercase'>" parcours_doctoral.nom_doctorant "</span> " parcours_doctoral.prenom_doctorant as full_name %}
+    {% field_data _("Doctorate") parcours_doctoral.formation.nom_complet inline=True %}
+    {% field_data _("Doctoral student") full_name|safe inline=True %}
+    {% field_data _("Registration Id") parcours_doctoral.noma_doctorant inline=True %}
+
+    {% if parcours_doctoral.cotutelle.cotutelle %}
+      {% get_superior_institute_name parcours_doctoral.cotutelle.institution as institute_name %}
+      <span class="underline-text as-field-data">
+        {% blocktranslate with institute_name=institute_name|default:parcours_doctoral.cotutelle.autre_institution_nom trimmed %}
+          Thesis with cotutelle with {{ institute_name }}
+        {% endblocktranslate %}
+      </span>
+    {% endif %}
+
+    {% field_data _("Thesis title") parcours_doctoral.projet.titre inline=True %}
+
+    <p>
+      {% blocktranslate trimmed %}
+        The <span class="text-uppercase underline-text bold-text">new</span> supervisory panel would be made up as follows:
+      {% endblocktranslate %}
+    </p>
+
+    <div class="avoid-break-inside">
+      <span class="bold-text">{% translate "Promoter" %}</span>{% translate ':' %}
+    <hr class="dotted-line" style="margin-bottom: 0.5em" />
+
+    <div class="complete-after solid-line">
+      ➔ <span class="underline-text font-italic bold-text">{% translate 'Signature and date' %}</span>
+      <span class="font-italic">{% translate '(or attach a confirmation email):' %}</span>
+    </div>
+    </div>
+
+    {% for promoter_index in 1|range_for:2 %}
+      <div class="mt-1 avoid-break-inside ca-member">
+        <span class="bold-text">{% translate "Promoter" %}</span> {% translate '(if applicable):' %}
+        <hr class="dotted-line" style="margin-bottom: 0.5em" />
+
+        <div class="complete-after solid-line" style="margin: 0">
+          ➔ <span class="underline-text font-italic bold-text">{% translate 'Signature and date' %}</span>
+          <span class="font-italic">{% translate '(or attach a confirmation email):' %}</span>
+        </div>
+      </div>
+    {% endfor %}
+
+    {% for ca_member_index in 1|range_for:5 %}
+      <div class="mt-1 avoid-break-inside ca-member">
+      <span class="bold-text">
+        {% blocktranslate with ca_member_index=ca_member_index %}Member {{ ca_member_index }}{% endblocktranslate %}
+      </span> {% translate '(if applicable):' %}
+        <br>
+        <div style="display: flex;">
+          <div style="flex: 1;">{% translate 'Title (Prof., Dr):' %} ... </div>
+          <div style="flex: 2">{% translate 'Last name:' %}</div>
+          <div style="flex: 2">{% translate 'First name:' %}</div>
+        </div>
+        {% translate 'Institution:' %}<br>
+        {% translate 'Email:' %}<br>
+
+        <div class="complete-after solid-line">
+          ➔ <span class="underline-text font-italic bold-text">{% translate 'Signature and date' %}</span>
+          <span class="font-italic">{% translate '(or attach a confirmation email):' %}</span>
+        </div>
+      </div>
+    {% endfor %}
+
+    <div id="justification" class="avoid-break-inside">
+      <p class="bold-text">
+        {% translate 'Proposed changes to the supervisory panel and justification:' %}
+      </p>
+      {% for _ in 1|range_for:20 %}
+        <hr class="dotted-line" />
+      {% endfor %}
+    </div>
+
+    <p>
+      ➔ {% blocktranslate trimmed %}
+      <span class="bold-text">Name, signature</span> <span class="bold-text font-italic">and date</span> of
+      <span class="bold-text underline-text">all outgoing members</span> of the supervisory panel - including the
+      promoter(s) if applicable (<span class="font-italic">or attach a confirmation email</span>)
+    {% endblocktranslate %}
+    </p>
+
+    <div style="height: 8em;"></div>
+
+    <p>
+      ➔ {% blocktranslate trimmed %}
+      <span class="bold-text">Signature</span> <span class="bold-text font-italic">and date</span> of the
+      <span class="bold-text underline-text">doctoral student</span>
+      (<span class="font-italic">or attach a confirmation email</span>)
+    {% endblocktranslate %}
+    </p>
+
+    <div style="height: 4em;"></div>
+
+  </div>
+{% endblock %}

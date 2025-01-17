@@ -23,41 +23,24 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from rest_framework.fields import CharField
-from rest_framework.serializers import ModelSerializer, ReadOnlyField, Serializer
 
-from base.models.person import Person
-from base.utils.serializers import DTOSerializer
-from parcours_doctoral.ddd.dtos import GroupeDeSupervisionDTO
+from django.views.generic import RedirectView
+
+from parcours_doctoral.exports.supervision_canvas import supervision_canvas_pdf
+from parcours_doctoral.views.mixins import ParcoursDoctoralViewMixin
 
 __all__ = [
-    'SupervisionDTOSerializer',
-    'SupervisionCanvasSerializer',
-    'PersonSerializer',
-    'TutorSerializer',
+    "SupervisionCanvasExportView",
 ]
 
 
-class SupervisionCanvasSerializer(Serializer):
-    url = CharField()
+class SupervisionCanvasExportView(ParcoursDoctoralViewMixin, RedirectView):
+    permission_required = 'parcours_doctoral.view_supervision'
 
-
-class SupervisionDTOSerializer(DTOSerializer):
-    class Meta:
-        source = GroupeDeSupervisionDTO
-
-
-class PersonSerializer(ModelSerializer):
-    class Meta:
-        model = Person
-        fields = (
-            'first_name',
-            'last_name',
-            'global_id',
+    def get(self, request, *args, **kwargs):
+        self.url = supervision_canvas_pdf(
+            parcours_doctoral=self.parcours_doctoral_dto,
+            language=self.parcours_doctoral.student.language,
         )
 
-
-class TutorSerializer(PersonSerializer):
-    first_name = ReadOnlyField(source='person.first_name')
-    last_name = ReadOnlyField(source='person.last_name')
-    global_id = ReadOnlyField(source='person.global_id')
+        return super().get(request, *args, **kwargs)

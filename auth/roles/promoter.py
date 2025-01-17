@@ -68,6 +68,7 @@ class Promoter(RoleModel):
             'parcours_doctoral.view_cotutelle': is_parcours_doctoral_promoter,
             'parcours_doctoral.view_funding': is_parcours_doctoral_promoter,
             'parcours_doctoral.view_supervision': is_parcours_doctoral_promoter,
+            'parcours_doctoral.view_supervision_canvas': is_parcours_doctoral_reference_promoter,
             'parcours_doctoral.view_jury': is_parcours_doctoral_promoter,
             'parcours_doctoral.view_confirmation': is_parcours_doctoral_promoter,
             'parcours_doctoral.upload_pdf_confirmation': is_parcours_doctoral_promoter,
