@@ -292,9 +292,6 @@ msgstr "Ajouter une activité"
 msgid "Add validation of prior experience (VAE)"
 msgstr "Ajouter une valorisation des acquis d'expérience"
 
-msgid "Admission"
-msgstr "Admission"
-
 msgctxt "parcours_doctoral"
 msgid "Admission"
 msgstr "Admission"
@@ -319,6 +316,13 @@ msgstr ""
 
 msgid "All supervisors must have approved the proposition."
 msgstr "Tous les promoteurs doivent approuver la proposition."
+
+msgid "Allow you to manage emails sent by CDD managers based on the CDD"
+msgstr ""
+"Permet d’administrer par CDD les mails envoyés par les gestionnaires CDD"
+
+msgid "Allow you to manage the doctoral training activities"
+msgstr "Permet d’administrer les activités de formation doctorale"
 
 msgid "Already a member."
 msgstr "Déjà membre."
@@ -555,6 +559,9 @@ msgstr "Ville"
 msgid "Close"
 msgstr "Fermer"
 
+msgid "Cohorts management"
+msgstr "Gestion des cohortes"
+
 msgid "Comment"
 msgstr "Commentaire"
 
@@ -706,9 +713,6 @@ msgstr "Template d'email personnalisé supprimé avec succès"
 msgid "Custom mail template saved successfully."
 msgstr "Template d'email personnalisé enregistré avec succès."
 
-msgid "Custom mail templates"
-msgstr "Templates d'email personnalisé"
-
 msgid "DOCTORAL_TRAINING"
 msgstr "Formation doctorale"
 
@@ -793,6 +797,9 @@ msgstr "Doctorant·e"
 
 msgid "Doctoral training"
 msgstr "Formation doctorale"
+
+msgid "Doctoral training configuration"
+msgstr "Configuration formation doctorale"
 
 msgid "Doctoral training numero"
 msgstr "Numéro de la formation doctorale"
@@ -2029,6 +2036,9 @@ msgstr "État :"
 
 msgid "Student"
 msgstr "Étudiant"
+
+msgid "Student path"
+msgstr "Parcours de l'étudiant·e"
 
 msgid "Subject"
 msgstr "Sujet"

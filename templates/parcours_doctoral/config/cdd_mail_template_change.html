@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends "bootstrap5/layout.html" %}
 {% load django_bootstrap5 i18n dictionnary %}
 
 {% comment "License" %}
@@ -26,8 +26,8 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-  <li class="breadcrumb-item">{% trans 'Admission' %}</li>
-  <li class="breadcrumb-item"><a href="{% url 'parcours_doctoral:config:cdd-mail-template:list' %}">{% trans 'Custom mail templates' %}</a></li>
+  <li class="breadcrumb-item"><a href="{% url 'parcours_doctoral:config:home' %}">{% trans 'CDD configuration' %}</a></li>
+  <li class="breadcrumb-item"><a href="{% url 'parcours_doctoral:config:cdd-mail-template:list' %}">{% trans 'CDD Mail template' %}</a></li>
   {% if view.kwargs.pk %}
     <li class="breadcrumb-item active">{{ forms.1.instance.name }}</li>
   {% else %}

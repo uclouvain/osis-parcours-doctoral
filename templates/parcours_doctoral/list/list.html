@@ -27,6 +27,12 @@
 
 {% block breadcrumb %}
   <li class="breadcrumb-item">
+    <a href="{% url 'studies' %}" id="lnk_studies">{% translate 'Student path' %}</a>
+  </li>
+  <li class="breadcrumb-item" id="lnk_cohorts_management">
+    <a href="{% url 'cohorts_management' %}">{% translate "Cohorts management" %}</a>
+  </li>
+  <li class="breadcrumb-item">
     <a href="{% url 'parcours_doctoral:list' %}" id="lnk_parcours_doctorals" class="active">
       {% trans 'Doctoral trainings' %}
     </a>

@@ -250,9 +250,6 @@ msgstr ""
 msgid "Add validation of prior experience (VAE)"
 msgstr ""
 
-msgid "Admission"
-msgstr ""
-
 msgctxt "parcours_doctoral"
 msgid "Admission"
 msgstr ""
@@ -272,6 +269,12 @@ msgid "All CA members must have approved the proposition."
 msgstr "All supervisory panel members must have approved the proposition."
 
 msgid "All supervisors must have approved the proposition."
+msgstr ""
+
+msgid "Allow you to manage emails sent by CDD managers based on the CDD"
+msgstr ""
+
+msgid "Allow you to manage the doctoral training activities"
 msgstr ""
 
 msgid "Already a member."
@@ -509,6 +512,9 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
+msgid "Cohorts management"
+msgstr ""
+
 msgid "Comment"
 msgstr ""
 
@@ -654,9 +660,6 @@ msgstr ""
 msgid "Custom mail template saved successfully."
 msgstr ""
 
-msgid "Custom mail templates"
-msgstr ""
-
 msgid "DOCTORAL_TRAINING"
 msgstr "PhD training"
 
@@ -740,6 +743,9 @@ msgid "Doctoral student"
 msgstr ""
 
 msgid "Doctoral training"
+msgstr ""
+
+msgid "Doctoral training configuration"
 msgstr ""
 
 msgid "Doctoral training numero"
@@ -1889,6 +1895,9 @@ msgid "Status:"
 msgstr ""
 
 msgid "Student"
+msgstr ""
+
+msgid "Student path"
 msgstr ""
 
 msgid "Subject"
