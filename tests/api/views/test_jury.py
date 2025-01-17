@@ -23,14 +23,12 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from base.tests.factories.entity import EntityFactory
-from base.tests.factories.person import PersonFactory
 from django.shortcuts import resolve_url
-from reference.tests.factories.country import CountryFactory
-from reference.tests.factories.language import FrenchLanguageFactory
 from rest_framework import status
 from rest_framework.test import APITestCase
 
+from base.tests.factories.entity import EntityFactory
+from base.tests.factories.person import PersonFactory
 from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from parcours_doctoral.models import JuryMember, ParcoursDoctoral
 from parcours_doctoral.tests.factories.jury import JuryMemberFactory
@@ -40,6 +38,8 @@ from parcours_doctoral.tests.factories.supervision import (
     CaMemberFactory,
     PromoterFactory,
 )
+from reference.tests.factories.country import CountryFactory
+from reference.tests.factories.language import FrenchLanguageFactory
 
 
 class JuryApiTestCase(APITestCase):
@@ -76,7 +76,7 @@ class JuryApiTestCase(APITestCase):
         cls.other_committee_member_user = CaMemberFactory().person.user
 
     def setUp(self):
-        self.parcours_doctoral.status = ChoixStatutParcoursDoctoral.PASSED_CONFIRMATION.name
+        self.parcours_doctoral.status = ChoixStatutParcoursDoctoral.CONFIRMATION_REUSSIE.name
         self.parcours_doctoral.save()
 
     def test_user_not_logged_assert_not_authorized(self):
@@ -102,6 +102,29 @@ class JuryApiTestCase(APITestCase):
         self.client.force_authenticate(user=self.no_role_user)
         response = self.client.post(self.url, data=self.updated_data, format="json")
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN, response.content)
+
+    def test_jury_get_of_in_creation_doctorate_is_forbidden(self):
+        self.parcours_doctoral.status = ChoixStatutParcoursDoctoral.EN_COURS_DE_CREATION_PAR_GESTIONNAIRE.name
+        self.parcours_doctoral.save()
+
+        users = [
+            self.promoter_user,
+            self.committee_member_user,
+            self.student.user,
+        ]
+
+        for user in users:
+            self.client.force_authenticate(user=user)
+            response = self.client.get(self.url)
+            self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        self.parcours_doctoral.status = ChoixStatutParcoursDoctoral.EN_ATTENTE_INJECTION_EPC.name
+        self.parcours_doctoral.save()
+
+        for user in users:
+            self.client.force_authenticate(user=user)
+            response = self.client.get(self.url)
+            self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_jury_get_student(self):
         self.client.force_authenticate(user=self.student.user)
@@ -202,7 +225,7 @@ class JuryMembersListApiTestCase(APITestCase):
         cls.other_committee_member_user = CaMemberFactory().person.user
 
     def setUp(self):
-        self.parcours_doctoral.status = ChoixStatutParcoursDoctoral.PASSED_CONFIRMATION.name
+        self.parcours_doctoral.status = ChoixStatutParcoursDoctoral.CONFIRMATION_REUSSIE.name
         self.parcours_doctoral.save()
 
     def test_user_not_logged_assert_not_authorized(self):
@@ -335,7 +358,7 @@ class JuryMembersDetailApiTestCase(APITestCase):
         cls.other_committee_member_user = CaMemberFactory().person.user
 
     def setUp(self):
-        self.parcours_doctoral.status = ChoixStatutParcoursDoctoral.PASSED_CONFIRMATION.name
+        self.parcours_doctoral.status = ChoixStatutParcoursDoctoral.CONFIRMATION_REUSSIE.name
         self.parcours_doctoral.save()
 
     def test_user_not_logged_assert_not_authorized(self):

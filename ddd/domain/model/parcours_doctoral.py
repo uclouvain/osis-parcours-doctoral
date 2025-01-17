@@ -28,8 +28,8 @@ from datetime import datetime
 from typing import List, Optional
 
 import attr
-from osis_common.ddd import interface
 
+from osis_common.ddd import interface
 from parcours_doctoral.ddd.domain.model._cotutelle import Cotutelle
 from parcours_doctoral.ddd.domain.model._experience_precedente_recherche import (
     ExperiencePrecedenteRecherche,
@@ -100,16 +100,16 @@ class ParcoursDoctoral(interface.RootEntity):
         ).validate()
 
     def soumettre_epreuve_confirmation(self):
-        self.statut = ChoixStatutParcoursDoctoral.SUBMITTED_CONFIRMATION
+        self.statut = ChoixStatutParcoursDoctoral.CONFIRMATION_SOUMISE
 
     def encoder_decision_reussite_epreuve_confirmation(self):
-        self.statut = ChoixStatutParcoursDoctoral.PASSED_CONFIRMATION
+        self.statut = ChoixStatutParcoursDoctoral.CONFIRMATION_REUSSIE
 
     def encoder_decision_echec_epreuve_confirmation(self):
-        self.statut = ChoixStatutParcoursDoctoral.NOT_ALLOWED_TO_CONTINUE
+        self.statut = ChoixStatutParcoursDoctoral.NON_AUTORISE_A_POURSUIVRE
 
     def encoder_decision_repassage_epreuve_confirmation(self):
-        self.statut = ChoixStatutParcoursDoctoral.CONFIRMATION_TO_BE_REPEATED
+        self.statut = ChoixStatutParcoursDoctoral.CONFIRMATION_A_REPRESENTER
 
     def _modifier_projet(
         self,
