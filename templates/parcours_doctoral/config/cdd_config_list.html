@@ -27,8 +27,8 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-  <li>{% trans 'Admission' %}</li>
-  <li class="active">{% trans 'CDD configuration' %}</li>
+  <li class="breadcrumb-item">{% trans 'Admission' %}</li>
+  <li class="breadcrumb-item active">{% trans 'CDD configuration' %}</li>
 {% endblock %}
 
 {% block content %}
@@ -42,8 +42,8 @@
       {% url 'parcours_doctoral:config:cdd-config:edit' pk=entity_id as change_url %}
       <li class="list-group-item container-fluid">
         {{ acronym }}
-        <div class="pull-right">
-          <a href="{{ change_url }}" class="btn btn-default">
+        <div class="float-end">
+          <a href="{{ change_url }}" class="btn btn-default border border-dark-subtle">
             <span class="fa fa-edit"></span>
             {% trans "Configure" context "parcours_doctoral" %}
           </a>

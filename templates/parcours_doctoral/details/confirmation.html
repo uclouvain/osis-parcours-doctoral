@@ -38,63 +38,63 @@
     <div class="btn-group">
       <button
           type="button"
-          class="btn btn-default"
-          data-toggle="dropdown"
+          class="btn btn-default border border-dark-subtle"
+          data-bs-toggle="dropdown"
           aria-haspopup="true"
           aria-expanded="false"
       >
         {% trans "Actions" %}
-        <span class="caret"></span>
+        <i class="fa-solid fa-caret-down"></i>
       </button>
-      <ul class="dropdown-menu pull-right">
+      <ul class="dropdown-menu float-end">
         {% if can_update_tab %}
           <li>
-            <a href="{{ update_url }}">
+            <a class="dropdown-item" href="{{ update_url }}">
               {% trans "Update" context 'verb' %}
             </a>
           </li>
         {% endif %}
         {% if can_upload_renewal_opinion %}
           <li>
-            <a href="{% url "parcours_doctoral:confirmation:opinion" parcours_doctoral.uuid %}">
+            <a class="dropdown-item" href="{% url "parcours_doctoral:confirmation:opinion" parcours_doctoral.uuid %}">
               {% trans "Upload the opinion on the renewal of the research mandate" %}
             </a>
           </li>
         {% endif %}
         {% if can_make_decision %}
-          <li role="separator" class="divider"></li>
+          <li><hr class="dropdown-divider"></li>
           <li>
-            <a href="{% url 'parcours_doctoral:send-mail' uuid=uuid %}?template={{ INFO_TEMPLATE_IDENTIFIER }}&cc_promoteurs=True">
+            <a class="dropdown-item" href="{% url 'parcours_doctoral:send-mail' uuid=uuid %}?template={{ INFO_TEMPLATE_IDENTIFIER }}&cc_promoteurs=True">
               {% trans "Send an information email" %}
             </a>
           </li>
-          <li role="separator" class="divider"></li>
+          <li><hr class="dropdown-divider"></li>
           {% if can_be_evaluated %}
             <li>
-              <a href="#" data-toggle="modal" data-target="#confirmationSuccessModal">
+              <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#confirmationSuccessModal">
                 {% trans "Successful test" %}
               </a>
             </li>
             <li>
-              <a href="{% url 'parcours_doctoral:confirmation:failure' uuid %}">
+              <a class="dropdown-item" href="{% url 'parcours_doctoral:confirmation:failure' uuid %}">
                 {% trans "Failure of the test" %}
               </a>
             </li>
             <li>
-              <a href="{% url 'parcours_doctoral:confirmation:retaking' uuid %}">
+              <a class="dropdown-item" href="{% url 'parcours_doctoral:confirmation:retaking' uuid %}">
                 {% trans "Retaking of the test" %}
               </a>
             </li>
           {% else %}
             {% with _("Impossible action: please be sure that the confirmation date and report are specified.") as error_message %}
               <li class="disabled">
-                <a href="#" title="{{ error_message }}">{% trans "Successful test" %}</a>
+                <a class="dropdown-item" href="#" title="{{ error_message }}">{% trans "Successful test" %}</a>
               </li>
               <li class="disabled">
-                <a href="#" title="{{ error_message }}">{% trans "Failure of the test" %}</a>
+                <a class="dropdown-item" href="#" title="{{ error_message }}">{% trans "Failure of the test" %}</a>
               </li>
               <li class="disabled">
-                <a href="#" title="{{ error_message }}">{% trans "Retaking of the test" %}</a>
+                <a class="dropdown-item" href="#" title="{{ error_message }}">{% trans "Retaking of the test" %}</a>
               </li>
             {% endwith %}
           {% endif %}
@@ -107,7 +107,7 @@
 {% block tab_content %}
   <h3>{% trans "Confirmation exam" %}</h3>
   <div>
-    {% field_data _("Definitive doctoral training date:") doctorate.parcours_doctoral_acceptee_le 'inline-field-data' %}
+    {% field_data _("Definitive admission date:") doctorate.parcours_doctoral_acceptee_le 'inline-field-data' %}
     {% field_data _("Confirmation deadline:") current_confirmation_paper.date_limite 'inline-field-data' %}
     {% field_data _("Confirmation exam date:") current_confirmation_paper.date 'inline-field-data' %}
     {% field_data _("Research report") current_confirmation_paper.rapport_recherche %}

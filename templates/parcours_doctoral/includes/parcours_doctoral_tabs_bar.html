@@ -32,13 +32,13 @@
 
 <div class="form-group">
   {# Nav for mobile display #}
-  <nav class="navbar navbar-default visible-xs visible-sm">
+  <nav class="navbar navbar-default d-sm-block d-md-none">
     {# Toggle for better mobile display #}
     <button
       type="button"
       class="navbar-toggle tabsbar-toggle collapsed"
-      data-toggle="collapse"
-      data-target="#parcours-doctoral-navbar"
+      data-bs-toggle="collapse"
+      data-bs-target="#parcours-doctoral-navbar"
       aria-expanded="false"
     >
       <span class="icon-bar"></span>
@@ -73,7 +73,7 @@
     </div>
   </nav>
 
-  <ul class="nav nav-tabs visible-md visible-lg">
+  <ul class="nav nav-tabs d-sm-none d-md-flex">
     {% for parent, children in tab_tree.items %}
       {% if parent == active_parent %}
         {% include 'parcours_doctoral/includes/tab_entry.html' with tab_name=children.0.name tab_label=parent.label is_active=True icon=parent.icon badge=parent.badge %}

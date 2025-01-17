@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
-{% load bootstrap3 i18n osis_role pagination static enums parcours_doctoral %}
+{% load django_bootstrap5 i18n osis_role pagination static enums parcours_doctoral %}
 
 {% comment "License" %}
   * OSIS stands for Open Student Information System. It's an application
@@ -26,7 +26,7 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-  <li>
+  <li class="breadcrumb-item">
     <a href="{% url 'parcours_doctoral:list' %}" id="lnk_parcours_doctorals" class="active">
       {% trans 'Doctoral trainings' %}
     </a>
@@ -41,7 +41,7 @@
   <div id="parcours_doctoral-search" class="panel panel-default">
     <div class="panel-body">
       <div id="form_errors">
-        {% bootstrap_form_errors filter_form %}
+        {% bootstrap_form_errors filter_form type='non_fields' %}
       </div>
       <form
           id="search_form"
@@ -54,18 +54,18 @@
         <div class="row">
           <div class="col-md-11">
             <div class="row">
-              {% bootstrap_field filter_form.numero form_group_class="form-group col-md-2" %}
-              {% bootstrap_field filter_form.noma form_group_class="form-group col-md-2" %}
-              {% bootstrap_field filter_form.matricule_etudiant form_group_class="form-group col-md-3" %}
-              {% bootstrap_field filter_form.etats form_group_class="form-group col-md-3" %}
+              {% bootstrap_field filter_form.numero wrapper_class="form-group col-md-2" %}
+              {% bootstrap_field filter_form.noma wrapper_class="form-group col-md-2" %}
+              {% bootstrap_field filter_form.matricule_etudiant wrapper_class="form-group col-md-3" %}
+              {% bootstrap_field filter_form.etats wrapper_class="form-group col-md-3" %}
             </div>
             <div class="row">
-              {% bootstrap_field filter_form.formation form_group_class="form-group col-md-3" %}
+              {% bootstrap_field filter_form.formation wrapper_class="form-group col-md-3" %}
             </div>
           </div>
           <div class="col-md-1">
             <label class="control-label">&nbsp;</label>
-            <div class="text-right">
+            <div class="text-end">
               <button
                   type="submit"
                   id="bt_submit_parcours_doctoral_doctorate_groups_search"
@@ -73,16 +73,16 @@
                   role="button"
                   aria-label="{% trans 'Search' context 'verb' %}"
               >
-                <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                <span class="fa-solid fa-search" aria-hidden="true"></span>
               </button>
               <button
                   type="reset"
                   id="bt_reset_parcours_doctoral_doctorate_groups_search"
-                  class="btn btn-default"
+                  class="btn btn-default border border-dark-subtle"
                   role="button"
                   aria-label="{% trans 'Reset' %}"
               >
-                <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+                <span class="fa-solid fa-arrows-rotate" aria-hidden="true"></span>
               </button>
             </div>
           </div>
