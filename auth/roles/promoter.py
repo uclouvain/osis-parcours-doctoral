@@ -50,7 +50,7 @@ class Promoter(RoleModel):
         verbose_name_plural = _("Role: Promoters")
         group_name = "promoters"
         constraints = [
-            UniqueConstraint(fields=['person'], name='unique_promoter_person'),
+            UniqueConstraint(fields=['person'], name='unique_promoter_by_person'),
         ]
 
     @classmethod

@@ -43,7 +43,7 @@ class CommitteeMember(RoleModel):
         verbose_name = _("Role: Committee member")
         verbose_name_plural = _("Role: Committee members")
         group_name = "committee_members"
-        constraints = [UniqueConstraint(fields=['person'], name='unique_committee_member_person')]
+        constraints = [UniqueConstraint(fields=['person'], name='unique_committee_member_by_person')]
 
     @classmethod
     def rule_set(cls):
