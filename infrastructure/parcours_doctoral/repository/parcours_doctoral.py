@@ -25,6 +25,8 @@
 # ##############################################################################
 from typing import Dict, List, Optional
 
+from django.db.models.expressions import F
+
 from admission.infrastructure.admission.domain.service.bourse import BourseTranslator
 from base.models.education_group_year import EducationGroupYear
 from base.models.entity_version import EntityVersion
@@ -263,6 +265,9 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
                 .annotate_with_reference()
                 .annotate_with_student_registration_id()
                 .annotate_last_status_update()
+                .annotate(
+                    admission_uuid=F('admission__uuid'),
+                )
                 .get(uuid=entity_id.uuid)
             )
         except ParcoursDoctoralModel.DoesNotExist:
@@ -277,6 +282,7 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
 
         return ParcoursDoctoralDTO(
             uuid=str(entity_id.uuid),
+            uuid_admission=str(parcours_doctoral.admission_uuid),  # from annotation
             statut=parcours_doctoral.status,
             date_changement_statut=parcours_doctoral.status_updated_at,
             cree_le=parcours_doctoral.created_at,

@@ -250,6 +250,9 @@ msgstr ""
 msgid "Add validation of prior experience (VAE)"
 msgstr ""
 
+msgid "Admission"
+msgstr ""
+
 msgctxt "parcours_doctoral"
 msgid "Admission"
 msgstr ""
