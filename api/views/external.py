@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -38,7 +38,7 @@ from infrastructure.messages_bus import message_bus_instance
 from parcours_doctoral.api.schema import ResponseSpecificSchema
 from parcours_doctoral.api.serializers import ExternalSupervisionDTOSerializer
 from parcours_doctoral.ddd.commands import (
-    GetGroupeDeSupervisionCommand,
+    GetGroupeDeSupervisionQuery,
     RecupererParcoursDoctoralQuery,
 )
 from parcours_doctoral.utils.cache import get_cached_parcours_doctoral_perm_obj
@@ -105,7 +105,7 @@ class ExternalDoctorateSupervisionAPIView(ExternalDoctorateAPIView):
         doctorate, supervision = message_bus_instance.invoke_multiple(
             [
                 RecupererParcoursDoctoralQuery(parcours_doctoral_uuid=self.doctorate_uuid),
-                GetGroupeDeSupervisionCommand(uuid_parcours_doctoral=self.doctorate_uuid),
+                GetGroupeDeSupervisionQuery(uuid_parcours_doctoral=self.doctorate_uuid),
             ],
         )
 

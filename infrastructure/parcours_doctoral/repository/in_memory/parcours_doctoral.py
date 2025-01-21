@@ -140,6 +140,8 @@ class ParcoursDoctoralInMemoryRepository(InMemoryGenericRepository, IParcoursDoc
             uuid_admission='',
             statut=parcours_doctoral.statut.name,
             date_changement_statut=None,
+            justification="",
+            intitule_secteur_formation="FOO",
             reference=str(parcours_doctoral.reference),
             matricule_doctorant=parcours_doctoral.matricule_doctorant,
             noma_doctorant=doctorant.noma,

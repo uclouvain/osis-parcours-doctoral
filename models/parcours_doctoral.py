@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -24,6 +24,7 @@
 #
 # ##############################################################################
 import uuid
+from datetime import date
 
 from django.core.cache import cache
 from django.db import models
@@ -52,8 +53,10 @@ from base.models.education_group_year import EducationGroupYear
 from base.models.entity_version import EntityVersion
 from base.models.enums.education_group_categories import Categories
 from base.models.enums.education_group_types import TrainingType
+from base.models.enums.entity_type import SECTOR
 from base.models.person import Person
 from base.models.student import Student
+from base.utils.cte import CTESubquery
 from parcours_doctoral.ddd.domain.model.enums import (
     STATUTS_DOCTORAT_EN_COURS_DE_CREATION,
     ChoixCommissionProximiteCDEouCLSM,
@@ -184,6 +187,19 @@ class ParcoursDoctoralQuerySet(models.QuerySet):
             },
         )
 
+    def annotate_intitule_secteur_formation(self):
+        cte = EntityVersion.objects.with_children(entity_id=OuterRef("training__management_entity_id"))
+        sector_subqs = (
+            cte.join(EntityVersion, id=cte.col.id)
+            .with_cte(cte)
+            .filter(entity_type=SECTOR)
+            .exclude(end_date__lte=date.today())
+        )
+
+        return self.annotate(
+            intitule_secteur_formation=CTESubquery(sector_subqs.values("title")[:1]),
+        )
+
 
 class ParcoursDoctoral(models.Model):
     uuid = models.UUIDField(
@@ -202,6 +218,11 @@ class ParcoursDoctoral(models.Model):
         verbose_name=_("Reference"),
         unique=True,
         editable=False,
+    )
+    justification = models.TextField(
+        default='',
+        verbose_name=_("Justification"),
+        blank=True,
     )
 
     created_at = models.DateTimeField(verbose_name=_('Created'), auto_now_add=True)

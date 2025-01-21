@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -24,6 +24,7 @@
 #
 # ##############################################################################
 from typing import Dict
+from uuid import UUID
 
 from django.db import transaction
 from osis_document.api.utils import documents_remote_duplicate
@@ -118,7 +119,7 @@ class ParcoursDoctoralService(IParcoursDoctoralService):
             # TODO Better path name?
             str(
                 file_uuid
-            ): f'parcours_doctoral/{admission.candidate.uuid}/{parcours_doctoral.uuid}/duplicates_from_admission/'
+            ): f'parcours_doctoral/{admission.candidate.uuid}/{parcours_doctoral.uuid}/duplicates_from_admission/{file_uuid}.pdf'
             for file_uuid in files_uuids
         }
 
@@ -138,6 +139,7 @@ class ParcoursDoctoralService(IParcoursDoctoralService):
         parcours_doctoral = ParcoursDoctoralModel.objects.create(
             admission=admission,
             reference=admission.reference,
+            justification=admission.comment,
             student=admission.candidate,
             training=admission.training,
             project_title=admission.project_title,
@@ -180,7 +182,7 @@ class ParcoursDoctoralService(IParcoursDoctoralService):
                 file_uuid = str(getattr(admission, field)[0])
             except IndexError:
                 continue
-            setattr(parcours_doctoral, field, uploaded_files.get(file_uuid))
+            setattr(parcours_doctoral, field, [UUID(uploaded_files.get(file_uuid))])
         parcours_doctoral.save(update_fields=cls.FILES_FIELDS)
 
         return ParcoursDoctoralIdentity(uuid=str(parcours_doctoral.uuid))

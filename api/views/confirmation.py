@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -40,7 +40,7 @@ from parcours_doctoral.api.serializers import (
     SubmitConfirmationPaperExtensionRequestCommandSerializer,
 )
 from parcours_doctoral.ddd.commands import (
-    GetGroupeDeSupervisionCommand,
+    GetGroupeDeSupervisionQuery,
     RecupererParcoursDoctoralQuery,
 )
 from parcours_doctoral.ddd.epreuve_confirmation.commands import (
@@ -193,7 +193,7 @@ class LastConfirmationCanvasAPIView(DoctorateAPIPermissionRequiredMixin, mixins.
             [
                 RecupererParcoursDoctoralQuery(self.doctorate_uuid),
                 RecupererDerniereEpreuveConfirmationQuery(parcours_doctoral_uuid=self.doctorate_uuid),
-                GetGroupeDeSupervisionCommand(uuid_parcours_doctoral=self.doctorate_uuid),
+                GetGroupeDeSupervisionQuery(uuid_parcours_doctoral=self.doctorate_uuid),
             ]
         )
         doctorate = self.get_permission_object()

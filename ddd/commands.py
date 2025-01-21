@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -57,7 +57,7 @@ class EnvoyerMessageDoctorantCommand(interface.CommandRequest):
 
 
 @attr.dataclass(frozen=True, slots=True)
-class GetGroupeDeSupervisionCommand(interface.QueryRequest):
+class GetGroupeDeSupervisionQuery(interface.QueryRequest):
     uuid_parcours_doctoral: str
 
 
@@ -110,6 +110,14 @@ class ModifierMembreSupervisionExterneCommand(interface.CommandRequest):
 class DemanderSignaturesCommand(interface.CommandRequest):
     uuid_parcours_doctoral: str
     matricule_auteur: str
+
+
+@attr.dataclass(frozen=True, slots=True)
+class ApprouverMembreParPdfCommand(interface.CommandRequest):
+    uuid_parcours_doctoral: str
+    matricule_auteur: str
+    uuid_membre: str
+    pdf: List[str] = attr.Factory(list)
 
 
 @attr.dataclass(frozen=True, slots=True)
