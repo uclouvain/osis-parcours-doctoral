@@ -354,6 +354,9 @@ msgid "All CA members must have approved the proposition."
 msgstr ""
 "Tous les membres du comité d'accompagnement doivent approuver la proposition."
 
+msgid "All history"
+msgstr "Historique complet"
+
 msgid "All supervisors must have approved the proposition."
 msgstr "Tous les promoteurs doivent approuver la proposition."
 
@@ -1122,6 +1125,10 @@ msgstr "Votre projet doctoral a-t-il déjà commencé ?"
 msgid "Have you previously enrolled for a PhD?"
 msgstr ""
 "Avez-vous été inscrit antérieurement pour réaliser une thèse de doctorat ?"
+
+msgctxt "tab"
+msgid "History"
+msgstr "Historique"
 
 msgid "Holder of a PhD with thesis"
 msgstr "Titulaire d'un doctorat avec thèse"
@@ -2293,6 +2300,9 @@ msgstr "Statut"
 msgctxt "parcours_doctoral filter"
 msgid "Status"
 msgstr "État"
+
+msgid "Status changes"
+msgstr "Changements de statut"
 
 msgid "Status of the doctoral training"
 msgstr "État d’avancement de la formation doctorale"

@@ -86,10 +86,6 @@ TAB_TREE = {
     # Tab('comments', pgettext('tab', 'Comments'), 'comments'): [
     #     Tab('comments', pgettext('tab', 'Comments'), 'comments')
     # ],
-    # Tab('history', pgettext('tab', 'History'), 'history'): [
-    #     Tab('history-all', _('All history')),
-    #     Tab('history', _('Status changes')),
-    # ],
     # Tab('person', _('Personal data'), 'user'): [
     #     Tab('person', _('Identification'), 'user'),
     #     Tab('coordonnees', _('Contact details'), 'user'),
@@ -118,6 +114,10 @@ TAB_TREE = {
     Tab('defense', pgettext('doctorate tab', 'Defense'), 'person-chalkboard'): [
         Tab('jury-preparation', pgettext('admission tab', 'Defense method')),
         Tab('jury', _('Jury composition')),
+    ],
+    Tab('history', pgettext('tab', 'History'), 'history'): [
+        Tab('history-all', _('All history')),
+        Tab('history', _('Status changes')),
     ],
     Tab('management', pgettext('tab', 'Management'), 'gear'): [
         Tab('send-mail', _('Send a mail')),
