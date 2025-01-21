@@ -90,7 +90,7 @@ class FormationFactory(EducationGroupYearFactory):
             ),
         ),
     )
-    education_group_type = factory.SubFactory(EducationGroupTypeFactory, name=TrainingType.FORMATION_PHD.name)
+    education_group_type = factory.SubFactory(EducationGroupTypeFactory, name=TrainingType.PHD.name)
     primary_language = None
 
     @factory.post_generation

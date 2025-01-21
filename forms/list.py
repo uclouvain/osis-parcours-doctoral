@@ -369,7 +369,7 @@ class ParcoursDoctorauxFilterForm(forms.Form):
 
     def get_doctorate_queryset(self):
         """Used to determine which training to filter on"""
-        qs = EducationGroupYear.objects.filter(education_group_type__name=TrainingType.FORMATION_PHD.name)
+        qs = EducationGroupYear.objects.filter(education_group_type__name=TrainingType.PHD.name)
 
         if self.managed_education_groups:
             qs = qs.filter(education_group_id__in=self.managed_education_groups)
