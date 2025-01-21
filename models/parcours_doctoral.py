@@ -561,7 +561,7 @@ class ParcoursDoctoral(models.Model):
 def _invalidate_doctorate_cache(sender, instance, **kwargs):
     if (
         instance.education_group_type.category == Categories.TRAINING.name
-        and instance.education_group_type.name == TrainingType.FORMATION_PHD.name
+        and instance.education_group_type.name == TrainingType.PHD.name
     ):  # pragma: no branch
         keys = [
             f'parcours_doctoral_permission_{a_uuid}'
