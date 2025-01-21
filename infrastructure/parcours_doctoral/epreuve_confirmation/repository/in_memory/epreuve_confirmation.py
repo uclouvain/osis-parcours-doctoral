@@ -26,7 +26,6 @@
 from typing import List
 
 from base.ddd.utils.in_memory_repository import InMemoryGenericRepository
-
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import (
     ParcoursDoctoralIdentity,
 )
@@ -57,7 +56,8 @@ class EpreuveConfirmationInMemoryRepository(InMemoryGenericRepository, IEpreuveC
 
     @classmethod
     def search_by_parcours_doctoral_identity(
-        cls, parcours_doctoral_entity_id: 'ParcoursDoctoralIdentity'
+        cls,
+        parcours_doctoral_entity_id: 'ParcoursDoctoralIdentity',
     ) -> List['EpreuveConfirmation']:
         result = [
             entity for entity in cls.entities if entity.parcours_doctoral_id.uuid == parcours_doctoral_entity_id.uuid
@@ -67,26 +67,29 @@ class EpreuveConfirmationInMemoryRepository(InMemoryGenericRepository, IEpreuveC
 
     @classmethod
     def search_dto_by_parcours_doctoral_identity(
-        cls, parcours_doctoral_entity_id: 'ParcoursDoctoralIdentity'
+        cls,
+        parcours_doctoral_entity_id: 'ParcoursDoctoralIdentity',
     ) -> List['EpreuveConfirmationDTO']:
         result = cls.search_by_parcours_doctoral_identity(parcours_doctoral_entity_id)
         return [cls._load_confirmation_dto(entity) for entity in result]
 
     @classmethod
     def get_last_dto_by_parcours_doctoral_identity(
-        cls, parcours_doctoral_entity_id: 'ParcoursDoctoralIdentity'
+        cls,
+        parcours_doctoral_entity_id: 'ParcoursDoctoralIdentity',
     ) -> 'EpreuveConfirmationDTO':
-        first_result = cls.search_by_parcours_doctoral_identity(parcours_doctoral_entity_id)
-        if not first_result:
+        results = cls.search_by_parcours_doctoral_identity(parcours_doctoral_entity_id)
+        active_result = next((result for result in results if result.est_active), None)
+        if not active_result:
             raise EpreuveConfirmationNonTrouveeException
-        return cls._load_confirmation_dto(first_result[0])
+        return cls._load_confirmation_dto(active_result)
 
     @classmethod
     def reset(cls):
         cls.entities = [
-            EpreuveConfirmation0DoctoratSC3DPFactory(id=0),
-            EpreuveConfirmation2DoctoratSC3DPFactory(id=1),
-            EpreuveConfirmation1DoctoratSC3DPFactory(id=2),
+            EpreuveConfirmation0DoctoratSC3DPFactory(id=0, est_active=False),
+            EpreuveConfirmation2DoctoratSC3DPFactory(id=1, est_active=False),
+            EpreuveConfirmation1DoctoratSC3DPFactory(id=2, est_active=True),
         ]
 
     @classmethod
@@ -116,6 +119,7 @@ class EpreuveConfirmationInMemoryRepository(InMemoryGenericRepository, IEpreuveC
     def _load_confirmation_dto(cls, confirmation_paper: EpreuveConfirmation) -> EpreuveConfirmationDTO:
         return EpreuveConfirmationDTO(
             uuid=str(confirmation_paper.entity_id.uuid),
+            est_active=confirmation_paper.est_active,
             date_limite=confirmation_paper.date_limite,
             date=confirmation_paper.date,
             rapport_recherche=confirmation_paper.rapport_recherche,

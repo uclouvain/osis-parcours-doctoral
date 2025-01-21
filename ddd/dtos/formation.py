@@ -26,8 +26,8 @@
 from typing import Optional
 
 import attr
-from osis_common.ddd import interface
 
+from osis_common.ddd import interface
 from parcours_doctoral.ddd.dtos.campus import CampusDTO
 
 

@@ -23,9 +23,9 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from base.utils.serializers import DTOSerializer
 from rest_framework import serializers
 
+from base.utils.serializers import DTOSerializer
 from parcours_doctoral.ddd.epreuve_confirmation.commands import (
     CompleterEpreuveConfirmationParPromoteurCommand,
     SoumettreEpreuveConfirmationCommand,
@@ -39,6 +39,8 @@ class ConfirmationPaperCanvasSerializer(serializers.Serializer):
 
 
 class ConfirmationPaperDTOSerializer(DTOSerializer):
+    est_active = None
+
     class Meta:
         source = EpreuveConfirmationDTO
 

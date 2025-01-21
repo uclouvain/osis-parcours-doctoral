@@ -26,13 +26,13 @@
 import datetime
 import uuid
 
-from base.tests.factories.academic_year import AcademicYearFactory
-from base.tests.factories.program_manager import ProgramManagerFactory
 from django.shortcuts import resolve_url
 from django.test import TestCase, override_settings
 from django.urls import reverse
 from rest_framework.status import HTTP_200_OK, HTTP_404_NOT_FOUND
 
+from base.tests.factories.academic_year import AcademicYearFactory
+from base.tests.factories.program_manager import ProgramManagerFactory
 from parcours_doctoral.models.confirmation_paper import ConfirmationPaper
 from parcours_doctoral.tests.factories.confirmation_paper import (
     ConfirmationPaperFactory,
@@ -109,6 +109,9 @@ class ExtensionRequestFormViewTestCase(TestCase):
         )
 
     def test_get_extension_request_detail_cdd_user_with_confirmation_paper_without_extension_request(self):
+        self.confirmation_paper_with_extension_request.is_active = False
+        self.confirmation_paper_with_extension_request.save()
+
         self.confirmation_paper_without_extension_request = ConfirmationPaperFactory(
             parcours_doctoral=self.parcours_doctoral_with_confirmation_papers,
             confirmation_date=datetime.date(2022, 6, 1),
@@ -142,6 +145,9 @@ class ExtensionRequestFormViewTestCase(TestCase):
         self.assertEqual(updated_confirmation_paper.cdd_opinion, 'My new opinion')
 
     def test_post_extension_request_detail_cdd_user_with_confirmation_paper_without_extension_request(self):
+        self.confirmation_paper_with_extension_request.is_active = False
+        self.confirmation_paper_with_extension_request.save()
+
         self.confirmation_paper_without_extension_request = ConfirmationPaperFactory(
             parcours_doctoral=self.parcours_doctoral_with_confirmation_papers,
             confirmation_date=datetime.date(2022, 6, 1),

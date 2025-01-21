@@ -26,13 +26,9 @@
 from admission.infrastructure.admission.doctorat.preparation.repository.in_memory.proposition import (
     PropositionInMemoryRepository,
 )
-
 from parcours_doctoral.ddd.commands import *
 from parcours_doctoral.ddd.use_case.read import *
 from parcours_doctoral.ddd.use_case.read.get_cotutelle_service import get_cotutelle
-from parcours_doctoral.ddd.use_case.read.lister_parcours_doctoraux_service import (
-    lister_parcours_doctoraux,
-)
 from parcours_doctoral.ddd.use_case.read.recuperer_groupe_de_supervision_service import (
     recuperer_groupe_de_supervision,
 )
@@ -67,9 +63,6 @@ from parcours_doctoral.ddd.use_case.write.supprimer_promoteur_service import (
 from parcours_doctoral.infrastructure.parcours_doctoral.domain.service.in_memory.historique import (
     HistoriqueInMemory,
 )
-from parcours_doctoral.infrastructure.parcours_doctoral.domain.service.in_memory.lister_toutes_demandes import (
-    ListerTousParcoursDoctorauxInMemory,
-)
 from parcours_doctoral.infrastructure.parcours_doctoral.domain.service.in_memory.membre_CA import (
     MembreCAInMemoryTranslator,
 )
@@ -85,6 +78,9 @@ from parcours_doctoral.infrastructure.parcours_doctoral.domain.service.in_memory
 from parcours_doctoral.infrastructure.parcours_doctoral.epreuve_confirmation.repository.in_memory.epreuve_confirmation import (
     EpreuveConfirmationInMemoryRepository,
 )
+from parcours_doctoral.infrastructure.parcours_doctoral.read_view.handlers_in_memory import (
+    COMMAND_HANDLERS as READ_VIEW_COMMAND_HANDLERS,
+)
 from parcours_doctoral.infrastructure.parcours_doctoral.repository.in_memory.groupe_de_supervision import (
     GroupeDeSupervisionInMemoryRepository,
 )
@@ -94,7 +90,6 @@ from parcours_doctoral.infrastructure.parcours_doctoral.repository.in_memory.par
 
 _parcours_doctoral_repository = ParcoursDoctoralInMemoryRepository()
 _parcours_doctoral_service = ParcoursDoctoralInMemoryService()
-_lister_parcours_doctoraux_service = ListerTousParcoursDoctorauxInMemory()
 _epreuve_confirmation_repository = EpreuveConfirmationInMemoryRepository()
 _proposition_repository = PropositionInMemoryRepository()
 _groupe_de_supervision_repository = GroupeDeSupervisionInMemoryRepository()
@@ -211,8 +206,5 @@ COMMAND_HANDLERS = {
         parcours_doctoral_repository=_parcours_doctoral_repository,
         historique=_historique,
     ),
-    ListerTousParcoursDoctorauxQuery: lambda msg_bus, cmd: lister_parcours_doctoraux(
-        cmd,
-        lister_tous_parcours_doctoraux_service=_lister_parcours_doctoraux_service,
-    ),
+    **READ_VIEW_COMMAND_HANDLERS,
 }

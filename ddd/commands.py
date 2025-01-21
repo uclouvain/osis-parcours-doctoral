@@ -27,21 +27,8 @@ import datetime
 from typing import List, Optional
 
 import attr
+
 from osis_common.ddd import interface
-
-
-@attr.dataclass(frozen=True, slots=True)
-class ListerTousParcoursDoctorauxQuery(interface.QueryRequest):
-    tri_inverse: bool = False
-    champ_tri: Optional[str] = None
-    page: Optional[int] = None
-    taille_page: Optional[int] = None
-
-    numero: Optional[int] = None
-    noma: Optional[str] = ''
-    matricule_etudiant: Optional[str] = ''
-    formation: Optional[str] = ''
-    etats: Optional[List[str]] = None
 
 
 @attr.dataclass(frozen=True, slots=True)

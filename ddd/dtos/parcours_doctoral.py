@@ -28,8 +28,8 @@ from typing import List, Optional
 from uuid import UUID
 
 import attr
-from osis_common.ddd import interface
 
+from osis_common.ddd import interface
 from parcours_doctoral.ddd.domain.model.enums import CHOIX_COMMISSION_PROXIMITE
 from parcours_doctoral.ddd.dtos.bourse import BourseDTO
 from parcours_doctoral.ddd.dtos.formation import FormationDTO
@@ -120,7 +120,7 @@ class ParcoursDoctoralDTO(interface.DTO):
 
 
 @attr.dataclass(slots=True)
-class ParcoursDoctoralRechercheDTO(interface.DTO):
+class ParcoursDoctoralRechercheEtudiantDTO(interface.DTO):
     uuid: str
     reference: str
     statut: str

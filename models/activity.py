@@ -26,7 +26,6 @@
 import contextlib
 from uuid import uuid4
 
-from base.ddd.utils.business_validator import MultipleBusinessExceptions
 from django.core import validators
 from django.db import models
 from django.db.models import Q
@@ -37,6 +36,7 @@ from django.utils.translation import gettext_lazy as _
 from django.utils.translation import pgettext_lazy
 from osis_document.contrib import FileField
 
+from base.ddd.utils.business_validator import MultipleBusinessExceptions
 from parcours_doctoral.ddd.formation.domain.model.enums import (
     CategorieActivite,
     ChoixComiteSelection,
@@ -60,13 +60,15 @@ def training_activity_directory_path(instance: 'Activity', filename: str):
 
 
 class ActivityQuerySet(models.QuerySet):
+    def for_doctoral_training_filter(self):
+        return self.filter(
+            context=ContexteFormation.DOCTORAL_TRAINING.name,
+        ).exclude(Q(category=CategorieActivite.UCL_COURSE.name, course_completed=False))
+
     def for_doctoral_training(self, parcours_doctoral_uuid):
         return (
-            self.filter(
-                parcours_doctoral__uuid=parcours_doctoral_uuid,
-                context=ContexteFormation.DOCTORAL_TRAINING.name,
-            )
-            .exclude(Q(category=CategorieActivite.UCL_COURSE.name, course_completed=False))
+            self.for_doctoral_training_filter()
+            .filter(parcours_doctoral__uuid=parcours_doctoral_uuid)
             .prefetch_related('children')
             .select_related(
                 'country',
@@ -76,13 +78,15 @@ class ActivityQuerySet(models.QuerySet):
             )
         )
 
+    def for_complementary_training_filter(self):
+        return self.filter(
+            context=ContexteFormation.COMPLEMENTARY_TRAINING.name,
+        ).exclude(Q(category=CategorieActivite.UCL_COURSE.name, course_completed=False))
+
     def for_complementary_training(self, parcours_doctoral_uuid):
         return (
-            self.filter(
-                parcours_doctoral__uuid=parcours_doctoral_uuid,
-                context=ContexteFormation.COMPLEMENTARY_TRAINING.name,
-            )
-            .exclude(Q(category=CategorieActivite.UCL_COURSE.name, course_completed=False))
+            self.for_complementary_training_filter()
+            .filter(parcours_doctoral__uuid=parcours_doctoral_uuid)
             .select_related(
                 'country',
                 'parent',

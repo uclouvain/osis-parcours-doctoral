@@ -28,11 +28,11 @@ from unittest import mock
 from uuid import uuid4
 
 import freezegun
-from base.tests.factories.person import PersonFactory
 from django.shortcuts import resolve_url
 from rest_framework import status
 from rest_framework.test import APITestCase
 
+from base.tests.factories.person import PersonFactory
 from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from parcours_doctoral.models import ConfirmationPaper
 from parcours_doctoral.tests.factories.confirmation_paper import (
@@ -180,6 +180,7 @@ class ConfirmationAPIViewTestCase(APITestCase):
                 research_mandate_renewal_opinion=[self.file_uuids['research_mandate_renewal_opinion']],
                 certificate_of_achievement=[self.file_uuids['certificate_of_achievement']],
                 certificate_of_failure=[self.file_uuids['certificate_of_failure']],
+                is_active=False,
             )
 
         with freezegun.freeze_time('2023-01-01'):
@@ -197,6 +198,7 @@ class ConfirmationAPIViewTestCase(APITestCase):
                 brief_justification='Brief justification',
                 justification_letter=[self.file_uuids['justification_letter']],
                 cdd_opinion='CDD opinion',
+                is_active=True,
             )
 
         response = self.client.get(self.url, format='json')

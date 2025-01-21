@@ -182,11 +182,20 @@ msgstr "Un promoteur ne peut pas être retiré du jury."
 msgid "A promoter can not be updated from the jury."
 msgstr "Un promoteur ne peut pas être modifié dans le jury."
 
+msgid "ABANDON"
+msgstr "Abandon"
+
+msgid "ABANDON_ECHEC"
+msgstr "Abandon / Échec"
+
 msgid "ACCEPTEE"
 msgstr "Acceptée"
 
 msgid "ADMIS"
 msgstr "Admis"
+
+msgid "ADMISSION"
+msgstr "Admission"
 
 msgid "Abstract"
 msgstr "Résumé"
@@ -206,6 +215,9 @@ msgstr "Acceptée"
 
 msgid "Achieved additional training"
 msgstr "Formation complémentaire réalisée"
+
+msgid "Acronym / Title"
+msgstr "Sigle / Intitulé"
 
 msgid "Actions"
 msgstr "Actions"
@@ -289,8 +301,15 @@ msgstr "Ajouter un service"
 msgid "Add an activity"
 msgstr "Ajouter une activité"
 
+msgid "Add date filter"
+msgstr "Ajouter un filtre de date"
+
 msgid "Add validation of prior experience (VAE)"
 msgstr "Ajouter une valorisation des acquis d'expérience"
+
+msgctxt "parcours_doctoral filter"
+msgid "Additional training"
+msgstr "Formation complémentaire"
 
 msgid "Admission"
 msgstr "Admission"
@@ -298,6 +317,13 @@ msgstr "Admission"
 msgctxt "parcours_doctoral"
 msgid "Admission"
 msgstr "Admission"
+
+msgid "Admission date"
+msgstr "Date d'admission"
+
+msgctxt "doctorate-filter"
+msgid "Admission type"
+msgstr "Type d’admission"
 
 #, python-format
 msgid ""
@@ -312,6 +338,10 @@ msgstr ""
 msgctxt "filters"
 msgid "All"
 msgstr "Tous"
+
+msgctxt "filters feminine"
+msgid "All"
+msgstr "Toutes"
 
 msgid "All CA members must have approved the proposition."
 msgstr ""
@@ -350,6 +380,9 @@ msgstr "Un membre externe doit avoir un email."
 
 msgid "An external member must have an institute."
 msgstr "Un membre externe doit avoir une institution."
+
+msgid "Application numero"
+msgstr "Numéro de demande"
 
 msgid "Application status"
 msgstr "État de la demande"
@@ -453,6 +486,9 @@ msgstr "Types d'activité pour une communication dans la catégorie Conférence"
 
 msgid "CONFERENCE types"
 msgstr "Types d'activité pour la catégorie Conférence"
+
+msgid "CONFIRMATION"
+msgstr "Confirmation"
 
 msgid "CONFIRMATION_A_REPRESENTER"
 msgstr "Confirmation à représenter"
@@ -644,6 +680,9 @@ msgstr ""
 msgid "Context"
 msgstr "Contexte"
 
+msgid "Cotutelle"
+msgstr "Cotutelle"
+
 msgid "Cotutelle request document"
 msgstr "Demande d'ouverture de cotutelle"
 
@@ -683,6 +722,10 @@ msgctxt "parcours_doctoral"
 msgid "Course units"
 msgstr "Cours"
 
+msgctxt "doctorate"
+msgid "Courses"
+msgstr "Formations"
+
 msgid "Courses taken"
 msgstr "Cours suivis"
 
@@ -716,11 +759,27 @@ msgstr "Template d'email personnalisé supprimé avec succès"
 msgid "Custom mail template saved successfully."
 msgstr "Template d'email personnalisé enregistré avec succès."
 
+msgid "DECISION_DE_RECEVABILITE"
+msgstr "Décision de recevabilité"
+
+msgid "DEFENSE_PRIVEE"
+msgstr "Défense privée"
+
 msgid "DOCTORAL_TRAINING"
 msgstr "Formation doctorale"
 
+msgid "Date"
+msgstr "Date"
+
+#, python-format
+msgid "Date - Filter #%s"
+msgstr "Date - Filtre #%s"
+
 msgid "Date of the confirmation paper (DD/MM/YYYY)"
 msgstr "Date de l'épreuve de confirmation (JJ/MM/AAAA)"
+
+msgid "Date type"
+msgstr "Type de date"
 
 msgid "Deadline extended"
 msgstr "Nouvelle échéance"
@@ -795,6 +854,9 @@ msgstr "Souhaitez-vous passer la demande dans l'état \"%(status)s\" ?"
 msgid "Doctor"
 msgstr "Docteur"
 
+msgid "Doctoral commissions"
+msgstr "Commissions doctorales"
+
 msgid "Doctoral student"
 msgstr "Doctorant·e"
 
@@ -803,12 +865,6 @@ msgstr "Formation doctorale"
 
 msgid "Doctoral training configuration"
 msgstr "Configuration formation doctorale"
-
-msgid "Doctoral training numero"
-msgstr "Numéro de la formation doctorale"
-
-msgid "Doctoral training status"
-msgstr "Statut de la formation doctorale"
 
 msgid "Doctoral trainings"
 msgstr "Formations doctorales"
@@ -821,6 +877,9 @@ msgstr "N'est pas porteur du titre de docteur"
 
 msgid "Done in"
 msgstr "Fait à"
+
+msgid "Dossier numero"
+msgstr "Numéro de dossier"
 
 msgid "Dr"
 msgstr "Dr."
@@ -920,6 +979,9 @@ msgstr "Demande de prolongation non complète."
 msgid "Extension request not defined."
 msgstr "Demande de prolongation non définie."
 
+msgid "FNRS, FRIA, FRESH"
+msgstr "FNRS, FRIA, FRESH"
+
 msgid "FREE_COURSE"
 msgstr "Cours libre"
 
@@ -965,6 +1027,9 @@ msgstr ""
 msgid "French"
 msgstr "Français"
 
+msgid "From"
+msgstr "De"
+
 msgid "Funding type"
 msgstr "Type de financement"
 
@@ -976,9 +1041,6 @@ msgstr "Graphe de Gantt"
 
 msgid "Gender"
 msgstr "Genre"
-
-msgid "General"
-msgstr "Général"
 
 msgid "Generate the PDF recap"
 msgstr "Générer le PDF récapitulatif"
@@ -1035,6 +1097,9 @@ msgstr ""
 "Action impossible : veuillez-vous assurer que la date et le procès-verbal de "
 "l'épreuve ont bien été complétés."
 
+msgid "In order of registration"
+msgstr "En règle d'inscription"
+
 msgid "In person"
 msgstr "En présentiel"
 
@@ -1051,6 +1116,9 @@ msgstr ""
 msgctxt "jury"
 msgid "Institute"
 msgstr "Institution"
+
+msgid "Institute / Sector"
+msgstr "Institut / Secteur"
 
 msgid "Institution"
 msgstr "Institution"
@@ -1072,29 +1140,35 @@ msgstr "Commentaire interne"
 msgid "International scholarship"
 msgstr "Bourse internationale"
 
+msgid "Is active"
+msgstr "Est active"
+
 msgid ""
 "Is your admission request linked with a FNRS, FRIA, FRESH or CSC application?"
 msgstr ""
 "Votre demande d'admission est-elle en lien avec une candidature FNRS, FRIA, "
 "FRESH, CSC"
 
+msgid "JURY"
+msgstr "Jury"
+
 msgid "JURY_APPROUVE_ADRE"
-msgstr "JURY_APPROUVE_ADRE"
+msgstr "Jury approuvé ADRE"
 
 msgid "JURY_APPROUVE_CA"
-msgstr "JURY_APPROUVE_CA"
+msgstr "Jury approuvé CA"
 
 msgid "JURY_APPROUVE_CDD"
-msgstr "JURY_APPROUVE_CDD"
+msgstr "Jury approuvé CDD"
 
 msgid "JURY_REFUSE_ADRE"
-msgstr "JURY_REFUSE_ADRE"
+msgstr "Jury refusé ADRE"
 
 msgid "JURY_REFUSE_CDD"
-msgstr "JURY_REFUSE_CDD"
+msgstr "Jury refusé CDD"
 
 msgid "JURY_SOUMIS"
-msgstr "JURY_SOUMIS"
+msgstr "Jury soumis"
 
 msgid "Joint supervision agreement"
 msgstr "Convention de cotutelle"
@@ -1104,6 +1178,9 @@ msgstr "Nom de la revue ou de la maison d'édition"
 
 msgid "Jury approval"
 msgstr "Approbation du jury"
+
+msgid "Jury chair"
+msgstr "Présidence jury"
 
 msgid "Jury composition"
 msgstr "Composition du jury"
@@ -1122,11 +1199,14 @@ msgstr "Mots-clés"
 msgid "Language"
 msgstr "Langue"
 
-msgid "Last name / First name / Email"
-msgstr "Nom / Prénom / E-mail"
+msgid "Last name / First name"
+msgstr "Nom / Prénom"
 
 msgid "Last name / First name / Global id"
 msgstr "Nom / Prénom / Identifiant global"
+
+msgid "Last name / First name / NOMA"
+msgstr "Nom / Prénom / NOMA"
 
 msgid "Last name:"
 msgstr "Nom :"
@@ -1481,9 +1561,6 @@ msgstr "Aucun doctorat trouvé."
 msgid "No jury found."
 msgstr "Pas de jury trouvé."
 
-msgid "Noma"
-msgstr "Noma"
-
 msgid "Non doctor reason"
 msgstr "Justification"
 
@@ -1492,6 +1569,9 @@ msgstr "Nombre de jours de participation"
 
 msgid "Number of values mismatch"
 msgstr "Le nombre de valeurs ne correspond pas"
+
+msgid "OTHER"
+msgstr "Autre"
 
 msgid "One choice per line, leave the \"Other\" value out"
 msgstr "Un choix, par ligne, ne pas renseigner la valeur \"Autre\""
@@ -1638,8 +1718,14 @@ msgstr ""
 "Veuillez consulter les dispositions particulières de votre commission "
 "doctorale de domaine pour le choix des activités."
 
+msgid "Please select at least one date."
+msgstr "Veuillez sélectionner au-moins une date."
+
 msgid "Poster"
 msgstr "Poster"
+
+msgid "Pre-admission"
+msgstr "Préadmission"
 
 msgid "Presentation date"
 msgstr "Date de l'exposé"
@@ -1806,6 +1892,9 @@ msgstr "Refuser l'activité"
 msgid "Registration Id"
 msgstr "Noma"
 
+msgid "Related doctorate"
+msgstr "Doctorat associé"
+
 msgctxt "parcours_doctoral"
 msgid "Remove"
 msgstr "Retirer"
@@ -1829,6 +1918,9 @@ msgstr "Demander des changements pour \"%(object)s\""
 
 msgid "Research report"
 msgstr "Rapport de recherche"
+
+msgid "Research scholarship"
+msgstr "Bourse de recherche"
 
 msgid "Research seminar"
 msgstr "Séminaire de recherche"
@@ -1926,6 +2018,9 @@ msgstr "Signatures en cours"
 msgid "SOUMISE"
 msgstr "Soumise"
 
+msgid "SOUTENANCE_PUBLIQUE"
+msgstr "Soutenance publique"
+
 msgid "STATISTICS"
 msgstr "Statistiques"
 
@@ -1938,6 +2033,9 @@ msgstr "Enregistrer et voir le résultat"
 
 msgid "Scholarship end date"
 msgstr "Date de fin de la bourse"
+
+msgid "Scholarship holder"
+msgstr "Boursier"
 
 msgid "Scholarship start date"
 msgstr "Date de démarrage de la bourse"
@@ -1966,6 +2064,12 @@ msgstr "Veuillez sélectionner au moins une activité"
 
 msgid "Select for batch action"
 msgstr "Sélectionner pour une action en masse"
+
+msgid "Select the active statuses"
+msgstr "Sélectionner les états actifs"
+
+msgid "Select the inactive statuses"
+msgstr "Sélectionner les états inactifs"
 
 msgid "Selection committee"
 msgstr "Comité de sélection"
@@ -2031,6 +2135,10 @@ msgctxt "parcours_doctoral"
 msgid "Status"
 msgstr "Statut"
 
+msgctxt "parcours_doctoral filter"
+msgid "Status"
+msgstr "État"
+
 msgid "Status of the doctoral training"
 msgstr "État d’avancement de la formation doctorale"
 
@@ -2077,6 +2185,10 @@ msgstr "Groupe de supervision non trouvé."
 
 msgid "Supervisor"
 msgstr "Promoteur"
+
+msgctxt "gender"
+msgid "Supervisor"
+msgstr "Promoteur·trice"
 
 msgid "Supervisor not found."
 msgstr "Promoteur non trouvé."
@@ -2396,6 +2508,9 @@ msgstr "Titre de la communication"
 msgid "Title of the training"
 msgstr "Intitulé de la formation"
 
+msgid "To"
+msgstr "À"
+
 msgid ""
 "To be sent to the CDD secretariat <br> (To help you to fill this form, "
 "please read the UCLouvain Doctoral Regulations and the special provisions of "
@@ -2481,6 +2596,9 @@ msgstr "Valider les cours sélectionnées"
 msgid "Validated"
 msgstr "Validé"
 
+msgid "Validated credits total"
+msgstr "Total crédits validés"
+
 msgid "WORK_CONTRACT"
 msgstr "Contrat de travail"
 
@@ -2508,6 +2626,9 @@ msgstr "Type de contrat de travail"
 
 msgid "YES"
 msgstr "Oui"
+
+msgid "Year"
+msgstr "Année"
 
 msgid "Yes"
 msgstr "Oui"
@@ -2594,6 +2715,9 @@ msgstr "la <strong>non-poursuite</strong> du doctorat."
 
 msgid "the <strong>successful completion</strong> of the confirmation paper."
 msgstr "la <strong>réussite</strong> de l'épreuve de confirmation."
+
+msgid "to"
+msgstr "à"
 
 msgid "ucl"
 msgstr "UCLouvain"

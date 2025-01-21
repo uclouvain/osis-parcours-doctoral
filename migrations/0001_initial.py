@@ -117,6 +117,7 @@ class Migration(migrations.Migration):
                             ("JURY_REFUSE_CDD", "JURY_REFUSE_CDD"),
                             ("JURY_APPROUVE_ADRE", "JURY_APPROUVE_ADRE"),
                             ("JURY_REFUSE_ADRE", "JURY_REFUSE_ADRE"),
+                            ("ABANDON", "ABANDON"),
                         ],
                         default="ADMITTED",
                         max_length=30,

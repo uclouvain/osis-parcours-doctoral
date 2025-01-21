@@ -51,6 +51,7 @@ class ChoixStatutParcoursDoctoral(ChoiceEnum):
     JURY_REFUSE_CDD = _('JURY_REFUSE_CDD')
     JURY_APPROUVE_ADRE = _('JURY_APPROUVE_ADRE')
     JURY_REFUSE_ADRE = _('JURY_REFUSE_ADRE')
+    ABANDON = _('ABANDON')
 
 
 STATUTS_DOCTORAT_EN_COURS_DE_CREATION = {
@@ -83,6 +84,10 @@ class ChoixTypeFinancement(ChoiceEnum):
     WORK_CONTRACT = _('WORK_CONTRACT')
     SEARCH_SCHOLARSHIP = _('SEARCH_SCHOLARSHIP')
     SELF_FUNDING = _('SELF_FUNDING')
+
+
+class BourseRecherche(ChoiceEnum):
+    OTHER = _('OTHER')
 
 
 class ChoixStatutSignatureGroupeDeSupervision(ChoiceEnum):
@@ -130,3 +135,43 @@ CHOIX_COMMISSION_PROXIMITE = {
         ChoixSousDomaineSciences,
     )
 }
+
+
+class ChoixEtapeParcoursDoctoral(ChoiceEnum):
+    ADMISSION = _('ADMISSION')
+    JURY = _('JURY')
+    CONFIRMATION = _('CONFIRMATION')
+    DECISION_DE_RECEVABILITE = _('DECISION_DE_RECEVABILITE')
+    DEFENSE_PRIVEE = _('DEFENSE_PRIVEE')
+    SOUTENANCE_PUBLIQUE = _('SOUTENANCE_PUBLIQUE')
+    ABANDON_ECHEC = _('ABANDON_ECHEC')
+
+
+STATUTS_PAR_ETAPE_PARCOURS_DOCTORAL = {
+    ChoixEtapeParcoursDoctoral.ADMISSION: [],
+    ChoixEtapeParcoursDoctoral.CONFIRMATION: [
+        ChoixStatutParcoursDoctoral.ADMIS,
+        ChoixStatutParcoursDoctoral.CONFIRMATION_SOUMISE,
+        ChoixStatutParcoursDoctoral.CONFIRMATION_A_REPRESENTER,
+        ChoixStatutParcoursDoctoral.CONFIRMATION_REUSSIE,
+        ChoixStatutParcoursDoctoral.NON_AUTORISE_A_POURSUIVRE,
+    ],
+    ChoixEtapeParcoursDoctoral.JURY: [
+        ChoixStatutParcoursDoctoral.JURY_SOUMIS,
+        ChoixStatutParcoursDoctoral.JURY_APPROUVE_CA,
+        ChoixStatutParcoursDoctoral.JURY_APPROUVE_CDD,
+        ChoixStatutParcoursDoctoral.JURY_REFUSE_CDD,
+        ChoixStatutParcoursDoctoral.JURY_APPROUVE_ADRE,
+        ChoixStatutParcoursDoctoral.JURY_REFUSE_ADRE,
+    ],
+    ChoixEtapeParcoursDoctoral.DECISION_DE_RECEVABILITE: [],
+    ChoixEtapeParcoursDoctoral.DEFENSE_PRIVEE: [],
+    ChoixEtapeParcoursDoctoral.SOUTENANCE_PUBLIQUE: [],
+    ChoixEtapeParcoursDoctoral.ABANDON_ECHEC: [
+        ChoixStatutParcoursDoctoral.ABANDON,
+    ],
+}
+
+STATUTS_INACTIFS = {ChoixStatutParcoursDoctoral.ABANDON.name}
+
+STATUTS_ACTIFS = {choix.name for choix in ChoixStatutParcoursDoctoral if choix.name not in STATUTS_INACTIFS}

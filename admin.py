@@ -25,7 +25,6 @@
 # ##############################################################################
 import itertools
 
-from base.models.entity_version import EntityVersion
 from django.conf import settings
 from django.contrib import admin
 from django.db import models
@@ -37,8 +36,9 @@ from django_json_widget.widgets import JSONEditorWidget
 from hijack.contrib.admin import HijackUserAdminMixin
 from osis_document.contrib.fields import FileField
 from osis_mail_template.admin import MailTemplateAdmin
-from osis_role.contrib.admin import RoleModelAdmin
 
+from base.models.entity_version import EntityVersion
+from osis_role.contrib.admin import RoleModelAdmin
 from parcours_doctoral.auth.roles.adre import AdreSecretary
 from parcours_doctoral.auth.roles.ca_member import CommitteeMember
 from parcours_doctoral.auth.roles.cdd_configurator import CddConfigurator
@@ -50,7 +50,7 @@ from parcours_doctoral.ddd.formation.domain.model.enums import (
     CategorieActivite,
     ContexteFormation,
 )
-from parcours_doctoral.models import ParcoursDoctoral
+from parcours_doctoral.models import ConfirmationPaper, ParcoursDoctoral
 from parcours_doctoral.models.activity import Activity
 from parcours_doctoral.models.cdd_config import CddConfiguration
 from parcours_doctoral.models.cdd_mail_template import CddMailTemplate
@@ -304,3 +304,31 @@ class ParcoursDoctoralAdmin(ReadOnlyFilesMixin, admin.ModelAdmin):
     def view_on_portal(self, obj):
         url = f"{settings.OSIS_PORTAL_URL}admin/auth/user/?q={obj.student.global_id}"
         return mark_safe(f'<a class="button" href="{url}" target="_blank">{_("Student on portal")}</a>')
+
+
+@admin.register(ConfirmationPaper)
+class ConfirmationPaperAdmin(ReadOnlyFilesMixin, admin.ModelAdmin):
+    list_display = [
+        'parcours_doctoral_reference',
+        'is_active',
+        'confirmation_date',
+    ]
+    search_fields = [
+        'parcours_doctoral__reference',
+        'parcours_doctoral__student__last_name',
+        'parcours_doctoral__student__first_name',
+    ]
+    autocomplete_fields = [
+        'parcours_doctoral',
+    ]
+    ordering = [
+        'parcours_doctoral__reference',
+        '-created_at',
+    ]
+    list_select_related = [
+        'parcours_doctoral',
+    ]
+
+    @admin.display(description=_('Related doctorate'))
+    def parcours_doctoral_reference(self, obj):
+        return obj.parcours_doctoral.reference

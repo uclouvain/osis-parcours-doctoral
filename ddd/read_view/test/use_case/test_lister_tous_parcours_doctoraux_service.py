@@ -26,7 +26,7 @@
 
 from django.test import TestCase
 
-from parcours_doctoral.ddd.commands import ListerTousParcoursDoctorauxQuery
+from parcours_doctoral.ddd.read_view.queries import ListerTousParcoursDoctorauxQuery
 from parcours_doctoral.infrastructure.message_bus_in_memory import (
     message_bus_in_memory_instance,
 )
@@ -37,7 +37,7 @@ from parcours_doctoral.infrastructure.parcours_doctoral.repository.in_memory.par
 
 class TestListerTousParcoursDoctoral(TestCase):
     def setUp(self) -> None:
-        self.cmd = ListerTousParcoursDoctorauxQuery(matricule_etudiant='1')
+        self.cmd = ListerTousParcoursDoctorauxQuery(matricule_doctorant='1')
         self.message_bus = message_bus_in_memory_instance
         ParcoursDoctoralInMemoryRepository.reset()
 
