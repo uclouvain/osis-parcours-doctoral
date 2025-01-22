@@ -1,6 +1,5 @@
-{% extends "parcours_doctoral/details/tab_layout.html" %}
-{% load i18n parcours_doctoral %}
-{% load osis_document %}
+{% extends "parcours_doctoral/forms/tab_layout.html" %}
+{% load i18n parcours_doctoral django_bootstrap5 %}
 
 {% comment "License" %}
 * OSIS stands for Open Student Information System. It's an application
@@ -26,26 +25,10 @@
 * see http://www.gnu.org/licenses/.
 {% endcomment %}
 
-{% block additional_actions %}
-  <li>
-    <a class="dropdown-item" href="{% url 'parcours_doctoral:update:extension-request-opinion' uuid=view.kwargs.uuid %}">
-      {% trans "Accept / Reject" %}
-    </a>
-  </li>
+{% block tab_content_header %}
+  <h3>{% trans "Request of a new deadline for the confirmation paper" %}</h3>
 {% endblock %}
 
-{% block tab_content %}
-  <h3>{% trans "Request of a new deadline for the confirmation paper" %}</h3>
-  {% if confirmation_paper.demande_prolongation %}
-    <div>
-      {% field_data _("Proposed new deadline") confirmation_paper.demande_prolongation.nouvelle_echeance inline=True %}
-      {% field_data _("Brief justification") confirmation_paper.demande_prolongation.justification_succincte html_tag="blockquote" %}
-      {% field_data _("Justification letter") confirmation_paper.demande_prolongation.lettre_justification %}
-      {% field_data _("CDD opinion") confirmation_paper.demande_prolongation.avis_cdd html_tag="blockquote" %}
-    </div>
-  {% else %}
-    <p>
-      <strong>{% trans "There is no request for a new deadline." %}</strong>
-    </p>
-  {% endif %}
+{% block form_content %}
+  {% bootstrap_field form.avis_cdd %}
 {% endblock %}

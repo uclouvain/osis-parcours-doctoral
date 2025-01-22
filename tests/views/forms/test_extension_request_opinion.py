@@ -25,7 +25,6 @@
 # ##############################################################################
 import datetime
 import uuid
-from unittest.mock import patch
 
 from django.shortcuts import resolve_url
 from django.test import TestCase, override_settings
@@ -43,7 +42,7 @@ from parcours_doctoral.tests.factories.supervision import PromoterFactory
 
 
 @override_settings(OSIS_DOCUMENT_BASE_URL='http://dummyurl')
-class ExtensionRequestFormViewTestCase(TestCase):
+class ExtensionRequestOpinionFormViewTestCase(TestCase):
     @classmethod
     def setUpTestData(cls):
         # Create some academic years
@@ -64,71 +63,36 @@ class ExtensionRequestFormViewTestCase(TestCase):
         cls.manager = ProgramManagerFactory(
             education_group=cls.parcours_doctoral_without_confirmation_paper.training.education_group
         ).person.user
-        cls.update_path = 'parcours_doctoral:update:extension-request'
+        cls.update_path = 'parcours_doctoral:update:extension-request-opinion'
         cls.read_path = 'parcours_doctoral:extension-request'
-        cls.file_uuid = uuid.uuid4()
-        cls.other_file_uuid = uuid.uuid4()
-        cls.tokens = {
-            cls.file_uuid: 'token-1',
-            cls.other_file_uuid: 'token-2',
-        }
 
     def setUp(self):
         self.client.force_login(user=self.manager)
-
-        # Mock documents
-        patcher = patch(
-            "osis_document.api.utils.get_remote_token", side_effect=lambda value, **kwargs: self.tokens[value]
-        )
-        patcher.start()
-        self.addCleanup(patcher.stop)
-
-        patcher = patch(
-            "osis_document.api.utils.get_remote_metadata",
-            return_value={"name": "myfile", "mimetype": "application/pdf", "size": 1},
-        )
-        patcher.start()
-        self.addCleanup(patcher.stop)
-
-        patcher = patch(
-            "osis_document.api.utils.confirm_remote_upload",
-            side_effect=lambda token, *args, **kwargs: token,
-        )
-        patcher.start()
-        self.addCleanup(patcher.stop)
-
-        patcher = patch(
-            "osis_document.contrib.fields.FileField._confirm_multiple_upload",
-            side_effect=lambda _, value, __: value,
-        )
-        patcher.start()
-        self.addCleanup(patcher.stop)
-
-        self.confirmation_paper_with_extension_request: ConfirmationPaper = ConfirmationPaperFactory(
+        self.confirmation_paper_with_extension_request = ConfirmationPaperFactory(
             parcours_doctoral=self.parcours_doctoral_with_confirmation_papers,
             confirmation_date=datetime.date(2022, 4, 1),
             confirmation_deadline=datetime.date(2022, 4, 5),
             extended_deadline=datetime.date(2023, 1, 1),
             cdd_opinion='My opinion',
-            justification_letter=[self.file_uuid],
+            justification_letter=[],
             brief_justification='My reason',
         )
 
-    def test_get_extension_request_form_cdd_user_with_unknown_parcours_doctoral(self):
+    def test_get_extension_request_opinion_form_cdd_user_with_unknown_parcours_doctoral(self):
         url = reverse(self.update_path, args=[uuid.uuid4()])
 
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, HTTP_404_NOT_FOUND)
 
-    def test_get_extension_request_form_cdd_user_without_confirmation_paper(self):
+    def test_get_extension_request_opinion_form_cdd_user_without_confirmation_paper(self):
         url = reverse(self.update_path, args=[self.parcours_doctoral_without_confirmation_paper.uuid])
 
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, HTTP_404_NOT_FOUND)
 
-    def test_get_extension_request_form_cdd_user_with_confirmation_paper_with_extension_request(self):
+    def test_get_extension_request_opinion_form_cdd_user_with_confirmation_paper_with_extension_request(self):
         url = reverse(self.update_path, args=[self.parcours_doctoral_with_confirmation_papers.uuid])
 
         response = self.client.get(url)
@@ -139,14 +103,12 @@ class ExtensionRequestFormViewTestCase(TestCase):
             response.context.get('parcours_doctoral').uuid,
             str(self.parcours_doctoral_with_confirmation_papers.uuid),
         )
+        self.assertEqual(
+            response.context['form'].initial['avis_cdd'],
+            'My opinion',
+        )
 
-        form = response.context['form']
-
-        self.assertEqual(form['nouvelle_echeance'].value(), datetime.date(2023, 1, 1))
-        self.assertEqual(form['justification_succincte'].value(), 'My reason')
-        self.assertEqual(form['lettre_justification'].value(), [self.tokens[self.file_uuid]])
-
-    def test_get_extension_request_form_cdd_user_with_confirmation_paper_without_extension_request(self):
+    def test_get_extension_request_opinion_form_cdd_user_with_confirmation_paper_without_extension_request(self):
         self.confirmation_paper_with_extension_request.is_active = False
         self.confirmation_paper_with_extension_request.save()
 
@@ -166,29 +128,39 @@ class ExtensionRequestFormViewTestCase(TestCase):
             response.context.get('parcours_doctoral').uuid,
             str(self.parcours_doctoral_with_confirmation_papers.uuid),
         )
-        form = response.context['form']
-        self.assertEqual(form['nouvelle_echeance'].value(), None)
-        self.assertEqual(form['justification_succincte'].value(), None)
-        self.assertEqual(form['lettre_justification'].value(), [])
+        self.assertEqual(response.context['form'].initial, {})
 
-    def test_post_extension_request_form_cdd_user_with_confirmation_paper_with_extension_request(self):
+    def test_post_extension_request_opinion_form_cdd_user_with_confirmation_paper_with_extension_request(self):
         url = reverse(self.update_path, args=[self.parcours_doctoral_with_confirmation_papers.uuid])
 
-        response = self.client.post(
-            url,
-            data={
-                'nouvelle_echeance': datetime.date(2023, 1, 2),
-                'justification_succincte': 'My new reason',
-                'lettre_justification_0': [self.other_file_uuid],
-            },
-        )
+        response = self.client.post(url, data={'avis_cdd': 'My new opinion'})
 
         self.assertRedirects(
-            response,
-            resolve_url(self.read_path, uuid=self.parcours_doctoral_with_confirmation_papers.uuid),
+            response, resolve_url(self.read_path, uuid=self.parcours_doctoral_with_confirmation_papers.uuid)
         )
 
-        self.confirmation_paper_with_extension_request.refresh_from_db()
-        self.assertEqual(self.confirmation_paper_with_extension_request.extended_deadline, datetime.date(2023, 1, 2))
-        self.assertEqual(self.confirmation_paper_with_extension_request.brief_justification, 'My new reason')
-        self.assertEqual(self.confirmation_paper_with_extension_request.justification_letter, [self.other_file_uuid])
+        updated_confirmation_paper = ConfirmationPaper.objects.get(
+            uuid=self.confirmation_paper_with_extension_request.uuid,
+        )
+        self.assertEqual(updated_confirmation_paper.cdd_opinion, 'My new opinion')
+
+    def test_post_extension_request_opinion_form_cdd_user_with_confirmation_paper_without_extension_request(self):
+        self.confirmation_paper_with_extension_request.is_active = False
+        self.confirmation_paper_with_extension_request.save()
+
+        self.confirmation_paper_without_extension_request = ConfirmationPaperFactory(
+            parcours_doctoral=self.parcours_doctoral_with_confirmation_papers,
+            confirmation_date=datetime.date(2022, 6, 1),
+            confirmation_deadline=datetime.date(2022, 6, 5),
+        )
+
+        url = reverse(self.update_path, kwargs={'uuid': self.parcours_doctoral_with_confirmation_papers.uuid})
+
+        response = self.client.post(url, data={'avis_cdd': 'My new opinion'})
+
+        self.assertEqual(response.status_code, HTTP_200_OK)
+        self.assertEqual(
+            response.wsgi_request.path,
+            resolve_url(self.update_path, uuid=self.parcours_doctoral_with_confirmation_papers.uuid),
+        )
+        self.assertFormError(response, 'form', None, ['Demande de prolongation non définie.'])

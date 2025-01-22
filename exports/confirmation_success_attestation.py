@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -23,32 +23,22 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from django.conf import settings
+from django.utils import translation
+
 from base.models.enums.person_address_type import PersonAddressType
 from base.models.person_address import PersonAddress
-from django.conf import settings
-from django.db.models import QuerySet
-from django.utils import translation
+from infrastructure.messages_bus import message_bus_instance
+from parcours_doctoral.ddd.commands import RecupererParcoursDoctoralQuery
+from parcours_doctoral.ddd.dtos import ParcoursDoctoralDTO
+from parcours_doctoral.exports.utils import parcours_doctoral_generate_pdf
+from parcours_doctoral.models import ConfirmationPaper, ParcoursDoctoralTask, Activity
+from parcours_doctoral.utils.formatting import format_address
 from reference.services.mandates import (
     MandateFunctionEnum,
     MandatesException,
     MandatesService,
 )
-
-from infrastructure.messages_bus import message_bus_instance
-from parcours_doctoral.ddd.commands import RecupererParcoursDoctoralQuery
-from parcours_doctoral.ddd.dtos import ParcoursDoctoralDTO
-from parcours_doctoral.exports.utils import parcours_doctoral_generate_pdf
-from parcours_doctoral.models import ConfirmationPaper, ParcoursDoctoralTask
-
-
-def format_address(address, language):
-    """Return the concatenation of the street, street number, postal code, city and state of an address."""
-    address_parts = [
-        '{street} {street_number}'.format_map(address),
-        '{postal_code} {city}'.format_map(address),
-        address.get('country__name' if language == settings.LANGUAGE_CODE else 'country__name_en'),
-    ]
-    return ', '.join(filter(lambda part: part and len(part) > 1, address_parts))
 
 
 def confirmation_success_attestation(task_uuid, language=None):
@@ -67,25 +57,40 @@ def confirmation_success_attestation(task_uuid, language=None):
         )
 
         confirmation_paper = ConfirmationPaper.objects.filter(
-            parcours_doctoral=doctorate_task.parcours_doctoral
+            parcours_doctoral=doctorate_task.parcours_doctoral,
+            is_active=True,
         ).first()
 
-        addresses: QuerySet[PersonAddress] = (
-            PersonAddress.objects.filter(person=doctorate_task.parcours_doctoral.student)
-            .select_related('country')
-            .values('street', 'street_number', 'postal_code', 'city', 'country__name', 'country__name_en')
+        doctoral_training_ects_nb = Activity.objects.get_doctoral_training_credits_number(
+            parcours_doctoral_uuid=doctorate_dto.uuid,
         )
 
-        contact_address = (
-            format_address(
-                address=addresses.filter(label=PersonAddressType.CONTACT.name).first()
-                or addresses.filter(label=PersonAddressType.RESIDENTIAL.name).first()
-                or addresses[0],
-                language=current_language,
-            )
-            if addresses
-            else None
+        addresses = (
+            PersonAddress.objects.filter(person=doctorate_task.parcours_doctoral.student)
+            .select_related('country')
+            .only('street', 'street_number', 'postal_code', 'city', 'country__name', 'country__name_en')
         )
+
+        if addresses:
+            contact_address = (
+                addresses.filter(label=PersonAddressType.CONTACT.name).first()
+                or addresses.filter(label=PersonAddressType.RESIDENTIAL.name).first()
+                or addresses[0]
+            )
+
+            contact_address = format_address(
+                street=contact_address.street,
+                street_number=contact_address.street_number,
+                postal_code=contact_address.postal_code,
+                city=contact_address.city,
+                country=getattr(
+                    contact_address.country,
+                    'name' if current_language == settings.LANGUAGE_CODE else 'name_en',
+                ),
+            )
+
+        else:
+            contact_address = ''
 
         cdd_president = []
         if settings.ESB_API_URL:
@@ -106,6 +111,7 @@ def confirmation_success_attestation(task_uuid, language=None):
                 'contact_address': contact_address,
                 'cdd_president': cdd_president[0] if cdd_president else {},
                 'confirmation_paper': confirmation_paper,
+                'doctoral_training_ects_nb': doctoral_training_ects_nb,
             },
         )
 

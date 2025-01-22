@@ -25,8 +25,7 @@
 # ##############################################################################
 import re
 from dataclasses import dataclass
-from functools import wraps
-from inspect import getfullargspec
+from typing import List, Optional
 
 import attr
 from django import template
@@ -136,7 +135,7 @@ def get_active_parent(tab_tree, tab_name):
 @register.simple_tag(takes_context=True)
 def default_tab_context(context):
     match = context['request'].resolver_match
-    active_tab = match.url_name
+    active_tab = context.get('active_tab', match.url_name)
     active_parent = get_active_parent(TAB_TREE, active_tab)
 
     if len(match.namespaces) > 1 and match.namespaces[1] != 'update':
@@ -219,7 +218,7 @@ def can_update_tab(context, tab_name, obj=None):
 def detail_tab_path_from_update(context, parcours_doctoral_uuid):
     """From an update page, get the path of the detail page."""
     match = context['request'].resolver_match
-    current_tab_name = match.url_name
+    current_tab_name = context.get('active_tab', match.url_name)
     if len(match.namespaces) > 1 and match.namespaces[1] != 'update':
         current_tab_name = match.namespaces[1]
     return reverse(
@@ -232,16 +231,17 @@ def detail_tab_path_from_update(context, parcours_doctoral_uuid):
 def update_tab_path_from_detail(context, parcours_doctoral_uuid):
     """From a detail page, get the path of the update page."""
     match = context['request'].resolver_match
+    current_tab_name = context.get('active_tab', match.url_name)
     try:
         return reverse(
-            '{}:update:{}'.format(':'.join(match.namespaces), match.url_name),
+            '{}:update:{}'.format(':'.join(match.namespaces), current_tab_name),
             args=[parcours_doctoral_uuid],
         )
     except NoReverseMatch:
         if len(match.namespaces) > 1:
             path = ':'.join(match.namespaces[:2])
         else:
-            path = '{}:{}'.format(':'.join(match.namespaces), match.url_name)
+            path = '{}:{}'.format(':'.join(match.namespaces), current_tab_name)
         return reverse(
             path,
             args=[parcours_doctoral_uuid],

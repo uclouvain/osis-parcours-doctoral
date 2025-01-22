@@ -30,47 +30,34 @@ from parcours_doctoral.ddd.epreuve_confirmation.builder.epreuve_confirmation_ide
     EpreuveConfirmationIdentityBuilder,
 )
 from parcours_doctoral.ddd.epreuve_confirmation.commands import (
-    SoumettreEpreuveConfirmationCommand,
-)
-from parcours_doctoral.ddd.epreuve_confirmation.domain.service.i_notification import (
-    INotification,
+    SoumettreReportDeDateParCDDCommand,
 )
 from parcours_doctoral.ddd.epreuve_confirmation.repository.i_epreuve_confirmation import (
     IEpreuveConfirmationRepository,
 )
-from parcours_doctoral.ddd.repository.i_parcours_doctoral import (
-    IParcoursDoctoralRepository,
-)
 
 
-def soumettre_epreuve_confirmation(
-    cmd: 'SoumettreEpreuveConfirmationCommand',
-    parcours_doctoral_repository: 'IParcoursDoctoralRepository',
+def soumettre_report_de_date_par_cdd(
+    cmd: 'SoumettreReportDeDateParCDDCommand',
     epreuve_confirmation_repository: 'IEpreuveConfirmationRepository',
-    notification: 'INotification',
 ) -> ParcoursDoctoralIdentity:
     # GIVEN
     epreuve_confirmation_id = EpreuveConfirmationIdentityBuilder.build_from_uuid(cmd.uuid)
     epreuve_confirmation = epreuve_confirmation_repository.get(epreuve_confirmation_id)
 
-    epreuve_confirmation.verifier(
-        date=cmd.date,
+    epreuve_confirmation.verifier_demande_prolongation(
+        nouvelle_echeance=cmd.nouvelle_echeance,
+        justification_succincte=cmd.justification_succincte,
     )
-
-    parcours_doctoral = parcours_doctoral_repository.get(epreuve_confirmation.parcours_doctoral_id)
 
     # WHEN
-    epreuve_confirmation.modifier(
-        date=cmd.date,
-        rapport_recherche=cmd.rapport_recherche,
-        proces_verbal_ca=cmd.proces_verbal_ca,
-        avis_renouvellement_mandat_recherche=cmd.avis_renouvellement_mandat_recherche,
+    epreuve_confirmation.faire_demande_prolongation(
+        nouvelle_echeance=cmd.nouvelle_echeance,
+        justification_succincte=cmd.justification_succincte,
+        lettre_justification=cmd.lettre_justification,
     )
-    parcours_doctoral.soumettre_epreuve_confirmation()
 
     # THEN
-    notification.notifier_soumission(epreuve_confirmation=epreuve_confirmation)
-    parcours_doctoral_repository.save(parcours_doctoral)
     epreuve_confirmation_repository.save(epreuve_confirmation)
 
     return epreuve_confirmation.parcours_doctoral_id

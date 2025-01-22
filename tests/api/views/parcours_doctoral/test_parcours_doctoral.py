@@ -36,7 +36,8 @@ from base.tests.factories.entity_version import EntityVersionFactory
 from base.tests.factories.person import PersonFactory
 from parcours_doctoral.ddd.domain.model.enums import (
     ChoixDoctoratDejaRealise,
-    ChoixTypeFinancement, ChoixStatutParcoursDoctoral,
+    ChoixTypeFinancement,
+    ChoixStatutParcoursDoctoral,
 )
 from parcours_doctoral.tests.factories.parcours_doctoral import ParcoursDoctoralFactory
 from parcours_doctoral.tests.factories.supervision import PromoterFactory

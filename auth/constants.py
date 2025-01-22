@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -46,6 +46,7 @@ READ_ACTIONS_BY_TAB = {
     # Confirmation exam
     'confirmation': 'parcours_doctoral.view_confirmation',
     'extension-request': 'parcours_doctoral.view_confirmation',
+    'extension-request-opinion': 'parcours_doctoral.view_confirmation',
     # History
     'history': 'parcours_doctoral.view_historyentry',
     'history-all': 'parcours_doctoral.view_historyentry',
@@ -90,6 +91,7 @@ UPDATE_ACTIONS_BY_TAB = {
     # Confirmation exam
     'confirmation': 'parcours_doctoral.change_confirmation',
     'extension-request': 'parcours_doctoral.change_confirmation_extension',
+    'extension-request-opinion': 'parcours_doctoral.change_confirmation_extension',
     # Mails
     'send-mail': 'parcours_doctoral.send_message',
     # Training

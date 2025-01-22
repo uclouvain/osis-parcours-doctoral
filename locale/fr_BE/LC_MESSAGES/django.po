@@ -207,6 +207,9 @@ msgstr "Résumé"
 msgid "Accept"
 msgstr "Accepter"
 
+msgid "Accept / Reject"
+msgstr "Accepter / Refuser"
+
 msgid "Accept selected activities"
 msgstr "Accepter les activités sélectionnées"
 
@@ -908,6 +911,18 @@ msgstr "Commissions doctorales"
 msgid "Doctoral student"
 msgstr "Doctorant·e"
 
+msgctxt "female gender"
+msgid "Doctoral student"
+msgstr "Doctorante"
+
+msgctxt "gender"
+msgid "Doctoral student"
+msgstr "Doctorant·e"
+
+msgctxt "male gender"
+msgid "Doctoral student"
+msgstr "Doctorant"
+
 msgid "Doctoral training"
 msgstr "Formation doctorale"
 
@@ -1144,6 +1159,13 @@ msgstr "Photo d'identité de l'étudiant"
 
 msgid "Identifier"
 msgstr "Identifiant"
+
+msgid ""
+"If applicable, please upload here the opinion of your support committee on "
+"the extension request."
+msgstr ""
+"Le cas échéant, veuillez téléverser ici l’avis de votre comité "
+"d’accompagnement sur la demande de prolongation."
 
 msgid ""
 "If necessary, please finish inputting doctoral activities and complete the "
@@ -2481,6 +2503,10 @@ msgctxt "female gender"
 msgid "The doctoral student"
 msgstr "La doctorante"
 
+msgctxt "gender"
+msgid "The doctoral student"
+msgstr "La·Le doctorant·e"
+
 msgctxt "male gender"
 msgid "The doctoral student"
 msgstr "Le doctorant"
@@ -2526,8 +2552,14 @@ msgstr "Le membre n'a pas été trouvé dans le jury."
 #, python-format
 msgid ""
 "The number of acquired <strong>doctoral</strong> credits amounts to "
+"%(credits_nb)s credit."
+msgid_plural ""
+"The number of acquired <strong>doctoral</strong> credits amounts to "
 "%(credits_nb)s credits."
-msgstr ""
+msgstr[0] ""
+"Le nombre de crédits acquis de <strong>formation doctorale</strong> s'élève "
+"à %(credits_nb)s crédit."
+msgstr[1] ""
 "Le nombre de crédits acquis de <strong>formation doctorale</strong> s'élève "
 "à %(credits_nb)s crédits."
 

@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -67,6 +67,10 @@ COMMAND_HANDLERS = {
         cmd,
         epreuve_confirmation_repository=_epreuve_confirmation_repository,
         notification=_notification,
+    ),
+    SoumettreReportDeDateParCDDCommand: lambda msg_bus, cmd: soumettre_report_de_date_par_cdd(
+        cmd,
+        epreuve_confirmation_repository=_epreuve_confirmation_repository,
     ),
     SoumettreAvisProlongationCommand: lambda msg_bus, cmd: soumettre_avis_prolongation(
         cmd,

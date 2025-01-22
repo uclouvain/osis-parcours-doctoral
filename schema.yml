@@ -1418,6 +1418,8 @@ components:
                   type: string
                 pays:
                   type: string
+                nom_pays:
+                  type: string
                 numero_telephone:
                   type: string
                 code_secteur:
@@ -1547,6 +1549,8 @@ components:
       properties:
         uuid:
           type: string
+        uuid_admission:
+          type: string
         reference:
           type: string
         statut:
@@ -1555,6 +1559,10 @@ components:
           type: string
           format: date-time
           nullable: true
+        justification:
+          type: string
+        intitule_secteur_formation:
+          type: string
         cree_le:
           type: string
           format: date-time
@@ -1587,6 +1595,8 @@ components:
                 ville:
                   type: string
                 pays:
+                  type: string
+                nom_pays:
                   type: string
                 numero_telephone:
                   type: string
@@ -1887,8 +1897,10 @@ components:
           default: {}
       required:
       - uuid
+      - uuid_admission
       - reference
       - statut
+      - intitule_secteur_formation
       - cree_le
       - formation
       - projet
@@ -2077,6 +2089,8 @@ components:
                     ville:
                       type: string
                     pays:
+                      type: string
+                    nom_pays:
                       type: string
                     numero_telephone:
                       type: string

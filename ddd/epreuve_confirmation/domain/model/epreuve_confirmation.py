@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -96,7 +96,7 @@ class EpreuveConfirmation(interface.RootEntity):
         self.proces_verbal_ca = proces_verbal_ca
         self.avis_renouvellement_mandat_recherche = avis_renouvellement_mandat_recherche
 
-    def soumettre(
+    def modifier(
         self,
         date: datetime.date,
         rapport_recherche: List[str],
@@ -111,10 +111,8 @@ class EpreuveConfirmation(interface.RootEntity):
     def verifier(
         self,
         date: Optional[datetime.date],
-        date_limite: datetime.date,
     ):
         SoumettreEpreuveConfirmationValidatorList(
-            date_limite=date_limite,
             date=date,
         ).validate()
 

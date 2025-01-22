@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -359,27 +359,6 @@ class LastConfirmationAPIViewTestCase(APITestCase):
         self.assertEqual(
             response.json()['non_field_errors'][0]['status_code'],
             EpreuveConfirmationNonTrouveeException.status_code,
-        )
-
-    def test_update_last_confirmation_with_invalid_date(self):
-        self.client.force_authenticate(user=self.student.user)
-
-        # Invalid date
-        response = self.client.put(
-            self.url,
-            format='json',
-            data={
-                'date': datetime.date(2022, 5, 15).isoformat(),
-                'rapport_recherche': [],
-                'proces_verbal_ca': [],
-                'avis_renouvellement_mandat_recherche': [],
-            },
-        )
-
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(
-            response.json()['non_field_errors'][0]['status_code'],
-            EpreuveConfirmationDateIncorrecteException.status_code,
         )
 
     def test_submit_extension_request(self):

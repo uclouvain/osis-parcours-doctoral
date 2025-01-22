@@ -406,6 +406,15 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
         if not management_entities_ids:
             return {}
 
+        i18n_fields = {
+            settings.LANGUAGE_CODE_EN: {
+                'country_name': 'entity__country__name_en',
+            },
+            settings.LANGUAGE_CODE_FR: {
+                'country_name': 'entity__country__name',
+            },
+        }[get_language()]
+
         cte = EntityVersion.objects.with_children(
             'acronym',
             'entity_type',
@@ -414,6 +423,7 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
             'entity__location',
             'entity__city',
             'entity__country__iso_code',
+            i18n_fields['country_name'],
             'entity__phone',
             entity_id__in=management_entities_ids,
         )
@@ -445,6 +455,7 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
                     code_postal=management_entity['entity__postal_code'],
                     ville=management_entity['entity__city'],
                     pays=management_entity['entity__country__iso_code'],
+                    nom_pays=management_entity[i18n_fields['country_name']],
                     numero_telephone=management_entity['entity__phone'],
                 )
                 if management_entity

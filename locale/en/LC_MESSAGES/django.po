@@ -165,6 +165,9 @@ msgstr ""
 msgid "Accept"
 msgstr ""
 
+msgid "Accept / Reject"
+msgstr ""
+
 msgid "Accept selected activities"
 msgstr ""
 
@@ -853,6 +856,18 @@ msgstr ""
 msgid "Doctoral student"
 msgstr ""
 
+msgctxt "female gender"
+msgid "Doctoral student"
+msgstr ""
+
+msgctxt "gender"
+msgid "Doctoral student"
+msgstr ""
+
+msgctxt "male gender"
+msgid "Doctoral student"
+msgstr ""
+
 msgid "Doctoral training"
 msgstr ""
 
@@ -1081,6 +1096,11 @@ msgid "Identification photo of the student"
 msgstr ""
 
 msgid "Identifier"
+msgstr ""
+
+msgid ""
+"If applicable, please upload here the opinion of your support committee on "
+"the extension request."
 msgstr ""
 
 msgid ""
@@ -2313,6 +2333,10 @@ msgctxt "female gender"
 msgid "The doctoral student"
 msgstr ""
 
+msgctxt "gender"
+msgid "The doctoral student"
+msgstr ""
+
 msgctxt "male gender"
 msgid "The doctoral student"
 msgstr ""
@@ -2357,8 +2381,12 @@ msgstr ""
 #, python-format
 msgid ""
 "The number of acquired <strong>doctoral</strong> credits amounts to "
+"%(credits_nb)s credit."
+msgid_plural ""
+"The number of acquired <strong>doctoral</strong> credits amounts to "
 "%(credits_nb)s credits."
-msgstr ""
+msgstr[0] ""
+msgstr[1] ""
 
 msgid "The opinion about the extension request is not completed."
 msgstr ""
