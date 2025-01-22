@@ -421,13 +421,13 @@ msgstr ""
 msgid "Are you sure you want to restore \"%(object)s\"?"
 msgstr ""
 
+msgid "Are you sure you want to withdraw the student from this assessment?"
+msgstr ""
+
 msgid "Are you sure your want to delete this document?"
 msgstr ""
 
 msgid "As it appears in an official course catalogue"
-msgstr ""
-
-msgid "Are you sure you want to withdraw the student from this assessment?"
 msgstr ""
 
 msgid "Assessment enrollments"
@@ -787,7 +787,7 @@ msgctxt "doctorate"
 msgid "Courses"
 msgstr ""
 
-msgid "Courses taken"
+msgid "Courses and trainings"
 msgstr ""
 
 #, python-format
@@ -1876,9 +1876,6 @@ msgstr ""
 msgid "Opinion on research mandate renewal"
 msgstr ""
 
-msgid "Oral communication"
-msgstr ""
-
 msgid "Oral presentation"
 msgstr "Oral exposé"
 
@@ -1944,13 +1941,16 @@ msgstr ""
 msgid "Page size"
 msgstr ""
 
+msgid "Participating proof"
+msgstr ""
+
 msgid "Participation"
 msgstr ""
 
 msgid "Participation certification"
 msgstr ""
 
-msgid "Participation to symposium/conference"
+msgid "Participations"
 msgstr ""
 
 msgid "Partner institution"
@@ -2390,6 +2390,9 @@ msgstr ""
 msgid "Scholarship start date"
 msgstr ""
 
+msgid "Scientific communications"
+msgstr ""
+
 msgid "Scientific residencies"
 msgstr ""
 
@@ -2434,9 +2437,6 @@ msgid "Select the inactive statuses"
 msgstr ""
 
 msgid "Selection committee"
-msgstr ""
-
-msgid "Seminar taken"
 msgstr ""
 
 msgid "Send a mail"
@@ -2688,14 +2688,14 @@ msgstr ""
 msgid "The activity title"
 msgstr ""
 
+msgid "The assessment enrollment has not been found"
+msgstr ""
+
 msgid ""
 "The authorized publications and their valuation in credits are specified on "
 "the website of you domain doctoral commission. If the publication must be "
 "associated to a conference, first input the conference and use the menu "
 "action \"Add a publication to this conference\""
-msgstr ""
-
-msgid "The assessment enrollment has not been found"
 msgstr ""
 
 msgid "The certificate of achievement is being generated."
@@ -3022,6 +3022,9 @@ msgctxt "parcours_doctoral"
 msgid "Tokens that can be used for replacement"
 msgstr ""
 
+msgid "Total"
+msgstr ""
+
 msgid "Total hourly volume"
 msgstr ""
 
@@ -3143,10 +3146,10 @@ msgstr ""
 msgid "With reading committee"
 msgstr ""
 
-msgid "Without reading committee"
+msgid "Withdraw"
 msgstr ""
 
-msgid "Withdraw"
+msgid "Without reading committee"
 msgstr ""
 
 msgid "Work contract"

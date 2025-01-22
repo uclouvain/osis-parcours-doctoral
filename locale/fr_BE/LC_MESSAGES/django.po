@@ -475,15 +475,15 @@ msgstr "Êtes-vous sûr de vouloir retirer \"%(prenom)s %(nom)s\" du jury ?"
 msgid "Are you sure you want to restore \"%(object)s\"?"
 msgstr "Êtes-vous sûr de vouloir remettre \"%(object)s\" au statut soumis ?"
 
+msgid "Are you sure you want to withdraw the student from this assessment?"
+msgstr ""
+"Êtes-vous sûr de vouloir désinscrire l'étudiant·e de cette évaluation ?"
+
 msgid "Are you sure your want to delete this document?"
 msgstr "Êtes-vous sûr de vouloir supprimer ce document ?"
 
 msgid "As it appears in an official course catalogue"
 msgstr "Tel qu’il apparait dans un catalogue officiel de formation"
-
-msgid "Are you sure you want to withdraw the student from this assessment?"
-msgstr ""
-"Êtes-vous sûr de vouloir désinscrire l'étudiant·e de cette évaluation ?"
 
 msgid "Assessment enrollments"
 msgstr "Inscriptions aux évaluations"
@@ -848,8 +848,8 @@ msgctxt "doctorate"
 msgid "Courses"
 msgstr "Formations"
 
-msgid "Courses taken"
-msgstr "Cours suivis"
+msgid "Courses and trainings"
+msgstr "Cours et formation"
 
 #, python-format
 msgid "Create the confirmation paper success attestation (%(reference)s)"
@@ -2037,9 +2037,6 @@ msgstr "Avis du comité d'accompagnement suivant le format fourni par la CDD"
 msgid "Opinion on research mandate renewal"
 msgstr "Avis sur le renouvellement du mandat de recherche"
 
-msgid "Oral communication"
-msgstr "Communication orale"
-
 msgid "Oral presentation"
 msgstr "Exposé oral"
 
@@ -2105,14 +2102,17 @@ msgstr "Page"
 msgid "Page size"
 msgstr "Taille de la page"
 
+msgid "Participating proof"
+msgstr "Preuve de participation"
+
 msgid "Participation"
 msgstr "Participation"
 
 msgid "Participation certification"
 msgstr "Certificat de participation"
 
-msgid "Participation to symposium/conference"
-msgstr "Participation à des colloques/conférences"
+msgid "Participations"
+msgstr "Participations"
 
 msgid "Partner institution"
 msgstr "Institution partenaire"
@@ -2573,6 +2573,9 @@ msgstr "Boursier"
 msgid "Scholarship start date"
 msgstr "Date de démarrage de la bourse"
 
+msgid "Scientific communications"
+msgstr "Communications scientifiques"
+
 msgid "Scientific residencies"
 msgstr "Séjours scientifiques"
 
@@ -2618,9 +2621,6 @@ msgstr "Sélectionner les états inactifs"
 
 msgid "Selection committee"
 msgstr "Comité de sélection"
-
-msgid "Seminar taken"
-msgstr "Séminaires suivis"
 
 msgid "Send a mail"
 msgstr "Envoyer un e-mail"
@@ -2888,6 +2888,9 @@ msgstr "L'acronyme de la bourse d'études"
 msgid "The activity title"
 msgstr "Le titre de l'activité"
 
+msgid "The assessment enrollment has not been found"
+msgstr "L'inscription à l'évaluation n'a pas été trouvée"
+
 msgid ""
 "The authorized publications and their valuation in credits are specified on "
 "the website of you domain doctoral commission. If the publication must be "
@@ -2899,9 +2902,6 @@ msgstr ""
 "doit être associée à une conférence, encoder d'abord la conférence et "
 "utiliser ensuite l'action du menu \"Ajouter une publication à cette "
 "conférence\""
-
-msgid "The assessment enrollment has not been found"
-msgstr "L'inscription à l'évaluation n'a pas été trouvée"
 
 msgid "The certificate of achievement is being generated."
 msgstr "L'attestation de réussite est en cours de génération."
@@ -3286,6 +3286,9 @@ msgctxt "parcours_doctoral"
 msgid "Tokens that can be used for replacement"
 msgstr "Tokens pouvant être utilisés"
 
+msgid "Total"
+msgstr "Total"
+
 msgid "Total hourly volume"
 msgstr "Volume horaire total"
 
@@ -3370,7 +3373,7 @@ msgid "Upload the opinion on the renewal of the research mandate"
 msgstr "Téléverser l'avis sur le renouvellement du mandat de recherche"
 
 msgid "VAE"
-msgstr "Valorisation des acquis de l'expérience"
+msgstr "VAE"
 
 msgctxt "CategorieActivite"
 msgid "VAE"
@@ -3417,11 +3420,11 @@ msgstr "Site web"
 msgid "With reading committee"
 msgstr "Avec comité de lecture"
 
-msgid "Without reading committee"
-msgstr "Sans comité de lecture"
-
 msgid "Withdraw"
 msgstr "Désinscrire"
+
+msgid "Without reading committee"
+msgstr "Sans comité de lecture"
 
 msgid "Work contract"
 msgstr "Type de contrat de travail"
