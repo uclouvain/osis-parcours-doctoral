@@ -230,7 +230,7 @@ class ParcoursDoctoral(models.Model):
 
     student = models.ForeignKey(
         to="base.Person",
-        verbose_name=_("Student"),
+        verbose_name=pgettext_lazy("parcours_doctoral", "Student"),
         related_name="%(class)ss",
         on_delete=models.PROTECT,
         editable=False,

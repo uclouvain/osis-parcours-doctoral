@@ -288,7 +288,7 @@ class ParcoursDoctoralAdmin(ReadOnlyFilesMixin, admin.ModelAdmin):
         'uuid',
     ]
 
-    @admin.display(description=_('Student'))
+    @admin.display(description=pgettext_lazy('parcours_doctoral', 'Student'))
     def student_fmt(self, obj):
         return '{} ({global_id})'.format(obj.student, global_id=obj.student.global_id)
 

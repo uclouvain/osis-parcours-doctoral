@@ -138,7 +138,7 @@
     </p>
 
     <div class="avoid-break-inside">
-      <span class="bold-text">{% translate "Promoter" %}</span>{% translate ':' %}
+      <span class="bold-text">{% translate "Promoter" context "gender" %}</span>{% translate ':' %}
     <hr class="dotted-line" style="margin-bottom: 0.5em" />
 
     <div class="complete-after solid-line">
@@ -149,7 +149,7 @@
 
     {% for promoter_index in 1|range_for:2 %}
       <div class="mt-1 avoid-break-inside ca-member">
-        <span class="bold-text">{% translate "Promoter" %}</span> {% translate '(if applicable):' %}
+        <span class="bold-text">{% translate "Promoter" context "gender" %}</span> {% translate '(if applicable):' %}
         <hr class="dotted-line" style="margin-bottom: 0.5em" />
 
         <div class="complete-after solid-line" style="margin: 0">
