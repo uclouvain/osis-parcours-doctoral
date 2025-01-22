@@ -765,8 +765,8 @@ msgctxt "doctorate"
 msgid "Courses"
 msgstr "Formations"
 
-msgid "Courses taken"
-msgstr "Cours suivis"
+msgid "Courses and trainings"
+msgstr "Cours et formation"
 
 #, python-format
 msgid "Create the confirmation paper success attestation (%(reference)s)"
@@ -1704,9 +1704,6 @@ msgstr "Avis du comité d'accompagnement suivant le format fourni par la CDD"
 msgid "Opinion on research mandate renewal"
 msgstr "Avis sur le renouvellement du mandat de recherche"
 
-msgid "Oral communication"
-msgstr "Communication orale"
-
 msgid "Oral presentation"
 msgstr "Exposé oral"
 
@@ -1781,8 +1778,8 @@ msgstr "Participation"
 msgid "Participation certification"
 msgstr "Certificat de participation"
 
-msgid "Participation to symposium/conference"
-msgstr "Participation à des colloques/conférences"
+msgid "Participations"
+msgstr "Participations"
 
 msgid "Partner institution"
 msgstr "Institution partenaire"
@@ -2186,6 +2183,9 @@ msgstr "Boursier"
 msgid "Scholarship start date"
 msgstr "Date de démarrage de la bourse"
 
+msgid "Scientific communications"
+msgstr "Communications scientifiques"
+
 msgid "Scientific residencies"
 msgstr "Séjours scientifiques"
 
@@ -2228,9 +2228,6 @@ msgstr "Sélectionner les états inactifs"
 
 msgid "Selection committee"
 msgstr "Comité de sélection"
-
-msgid "Seminar taken"
-msgstr "Séminaires suivis"
 
 msgid "Send a mail"
 msgstr "Envoyer un e-mail"
@@ -2700,6 +2697,9 @@ msgctxt "parcours_doctoral"
 msgid "Tokens that can be used for replacement"
 msgstr "Tokens pouvant être utilisés"
 
+msgid "Total"
+msgstr "Total"
+
 msgid "Total hourly volume"
 msgstr "Volume horaire total"
 
@@ -2749,7 +2749,7 @@ msgid "Upload the opinion on the renewal of the research mandate"
 msgstr "Téléverser l'avis sur le renouvellement du mandat de recherche"
 
 msgid "VAE"
-msgstr "Valorisation des acquis de l'expérience"
+msgstr "VAE"
 
 msgctxt "CategorieActivite"
 msgid "VAE"
@@ -2896,6 +2896,3 @@ msgstr "UCLouvain"
 #, python-brace-format
 msgid "{items} types out of {total}"
 msgstr "{items} types sur {total}"
-
-#~ msgid "Noma"
-#~ msgstr "Noma"

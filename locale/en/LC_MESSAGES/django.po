@@ -713,7 +713,7 @@ msgctxt "doctorate"
 msgid "Courses"
 msgstr ""
 
-msgid "Courses taken"
+msgid "Courses and trainings"
 msgstr ""
 
 #, python-format
@@ -1575,9 +1575,6 @@ msgstr ""
 msgid "Opinion on research mandate renewal"
 msgstr ""
 
-msgid "Oral communication"
-msgstr ""
-
 msgid "Oral presentation"
 msgstr "Oral exposé"
 
@@ -1652,7 +1649,7 @@ msgstr ""
 msgid "Participation certification"
 msgstr ""
 
-msgid "Participation to symposium/conference"
+msgid "Participations"
 msgstr ""
 
 msgid "Partner institution"
@@ -2043,6 +2040,9 @@ msgstr ""
 msgid "Scholarship start date"
 msgstr ""
 
+msgid "Scientific communications"
+msgstr ""
+
 msgid "Scientific residencies"
 msgstr ""
 
@@ -2084,9 +2084,6 @@ msgid "Select the inactive statuses"
 msgstr ""
 
 msgid "Selection committee"
-msgstr ""
-
-msgid "Seminar taken"
 msgstr ""
 
 msgid "Send a mail"
@@ -2508,6 +2505,9 @@ msgstr ""
 
 msgctxt "parcours_doctoral"
 msgid "Tokens that can be used for replacement"
+msgstr ""
+
+msgid "Total"
 msgstr ""
 
 msgid "Total hourly volume"
