@@ -857,6 +857,15 @@ msgstr ""
 msgid "Doctoral commissions"
 msgstr ""
 
+msgctxt "female gender"
+msgid "Doctoral student"
+msgstr ""
+
+msgctxt "gender"
+msgid "Doctoral student"
+msgstr ""
+
+msgctxt "male gender"
 msgid "Doctoral student"
 msgstr ""
 
@@ -1801,6 +1810,7 @@ msgctxt "gender"
 msgid "Promoter"
 msgstr ""
 
+msgctxt "gender"
 msgid "Promoters"
 msgstr ""
 
