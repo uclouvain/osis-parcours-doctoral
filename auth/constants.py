@@ -62,7 +62,7 @@ READ_ACTIONS_BY_TAB = {
     # Management
     'internal-note': 'parcours_doctoral.view_internalnote',
     'debug': 'parcours_doctoral.view_debug_info',
-    'comments': 'parcours_doctoral.view_enrolment_application',
+    'comments': 'parcours_doctoral.view_comments',
     'checklist': 'parcours_doctoral.view_checklist',
     # Documents
     'documents': 'parcours_doctoral.view_documents_management',
@@ -100,6 +100,7 @@ UPDATE_ACTIONS_BY_TAB = {
     # Management
     'documents': 'parcours_doctoral.view_documents_management',
     'checklist': 'parcours_doctoral.view_checklist',
+    'comments': 'parcours_doctoral.change_comments',
     # Jury
     'jury-preparation': 'parcours_doctoral.change_jury',
     'jury': 'parcours_doctoral.change_jury',

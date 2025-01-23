@@ -24,12 +24,12 @@
  *
  */
 
-.card .badge {
+#activities .card .badge {
     background-image: linear-gradient(rgb(0 0 0/40%) 0 0);
     color: white;
 }
 
-#activity-list > .card {
+#activities > .card {
     margin-bottom: 2em;
 }
 
@@ -67,14 +67,14 @@
     font-size: 1rem;
 }
 
-#activity-list .card-header .card-title > a {
+#activities .card-header .card-title > a {
     text-decoration: none;
     width: 20px;
-    color: white;
+    color: inherit;
 }
 
 .card-header .card-title > a:after {
-    font-family: 'Font Awesome 5 Free';
+    font-family: 'Font Awesome 5 Pro';
     font-weight: 900;
     content: "\f078";
     font-size: 1.5em;

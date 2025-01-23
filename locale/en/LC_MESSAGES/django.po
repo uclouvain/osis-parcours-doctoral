@@ -600,6 +600,10 @@ msgstr ""
 msgid "Comments"
 msgstr ""
 
+msgctxt "tab"
+msgid "Comments"
+msgstr ""
+
 msgid "Communication attestation"
 msgstr ""
 
@@ -1050,6 +1054,9 @@ msgid "Generic"
 msgstr ""
 
 msgid "Generic mail that can be manually sent"
+msgstr ""
+
+msgid "Global comments"
 msgstr ""
 
 msgid "Grounds for denied"

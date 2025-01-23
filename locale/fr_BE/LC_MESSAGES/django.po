@@ -649,6 +649,10 @@ msgstr "Commentaire à destination du candidat :"
 msgid "Comments"
 msgstr "Commentaires"
 
+msgctxt "tab"
+msgid "Comments"
+msgstr "Commentaires"
+
 msgid "Communication attestation"
 msgstr "Attestation de communication"
 
@@ -1112,6 +1116,9 @@ msgstr "Générique"
 
 msgid "Generic mail that can be manually sent"
 msgstr "E-mail générique qui peut être envoyé manuellement"
+
+msgid "Global comments"
+msgstr "Commentaires globaux"
 
 msgid "Grounds for denied"
 msgstr "Motif de refus"
