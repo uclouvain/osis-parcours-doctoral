@@ -24,14 +24,12 @@
 #
 # ##############################################################################
 import datetime
-from tabnanny import verbose
 from uuid import uuid4
 
 import freezegun
-from django.contrib.auth.models import User
 from django.core.cache import cache
 from django.core.exceptions import NON_FIELD_ERRORS
-from django.forms import HiddenInput, MultipleHiddenInput
+from django.forms import MultipleHiddenInput
 from django.shortcuts import reverse
 from django.test import RequestFactory, TestCase, override_settings
 from django.utils.translation import gettext
@@ -40,7 +38,6 @@ from admission.ddd.admission.doctorat.preparation.domain.model.enums import (
     ChoixTypeAdmission,
 )
 from admission.tests.factories.roles import (
-    ProgramManagerRoleFactory,
     SicManagementRoleFactory,
 )
 from admission.tests.factories.scholarship import DoctorateScholarshipFactory
@@ -61,7 +58,6 @@ from base.tests.factories.user import UserFactory
 from parcours_doctoral.ddd.domain.model.enums import (
     STATUTS_ACTIFS,
     BourseRecherche,
-    ChoixCommissionProximiteCDEouCLSM,
     ChoixCommissionProximiteCDSS,
     ChoixEtapeParcoursDoctoral,
     ChoixStatutParcoursDoctoral,
@@ -76,7 +72,6 @@ from parcours_doctoral.forms.list import ALL_FEMININE_EMPTY_CHOICE
 from parcours_doctoral.models import ParcoursDoctoral
 from parcours_doctoral.models.entity_proxy import EntityProxy
 from parcours_doctoral.tests.factories.activity import (
-    ActivityFactory,
     CourseFactory,
     VaeFactory,
 )
@@ -97,13 +92,13 @@ from parcours_doctoral.tests.factories.supervision import (
     ExternalPromoterFactory,
     PromoterFactory,
 )
-from parcours_doctoral.views.list import ParcoursDoctoralList
 from reference.tests.factories.country import CountryFactory
 
 
 @freezegun.freeze_time('2023-01-01')
+@override_settings(WAFFLE_CREATE_MISSING_SWITCHES=False)
 class ParcoursDoctoralListTestView(QueriesAssertionsMixin, TestCase):
-    NB_MAX_QUERIES = 33
+    NB_MAX_QUERIES = 26
 
     @classmethod
     def setUpTestData(cls):
