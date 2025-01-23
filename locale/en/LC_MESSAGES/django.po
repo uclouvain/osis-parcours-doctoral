@@ -1770,6 +1770,7 @@ msgstr ""
 msgid "Project title"
 msgstr ""
 
+msgctxt "gender"
 msgid "Promoter"
 msgstr ""
 
@@ -2167,6 +2168,7 @@ msgstr ""
 msgid "Status:"
 msgstr ""
 
+msgctxt "parcours_doctoral"
 msgid "Student"
 msgstr ""
 

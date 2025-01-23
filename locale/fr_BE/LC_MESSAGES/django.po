@@ -330,7 +330,7 @@ msgstr "Date d'admission"
 
 msgctxt "doctorate-filter"
 msgid "Admission type"
-msgstr "Type d’admission"
+msgstr "Type d'admission"
 
 #, python-format
 msgid ""
@@ -1859,7 +1859,7 @@ msgid "Poster"
 msgstr "Poster"
 
 msgid "Pre-admission"
-msgstr "Préadmission"
+msgstr "Pré-admission"
 
 msgid "Presentation date"
 msgstr "Date de l'exposé"
@@ -1906,6 +1906,7 @@ msgstr "Résumé"
 msgid "Project title"
 msgstr "Sujet"
 
+msgctxt "gender"
 msgid "Promoter"
 msgstr "Promoteur·rice"
 
@@ -2310,11 +2311,12 @@ msgstr "État d’avancement de la formation doctorale"
 msgid "Status:"
 msgstr "État :"
 
+msgctxt "parcours_doctoral"
 msgid "Student"
 msgstr "Étudiant"
 
 msgid "Student path"
-msgstr "Parcours de l'étudiant·e"
+msgstr "Parcours de l'étudiant.e"
 
 msgid "Subject"
 msgstr "Sujet"
