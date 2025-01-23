@@ -905,8 +905,17 @@ msgstr "Docteur"
 msgid "Doctoral commissions"
 msgstr "Commissions doctorales"
 
+msgctxt "female gender"
+msgid "Doctoral student"
+msgstr "Doctorante"
+
+msgctxt "gender"
 msgid "Doctoral student"
 msgstr "Doctorant·e"
+
+msgctxt "male gender"
+msgid "Doctoral student"
+msgstr "Doctorant"
 
 msgid "Doctoral training"
 msgstr "Formation doctorale"
@@ -1906,11 +1915,13 @@ msgstr "Résumé"
 msgid "Project title"
 msgstr "Sujet"
 
+msgctxt "gender"
 msgid "Promoter"
-msgstr "Promoteur·rice"
+msgstr "Promoteur·trice"
 
+msgctxt "gender"
 msgid "Promoters"
-msgstr "Promoteurs"
+msgstr "Promoteurs·trices"
 
 msgid "Promotion"
 msgstr "Promotion"
@@ -2906,6 +2917,3 @@ msgstr "UCLouvain"
 #, python-brace-format
 msgid "{items} types out of {total}"
 msgstr "{items} types sur {total}"
-
-#~ msgid "Noma"
-#~ msgstr "Noma"
