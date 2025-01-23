@@ -2908,6 +2908,3 @@ msgstr "UCLouvain"
 #, python-brace-format
 msgid "{items} types out of {total}"
 msgstr "{items} types sur {total}"
-
-#~ msgid "Noma"
-#~ msgstr "Noma"
