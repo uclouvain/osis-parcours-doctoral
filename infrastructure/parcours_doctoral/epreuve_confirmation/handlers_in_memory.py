@@ -27,6 +27,7 @@
 from parcours_doctoral.ddd.epreuve_confirmation.commands import *
 from parcours_doctoral.ddd.epreuve_confirmation.use_case.read import *
 from parcours_doctoral.ddd.epreuve_confirmation.use_case.write import *
+from parcours_doctoral.infrastructure.parcours_doctoral.domain.service.in_memory.historique import HistoriqueInMemory
 
 from ..repository.in_memory.parcours_doctoral import ParcoursDoctoralInMemoryRepository
 from .domain.service.in_memory.notification import NotificationInMemory
@@ -37,6 +38,7 @@ from .repository.in_memory.epreuve_confirmation import (
 _epreuve_confirmation_repository = EpreuveConfirmationInMemoryRepository()
 _parcours_doctoral_repository = ParcoursDoctoralInMemoryRepository()
 _notification = NotificationInMemory()
+_historique = HistoriqueInMemory()
 
 
 COMMAND_HANDLERS = {
@@ -57,6 +59,7 @@ COMMAND_HANDLERS = {
         parcours_doctoral_repository=_parcours_doctoral_repository,
         epreuve_confirmation_repository=_epreuve_confirmation_repository,
         notification=_notification,
+        historique=_historique,
     ),
     CompleterEpreuveConfirmationParPromoteurCommand: lambda msg_bus, cmd: completer_epreuve_confirmation_par_promoteur(
         cmd,
@@ -81,18 +84,21 @@ COMMAND_HANDLERS = {
         epreuve_confirmation_repository=_epreuve_confirmation_repository,
         parcours_doctoral_repository=_parcours_doctoral_repository,
         notification=_notification,
+        historique=_historique,
     ),
     ConfirmerEchecCommand: lambda msg_bus, cmd: confirmer_echec(
         cmd,
         epreuve_confirmation_repository=_epreuve_confirmation_repository,
         parcours_doctoral_repository=_parcours_doctoral_repository,
         notification=_notification,
+        historique=_historique,
     ),
     ConfirmerRepassageCommand: lambda msg_bus, cmd: confirmer_repassage(
         cmd,
         epreuve_confirmation_repository=_epreuve_confirmation_repository,
         parcours_doctoral_repository=_parcours_doctoral_repository,
         notification=_notification,
+        historique=_historique,
     ),
     TeleverserAvisRenouvellementMandatRechercheCommand: lambda msg_bus, cmd: televerser_avis_renouvellement_mandat_recherche(
         cmd,

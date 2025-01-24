@@ -55,6 +55,7 @@ class ModifierEpreuveConfirmationParCDDCommand(interface.CommandRequest):
 @attr.dataclass(frozen=True, slots=True)
 class SoumettreEpreuveConfirmationCommand(interface.CommandRequest):
     uuid: str
+    matricule_auteur: str
 
     date: datetime.date
     rapport_recherche: List[str]
@@ -99,11 +100,13 @@ class SoumettreAvisProlongationCommand(interface.CommandRequest):
 @attr.dataclass(frozen=True, slots=True)
 class ConfirmerReussiteCommand(interface.CommandRequest):
     uuid: str
+    matricule_auteur: str
 
 
 @attr.dataclass(frozen=True, slots=True)
 class ConfirmerEchecCommand(interface.CommandRequest):
     uuid: str
+    matricule_auteur: str
 
     sujet_message: str
     corps_message: str
@@ -112,6 +115,7 @@ class ConfirmerEchecCommand(interface.CommandRequest):
 @attr.dataclass(frozen=True, slots=True)
 class ConfirmerRepassageCommand(interface.CommandRequest):
     uuid: str
+    matricule_auteur: str
 
     date_limite: datetime.date
     sujet_message: str
