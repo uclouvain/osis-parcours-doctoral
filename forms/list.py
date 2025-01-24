@@ -23,13 +23,11 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-import json
 import re
 
 from dal import forward
 from django import forms
 from django.conf import settings
-from django.db.models import Q
 from django.utils.translation import get_language
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import pgettext_lazy
@@ -61,7 +59,6 @@ from parcours_doctoral.ddd.domain.model.enums import (
     ChoixCommissionProximiteCDSS,
     ChoixEtapeParcoursDoctoral,
     ChoixSousDomaineSciences,
-    ChoixStatutParcoursDoctoral,
     ChoixTypeFinancement,
 )
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import (
