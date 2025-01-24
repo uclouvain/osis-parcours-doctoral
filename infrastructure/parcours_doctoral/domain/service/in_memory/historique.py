@@ -119,3 +119,19 @@ class HistoriqueInMemory(IHistorique):
         matricule_auteur: Optional[str] = '',
     ):
         pass
+
+    @classmethod
+    def historiser_repassage_epreuve_confirmation(cls, parcours_doctoral: ParcoursDoctoral, matricule_auteur: str):
+        pass
+
+    @classmethod
+    def historiser_echec_epreuve_confirmation(cls, parcours_doctoral: ParcoursDoctoral, matricule_auteur: str):
+        pass
+
+    @classmethod
+    def historiser_reussite_epreuve_confirmation(cls, parcours_doctoral: ParcoursDoctoral, matricule_auteur: str):
+        pass
+
+    @classmethod
+    def historiser_soumission_epreuve_confirmation(cls, parcours_doctoral: ParcoursDoctoral, matricule_auteur: str):
+        pass

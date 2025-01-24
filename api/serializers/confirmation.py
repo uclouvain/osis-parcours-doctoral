@@ -47,6 +47,7 @@ class ConfirmationPaperDTOSerializer(DTOSerializer):
 
 class SubmitConfirmationPaperCommandSerializer(DTOSerializer):
     uuid = None
+    matricule_auteur = None
 
     class Meta:
         source = SoumettreEpreuveConfirmationCommand

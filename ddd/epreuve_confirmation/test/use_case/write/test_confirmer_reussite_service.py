@@ -44,20 +44,20 @@ class TestConfirmerReussite(TestCase):
 
     def test_should_generer_exception_si_confirmation_inconnue(self):
         with self.assertRaises(EpreuveConfirmationNonTrouveeException):
-            self.message_bus.invoke(ConfirmerReussiteCommand(uuid='inconnue'))
+            self.message_bus.invoke(ConfirmerReussiteCommand(uuid='inconnue', matricule_auteur='1234'))
 
     def test_should_generer_exception_si_date_epreuve_confirmation_non_specifiee(self):
         with self.assertRaises(MultipleBusinessExceptions) as e:
-            self.message_bus.invoke(ConfirmerReussiteCommand(uuid='c1'))
+            self.message_bus.invoke(ConfirmerReussiteCommand(uuid='c1', matricule_auteur='1234'))
         self.assertIsInstance(e.exception.exceptions.pop(), EpreuveConfirmationNonCompleteePourEvaluationException)
 
     def test_should_generer_exception_si_proces_verbal_non_specifie(self):
         with self.assertRaises(MultipleBusinessExceptions) as e:
-            self.message_bus.invoke(ConfirmerReussiteCommand(uuid='c0'))
+            self.message_bus.invoke(ConfirmerReussiteCommand(uuid='c0', matricule_auteur='1234'))
         self.assertIsInstance(e.exception.exceptions.pop(), EpreuveConfirmationNonCompleteePourEvaluationException)
 
     def test_should_confirmer_reussite_epreuve_confirmation_si_valide(self):
-        parcours_doctoral_id = self.message_bus.invoke(ConfirmerReussiteCommand(uuid='c2'))
+        parcours_doctoral_id = self.message_bus.invoke(ConfirmerReussiteCommand(uuid='c2', matricule_auteur='1234'))
 
         parcours_doctoral = self.message_bus.invoke(
             RecupererParcoursDoctoralQuery(parcours_doctoral_uuid=parcours_doctoral_id.uuid),

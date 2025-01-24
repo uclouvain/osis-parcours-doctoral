@@ -29,6 +29,7 @@ from uuid import uuid4
 
 import freezegun
 from django.shortcuts import resolve_url
+from osis_history.models import HistoryEntry
 from osis_notification.models import WebNotification
 from rest_framework import status
 from rest_framework.test import APITestCase
@@ -347,6 +348,12 @@ class LastConfirmationAPIViewTestCase(APITestCase):
         self.assertEqual(WebNotification.objects.count(), 1)
         notification = WebNotification.objects.first()
         self.assertEqual(notification.person, self.manager)
+
+        # Check the history entry
+        history_entries = HistoryEntry.objects.filter(object_uuid=self.doctorate.uuid)
+
+        self.assertEqual(len(history_entries), 1)
+        self.assertCountEqual(history_entries[0].tags, ['parcours_doctoral', 'confirmation', 'status-changed'])
 
         self.confirmation_paper.delete()
 
