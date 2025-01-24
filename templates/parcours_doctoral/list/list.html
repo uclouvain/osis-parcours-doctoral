@@ -87,7 +87,7 @@
                   class="custom-fieldset"
                 >
                   <legend>
-                    <a data-bs-toggle="collapse" href="#date-formset-container" aria-expanded="true">
+                    <a data-bs-toggle="collapse" href="#date-formset-container" aria-expanded="false">
                       {% trans "Date" %}
                       <span class="fa fa-chevron-down"></span>
                       <span class="fa fa-chevron-up"></span>
@@ -186,11 +186,11 @@
           padding: 0 5px;
       }
 
-      #date-fieldset legend[aria-expanded="true"] .fa-chevron-down, #date-fieldset legend[aria-expanded="false"] .fa-chevron-up {
+      #date-fieldset legend a[aria-expanded="true"] .fa-chevron-down, #date-fieldset legend a[aria-expanded="false"] .fa-chevron-up {
           display: none;
       }
 
-      #date-fieldset legend[aria-expanded="false"] .fa-chevron-down, #date-fieldset legend[aria-expanded="true"] .fa-chevron-up {
+      #date-fieldset legend a[aria-expanded="false"] .fa-chevron-down, #date-fieldset legend a[aria-expanded="true"] .fa-chevron-up {
           display: initial;
       }
 
