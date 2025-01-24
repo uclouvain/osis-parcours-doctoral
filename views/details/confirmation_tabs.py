@@ -82,7 +82,12 @@ class ConfirmationSuccessDecisionView(
 
     def post(self, *args, **kwargs):
         try:
-            message_bus_instance.invoke(ConfirmerReussiteCommand(uuid=self.last_confirmation_paper.uuid))
+            message_bus_instance.invoke(
+                ConfirmerReussiteCommand(
+                    uuid=self.last_confirmation_paper.uuid,
+                    matricule_auteur=self.request.user.person.global_id,
+                ),
+            )
             messages.success(
                 self.request,
                 _("The status has been changed to %(status)s.")
@@ -176,6 +181,7 @@ class ConfirmationFailureDecisionView(
                 uuid=self.last_confirmation_paper.uuid,
                 sujet_message=form.cleaned_data['subject'],
                 corps_message=form.cleaned_data['body'],
+                matricule_auteur=self.request.user.person.global_id,
             )
         )
 
@@ -199,6 +205,7 @@ class ConfirmationRetakingDecisionView(
                 sujet_message=form.cleaned_data['subject'],
                 corps_message=form.cleaned_data['body'],
                 date_limite=form.cleaned_data['date_limite'],
+                matricule_auteur=self.request.user.person.global_id,
             )
         )
 

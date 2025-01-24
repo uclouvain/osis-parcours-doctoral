@@ -46,7 +46,10 @@ class IHistorique(interface.DomainService):
     @classmethod
     @abstractmethod
     def historiser_message_au_doctorant(
-        cls, parcours_doctoral: ParcoursDoctoral, matricule_emetteur: str, message: EmailMessage
+        cls,
+        parcours_doctoral: ParcoursDoctoral,
+        matricule_emetteur: str,
+        message: EmailMessage,
     ):
         raise NotImplementedError
 
@@ -126,4 +129,24 @@ class IHistorique(interface.DomainService):
         statut_original_proposition: 'ChoixStatutPropositionDoctorale',
         matricule_auteur: Optional[str] = '',
     ):
+        raise NotImplementedError
+
+    @classmethod
+    @abstractmethod
+    def historiser_repassage_epreuve_confirmation(cls, parcours_doctoral: ParcoursDoctoral, matricule_auteur: str):
+        raise NotImplementedError
+
+    @classmethod
+    @abstractmethod
+    def historiser_echec_epreuve_confirmation(cls, parcours_doctoral: ParcoursDoctoral, matricule_auteur: str):
+        raise NotImplementedError
+
+    @classmethod
+    @abstractmethod
+    def historiser_reussite_epreuve_confirmation(cls, parcours_doctoral: ParcoursDoctoral, matricule_auteur: str):
+        raise NotImplementedError
+
+    @classmethod
+    @abstractmethod
+    def historiser_soumission_epreuve_confirmation(cls, parcours_doctoral: ParcoursDoctoral, matricule_auteur: str):
         raise NotImplementedError

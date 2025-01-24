@@ -26,6 +26,7 @@
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import (
     ParcoursDoctoralIdentity,
 )
+from parcours_doctoral.ddd.domain.service.i_historique import IHistorique
 from parcours_doctoral.ddd.epreuve_confirmation.builder.epreuve_confirmation_identity import (
     EpreuveConfirmationIdentityBuilder,
 )
@@ -46,6 +47,7 @@ def confirmer_echec(
     epreuve_confirmation_repository: 'IEpreuveConfirmationRepository',
     parcours_doctoral_repository: 'IParcoursDoctoralRepository',
     notification: 'INotification',
+    historique: 'IHistorique',
 ) -> ParcoursDoctoralIdentity:
     # GIVEN
     epreuve_confirmation_id = EpreuveConfirmationIdentityBuilder.build_from_uuid(cmd.uuid)
@@ -61,5 +63,6 @@ def confirmer_echec(
     notification.notifier_echec_epreuve(epreuve_confirmation, cmd.sujet_message, cmd.corps_message)
     parcours_doctoral_repository.save(parcours_doctoral)
     epreuve_confirmation_repository.save(epreuve_confirmation)
+    historique.historiser_echec_epreuve_confirmation(parcours_doctoral, cmd.matricule_auteur)
 
     return parcours_doctoral.entity_id

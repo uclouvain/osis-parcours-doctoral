@@ -63,7 +63,10 @@ class Historique(IHistorique):
 
     @classmethod
     def historiser_message_au_doctorant(
-        cls, parcours_doctoral: ParcoursDoctoral, matricule_emetteur: str, message: EmailMessage
+        cls,
+        parcours_doctoral: ParcoursDoctoral,
+        matricule_emetteur: str,
+        message: EmailMessage,
     ):
         emetteur = PersonneConnueUclTranslator.get(matricule_emetteur)
 
@@ -270,4 +273,48 @@ class Historique(IHistorique):
             message_en,
             "{auteur.prenom} {auteur.nom}".format(auteur=auteur),
             tags=tags,
+        )
+
+    @classmethod
+    def historiser_repassage_epreuve_confirmation(cls, parcours_doctoral: ParcoursDoctoral, matricule_auteur: str):
+        auteur = PersonneConnueUclTranslator().get(matricule_auteur)
+        add_history_entry(
+            parcours_doctoral.entity_id.uuid,
+            "La décision de l'épreuve de confirmation a été donnée : celle-ci doit être repassée.",
+            "The decision of the confirmation paper exam has been made: it must be repeated.",
+            "{auteur.prenom} {auteur.nom}".format(auteur=auteur),
+            tags=["parcours_doctoral", "confirmation", "status-changed"],
+        )
+
+    @classmethod
+    def historiser_echec_epreuve_confirmation(cls, parcours_doctoral: ParcoursDoctoral, matricule_auteur: str):
+        auteur = PersonneConnueUclTranslator().get(matricule_auteur)
+        add_history_entry(
+            parcours_doctoral.entity_id.uuid,
+            "La décision de l'épreuve de confirmation a été donnée : le candidat n'est pas autorisé à poursuivre.",
+            "The decision of the confirmation paper exam has been made: the candidate is not authorized to continue.",
+            "{auteur.prenom} {auteur.nom}".format(auteur=auteur),
+            tags=["parcours_doctoral", "confirmation", "status-changed"],
+        )
+
+    @classmethod
+    def historiser_reussite_epreuve_confirmation(cls, parcours_doctoral: ParcoursDoctoral, matricule_auteur: str):
+        auteur = PersonneConnueUclTranslator().get(matricule_auteur)
+        add_history_entry(
+            parcours_doctoral.entity_id.uuid,
+            "La décision de l'épreuve de confirmation a été donnée : celle-ci a été réussie.",
+            "The decision of the confirmation paper exam has been made: it has been passed.",
+            "{auteur.prenom} {auteur.nom}".format(auteur=auteur),
+            tags=["parcours_doctoral", "confirmation", "status-changed"],
+        )
+
+    @classmethod
+    def historiser_soumission_epreuve_confirmation(cls, parcours_doctoral: ParcoursDoctoral, matricule_auteur: str):
+        auteur = PersonneConnueUclTranslator().get(matricule_auteur)
+        add_history_entry(
+            parcours_doctoral.entity_id.uuid,
+            "Le candidat a renseigné des informations relatives à son épreuve de confirmation.",
+            "The candidate has filled in information relating to his confirmation paper exam.",
+            "{auteur.prenom} {auteur.nom}".format(auteur=auteur),
+            tags=["parcours_doctoral", "confirmation", "status-changed"],
         )

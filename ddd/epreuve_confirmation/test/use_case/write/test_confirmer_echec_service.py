@@ -44,6 +44,7 @@ class TestConfirmerEchec(TestCase):
         self.parametres_commande_defaut = {
             'sujet_message': 'Le sujet du message',
             'corps_message': 'Le corps du message.',
+            'matricule_auteur': '1234',
         }
 
     def test_should_generer_exception_si_confirmation_inconnue(self):

@@ -140,10 +140,12 @@ class LastConfirmationAPIView(DoctorateAPIPermissionRequiredMixin, mixins.Retrie
         serializer.is_valid(raise_exception=True)
 
         last_confirmation_paper = self.get_last_confirmation_paper()
+        doctorate = self.get_permission_object()
 
         result = message_bus_instance.invoke(
             SoumettreEpreuveConfirmationCommand(
                 uuid=last_confirmation_paper.uuid,
+                matricule_auteur=doctorate.student.global_id,
                 **serializer.validated_data,
             )
         )

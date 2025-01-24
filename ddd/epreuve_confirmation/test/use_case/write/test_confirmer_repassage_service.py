@@ -52,6 +52,7 @@ class TestConfirmerRepassage(TestCase):
             'sujet_message': 'Le sujet du message',
             'corps_message': 'Le corps du message.',
             'date_limite': datetime.date(2023, 7, 14),
+            'matricule_auteur': '1234',
         }
 
     def test_should_generer_exception_si_confirmation_inconnue(self):
