@@ -25,7 +25,7 @@
 # ##############################################################################
 from typing import Dict
 
-from parcours_doctoral.ddd.read_view.domain.enums.tableau_bord import IndicateurTableauBordEnum
+from admission.ddd.admission.doctorat.preparation.read_view.domain.enums.tableau_bord import IndicateurTableauBordEnum
 from parcours_doctoral.ddd.read_view.repository.i_tableau_bord import ITableauBordRepository
 
 

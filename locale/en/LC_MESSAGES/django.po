@@ -282,10 +282,6 @@ msgstr ""
 msgid "Admission"
 msgstr ""
 
-msgctxt "dashboard-category"
-msgid "Admission"
-msgstr ""
-
 msgctxt "parcours_doctoral"
 msgid "Admission"
 msgstr ""
@@ -406,14 +402,6 @@ msgid "Attachments:"
 msgstr ""
 
 msgid "Attestation of the communication"
-msgstr ""
-
-msgctxt "dashboard-indicator admission"
-msgid "Authorized SIC"
-msgstr ""
-
-msgctxt "dashboard-indicator pre-admission"
-msgid "Authorized SIC"
 msgstr ""
 
 msgid "Authors"
@@ -806,10 +794,6 @@ msgstr ""
 
 msgctxt "dashboard-indicator confirmation"
 msgid "Deadline 2 months"
-msgstr ""
-
-msgctxt "dashboard-indicator pre-admission"
-msgid "Deadline 3 months"
 msgstr ""
 
 msgid "Deadline extended"
@@ -1617,14 +1601,6 @@ msgstr ""
 msgid "Non doctor reason"
 msgstr ""
 
-msgctxt "dashboard-indicator admission"
-msgid "Not in order of registration"
-msgstr ""
-
-msgctxt "dashboard-indicator pre-admission"
-msgid "Not in order of registration"
-msgstr ""
-
 msgid "Number of days participating"
 msgstr ""
 
@@ -1802,10 +1778,6 @@ msgstr ""
 msgid "Poster"
 msgstr ""
 
-msgid "Pre-admission"
-msgstr ""
-
-msgctxt "dashboard-category"
 msgid "Pre-admission"
 msgstr ""
 
@@ -2333,14 +2305,6 @@ msgstr ""
 
 msgctxt "dashboard-indicator confirmation"
 msgid "Submitted confirmation"
-msgstr ""
-
-msgctxt "dashboard-indicator admission"
-msgid "Submitted dossiers"
-msgstr ""
-
-msgctxt "dashboard-indicator pre-admission"
-msgid "Submitted dossiers"
 msgstr ""
 
 msgid "Submitted for publication"

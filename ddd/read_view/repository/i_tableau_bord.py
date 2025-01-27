@@ -23,21 +23,25 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+import itertools
 from abc import abstractmethod
 from typing import Dict, List
 
 from django.utils.translation import pgettext_lazy
 
-from osis_common.ddd import interface
-from parcours_doctoral.ddd.read_view.domain.enums.tableau_bord import (
+from admission.ddd.admission.doctorat.preparation.read_view.domain.enums.tableau_bord import (
     CategorieTableauBordEnum,
-    IndicateurTableauBordEnum,
     TypeCategorieTableauBord,
+    IndicateurTableauBordEnum,
 )
-from parcours_doctoral.ddd.read_view.domain.model.tableau_bord import (
+from admission.ddd.admission.doctorat.preparation.read_view.domain.model.tableau_bord import (
     CategorieTableauBord,
     IndicateurTableauBord,
 )
+from admission.ddd.admission.doctorat.preparation.read_view.repository.i_tableau_bord import (
+    ITableauBordRepositoryAdmissionMixin,
+)
+from osis_common.ddd import interface
 from parcours_doctoral.ddd.read_view.dto.tableau_bord import (
     TableauBordDTO,
     CategorieTableauBordDTO,
@@ -45,50 +49,8 @@ from parcours_doctoral.ddd.read_view.dto.tableau_bord import (
 )
 
 
-class ITableauBordRepository(interface.ReadModelRepository):
-    categories: List[CategorieTableauBord] = [
-        CategorieTableauBord(
-            id=CategorieTableauBordEnum.PRE_ADMISSION,
-            libelle=pgettext_lazy('dashboard-category', 'Pre-admission'),
-            type=TypeCategorieTableauBord.ADMISSION,
-            indicateurs=[
-                IndicateurTableauBord(
-                    id=IndicateurTableauBordEnum.PRE_ADMISSION_DOSSIER_SOUMIS,
-                    libelle=pgettext_lazy('dashboard-indicator pre-admission', 'Submitted dossiers'),
-                ),
-                IndicateurTableauBord(
-                    id=IndicateurTableauBordEnum.PRE_ADMISSION_AUTORISE_SIC,
-                    libelle=pgettext_lazy('dashboard-indicator pre-admission', 'Authorized SIC'),
-                ),
-                IndicateurTableauBord(
-                    id=IndicateurTableauBordEnum.PRE_ADMISSION_PAS_EN_ORDRE_INSCRIPTION,
-                    libelle=pgettext_lazy('dashboard-indicator pre-admission', 'Not in order of registration'),
-                ),
-                IndicateurTableauBord(
-                    id=IndicateurTableauBordEnum.PRE_ADMISSION_ECHEANCE_3_MOIS,
-                    libelle=pgettext_lazy('dashboard-indicator pre-admission', 'Deadline 3 months'),
-                ),
-            ],
-        ),
-        CategorieTableauBord(
-            id=CategorieTableauBordEnum.ADMISSION,
-            libelle=pgettext_lazy('dashboard-category', 'Admission'),
-            type=TypeCategorieTableauBord.ADMISSION,
-            indicateurs=[
-                IndicateurTableauBord(
-                    id=IndicateurTableauBordEnum.ADMISSION_DOSSIER_SOUMIS,
-                    libelle=pgettext_lazy('dashboard-indicator admission', 'Submitted dossiers'),
-                ),
-                IndicateurTableauBord(
-                    id=IndicateurTableauBordEnum.ADMISSION_AUTORISE_SIC,
-                    libelle=pgettext_lazy('dashboard-indicator admission', 'Authorized SIC'),
-                ),
-                IndicateurTableauBord(
-                    id=IndicateurTableauBordEnum.ADMISSION_PAS_EN_ORDRE_INSCRIPTION,
-                    libelle=pgettext_lazy('dashboard-indicator admission', 'Not in order of registration'),
-                ),
-            ],
-        ),
+class ITableauBordRepository(ITableauBordRepositoryAdmissionMixin, interface.ReadModelRepository):
+    categories_doctorat: List[CategorieTableauBord] = [
         CategorieTableauBord(
             id=CategorieTableauBordEnum.CONFIRMATION,
             libelle=pgettext_lazy('dashboard-category', 'Confirmation'),
@@ -230,32 +192,28 @@ class ITableauBordRepository(interface.ReadModelRepository):
         ),
     ]
 
-    libelles_indicateurs = {
-        indicateur.id.name: f'{categorie.libelle} - {indicateur.libelle}'
-        for categorie in categories
-        for indicateur in categorie.indicateurs
-    }
-
     @classmethod
     def get(cls) -> 'TableauBordDTO':
         valeurs = cls._get_valeurs_indicateurs()
 
-        return TableauBordDTO(categories={
-            category.id.name: CategorieTableauBordDTO(
-                id=category.id.name,
-                type=category.type.name,
-                libelle=category.libelle,
-                indicateurs={
-                    indicateur.id.name: IndicateurTableauBordDTO(
-                        id=indicateur.id.name,
-                        libelle=indicateur.libelle,
-                        valeur=valeurs.get(indicateur.id.name, None),
-                    )
-                    for indicateur in category.indicateurs
-                },
-            )
-            for category in cls.categories
-        })
+        return TableauBordDTO(
+            categories={
+                category.id.name: CategorieTableauBordDTO(
+                    id=category.id.name,
+                    type=category.type.name,
+                    libelle=category.libelle,
+                    indicateurs={
+                        indicateur.id.name: IndicateurTableauBordDTO(
+                            id=indicateur.id.name,
+                            libelle=indicateur.libelle,
+                            valeur=valeurs.get(indicateur.id.name, None),
+                        )
+                        for indicateur in category.indicateurs
+                    },
+                )
+                for category in itertools.chain(cls.categories_admission, cls.categories_doctorat)
+            }
+        )
 
     @classmethod
     @abstractmethod
