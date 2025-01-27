@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -28,16 +28,15 @@ from unittest import mock
 from uuid import uuid4
 
 import freezegun
-from admission.ddd.admission.doctorat.preparation.domain.model.enums import (
-    ChoixTypeContratTravail,
-)
-from admission.tests.factories.scholarship import DoctorateScholarshipFactory
-from base.tests.factories.organization import OrganizationFactory
-from base.tests.factories.person import PersonFactory
 from django.shortcuts import resolve_url
 from rest_framework import status
 from rest_framework.test import APITestCase
 
+from admission.ddd.admission.doctorat.preparation.domain.model.enums import (
+    ChoixTypeContratTravail,
+)
+from base.tests.factories.organization import OrganizationFactory
+from base.tests.factories.person import PersonFactory
 from parcours_doctoral.ddd.domain.model.enums import ChoixTypeFinancement, ChoixStatutParcoursDoctoral
 from parcours_doctoral.tests.factories.parcours_doctoral import ParcoursDoctoralFactory
 from parcours_doctoral.tests.factories.roles import StudentRoleFactory
@@ -45,6 +44,7 @@ from parcours_doctoral.tests.factories.supervision import (
     CaMemberFactory,
     PromoterFactory,
 )
+from reference.tests.factories.scholarship import DoctorateScholarshipFactory
 
 
 @freezegun.freeze_time('2023-01-01')

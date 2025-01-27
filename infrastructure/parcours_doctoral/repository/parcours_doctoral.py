@@ -29,11 +29,12 @@ from django.conf import settings
 from django.db.models import F, QuerySet
 from django.utils.translation import get_language
 
-from admission.infrastructure.admission.domain.service.bourse import BourseTranslator
 from base.models.education_group_year import EducationGroupYear
 from base.models.entity_version import EntityVersion
 from base.models.enums.entity_type import EntityType
 from base.models.person import Person
+from ddd.logic.reference.domain.model.bourse import BourseIdentity
+from infrastructure.reference.domain.service.bourse import BourseTranslator
 from osis_common.ddd.interface import ApplicationService, EntityIdentity, RootEntity
 from parcours_doctoral.ddd.domain.model._cotutelle import Cotutelle
 from parcours_doctoral.ddd.domain.model._experience_precedente_recherche import (
@@ -43,7 +44,6 @@ from parcours_doctoral.ddd.domain.model._financement import Financement
 from parcours_doctoral.ddd.domain.model._formation import FormationIdentity
 from parcours_doctoral.ddd.domain.model._institut import InstitutIdentity
 from parcours_doctoral.ddd.domain.model._projet import Projet
-from parcours_doctoral.ddd.domain.model.bourse import BourseIdentity
 from parcours_doctoral.ddd.domain.model.enums import (
     ChoixDoctoratDejaRealise,
     ChoixStatutParcoursDoctoral,
