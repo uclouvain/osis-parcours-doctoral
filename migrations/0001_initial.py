@@ -464,17 +464,6 @@ class Migration(migrations.Migration):
                     ),
                 ),
                 (
-                    "international_scholarship",
-                    models.ForeignKey(
-                        blank=True,
-                        null=True,
-                        on_delete=django.db.models.deletion.PROTECT,
-                        related_name="+",
-                        to="admission.scholarship",
-                        verbose_name="International scholarship",
-                    ),
-                ),
-                (
                     "student",
                     models.ForeignKey(
                         editable=False,
