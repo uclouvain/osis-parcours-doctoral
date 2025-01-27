@@ -23,13 +23,11 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-import json
 import re
 
 from dal import forward
 from django import forms
 from django.conf import settings
-from django.db.models import Q
 from django.utils.translation import get_language
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import pgettext_lazy
@@ -37,9 +35,7 @@ from django.utils.translation import pgettext_lazy
 from admission.ddd.admission.doctorat.preparation.domain.model.enums import (
     ChoixTypeAdmission,
 )
-from admission.ddd.admission.enums import TypeBourse
 from admission.forms import DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS
-from admission.models import Scholarship
 from admission.models.enums.actor_type import ActorType
 from base.auth.roles.program_manager import ProgramManager
 from base.forms.utils import autocomplete
@@ -61,7 +57,6 @@ from parcours_doctoral.ddd.domain.model.enums import (
     ChoixCommissionProximiteCDSS,
     ChoixEtapeParcoursDoctoral,
     ChoixSousDomaineSciences,
-    ChoixStatutParcoursDoctoral,
     ChoixTypeFinancement,
 )
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import (
@@ -74,6 +69,8 @@ from parcours_doctoral.ddd.domain.model.parcours_doctoral import (
 from parcours_doctoral.ddd.jury.domain.model.enums import RoleJury
 from parcours_doctoral.models import JuryMember, ParcoursDoctoralSupervisionActor
 from parcours_doctoral.models.entity_proxy import EntityProxy
+from reference.models.enums.scholarship_type import ScholarshipType
+from reference.models.scholarship import Scholarship
 
 REGEX_REFERENCE = r'\d{4}\.\d{4}$'
 ALL_EMPTY_CHOICE = (('', pgettext_lazy('filters', 'All')),)
@@ -323,7 +320,7 @@ class ParcoursDoctorauxFilterForm(forms.Form):
 
     def get_scholarship_choices(self):
         doctorate_scholarships = Scholarship.objects.filter(
-            type=TypeBourse.BOURSE_INTERNATIONALE_DOCTORAT.name,
+            type=ScholarshipType.BOURSE_INTERNATIONALE_DOCTORAT.name,
         ).order_by('short_name')
 
         return (
