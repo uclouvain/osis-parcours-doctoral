@@ -23,7 +23,6 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-
 from rest_framework import mixins, status
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
@@ -60,6 +59,8 @@ __all__ = [
     "LastConfirmationCanvasAPIView",
     "SupervisedConfirmationAPIView",
 ]
+
+from parcours_doctoral.models import Activity
 
 
 class ConfirmationSchema(ResponseSpecificSchema):
@@ -198,6 +199,14 @@ class LastConfirmationCanvasAPIView(DoctorateAPIPermissionRequiredMixin, mixins.
         )
         doctorate = self.get_permission_object()
 
+        doctoral_training_ects_nb = Activity.objects.get_doctoral_training_credits_number(
+            parcours_doctoral_uuid=self.doctorate_uuid,
+        )
+
+        has_additional_training = Activity.objects.has_complementary_training(
+            parcours_doctoral_uuid=self.doctorate_uuid,
+        )
+
         uuid = parcours_doctoral_pdf_confirmation_canvas(
             parcours_doctoral=doctorate,
             language=doctorate.student.language,
@@ -208,6 +217,8 @@ class LastConfirmationCanvasAPIView(DoctorateAPIPermissionRequiredMixin, mixins.
                 'supervision_people_nb': (
                     len(supervision_group.signatures_promoteurs) + len(supervision_group.signatures_membres_CA)
                 ),
+                'doctoral_training_ects_nb': doctoral_training_ects_nb,
+                'has_additional_training': has_additional_training,
             },
         )
 

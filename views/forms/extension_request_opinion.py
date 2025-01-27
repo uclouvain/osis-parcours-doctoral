@@ -29,34 +29,35 @@ from django.views.generic import FormView
 
 from infrastructure.messages_bus import message_bus_instance
 from parcours_doctoral.ddd.epreuve_confirmation.commands import (
-    SoumettreReportDeDateParCDDCommand,
+    SoumettreAvisProlongationCommand,
 )
-from parcours_doctoral.forms.extension_request import ExtensionRequestForm
+from parcours_doctoral.forms.extension_request import ExtensionRequestOpinionForm
 from parcours_doctoral.views.mixins import (
     BusinessExceptionFormViewMixin,
     LastConfirmationMixin,
 )
 
 __all__ = [
-    "ExtensionRequestFormView",
+    "ExtensionRequestOpinionFormView",
 ]
 
 
-class ExtensionRequestFormView(
+class ExtensionRequestOpinionFormView(
     LastConfirmationMixin,
     BusinessExceptionFormViewMixin,
     FormView,
 ):
-    template_name = 'parcours_doctoral/forms/extension_request.html'
+    template_name = 'parcours_doctoral/forms/extension_request_opinion.html'
     permission_required = 'parcours_doctoral.change_confirmation_extension'
-    form_class = ExtensionRequestForm
+    form_class = ExtensionRequestOpinionForm
+    extra_context = {
+        'active_tab': 'extension-request',  # Pretend that the "Extension request" page is active
+    }
 
     def get_initial(self):
         return (
             {
-                'nouvelle_echeance': self.last_confirmation_paper.demande_prolongation.nouvelle_echeance,
-                'justification_succincte': self.last_confirmation_paper.demande_prolongation.justification_succincte,
-                'lettre_justification': self.last_confirmation_paper.demande_prolongation.lettre_justification,
+                'avis_cdd': self.last_confirmation_paper.demande_prolongation.avis_cdd,
             }
             if self.last_confirmation_paper.demande_prolongation
             else {}
@@ -64,7 +65,7 @@ class ExtensionRequestFormView(
 
     def call_command(self, form):
         message_bus_instance.invoke(
-            SoumettreReportDeDateParCDDCommand(
+            SoumettreAvisProlongationCommand(
                 uuid=self.last_confirmation_paper.uuid,
                 **form.cleaned_data,
             )

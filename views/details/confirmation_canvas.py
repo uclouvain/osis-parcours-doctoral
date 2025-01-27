@@ -31,6 +31,7 @@ from parcours_doctoral.ddd.commands import GetGroupeDeSupervisionQuery
 from parcours_doctoral.exports.confirmation_canvas import (
     parcours_doctoral_pdf_confirmation_canvas,
 )
+from parcours_doctoral.models import Activity
 from parcours_doctoral.views.mixins import LastConfirmationMixin
 
 __all__ = [
@@ -51,6 +52,14 @@ class ConfirmationCanvasExportView(LastConfirmationMixin, RedirectView):
             len(context_data['supervision_group'].signatures_promoteurs)
             + len(context_data['supervision_group'].signatures_membres_CA)
         )
+        context_data['doctoral_training_ects_nb'] = Activity.objects.get_doctoral_training_credits_number(
+            parcours_doctoral_uuid=self.parcours_doctoral_uuid,
+        )
+
+        context_data['has_additional_training'] = Activity.objects.has_complementary_training(
+            parcours_doctoral_uuid=self.parcours_doctoral_uuid,
+        )
+
         return context_data
 
     def get(self, request, *args, **kwargs):

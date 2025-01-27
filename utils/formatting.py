@@ -23,37 +23,21 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from django import forms
-from django.utils.translation import gettext_lazy as _
-
-from base.forms.utils.datefield import CustomDateInput
-from osis_document.contrib import FileUploadField
 
 
-class ExtensionRequestOpinionForm(forms.Form):
-    avis_cdd = forms.CharField(
-        label=_('CDD opinion'),
-        required=True,
-        widget=forms.Textarea(),
-    )
-
-
-class ExtensionRequestForm(forms.Form):
-    nouvelle_echeance = forms.DateField(
-        label=_('Proposed new deadline'),
-        required=True,
-        widget=CustomDateInput(),
-    )
-    justification_succincte = forms.CharField(
-        label=_('Brief justification'),
-        required=True,
-        max_length=2000,
-        widget=forms.Textarea(),
-    )
-    lettre_justification = FileUploadField(
-        label=_('Justification letter'),
-        required=False,
-        help_text=_(
-            'If applicable, please upload here the opinion of your support committee on the extension request.',
-        ),
-    )
+def format_address(street: str, street_number: str, postal_code: str, city: str, country: str):
+    """
+    Return the concatenation of the street, street number, postal code, city and state of an address.
+    :param street: The street name
+    :param street_number: The street number
+    :param postal_code: The postal code
+    :param city: The city
+    :param country: The country
+    :return: The concatenated address
+    """
+    address_parts = [
+        '{street} {street_number}'.format(street=street, street_number=street_number).strip(),
+        '{postal_code} {city}'.format(postal_code=postal_code, city=city).strip(),
+        country,
+    ]
+    return ', '.join(filter(lambda part: part and len(part) > 1, address_parts))

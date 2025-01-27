@@ -118,14 +118,16 @@
     </div>
 
     {% if parcours_doctoral.genre_doctorant == "F" %}
-      {% translate "The doctoral student" as student_title context "female gender" %}
+      {% translate "Doctoral student" as student_title context "female gender" %}
+    {% elif parcours_doctoral.genre_doctorant == "H" %}
+      {% translate "Doctoral student" as student_title context "male gender" %}
     {% else %}
-      {% translate "The doctoral student" as student_title context "male gender" %}
+      {% translate "Doctoral student" as student_title context "gender" %}
     {% endif %}
     {% concat parcours_doctoral.nom_doctorant " " parcours_doctoral.prenom_doctorant as full_name %}
     {% field_data student_title full_name inline=True %}
     {% field_data _("Registration Id") parcours_doctoral.noma_doctorant inline=True %}
-    {% field_data _("Definitive admission date to doctorate") parcours_doctoral.cree_le inline=True %}
+    {% field_data _("Definitive admission date to doctorate") parcours_doctoral.cree_le|date:'d/m/Y' inline=True %}
 
     {% if parcours_doctoral.financement.type == "SEARCH_SCHOLARSHIP" %}
       {% if parcours_doctoral.financement.bourse_recherche %}
@@ -168,7 +170,7 @@
       {% endfor %}
     </ul>
 
-    {% field_data _("Confirmation exam date") confirmation_paper.date inline=True %}
+    {% field_data _("Confirmation exam date") confirmation_paper.date|date:'d/m/Y' inline=True %}
 
     {% if confirmation_paper.date > confirmation_paper.date_limite %}
       <div class="d-flex">
@@ -233,18 +235,17 @@
     </div>
 
     <p>
-      {# TODO should be replaced by the number of credits #}
-      {% blocktranslate trimmed with credits_nb="[CREDITS_NUMBER]" %}
+      {% blocktranslate trimmed count credits_nb=doctoral_training_ects_nb %}
+        The number of acquired <strong>doctoral</strong> credits amounts to {{ credits_nb }} credit.
+        {% plural %}
         The number of acquired <strong>doctoral</strong> credits amounts to {{ credits_nb }} credits.
       {% endblocktranslate %}
     </p>
 
-    {# TODO only if an additional training is required #}
-    {% if True %}
+    {% if has_additional_training %}
       <p>
         {% translate "The <strong>additional training</strong> has been completed: yes / no." %}<br>
         {% translate "The current training is attached to this document." %}
-        [SEULEMENT_SI_REQUIS]
       </p>
     {% endif %}
 
@@ -263,7 +264,15 @@
       <thead>
         <tr>
           <th>{% translate "The CA members" %}</th>
-          <th>{{ student_title }}</th>
+          <th>
+            {% if parcours_doctoral.genre_doctorant == "F" %}
+              {% translate "The doctoral student" context "female gender" %}
+            {% elif parcours_doctoral.genre_doctorant == "H" %}
+              {% translate "The doctoral student" context "male gender" %}
+            {% else %}
+              {% translate "The doctoral student" context "gender" %}
+            {% endif %}
+          </th>
         </tr>
       </thead>
       <tbody>
@@ -302,10 +311,9 @@
       <ul>
         <li>{% translate "Opinion of the CA following the format provided by the CDD" %}</li>
         <li>{% translate "Status of the doctoral training" %}</li>
-        {# TODO only if an additional training is required #}
-        {% if True %}
+        {% if has_additional_training %}
           <li>
-            {% translate "Achieved additional training" %} [SEULEMENT_SI_REQUIS]
+            {% translate "Achieved additional training" %}
           </li>
         {% endif %}
       </ul>

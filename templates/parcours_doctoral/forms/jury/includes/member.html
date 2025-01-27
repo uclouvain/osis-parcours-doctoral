@@ -6,7 +6,7 @@
 * The core business involves the administration of students, teachers,
 * courses, programs and so on.
 *
-* Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+* Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 *
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -50,7 +50,7 @@
 {% if not membre.est_promoteur %}
 <!-- delete modal -->
 <div class="modal fade" id="deleteModal-{{ membre.uuid }}" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel-{{ membre.uuid }}">
-  <div class="modal-dialog" role="document">
+  <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <form action="{% url 'parcours_doctoral:update:jury-member:remove' uuid=jury.uuid member_uuid=membre.uuid %}" method="post">
         {% csrf_token %}
