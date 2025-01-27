@@ -30,7 +30,6 @@ from unittest.mock import patch
 
 import freezegun
 from django.db.models.expressions import Value
-from django.db.models.functions.datetime import Now
 from django.test import TestCase
 from django.test.utils import override_settings
 
@@ -38,14 +37,14 @@ from admission.ddd.admission.doctorat.preparation.domain.model.enums import (
     ChoixStatutPropositionDoctorale,
     ChoixTypeAdmission,
 )
+from admission.ddd.admission.doctorat.preparation.read_view.domain.enums.tableau_bord import (
+    CategorieTableauBordEnum,
+    IndicateurTableauBordEnum,
+)
 from admission.tests.factories import DoctorateAdmissionFactory
 from infrastructure.messages_bus import message_bus_instance
 from parcours_doctoral.ddd.domain.model.enums import (
     ChoixStatutParcoursDoctoral,
-)
-from parcours_doctoral.ddd.read_view.domain.enums.tableau_bord import (
-    CategorieTableauBordEnum,
-    IndicateurTableauBordEnum,
 )
 from parcours_doctoral.ddd.read_view.dto.tableau_bord import TableauBordDTO
 from parcours_doctoral.ddd.read_view.queries import RecupererInformationsTableauBordQuery

@@ -67,7 +67,6 @@ from parcours_doctoral.ddd.domain.model.parcours_doctoral import (
     SIGLE_SCIENCES,
 )
 from parcours_doctoral.ddd.jury.domain.model.enums import RoleJury
-from parcours_doctoral.ddd.read_view.domain.enums.tableau_bord import TypeCategorieTableauBord
 from parcours_doctoral.forms.fields import SelectWithDisabledOptions
 from parcours_doctoral.infrastructure.parcours_doctoral.read_view.repository.tableau_bord import TableauBordRepository
 from parcours_doctoral.models import JuryMember, ParcoursDoctoralSupervisionActor
@@ -216,10 +215,10 @@ class ParcoursDoctorauxFilterForm(forms.Form):
     indicateur_tableau_bord = forms.ChoiceField(
         label=_('Dashboard indicator'),
         required=False,
-        choices=[EMPTY_CHOICE[0]] + [
+        choices=[EMPTY_CHOICE[0]]
+        + [
             [category.libelle, [[indicator.id.name, indicator.libelle] for indicator in category.indicateurs]]
-            for category in TableauBordRepository.categories
-            if category.type == TypeCategorieTableauBord.DOCTORAT
+            for category in TableauBordRepository.categories_doctorat
         ],
         widget=SelectWithDisabledOptions(
             enabled_options={*TableauBordRepository.DOCTORATE_DJANGO_FILTER_BY_INDICATOR, ''},

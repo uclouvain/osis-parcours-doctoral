@@ -324,10 +324,6 @@ msgstr "Formation complémentaire"
 msgid "Admission"
 msgstr "Admission"
 
-msgctxt "dashboard-category"
-msgid "Admission"
-msgstr "Admission"
-
 msgctxt "parcours_doctoral"
 msgid "Admission"
 msgstr "Admission"
@@ -456,14 +452,6 @@ msgstr "Annexes :"
 
 msgid "Attestation of the communication"
 msgstr "Attestation de communication"
-
-msgctxt "dashboard-indicator admission"
-msgid "Authorized SIC"
-msgstr "Autorisé SIC"
-
-msgctxt "dashboard-indicator pre-admission"
-msgid "Authorized SIC"
-msgstr "Autorisé SIC"
 
 msgid "Authors"
 msgstr "Auteurs et autrices"
@@ -862,10 +850,6 @@ msgstr "Echéance 15 jours"
 msgctxt "dashboard-indicator confirmation"
 msgid "Deadline 2 months"
 msgstr "Echéance 2 mois"
-
-msgctxt "dashboard-indicator pre-admission"
-msgid "Deadline 3 months"
-msgstr "Échéance 3 mois"
 
 msgid "Deadline extended"
 msgstr "Nouvelle échéance"
@@ -1747,14 +1731,6 @@ msgstr "Aucun invité"
 msgid "Non doctor reason"
 msgstr "Justification"
 
-msgctxt "dashboard-indicator admission"
-msgid "Not in order of registration"
-msgstr "Pas en ordre d’inscription"
-
-msgctxt "dashboard-indicator pre-admission"
-msgid "Not in order of registration"
-msgstr "Pas en ordre d’inscription"
-
 msgid "Number of days participating"
 msgstr "Nombre de jours de participation"
 
@@ -1940,10 +1916,6 @@ msgstr "Veuillez sélectionner au-moins une date."
 msgid "Poster"
 msgstr "Poster"
 
-msgid "Pre-admission"
-msgstr "Pré-admission"
-
-msgctxt "dashboard-category"
 msgid "Pre-admission"
 msgstr "Pré-admission"
 
@@ -2479,14 +2451,6 @@ msgstr "Recevabilité soumise"
 msgctxt "dashboard-indicator confirmation"
 msgid "Submitted confirmation"
 msgstr "Confirmation soumise"
-
-msgctxt "dashboard-indicator admission"
-msgid "Submitted dossiers"
-msgstr "Dossiers soumis"
-
-msgctxt "dashboard-indicator pre-admission"
-msgid "Submitted dossiers"
-msgstr "Dossiers soumis"
 
 msgid "Submitted for publication"
 msgstr "Soumis pour publication"

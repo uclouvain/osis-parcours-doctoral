@@ -31,12 +31,13 @@ from django.core.cache import cache
 from django.core.exceptions import NON_FIELD_ERRORS
 from django.forms import MultipleHiddenInput
 from django.shortcuts import reverse
-from django.test import RequestFactory, TestCase
+from django.test import RequestFactory, TestCase, override_settings
 from django.utils.translation import gettext
 
 from admission.ddd.admission.doctorat.preparation.domain.model.enums import (
     ChoixTypeAdmission,
 )
+from admission.ddd.admission.doctorat.preparation.read_view.domain.enums.tableau_bord import IndicateurTableauBordEnum
 from admission.tests.factories.roles import (
     SicManagementRoleFactory,
 )
@@ -67,7 +68,6 @@ from parcours_doctoral.ddd.formation.domain.model.enums import (
     ContexteFormation,
     StatutActivite,
 )
-from parcours_doctoral.ddd.read_view.domain.enums.tableau_bord import IndicateurTableauBordEnum
 from parcours_doctoral.forms.list import ALL_FEMININE_EMPTY_CHOICE
 from parcours_doctoral.models import ParcoursDoctoral
 from parcours_doctoral.models.entity_proxy import EntityProxy

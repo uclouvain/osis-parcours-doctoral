@@ -32,20 +32,19 @@ from django.db.models.functions.datetime import Now
 from django.db.models.lookups import GreaterThanOrEqual
 from django.db.models.query_utils import Q
 
-from admission.ddd.admission.doctorat.preparation.domain.model.enums import (
-    ChoixStatutPropositionDoctorale,
-    ChoixTypeAdmission,
+from admission.ddd.admission.doctorat.preparation.read_view.domain.enums.tableau_bord import IndicateurTableauBordEnum
+from admission.infrastructure.admission.doctorat.preparation.read_view.repository.tableau_bord import (
+    TableauBordRepositoryAdmissionMixin,
 )
 from admission.models import DoctorateAdmission
 from parcours_doctoral.ddd.domain.model.enums import (
     ChoixStatutParcoursDoctoral,
 )
-from parcours_doctoral.ddd.read_view.domain.enums.tableau_bord import IndicateurTableauBordEnum
 from parcours_doctoral.ddd.read_view.repository.i_tableau_bord import ITableauBordRepository
 from parcours_doctoral.models import ParcoursDoctoral
 
 
-class TableauBordRepository(ITableauBordRepository):
+class TableauBordRepository(TableauBordRepositoryAdmissionMixin, ITableauBordRepository):
     DOCTORATE_DJANGO_FILTER_BY_INDICATOR = {
         IndicateurTableauBordEnum.CONFIRMATION_ECHEANCE_2_MOIS.name: Q(
             GreaterThanOrEqual(
@@ -95,28 +94,6 @@ class TableauBordRepository(ITableauBordRepository):
         # IndicateurTableauBordEnum.AUTORISATION_DIFFUSION_THESE_REJET_SCEB.name: Q(),
         # IndicateurTableauBordEnum.SOUTENANCE_PUBLIQUE_SOUMISE.name: Q(),
         # IndicateurTableauBordEnum.SOUTENANCE_PUBLIQUE_PV_TELEVERSE.name: Q(),
-    }
-
-    ADMISSION_DJANGO_FILTER_BY_INDICATOR = {
-        IndicateurTableauBordEnum.PRE_ADMISSION_DOSSIER_SOUMIS.name: Q(
-            status=ChoixStatutPropositionDoctorale.CONFIRMEE.name,
-            type=ChoixTypeAdmission.PRE_ADMISSION.name,
-        ),
-        IndicateurTableauBordEnum.PRE_ADMISSION_AUTORISE_SIC.name: Q(
-            status=ChoixStatutPropositionDoctorale.INSCRIPTION_AUTORISEE.name,
-            type=ChoixTypeAdmission.PRE_ADMISSION.name,
-        ),
-        # IndicateurTableauBordEnum.PRE_ADMISSION_PAS_EN_ORDRE_INSCRIPTION.name: Q(),
-        # IndicateurTableauBordEnum.PRE_ADMISSION_ECHEANCE_3_MOIS.name: Q(),
-        IndicateurTableauBordEnum.ADMISSION_DOSSIER_SOUMIS.name: Q(
-            status=ChoixStatutPropositionDoctorale.CONFIRMEE.name,
-            type=ChoixTypeAdmission.ADMISSION.name,
-        ),
-        IndicateurTableauBordEnum.ADMISSION_AUTORISE_SIC.name: Q(
-            status=ChoixStatutPropositionDoctorale.INSCRIPTION_AUTORISEE.name,
-            type=ChoixTypeAdmission.ADMISSION.name,
-        ),
-        # IndicateurTableauBordEnum.ADMISSION_PAS_EN_ORDRE_INSCRIPTION.name: Q(),
     }
 
     @classmethod
