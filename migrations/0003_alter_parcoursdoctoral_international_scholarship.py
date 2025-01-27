@@ -12,7 +12,7 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AlterField(
+        migrations.AddField(
             model_name="parcoursdoctoral",
             name="international_scholarship",
             field=models.ForeignKey(
