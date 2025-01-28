@@ -41,6 +41,7 @@ from django_bootstrap5.renderers import FieldRenderer
 from osis_document.api.utils import get_remote_metadata, get_remote_token
 
 from admission.utils import format_school_title, get_superior_institute_queryset
+from base.forms.utils.file_field import PDF_MIME_TYPE
 from base.models.entity_version import EntityVersion
 from base.models.organization import Organization
 from parcours_doctoral.auth.constants import READ_ACTIONS_BY_TAB, UPDATE_ACTIONS_BY_TAB
@@ -79,9 +80,9 @@ class Tab:
 
 
 TAB_TREE = {
-    # Tab('documents', _('Documents'), 'folder-open'): [
-    #     Tab('documents', _('Documents'), 'folder-open'),
-    # ],
+    Tab('documents', _('Documents'), 'folder-open'): [
+        Tab('documents', _('Documents'), 'folder-open'),
+    ],
     # Tab('person', _('Personal data'), 'user'): [
     #     Tab('person', _('Identification'), 'user'),
     #     Tab('coordonnees', _('Contact details'), 'user'),
@@ -406,7 +407,7 @@ def field_data(
         elif context.get('load_files') is False:
             data = _('Specified') if data else _('Incomplete field')
         elif data:
-            template_string = "{% load osis_document %}{% document_visualizer files for_modified_upload=True %}"
+            template_string = "{% load osis_document %}{% document_visualizer files %}"
             template_context = {'files': data}
             data = template.Template(template_string).render(template.Context(template_context))
         else:
@@ -593,3 +594,29 @@ def url_params_from_form(form):
                 url_params += f'&{field_name}={field_value}'
 
     return url_params
+
+
+@register.inclusion_tag('parcours_doctoral/document/dummy.html')
+def document_component(document_write_token, document_metadata, can_edit=True):
+    """Display the right editor component depending on the file type."""
+    if document_metadata:
+        if document_metadata.get('mimetype') == PDF_MIME_TYPE:
+            attrs = {}
+            if not can_edit:
+                attrs = {action: False for action in ['comment', 'highlight', 'rotation']}
+            return {
+                'template': 'osis_document/editor.html',
+                'value': document_write_token,
+                'base_url': settings.OSIS_DOCUMENT_BASE_URL,
+                'attrs': attrs,
+            }
+        elif document_metadata.get('mimetype') in IMAGE_MIME_TYPES:
+            return {
+                'template': 'parcours_doctoral/document/image.html',
+                'url': document_metadata.get('url'),
+                'alt': document_metadata.get('name'),
+            }
+    return {
+        'template': 'parcours_doctoral/document/no_document.html',
+        'message': _('Non-retrievable document') if document_write_token else _('No document'),
+    }

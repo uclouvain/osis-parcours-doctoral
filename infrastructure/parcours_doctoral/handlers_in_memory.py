@@ -28,6 +28,7 @@ from admission.infrastructure.admission.doctorat.preparation.repository.in_memor
 )
 
 from parcours_doctoral.ddd.commands import *
+from parcours_doctoral.ddd.commands import ListerDocumentsQuery, RecupererDocumentQuery
 from parcours_doctoral.ddd.use_case.read import *
 from parcours_doctoral.ddd.use_case.read.get_cotutelle_service import get_cotutelle
 from parcours_doctoral.ddd.use_case.read.recuperer_groupe_de_supervision_service import (
@@ -85,6 +86,9 @@ from parcours_doctoral.infrastructure.parcours_doctoral.epreuve_confirmation.rep
 from parcours_doctoral.infrastructure.parcours_doctoral.read_view.handlers_in_memory import (
     COMMAND_HANDLERS as READ_VIEW_COMMAND_HANDLERS,
 )
+from parcours_doctoral.infrastructure.parcours_doctoral.repository.in_memory.document import (
+    DocumentInMemoryRepository,
+)
 from parcours_doctoral.infrastructure.parcours_doctoral.repository.in_memory.groupe_de_supervision import (
     GroupeDeSupervisionInMemoryRepository,
 )
@@ -101,6 +105,7 @@ _notification = NotificationInMemory()
 _historique = HistoriqueInMemory()
 _membre_ca_translator = MembreCAInMemoryTranslator()
 _promoteur_translator = PromoteurInMemoryTranslator()
+_document_repository = DocumentInMemoryRepository()
 
 
 COMMAND_HANDLERS = {
@@ -215,6 +220,26 @@ COMMAND_HANDLERS = {
         parcours_doctoral_repository=_parcours_doctoral_repository,
         groupe_supervision_repository=_groupe_de_supervision_repository,
         historique=_historique,
+    ),
+    InitialiserDocumentCommand: lambda msg_bus, cmd: initialiser_document(
+        cmd,
+        document_repository=_document_repository,
+    ),
+    ModifierDocumentCommand: lambda msg_bus, cmd: modifier_document(
+        cmd,
+        document_repository=_document_repository,
+    ),
+    SupprimerDocumentCommand: lambda msg_bus, cmd: supprimer_document(
+        cmd,
+        document_repository=_document_repository,
+    ),
+    ListerDocumentsQuery: lambda msg_bus, cmd: lister_documents(
+        cmd,
+        document_repository=_document_repository,
+    ),
+    RecupererDocumentQuery: lambda msg_bus, cmd: recuperer_document(
+        cmd,
+        document_repository=_document_repository,
     ),
     **READ_VIEW_COMMAND_HANDLERS,
 }

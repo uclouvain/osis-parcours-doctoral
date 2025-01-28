@@ -67,7 +67,7 @@ READ_ACTIONS_BY_TAB = {
     'comments': 'parcours_doctoral.view_comments',
     'checklist': 'parcours_doctoral.view_checklist',
     # Documents
-    'documents': 'parcours_doctoral.view_documents_management',
+    'documents': 'parcours_doctoral.view_documents',
 }
 
 # Association between a write-only tab name (path name) and a permission
@@ -102,7 +102,7 @@ UPDATE_ACTIONS_BY_TAB = {
     'complementary-training': '',
     'course-enrollment': '',
     # Management
-    'documents': 'parcours_doctoral.view_documents_management',
+    'documents': 'parcours_doctoral.view_documents',
     'checklist': 'parcours_doctoral.view_checklist',
     'comments': 'parcours_doctoral.change_comments',
     # Jury

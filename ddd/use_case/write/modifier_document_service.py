@@ -23,13 +23,26 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from parcours_doctoral.ddd.builder.document_identity_builder import (
+    DocumentIdentityBuilder,
+)
+from parcours_doctoral.ddd.commands import ModifierDocumentCommand
+from parcours_doctoral.ddd.domain.model.document import DocumentIdentity
+from parcours_doctoral.ddd.repository.i_document import IDocumentRepository
 
-from parcours_doctoral.models.activity import *
-from parcours_doctoral.models.actor import *
-from parcours_doctoral.models.cdd_config import *
-from parcours_doctoral.models.cdd_mail_template import *
-from parcours_doctoral.models.confirmation_paper import *
-from parcours_doctoral.models.document import *
-from parcours_doctoral.models.jury import *
-from parcours_doctoral.models.parcours_doctoral import *
-from parcours_doctoral.models.task import *
+
+def modifier_document(
+    cmd: 'ModifierDocumentCommand',
+    document_repository: 'IDocumentRepository',
+) -> DocumentIdentity:
+    document = document_repository.get(
+        entity_id=DocumentIdentityBuilder.build(
+            uuid_parcours_doctoral=cmd.uuid_parcours_doctoral,
+            identifiant=cmd.identifiant,
+        )
+    )
+    document.modifier(uuids_documents=cmd.uuids_documents, auteur=cmd.auteur)
+
+    document_repository.save(entity=document)
+
+    return document.entity_id

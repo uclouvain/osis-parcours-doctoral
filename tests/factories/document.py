@@ -23,13 +23,20 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+import uuid
 
-from parcours_doctoral.models.activity import *
-from parcours_doctoral.models.actor import *
-from parcours_doctoral.models.cdd_config import *
-from parcours_doctoral.models.cdd_mail_template import *
-from parcours_doctoral.models.confirmation_paper import *
-from parcours_doctoral.models.document import *
-from parcours_doctoral.models.jury import *
-from parcours_doctoral.models.parcours_doctoral import *
-from parcours_doctoral.models.task import *
+import factory
+from factory.fuzzy import FuzzyChoice
+
+from parcours_doctoral.ddd.domain.model.document import TypeDocument
+from parcours_doctoral.models import Document as DocumentDbModel
+
+
+class DocumentFactory(factory.django.DjangoModelFactory):
+    name = factory.Faker('text', max_nb_chars=255)
+    updated_at = factory.Faker('date_time')
+    file = factory.LazyFunction(lambda: [uuid.uuid4()])
+    document_type = FuzzyChoice([TypeDocument.SYSTEME.name, TypeDocument.LIBRE.name])
+
+    class Meta:
+        model = DocumentDbModel

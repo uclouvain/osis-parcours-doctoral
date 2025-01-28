@@ -36,6 +36,9 @@ from parcours_doctoral.ddd.use_case.write import *
 from parcours_doctoral.infrastructure.parcours_doctoral.read_view.handlers import (
     COMMAND_HANDLERS as READ_VIEW_COMMAND_HANDLERS,
 )
+from parcours_doctoral.infrastructure.parcours_doctoral.repository.document import (
+    DocumentRepository,
+)
 
 from ...ddd.use_case.read.get_cotutelle_service import get_cotutelle
 from ...ddd.use_case.read.recuperer_groupe_de_supervision_service import (
@@ -186,6 +189,26 @@ COMMAND_HANDLERS = {
         parcours_doctoral_repository=ParcoursDoctoralRepository(),
         groupe_supervision_repository=GroupeDeSupervisionRepository(),
         historique=Historique(),
+    ),
+    InitialiserDocumentCommand: lambda msg_bus, cmd: initialiser_document(
+        cmd,
+        document_repository=DocumentRepository(),
+    ),
+    ModifierDocumentCommand: lambda msg_bus, cmd: modifier_document(
+        cmd,
+        document_repository=DocumentRepository(),
+    ),
+    SupprimerDocumentCommand: lambda msg_bus, cmd: supprimer_document(
+        cmd,
+        document_repository=DocumentRepository(),
+    ),
+    ListerDocumentsQuery: lambda msg_bus, cmd: lister_documents(
+        cmd,
+        document_repository=DocumentRepository(),
+    ),
+    RecupererDocumentQuery: lambda msg_bus, cmd: recuperer_document(
+        cmd,
+        document_repository=DocumentRepository(),
     ),
     **READ_VIEW_COMMAND_HANDLERS,
 }

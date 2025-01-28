@@ -23,13 +23,20 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from typing import Dict, List
 
-from parcours_doctoral.models.activity import *
-from parcours_doctoral.models.actor import *
-from parcours_doctoral.models.cdd_config import *
-from parcours_doctoral.models.cdd_mail_template import *
-from parcours_doctoral.models.confirmation_paper import *
-from parcours_doctoral.models.document import *
-from parcours_doctoral.models.jury import *
-from parcours_doctoral.models.parcours_doctoral import *
-from parcours_doctoral.models.task import *
+from parcours_doctoral.ddd.builder.parcours_doctoral_identity import (
+    ParcoursDoctoralIdentityBuilder,
+)
+from parcours_doctoral.ddd.commands import ListerDocumentsQuery
+from parcours_doctoral.ddd.dtos.document import DocumentDTO
+from parcours_doctoral.ddd.repository.i_document import IDocumentRepository
+
+
+def lister_documents(
+    cmd: 'ListerDocumentsQuery',
+    document_repository: 'IDocumentRepository',
+) -> Dict[str, List[DocumentDTO]]:
+    return document_repository.get_dtos_parcours_doctoral(
+        parcours_doctoral_id=ParcoursDoctoralIdentityBuilder.build_from_uuid(cmd.uuid_parcours_doctoral)
+    )

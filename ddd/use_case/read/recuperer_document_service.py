@@ -24,12 +24,21 @@
 #
 # ##############################################################################
 
-from parcours_doctoral.models.activity import *
-from parcours_doctoral.models.actor import *
-from parcours_doctoral.models.cdd_config import *
-from parcours_doctoral.models.cdd_mail_template import *
-from parcours_doctoral.models.confirmation_paper import *
-from parcours_doctoral.models.document import *
-from parcours_doctoral.models.jury import *
-from parcours_doctoral.models.parcours_doctoral import *
-from parcours_doctoral.models.task import *
+from parcours_doctoral.ddd.builder.document_identity_builder import (
+    DocumentIdentityBuilder,
+)
+from parcours_doctoral.ddd.commands import RecupererDocumentQuery
+from parcours_doctoral.ddd.dtos.document import DocumentDTO
+from parcours_doctoral.ddd.repository.i_document import IDocumentRepository
+
+
+def recuperer_document(
+    cmd: 'RecupererDocumentQuery',
+    document_repository: 'IDocumentRepository',
+) -> DocumentDTO:
+    return document_repository.get_dto(
+        entity_id=DocumentIdentityBuilder.build(
+            uuid_parcours_doctoral=cmd.uuid_parcours_doctoral,
+            identifiant=cmd.identifiant,
+        )
+    )

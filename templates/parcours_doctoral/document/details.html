@@ -1,0 +1,81 @@
+{% load parcours_doctoral %}
+{% load i18n %}
+{% comment "License" %}
+* OSIS stands for Open Student Information System. It's an application
+* designed to manage the core business of higher education institutions,
+* such as universities, faculties, institutes and professional schools.
+* The core business involves the administration of students, teachers,
+* courses, programs and so on.
+*
+* Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* A copy of this license - GNU General Public License - is available
+* at the root of the source code of this program.  If not,
+* see http://www.gnu.org/licenses/.
+{% endcomment %}
+
+<div
+  id="document-details"
+  class="position-relative d-flex flex-column justify-content-center"
+  {% if refresh_documents %}
+  hx-swap-oob="true"
+  {% endif %}
+>
+  {% if not document_uuid %}
+    <p id="empty-document-details" class="text-center">
+      {% translate 'To visualize and edit a document, please select it in the list opposite.' %}
+    </p>
+  {% else %}
+    <div id="document-editor-container">
+      {% document_component document_token document_metadata False %}
+    </div>
+
+    {# Actions #}
+    <div
+      class="btn-group document-actions fit-content flex-1"
+    >
+      <a
+        class="btn btn-default fit-content"
+        href="{{ document_metadata.url }}?dl=1"
+        target="_blank"
+        title="{% translate 'Download the document' %}"
+      >
+        <i class="fas fa-download"></i>
+      </a>
+      {% if editable_document %}
+        <button
+          id="delete-modal-button"
+          class="btn btn-danger fit-content"
+          data-bs-toggle="modal"
+          data-bs-target="#delete-confirm-modal"
+          title="{% translate 'Delete the document' %}"
+        >
+          <i class="fas fa-trash"></i>
+        </button>
+        {% include 'parcours_doctoral/document/delete_modal.html' %}
+        <button
+          id="document-upload-button"
+          class="btn btn-default fit-content"
+          data-bs-toggle="modal"
+          data-bs-target="#document-upload-modal"
+          title="{% translate 'Upload a document' %}"
+        >
+          <i class="fa-solid fa-upload"></i>
+        </button>
+        <div>
+          {% include 'parcours_doctoral/document/upload_modal.html' %}
+        </div>
+      {% endif %}
+    </div>
+  {% endif %}
+</div>

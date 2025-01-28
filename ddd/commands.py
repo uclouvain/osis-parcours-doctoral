@@ -211,3 +211,37 @@ class ModifierCotutelleCommand(interface.CommandRequest):
     demande_ouverture: List[str]
     convention: List[str]
     autres_documents: List[str]
+
+
+@attr.dataclass(frozen=True, slots=True)
+class InitialiserDocumentCommand(interface.CommandRequest):
+    uuid_parcours_doctoral: str
+    uuids_documents: List[str]
+    libelle: str
+    type_document: str
+    auteur: Optional[str]
+
+
+@attr.dataclass(frozen=True, slots=True)
+class ModifierDocumentCommand(interface.CommandRequest):
+    uuid_parcours_doctoral: str
+    identifiant: str
+    uuids_documents: List[str]
+    auteur: str
+
+
+@attr.dataclass(frozen=True, slots=True)
+class SupprimerDocumentCommand(interface.CommandRequest):
+    uuid_parcours_doctoral: str
+    identifiant: str
+
+
+@attr.dataclass(frozen=True, slots=True)
+class ListerDocumentsQuery(interface.QueryRequest):
+    uuid_parcours_doctoral: str
+
+
+@attr.dataclass(frozen=True, slots=True)
+class RecupererDocumentQuery(interface.QueryRequest):
+    uuid_parcours_doctoral: str
+    identifiant: str

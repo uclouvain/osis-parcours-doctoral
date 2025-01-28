@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -69,6 +69,8 @@ from parcours_doctoral.views.list import ParcoursDoctoralList
 
 
 class ParcoursDoctoralViewMixin(LoginRequiredMixin, PermissionRequiredMixin, ContextMixin):
+    load_doctorate_dto = True
+
     @property
     def parcours_doctoral_uuid(self) -> str:
         return self.kwargs.get('uuid', '')
@@ -134,7 +136,9 @@ class ParcoursDoctoralViewMixin(LoginRequiredMixin, PermissionRequiredMixin, Con
                         'parcours_doctoral:base', uuid=current_parcours_doctoral[key]
                     )
 
-        context['parcours_doctoral'] = self.parcours_doctoral_dto
+        if self.load_doctorate_dto:
+            context['parcours_doctoral'] = self.parcours_doctoral_dto
+
         return context
 
 
