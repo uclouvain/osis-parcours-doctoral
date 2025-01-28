@@ -525,8 +525,6 @@ class ParcoursDoctoral(models.Model):
         verbose_name = _("Doctoral training")
         ordering = ('-created_at',)
         permissions = [
-            ('download_jury_approved_pdf', _("Can download jury-approved PDF")),
-            ('upload_jury_approved_pdf', _("Can upload jury-approved PDF")),
             ('validate_registration', _("Can validate registration")),
             ('approve_jury', _("Can approve jury")),
             ('approve_confirmation_paper', _("Can approve confirmation paper")),

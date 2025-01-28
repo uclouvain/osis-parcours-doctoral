@@ -62,7 +62,6 @@ class Promoter(RoleModel):
             'parcours_doctoral.approve_confirmation_paper': is_parcours_doctoral_promoter,
             'parcours_doctoral.validate_doctoral_training': is_parcours_doctoral_promoter,
             'parcours_doctoral.fill_thesis': is_parcours_doctoral_promoter,
-            'parcours_doctoral.check_publication_authorisation': is_parcours_doctoral_promoter,
             # A promoter can view as long as he is one of the PhD promoters
             'parcours_doctoral.view_project': is_parcours_doctoral_promoter,
             'parcours_doctoral.view_cotutelle': is_parcours_doctoral_promoter,
