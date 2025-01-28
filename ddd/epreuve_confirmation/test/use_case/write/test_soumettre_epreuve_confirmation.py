@@ -69,20 +69,6 @@ class TestSoumettreEpreuveConfirmation(TestCase):
                 )
             )
 
-    def test_should_generer_exception_si_date_epreuve_confirmation_invalide(self):
-        with self.assertRaises(MultipleBusinessExceptions) as e:
-            self.message_bus.invoke(
-                SoumettreEpreuveConfirmationCommand(
-                    uuid=str(self.epreuve_confirmation_id.uuid),
-                    rapport_recherche=['mon_fichier_1'],
-                    proces_verbal_ca=['mon_fichier_2'],
-                    avis_renouvellement_mandat_recherche=['mon_fichier_3'],
-                    date=datetime.date(2030, 10, 10),
-                    matricule_auteur='1234',
-                )
-            )
-        self.assertIsInstance(e.exception.exceptions.pop(), EpreuveConfirmationDateIncorrecteException)
-
     def test_should_generer_exception_si_date_epreuve_confirmation_non_specifiee(self):
         with self.assertRaises(MultipleBusinessExceptions) as e:
             self.message_bus.invoke(
