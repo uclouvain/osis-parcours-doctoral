@@ -30,11 +30,11 @@
   role="presentation"
   class="nav-item"
 >
-  <a href="{{ tab_url|default:'#' }}" class="nav-link{% if is_active %} active{% elif not tab_url %} disabled{% endif %}{% if is_subtab %} py-3{% endif %}">
+  <a href="{{ tab_url|default:'#' }}" class="align-items-center nav-link d-flex{% if is_active %} active{% elif not tab_url %} disabled{% endif %}{% if is_subtab %} py-3{% endif %}">
     {% if icon %}
-      <span class="fa fa-{{ icon }}"></span>
+      <span class="fa fa-{{ icon }} me-1"></span>
     {% endif %}
     {{ tab_label }}
-    {% if badge %}<span class="badge rounded-pill bg-secondary">{{ badge }}</span>{% endif %}
+    {% if badge %}{{ badge }}{% endif %}
   </a>
 </li>

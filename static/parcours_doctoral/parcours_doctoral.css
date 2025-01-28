@@ -546,3 +546,12 @@ a.no-link {
 .dot.green-dot {
   background: rgb(50, 200, 50);
 }
+
+/* Badges */
+#main .badge:empty {
+  display: none;
+}
+
+#main .comment-count > .badge {
+  font-size: 0.7em;
+}

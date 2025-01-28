@@ -72,4 +72,7 @@ PROGRAM_MANAGER_RULES = {
     'parcours_doctoral.change_jury': is_part_of_education_group & is_jury_in_progress,
     # -- Défense
     # -- Soutenance
+    # -- Commentaire
+    'parcours_doctoral.view_comments': is_part_of_education_group,
+    'parcours_doctoral.change_comments': is_part_of_education_group,
 }

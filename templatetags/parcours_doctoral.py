@@ -82,9 +82,6 @@ TAB_TREE = {
     # Tab('documents', _('Documents'), 'folder-open'): [
     #     Tab('documents', _('Documents'), 'folder-open'),
     # ],
-    # Tab('comments', pgettext('tab', 'Comments'), 'comments'): [
-    #     Tab('comments', pgettext('tab', 'Comments'), 'comments')
-    # ],
     # Tab('person', _('Personal data'), 'user'): [
     #     Tab('person', _('Identification'), 'user'),
     #     Tab('coordonnees', _('Contact details'), 'user'),
@@ -113,6 +110,9 @@ TAB_TREE = {
     Tab('defense', pgettext('doctorate tab', 'Defense'), 'person-chalkboard'): [
         Tab('jury-preparation', pgettext('admission tab', 'Defense method')),
         Tab('jury', _('Jury composition')),
+    ],
+    Tab('comments', pgettext('tab', 'Comments'), 'comments'): [
+        Tab('comments', pgettext('tab', 'Comments'), 'comments')
     ],
     Tab('history', pgettext('tab', 'History'), 'history'): [
         Tab('history-all', _('All history')),
@@ -175,6 +175,7 @@ def parcours_doctoral_tabs(context):
     parcours_doctoral = context['view'].get_permission_object()
     current_tab_tree = get_valid_tab_tree(context, parcours_doctoral, TAB_TREE).copy()
     tab_context['tab_tree'] = current_tab_tree
+    tab_context['tab_badges'] = context.get('tab_badges', {})
     return tab_context
 
 
