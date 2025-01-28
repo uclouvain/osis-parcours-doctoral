@@ -920,14 +920,6 @@ msgctxt "gender"
 msgid "Doctoral student"
 msgstr "Doctorant·e"
 
-msgctxt "female gender"
-msgid "Doctoral student"
-msgstr "Doctorante"
-
-msgctxt "gender"
-msgid "Doctoral student"
-msgstr "Doctorant·e"
-
 msgctxt "male gender"
 msgid "Doctoral student"
 msgstr "Doctorant"
