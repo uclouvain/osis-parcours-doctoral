@@ -107,7 +107,7 @@
 {% block tab_content %}
   <h3>{% trans "Confirmation exam" %}</h3>
   <div>
-    {% field_data _("Definitive admission date:") doctorate.parcours_doctoral_acceptee_le 'inline-field-data' %}
+    {% field_data _("Definitive admission date:") parcours_doctoral.cree_le|date 'inline-field-data' %}
     {% field_data _("Confirmation deadline:") current_confirmation_paper.date_limite 'inline-field-data' %}
     {% field_data _("Confirmation exam date:") current_confirmation_paper.date 'inline-field-data' %}
     {% field_data _("Research report") current_confirmation_paper.rapport_recherche %}

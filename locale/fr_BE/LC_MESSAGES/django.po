@@ -2480,11 +2480,6 @@ msgstr ""
 "La date de l'épreuve de confirmation ne peut être postérieure à sa date "
 "limite."
 
-msgid "The date of the confirmation paper cannot be later than its deadline."
-msgstr ""
-"La date de l'épreuve de confirmation ne peut être postérieure à sa date "
-"limite."
-
 msgid "The decision of the signing actor"
 msgstr "La décision du signataire"
 

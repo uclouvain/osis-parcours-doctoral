@@ -2316,9 +2316,6 @@ msgstr ""
 msgid "The date of the confirmation exam cannot be later than its deadline."
 msgstr ""
 
-msgid "The date of the confirmation paper cannot be later than its deadline."
-msgstr ""
-
 msgid "The decision of the signing actor"
 msgstr ""
 

@@ -30,7 +30,7 @@
 {% endblock %}
 
 {% block form_content %}
-{#  {% field_data _("Definitive admission date:") parcours_doctoral.admission_acceptee_le 'inline-field-data' %}#}
+  {% field_data _("Definitive admission date:") parcours_doctoral.cree_le|date 'inline-field-data' %}
   {% bootstrap_field form.date_limite wrapper_class="form-group min_field" %}
   {% bootstrap_field form.date wrapper_class="form-group min_field" %}
   {% bootstrap_field form.rapport_recherche %}
