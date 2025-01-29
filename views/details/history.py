@@ -47,7 +47,7 @@ class HistoryAPIView(LoginRequiredMixin, APIPermissionRequiredMixin, HistoryEntr
     }
 
     def get_permission_object(self):
-        get_cached_parcours_doctoral_perm_obj(self.kwargs['uuid'])
+        return get_cached_parcours_doctoral_perm_obj(self.kwargs['uuid'])
 
 
 class HistoryView(ParcoursDoctoralViewMixin, TemplateView):
