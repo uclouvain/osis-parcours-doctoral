@@ -87,15 +87,20 @@
                   class="custom-fieldset"
                 >
                   <legend>
-                    <a data-bs-toggle="collapse" href="#date-formset-container" aria-expanded="false">
-                      {% trans "Date" %}
-                      <span class="fa fa-chevron-down"></span>
-                      <span class="fa fa-chevron-up"></span>
-                    </a>
+                    <button
+                      type="button"
+                      class="btn btn-collapse"
+                      data-bs-toggle="collapse"
+                      data-bs-target="#date-formset-container"
+                      aria-expanded="true"
+                      aria-controls="date-formset-container"
+                    >
+                      {% translate "Date" %}
+                    </button>
                   </legend>
                   <div
                     id="date-formset-container"
-                    class="date-formset-container collapse"
+                    class="date-formset-container collapse show"
                   >
                     {% for date_form in date_formset %}
                       {% include "parcours_doctoral/list/date_form.html" with form=date_form %}
@@ -182,18 +187,17 @@
           padding-bottom: 0.5em;
       }
 
-      #date-fieldset legend {
-          padding: 0 5px;
+      #date-fieldset legend button::after{
+          font-family: "Font Awesome 5 Pro";
       }
 
-      #date-fieldset legend a[aria-expanded="true"] .fa-chevron-down, #date-fieldset legend a[aria-expanded="false"] .fa-chevron-up {
-          display: none;
+      #date-fieldset legend button[aria-expanded="true"]::after {
+          content: "\f077";
       }
 
-      #date-fieldset legend a[aria-expanded="false"] .fa-chevron-down, #date-fieldset legend a[aria-expanded="true"] .fa-chevron-up {
-          display: initial;
+      #date-fieldset legend button[aria-expanded="false"]::after {
+          content: "\f078";
       }
-
   </style>
 {% endblock %}
 
@@ -215,6 +219,7 @@
 
       $(document).ready(function () {
           const main_container = document.getElementById('main');
+          const dateFormsetToggleButton = $('#date-fieldset legend button');
           const dateFormsetContainer = $('#date-formset-container');
           const dateFormContainer = $('.date-form-container');
           const defaultFormValues = {{ default_form_values|safe }};
@@ -233,6 +238,9 @@
                   }
               });
               dateFormsetContainer.find('.delete-row').click();
+              if (dateFormsetToggleButton.attr('aria-expanded') === 'false') {
+                  dateFormsetToggleButton.click();
+              }
               evt.preventDefault();
               $('#search_form button[type=submit]').click();
               return false;
@@ -296,6 +304,9 @@
               },
           });
 
+          if (dateFormsetContainer.find('.date-form-container').length > 0) {
+            dateFormsetToggleButton.click();
+          }
       });
   </script>
 
