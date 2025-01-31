@@ -276,8 +276,9 @@ class ParcoursDoctorauxFilterForm(forms.Form):
         self.fields['bourse_recherche'].choices = self.get_scholarship_choices()
 
         # Initialize the institute sector field
-        self.institutes_sectors = self.get_institute_and_sector_queryset()
-        self.fields['instituts_secteurs'].choices = [(acronym, acronym) for acronym in self.institutes_sectors]
+        self.sectors_acronyms = set()
+
+        self.fields['instituts_secteurs'].choices = self.get_institute_and_sector_choices()
 
         # Initialize the labels of the autocomplete fields
         if load_labels:
@@ -346,7 +347,7 @@ class ParcoursDoctorauxFilterForm(forms.Form):
             )
         )
 
-    def get_institute_and_sector_queryset(self):
+    def get_institute_and_sector_choices(self):
         """Used to determine which institute / sector to filter on"""
         qs = EntityProxy.objects.filter(
             entityversion__entity_type__in=[
@@ -354,15 +355,25 @@ class ParcoursDoctorauxFilterForm(forms.Form):
                 EntityType.SECTOR.name,
             ],
         )
-        return (
+        qs = (
             qs.with_acronym()
             .distinct('acronym')
             .order_by('acronym')
-            .values_list(
+            .values(
+                'entityversion__entity_type',
                 'acronym',
-                flat=True,
             )
         )
+
+        choices = []
+
+        for row in qs:
+            if row['entityversion__entity_type'] == EntityType.SECTOR.name:
+                self.sectors_acronyms.add(row['acronym'])
+
+            choices.append((row['acronym'], row['acronym']))
+
+        return choices
 
     def get_doctorate_queryset(self):
         """Used to determine which training to filter on"""
@@ -402,6 +413,20 @@ class ParcoursDoctorauxFilterForm(forms.Form):
 
     def clean_page(self):
         return self.cleaned_data.get('page') or self.fields['page'].initial
+
+    def clean(self):
+        cleaned_data = super().clean()
+
+        sector_institutes_values = cleaned_data.get('instituts_secteurs')
+
+        cleaned_data['instituts'] = []
+        cleaned_data['secteurs'] = []
+
+        if sector_institutes_values:
+            for value in sector_institutes_values:
+                cleaned_data['secteurs' if value in self.sectors_acronyms else 'instituts'].append(value)
+
+        return cleaned_data
 
 
 class IntervalDateForm(forms.Form):

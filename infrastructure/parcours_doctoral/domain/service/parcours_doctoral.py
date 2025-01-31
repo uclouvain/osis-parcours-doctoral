@@ -38,6 +38,7 @@ from admission.models import DoctorateAdmission, SupervisionActor
 from admission.models.enums.actor_type import ActorType as AdmissionActorType
 from parcours_doctoral.auth.roles.ca_member import CommitteeMember
 from parcours_doctoral.auth.roles.promoter import Promoter
+from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import (
     ParcoursDoctoralIdentity,
 )
@@ -174,6 +175,7 @@ class ParcoursDoctoralService(IParcoursDoctoralService):
             dedicated_time=admission.dedicated_time,
             is_fnrs_fria_fresh_csc_linked=admission.is_fnrs_fria_fresh_csc_linked,
             financing_comment=admission.financing_comment,
+            status=ChoixStatutParcoursDoctoral.EN_ATTENTE_INJECTION_EPC.name,
         )
 
         uploaded_files = cls._duplicate_uploaded_files(admission, parcours_doctoral)
