@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -27,14 +27,13 @@ import re
 from collections import OrderedDict
 from inspect import getfullargspec
 
-from base.api.serializers.academic_year import RelatedAcademicYearField
-from base.forms.utils.academic_year_field import AcademicYearModelChoiceField
 from django import forms
 from osis_document.contrib import FileUploadField
-from reference.api.serializers.country import RelatedCountryField
 from rest_framework import serializers
 from rest_framework.generics import get_object_or_404
 
+from base.api.serializers.academic_year import RelatedAcademicYearField
+from base.forms.utils.academic_year_field import AcademicYearModelChoiceField
 from parcours_doctoral.ddd.formation.domain.model.enums import (
     CategorieActivite,
     ContexteFormation,
@@ -46,6 +45,7 @@ from parcours_doctoral.forms.training.activity import ConfigurableActivityTypeFi
 from parcours_doctoral.models.activity import Activity
 from parcours_doctoral.models.cdd_config import CddConfiguration
 from parcours_doctoral.models.parcours_doctoral import ParcoursDoctoral
+from reference.api.serializers.country import RelatedCountryField
 
 FORM_SERIALIZER_FIELD_MAPPING = {
     forms.CharField: serializers.CharField,
@@ -65,6 +65,17 @@ FORM_SERIALIZER_FIELD_MAPPING = {
     forms.DecimalField: serializers.FloatField,
     FileUploadField: serializers.ListField,
     AcademicYearModelChoiceField: RelatedAcademicYearField,
+}
+
+EXCLUDED_FIELDS = {
+    'start_date_month',
+    'start_date_year',
+}
+
+BOOLEAN_FIELDS = {
+    'is_online',
+    'is_publication_national',
+    'with_reading_committee',
 }
 
 
@@ -141,11 +152,14 @@ class ActivitySerializerBase(serializers.Serializer):
             if field_name in ret:  # pragma: no cover
                 continue
 
-            if field_name in excluded:
+            if field_name in excluded or field_name in EXCLUDED_FIELDS:
                 continue
 
             try:
-                serializer_field_class = field_mapping[form_field.__class__]
+                if field_name in BOOLEAN_FIELDS:
+                    serializer_field_class = serializers.BooleanField
+                else:
+                    serializer_field_class = field_mapping[form_field.__class__]
             except KeyError:  # pragma: no cover
                 raise TypeError(
                     f"{field_name} ({form_field}) is not mapped to a serializer field. "
@@ -312,9 +326,7 @@ class PaperSerializer(ActivitySerializerBase):
 
 class UclCourseSerializer(ActivitySerializerBase):
     learning_unit_year = serializers.CharField(source="learning_unit_year.acronym")
-    academic_year = serializers.IntegerField(source="learning_unit_year.academic_year.year")
     learning_unit_title = serializers.CharField(source="learning_unit_year.complete_title_i18n", read_only=True)
-    academic_year_title = serializers.CharField(source="learning_unit_year.academic_year", read_only=True)
     ects = serializers.FloatField(read_only=True)
 
     class Meta:

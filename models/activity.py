@@ -31,7 +31,6 @@ from django.db import models
 from django.db.models import Q, Sum
 from django.db.models.signals import post_delete, post_save
 from django.dispatch import receiver
-from django.template import Context, Template
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import pgettext_lazy
 from osis_document.contrib import FileField
@@ -40,10 +39,13 @@ from base.ddd.utils.business_validator import MultipleBusinessExceptions
 from parcours_doctoral.ddd.formation.domain.model.enums import (
     CategorieActivite,
     ChoixComiteSelection,
+    ChoixRolePublication,
     ChoixStatutPublication,
+    ChoixTypeVolume,
     ContexteFormation,
     StatutActivite,
 )
+from parcours_doctoral.utils.formatting import format_activity_ects
 
 __all__ = [
     "Activity",
@@ -206,7 +208,7 @@ class Activity(models.Model):
 
     participating_proof = FileField(
         verbose_name=_("Participation certification"),
-        max_files=1,
+        max_files=2,
         blank=True,
         upload_to=training_activity_directory_path,
     )
@@ -314,19 +316,34 @@ class Activity(models.Model):
     role = models.CharField(
         verbose_name=pgettext_lazy("activity", "Role"),
         max_length=100,
+        choices=ChoixRolePublication.choices(),
         default="",
         blank=True,
     )
     keywords = models.CharField(
-        verbose_name=pgettext_lazy("admission", "Keywords"),
+        verbose_name=pgettext_lazy("parcours_doctoral", "Keywords"),
         max_length=100,
         default="",
         blank=True,
     )
     journal = models.CharField(
-        verbose_name=_("Journal or publishing house name"),
+        verbose_name=_("Journal, publishing house or depository institution"),
         max_length=100,
         default="",
+        blank=True,
+    )
+    is_publication_national = models.BooleanField(
+        verbose_name=_("Is publication national"),
+        choices=((False, _("International publication")), (True, _("National publication"))),
+        default=None,
+        null=True,
+        blank=True,
+    )
+    with_reading_committee = models.BooleanField(
+        verbose_name=_("With reading committee"),
+        choices=((False, _("Without reading committee")), (True, _("With reading committee"))),
+        default=None,
+        null=True,
         blank=True,
     )
 
@@ -344,6 +361,13 @@ class Activity(models.Model):
         default="",
         blank=True,
     )
+    hour_volume_type = models.CharField(
+        verbose_name=_("Hourly volume type"),
+        max_length=100,
+        default="",
+        choices=ChoixTypeVolume.choices(),
+        blank=True,
+    )
 
     # UCL Course
     learning_unit_year = models.ForeignKey(
@@ -355,6 +379,12 @@ class Activity(models.Model):
     course_completed = models.BooleanField(
         blank=True,
         default=False,
+    )
+    mark = models.CharField(
+        verbose_name=_("Mark or honours obtained"),
+        max_length=100,
+        default="",
+        blank=True,
     )
 
     # Process
@@ -391,16 +421,7 @@ class Activity(models.Model):
         return f"{self.get_category_display()} ({self.ects} ects, {self.get_status_display()})"
 
     def __str__(self) -> str:
-        return (
-            Template(
-                """{% load parcours_doctoral %}
-            {% firstof 0 activity.category|lower|add:'.html' as template_name %}
-            {% include "parcours_doctoral/details/training/_activity_title.html" %}
-            """
-            )
-            .render(Context({'activity': self}))
-            .strip()
-        )
+        return f"{self.get_category_display()} - {format_activity_ects(self.ects)}"
 
     class Meta:
         verbose_name = _("Training activity")

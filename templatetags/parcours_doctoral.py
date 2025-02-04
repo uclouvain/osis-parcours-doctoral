@@ -55,6 +55,7 @@ from parcours_doctoral.ddd.formation.domain.model.enums import (
 from parcours_doctoral.ddd.repository.i_parcours_doctoral import formater_reference
 from parcours_doctoral.forms.supervision import MemberSupervisionForm
 from parcours_doctoral.models import ParcoursDoctoral
+from parcours_doctoral.utils.formatting import format_activity_ects
 from reference.models.language import Language
 
 register = template.Library()
@@ -107,6 +108,8 @@ TAB_TREE = {
     Tab('training', pgettext('admission', 'Course'), 'book-open-reader'): [
         Tab('doctoral-training', _('PhD training')),
         Tab('complementary-training', _('Complementary training')),
+    ],
+    Tab('course-enrollment', _('Course unit enrolment'), 'book-open-reader'): [
         Tab('course-enrollment', _('Course unit enrolment')),
     ],
     Tab('defense', pgettext('doctorate tab', 'Defense'), 'person-chalkboard'): [
@@ -539,10 +542,7 @@ def default_if_none_or_empty(value, arg):
 
 @register.filter()
 def format_ects(ects):
-    if not ects:
-        ects = ""
-    ects = floatformat(ects, -2)
-    return f"{ects} ECTS"
+    return format_activity_ects(ects=ects)
 
 
 @register.simple_tag

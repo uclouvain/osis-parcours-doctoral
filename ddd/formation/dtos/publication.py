@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -28,14 +28,15 @@ from datetime import date
 from typing import List, Optional
 
 import attr
-from osis_common.ddd import interface
 
+from osis_common.ddd import interface
 from parcours_doctoral.ddd.formation.domain.model.enums import ChoixStatutPublication
 
 
 @attr.dataclass(slots=True, frozen=True)
 class PublicationDTO(interface.DTO):
     type: str = ""
+    est_publication_nationale: bool = True
     intitule: str = ""
     date: Optional[date] = None
     auteurs: str = ""
@@ -43,6 +44,7 @@ class PublicationDTO(interface.DTO):
     nom_revue_maison_edition: str = ""
     preuve_acceptation: List[str] = attr.Factory(list)
     statut_publication: Optional[ChoixStatutPublication] = None
+    avec_comite_de_lecture: bool = False
     mots_cles: str = ""
     resume: str = ""
     reference_dial: str = ""
