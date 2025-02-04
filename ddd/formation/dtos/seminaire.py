@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -28,6 +28,7 @@ from datetime import date
 from typing import List, Optional
 
 import attr
+
 from osis_common.ddd import interface
 
 
@@ -35,9 +36,13 @@ from osis_common.ddd import interface
 class SeminaireDTO(interface.DTO):
     type: str = ""
     nom: str = ""
+    pays: str = ""
+    ville: str = ""
+    institution_organisatrice: str = ""
     date_debut: Optional[date] = None
     date_fin: Optional[date] = None
     volume_horaire: str = ""
+    volume_horaire_type: str = ""
     attestation_participation: List[str] = attr.Factory(list)
 
 
@@ -45,9 +50,6 @@ class SeminaireDTO(interface.DTO):
 class SeminaireCommunicationDTO(interface.DTO):
     date: Optional[date] = None
     en_ligne: bool = False
-    pays: str = ""
-    ville: str = ""
-    institution_organisatrice: str = ""
     site_web: str = ""
     titre_communication: str = ""
     orateur_oratrice: str = ""

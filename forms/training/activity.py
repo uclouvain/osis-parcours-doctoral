@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -23,20 +23,21 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+import datetime
 from functools import partial
 from typing import List, Tuple
 
-import dal.forward
-from base.forms.utils import autocomplete
-from base.forms.utils.academic_year_field import AcademicYearModelChoiceField
-from base.forms.utils.datefield import DatePickerInput
-from base.models.academic_year import AcademicYear
-from base.models.learning_unit_year import LearningUnitYear
 from django import forms
+from django.utils.dates import MONTHS_ALT
 from django.utils.translation import get_language
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import pgettext_lazy
 
+from base.forms.utils import EMPTY_CHOICE, autocomplete
+from base.forms.utils.academic_year_field import AcademicYearModelChoiceField
+from base.forms.utils.datefield import DatePickerInput
+from base.models.academic_year import AcademicYear, current_academic_year
+from base.models.learning_unit_year import LearningUnitYear
 from parcours_doctoral.ddd.formation.domain.model.enums import (
     CategorieActivite,
     ChoixComiteSelection,
@@ -70,6 +71,15 @@ __all__ = [
 from parcours_doctoral.models.parcours_doctoral import ParcoursDoctoral
 
 INSTITUTION_UCL = "UCLouvain"
+MINIMUM_YEAR = 2000
+
+
+def year_choices():
+    return [EMPTY_CHOICE[0]] + [(int(year), year) for year in range(datetime.date.today().year, MINIMUM_YEAR, -1)]
+
+
+def month_choices():
+    return [EMPTY_CHOICE[0]] + [(int(index), month) for index, month in MONTHS_ALT.items()]
 
 
 def get_cdd_config(cdd_id) -> CddConfiguration:
@@ -134,6 +144,18 @@ class ActivityFormMixin(forms.BaseForm):
         self.cdd_id = parcours_doctoral.training.management_entity_id
         super().__init__(*args, **kwargs)
 
+    def clean_start_date(self):
+        start_date = self.cleaned_data.get("start_date")
+        if start_date and start_date > datetime.date.today():
+            raise forms.ValidationError(_("The date cannot be in the future."))
+        return start_date
+
+    def clean_end_date(self):
+        end_date = self.cleaned_data.get("end_date")
+        if end_date and end_date > datetime.date.today():
+            raise forms.ValidationError(_("The date cannot be in the future."))
+        return end_date
+
     def clean(self):
         cleaned_data = super().clean()
         if (
@@ -168,6 +190,7 @@ class ConferenceForm(ActivityFormMixin, forms.ModelForm):
             'start_date',
             'end_date',
             'participating_days',
+            'hour_volume',
             'is_online',
             'website',
             'country',
@@ -185,11 +208,27 @@ class ConferenceForm(ActivityFormMixin, forms.ModelForm):
             'start_date': CustomDatePickerInput(),
             'end_date': CustomDatePickerInput(),
             'country': autocomplete.ListSelect2(url="country-autocomplete"),
+            'participating_days': forms.NumberInput(attrs={'min': '0', 'step': '0.5'}),
             'ects': forms.NumberInput(attrs={'min': '0', 'step': '0.5'}),
         }
         help_texts = {
             'title': _("Name in the language of the manifestation"),
+            'participating_days': _("Please specify either a hourly volume or a number of participating days"),
+            'hour_volume': _("Please specify either a hourly volume or a number of participating days"),
         }
+
+    def clean(self):
+        cleaned_data = super().clean()
+        if not cleaned_data.get('participating_days') and not cleaned_data.get('hour_volume'):
+            self.add_error(
+                'participating_days',
+                forms.ValidationError(_("Please specify either a hourly volume or a number of participating days")),
+            )
+            self.add_error(
+                'hour_volume',
+                forms.ValidationError(_("Please specify either a hourly volume or a number of participating days")),
+            )
+        return cleaned_data
 
 
 class ConferenceCommunicationForm(ActivityFormMixin, forms.ModelForm):
@@ -231,11 +270,36 @@ class ConferenceCommunicationForm(ActivityFormMixin, forms.ModelForm):
         widgets = {
             'ects': forms.NumberInput(attrs={'min': '0', 'step': '0.5'}),
         }
+        help_texts = {
+            'title': _("Name in the language of the manifestation"),
+            'participating_proof': _(
+                "A document proving that the communication was done (i.e. communication certificate)"
+            ),
+        }
 
 
 class ConferencePublicationForm(ActivityFormMixin, forms.ModelForm):
     template_name = "parcours_doctoral/forms/training/conference_publication.html"
     type = ConfigurableActivityTypeField('conference_publication_types', label=_("Publication type"))
+
+    start_date_month = forms.TypedChoiceField(
+        choices=month_choices,
+        label=_('Month'),
+        widget=autocomplete.Select2(),
+        required=True,
+        coerce=int,
+    )
+    start_date_year = forms.TypedChoiceField(
+        choices=year_choices,
+        label=_('Year'),
+        widget=autocomplete.Select2(),
+        required=True,
+        coerce=int,
+        help_text=_(
+            "For a released text, specify the month and year of publication."
+            " Else, specify the month and year of the manuscript."
+        ),
+    )
 
     class Meta:
         model = Activity
@@ -257,17 +321,38 @@ class ConferencePublicationForm(ActivityFormMixin, forms.ModelForm):
         ]
         labels = {
             'type': _("Publication type"),
-            'title': _("Publication title"),
-            'start_date': _("Publication date"),
+            'title': _("Publication title (in the publication language)"),
             'committee': _("Selection committee"),
             'summary': pgettext_lazy("paper summary", "Summary"),
             'acceptation_proof': _("Proof of acceptance or publication"),
             'publication_status': _("Publication status"),
         }
         widgets = {
-            'start_date': CustomDatePickerInput(),
             'ects': forms.NumberInput(attrs={'min': '0', 'step': '0.5'}),
         }
+        help_texts = {
+            'publication_status': _("Refer to the website of your commission for more details."),
+            'acceptation_proof': _(
+                "Submit a proof, for example a letter from the editor,"
+                " a delivery attestation, the first page of the publication, ..."
+            ),
+        }
+
+    def __init__(self, *args, **kwargs):
+        instance = kwargs.get('instance')
+
+        if instance and instance.start_date:
+            kwargs['initial'] = {
+                'start_date_month': instance.start_date.month,
+                'start_date_year': instance.start_date.year,
+            }
+
+        super().__init__(*args, **kwargs)
+
+    def clean(self):
+        data = super().clean()
+        data['start_date'] = datetime.date(data['start_date_year'], data['start_date_month'], 1)
+        return data
 
 
 class CommunicationForm(ActivityFormMixin, forms.ModelForm):
@@ -315,7 +400,8 @@ class CommunicationForm(ActivityFormMixin, forms.ModelForm):
             'comment',
         ]
         labels = {
-            'title': _("Activity name"),
+            'title': _("Event name"),
+            'subtitle': _("Communication title (in the activity language)"),
             'start_date': _("Activity date"),
             'website': _("Event website"),
             'acceptation_proof': _("Proof of acceptation by the committee"),
@@ -328,16 +414,40 @@ class CommunicationForm(ActivityFormMixin, forms.ModelForm):
             'country': autocomplete.ListSelect2(url="country-autocomplete"),
             'ects': forms.NumberInput(attrs={'min': '0', 'step': '0.5'}),
         }
+        help_texts = {
+            'title': _("Specify the name of the event in which the communicate took place"),
+            'summary': _(
+                "Required field for some of the doctoral commissions. Refer to the website of your commission for "
+                "more detail."
+            ),
+        }
 
 
 class PublicationForm(ActivityFormMixin, forms.ModelForm):
     template_name = "parcours_doctoral/forms/training/publication.html"
     type = ConfigurableActivityTypeField('publication_types', label=_("Publication type"))
 
+    start_date_month = forms.TypedChoiceField(
+        choices=month_choices,
+        label=_('Month'),
+        widget=autocomplete.Select2(),
+        required=True,
+        coerce=int,
+    )
+    start_date_year = forms.TypedChoiceField(
+        choices=year_choices,
+        label=_('Year'),
+        widget=autocomplete.Select2(),
+        required=True,
+        coerce=int,
+        help_text=_("If necessary, specify the date of publication, delivery, acceptation or of the manuscript"),
+    )
+
     class Meta:
         model = Activity
         fields = [
             'type',
+            'is_publication_national',
             'title',
             'start_date',
             'authors',
@@ -346,26 +456,69 @@ class PublicationForm(ActivityFormMixin, forms.ModelForm):
             'summary',
             'journal',
             'publication_status',
+            'with_reading_committee',
             'dial_reference',
             'ects',
             'acceptation_proof',
             'comment',
         ]
         labels = {
-            'title': _("Publication title"),
-            'start_date': _("Publication date"),
-            'publication_status': _("Publication status"),
-            'acceptation_proof': _("Proof of publication"),
+            'title': _("Title (in the publication language)"),
+            'start_date': _("Date"),
+            'publication_status': _("Status"),
+            'acceptation_proof': _("Attestation"),
         }
         widgets = {
-            'start_date': CustomDatePickerInput(),
             'ects': forms.NumberInput(attrs={'min': '0', 'step': '0.5'}),
+            'is_publication_national': forms.RadioSelect(),
+            'with_reading_committee': forms.RadioSelect(),
         }
+        help_texts = {
+            'publication_status': _(
+                "Specify the status of the publication or of the patent. Consult the website of your commission for "
+                "more detail."
+            ),
+            'acceptation_proof': _(
+                "Submit a proof, for example a letter from the editor,"
+                " a delivery attestation, the first page of the publication, ..."
+            ),
+        }
+
+    def __init__(self, *args, **kwargs):
+        instance = kwargs.get('instance')
+        kwargs.setdefault('initial', {})
+
+        if instance:
+            if instance.start_date:
+                kwargs['initial'].update(
+                    {
+                        'start_date_month': instance.start_date.month,
+                        'start_date_year': instance.start_date.year,
+                    }
+                )
+        else:
+            kwargs['initial'].update(
+                {
+                    'is_publication_national': True,
+                    'with_reading_committee': False,
+                }
+            )
+
+        super().__init__(*args, **kwargs)
+
+    def clean(self):
+        data = super().clean()
+        data['start_date'] = datetime.date(data['start_date_year'], data['start_date_month'], 1)
+        return data
 
 
 class ResidencyForm(ActivityFormMixin, forms.ModelForm):
     template_name = "parcours_doctoral/forms/training/residency.html"
-    type = ConfigurableActivityTypeField('residency_types', label=_("Activity type"))
+    type = ConfigurableActivityTypeField(
+        'residency_types',
+        label=_("Activity type"),
+        help_text=_("Refer to your commission website for more detail."),
+    )
 
     class Meta:
         model = Activity
@@ -377,18 +530,26 @@ class ResidencyForm(ActivityFormMixin, forms.ModelForm):
             'end_date',
             'country',
             'city',
+            'organizing_institution',
             'participating_proof',
             'comment',
         ]
         labels = {
             'subtitle': _("Activity description"),
-            'participating_proof': _("Proof (if applicable)"),
+            'organizing_institution': _("Institution"),
+            'participating_proof': _("Attestation"),
         }
         widgets = {
             'start_date': CustomDatePickerInput(),
             'end_date': CustomDatePickerInput(),
             'country': autocomplete.ListSelect2(url="country-autocomplete"),
             'ects': forms.NumberInput(attrs={'min': '0', 'step': '0.5'}),
+        }
+        help_texts = {
+            'participating_proof': _(
+                "Be careful, some doctorales commissions require an activity proof in their"
+                " specifics dispositions. Refer to your commission specifics dispositions."
+            ),
         }
 
 
@@ -400,7 +561,9 @@ class ResidencyCommunicationForm(ActivityFormMixin, forms.ModelForm):
         label=_("Type of communication"),
         required=False,
     )
-    subtitle = forms.CharField(label=_("Title of the communication"), max_length=200, required=False)
+    subtitle = forms.CharField(
+        label=_("Communication title (in the activity language)"), max_length=200, required=False
+    )
     is_online = IsOnlineField()
 
     class Meta:
@@ -421,7 +584,7 @@ class ResidencyCommunicationForm(ActivityFormMixin, forms.ModelForm):
         ]
         labels = {
             'title': _("Event name"),
-            'start_date': _("Activity date"),
+            'start_date': _("Communication date"),
             'website': _("Event website"),
             'summary': _("Summary of the communication"),
             'participating_proof': _("Attestation of the communication"),
@@ -430,11 +593,21 @@ class ResidencyCommunicationForm(ActivityFormMixin, forms.ModelForm):
             'start_date': CustomDatePickerInput(),
             'ects': forms.NumberInput(attrs={'min': '0', 'step': '0.5'}),
         }
+        help_texts = {
+            'title': _("Specify the name of the event in which the communicate took place"),
+            'summary': _(
+                "Required field if some doctorals commissions, refer to your commission specifics dispositions."
+            ),
+        }
 
 
 class ServiceForm(ActivityFormMixin, forms.ModelForm):
     template_name = "parcours_doctoral/forms/training/service.html"
-    type = ConfigurableActivityTypeField("service_types", label=_("Activity type"))
+    type = ConfigurableActivityTypeField(
+        "service_types",
+        label=_("Service type"),
+        help_text=_("Refer to your commission website for more detail."),
+    )
 
     class Meta:
         model = Activity
@@ -450,15 +623,23 @@ class ServiceForm(ActivityFormMixin, forms.ModelForm):
             'comment',
         ]
         labels = {
-            'title': _("Activity name"),
+            'title': _("Name or brief description"),
+            'start_date': _("Start date"),
+            'end_date': _("End date"),
             'subtitle': _("Activity description"),
-            'participating_proof': _("Proof (if applicable)"),
+            'participating_proof': _("Attestation"),
             'organizing_institution': _("Institution"),
         }
         widgets = {
             'start_date': CustomDatePickerInput(),
             'end_date': CustomDatePickerInput(),
             'ects': forms.NumberInput(attrs={'min': '0', 'step': '0.5'}),
+        }
+        help_texts = {
+            'participating_proof': _(
+                "Be careful, some doctorales commissions require an activity proof in their"
+                " specifics dispositions. Refer to your commission specifics dispositions."
+            )
         }
 
 
@@ -473,7 +654,12 @@ class SeminarForm(ActivityFormMixin, forms.ModelForm):
             'title',
             'start_date',
             'end_date',
+            'country',
+            'city',
+            'organizing_institution',
             'hour_volume',
+            'hour_volume_type',
+            'summary',
             'participating_proof',
             'ects',
         ]
@@ -484,7 +670,15 @@ class SeminarForm(ActivityFormMixin, forms.ModelForm):
         widgets = {
             'start_date': CustomDatePickerInput(),
             'end_date': CustomDatePickerInput(),
+            'hour_volume': forms.NumberInput(attrs={'min': '0', 'step': '0.5'}),
             'ects': forms.NumberInput(attrs={'min': '0', 'step': '0.5'}),
+        }
+        help_texts = {
+            'city': _("If the seminar takes place in several places, leave this field empty."),
+            'hour_volume': _(
+                "Following the specifics of your domain doctoral commission,"
+                " specify the total time dedicated to this activity"
+            ),
         }
 
 
@@ -498,18 +692,15 @@ class SeminarCommunicationForm(ActivityFormMixin, forms.ModelForm):
             'title',
             'start_date',
             'is_online',
-            'country',
-            'city',
-            'organizing_institution',
             'website',
             'authors',
             'participating_proof',
             'comment',
         ]
         labels = {
-            'title': _("Title of the communication"),
+            'title': _("Title of the paper in the language of the activity"),
             'start_date': _("Presentation date"),
-            'authors': _("Speaker"),
+            'authors': _("First name and last name of the speaker"),
             'participating_proof': _("Certificate of participation in the presentation"),
         }
         widgets = {
@@ -545,7 +736,7 @@ class ValorisationForm(ActivityFormMixin, forms.ModelForm):
 
 class CourseForm(ActivityFormMixin, forms.ModelForm):
     template_name = "parcours_doctoral/forms/training/course.html"
-    type = ConfigurableActivityTypeField("course_types", label=_("Activity type"))
+    type = ConfigurableActivityTypeField("course_types", label=pgettext_lazy("parcours_doctoral course", "Course type"))
     subtitle = forms.CharField(
         label=_("Course unit code (if applicable)"),
         max_length=200,
@@ -595,6 +786,7 @@ class CourseForm(ActivityFormMixin, forms.ModelForm):
             'hour_volume',
             'authors',
             'is_online',
+            'mark',
             'ects',
             'participating_proof',
             'comment',
@@ -605,9 +797,14 @@ class CourseForm(ActivityFormMixin, forms.ModelForm):
             'ects': forms.NumberInput(attrs={'min': '0', 'step': '0.5'}),
         }
         labels = {
-            'title': _("Activity name"),
-            'authors': _("Course unit instructor (if applicable)"),
+            'title': pgettext_lazy("parcours_doctoral course", "Title"),
+            'authors': _("Organisers or academic responsibles"),
+            'hour_volume': _("Hourly volume"),
             'participating_proof': _("Proof of participation or success"),
+        }
+        help_texts = {
+            'authors': _("In the context of a course, specify the name of the professor"),
+            'title': _("As it appears in an official course catalogue"),
         }
 
 
@@ -639,21 +836,15 @@ class PaperForm(ActivityFormMixin, forms.ModelForm):
 
 class UclCourseForm(ActivityFormMixin, forms.ModelForm):
     template_name = "parcours_doctoral/forms/training/ucl_course.html"
-    academic_year = AcademicYearModelChoiceField(
-        to_field_name='year',
-        widget=autocomplete.ListSelect2(),
-        future_only=True,
-    )
     learning_unit_year = forms.CharField(
         label=pgettext_lazy("admission", "Learning unit"),
         widget=autocomplete.ListSelect2(
-            url='admission:autocomplete:learning-unit-years-and-classes',
+            url='parcours_doctoral:autocomplete:current-learning-unit-years-and-classes',
             attrs={
                 'data-html': True,
                 'data-placeholder': _('Search for an EU code (outside the EU of the form)'),
                 'data-minimum-input-length': 3,
             },
-            forward=[dal.forward.Field("academic_year", "annee")],
         ),
     )
 
@@ -669,7 +860,6 @@ class UclCourseForm(ActivityFormMixin, forms.ModelForm):
         # Initialize values
         if self.initial.get('learning_unit_year'):
             learning_unit_year = LearningUnitYear.objects.get(pk=self.initial['learning_unit_year'])
-            self.initial['academic_year'] = learning_unit_year.academic_year.year
             self.initial['learning_unit_year'] = learning_unit_year.acronym
             self.fields['learning_unit_year'].widget.choices = [
                 (
@@ -680,9 +870,9 @@ class UclCourseForm(ActivityFormMixin, forms.ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
-        if cleaned_data.get('academic_year') and cleaned_data.get('learning_unit_year'):
+        if cleaned_data.get('learning_unit_year'):
             cleaned_data['learning_unit_year'] = LearningUnitYear.objects.get(
-                academic_year=cleaned_data['academic_year'],
+                academic_year=current_academic_year(),
                 acronym=cleaned_data['learning_unit_year'],
             )
         return cleaned_data
