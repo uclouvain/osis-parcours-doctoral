@@ -40,7 +40,9 @@ from base.ddd.utils.business_validator import MultipleBusinessExceptions
 from parcours_doctoral.ddd.formation.domain.model.enums import (
     CategorieActivite,
     ChoixComiteSelection,
+    ChoixRolePublication,
     ChoixStatutPublication,
+    ChoixTypeVolume,
     ContexteFormation,
     StatutActivite,
 )
@@ -206,7 +208,7 @@ class Activity(models.Model):
 
     participating_proof = FileField(
         verbose_name=_("Participation certification"),
-        max_files=1,
+        max_files=2,
         blank=True,
         upload_to=training_activity_directory_path,
     )
@@ -314,19 +316,34 @@ class Activity(models.Model):
     role = models.CharField(
         verbose_name=pgettext_lazy("activity", "Role"),
         max_length=100,
+        choices=ChoixRolePublication.choices(),
         default="",
         blank=True,
     )
     keywords = models.CharField(
-        verbose_name=pgettext_lazy("admission", "Keywords"),
+        verbose_name=pgettext_lazy("parcours_doctoral", "Keywords"),
         max_length=100,
         default="",
         blank=True,
     )
     journal = models.CharField(
-        verbose_name=_("Journal or publishing house name"),
+        verbose_name=_("Journal, publishing house or depository institution"),
         max_length=100,
         default="",
+        blank=True,
+    )
+    is_publication_national = models.BooleanField(
+        verbose_name=_("Is publication national"),
+        choices=((False, _("International publication")), (True, _("National publication"))),
+        default=None,
+        null=True,
+        blank=True,
+    )
+    with_reading_committee = models.BooleanField(
+        verbose_name=_("With reading committee"),
+        choices=((False, _("Without reading committee")), (True, _("With reading committee"))),
+        default=None,
+        null=True,
         blank=True,
     )
 
@@ -344,6 +361,13 @@ class Activity(models.Model):
         default="",
         blank=True,
     )
+    hour_volume_type = models.CharField(
+        verbose_name=_("Hourly volume type"),
+        max_length=100,
+        default="",
+        choices=ChoixTypeVolume.choices(),
+        blank=True,
+    )
 
     # UCL Course
     learning_unit_year = models.ForeignKey(
@@ -355,6 +379,12 @@ class Activity(models.Model):
     course_completed = models.BooleanField(
         blank=True,
         default=False,
+    )
+    mark = models.CharField(
+        verbose_name=_("Mark or honours obtained"),
+        max_length=100,
+        default="",
+        blank=True,
     )
 
     # Process

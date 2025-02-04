@@ -7,7 +7,7 @@
   * The core business involves the administration of students, teachers,
   * courses, programs and so on.
   *
-  * Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+  * Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
   *
   * This program is free software: you can redistribute it and/or modify
   * it under the terms of the GNU General Public License as published by
@@ -50,9 +50,36 @@
     <div>
       <p>
         <strong class="d-block">{% trans "Description" %}</strong>
-        {{ activity.title }} {{ period }} - {{ activity.hour_volume }} hours
+        {{ activity.title }}, {{ activity.type }}, {{ period }}.
+
       </p>
+      <div class="row mb-3">
+        {% if activity.organizing_institution %}
+          <div class="col-md-4">
+            <strong class="d-block">{% trans "Organising institution" %}</strong>
+            {{ activity.organizing_institution }}
+          </div>
+        {% endif %}
+        {% if activity.country %}
+          <div class="col-md-4">
+            <strong class="d-block">{% trans "Country" %}</strong>
+            {{ activity.country }}
+          </div>
+        {% endif %}
+        {% if activity.city %}
+          <div class="col-md-4">
+            <strong class="d-block">{% trans "city" %}</strong>
+            {{ activity.city }}
+          </div>
+        {% endif %}
+      </div>
       <div class="row">
+        {% if activity.hour_volume %}
+          <p class="col-md-4">
+            <strong class="d-block">{% trans "Total hourly volume" %}</strong>
+            {{ activity.hour_volume }} {% if activity.hour_volume_type %}{{ activity.hour_volume_type|enum_display:"ChoixTypeVolume" }}{% endif %}
+          </p>
+        {% endif %}
         {% if activity.ects %}
           <p class="col-md-4">
             <strong class="d-block">{% trans "ECTS" %}</strong>

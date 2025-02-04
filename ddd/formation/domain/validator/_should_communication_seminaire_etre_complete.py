@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -25,8 +25,8 @@
 # ##############################################################################
 
 import attr
-from base.ddd.utils.business_validator import BusinessValidator
 
+from base.ddd.utils.business_validator import BusinessValidator
 from parcours_doctoral.ddd.formation.business_types import *
 from parcours_doctoral.ddd.formation.domain.validator.exceptions import (
     ActiviteNonComplete,
@@ -43,9 +43,6 @@ class ShouldCommunicationSeminaireEtreComplete(BusinessValidator):
         if not all(
             [
                 self.communication.date,
-                self.communication.pays,
-                self.communication.ville,
-                self.communication.institution_organisatrice,
                 self.communication.titre_communication,
                 self.communication.orateur_oratrice,
             ]

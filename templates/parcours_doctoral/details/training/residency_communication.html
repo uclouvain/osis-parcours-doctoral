@@ -7,7 +7,7 @@
   * The core business involves the administration of students, teachers,
   * courses, programs and so on.
   *
-  * Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+  * Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
   *
   * This program is free software: you can redistribute it and/or modify
   * it under the terms of the GNU General Public License as published by
@@ -48,9 +48,9 @@
     <div>
       <p>
         <strong class="d-block">{% trans "Description" %}</strong>
-        {{ activity.title }} - {{ activity.subtitle }} - {{ activity.is_online|format_is_online }} - {{ website }}
-        <br />
-        {{ activity.organizing_institution }}, {{ activity.city }}, {{ activity.country }}
+        {{ parcours_doctoral.nom_doctorant }}, {{ parcours_doctoral.prenom_doctorant.0 }}. ({{ activity.start_date|date:'Y, m' }}).
+        <em>{{ activity.subtitle }}</em> {{ activity.type }}. {{ activity.title }}, {{ activity.parent.city }}, {{ activity.parent.country }}.
+        {% if activity.website %}<a href="{{ activity.website }}" target="_blank">{{ activity.website }}</a>{% endif %}
       </p>
       {% if activity.summary %}
         <div class="mb-3">
@@ -59,12 +59,9 @@
         </div>
       {% endif %}
       <div class="row">
-        {% if activity.participating_days %}
-          <p class="col-md-4">
-            <strong class="d-block">{% trans "Number of days participating" %}</strong>
-            {{ activity.participating_days|floatformat }}
-          </p>
-        {% endif %}
+        <p class="col-md-4">
+          <strong>{% if activity.is_online %}{% translate "Online" %}{% else %}{% translate "In person" %}{% endif %}</strong>
+        </p>
         {% if activity.ects %}
           <p class="col-md-4">
             <strong class="d-block">{% trans "ECTS" %}</strong>

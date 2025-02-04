@@ -30,7 +30,6 @@ function initializePopover(configuration) {
     html: true,
     placement: 'top',
     fallbackPlacements: ['auto'],
-    toggle: 'popover',
     trigger: 'focus',
   }});
 }
