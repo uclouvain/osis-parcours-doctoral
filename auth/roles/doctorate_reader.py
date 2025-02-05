@@ -44,7 +44,6 @@ class DoctorateReader(RoleModel):
             'parcours_doctoral.view_supervision': always_allow,
             'parcours_doctoral.view_jury': always_allow,
             'parcours_doctoral.view_confirmation': always_allow,
-            'parcours_doctoral.view_doctorate_enrolment_applications': always_allow,
             'parcours_doctoral.view_dossiers': always_allow,
             'parcours_doctoral.view_internalnote': always_allow,
         }

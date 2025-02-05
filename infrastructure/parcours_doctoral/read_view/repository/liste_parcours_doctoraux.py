@@ -81,7 +81,8 @@ class ListeParcoursDoctorauxRepository(IListeParcoursDoctorauxRepository):
         type_financement: Optional[str] = '',
         bourse_recherche: Optional[str] = '',
         fnrs_fria_fresh: Optional[bool] = None,
-        instituts_secteurs: Optional[List[str]] = None,
+        instituts: Optional[List[str]] = None,
+        secteurs: Optional[List[str]] = None,
         dates: Optional[List[Tuple[str, Optional[date], Optional[date]]]] = None,
         sigles_formations: Optional[List[str]] = None,
         tri_inverse: bool = False,
@@ -148,10 +149,19 @@ class ListeParcoursDoctorauxRepository(IListeParcoursDoctorauxRepository):
         if demandeur:
             qs = filter_doctorate_queryset_according_to_roles(qs, demandeur)
 
-        if cdds or instituts_secteurs:
-            qs = qs.filter(
-                training__management_entity_id__in=get_entities_with_descendants_ids(cdds + instituts_secteurs)
-            )
+        if cdds:
+            qs = qs.filter(training__management_entity_id__in=get_entities_with_descendants_ids(cdds))
+
+        sector_condition = Q()
+        institute_condition = Q()
+
+        if secteurs:
+            sector_condition = Q(training__management_entity_id__in=get_entities_with_descendants_ids(secteurs))
+
+        if instituts:
+            institute_condition = Q(thesis_institute__acronym__in=instituts)
+
+        qs = qs.filter(sector_condition | institute_condition)
 
         if commission_proximite:
             qs = qs.filter(proximity_commission=commission_proximite)

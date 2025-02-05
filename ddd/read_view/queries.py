@@ -51,7 +51,8 @@ class ListerTousParcoursDoctorauxQuery(interface.QueryRequest):
     type_financement: Optional[str] = ''
     bourse_recherche: Optional[str] = ''
     fnrs_fria_fresh: Optional[bool] = None
-    instituts_secteurs: Optional[List[str]] = None
+    instituts: Optional[List[str]] = None
+    secteurs: Optional[List[str]] = None
     statuts: Optional[List] = None
     dates: Optional[List[Tuple[str, Optional[datetime.date], Optional[datetime.date]]]] = None
     demandeur: Optional[str] = ''

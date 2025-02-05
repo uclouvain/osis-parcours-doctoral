@@ -912,9 +912,6 @@ msgstr "Docteur"
 msgid "Doctoral commissions"
 msgstr "Commissions doctorales"
 
-msgid "Doctoral student"
-msgstr "Doctorant·e"
-
 msgctxt "female gender"
 msgid "Doctoral student"
 msgstr "Doctorante"
@@ -1937,10 +1934,11 @@ msgstr "Sujet"
 
 msgctxt "gender"
 msgid "Promoter"
-msgstr "Promoteur·rice"
+msgstr "Promoteur·trice"
 
+msgctxt "gender"
 msgid "Promoters"
-msgstr "Promoteurs"
+msgstr "Promoteurs·trices"
 
 msgid "Promotion"
 msgstr "Promotion"

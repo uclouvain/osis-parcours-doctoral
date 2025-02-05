@@ -111,13 +111,15 @@
     </div>
 
     {% if parcours_doctoral.genre_doctorant == "F" %}
-      {% translate "The doctoral student" as student_title context "female gender" %}
+      {% translate "Doctoral student" as student_title context "female gender" %}
+    {% elif parcours_doctoral.genre_doctorant == "H" %}
+      {% translate "Doctoral student" as student_title context "male gender" %}
     {% else %}
-      {% translate "The doctoral student" as student_title context "male gender" %}
+      {% translate "Doctoral student" as student_title context "gender" %}
     {% endif %}
     {% concat "<span class='bold-text text-uppercase'>" parcours_doctoral.nom_doctorant "</span> " parcours_doctoral.prenom_doctorant as full_name %}
     {% field_data _("Doctorate") parcours_doctoral.formation.nom_complet inline=True %}
-    {% field_data _("Doctoral student") full_name|safe inline=True %}
+    {% field_data student_title full_name|safe inline=True %}
     {% field_data _("Registration Id") parcours_doctoral.noma_doctorant inline=True %}
 
     {% if parcours_doctoral.cotutelle.cotutelle %}
@@ -148,7 +150,7 @@
     </div>
 
     {% for promoter_index in 1|range_for:2 %}
-      <div class="mt-1 avoid-break-inside ca-member">
+      <div class="mt-3 avoid-break-inside ca-member">
         <span class="bold-text">{% translate "Promoter" context "gender" %}</span> {% translate '(if applicable):' %}
         <hr class="dotted-line" style="margin-bottom: 0.5em" />
 
@@ -160,7 +162,7 @@
     {% endfor %}
 
     {% for ca_member_index in 1|range_for:5 %}
-      <div class="mt-1 avoid-break-inside ca-member">
+      <div class="mt-3 avoid-break-inside ca-member">
       <span class="bold-text">
         {% blocktranslate with ca_member_index=ca_member_index %}Member {{ ca_member_index }}{% endblocktranslate %}
       </span> {% translate '(if applicable):' %}

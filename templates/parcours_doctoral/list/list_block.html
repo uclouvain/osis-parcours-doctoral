@@ -91,9 +91,17 @@
           <td>{{ parcours_doctoral.formation.nom_complet }}</td>
           <td>{{ parcours_doctoral.statut|enum_display:'ChoixStatutParcoursDoctoral' }}</td>
           <td>{{ parcours_doctoral.cree_le|date:"d/m/Y" }}</td>
-          <td><span class="dot {% if parcours_doctoral.pre_admission %}green-dot{% else %}red-dot{% endif %}"></span></td>
-          <td><span class="dot {% if parcours_doctoral.cotutelle %}green-dot{% else %}red-dot{% endif %}"></span></td>
-          <td><span class="dot {% if parcours_doctoral.formation_complementaire %}green-dot{% else %}red-dot{% endif %}"></span></td>
+          <td class="text-center">
+            {% if parcours_doctoral.pre_admission %}<i class="fa-solid fa-flag" style="color: #c01c28;"></i>{% endif %}
+          </td>
+          <td class="text-center">
+            {% if parcours_doctoral.cotutelle %}<i class="fa-solid fa-seedling" style="color: #26a269;"></i>{% endif %}
+          </td>
+          <td class="text-center">
+            {% if parcours_doctoral.formation_complementaire %}
+              <i class="fa-regular fa-calendar-circle-plus" style="color: #2c67b1;"></i>
+            {% endif %}
+          </td>
           <td>
             {# <span class="dot {% if parcours_doctoral.en_regle_inscription %}green-dot{% else %}red-dot{% endif %}"></span> #}
             (TODO)

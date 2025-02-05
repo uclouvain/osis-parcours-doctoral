@@ -152,6 +152,7 @@ class ParcoursDoctoralList(LoginRequiredMixin, PermissionRequiredMixin, HtmxMixi
             cache.set(self.cache_key, self.request.GET, timeout=self.parameters_cache_timeout)
 
         self.filters = self.form.cleaned_data
+        self.filters.pop('instituts_secteurs', None)
 
         self.filters['dates'] = []
         for date_form in self.date_formset:

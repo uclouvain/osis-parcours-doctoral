@@ -50,14 +50,28 @@ role.role_manager.register(CommitteeMember)
 PROGRAM_MANAGER_RULES = {
     # Doctorats
     'parcours_doctoral.view_parcours_doctoral': always_allow,
+    'parcours_doctoral.view_historyentry': is_part_of_education_group,
+    'parcours_doctoral.view_person': is_part_of_education_group,
+    'parcours_doctoral.view_coordinates': is_part_of_education_group,
+    'parcours_doctoral.view_secondary_studies': is_part_of_education_group,
+    'parcours_doctoral.view_curriculum': is_part_of_education_group,
+    'parcours_doctoral.view_languages': is_part_of_education_group,
+    'parcours_doctoral.view_internalnote': is_part_of_education_group,
     # --- Projet de recherche
+    'parcours_doctoral.view_project': is_part_of_education_group,
+    'parcours_doctoral.view_cotutelle': is_part_of_education_group,
     'parcours_doctoral.view_supervision': is_part_of_education_group,
+    'parcours_doctoral.add_supervision_member': is_part_of_education_group,
+    'parcours_doctoral.edit_external_supervision_member': is_part_of_education_group,
+    'parcours_doctoral.remove_supervision_member': is_part_of_education_group,
+    'parcours_doctoral.approve_member_by_pdf': is_part_of_education_group,
     # --- Confirmation
     'parcours_doctoral.view_confirmation': is_part_of_education_group,
     'parcours_doctoral.change_confirmation': is_part_of_education_group,
     'parcours_doctoral.change_confirmation_extension': is_part_of_education_group,
     'parcours_doctoral.make_confirmation_decision': is_part_of_education_group & submitted_confirmation_paper,
     'parcours_doctoral.send_message': is_part_of_education_group,
+    'parcours_doctoral.upload_pdf_confirmation': is_part_of_education_group,
     # -- Formation doctorale
     'parcours_doctoral.view_training': is_part_of_education_group,
     'parcours_doctoral.view_doctoral_training': is_part_of_education_group,

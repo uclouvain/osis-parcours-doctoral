@@ -111,6 +111,16 @@ class ParcoursDoctoralListTestView(QueriesAssertionsMixin, TestCase):
 
         # Create doctorate
         root_entity = MainEntityVersionFactory(parent=None).entity
+        cls.institute = EntityVersionFactory(
+            parent=root_entity,
+            entity_type=EntityType.INSTITUTE.name,
+            acronym='I1',
+        )
+        cls.other_institute = EntityVersionFactory(
+            parent=root_entity,
+            entity_type=EntityType.INSTITUTE.name,
+            acronym='I2',
+        )
         cls.sector = EntityVersionFactory(
             parent=root_entity,
             entity_type=EntityType.SECTOR.name,
@@ -182,6 +192,7 @@ class ParcoursDoctoralListTestView(QueriesAssertionsMixin, TestCase):
             dedicated_time=30,
             is_fnrs_fria_fresh_csc_linked=False,
             financing_comment='Funding comment',
+            thesis_institute=cls.institute,
         )
         cls.doctorate_training = cls.doctorate.training
         cls.first_teaching_campus = (
@@ -740,6 +751,16 @@ class ParcoursDoctoralListTestView(QueriesAssertionsMixin, TestCase):
         self.assertEqual(len(response.context['object_list']), 0)
 
         response = self._do_request(allowed_sql_surplus=1, instituts_secteurs=[self.sector.acronym])
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.context['object_list']), 1)
+
+        response = self._do_request(allowed_sql_surplus=1, instituts_secteurs=[self.other_institute.acronym])
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.context['object_list']), 0)
+
+        response = self._do_request(allowed_sql_surplus=1, instituts_secteurs=[self.institute.acronym])
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.context['object_list']), 1)

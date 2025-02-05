@@ -126,6 +126,7 @@ fieldset.custom-fieldset {
 }
 
 fieldset.custom-fieldset > legend {
+  float: initial;
   font-size: 1em;
   width: fit-content;
   border: none;

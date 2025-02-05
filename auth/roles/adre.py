@@ -50,12 +50,6 @@ class AdreSecretary(RoleModel):
             'base.can_access_student_path': rules.always_allow,
             # Doctorate
             'parcours_doctoral.view_parcours_doctoral': rules.always_allow,
-            'parcours_doctoral.download_jury_approved_pdf': rules.always_allow,
-            'parcours_doctoral.upload_jury_approved_pdf': rules.always_allow,
-            'parcours_doctoral.upload_signed_scholarship': rules.always_allow,
-            'parcours_doctoral.check_publication_authorisation': rules.always_allow,
-            'parcours_doctoral.view_doctorate_enrolment_applications': rules.always_allow,
-            'parcours_doctoral.view_enrolment_applications': rules.always_allow,
             'parcours_doctoral.view_person': rules.always_allow,
             'parcours_doctoral.view_coordinates': rules.always_allow,
             'parcours_doctoral.view_secondary_studies': rules.always_allow,
