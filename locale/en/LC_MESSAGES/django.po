@@ -104,6 +104,12 @@ msgid ""
 "a> - Some doctoral training activities have been approved."
 msgstr ""
 
+msgid ""
+"<a href='https://uclouvain.be/en/research/valodoc/confirmation-eligibility-"
+"doctoral-programme.html' target='_blank'>https://uclouvain.be/en/research/"
+"valodoc/confirmation-eligibility-doctoral-programme.html</a>"
+msgstr ""
+
 #, python-format
 msgid ""
 "<h2>Delete \"%(name)s\" custom mail template?</h2> <p>Are you sure you want "
@@ -505,16 +511,10 @@ msgstr ""
 msgid "Can be submitted"
 msgstr ""
 
-msgid "Can download jury-approved PDF"
-msgstr ""
-
 msgid "Can update the information related to the admission jury"
 msgstr ""
 
 msgid "Can update the information related to the confirmation paper"
-msgstr ""
-
-msgid "Can upload jury-approved PDF"
 msgstr ""
 
 msgid "Can validate doctoral training"
@@ -744,6 +744,9 @@ msgctxt "confirmation paper"
 msgid "Created at"
 msgstr ""
 
+msgid "Current funding"
+msgstr ""
+
 msgid "Custom mail template"
 msgstr ""
 
@@ -829,6 +832,13 @@ msgctxt "admission decision"
 msgid "Denied"
 msgstr ""
 
+msgid ""
+"Depending on your previous experience and your research project, the PhD "
+"Committee may require you to take additional PhD training, up to a maximum "
+"of 60 credits. If so, please indicate here a proposal for additional "
+"training."
+msgstr ""
+
 msgid "Description"
 msgstr ""
 
@@ -879,6 +889,9 @@ msgid "Doctoral trainings"
 msgstr ""
 
 msgid "Doctorate"
+msgstr ""
+
+msgid "Doctorate thesis field"
 msgstr ""
 
 msgid "Does not have a doctor title"
@@ -1033,6 +1046,11 @@ msgid ""
 "of the work and announces:"
 msgstr ""
 
+msgid ""
+"For example, a contract, a letter from a supervisor, or any other document "
+"showing that you have been awarded the scholarship on the dates indicated."
+msgstr ""
+
 msgid "French"
 msgstr ""
 
@@ -1044,6 +1062,10 @@ msgid "Full-time equivalent (as %)"
 msgstr ""
 
 msgctxt "parcours_doctoral"
+msgid "Funding"
+msgstr ""
+
+msgctxt "tab"
 msgid "Funding"
 msgstr ""
 
@@ -1108,11 +1130,24 @@ msgid ""
 msgstr ""
 
 msgid ""
+"If known, indicate the name of the laboratory, clinical department or "
+"research centre where the thesis will be carried out"
+msgstr ""
+
+msgid ""
 "If necessary, please finish inputting doctoral activities and complete the "
 "defense preparation below before submitting the jury proposition."
 msgstr ""
 
+msgid "If other scholarship, specify"
+msgstr ""
+
 msgid "If other, specify"
+msgstr ""
+
+msgid ""
+"If you don't have any funding yet, please choose \"Self-funding\" and "
+"explain the considered funding in the \"Comment\" area."
 msgstr ""
 
 msgid ""
@@ -1138,11 +1173,20 @@ msgid "Incomplete field"
 msgstr ""
 
 msgid ""
+"Indicate any completed or interrupted PhD studies in which you are no longer "
+"enrolled."
+msgstr ""
+
+msgid ""
 "Information about a potential cotutelle are to be inputted in the \"Doctoral "
 "project\" part."
 msgstr ""
 
 msgctxt "jury"
+msgid "Institute"
+msgstr ""
+
+msgctxt "parcours_doctoral"
 msgid "Institute"
 msgstr ""
 
@@ -1159,6 +1203,9 @@ msgid "Institution"
 msgstr ""
 
 msgid "Institution Federation Wallonie-Bruxelles"
+msgstr ""
+
+msgid "Institution in which the PhD has been realised / started."
 msgstr ""
 
 msgid "Institution should be set when PhD has been set to yes or partial"
@@ -1550,6 +1597,9 @@ msgstr ""
 msgid "No"
 msgstr ""
 
+msgid "No defense"
+msgstr ""
+
 msgid "No defense reason"
 msgstr ""
 
@@ -1736,6 +1786,11 @@ msgid "Please justify why the member does not have a doctor title"
 msgstr ""
 
 msgid ""
+"Please look up the website of your domain doctoral committee on how to "
+"download the document."
+msgstr ""
+
+msgid ""
 "Please refer to the specifics disposition of your domain doctoral commission "
 "for your activities choice."
 msgstr ""
@@ -1791,7 +1846,13 @@ msgstr ""
 msgid "Project resume"
 msgstr ""
 
+msgid "Project resume (max. 2000 characters)"
+msgstr ""
+
 msgid "Project title"
+msgstr ""
+
+msgid "Project title (max. 100 characters)"
 msgstr ""
 
 msgctxt "gender"
@@ -2070,6 +2131,9 @@ msgstr ""
 msgid "Scholarship end date"
 msgstr ""
 
+msgid "Scholarship end date prior to any possible renewal."
+msgstr ""
+
 msgid "Scholarship holder"
 msgstr ""
 
@@ -2168,6 +2232,9 @@ msgid "Speaker"
 msgstr ""
 
 msgid "Specified"
+msgstr ""
+
+msgid "Specify employer and function"
 msgstr ""
 
 msgid "Specify if other"
@@ -2362,6 +2429,11 @@ msgstr ""
 msgid "The first name of the student"
 msgstr ""
 
+msgid ""
+"The format of the documents to be uploaded below may vary from one CDD to "
+"another. Find out more on your CDD's website or from your doctoral manager."
+msgstr ""
+
 msgid "The jury is not in progress"
 msgstr ""
 
@@ -2446,7 +2518,7 @@ msgstr ""
 msgid "Thesis language"
 msgstr ""
 
-msgid "Thesis location"
+msgid "Thesis location in UCLouvain"
 msgstr ""
 
 msgid "Thesis title"
@@ -2637,10 +2709,22 @@ msgstr ""
 msgid "Work contract should be set when funding type is set to work contract"
 msgstr ""
 
+msgid "Work contract type"
+msgstr ""
+
 msgid "Work start date"
 msgstr ""
 
 msgid "Working contract type"
+msgstr ""
+
+msgid ""
+"Would you like to carry out your thesis under joint supervision with another "
+"institution?"
+msgstr ""
+
+msgid ""
+"Write your resume in the language decided with your accompanying committee."
 msgstr ""
 
 msgid "YES"
@@ -2699,6 +2783,11 @@ msgid "You need to set a member as secretary."
 msgstr ""
 
 msgid "Your data have been saved."
+msgstr ""
+
+msgid ""
+"Your joint supervision information can be completed later. Please input "
+"\"No\" if you don't have information yet."
 msgstr ""
 
 msgid "Your participation in the event"

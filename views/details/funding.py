@@ -25,30 +25,25 @@
 # ##############################################################################
 
 from django.utils.translation import gettext_lazy as _
-from rules import RuleSet, always_allow
+from django.views.generic import TemplateView
 
-from osis_role.contrib.models import RoleModel
-from parcours_doctoral.auth.predicates.parcours_doctoral import (
-    is_related_to_an_admission,
-)
+from parcours_doctoral.views.mixins import ParcoursDoctoralViewMixin
+
+__all__ = ['FundingDetailView']
 
 
-class DoctorateReader(RoleModel):
-    class Meta:
-        verbose_name = _("Role: Doctorate reader")
-        verbose_name_plural = _("Role: Doctorate readers")
-        group_name = "doctorate_reader"
+class FundingDetailView(ParcoursDoctoralViewMixin, TemplateView):
+    template_name = 'parcours_doctoral/details/funding.html'
+    permission_required = 'parcours_doctoral.view_funding'
 
-    @classmethod
-    def rule_set(cls):
-        ruleset = {
-            'base.can_access_student_path': always_allow,
-            'parcours_doctoral.view_project': always_allow,
-            'parcours_doctoral.view_cotutelle': is_related_to_an_admission,
-            'parcours_doctoral.view_supervision': always_allow,
-            'parcours_doctoral.view_jury': always_allow,
-            'parcours_doctoral.view_confirmation': always_allow,
-            'parcours_doctoral.view_dossiers': always_allow,
-            'parcours_doctoral.view_internalnote': always_allow,
-        }
-        return RuleSet(ruleset)
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+
+        # There is a bug with translated strings with percent signs
+        # https://docs.djangoproject.com/en/3.2/topics/i18n/translation/#troubleshooting-gettext-incorrectly-detects-python-format-in-strings-with-percent-signs
+        # xgettext:no-python-format
+        context_data['fte_label'] = _("Full-time equivalent (as %)")
+        # xgettext:no-python-format
+        context_data['allocated_time_label'] = _("Time allocated for thesis (in %)")
+
+        return context_data

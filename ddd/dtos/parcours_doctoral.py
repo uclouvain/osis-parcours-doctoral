@@ -94,6 +94,7 @@ class ProjetDTO(interface.DTO):
 class ParcoursDoctoralDTO(interface.DTO):
     uuid: str
     uuid_admission: str
+    type_admission: str
     reference: str
     statut: str
     date_changement_statut: Optional[datetime.datetime]

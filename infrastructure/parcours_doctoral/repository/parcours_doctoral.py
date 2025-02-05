@@ -264,6 +264,7 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
                 .annotate_last_status_update()
                 .annotate(
                     admission_uuid=F('admission__uuid'),
+                    admission_type=F('admission__type'),
                 )
                 .annotate_intitule_secteur_formation()
                 .get(uuid=entity_id.uuid)
@@ -281,8 +282,9 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
         return ParcoursDoctoralDTO(
             uuid=str(entity_id.uuid),
             uuid_admission=str(parcours_doctoral.admission_uuid),  # from annotation
+            type_admission=parcours_doctoral.admission_type,  # from annotation
             statut=parcours_doctoral.status,
-            date_changement_statut=parcours_doctoral.status_updated_at,
+            date_changement_statut=parcours_doctoral.status_updated_at,  # from annotation
             cree_le=parcours_doctoral.created_at,
             reference=parcours_doctoral.formatted_reference,
             noma_doctorant=parcours_doctoral.student_registration_id or '',  # from annotation

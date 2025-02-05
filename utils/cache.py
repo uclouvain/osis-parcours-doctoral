@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -33,6 +33,7 @@ from parcours_doctoral.models.parcours_doctoral import ParcoursDoctoral
 def get_cached_parcours_doctoral_perm_obj(parcours_doctoral_uuid):
     qs = ParcoursDoctoral.objects.select_related(
         'student',
+        'admission',
         'training__academic_year',
     )
     return cache.get_or_set(
