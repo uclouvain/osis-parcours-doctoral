@@ -26,7 +26,9 @@
 from parcours_doctoral.ddd.epreuve_confirmation.commands import *
 from parcours_doctoral.ddd.epreuve_confirmation.use_case.read import *
 from parcours_doctoral.ddd.epreuve_confirmation.use_case.write import *
-from parcours_doctoral.infrastructure.parcours_doctoral.domain.service.historique import Historique
+from parcours_doctoral.infrastructure.parcours_doctoral.domain.service.historique import (
+    Historique,
+)
 
 from ..repository.parcours_doctoral import ParcoursDoctoralRepository
 from .domain.service.notification import Notification

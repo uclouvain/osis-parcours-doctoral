@@ -60,7 +60,7 @@
           {% endif %}
         </dd>
       </dl>
-      {% field_data _("Thesis location in UCLouvain") parcours_doctoral.projet.lieu_these %}
+      {% field_data _("Thesis location") parcours_doctoral.projet.lieu_these %}
 
       {% field_data _("PhD research project") parcours_doctoral.projet.documents_projet %}
       {% field_data _("PhD proposal") parcours_doctoral.projet.proposition_programme_doctoral %}
@@ -82,8 +82,8 @@
       {% endif %}
       {% field_data _("Have you previously enrolled for a PhD?") parcours_doctoral.projet.doctorat_deja_realise|enum_display:'ChoixDoctoratDejaRealise' %}
       {% if parcours_doctoral.projet.doctorat_deja_realise != "NO" %}
-          {% field_data _("Institution") parcours_doctoral.projet.institution %}
-          {% field_data _("Thesis field") parcours_doctoral.projet.domaine_these %}
+          {% field_data _("Institution in which the PhD thesis has been realised / started") parcours_doctoral.projet.institution %}
+          {% field_data _("Doctorate thesis field") parcours_doctoral.projet.domaine_these %}
           {% if parcours_doctoral.projet.date_soutenance %}
               {% field_data _("Defence date") parcours_doctoral.projet.date_soutenance %}
           {% elif parcours_doctoral.projet.raison_non_soutenue %}

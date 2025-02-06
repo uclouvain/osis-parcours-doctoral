@@ -211,11 +211,11 @@ class DashboardCommandTestCase(TestCase):
         admission = DoctorateAdmissionFactory(
             status=ChoixStatutPropositionDoctorale.CONFIRMEE.name,
             type=ChoixTypeAdmission.ADMISSION.name,
-            proximity_commission=ChoixCommissionProximiteCDSS.BCM.name,
+            proximity_commission=ChoixCommissionProximiteCDSS.DENT.name,
         )
 
         self.assert_dashboard_value(category, indicator, 1)
-        self.assert_dashboard_value(category, indicator, 1, commission_proximite=ChoixCommissionProximiteCDSS.BCM.name)
+        self.assert_dashboard_value(category, indicator, 1, commission_proximite=ChoixCommissionProximiteCDSS.DENT.name)
         self.assert_dashboard_value(category, indicator, 0, commission_proximite=ChoixCommissionProximiteCDSS.ECLI.name)
 
         category = CategorieTableauBordEnum.CONFIRMATION.name
@@ -223,11 +223,11 @@ class DashboardCommandTestCase(TestCase):
 
         doctorate = ParcoursDoctoralFactory(
             status=ChoixStatutParcoursDoctoral.CONFIRMATION_SOUMISE.name,
-            proximity_commission=ChoixCommissionProximiteCDSS.BCM.name,
+            proximity_commission=ChoixCommissionProximiteCDSS.DENT.name,
         )
 
         self.assert_dashboard_value(category, indicator, 1)
-        self.assert_dashboard_value(category, indicator, 1, commission_proximite=ChoixCommissionProximiteCDSS.BCM.name)
+        self.assert_dashboard_value(category, indicator, 1, commission_proximite=ChoixCommissionProximiteCDSS.DENT.name)
         self.assert_dashboard_value(category, indicator, 0, commission_proximite=ChoixCommissionProximiteCDSS.ECLI.name)
 
     def test_filter_by_cdds(self):
