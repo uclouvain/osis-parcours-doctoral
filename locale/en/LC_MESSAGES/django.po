@@ -1693,9 +1693,6 @@ msgctxt "CategorieActivite"
 msgid "PAPER"
 msgstr "Examination"
 
-msgid "PARTIAL"
-msgstr "Partially"
-
 msgid "PDF file"
 msgstr ""
 
@@ -1902,9 +1899,6 @@ msgstr ""
 msgid "Proximity Commission for Dental Sciences (DENT)"
 msgstr ""
 
-msgid "Proximity Commission for Genetics and Immunology (GIM)"
-msgstr ""
-
 msgid "Proximity Commission for Motricity Sciences (MOTR)"
 msgstr ""
 
@@ -1921,7 +1915,8 @@ msgid "Proximity commission / Subdomain"
 msgstr ""
 
 msgid ""
-"Proximity commission for cellular and molecular biology, biochemistry (BCM)"
+"Proximity commission for biochemistry, cellular and molecular biology, "
+"genetics, immunology (BCGIM)"
 msgstr ""
 
 msgid "Proximity commission for experimental and clinical research (ECLI)"
@@ -2748,9 +2743,9 @@ msgid ""
 "You must add at least one external supervisor in order to request signatures."
 msgstr ""
 
-msgid "You must add at least two CA member in order to request signatures."
+msgid "You must add at least two CA members in order to request signatures."
 msgstr ""
-"You must add at least two supervisory panel member in order to request "
+"You must add at least two supervisory panel members in order to request "
 "signatures."
 
 msgid "You must be a member of the committee to access this doctoral training"

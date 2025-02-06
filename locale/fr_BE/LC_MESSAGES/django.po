@@ -1839,9 +1839,6 @@ msgctxt "CategorieActivite"
 msgid "PAPER"
 msgstr "Épreuve"
 
-msgid "PARTIAL"
-msgstr "En partie"
-
 msgid "PDF file"
 msgstr "Fichier PDF"
 
@@ -2057,9 +2054,6 @@ msgstr "Titre proposé pour la thèse"
 msgid "Proximity Commission for Dental Sciences (DENT)"
 msgstr "Commission de proximité de sciences dentaires (DENT)"
 
-msgid "Proximity Commission for Genetics and Immunology (GIM)"
-msgstr "Commission de proximité de génétique et immunologie (GIM)"
-
 msgid "Proximity Commission for Motricity Sciences (MOTR)"
 msgstr "Commission de proximité de sciences de la motricité (MOTR)"
 
@@ -2076,10 +2070,11 @@ msgid "Proximity commission / Subdomain"
 msgstr "Commission de proximité"
 
 msgid ""
-"Proximity commission for cellular and molecular biology, biochemistry (BCM)"
+"Proximity commission for biochemistry, cellular and molecular biology, "
+"genetics, immunology (BCGIM)"
 msgstr ""
-"Commission de proximité de biologie cellulaire et moléculaire, biochimie "
-"(BCM)"
+"Commission de proximité de biochimie, biologie cellulaire et moléculaire, "
+"génétique, immunologie (BCGIM)"
 
 msgid "Proximity commission for experimental and clinical research (ECLI)"
 msgstr "Commission de proximité de recherche expérimentale et clinique (ECLI)"
@@ -2975,9 +2970,9 @@ msgstr ""
 "Vous devez ajouter au moins un promoteur externe afin de demander les "
 "signatures."
 
-msgid "You must add at least two CA member in order to request signatures."
+msgid "You must add at least two CA members in order to request signatures."
 msgstr ""
-"Vous devez ajouter au moins deux membre du comité d'accompagnement afin de "
+"Vous devez ajouter au moins deux membres du comité d'accompagnement afin de "
 "demander les signatures."
 
 msgid "You must be a member of the committee to access this doctoral training"

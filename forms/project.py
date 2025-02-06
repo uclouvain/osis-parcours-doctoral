@@ -210,7 +210,6 @@ class ProjectForm(forms.Form):
         # Some consistency checks and cleaning
         if cleaned_data['doctorat_deja_realise'] not in [
             ChoixDoctoratDejaRealise.YES.name,
-            ChoixDoctoratDejaRealise.PARTIAL.name,
         ]:
             cleaned_data['institution'] = ''
             cleaned_data['domaine_these'] = ''
