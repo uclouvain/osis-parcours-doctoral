@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -27,23 +27,24 @@ import datetime
 from uuid import uuid4
 
 import freezegun
-from admission.tests.factories.scholarship import DoctorateScholarshipFactory
-from base.models.enums.entity_type import EntityType
-from base.tests.factories.entity_version import EntityVersionFactory
-from base.tests.factories.person import PersonFactory
 from django.shortcuts import resolve_url
-from reference.tests.factories.country import CountryFactory
-from reference.tests.factories.language import LanguageFactory
 from rest_framework import status
 from rest_framework.test import APITestCase
 
+from base.models.enums.entity_type import EntityType
+from base.tests.factories.entity_version import EntityVersionFactory
+from base.tests.factories.person import PersonFactory
 from parcours_doctoral.ddd.domain.model.enums import (
     ChoixDoctoratDejaRealise,
     ChoixTypeFinancement,
+    ChoixStatutParcoursDoctoral,
 )
 from parcours_doctoral.tests.factories.parcours_doctoral import ParcoursDoctoralFactory
 from parcours_doctoral.tests.factories.supervision import PromoterFactory
 from parcours_doctoral.tests.mixins import CheckActionLinksMixin
+from reference.tests.factories.country import CountryFactory
+from reference.tests.factories.language import LanguageFactory
+from reference.tests.factories.scholarship import DoctorateScholarshipFactory
 
 
 class ParcoursDoctoralAPIViewTestCase(CheckActionLinksMixin, APITestCase):
@@ -120,10 +121,9 @@ class ParcoursDoctoralAPIViewTestCase(CheckActionLinksMixin, APITestCase):
         cls.other_student = cls.other_parcours_doctoral.student
         cls.no_role_user = PersonFactory().user
 
-        cls.url = resolve_url(
-            'parcours_doctoral_api_v1:doctorate',
-            uuid=cls.doctorate.uuid,
-        )
+        cls.base_url = 'parcours_doctoral_api_v1:doctorate'
+
+        cls.url = resolve_url(cls.base_url, uuid=cls.doctorate.uuid)
 
     def test_assert_methods_not_allowed(self):
         self.client.force_authenticate(user=self.student.user)
@@ -154,6 +154,26 @@ class ParcoursDoctoralAPIViewTestCase(CheckActionLinksMixin, APITestCase):
         response = self.client.get(self.url, format='json')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
+    def test_get_parcours_doctoral_of_in_creation_doctorate_is_forbidden(self):
+        self.client.force_authenticate(user=self.student.user)
+
+        in_creation_doctorate = ParcoursDoctoralFactory(
+            supervision_group=self.doctorate.supervision_group,
+            student=self.student,
+            status=ChoixStatutParcoursDoctoral.EN_COURS_DE_CREATION_PAR_GESTIONNAIRE.name,
+        )
+
+        url = resolve_url(self.base_url, uuid=in_creation_doctorate.uuid)
+
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        in_creation_doctorate.status = ChoixStatutParcoursDoctoral.EN_ATTENTE_INJECTION_EPC.name
+        in_creation_doctorate.save()
+
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
     @freezegun.freeze_time('2023-01-01')
     def test_get_parcours_doctoral_student(self):
         self.client.force_authenticate(user=self.student.user)
@@ -176,6 +196,7 @@ class ParcoursDoctoralAPIViewTestCase(CheckActionLinksMixin, APITestCase):
                 'retrieve_funding',
                 'update_funding',
                 'retrieve_supervision',
+                'retrieve_supervision_canvas',
                 'retrieve_confirmation',
                 'retrieve_doctorate_training',
                 'retrieve_course_enrollment',
@@ -198,6 +219,7 @@ class ParcoursDoctoralAPIViewTestCase(CheckActionLinksMixin, APITestCase):
 
         # Global
         self.assertEqual(json_response['uuid'], str(self.doctorate.uuid))
+        self.assertEqual(json_response['uuid_admission'], str(self.doctorate.admission.uuid))
         self.assertEqual(json_response['reference'], f'M-CDA22-{self.doctorate.reference_str}')
         self.assertEqual(json_response['statut'], self.doctorate.status)
         self.assertEqual(json_response['matricule_doctorant'], self.doctorate.student.global_id)

@@ -38,12 +38,12 @@ class DoctorateReader(RoleModel):
     @classmethod
     def rule_set(cls):
         ruleset = {
+            'base.can_access_student_path': always_allow,
             'parcours_doctoral.view_project': always_allow,
             'parcours_doctoral.view_cotutelle': always_allow,
             'parcours_doctoral.view_supervision': always_allow,
             'parcours_doctoral.view_jury': always_allow,
             'parcours_doctoral.view_confirmation': always_allow,
-            'parcours_doctoral.view_doctorate_enrolment_applications': always_allow,
             'parcours_doctoral.view_dossiers': always_allow,
             'parcours_doctoral.view_internalnote': always_allow,
         }

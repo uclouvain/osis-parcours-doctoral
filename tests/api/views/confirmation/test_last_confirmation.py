@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -28,13 +28,14 @@ from unittest import mock
 from uuid import uuid4
 
 import freezegun
-from base.tests.factories.person import PersonFactory
-from base.tests.factories.program_manager import ProgramManagerFactory
 from django.shortcuts import resolve_url
+from osis_history.models import HistoryEntry
 from osis_notification.models import WebNotification
 from rest_framework import status
 from rest_framework.test import APITestCase
 
+from base.tests.factories.person import PersonFactory
+from base.tests.factories.program_manager import ProgramManagerFactory
 from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from parcours_doctoral.ddd.epreuve_confirmation.validators.exceptions import (
     EpreuveConfirmationDateIncorrecteException,
@@ -80,12 +81,14 @@ class LastConfirmationAPIViewTestCase(APITestCase):
         cls.doctorate = ParcoursDoctoralFactory(
             supervision_group=cls.process,
             student=cls.student,
-            status=ChoixStatutParcoursDoctoral.ADMITTED.name,
+            status=ChoixStatutParcoursDoctoral.ADMIS.name,
         )
 
         cls.manager = ProgramManagerFactory(education_group=cls.doctorate.training.education_group).person
 
-        cls.url = resolve_url('parcours_doctoral_api_v1:last_confirmation', uuid=cls.doctorate.uuid)
+        cls.base_url = 'parcours_doctoral_api_v1:last_confirmation'
+
+        cls.url = resolve_url(cls.base_url, uuid=cls.doctorate.uuid)
 
     def setUp(self):
         self.confirmation_paper: ConfirmationPaper = ConfirmationPaperFactory(
@@ -143,6 +146,34 @@ class LastConfirmationAPIViewTestCase(APITestCase):
 
         response = self.client.put(self.url, format='json')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_get_last_confirmation_of_in_creation_doctorate_is_forbidden(self):
+        in_creation_doctorate = ParcoursDoctoralFactory(
+            supervision_group=self.doctorate.supervision_group,
+            student=self.student,
+            status=ChoixStatutParcoursDoctoral.EN_COURS_DE_CREATION_PAR_GESTIONNAIRE.name,
+        )
+
+        url = resolve_url(self.base_url, uuid=in_creation_doctorate.uuid)
+
+        users = [
+            self.promoter_user,
+            self.committee_member_user,
+            self.student.user,
+        ]
+
+        for user in users:
+            self.client.force_authenticate(user=user)
+            response = self.client.get(url)
+            self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        in_creation_doctorate.status = ChoixStatutParcoursDoctoral.EN_ATTENTE_INJECTION_EPC.name
+        in_creation_doctorate.save()
+
+        for user in users:
+            self.client.force_authenticate(user=user)
+            response = self.client.get(url)
+            self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_get_last_confirmation_with_student(self):
         self.client.force_authenticate(user=self.other_student.user)
@@ -263,6 +294,9 @@ class LastConfirmationAPIViewTestCase(APITestCase):
     def test_get_last_confirmation_with_several_confirmation_papers(self):
         self.client.force_authenticate(user=self.student.user)
 
+        self.confirmation_paper.is_active = False
+        self.confirmation_paper.save()
+
         with freezegun.freeze_time('2023-04-01'):
             new_confirmation_paper = ConfirmationPaperFactory(
                 parcours_doctoral=self.doctorate,
@@ -315,6 +349,12 @@ class LastConfirmationAPIViewTestCase(APITestCase):
         notification = WebNotification.objects.first()
         self.assertEqual(notification.person, self.manager)
 
+        # Check the history entry
+        history_entries = HistoryEntry.objects.filter(object_uuid=self.doctorate.uuid)
+
+        self.assertEqual(len(history_entries), 1)
+        self.assertCountEqual(history_entries[0].tags, ['parcours_doctoral', 'confirmation', 'status-changed'])
+
         self.confirmation_paper.delete()
 
         response = self.client.put(
@@ -326,27 +366,6 @@ class LastConfirmationAPIViewTestCase(APITestCase):
         self.assertEqual(
             response.json()['non_field_errors'][0]['status_code'],
             EpreuveConfirmationNonTrouveeException.status_code,
-        )
-
-    def test_update_last_confirmation_with_invalid_date(self):
-        self.client.force_authenticate(user=self.student.user)
-
-        # Invalid date
-        response = self.client.put(
-            self.url,
-            format='json',
-            data={
-                'date': datetime.date(2022, 5, 15).isoformat(),
-                'rapport_recherche': [],
-                'proces_verbal_ca': [],
-                'avis_renouvellement_mandat_recherche': [],
-            },
-        )
-
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(
-            response.json()['non_field_errors'][0]['status_code'],
-            EpreuveConfirmationDateIncorrecteException.status_code,
         )
 
     def test_submit_extension_request(self):

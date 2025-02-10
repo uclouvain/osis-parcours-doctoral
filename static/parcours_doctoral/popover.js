@@ -25,46 +25,28 @@
  */
 
 function initializePopover(configuration) {
-  $(function () {
-    $('body').popover(Object.assign({
-      selector: '.popover-buttons',
-      html: 'true',
-      placement: 'auto top',
-      toggle: 'popover',
-      trigger: 'focus',
-    }, configuration));
-
-    $('body').on('mousedown', '.popover', function(e) {
-      e.preventDefault();
-      return false;
-    });
-  });
+  new bootstrap.Popover(document.body, {...configuration, ...{
+    selector: '.popover-buttons',
+    html: true,
+    placement: 'top',
+    fallbackPlacements: ['auto'],
+    toggle: 'popover',
+    trigger: 'focus',
+  }});
 }
-function initializeLazyPopover(configuration) {
-  /**
-   * Display popovers whose content is loaded asynchronously. The 'data-lazy-popover-url' attribute must be set on
-   * the element and must point to the URL of the content to be loaded.
-   */
-  $(function () {
-    $('body').on('click', '[data-lazy-popover-url]', function(e) {
-      const dataset = $(this)[0].dataset;
 
-      if (dataset.computedPopover === '1') return;
+$(function () {
+  const body = $('body');
 
-      $.get(dataset.lazyPopoverUrl, (data) => {
-        $(this).popover(Object.assign({
-          content: data,
-          html: 'true',
-          placement: 'auto',
-          toggle: 'popover',
-          trigger: 'focus',
-          title: $(this)[0].dataset.title || '',
-        }, configuration));
-
-        $(this).popover('show');
-
-        dataset.computedPopover = '1';
-      });
-    });
+  // To prevent the popover from closing when clicking inside it (i.e. when a link is inside a popover)
+  body.on('mousedown', '.popover', function(e) {
+    e.preventDefault();
+    return false;
   });
-}
+
+  // To prevent to trigger another action when we want to open a popover (i.e. when the button is inside a label)
+  body.on('click', '.popover-buttons', function(e) {
+    e.preventDefault();
+    return false;
+  });
+});

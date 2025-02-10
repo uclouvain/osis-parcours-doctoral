@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -28,10 +28,10 @@ from typing import List, Optional
 from uuid import UUID
 
 import attr
-from osis_common.ddd import interface
 
+from ddd.logic.reference.dtos.bourse import BourseDTO
+from osis_common.ddd import interface
 from parcours_doctoral.ddd.domain.model.enums import CHOIX_COMMISSION_PROXIMITE
-from parcours_doctoral.ddd.dtos.bourse import BourseDTO
 from parcours_doctoral.ddd.dtos.formation import FormationDTO
 
 
@@ -93,9 +93,12 @@ class ProjetDTO(interface.DTO):
 @attr.dataclass(slots=True)
 class ParcoursDoctoralDTO(interface.DTO):
     uuid: str
+    uuid_admission: str
     reference: str
     statut: str
     date_changement_statut: Optional[datetime.datetime]
+    justification: Optional[str]
+    intitule_secteur_formation: str
 
     cree_le: datetime.datetime
 
@@ -119,7 +122,7 @@ class ParcoursDoctoralDTO(interface.DTO):
 
 
 @attr.dataclass(slots=True)
-class ParcoursDoctoralRechercheDTO(interface.DTO):
+class ParcoursDoctoralRechercheEtudiantDTO(interface.DTO):
     uuid: str
     reference: str
     statut: str

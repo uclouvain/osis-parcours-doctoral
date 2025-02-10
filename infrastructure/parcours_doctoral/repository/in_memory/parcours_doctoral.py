@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -25,15 +25,14 @@
 # ##############################################################################
 from typing import List
 
-from admission.ddd.admission.doctorat.validation.domain.model.enums import ChoixGenre
-from admission.infrastructure.admission.domain.service.in_memory.bourse import (
-    BourseInMemoryTranslator,
-)
 from attr import dataclass
-from base.ddd.utils.in_memory_repository import InMemoryGenericRepository
 from django.utils import timezone
 
-from parcours_doctoral.ddd.domain.model.enums import ChoixTypeFinancement
+from admission.ddd.admission.doctorat.validation.domain.model.enums import ChoixGenre
+from base.ddd.utils.in_memory_repository import InMemoryGenericRepository
+from infrastructure.reference.domain.service.in_memory.bourse import (
+    BourseInMemoryTranslator,
+)
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import (
     ParcoursDoctoral,
     ParcoursDoctoralIdentity,
@@ -45,15 +44,12 @@ from parcours_doctoral.ddd.dtos import (
     EntiteGestionDTO,
     FormationDTO,
     ParcoursDoctoralDTO,
-    ParcoursDoctoralRechercheDTO,
+    ParcoursDoctoralRechercheEtudiantDTO,
 )
 from parcours_doctoral.ddd.dtos.parcours_doctoral import (
     CotutelleDTO,
     FinancementDTO,
     ProjetDTO,
-)
-from parcours_doctoral.ddd.epreuve_confirmation.domain.model.epreuve_confirmation import (
-    EpreuveConfirmation,
 )
 from parcours_doctoral.ddd.repository.i_parcours_doctoral import (
     IParcoursDoctoralRepository,
@@ -141,8 +137,11 @@ class ParcoursDoctoralInMemoryRepository(InMemoryGenericRepository, IParcoursDoc
 
         return ParcoursDoctoralDTO(
             uuid=str(entity_id.uuid),
+            uuid_admission='',
             statut=parcours_doctoral.statut.name,
             date_changement_statut=None,
+            justification="",
+            intitule_secteur_formation="FOO",
             reference=str(parcours_doctoral.reference),
             matricule_doctorant=parcours_doctoral.matricule_doctorant,
             noma_doctorant=doctorant.noma,
@@ -163,6 +162,7 @@ class ParcoursDoctoralInMemoryRepository(InMemoryGenericRepository, IParcoursDoc
                     code_postal='',
                     ville='',
                     pays='',
+                    nom_pays='',
                     numero_telephone='',
                     code_secteur='',
                     intitule_secteur='',
@@ -253,11 +253,11 @@ class ParcoursDoctoralInMemoryRepository(InMemoryGenericRepository, IParcoursDoc
         ]
 
     @classmethod
-    def _get_search_dto(cls, parcours_doctoral: 'ParcoursDoctoral') -> 'ParcoursDoctoralRechercheDTO':
+    def _get_search_dto(cls, parcours_doctoral: 'ParcoursDoctoral') -> 'ParcoursDoctoralRechercheEtudiantDTO':
         doctorant = next(d for d in cls.doctorants if d.matricule == parcours_doctoral.matricule_doctorant)
         formation = next(f for f in cls.formations if f.sigle == parcours_doctoral.formation_id.sigle)
 
-        return ParcoursDoctoralRechercheDTO(
+        return ParcoursDoctoralRechercheEtudiantDTO(
             uuid=parcours_doctoral.entity_id.uuid,
             reference=str(parcours_doctoral.reference),
             statut=parcours_doctoral.statut.name,
@@ -275,6 +275,7 @@ class ParcoursDoctoralInMemoryRepository(InMemoryGenericRepository, IParcoursDoc
                     code_postal='',
                     ville='',
                     pays='',
+                    nom_pays='',
                     numero_telephone='',
                     code_secteur='',
                     intitule_secteur='',
@@ -292,11 +293,11 @@ class ParcoursDoctoralInMemoryRepository(InMemoryGenericRepository, IParcoursDoc
     @classmethod
     def search_dto(
         cls,
-        matricule_etudiant: str = None,
+        matricule_doctorant: str = None,
         matricule_membre: str = None,
-    ) -> List['ParcoursDoctoralRechercheDTO']:
+    ) -> List['ParcoursDoctoralRechercheEtudiantDTO']:
         return [
             cls._get_search_dto(parcours_doctoral)
             for parcours_doctoral in cls.entities
-            if parcours_doctoral.matricule_doctorant == matricule_etudiant
+            if parcours_doctoral.matricule_doctorant == matricule_doctorant
         ]

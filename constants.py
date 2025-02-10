@@ -36,3 +36,5 @@ CAMPUSES_UUIDS = {
     'NAMUR_UUID': uuid.UUID('ccdfd820-52dc-4aef-a325-fbba3a1f0f52'),
     'AUTRE_SITE_UUID': uuid.UUID('35b0431b-9609-4a31-a328-04c56571f4ba'),
 }
+
+COMMENT_TAB_GLOBAL = 'GLOBAL'

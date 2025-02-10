@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -25,9 +25,12 @@
 # ##############################################################################
 from abc import abstractmethod
 from email.message import EmailMessage
+from typing import Optional
 
+from admission.ddd.admission.doctorat.preparation.domain.model.enums import (
+    ChoixStatutPropositionDoctorale,
+)
 from osis_common.ddd import interface
-
 from parcours_doctoral.ddd.domain.model.groupe_de_supervision import (
     GroupeDeSupervision,
     SignataireIdentity,
@@ -36,13 +39,17 @@ from parcours_doctoral.ddd.domain.model.parcours_doctoral import (
     ParcoursDoctoral,
     ParcoursDoctoralIdentity,
 )
+from parcours_doctoral.ddd.dtos import AvisDTO
 
 
 class IHistorique(interface.DomainService):
     @classmethod
     @abstractmethod
     def historiser_message_au_doctorant(
-        cls, parcours_doctoral: ParcoursDoctoral, matricule_emetteur: str, message: EmailMessage
+        cls,
+        parcours_doctoral: ParcoursDoctoral,
+        matricule_emetteur: str,
+        message: EmailMessage,
     ):
         raise NotImplementedError
 
@@ -110,4 +117,36 @@ class IHistorique(interface.DomainService):
         parcours_doctoral_identity: ParcoursDoctoralIdentity,
         matricule_auteur: str,
     ):
+        raise NotImplementedError
+
+    @classmethod
+    @abstractmethod
+    def historiser_avis(
+        cls,
+        parcours_doctoral: ParcoursDoctoral,
+        signataire_id: 'SignataireIdentity',
+        avis: AvisDTO,
+        statut_original_proposition: 'ChoixStatutPropositionDoctorale',
+        matricule_auteur: Optional[str] = '',
+    ):
+        raise NotImplementedError
+
+    @classmethod
+    @abstractmethod
+    def historiser_repassage_epreuve_confirmation(cls, parcours_doctoral: ParcoursDoctoral, matricule_auteur: str):
+        raise NotImplementedError
+
+    @classmethod
+    @abstractmethod
+    def historiser_echec_epreuve_confirmation(cls, parcours_doctoral: ParcoursDoctoral, matricule_auteur: str):
+        raise NotImplementedError
+
+    @classmethod
+    @abstractmethod
+    def historiser_reussite_epreuve_confirmation(cls, parcours_doctoral: ParcoursDoctoral, matricule_auteur: str):
+        raise NotImplementedError
+
+    @classmethod
+    @abstractmethod
+    def historiser_soumission_epreuve_confirmation(cls, parcours_doctoral: ParcoursDoctoral, matricule_auteur: str):
         raise NotImplementedError

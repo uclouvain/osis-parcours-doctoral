@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends "bootstrap5/layout.html" %}
 {% load static %}
 {% load i18n %}
 
@@ -27,8 +27,8 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-  <li>{% trans 'Admission' %}</li>
-  <li class="active">{% trans 'Custom mail templates' %}</li>
+  <li class="breadcrumb-item"><a href="{% url 'parcours_doctoral:config:home' %}">{% trans 'CDD configuration' %}</a></li>
+  <li class="breadcrumb-item active">{% trans 'CDD Mail template' %}</li>
 {% endblock %}
 
 {% block content %}
@@ -38,41 +38,41 @@
     </h2>
   </div>
   {% for identifier, description in descriptions.items %}
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h3 class="panel-title clearfix">
+    <div class="card">
+      <div class="card-body">
+        <h3 class="card-title">
           {{ description|safe }}
-          <div class="pull-right">
+          <div class="float-end">
             <a href="{% url "parcours_doctoral:config:cdd-mail-template:add" identifier %}" class="btn btn-primary">
               {% trans "Add" %}
             </a>
           </div>
         </h3>
+        <ul class="list-group">
+          {% for cdd_mail_template in object_list|get_item:identifier %}
+            {% url 'parcours_doctoral:config:cdd-mail-template:preview' identifier=cdd_mail_template.identifier pk=cdd_mail_template.pk as preview_url %}
+            {% url 'parcours_doctoral:config:cdd-mail-template:edit'  identifier=cdd_mail_template.identifier pk=cdd_mail_template.pk as change_url %}
+            {% url 'parcours_doctoral:config:cdd-mail-template:delete'  identifier=cdd_mail_template.identifier pk=cdd_mail_template.pk as delete_url %}
+            <li class="list-group-item container-fluid">
+              <span class="text-muted">{{ cdd_mail_template.cdd.most_recent_acronym }} :</span>
+              {{ cdd_mail_template.name }}
+              <div class="float-end">
+                <a href="{{ change_url }}" class="btn btn-default border border-dark-subtle">
+                  <span class="fa fa-edit"></span>
+                  {% trans "Configure" context "parcours_doctoral" %}
+                </a>
+                <a href="{{ preview_url }}" class="btn btn-default border border-dark-subtle">
+                  <span class="fa fa-eye"></span>
+                  {% trans "Preview" %}
+                </a>
+                <a href="{{ delete_url }}" class="btn btn-danger">
+                  <span class="fa fa-trash"></span>
+                </a>
+              </div>
+            </li>
+          {% endfor %}
+        </ul>
       </div>
-      <ul class="list-group">
-        {% for cdd_mail_template in object_list|get_item:identifier %}
-          {% url 'parcours_doctoral:config:cdd-mail-template:preview' identifier=cdd_mail_template.identifier pk=cdd_mail_template.pk as preview_url %}
-          {% url 'parcours_doctoral:config:cdd-mail-template:edit'  identifier=cdd_mail_template.identifier pk=cdd_mail_template.pk as change_url %}
-          {% url 'parcours_doctoral:config:cdd-mail-template:delete'  identifier=cdd_mail_template.identifier pk=cdd_mail_template.pk as delete_url %}
-          <li class="list-group-item container-fluid">
-            <span class="text-muted">{{ cdd_mail_template.cdd.most_recent_acronym }} :</span>
-            {{ cdd_mail_template.name }}
-            <div class="pull-right">
-              <a href="{{ change_url }}" class="btn btn-default">
-                <span class="fa fa-edit"></span>
-                {% trans "Configure" context "parcours_doctoral" %}
-              </a>
-              <a href="{{ preview_url }}" class="btn btn-default">
-                <span class="fa fa-eye"></span>
-                {% trans "Preview" %}
-              </a>
-              <a href="{{ delete_url }}" class="btn btn-danger">
-                <span class="fa fa-trash"></span>
-              </a>
-            </div>
-          </li>
-        {% endfor %}
-      </ul>
     </div>
   {% endfor %}
 {% endblock %}

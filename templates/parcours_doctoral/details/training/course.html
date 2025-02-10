@@ -25,32 +25,31 @@
 {% endcomment %}
 
 <div
-    class="panel panel-{{ activity|status_as_class }}"
-    data-status="{{ activity.status }}"
-    data-type="{{ activity.category }}"
+  class="card card-{{ activity|status_as_class }}"
+  data-status="{{ activity.status }}"
+  data-type="{{ activity.category }}"
 >
-  <div class="panel-heading" role="tab" id="h-{{ activity.uuid }}">
-    <h3 class="panel-title">
+  <div class="card-header" role="tab" id="h-{{ activity.uuid }}">
+    <h3 class="card-title d-flex align-items-start gap-3">
       {% include "parcours_doctoral/details/training/_panel_title.html" %}
-      {% include "parcours_doctoral/details/training/_activity_title.html" %}
       <div class="clearfix"></div>
     </h3>
   </div>
   <div
       id="a-{{ activity.uuid }}"
-      class="panel-collapse collapse"
+      class="card-body panel-collapse collapse"
       role="tabpanel"
       aria-labelledby="h-{{ activity.uuid }}"
   >
-    <div class="panel-body">
+    <div>
       <p>
+        {{ activity.title }} - {{ activity.organizing_institution }} -
         {% if activity.organizing_institution == "UCLouvain" %}
-          {% display activity.start_date|date:"Y" "-" activity.end_date|date:"Y" as dates %}
+          {{ activity.start_date|date:"Y" }} - {{ activity.end_date|date:"Y" }}
         {% else %}
-          {% display activity.start_date|date:"d/m/Y" "-" activity.end_date|date:"d/m/Y" as dates %}
+          {{ activity.start_date|date:"d/m/Y" }} - {{ activity.end_date|date:"d/m/Y" }}
         {% endif %}
-        {% display activity.hour_volume " hours" as hours %}
-        {% display activity.title "-" activity.organizing_institution "-" dates|cut:" " "-" hours %}
+        - {{ activity.hour_volume }} hours
       </p>
       {% if activity.authors %}
         <div class="row">
@@ -71,13 +70,13 @@
         <strong class="d-block">{% trans "Course unit with evaluation" %}</strong> {{ activity.is_online|yesno }}
       </p>
       {% if activity.participating_proof %}
-        <div class="form-group">
+        <div class="mb-3">
           <strong class="d-block">{% trans "Proof of participation or success" %}</strong>
           {% document_visualizer activity.participating_proof for_modified_upload=True %}
         </div>
       {% endif %}
       {% if activity.comment %}
-        <div class="form-group">
+        <div class="mb-3">
           <strong class="d-block">{% trans "Comments" %}</strong>
           {{ activity.comment|linebreaks }}
         </div>

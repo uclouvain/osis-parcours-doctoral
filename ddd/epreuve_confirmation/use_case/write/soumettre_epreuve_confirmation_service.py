@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -26,6 +26,7 @@
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import (
     ParcoursDoctoralIdentity,
 )
+from parcours_doctoral.ddd.domain.service.i_historique import IHistorique
 from parcours_doctoral.ddd.epreuve_confirmation.builder.epreuve_confirmation_identity import (
     EpreuveConfirmationIdentityBuilder,
 )
@@ -48,6 +49,7 @@ def soumettre_epreuve_confirmation(
     parcours_doctoral_repository: 'IParcoursDoctoralRepository',
     epreuve_confirmation_repository: 'IEpreuveConfirmationRepository',
     notification: 'INotification',
+    historique: 'IHistorique',
 ) -> ParcoursDoctoralIdentity:
     # GIVEN
     epreuve_confirmation_id = EpreuveConfirmationIdentityBuilder.build_from_uuid(cmd.uuid)
@@ -55,13 +57,12 @@ def soumettre_epreuve_confirmation(
 
     epreuve_confirmation.verifier(
         date=cmd.date,
-        date_limite=epreuve_confirmation.date_limite,
     )
 
     parcours_doctoral = parcours_doctoral_repository.get(epreuve_confirmation.parcours_doctoral_id)
 
     # WHEN
-    epreuve_confirmation.soumettre(
+    epreuve_confirmation.modifier(
         date=cmd.date,
         rapport_recherche=cmd.rapport_recherche,
         proces_verbal_ca=cmd.proces_verbal_ca,
@@ -73,5 +74,6 @@ def soumettre_epreuve_confirmation(
     notification.notifier_soumission(epreuve_confirmation=epreuve_confirmation)
     parcours_doctoral_repository.save(parcours_doctoral)
     epreuve_confirmation_repository.save(epreuve_confirmation)
+    historique.historiser_soumission_epreuve_confirmation(parcours_doctoral, cmd.matricule_auteur)
 
     return epreuve_confirmation.parcours_doctoral_id

@@ -30,6 +30,7 @@ from django.shortcuts import resolve_url
 from rest_framework import status
 from rest_framework.test import APITestCase
 
+from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from parcours_doctoral.tests.factories.parcours_doctoral import ParcoursDoctoralFactory
 from parcours_doctoral.tests.factories.roles import StudentRoleFactory
 from parcours_doctoral.tests.factories.supervision import (
@@ -56,7 +57,8 @@ class SupervisionAPIViewTestCase(QueriesAssertionsMixin, APITestCase):
             supervision_group=cls.process,
             student=cls.student,
         )
-        cls.url = resolve_url('parcours_doctoral_api_v1:supervision', uuid=cls.doctorate.uuid)
+        cls.base_url = 'parcours_doctoral_api_v1:supervision'
+        cls.url = resolve_url(cls.base_url, uuid=cls.doctorate.uuid)
 
     def test_assert_methods_not_allowed(self):
         self.client.force_authenticate(user=self.student.user)
@@ -80,6 +82,34 @@ class SupervisionAPIViewTestCase(QueriesAssertionsMixin, APITestCase):
         self.client.force_authenticate(user=self.no_role_user)
         response = self.client.get(self.url, format='json')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_get_project_of_in_creation_doctorate_is_forbidden(self):
+        in_creation_doctorate = ParcoursDoctoralFactory(
+            supervision_group=self.doctorate.supervision_group,
+            student=self.student,
+            status=ChoixStatutParcoursDoctoral.EN_COURS_DE_CREATION_PAR_GESTIONNAIRE.name,
+        )
+
+        url = resolve_url(self.base_url, uuid=in_creation_doctorate.uuid)
+
+        users = [
+            self.promoter_user,
+            self.committee_member_user,
+            self.student.user,
+        ]
+
+        for user in users:
+            self.client.force_authenticate(user=user)
+            response = self.client.get(url)
+            self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        in_creation_doctorate.status = ChoixStatutParcoursDoctoral.EN_ATTENTE_INJECTION_EPC.name
+        in_creation_doctorate.save()
+
+        for user in users:
+            self.client.force_authenticate(user=user)
+            response = self.client.get(url)
+            self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_get_supervision_with_student(self):
         self.client.force_authenticate(user=self.student.user)

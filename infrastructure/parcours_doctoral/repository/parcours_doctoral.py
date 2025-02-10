@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -25,19 +25,17 @@
 # ##############################################################################
 from typing import Dict, List, Optional
 
-from admission.infrastructure.admission.domain.service.bourse import BourseTranslator
+from django.conf import settings
+from django.db.models import F, QuerySet
+from django.utils.translation import get_language
+
 from base.models.education_group_year import EducationGroupYear
 from base.models.entity_version import EntityVersion
 from base.models.enums.entity_type import EntityType
 from base.models.person import Person
-from base.models.student import Student
-from django.conf import settings
-from django.db.models import QuerySet
-from django.utils.translation import get_language
+from ddd.logic.reference.domain.model.bourse import BourseIdentity
+from infrastructure.reference.domain.service.bourse import BourseTranslator
 from osis_common.ddd.interface import ApplicationService, EntityIdentity, RootEntity
-from program_management.models.education_group_version import EducationGroupVersion
-from reference.models.language import Language
-
 from parcours_doctoral.ddd.domain.model._cotutelle import Cotutelle
 from parcours_doctoral.ddd.domain.model._experience_precedente_recherche import (
     ExperiencePrecedenteRecherche,
@@ -46,7 +44,6 @@ from parcours_doctoral.ddd.domain.model._financement import Financement
 from parcours_doctoral.ddd.domain.model._formation import FormationIdentity
 from parcours_doctoral.ddd.domain.model._institut import InstitutIdentity
 from parcours_doctoral.ddd.domain.model._projet import Projet
-from parcours_doctoral.ddd.domain.model.bourse import BourseIdentity
 from parcours_doctoral.ddd.domain.model.enums import (
     ChoixDoctoratDejaRealise,
     ChoixStatutParcoursDoctoral,
@@ -62,7 +59,7 @@ from parcours_doctoral.ddd.domain.validator.exceptions import (
 from parcours_doctoral.ddd.dtos import (
     CampusDTO,
     ParcoursDoctoralDTO,
-    ParcoursDoctoralRechercheDTO,
+    ParcoursDoctoralRechercheEtudiantDTO,
 )
 from parcours_doctoral.ddd.dtos.formation import EntiteGestionDTO, FormationDTO
 from parcours_doctoral.ddd.dtos.parcours_doctoral import (
@@ -77,6 +74,8 @@ from parcours_doctoral.ddd.repository.i_parcours_doctoral import (
 from parcours_doctoral.models.parcours_doctoral import (
     ParcoursDoctoral as ParcoursDoctoralModel,
 )
+from program_management.models.education_group_version import EducationGroupVersion
+from reference.models.language import Language
 
 
 class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
@@ -263,6 +262,10 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
                 .annotate_with_reference()
                 .annotate_with_student_registration_id()
                 .annotate_last_status_update()
+                .annotate(
+                    admission_uuid=F('admission__uuid'),
+                )
+                .annotate_intitule_secteur_formation()
                 .get(uuid=entity_id.uuid)
             )
         except ParcoursDoctoralModel.DoesNotExist:
@@ -277,6 +280,7 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
 
         return ParcoursDoctoralDTO(
             uuid=str(entity_id.uuid),
+            uuid_admission=str(parcours_doctoral.admission_uuid),  # from annotation
             statut=parcours_doctoral.status,
             date_changement_statut=parcours_doctoral.status_updated_at,
             cree_le=parcours_doctoral.created_at,
@@ -288,6 +292,8 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
             prenom_doctorant=parcours_doctoral.student.first_name,
             genre_doctorant=parcours_doctoral.student.gender,
             commission_proximite=parcours_doctoral.proximity_commission,
+            intitule_secteur_formation=parcours_doctoral.intitule_secteur_formation,  # from annotation
+            justification=parcours_doctoral.justification,
             formation=FormationDTO(
                 sigle=parcours_doctoral.training.acronym,
                 code=parcours_doctoral.training.partial_acronym,
@@ -400,6 +406,15 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
         if not management_entities_ids:
             return {}
 
+        i18n_fields = {
+            settings.LANGUAGE_CODE_EN: {
+                'country_name': 'entity__country__name_en',
+            },
+            settings.LANGUAGE_CODE_FR: {
+                'country_name': 'entity__country__name',
+            },
+        }[get_language()]
+
         cte = EntityVersion.objects.with_children(
             'acronym',
             'entity_type',
@@ -408,6 +423,7 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
             'entity__location',
             'entity__city',
             'entity__country__iso_code',
+            i18n_fields['country_name'],
             'entity__phone',
             entity_id__in=management_entities_ids,
         )
@@ -439,6 +455,7 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
                     code_postal=management_entity['entity__postal_code'],
                     ville=management_entity['entity__city'],
                     pays=management_entity['entity__country__iso_code'],
+                    nom_pays=management_entity[i18n_fields['country_name']],
                     numero_telephone=management_entity['entity__phone'],
                 )
                 if management_entity
@@ -465,7 +482,7 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
         cls,
         matricule_doctorant: str = None,
         matricule_membre: str = None,
-    ) -> List['ParcoursDoctoralRechercheDTO']:
+    ) -> List['ParcoursDoctoralRechercheEtudiantDTO']:
         if not matricule_doctorant and not matricule_membre:
             return []
 
@@ -506,7 +523,7 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
                 sigle_entite_gestion=management_entity.sigle,
             )
             results.append(
-                ParcoursDoctoralRechercheDTO(
+                ParcoursDoctoralRechercheEtudiantDTO(
                     uuid=str(doctorate.uuid),
                     reference=formatted_reference,
                     statut=doctorate.status,

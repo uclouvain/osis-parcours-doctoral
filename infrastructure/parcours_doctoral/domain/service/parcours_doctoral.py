@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -24,20 +24,21 @@
 #
 # ##############################################################################
 from typing import Dict
+from uuid import UUID
+
+from django.db import transaction
+from osis_document.api.utils import documents_remote_duplicate
+from osis_signature.enums import SignatureState
+from osis_signature.models import Process, StateHistory
 
 from admission.ddd.admission.doctorat.preparation.domain.model.proposition import (
     Proposition,
 )
 from admission.models import DoctorateAdmission, SupervisionActor
 from admission.models.enums.actor_type import ActorType as AdmissionActorType
-from django.db import transaction
-from osis_document.api.utils import documents_remote_duplicate
-from osis_signature.enums import SignatureState
-from osis_signature.models import Process, StateHistory
-
 from parcours_doctoral.auth.roles.ca_member import CommitteeMember
 from parcours_doctoral.auth.roles.promoter import Promoter
-from parcours_doctoral.auth.roles.student import Student
+from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import (
     ParcoursDoctoralIdentity,
 )
@@ -93,19 +94,22 @@ class ParcoursDoctoralService(IParcoursDoctoralService):
 
     @classmethod
     def _duplicate_roles(cls, admission: DoctorateAdmission) -> None:
-        if not Student.objects.filter(person=admission.candidate).exists():
-            Student.objects.create(person=admission.candidate)
+        promoters = []
+        ca_members = []
 
         for admission_actor in SupervisionActor.objects.select_related('person', 'country').filter(
             process__uuid=admission.supervision_group.uuid,
         ):
             if not admission_actor.person:
                 continue
-            # Will be improved in the future (bulk creation + unicity check)
+
             if admission_actor.type == AdmissionActorType.PROMOTER.name:
-                Promoter.objects.get_or_create(person=admission_actor.person)
+                promoters.append(Promoter(person=admission_actor.person))
             else:
-                CommitteeMember.objects.get_or_create(person=admission_actor.person)
+                ca_members.append(CommitteeMember(person=admission_actor.person))
+
+        Promoter.objects.bulk_create(promoters, ignore_conflicts=True)
+        CommitteeMember.objects.bulk_create(ca_members, ignore_conflicts=True)
 
     @classmethod
     def _duplicate_uploaded_files(
@@ -114,9 +118,10 @@ class ParcoursDoctoralService(IParcoursDoctoralService):
         files_uuids = [getattr(admission, field)[0] for field in cls.FILES_FIELDS if getattr(admission, field)]
         uploaded_paths = {
             # TODO Better path name?
-            str(
-                file_uuid
-            ): f'parcours_doctoral/{admission.candidate.uuid}/{parcours_doctoral.uuid}/duplicates_from_admission/'
+            str(file_uuid): (
+                f'parcours_doctoral/{admission.candidate.uuid}/{parcours_doctoral.uuid}/'
+                f'duplicates_from_admission/{file_uuid}.pdf'
+            )
             for file_uuid in files_uuids
         }
 
@@ -136,6 +141,7 @@ class ParcoursDoctoralService(IParcoursDoctoralService):
         parcours_doctoral = ParcoursDoctoralModel.objects.create(
             admission=admission,
             reference=admission.reference,
+            justification=admission.comment,
             student=admission.candidate,
             training=admission.training,
             project_title=admission.project_title,
@@ -170,6 +176,7 @@ class ParcoursDoctoralService(IParcoursDoctoralService):
             dedicated_time=admission.dedicated_time,
             is_fnrs_fria_fresh_csc_linked=admission.is_fnrs_fria_fresh_csc_linked,
             financing_comment=admission.financing_comment,
+            status=ChoixStatutParcoursDoctoral.EN_ATTENTE_INJECTION_EPC.name,
         )
 
         uploaded_files = cls._duplicate_uploaded_files(admission, parcours_doctoral)
@@ -178,7 +185,7 @@ class ParcoursDoctoralService(IParcoursDoctoralService):
                 file_uuid = str(getattr(admission, field)[0])
             except IndexError:
                 continue
-            setattr(parcours_doctoral, field, uploaded_files.get(file_uuid))
+            setattr(parcours_doctoral, field, [UUID(uploaded_files.get(file_uuid))])
         parcours_doctoral.save(update_fields=cls.FILES_FIELDS)
 
         return ParcoursDoctoralIdentity(uuid=str(parcours_doctoral.uuid))

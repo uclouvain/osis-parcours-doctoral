@@ -23,7 +23,6 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from base.ddd.utils.business_validator import MultipleBusinessExceptions
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.urls import reverse
@@ -32,10 +31,11 @@ from django.utils.translation import override
 from django.views import View
 from django.views.generic import FormView
 from django.views.generic.edit import FormMixin
-from osis_common.utils.htmx import HtmxMixin
 from osis_mail_template.models import MailTemplate
 
+from base.ddd.utils.business_validator import MultipleBusinessExceptions
 from infrastructure.messages_bus import message_bus_instance
+from osis_common.utils.htmx import HtmxMixin
 from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from parcours_doctoral.ddd.epreuve_confirmation.commands import (
     ConfirmerEchecCommand,
@@ -82,11 +82,16 @@ class ConfirmationSuccessDecisionView(
 
     def post(self, *args, **kwargs):
         try:
-            message_bus_instance.invoke(ConfirmerReussiteCommand(uuid=self.last_confirmation_paper.uuid))
+            message_bus_instance.invoke(
+                ConfirmerReussiteCommand(
+                    uuid=self.last_confirmation_paper.uuid,
+                    matricule_auteur=self.request.user.person.global_id,
+                ),
+            )
             messages.success(
                 self.request,
                 _("The status has been changed to %(status)s.")
-                % {'status': _(ChoixStatutParcoursDoctoral.PASSED_CONFIRMATION.value)},
+                % {'status': _(ChoixStatutParcoursDoctoral.CONFIRMATION_REUSSIE.value)},
             )
             messages.success(
                 self.request,
@@ -167,7 +172,7 @@ class ConfirmationFailureDecisionView(
     identifier = PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_ON_FAILURE_STUDENT
     page_title = _('Failure of the confirmation paper')
     message_on_success = _("The status has been changed to %(status)s.") % {
-        'status': _(ChoixStatutParcoursDoctoral.NOT_ALLOWED_TO_CONTINUE.value)
+        'status': _(ChoixStatutParcoursDoctoral.NON_AUTORISE_A_POURSUIVRE.value)
     }
 
     def call_command(self, form):
@@ -176,6 +181,7 @@ class ConfirmationFailureDecisionView(
                 uuid=self.last_confirmation_paper.uuid,
                 sujet_message=form.cleaned_data['subject'],
                 corps_message=form.cleaned_data['body'],
+                matricule_auteur=self.request.user.person.global_id,
             )
         )
 
@@ -189,7 +195,7 @@ class ConfirmationRetakingDecisionView(
     identifier = PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_ON_RETAKING_STUDENT
     page_title = _('Retaking of the confirmation paper')
     message_on_success = _("The status has been changed to %(status)s.") % {
-        'status': _(ChoixStatutParcoursDoctoral.CONFIRMATION_TO_BE_REPEATED.value)
+        'status': _(ChoixStatutParcoursDoctoral.CONFIRMATION_A_REPRESENTER.value)
     }
 
     def call_command(self, form):
@@ -199,6 +205,7 @@ class ConfirmationRetakingDecisionView(
                 sujet_message=form.cleaned_data['subject'],
                 corps_message=form.cleaned_data['body'],
                 date_limite=form.cleaned_data['date_limite'],
+                matricule_auteur=self.request.user.person.global_id,
             )
         )
 

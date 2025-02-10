@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -27,8 +27,8 @@ import contextlib
 from typing import List, Optional, Union
 
 import attr
-from osis_common.ddd import interface
 
+from osis_common.ddd import interface
 from parcours_doctoral.ddd.domain.model._institut import InstitutIdentity
 from parcours_doctoral.ddd.domain.model._membre_CA import MembreCAIdentity
 from parcours_doctoral.ddd.domain.model._promoteur import PromoteurIdentity
@@ -50,6 +50,7 @@ from parcours_doctoral.ddd.domain.validator.exceptions import (
 from parcours_doctoral.ddd.domain.validator.validator_by_business_action import (
     ApprobationPromoteurValidatorList,
     ApprobationValidatorList,
+    ApprouverParPdfValidatorList,
     ApprouverValidatorList,
     DesignerPromoteurReferenceValidatorList,
     InviterASignerValidatorList,
@@ -165,7 +166,7 @@ class GroupeDeSupervision(interface.RootEntity):
             )
 
     def approuver_par_pdf(self, signataire_id: SignataireIdentity, pdf: List[str]) -> None:
-        ApprouverValidatorList(
+        ApprouverParPdfValidatorList(
             groupe_de_supervision=self,
             signataire_id=signataire_id,
         ).validate()

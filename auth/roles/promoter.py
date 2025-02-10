@@ -23,13 +23,13 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from django.db.models import UniqueConstraint
 from django.utils.translation import gettext_lazy as _
-from osis_role.contrib.models import RoleModel
 from rules import RuleSet, always_allow
 
+from osis_role.contrib.models import RoleModel
 from parcours_doctoral.auth.predicates.parcours_doctoral import (
     complementary_training_enabled,
-    confirmation_paper_in_progress,
     is_jury_in_progress,
     is_parcours_doctoral_promoter,
     is_parcours_doctoral_reference_promoter,
@@ -49,6 +49,9 @@ class Promoter(RoleModel):
         verbose_name = _("Role: Promoter")
         verbose_name_plural = _("Role: Promoters")
         group_name = "promoters"
+        constraints = [
+            UniqueConstraint(fields=['person'], name='unique_promoter_by_person'),
+        ]
 
     @classmethod
     def rule_set(cls):
@@ -59,12 +62,12 @@ class Promoter(RoleModel):
             'parcours_doctoral.approve_confirmation_paper': is_parcours_doctoral_promoter,
             'parcours_doctoral.validate_doctoral_training': is_parcours_doctoral_promoter,
             'parcours_doctoral.fill_thesis': is_parcours_doctoral_promoter,
-            'parcours_doctoral.check_publication_authorisation': is_parcours_doctoral_promoter,
             # A promoter can view as long as he is one of the PhD promoters
             'parcours_doctoral.view_project': is_parcours_doctoral_promoter,
             'parcours_doctoral.view_cotutelle': is_parcours_doctoral_promoter,
             'parcours_doctoral.view_funding': is_parcours_doctoral_promoter,
             'parcours_doctoral.view_supervision': is_parcours_doctoral_promoter,
+            'parcours_doctoral.view_supervision_canvas': is_parcours_doctoral_reference_promoter,
             'parcours_doctoral.view_jury': is_parcours_doctoral_promoter,
             'parcours_doctoral.view_confirmation': is_parcours_doctoral_promoter,
             'parcours_doctoral.upload_pdf_confirmation': is_parcours_doctoral_promoter,

@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -26,11 +26,11 @@
 from typing import List, Optional, Union
 
 import attr
+
 from base.ddd.utils.business_validator import (
     BusinessValidator,
     TwoStepsMultipleBusinessExceptionListValidator,
 )
-
 from parcours_doctoral.ddd.domain.model._cotutelle import Cotutelle
 from parcours_doctoral.ddd.domain.model._institut import InstitutIdentity
 from parcours_doctoral.ddd.domain.model._membre_CA import MembreCAIdentity
@@ -172,6 +172,20 @@ class ApprouverValidatorList(TwoStepsMultipleBusinessExceptionListValidator):
         return [
             ShouldSignataireEtreDansGroupeDeSupervision(self.groupe_de_supervision, self.signataire_id),
             ShouldSignataireEtreInvite(self.groupe_de_supervision, self.signataire_id),
+        ]
+
+
+@attr.dataclass(frozen=True, slots=True)
+class ApprouverParPdfValidatorList(TwoStepsMultipleBusinessExceptionListValidator):
+    groupe_de_supervision: 'GroupeDeSupervision'
+    signataire_id: Union['PromoteurIdentity', 'MembreCAIdentity']
+
+    def get_data_contract_validators(self) -> List[BusinessValidator]:
+        return []
+
+    def get_invariants_validators(self) -> List[BusinessValidator]:
+        return [
+            ShouldSignataireEtreDansGroupeDeSupervision(self.groupe_de_supervision, self.signataire_id),
         ]
 
 

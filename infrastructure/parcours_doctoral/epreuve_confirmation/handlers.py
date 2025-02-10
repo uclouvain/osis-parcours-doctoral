@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -26,6 +26,7 @@
 from parcours_doctoral.ddd.epreuve_confirmation.commands import *
 from parcours_doctoral.ddd.epreuve_confirmation.use_case.read import *
 from parcours_doctoral.ddd.epreuve_confirmation.use_case.write import *
+from parcours_doctoral.infrastructure.parcours_doctoral.domain.service.historique import Historique
 
 from ..repository.parcours_doctoral import ParcoursDoctoralRepository
 from .domain.service.notification import Notification
@@ -49,6 +50,7 @@ COMMAND_HANDLERS = {
         parcours_doctoral_repository=ParcoursDoctoralRepository(),
         epreuve_confirmation_repository=EpreuveConfirmationRepository(),
         notification=Notification(),
+        historique=Historique(),
     ),
     CompleterEpreuveConfirmationParPromoteurCommand: lambda msg_bus, cmd: completer_epreuve_confirmation_par_promoteur(
         cmd,
@@ -56,6 +58,11 @@ COMMAND_HANDLERS = {
         notification=Notification(),
     ),
     SoumettreReportDeDateCommand: lambda msg_bus, cmd: soumettre_report_de_date(
+        cmd,
+        epreuve_confirmation_repository=EpreuveConfirmationRepository(),
+        notification=Notification(),
+    ),
+    SoumettreReportDeDateParCDDCommand: lambda msg_bus, cmd: soumettre_report_de_date(
         cmd,
         epreuve_confirmation_repository=EpreuveConfirmationRepository(),
         notification=Notification(),
@@ -69,18 +76,21 @@ COMMAND_HANDLERS = {
         epreuve_confirmation_repository=EpreuveConfirmationRepository(),
         parcours_doctoral_repository=ParcoursDoctoralRepository(),
         notification=Notification(),
+        historique=Historique(),
     ),
     ConfirmerEchecCommand: lambda msg_bus, cmd: confirmer_echec(
         cmd,
         epreuve_confirmation_repository=EpreuveConfirmationRepository(),
         parcours_doctoral_repository=ParcoursDoctoralRepository(),
         notification=Notification(),
+        historique=Historique(),
     ),
     ConfirmerRepassageCommand: lambda msg_bus, cmd: confirmer_repassage(
         cmd,
         epreuve_confirmation_repository=EpreuveConfirmationRepository(),
         parcours_doctoral_repository=ParcoursDoctoralRepository(),
         notification=Notification(),
+        historique=Historique(),
     ),
     TeleverserAvisRenouvellementMandatRechercheCommand: lambda msg_bus, cmd: televerser_avis_renouvellement_mandat_recherche(
         cmd,

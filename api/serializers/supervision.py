@@ -23,17 +23,23 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from rest_framework.fields import CharField
+from rest_framework.serializers import ModelSerializer, ReadOnlyField, Serializer
+
 from base.models.person import Person
 from base.utils.serializers import DTOSerializer
-from rest_framework.serializers import ModelSerializer, ReadOnlyField
-
 from parcours_doctoral.ddd.dtos import GroupeDeSupervisionDTO
 
 __all__ = [
     'SupervisionDTOSerializer',
+    'SupervisionCanvasSerializer',
     'PersonSerializer',
     'TutorSerializer',
 ]
+
+
+class SupervisionCanvasSerializer(Serializer):
+    url = CharField()
 
 
 class SupervisionDTOSerializer(DTOSerializer):

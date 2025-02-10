@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from parcours_doctoral.ddd.commands import GetGroupeDeSupervisionCommand
+from parcours_doctoral.ddd.commands import GetGroupeDeSupervisionQuery
 from parcours_doctoral.ddd.domain.service.groupe_de_supervision_dto import (
     GroupeDeSupervisionDto,
 )
@@ -36,7 +36,7 @@ from parcours_doctoral.ddd.repository.i_groupe_de_supervision import (
 
 
 def recuperer_groupe_de_supervision(
-    cmd: 'GetGroupeDeSupervisionCommand',
+    cmd: 'GetGroupeDeSupervisionQuery',
     groupe_supervision_repository: 'IGroupeDeSupervisionRepository',
     promoteur_translator: 'IPromoteurTranslator',
     membre_ca_translator: 'IMembreCATranslator',

@@ -57,6 +57,7 @@ class CddConfigurator(EntityRoleModel):
     def rule_set(cls):
         ruleset = {
             'base.can_access_student_path': rules.always_allow,
+            'parcours_doctoral.view_cdd_config_home': rules.always_allow,
             'parcours_doctoral.change_cddconfiguration': rules.always_allow,
             'parcours_doctoral.change_cddmailtemplate': rules.always_allow,
         }

@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -25,9 +25,9 @@
 # ##############################################################################
 import datetime
 
-from base.ddd.utils.business_validator import MultipleBusinessExceptions
 from django.test import TestCase
 
+from base.ddd.utils.business_validator import MultipleBusinessExceptions
 from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from parcours_doctoral.ddd.epreuve_confirmation.builder.epreuve_confirmation_identity import (
     EpreuveConfirmationIdentityBuilder,
@@ -65,21 +65,9 @@ class TestSoumettreEpreuveConfirmation(TestCase):
                     proces_verbal_ca=['mon_fichier_2'],
                     avis_renouvellement_mandat_recherche=['mon_fichier_3'],
                     date=datetime.date(2022, 4, 1),
+                    matricule_auteur='1234',
                 )
             )
-
-    def test_should_generer_exception_si_date_epreuve_confirmation_invalide(self):
-        with self.assertRaises(MultipleBusinessExceptions) as e:
-            self.message_bus.invoke(
-                SoumettreEpreuveConfirmationCommand(
-                    uuid=str(self.epreuve_confirmation_id.uuid),
-                    rapport_recherche=['mon_fichier_1'],
-                    proces_verbal_ca=['mon_fichier_2'],
-                    avis_renouvellement_mandat_recherche=['mon_fichier_3'],
-                    date=datetime.date(2030, 10, 10),
-                )
-            )
-        self.assertIsInstance(e.exception.exceptions.pop(), EpreuveConfirmationDateIncorrecteException)
 
     def test_should_generer_exception_si_date_epreuve_confirmation_non_specifiee(self):
         with self.assertRaises(MultipleBusinessExceptions) as e:
@@ -92,6 +80,7 @@ class TestSoumettreEpreuveConfirmation(TestCase):
                     **{
                         'date': None,
                     },
+                    matricule_auteur='1234',
                 )
             )
         self.assertIsInstance(e.exception.exceptions.pop(), EpreuveConfirmationNonCompleteeException)
@@ -104,6 +93,7 @@ class TestSoumettreEpreuveConfirmation(TestCase):
                 proces_verbal_ca=['mon_fichier_2'],
                 avis_renouvellement_mandat_recherche=['mon_fichier_3'],
                 date=datetime.date(2022, 1, 3),
+                matricule_auteur='1234',
             )
         )
 
@@ -121,4 +111,4 @@ class TestSoumettreEpreuveConfirmation(TestCase):
         self.assertEqual(epreuve_confirmation_mise_a_jour.proces_verbal_ca, ['mon_fichier_2'])
         self.assertEqual(epreuve_confirmation_mise_a_jour.avis_renouvellement_mandat_recherche, ['mon_fichier_3'])
 
-        self.assertEqual(parcours_doctoral.statut, ChoixStatutParcoursDoctoral.SUBMITTED_CONFIRMATION)
+        self.assertEqual(parcours_doctoral.statut, ChoixStatutParcoursDoctoral.CONFIRMATION_SOUMISE)

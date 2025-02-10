@@ -29,8 +29,6 @@ import uuid
 from typing import List, Optional
 from unittest.mock import patch
 
-from base.tests.factories.academic_year import AcademicYearFactory
-from base.tests.factories.program_manager import ProgramManagerFactory
 from django.test import TestCase, override_settings
 from django.urls import reverse
 from rest_framework.status import (
@@ -40,6 +38,8 @@ from rest_framework.status import (
     HTTP_404_NOT_FOUND,
 )
 
+from base.tests.factories.academic_year import AcademicYearFactory
+from base.tests.factories.program_manager import ProgramManagerFactory
 from parcours_doctoral.ddd.domain.model.enums import ChoixTypeFinancement
 from parcours_doctoral.models.confirmation_paper import ConfirmationPaper
 from parcours_doctoral.tests.factories.confirmation_paper import (
@@ -75,19 +75,6 @@ class ConfirmationFormViewTestCase(TestCase):
         cls.parcours_doctoral_with_confirmation_papers = ParcoursDoctoralFactory(
             training=cls.parcours_doctoral_without_confirmation_paper.training,
         )
-        cls.confirmation_papers = [
-            ConfirmationPaperFactory(
-                parcours_doctoral=cls.parcours_doctoral_with_confirmation_papers,
-                confirmation_date=datetime.date(2022, 1, 1),
-                confirmation_deadline=datetime.date(2022, 4, 5),
-            ),
-            ConfirmationPaperFactory(
-                parcours_doctoral=cls.parcours_doctoral_with_confirmation_papers,
-                confirmation_date=datetime.date(2022, 4, 1),
-                confirmation_deadline=datetime.date(2022, 4, 5),
-            ),
-        ]
-        cls.last_confirmation_paper = cls.confirmation_papers[1]
 
         cls.student = cls.parcours_doctoral_without_confirmation_paper.student
 
@@ -101,6 +88,23 @@ class ConfirmationFormViewTestCase(TestCase):
         }
 
         cls.path = 'parcours_doctoral:update:confirmation'
+
+    def setUp(self):
+        self.confirmation_papers = [
+            ConfirmationPaperFactory(
+                parcours_doctoral=self.parcours_doctoral_with_confirmation_papers,
+                confirmation_date=datetime.date(2022, 1, 1),
+                confirmation_deadline=datetime.date(2022, 4, 5),
+                is_active=False,
+            ),
+            ConfirmationPaperFactory(
+                parcours_doctoral=self.parcours_doctoral_with_confirmation_papers,
+                confirmation_date=datetime.date(2022, 4, 1),
+                confirmation_deadline=datetime.date(2022, 4, 5),
+                is_active=True,
+            ),
+        ]
+        self.last_confirmation_paper = self.confirmation_papers[1]
 
     def test_get_confirmation_form_cdd_user_without_confirmation_paper(self):
         self.client.force_login(user=self.manager.user)
@@ -168,10 +172,15 @@ class ConfirmationFormViewTestCase(TestCase):
     def test_post_confirmation_form_cdd_user_with_confirmation_papers(self):
         self.client.force_login(user=self.manager.user)
 
+        ConfirmationPaper.objects.filter(
+            parcours_doctoral=self.parcours_doctoral_with_confirmation_papers,
+        ).update(is_active=False)
+
         confirmation_paper_to_update = ConfirmationPaperFactory(
             parcours_doctoral=self.parcours_doctoral_with_confirmation_papers,
             confirmation_date=datetime.date(2023, 1, 1),
             confirmation_deadline=datetime.date(2023, 4, 5),
+            is_active=True,
         )
 
         url = reverse(self.path, args=[self.parcours_doctoral_with_confirmation_papers.uuid])
@@ -228,21 +237,6 @@ class DoctorateAdmissionConfirmationOpinionFormViewTestCase(TestCase):
             financing_type=ChoixTypeFinancement.WORK_CONTRACT.name,
         )
         cls.file_uuid = uuid.uuid4()
-        cls.confirmation_papers = [
-            ConfirmationPaperFactory(
-                parcours_doctoral=cls.parcours_doctoral_with_confirmation_papers,
-                confirmation_date=datetime.date(2022, 1, 1),
-                confirmation_deadline=datetime.date(2022, 4, 5),
-                research_mandate_renewal_opinion=[cls.file_uuid],
-            ),
-            ConfirmationPaperFactory(
-                parcours_doctoral=cls.parcours_doctoral_with_confirmation_papers,
-                confirmation_date=datetime.date(2022, 4, 1),
-                confirmation_deadline=datetime.date(2022, 4, 5),
-                research_mandate_renewal_opinion=[cls.file_uuid],
-            ),
-        ]
-        cls.last_confirmation_paper = cls.confirmation_papers[1]
 
         cls.student = cls.parcours_doctoral_without_confirmation_paper.student
 
@@ -262,6 +256,25 @@ class DoctorateAdmissionConfirmationOpinionFormViewTestCase(TestCase):
         cls.get_remote_metadata_patcher.stop()
         cls.get_remote_token_patcher.stop()
         super().tearDownClass()
+
+    def setUp(self):
+        self.confirmation_papers = [
+            ConfirmationPaperFactory(
+                parcours_doctoral=self.parcours_doctoral_with_confirmation_papers,
+                confirmation_date=datetime.date(2022, 1, 1),
+                confirmation_deadline=datetime.date(2022, 4, 5),
+                research_mandate_renewal_opinion=[self.file_uuid],
+                is_active=False,
+            ),
+            ConfirmationPaperFactory(
+                parcours_doctoral=self.parcours_doctoral_with_confirmation_papers,
+                confirmation_date=datetime.date(2022, 4, 1),
+                confirmation_deadline=datetime.date(2022, 4, 5),
+                research_mandate_renewal_opinion=[self.file_uuid],
+                is_active=True,
+            ),
+        ]
+        self.last_confirmation_paper = self.confirmation_papers[1]
 
     def test_get_confirmation_form_student_user(self):
         self.client.force_login(user=self.student.user)
@@ -336,12 +349,17 @@ class DoctorateAdmissionConfirmationOpinionFormViewTestCase(TestCase):
     def test_post_confirmation_form_cdd_user_with_confirmation_papers(self):
         self.client.force_login(user=self.adre_person.user)
 
+        ConfirmationPaper.objects.filter(
+            parcours_doctoral=self.parcours_doctoral_with_confirmation_papers,
+        ).update(is_active=False)
+
         confirmation_paper_to_update = ConfirmationPaperFactory(
             id=ConfirmationPaper.objects.all().first().id + 1,
             parcours_doctoral=self.parcours_doctoral_with_confirmation_papers,
             confirmation_date=datetime.date(2023, 1, 1),
             confirmation_deadline=datetime.date(2023, 4, 5),
             research_mandate_renewal_opinion=[],
+            is_active=True,
         )
 
         url = reverse(self.path, args=[self.parcours_doctoral_with_confirmation_papers.uuid])

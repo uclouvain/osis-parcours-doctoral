@@ -25,23 +25,26 @@
 # ##############################################################################
 import json
 
-from admission.utils import (
-    add_close_modal_into_htmx_response,
-    add_messages_into_htmx_response,
-)
-from base.ddd.utils.business_validator import MultipleBusinessExceptions
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.cache import cache
 from django.http import Http404
 from django.shortcuts import resolve_url
+from django.template.loader import render_to_string
 from django.utils.functional import cached_property
+from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 from django.views.generic.base import ContextMixin
+
+from admission.utils import (
+    add_close_modal_into_htmx_response,
+    add_messages_into_htmx_response,
+)
+from base.ddd.utils.business_validator import MultipleBusinessExceptions
+from infrastructure.messages_bus import message_bus_instance
 from osis_common.ddd.interface import BusinessException
 from osis_role.contrib.views import PermissionRequiredMixin
-
-from infrastructure.messages_bus import message_bus_instance
+from parcours_doctoral.constants import COMMENT_TAB_GLOBAL
 from parcours_doctoral.ddd.commands import (
     GetCotutelleQuery,
     RecupererParcoursDoctoralQuery,
@@ -99,10 +102,24 @@ class ParcoursDoctoralViewMixin(LoginRequiredMixin, PermissionRequiredMixin, Con
         hash_url = self.request.GET.get('next_hash_url', '')
         return f'{url}#{hash_url}' if hash_url else url
 
+    def get_tab_badges(self):
+        tab_badges = {}
+
+        # Add the number of comments related to the doctorate
+        tab_badges['comments'] = mark_safe(
+            render_to_string(
+                template_name='parcours_doctoral/includes/badges/comment.html',
+                context={'doctorate_uuid': self.parcours_doctoral_uuid, 'COMMENT_TAB_GLOBAL': COMMENT_TAB_GLOBAL},
+            )
+        )
+
+        return tab_badges
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['original_parcours_doctoral'] = self.parcours_doctoral
         context['next_url'] = self.next_url
+        context['tab_badges'] = self.get_tab_badges()
 
         # Get the next and previous doctorates from the last computed listing
         cached_parcours_doctorals_list = cache.get(

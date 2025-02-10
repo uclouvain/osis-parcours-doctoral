@@ -25,11 +25,8 @@
 # ##############################################################################
 from typing import List
 
-from parcours_doctoral.ddd.commands import (
-    ListerParcoursDoctorauxDoctorantQuery,
-    ListerParcoursDoctorauxSupervisesQuery,
-)
-from parcours_doctoral.ddd.dtos import ParcoursDoctoralRechercheDTO
+from parcours_doctoral.ddd.commands import ListerParcoursDoctorauxSupervisesQuery
+from parcours_doctoral.ddd.dtos import ParcoursDoctoralRechercheEtudiantDTO
 from parcours_doctoral.ddd.repository.i_parcours_doctoral import (
     IParcoursDoctoralRepository,
 )
@@ -38,5 +35,5 @@ from parcours_doctoral.ddd.repository.i_parcours_doctoral import (
 def lister_parcours_doctoraux_supervises(
     cmd: 'ListerParcoursDoctorauxSupervisesQuery',
     parcours_doctoral_repository: 'IParcoursDoctoralRepository',
-) -> List[ParcoursDoctoralRechercheDTO]:
+) -> List[ParcoursDoctoralRechercheEtudiantDTO]:
     return parcours_doctoral_repository.search_dto(matricule_membre=cmd.matricule_membre)
