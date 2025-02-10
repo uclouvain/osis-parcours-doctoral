@@ -118,9 +118,10 @@ class ParcoursDoctoralService(IParcoursDoctoralService):
         files_uuids = [getattr(admission, field)[0] for field in cls.FILES_FIELDS if getattr(admission, field)]
         uploaded_paths = {
             # TODO Better path name?
-            str(
-                file_uuid
-            ): f'parcours_doctoral/{admission.candidate.uuid}/{parcours_doctoral.uuid}/duplicates_from_admission/{file_uuid}.pdf'
+            str(file_uuid): (
+                f'parcours_doctoral/{admission.candidate.uuid}/{parcours_doctoral.uuid}/'
+                f'duplicates_from_admission/{file_uuid}.pdf'
+            )
             for file_uuid in files_uuids
         }
 

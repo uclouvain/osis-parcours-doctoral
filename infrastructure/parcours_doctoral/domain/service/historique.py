@@ -226,7 +226,9 @@ class Historique(IHistorique):
 
         # Basculer en français pour la traduction de l'état
         with translation.override(settings.LANGUAGE_CODE_FR):
-            message_fr = "{signataire.prenom} {signataire.nom} a {action} la parcours_doctoral {via_pdf}en tant que {role}".format(
+            message_fr = (
+                "{signataire.prenom} {signataire.nom} a {action} la parcours_doctoral {via_pdf}en tant que {role}"
+            ).format(
                 signataire=signataire,
                 action="refusé" if avis.motif_refus else "approuvé",
                 via_pdf="via PDF " if avis.pdf else "",
