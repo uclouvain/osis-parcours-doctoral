@@ -554,17 +554,11 @@ msgstr "Peut approuver le jury"
 msgid "Can be submitted"
 msgstr "Peut être soumis"
 
-msgid "Can download jury-approved PDF"
-msgstr "Peut télécharger le PDF d'avis du jury"
-
 msgid "Can update the information related to the admission jury"
 msgstr "Peut modifier les informations relatives au jury d'admission"
 
 msgid "Can update the information related to the confirmation paper"
 msgstr "Peut modifier les informations relatives à l'épreuve de confirmation"
-
-msgid "Can upload jury-approved PDF"
-msgstr "Peut téléverser le PDF d'avis du jury"
 
 msgid "Can validate doctoral training"
 msgstr "Peut valider la formation doctorale"

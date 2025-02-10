@@ -505,16 +505,10 @@ msgstr ""
 msgid "Can be submitted"
 msgstr ""
 
-msgid "Can download jury-approved PDF"
-msgstr ""
-
 msgid "Can update the information related to the admission jury"
 msgstr ""
 
 msgid "Can update the information related to the confirmation paper"
-msgstr ""
-
-msgid "Can upload jury-approved PDF"
 msgstr ""
 
 msgid "Can validate doctoral training"
