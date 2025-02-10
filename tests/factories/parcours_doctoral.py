@@ -27,6 +27,7 @@
 import uuid
 
 import factory
+
 from admission.tests.factories import DoctorateAdmissionFactory
 from base.models.education_group_year import EducationGroupYear
 from base.models.enums.education_group_types import TrainingType
@@ -38,15 +39,10 @@ from base.tests.factories.education_group_year import EducationGroupYearFactory
 from base.tests.factories.entity import EntityWithVersionFactory
 from base.tests.factories.person import PersonFactory
 from base.tests.factories.student import StudentFactory
-from program_management.ddd.domain.program_tree_version import (
-    NOT_A_TRANSITION,
-    STANDARD,
+from parcours_doctoral.ddd.domain.model.enums import (
+    ChoixStatutParcoursDoctoral,
+    ChoixTypeFinancement,
 )
-from program_management.tests.factories.education_group_version import (
-    EducationGroupVersionFactory,
-)
-
-from parcours_doctoral.ddd.domain.model.enums import ChoixTypeFinancement
 from parcours_doctoral.models.parcours_doctoral import ParcoursDoctoral
 from parcours_doctoral.tests.factories.roles import StudentRoleFactory
 from parcours_doctoral.tests.factories.supervision import (
@@ -54,6 +50,13 @@ from parcours_doctoral.tests.factories.supervision import (
     ExternalPromoterFactory,
     PromoterFactory,
     _ProcessFactory,
+)
+from program_management.ddd.domain.program_tree_version import (
+    NOT_A_TRANSITION,
+    STANDARD,
+)
+from program_management.tests.factories.education_group_version import (
+    EducationGroupVersionFactory,
 )
 
 
@@ -87,7 +90,7 @@ class FormationFactory(EducationGroupYearFactory):
             ),
         ),
     )
-    education_group_type = factory.SubFactory(EducationGroupTypeFactory, name=TrainingType.FORMATION_PHD.name)
+    education_group_type = factory.SubFactory(EducationGroupTypeFactory, name=TrainingType.PHD.name)
     primary_language = None
 
     @factory.post_generation
@@ -110,6 +113,7 @@ class ParcoursDoctoralFactory(factory.django.DjangoModelFactory):
         FormationFactory,
         enrollment_campus__name='Mons',
     )
+    status = ChoixStatutParcoursDoctoral.ADMIS.name
     cotutelle = False
     financing_type = ChoixTypeFinancement.SELF_FUNDING.name
     project_title = 'Test'

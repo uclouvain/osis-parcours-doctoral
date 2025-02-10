@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -24,14 +24,15 @@
 #
 # ##############################################################################
 
-from backoffice.settings.rest_framework.fields import ActionLinksField
-from base.models.utils.utils import ChoiceEnum
 from rest_framework import status
 from rest_framework.schemas.openapi import AutoSchema, SchemaGenerator
 from rest_framework.schemas.utils import is_list_view
 from rest_framework.serializers import Serializer
 
-PARCOURS_DOCTORAL_SDK_VERSION = "1.0.1"
+from backoffice.settings.rest_framework.fields import ActionLinksField
+from base.models.utils.utils import ChoiceEnum
+
+PARCOURS_DOCTORAL_SDK_VERSION = "1.0.4"
 
 
 class ParcoursDoctoralSchemaGenerator(SchemaGenerator):

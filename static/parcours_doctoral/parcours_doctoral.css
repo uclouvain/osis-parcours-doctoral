@@ -126,6 +126,7 @@ fieldset.custom-fieldset {
 }
 
 fieldset.custom-fieldset > legend {
+  float: initial;
   font-size: 1em;
   width: fit-content;
   border: none;
@@ -322,13 +323,13 @@ fieldset.custom-fieldset > legend {
 }
 
 .panel-default-badge-success{
-    color: #fff !important;
-    background-color: #28a745 !important;
+  color: #fff !important;
+  background-color: #28a745 !important;
 }
 
 .panel-default-badge-primary{
-    color: #fff !important;
-    background-color: #337ab7 !important;
+  color: #fff !important;
+  background-color: #337ab7 !important;
 }
 
 
@@ -457,8 +458,13 @@ select.select2-hidden-accessible + span {
   min-width: auto;
 }
 
-.select2-selection.select2-selection--single {
-  padding: 6px 12px;
+.select2-selection__rendered {
+  line-height: 1em !important;
+  overflow-y: visible !important;
+}
+
+.select2-selection__arrow {
+  display: none;
 }
 
 #document-spinner {
@@ -525,4 +531,28 @@ a.no-link {
 
 .multi-widget ul label {
   font-weight: normal;
+}
+
+.dot {
+  height: 1em;
+  width: 1em;
+  display: inline-block;
+  border-radius: 50%;
+}
+
+.dot.red-dot {
+  background: rgb(200, 50, 50);
+}
+
+.dot.green-dot {
+  background: rgb(50, 200, 50);
+}
+
+/* Badges */
+#main .badge:empty {
+  display: none;
+}
+
+#main .comment-count > .badge {
+  font-size: 0.7em;
 }

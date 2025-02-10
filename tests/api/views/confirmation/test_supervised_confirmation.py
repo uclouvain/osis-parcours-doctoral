@@ -28,12 +28,12 @@ from unittest import mock
 from uuid import uuid4
 
 import freezegun
-from base.tests.factories.person import PersonFactory
-from base.tests.factories.program_manager import ProgramManagerFactory
 from django.shortcuts import resolve_url
 from rest_framework import status
 from rest_framework.test import APITestCase
 
+from base.tests.factories.person import PersonFactory
+from base.tests.factories.program_manager import ProgramManagerFactory
 from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from parcours_doctoral.ddd.epreuve_confirmation.validators.exceptions import (
     EpreuveConfirmationNonTrouveeException,
@@ -73,12 +73,14 @@ class SupervisedConfirmationAPIViewTestCase(APITestCase):
         cls.doctorate = ParcoursDoctoralFactory(
             supervision_group=cls.process,
             student=cls.student,
-            status=ChoixStatutParcoursDoctoral.ADMITTED.name,
+            status=ChoixStatutParcoursDoctoral.ADMIS.name,
         )
 
         cls.manager = ProgramManagerFactory(education_group=cls.doctorate.training.education_group).person
 
-        cls.url = resolve_url('parcours_doctoral_api_v1:supervised_confirmation', uuid=cls.doctorate.uuid)
+        cls.base_url = 'parcours_doctoral_api_v1:supervised_confirmation'
+
+        cls.url = resolve_url(cls.base_url, uuid=cls.doctorate.uuid)
 
     def setUp(self):
         patcher = mock.patch(
@@ -129,6 +131,26 @@ class SupervisedConfirmationAPIViewTestCase(APITestCase):
         response = self.client.put(self.url, format='json')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
+    def test_update_confirmation_of_in_creation_doctorate_is_forbidden(self):
+        self.client.force_authenticate(user=self.promoter_user)
+
+        in_creation_doctorate = ParcoursDoctoralFactory(
+            supervision_group=self.doctorate.supervision_group,
+            student=self.student,
+            status=ChoixStatutParcoursDoctoral.EN_COURS_DE_CREATION_PAR_GESTIONNAIRE.name,
+        )
+
+        url = resolve_url(self.base_url, uuid=in_creation_doctorate.uuid)
+
+        response = self.client.put(url)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        in_creation_doctorate.status = ChoixStatutParcoursDoctoral.EN_ATTENTE_INJECTION_EPC.name
+        in_creation_doctorate.save()
+
+        response = self.client.put(url)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
     def test_update_confirmation_with_promoter(self):
         self.client.force_authenticate(user=self.other_promoter_user)
 
@@ -171,6 +193,7 @@ class SupervisedConfirmationAPIViewTestCase(APITestCase):
         old_confirmation_paper = ConfirmationPaperFactory(
             parcours_doctoral=self.doctorate,
             confirmation_date=datetime.date(2020, 4, 2),
+            is_active=False,
         )
 
         response = self.client.put(self.url, data=default_data, format='json')

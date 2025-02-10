@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -25,12 +25,12 @@
 # ##############################################################################
 from django.test import TestCase
 
-from parcours_doctoral.forms.extension_request import ExtensionRequestForm
+from parcours_doctoral.forms.extension_request import ExtensionRequestOpinionForm
 
 
 class ExtensionRequestTestCase(TestCase):
     def test_form_validation_with_no_data(self):
-        form = ExtensionRequestForm(data={})
+        form = ExtensionRequestOpinionForm(data={})
 
         self.assertFalse(form.is_valid())
 
@@ -38,7 +38,7 @@ class ExtensionRequestTestCase(TestCase):
         self.assertIn('avis_cdd', form.errors)
 
     def test_form_validation_with_valid_data(self):
-        form = ExtensionRequestForm(
+        form = ExtensionRequestOpinionForm(
             data={
                 'avis_cdd': 'My opinion',
             },

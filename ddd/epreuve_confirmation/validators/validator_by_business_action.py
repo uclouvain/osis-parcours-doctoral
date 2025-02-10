@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -48,7 +48,6 @@ from parcours_doctoral.ddd.epreuve_confirmation.validators import (
 @attr.dataclass(frozen=True, slots=True)
 class SoumettreEpreuveConfirmationValidatorList(TwoStepsMultipleBusinessExceptionListValidator):
     date: Optional[datetime.date]
-    date_limite: datetime.date
 
     def get_data_contract_validators(self) -> List[BusinessValidator]:
         return []
@@ -56,7 +55,6 @@ class SoumettreEpreuveConfirmationValidatorList(TwoStepsMultipleBusinessExceptio
     def get_invariants_validators(self) -> List[BusinessValidator]:
         return [
             ShouldEpreuveConfirmationEtreCompletee(self.date),
-            ShouldDateEpreuveEtreValide(self.date, self.date_limite),
         ]
 
 

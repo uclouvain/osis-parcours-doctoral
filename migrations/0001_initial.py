@@ -104,12 +104,12 @@ class Migration(migrations.Migration):
                         choices=[
                             ("ADMITTED", "ADMITTED"),
                             ("EN_ATTENTE_DE_SIGNATURE", "Waiting for signature"),
-                            ("SUBMITTED_CONFIRMATION", "SUBMITTED_CONFIRMATION"),
-                            ("PASSED_CONFIRMATION", "PASSED_CONFIRMATION"),
-                            ("NOT_ALLOWED_TO_CONTINUE", "NOT_ALLOWED_TO_CONTINUE"),
+                            ("CONFIRMATION_SOUMISE", "CONFIRMATION_SOUMISE"),
+                            ("CONFIRMATION_REUSSIE", "CONFIRMATION_REUSSIE"),
+                            ("NON_AUTORISE_A_POURSUIVRE", "NON_AUTORISE_A_POURSUIVRE"),
                             (
-                                "CONFIRMATION_TO_BE_REPEATED",
-                                "CONFIRMATION_TO_BE_REPEATED",
+                                "CONFIRMATION_A_REPRESENTER",
+                                "CONFIRMATION_A_REPRESENTER",
                             ),
                             ("JURY_SOUMIS", "JURY_SOUMIS"),
                             ("JURY_APPROUVE_CA", "JURY_APPROUVE_CA"),
@@ -117,6 +117,7 @@ class Migration(migrations.Migration):
                             ("JURY_REFUSE_CDD", "JURY_REFUSE_CDD"),
                             ("JURY_APPROUVE_ADRE", "JURY_APPROUVE_ADRE"),
                             ("JURY_REFUSE_ADRE", "JURY_REFUSE_ADRE"),
+                            ("ABANDON", "ABANDON"),
                         ],
                         default="ADMITTED",
                         max_length=30,
@@ -460,17 +461,6 @@ class Migration(migrations.Migration):
                         related_name="+",
                         to="admission.doctorateadmission",
                         verbose_name="Admission",
-                    ),
-                ),
-                (
-                    "international_scholarship",
-                    models.ForeignKey(
-                        blank=True,
-                        null=True,
-                        on_delete=django.db.models.deletion.PROTECT,
-                        related_name="+",
-                        to="admission.scholarship",
-                        verbose_name="International scholarship",
                     ),
                 ),
                 (

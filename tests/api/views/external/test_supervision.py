@@ -31,6 +31,7 @@ from osis_signature.utils import get_signing_token
 from rest_framework import status
 from rest_framework.test import APITestCase
 
+from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from parcours_doctoral.tests.factories.parcours_doctoral import ParcoursDoctoralFactory
 from parcours_doctoral.tests.factories.roles import StudentRoleFactory
 from parcours_doctoral.tests.factories.supervision import ExternalPromoterFactory
@@ -95,3 +96,24 @@ class ExternalDoctorateSupervisionAPIViewTestCase(QueriesAssertionsMixin, APITes
         self.assertEqual(len(data['supervision']['signatures_promoteurs']), 1)
         self.assertIn('parcours_doctoral', data)
         self.assertEqual(data['parcours_doctoral']['uuid'], str(self.doctorate.uuid))
+
+    def test_supervision_with_in_creation_doctorate_is_forbidden(self):
+        in_creation_doctorate = ParcoursDoctoralFactory(
+            supervision_group=self.doctorate.supervision_group,
+            student=self.student,
+            status=ChoixStatutParcoursDoctoral.EN_COURS_DE_CREATION_PAR_GESTIONNAIRE.name,
+        )
+
+        token = get_signing_token(self.external_promoter)
+        url = resolve_url(self.base_url, uuid=in_creation_doctorate.uuid, token=token)
+
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        in_creation_doctorate.status = ChoixStatutParcoursDoctoral.EN_ATTENTE_INJECTION_EPC.name
+        in_creation_doctorate.save()
+
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)

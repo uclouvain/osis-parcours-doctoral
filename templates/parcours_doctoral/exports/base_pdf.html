@@ -7,7 +7,7 @@
   * The core business involves the administration of students, teachers,
   * courses, programs and so on.
   *
-  * Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+  * Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
   *
   * This program is free software: you can redistribute it and/or modify
   * it under the terms of the GNU General Public License as published by
@@ -26,63 +26,105 @@
 <head>
   <meta charset="UTF-8">
   <title>{% block title %}{{ parcours_doctoral.reference }}{% endblock %}</title>
-  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+  <link rel="stylesheet" href="{% static 'css/bootstrap5/bootstrap.min.css' %}">
   <link rel="stylesheet" href="{% static 'parcours_doctoral/parcours_doctoral.css' %}">
   <style>
-    @page {
-      size: A4 portrait;
-      margin: 150px 1cm 120px 1cm;
-      padding: 1em 0;
+      @page {
+          size: A4 portrait;
+          margin: 150px 1cm 120px 1cm;
+          padding: 1em 0;
 
-      @top-left {
-        content: element(header);
-        width: 100%;
-        height: 150px;
-        border-bottom: solid 1px #ccc;
+          @top-left {
+              content: element(header);
+              width: 100%;
+              height: 150px;
+              border-bottom: solid 1px #ccc;
+          }
+
+          @bottom-left {
+              content: element(footer);
+              width: 100%;
+              height: 120px;
+              border-top: solid 1px #ccc;
+          }
       }
 
-      @bottom-left {
-        content: element(footer);
-        width: 100%;
-        height: 120px;
-        border-top: solid 1px #ccc;
-      }
-    }
+      @media print {
+          header {
+              position: running(header);
+          }
 
-    @media print {
-      header {
-        position: running(header);
-      }
+          header, header *, footer, footer * {
+              color: #000066 !important;
+          }
 
-      header, header *, footer, footer * {
-        color: #000066 !important;
-      }
+          header img {
+              height: 1.5cm;
+              width: auto;
+          }
 
-      header img {
-        height: 1.5cm;
-        width: auto;
-      }
+          header p {
+              padding-left: 1.5em;
+          }
 
-      header p {
-        padding-left: 1.5em;
-      }
+          footer {
+              position: running(footer);
+              padding-bottom: 1em;
+              padding-left: 2.5em;
+              background: url("{% static "img/l-background.png" %}") left 70% no-repeat !important;
+          }
 
-      footer {
-        position: running(footer);
-        padding-bottom: 1em;
-        padding-left: 2.5em;
-        background: url("{% static "img/l-background.png" %}") left 70% no-repeat !important;
+          body {
+              font-family: Calibri, Arial, sans-serif;
+              font-size: 11pt;
+          }
       }
 
-      body {
-        font-family: Calibri, Arial, sans-serif;
-        font-size: 11pt;
+      .container {
+          max-width: 18cm;
       }
 
-      h1, h2 {
-        color: #3399cc !important;
+      .avoid-break-inside {
+          break-inside: avoid;
       }
-    }
+
+      .inline-field-data {
+          display: block;
+      }
+
+      .inline-field-data dd, .inline-field-data dt {
+          display: inline;
+      }
+
+      #title {
+          margin-bottom: 3em;
+      }
+
+      #title h1, #title h2 {
+          font-size: 1em;
+          text-align: center;
+      }
+
+      h1 {
+          color: #5db3e6 !important;
+          text-transform: uppercase;
+          font-weight: bold;
+          margin-top: 1rem !important;
+          margin-bottom: 1rem !important;
+      }
+
+      h2 {
+          color: #515151 !important;
+          font-style: italic;
+      }
+
+      dl {
+          margin-bottom: 10px;
+      }
+
+      dd {
+          margin-left: 5px;
+      }
   </style>
   {% block extra_head %}{% endblock %}
 </head>
@@ -106,7 +148,7 @@
     <p>
       {% footer_campus parcours_doctoral.formation.campus %}
       <br>
-      {{ parcours_doctoral.formation.entite_gestion.lieu }} {{ parcours_doctoral.formation.entite_gestion.code_postal }} {{ parcours_doctoral.formation.entite_gestion.ville }}, Belgique<br />
+      {{ parcours_doctoral.formation.entite_gestion.adresse_complete }}<br />
       Tél: +32 {{ parcours_doctoral.formation.entite_gestion.numero_telephone|phone_spaced:True }} www.uclouvain.be
     </p>
   {% endblock %}

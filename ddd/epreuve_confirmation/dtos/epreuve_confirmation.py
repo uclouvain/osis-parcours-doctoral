@@ -27,6 +27,7 @@ import datetime
 from typing import List, Optional
 
 import attr
+
 from osis_common.ddd import interface
 
 from .demande_prolongation import DemandeProlongationDTO
@@ -35,6 +36,8 @@ from .demande_prolongation import DemandeProlongationDTO
 @attr.dataclass(frozen=True, slots=True)
 class EpreuveConfirmationDTO(interface.DTO):
     uuid: str
+
+    est_active: bool
 
     date_limite: datetime.date
     date: Optional[datetime.date] = None

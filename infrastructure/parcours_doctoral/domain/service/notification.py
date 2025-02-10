@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -26,7 +26,6 @@
 
 from email.message import EmailMessage
 
-from base.models.person import Person
 from django.conf import settings
 from django.utils import translation
 from django.utils.functional import lazy
@@ -43,6 +42,7 @@ from osis_notification.models import WebNotification
 from osis_signature.enums import SignatureState
 from osis_signature.utils import get_signing_token
 
+from base.models.person import Person
 from parcours_doctoral.ddd.domain.model.groupe_de_supervision import (
     GroupeDeSupervision,
     SignataireIdentity,
@@ -141,38 +141,38 @@ class Notification(INotification):
         parcours_doctoral: ParcoursDoctoral,
         groupe_de_supervision: GroupeDeSupervision,
     ) -> None:
-        parcours_doctoral = ParcoursDoctoralModel.objects.get(uuid=parcours_doctoral.entity_id.uuid)
+        parcours_doctoral_instance = ParcoursDoctoralModel.objects.get(uuid=parcours_doctoral.entity_id.uuid)
 
         # Création de la tâche de génération du document
         task = AsyncTask.objects.create(
             name=_("Exporting %(reference)s to PDF") % {'reference': parcours_doctoral.reference},
             description=_("Exporting the admission information to PDF"),
-            person=parcours_doctoral.student,
+            person=parcours_doctoral_instance.student,
             time_to_live=5,
         )
         ParcoursDoctoralTask.objects.create(
             task=task,
-            parcours_doctoral=parcours_doctoral,
+            parcours_doctoral=parcours_doctoral_instance,
             type=ParcoursDoctoralTask.TaskType.ARCHIVE.name,
         )
 
         # Tokens communs
-        candidat = Person.objects.get(global_id=parcours_doctoral.matricule_candidat)
-        common_tokens = cls.get_common_tokens(parcours_doctoral, candidat)
+        doctorant = Person.objects.get(global_id=parcours_doctoral.matricule_doctorant)
+        common_tokens = cls.get_common_tokens(parcours_doctoral_instance)
         common_tokens["parcours_doctoral_link_back"] = get_parcours_doctoral_link_back(
-            uuid=parcours_doctoral.entity_id.uuid,
+            uuid=parcours_doctoral_instance.entity_id.uuid,
             tab='supervision',
         )
         common_tokens["parcours_doctoral_link_front"] = get_parcours_doctoral_link_front(
-            uuid=parcours_doctoral.entity_id.uuid,
+            uuid=parcours_doctoral_instance.entity_id.uuid,
             tab='supervision',
         )
         actor_list = ParcoursDoctoralSupervisionActor.objects.filter(
-            process=parcours_doctoral.supervision_group
+            process=parcours_doctoral_instance.supervision_group
         ).select_related('person')
 
         # Envoyer aux gestionnaires CDD
-        for manager in get_parcours_doctoral_cdd_managers(parcours_doctoral.training.education_group_id):
+        for manager in get_parcours_doctoral_cdd_managers(parcours_doctoral_instance.training.education_group_id):
             with translation.override(manager.language):
                 content = (
                     _(
@@ -186,21 +186,21 @@ class Notification(INotification):
             WebNotificationHandler.create(web_notification)
 
         # Envoyer au doctorant
-        with translation.override(candidat.language):
+        with translation.override(doctorant.language):
             actor_list_str = [
                 f"{actor.first_name} {actor.last_name} ({actor.get_type_display()})" for actor in actor_list
             ]
         email_message = generate_email(
             PARCOURS_DOCTORAL_EMAIL_SIGNATURE_REQUESTS_STUDENT,
-            candidat.language,
+            doctorant.language,
             {
                 **common_tokens,
                 "actors_as_list_items": '<li></li>'.join(actor_list_str),
                 "actors_comma_separated": ', '.join(actor_list_str),
             },
-            recipients=[candidat.email],
+            recipients=[doctorant.email],
         )
-        EmailNotificationHandler.create(email_message, person=candidat)
+        EmailNotificationHandler.create(email_message, person=doctorant)
 
         # Envoyer aux acteurs n'ayant pas répondu
         actors_invited = [actor for actor in actor_list if actor.last_state == SignatureState.INVITED.name]
@@ -237,8 +237,7 @@ class Notification(INotification):
         actor.refresh_from_db()
 
         # Tokens communs
-        candidat = Person.objects.get(global_id=parcours_doctoral.matricule_candidat)
-        common_tokens = cls.get_common_tokens(parcours_doctoral, candidat)
+        common_tokens = cls.get_common_tokens(parcours_doctoral)
 
         # Envoyer aux acteurs n'ayant pas répondu
         tokens = {
@@ -270,15 +269,16 @@ class Notification(INotification):
         signataire_id: 'SignataireIdentity',
     ) -> None:
         # Notifier uniquement si le signataire a déjà signé
-        parcours_doctoral = ParcoursDoctoralModel.objects.get(uuid=parcours_doctoral.entity_id.uuid)
-        actor = parcours_doctoral.supervision_group.actors.select_related('person').get(uuid=signataire_id.uuid)
+        parcours_doctoral_instance = ParcoursDoctoralModel.objects.get(uuid=parcours_doctoral.entity_id.uuid)
+        actor = parcours_doctoral_instance.supervision_group.actors.select_related('person').get(
+            uuid=signataire_id.uuid
+        )
         if actor.state in [SignatureState.APPROVED.name, SignatureState.DECLINED.name]:
-            candidat = Person.objects.get(global_id=parcours_doctoral.matricule_candidat)
             email_message = generate_email(
                 PARCOURS_DOCTORAL_EMAIL_MEMBER_REMOVED,
                 actor.language,
                 {
-                    **cls.get_common_tokens(parcours_doctoral, candidat),
+                    **cls.get_common_tokens(parcours_doctoral_instance),
                     "actor_first_name": actor.first_name,
                     "actor_last_name": actor.last_name,
                 },

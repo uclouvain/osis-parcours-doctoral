@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -26,7 +26,7 @@
 
 from django.test import SimpleTestCase
 
-from parcours_doctoral.ddd.commands import GetGroupeDeSupervisionCommand
+from parcours_doctoral.ddd.commands import GetGroupeDeSupervisionQuery
 from parcours_doctoral.infrastructure.message_bus_in_memory import (
     message_bus_in_memory_instance,
 )
@@ -34,7 +34,7 @@ from parcours_doctoral.infrastructure.message_bus_in_memory import (
 
 class GetGroupeDeSupervisionTestCase(SimpleTestCase):
     def setUp(self):
-        self.cmd = GetGroupeDeSupervisionCommand(uuid_parcours_doctoral='uuid-SC3DP-promoteur-membre')
+        self.cmd = GetGroupeDeSupervisionQuery(uuid_parcours_doctoral='uuid-SC3DP-promoteur-membre')
         self.message_bus = message_bus_in_memory_instance
 
     def test_get_groupe_de_supervision(self):

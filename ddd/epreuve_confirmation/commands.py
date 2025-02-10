@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -55,6 +55,7 @@ class ModifierEpreuveConfirmationParCDDCommand(interface.CommandRequest):
 @attr.dataclass(frozen=True, slots=True)
 class SoumettreEpreuveConfirmationCommand(interface.CommandRequest):
     uuid: str
+    matricule_auteur: str
 
     date: datetime.date
     rapport_recherche: List[str]
@@ -81,6 +82,15 @@ class SoumettreReportDeDateCommand(interface.CommandRequest):
 
 
 @attr.dataclass(frozen=True, slots=True)
+class SoumettreReportDeDateParCDDCommand(interface.CommandRequest):
+    uuid: str
+
+    nouvelle_echeance: datetime.date
+    justification_succincte: str
+    lettre_justification: List[str]
+
+
+@attr.dataclass(frozen=True, slots=True)
 class SoumettreAvisProlongationCommand(interface.CommandRequest):
     uuid: str
 
@@ -90,11 +100,13 @@ class SoumettreAvisProlongationCommand(interface.CommandRequest):
 @attr.dataclass(frozen=True, slots=True)
 class ConfirmerReussiteCommand(interface.CommandRequest):
     uuid: str
+    matricule_auteur: str
 
 
 @attr.dataclass(frozen=True, slots=True)
 class ConfirmerEchecCommand(interface.CommandRequest):
     uuid: str
+    matricule_auteur: str
 
     sujet_message: str
     corps_message: str
@@ -103,6 +115,7 @@ class ConfirmerEchecCommand(interface.CommandRequest):
 @attr.dataclass(frozen=True, slots=True)
 class ConfirmerRepassageCommand(interface.CommandRequest):
     uuid: str
+    matricule_auteur: str
 
     date_limite: datetime.date
     sujet_message: str

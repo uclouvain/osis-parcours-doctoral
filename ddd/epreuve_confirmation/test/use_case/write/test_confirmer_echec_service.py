@@ -23,9 +23,9 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from base.ddd.utils.business_validator import MultipleBusinessExceptions
 from django.test import TestCase
 
+from base.ddd.utils.business_validator import MultipleBusinessExceptions
 from parcours_doctoral.ddd.commands import RecupererParcoursDoctoralQuery
 from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from parcours_doctoral.ddd.epreuve_confirmation.commands import ConfirmerEchecCommand
@@ -44,6 +44,7 @@ class TestConfirmerEchec(TestCase):
         self.parametres_commande_defaut = {
             'sujet_message': 'Le sujet du message',
             'corps_message': 'Le corps du message.',
+            'matricule_auteur': '1234',
         }
 
     def test_should_generer_exception_si_confirmation_inconnue(self):
@@ -69,4 +70,4 @@ class TestConfirmerEchec(TestCase):
             RecupererParcoursDoctoralQuery(parcours_doctoral_uuid=parcours_doctoral_id.uuid),
         )
 
-        self.assertEqual(parcours_doctoral.statut, ChoixStatutParcoursDoctoral.NOT_ALLOWED_TO_CONTINUE.name)
+        self.assertEqual(parcours_doctoral.statut, ChoixStatutParcoursDoctoral.NON_AUTORISE_A_POURSUIVRE.name)

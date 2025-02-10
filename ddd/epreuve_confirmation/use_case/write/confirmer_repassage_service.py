@@ -26,6 +26,7 @@
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import (
     ParcoursDoctoralIdentity,
 )
+from parcours_doctoral.ddd.domain.service.i_historique import IHistorique
 from parcours_doctoral.ddd.epreuve_confirmation.builder.epreuve_confirmation_identity import (
     EpreuveConfirmationIdentityBuilder,
 )
@@ -51,6 +52,7 @@ def confirmer_repassage(
     epreuve_confirmation_repository: 'IEpreuveConfirmationRepository',
     parcours_doctoral_repository: 'IParcoursDoctoralRepository',
     notification: 'INotification',
+    historique: 'IHistorique',
 ) -> ParcoursDoctoralIdentity:
     # GIVEN
     epreuve_confirmation_id = EpreuveConfirmationIdentityBuilder.build_from_uuid(cmd.uuid)
@@ -60,6 +62,7 @@ def confirmer_repassage(
 
     # WHEN
     epreuve_confirmation.verifier_pour_encodage_decision()
+    epreuve_confirmation.archiver()
     parcours_doctoral.encoder_decision_repassage_epreuve_confirmation()
     nouvelle_epreuve_confirmation = EpreuveConfirmationService.initier(
         parcours_doctoral_id=parcours_doctoral.entity_id,
@@ -71,5 +74,6 @@ def confirmer_repassage(
     epreuve_confirmation_repository.save(epreuve_confirmation)
     epreuve_confirmation_repository.save(nouvelle_epreuve_confirmation)
     notification.notifier_repassage_epreuve(epreuve_confirmation, cmd.sujet_message, cmd.corps_message)
+    historique.historiser_repassage_epreuve_confirmation(parcours_doctoral, cmd.matricule_auteur)
 
     return parcours_doctoral.entity_id

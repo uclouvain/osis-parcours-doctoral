@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -24,17 +24,21 @@
 #
 # ##############################################################################
 import uuid
+from datetime import date
 
-from admission.models.functions import ToChar
-from base.models.education_group_year import EducationGroupYear
-from base.models.entity_version import EntityVersion
-from base.models.enums.education_group_categories import Categories
-from base.models.enums.education_group_types import TrainingType
-from base.models.person import Person
-from base.models.student import Student
 from django.core.cache import cache
 from django.db import models
-from django.db.models import Case, CharField, F, OuterRef, Q, Subquery, Value, When
+from django.db.models import (
+    Case,
+    CharField,
+    F,
+    IntegerField,
+    OuterRef,
+    Q,
+    Subquery,
+    Value,
+    When,
+)
 from django.db.models.functions import Coalesce, Concat, JSONObject, Mod, Replace
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -43,9 +47,18 @@ from django.utils.translation import pgettext_lazy
 from osis_document.contrib import FileField
 from osis_history.models import HistoryEntry
 from osis_signature.contrib.fields import SignatureProcessField
-from program_management.models.education_group_version import EducationGroupVersion
 
+from admission.models.functions import ToChar
+from base.models.education_group_year import EducationGroupYear
+from base.models.entity_version import EntityVersion
+from base.models.enums.education_group_categories import Categories
+from base.models.enums.education_group_types import TrainingType
+from base.models.enums.entity_type import SECTOR
+from base.models.person import Person
+from base.models.student import Student
+from base.utils.cte import CTESubquery
 from parcours_doctoral.ddd.domain.model.enums import (
+    STATUTS_DOCTORAT_EN_COURS_DE_CREATION,
     ChoixCommissionProximiteCDEouCLSM,
     ChoixCommissionProximiteCDSS,
     ChoixDoctoratDejaRealise,
@@ -56,6 +69,7 @@ from parcours_doctoral.ddd.domain.model.enums import (
 )
 from parcours_doctoral.ddd.jury.domain.model.enums import FormuleDefense
 from parcours_doctoral.ddd.repository.i_parcours_doctoral import CAMPUS_LETTRE_DOSSIER
+from program_management.models.education_group_version import EducationGroupVersion
 
 __all__ = [
     'ParcoursDoctoral',
@@ -156,6 +170,36 @@ class ParcoursDoctoralQuerySet(models.QuerySet):
             )
         )
 
+    def annotate_ordered_enum(self, field_name, ordering_field_name, enum_class):
+        """
+        Annotate the queryset with an equivalent numeric version of an enum field.
+        :param field_name: The name of the enum field
+        :param ordering_field_name: The name of the output field
+        :param enum_class: The enum class
+        :return: The annotated queryset
+        """
+        return self.annotate(
+            **{
+                ordering_field_name: Case(
+                    *(When(**{field_name: member.name}, then=i) for i, member in enumerate(enum_class)),
+                    output_field=IntegerField(),
+                )
+            },
+        )
+
+    def annotate_intitule_secteur_formation(self):
+        cte = EntityVersion.objects.with_children(entity_id=OuterRef("training__management_entity_id"))
+        sector_subqs = (
+            cte.join(EntityVersion, id=cte.col.id)
+            .with_cte(cte)
+            .filter(entity_type=SECTOR)
+            .exclude(end_date__lte=date.today())
+        )
+
+        return self.annotate(
+            intitule_secteur_formation=CTESubquery(sector_subqs.values("title")[:1]),
+        )
+
 
 class ParcoursDoctoral(models.Model):
     uuid = models.UUIDField(
@@ -175,13 +219,18 @@ class ParcoursDoctoral(models.Model):
         unique=True,
         editable=False,
     )
+    justification = models.TextField(
+        default='',
+        verbose_name=_("Justification"),
+        blank=True,
+    )
 
     created_at = models.DateTimeField(verbose_name=_('Created'), auto_now_add=True)
     modified_at = models.DateTimeField(verbose_name=_('Modified'), auto_now=True)
 
     student = models.ForeignKey(
         to="base.Person",
-        verbose_name=_("Student"),
+        verbose_name=pgettext_lazy("parcours_doctoral", "Student"),
         related_name="%(class)ss",
         on_delete=models.PROTECT,
         editable=False,
@@ -206,8 +255,7 @@ class ParcoursDoctoral(models.Model):
 
     status = models.CharField(
         choices=ChoixStatutParcoursDoctoral.choices(),
-        max_length=30,
-        default=ChoixStatutParcoursDoctoral.ADMITTED.name,
+        max_length=64,
         verbose_name=_("Status"),
     )
 
@@ -415,7 +463,7 @@ class ParcoursDoctoral(models.Model):
         blank=True,
     )
     international_scholarship = models.ForeignKey(
-        to="admission.Scholarship",
+        to="reference.Scholarship",
         verbose_name=_("International scholarship"),
         related_name="+",
         on_delete=models.PROTECT,
@@ -477,8 +525,6 @@ class ParcoursDoctoral(models.Model):
         verbose_name = _("Doctoral training")
         ordering = ('-created_at',)
         permissions = [
-            ('download_jury_approved_pdf', _("Can download jury-approved PDF")),
-            ('upload_jury_approved_pdf', _("Can upload jury-approved PDF")),
             ('validate_registration', _("Can validate registration")),
             ('approve_jury', _("Can approve jury")),
             ('approve_confirmation_paper', _("Can approve confirmation paper")),
@@ -491,6 +537,10 @@ class ParcoursDoctoral(models.Model):
                 _("Can update the information related to the confirmation paper"),
             ),
         ]
+
+    @property
+    def is_initialized(self):
+        return self.status not in STATUTS_DOCTORAT_EN_COURS_DE_CREATION
 
     def save(self, *args, **kwargs) -> None:
         super().save(*args, **kwargs)
@@ -509,7 +559,7 @@ class ParcoursDoctoral(models.Model):
 def _invalidate_doctorate_cache(sender, instance, **kwargs):
     if (
         instance.education_group_type.category == Categories.TRAINING.name
-        and instance.education_group_type.name == TrainingType.FORMATION_PHD.name
+        and instance.education_group_type.name == TrainingType.PHD.name
     ):  # pragma: no branch
         keys = [
             f'parcours_doctoral_permission_{a_uuid}'

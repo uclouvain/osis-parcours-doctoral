@@ -1,5 +1,5 @@
 {% extends "parcours_doctoral/details/tab_layout.html" %}
-{% load i18n static parcours_doctoral bootstrap3 %}
+{% load i18n static parcours_doctoral django_bootstrap5 %}
 
 {% comment "License" %}
   * OSIS stands for Open Student Information System. It's an application
@@ -32,7 +32,7 @@
   <form action="" method="post">
     {% csrf_token %}
     {% include form.template_name %}
-    <div class="text-right">
+    <div class="text-end">
       <a href="{% url request.resolver_match.namespace uuid=view.kwargs.uuid %}" class="text-danger">
         {% trans "Cancel" %}
       </a>
@@ -48,7 +48,7 @@
   <script type="application/javascript">
       $(function () {
           // Tooltips
-          $('[data-toggle="popover"]').popover();
+          $('[data-bs-toggle="popover"]').popover();
 
           $('body').on('mousedown', '.popover', function(e) {
             e.preventDefault();

@@ -26,13 +26,13 @@
 from typing import List
 
 from django.db.models import Prefetch
-from osis_role.contrib.views import APIPermissionRequiredMixin
 from osis_signature.models import Actor
 from rest_framework import mixins
 from rest_framework.generics import GenericAPIView, ListAPIView
 from rest_framework.response import Response
 
 from infrastructure.messages_bus import message_bus_instance
+from osis_role.contrib.views import APIPermissionRequiredMixin
 from parcours_doctoral.api import serializers
 from parcours_doctoral.api.permissions import DoctorateAPIPermissionRequiredMixin
 from parcours_doctoral.api.schema import ResponseSpecificSchema
@@ -41,7 +41,7 @@ from parcours_doctoral.ddd.commands import (
     ListerParcoursDoctorauxSupervisesQuery,
     RecupererParcoursDoctoralQuery,
 )
-from parcours_doctoral.ddd.dtos import ParcoursDoctoralRechercheDTO
+from parcours_doctoral.ddd.dtos import ParcoursDoctoralRechercheEtudiantDTO
 from parcours_doctoral.models import ParcoursDoctoral
 
 __all__ = [
@@ -97,11 +97,11 @@ class BaseListView(APIPermissionRequiredMixin, ListAPIView):
     filter_backends = []
     serializer_class = serializers.ParcoursDoctoralRechercheDTOSerializer
 
-    def doctorate_list(self, request) -> List[ParcoursDoctoralRechercheDTO]:
+    def doctorate_list(self, request) -> List[ParcoursDoctoralRechercheEtudiantDTO]:
         """List the PhDs of the logged-in user."""
         raise NotImplementedError
 
-    def permission_object_qs(self, doctorate_list: List[ParcoursDoctoralRechercheDTO]):
+    def permission_object_qs(self, doctorate_list: List[ParcoursDoctoralRechercheEtudiantDTO]):
         return ParcoursDoctoral.objects.select_related(
             'student',
             'training__management_entity__doctorate_config',

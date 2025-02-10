@@ -119,7 +119,7 @@ class DoctorateTrainingActivityViewTestCase(TestCase):
         self.assertEqual(
             str(self.conference),
             f"Conférence nationale : {self.conference.title}"
-            f" ({self.conference.city}, {self.conference.country}) - 10 ECTS",
+            f" ({self.conference.city}, {self.conference.country}, ) - 10 ECTS",
         )
 
         # With an unsubmitted conference and unsubmitted service, we should have these links
@@ -134,7 +134,8 @@ class DoctorateTrainingActivityViewTestCase(TestCase):
         add_url = resolve_url(f'{self.namespace}:add', uuid=self.parcours_doctoral.uuid, category='communication')
         response = self.client.get(add_url)
         default_input = (
-            '<input type="radio" name="is_online" value="False" class="" title="" id="id_is_online_0" checked>'
+            '<input class="form-check-input" type="radio" name="is_online" '
+            'id="id_is_online_0" value="False" checked="checked">'
         )
         self.assertContains(response, default_input, html=True)
 
@@ -149,7 +150,8 @@ class DoctorateTrainingActivityViewTestCase(TestCase):
         add_url = resolve_url(f'{self.namespace}:add', uuid=self.parcours_doctoral.uuid, category='communication')
         response = self.client.post(add_url, {'is_online': True})
         default_input = (
-            '<input type="radio" name="is_online" value="False" class="" title="" id="id_is_online_0" checked>'
+            '<input class="form-check-input" type="radio" name="is_online" '
+            'id="id_is_online_0" value="False" checked="checked">'
         )
         self.assertNotContains(response, default_input, html=True)
 

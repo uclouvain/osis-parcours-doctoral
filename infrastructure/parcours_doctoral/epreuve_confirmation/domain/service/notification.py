@@ -112,7 +112,7 @@ class Notification(NotificationMixin, INotification):
         parcours_doctoral = cls._get_doctorate(doctorate_uuid=epreuve_confirmation.parcours_doctoral_id.uuid)
         common_tokens = cls.get_common_tokens(parcours_doctoral, epreuve_confirmation)
 
-        if parcours_doctoral.status == ChoixStatutParcoursDoctoral.SUBMITTED_CONFIRMATION.name:
+        if parcours_doctoral.status == ChoixStatutParcoursDoctoral.CONFIRMATION_SOUMISE.name:
             # Already submitted at least once
             manager_notification_content = _(
                 '<a href="%(confirmation_paper_link_back)s">%(reference)s</a> - '
