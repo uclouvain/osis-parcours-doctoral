@@ -104,7 +104,7 @@ class ProjectForm(forms.Form):
         label=_('Research institute'),
         required=False,
         widget=ListSelect2(
-            url='parcours_doctoral:autocomplete:entities',
+            url='admission:autocomplete:entities',
             forward=[
                 forward.Const(MAIN, 'organization_type'),
                 forward.Const(EntityType.INSTITUTE.name, 'entity_type'),
