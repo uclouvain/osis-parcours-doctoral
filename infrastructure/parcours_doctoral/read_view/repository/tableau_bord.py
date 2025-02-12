@@ -23,7 +23,7 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from typing import Dict
+from typing import Dict, List, Optional
 
 from django.db.models.aggregates import Count
 from django.db.models.expressions import ExpressionWrapper, F
@@ -32,15 +32,18 @@ from django.db.models.functions.datetime import Now
 from django.db.models.lookups import GreaterThanOrEqual
 from django.db.models.query_utils import Q
 
-from admission.ddd.admission.doctorat.preparation.read_view.domain.enums.tableau_bord import IndicateurTableauBordEnum
+from admission.ddd.admission.doctorat.preparation.read_view.domain.enums.tableau_bord import (
+    IndicateurTableauBordEnum,
+)
 from admission.infrastructure.admission.doctorat.preparation.read_view.repository.tableau_bord import (
     TableauBordRepositoryAdmissionMixin,
 )
 from admission.models import DoctorateAdmission
-from parcours_doctoral.ddd.domain.model.enums import (
-    ChoixStatutParcoursDoctoral,
+from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
+from parcours_doctoral.ddd.read_view.repository.i_tableau_bord import (
+    ITableauBordRepository,
 )
-from parcours_doctoral.ddd.read_view.repository.i_tableau_bord import ITableauBordRepository
+from parcours_doctoral.infrastructure.utils import get_entities_with_descendants_ids
 from parcours_doctoral.models import ParcoursDoctoral
 
 
@@ -97,17 +100,28 @@ class TableauBordRepository(TableauBordRepositoryAdmissionMixin, ITableauBordRep
     }
 
     @classmethod
-    def _get_valeurs_indicateurs(cls) -> Dict[str, int]:
+    def _get_valeurs_indicateurs(
+        cls,
+        commission_proximite: Optional[str],
+        cdds: Optional[List[str]],
+    ) -> Dict[str, int]:
+        common_filters = Q()
+        if commission_proximite:
+            common_filters &= Q(proximity_commission=commission_proximite)
+
+        if cdds:
+            common_filters &= Q(training__management_entity_id__in=get_entities_with_descendants_ids(cdds))
+
         doctorate_results = ParcoursDoctoral.objects.aggregate(
             **{
-                indicator: Count('pk', filter=django_filter)
+                indicator: Count('pk', filter=django_filter & common_filters)
                 for indicator, django_filter in cls.DOCTORATE_DJANGO_FILTER_BY_INDICATOR.items()
             }
         )
 
         admission_results = DoctorateAdmission.objects.aggregate(
             **{
-                indicator: Count('pk', filter=django_filter)
+                indicator: Count('pk', filter=django_filter & common_filters)
                 for indicator, django_filter in cls.ADMISSION_DJANGO_FILTER_BY_INDICATOR.items()
             }
         )

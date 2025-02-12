@@ -23,20 +23,33 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from parcours_doctoral.ddd.read_view.dto.tableau_bord import TableauBordDTO
-from parcours_doctoral.ddd.read_view.queries import (
-    RecupererInformationsTableauBordQuery,
-)
-from parcours_doctoral.ddd.read_view.repository.i_tableau_bord import (
-    ITableauBordRepository,
-)
+from django import forms
+from django.test import TestCase
+
+from parcours_doctoral.templatetags.parcours_doctoral import url_params_from_form
 
 
-def recuperer_informations_tableau_bord(
-    cmd: 'RecupererInformationsTableauBordQuery',
-    tableau_bord_repository: 'ITableauBordRepository',
-) -> 'TableauBordDTO':
-    return tableau_bord_repository.get(
-        commission_proximite=cmd.commission_proximite,
-        cdds=cmd.cdds,
-    )
+class UrlParamsTestCase(TestCase):
+    class MyForm(forms.Form):
+        char_field = forms.CharField(required=False, max_length=5)
+        multiple_choice_field = forms.MultipleChoiceField(required=False, choices=[['a', 'a'], ['b', 'b'], ['c', 'c']])
+
+    def test_with_no_bound_form(self):
+        form = self.MyForm()
+
+        self.assertEqual('', url_params_from_form(form))
+
+    def test_with_invalid_form(self):
+        form = self.MyForm(data={'char_field': '123456'})
+
+        self.assertEqual('', url_params_from_form(form))
+
+    def test_field_valid_form_with_missing_values(self):
+        form = self.MyForm(data={})
+
+        self.assertEqual('', url_params_from_form(form))
+
+    def test_with_valid_form(self):
+        form = self.MyForm(data={'char_field': '123', 'multiple_choice_field': ['a', 'b']})
+
+        self.assertEqual('&char_field=123&multiple_choice_field=a&multiple_choice_field=b', url_params_from_form(form))

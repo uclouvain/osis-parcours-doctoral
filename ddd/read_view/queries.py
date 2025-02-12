@@ -60,4 +60,5 @@ class ListerTousParcoursDoctorauxQuery(interface.QueryRequest):
 
 @attr.dataclass(frozen=True, slots=True)
 class RecupererInformationsTableauBordQuery(interface.QueryRequest):
-    pass
+    commission_proximite: Optional[str] = ''
+    cdds: Optional[List[str]] = None

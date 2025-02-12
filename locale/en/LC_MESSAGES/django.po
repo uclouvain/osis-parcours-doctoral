@@ -356,6 +356,9 @@ msgstr ""
 msgid "Application status"
 msgstr ""
 
+msgid "Apply filters"
+msgstr ""
+
 msgid "Approval by PDF"
 msgstr ""
 

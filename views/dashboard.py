@@ -24,28 +24,46 @@
 #
 # ##############################################################################
 
-from django.views.generic import TemplateView
+from django.views.generic import FormView
 
+from base.utils.htmx import HtmxPermissionRequiredMixin
 from infrastructure.messages_bus import message_bus_instance
-from osis_role.contrib.views import PermissionRequiredMixin
-from parcours_doctoral.ddd.read_view.queries import RecupererInformationsTableauBordQuery
+from osis_common.utils.htmx import HtmxMixin
+from parcours_doctoral.ddd.read_view.queries import (
+    RecupererInformationsTableauBordQuery,
+)
+from parcours_doctoral.forms.dashboard import DashboardForm
 
 __all__ = [
     'DashboardView',
 ]
 
 
-class DashboardView(PermissionRequiredMixin, TemplateView):
+class DashboardView(HtmxPermissionRequiredMixin, HtmxMixin, FormView):
     permission_required = 'parcours_doctoral.view_parcours_doctoral'
     template_name = 'parcours_doctoral/dashboard.html'
+    htmx_template_name = 'parcours_doctoral/dashboard_htmx.html'
+    form_class = DashboardForm
+
+    def get_form_kwargs(self):
+        form_kwargs = super().get_form_kwargs()
+        form_kwargs['user'] = self.request.user
+        return form_kwargs
+
+    def form_valid(self, form):
+        return super().form_invalid(form)
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
+        context_data = super().get_context_data(**kwargs)
 
-        dashboard = message_bus_instance.invoke(
-            RecupererInformationsTableauBordQuery(),
-        )
+        form = context_data['form']
 
-        context['dashboard'] = dashboard
+        if not form.is_bound or form.is_valid():
+            cmd_params = getattr(form, 'cleaned_data', {})
 
-        return context
+            if not cmd_params.get('cdds'):
+                cmd_params['cdds'] = form.cdd_acronyms
+
+            context_data['dashboard'] = message_bus_instance.invoke(RecupererInformationsTableauBordQuery(**cmd_params))
+
+        return context_data

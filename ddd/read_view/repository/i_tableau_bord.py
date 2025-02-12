@@ -25,14 +25,14 @@
 # ##############################################################################
 import itertools
 from abc import abstractmethod
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 from django.utils.translation import pgettext_lazy
 
 from admission.ddd.admission.doctorat.preparation.read_view.domain.enums.tableau_bord import (
     CategorieTableauBordEnum,
-    TypeCategorieTableauBord,
     IndicateurTableauBordEnum,
+    TypeCategorieTableauBord,
 )
 from admission.ddd.admission.doctorat.preparation.read_view.domain.model.tableau_bord import (
     CategorieTableauBord,
@@ -43,9 +43,9 @@ from admission.ddd.admission.doctorat.preparation.read_view.repository.i_tableau
 )
 from osis_common.ddd import interface
 from parcours_doctoral.ddd.read_view.dto.tableau_bord import (
-    TableauBordDTO,
     CategorieTableauBordDTO,
     IndicateurTableauBordDTO,
+    TableauBordDTO,
 )
 
 
@@ -193,8 +193,15 @@ class ITableauBordRepository(ITableauBordRepositoryAdmissionMixin, interface.Rea
     ]
 
     @classmethod
-    def get(cls) -> 'TableauBordDTO':
-        valeurs = cls._get_valeurs_indicateurs()
+    def get(
+        cls,
+        commission_proximite: Optional[str],
+        cdds: Optional[List[str]],
+    ) -> 'TableauBordDTO':
+        valeurs = cls._get_valeurs_indicateurs(
+            commission_proximite=commission_proximite,
+            cdds=cdds,
+        )
 
         return TableauBordDTO(
             categories={
@@ -217,5 +224,9 @@ class ITableauBordRepository(ITableauBordRepositoryAdmissionMixin, interface.Rea
 
     @classmethod
     @abstractmethod
-    def _get_valeurs_indicateurs(cls) -> Dict[str, int]:
+    def _get_valeurs_indicateurs(
+        cls,
+        commission_proximite: Optional[str],
+        cdds: Optional[List[str]],
+    ) -> Dict[str, int]:
         raise NotImplementedError

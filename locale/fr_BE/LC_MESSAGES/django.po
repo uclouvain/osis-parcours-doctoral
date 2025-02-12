@@ -403,6 +403,9 @@ msgstr "Numéro de demande"
 msgid "Application status"
 msgstr "État de la demande"
 
+msgid "Apply filters"
+msgstr "Appliquer les filtres"
+
 msgid "Approval by PDF"
 msgstr "Approbation via PDF"
 

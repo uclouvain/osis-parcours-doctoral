@@ -23,16 +23,21 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from typing import Dict
+from typing import Dict, List, Optional
 
-from admission.ddd.admission.doctorat.preparation.read_view.domain.enums.tableau_bord import IndicateurTableauBordEnum
-from parcours_doctoral.ddd.read_view.repository.i_tableau_bord import ITableauBordRepository
+from admission.ddd.admission.doctorat.preparation.read_view.domain.enums.tableau_bord import (
+    IndicateurTableauBordEnum,
+)
+from parcours_doctoral.ddd.read_view.repository.i_tableau_bord import (
+    ITableauBordRepository,
+)
 
 
 class TableauBordInMemoryRepository(ITableauBordRepository):
     @classmethod
-    def _get_valeurs_indicateurs(cls) -> Dict[str, int]:
-        return {
-            indicator.name: 0
-            for indicator in IndicateurTableauBordEnum
-        }
+    def _get_valeurs_indicateurs(
+        cls,
+        commission_proximite: Optional[str],
+        cdds: Optional[List[str]],
+    ) -> Dict[str, int]:
+        return {indicator.name: 0 for indicator in IndicateurTableauBordEnum}
