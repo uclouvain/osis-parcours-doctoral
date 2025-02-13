@@ -1178,8 +1178,8 @@ msgid ""
 msgstr ""
 
 msgid ""
-"Information about a potential cotutelle are to be inputted in the \"Doctoral "
-"project\" part."
+"Information about a potential cotutelle are to be inputted in the "
+"\"Research\" part."
 msgstr ""
 
 msgctxt "jury"
@@ -1205,7 +1205,7 @@ msgstr ""
 msgid "Institution Federation Wallonie-Bruxelles"
 msgstr ""
 
-msgid "Institution in which the PhD has been realised / started."
+msgid "Institution in which the PhD thesis has been realised / started"
 msgstr ""
 
 msgid "Institution should be set when PhD has been set to yes or partial"
@@ -1745,10 +1745,6 @@ msgstr ""
 msgid "PhD already done"
 msgstr ""
 
-msgctxt "tab"
-msgid "PhD project"
-msgstr ""
-
 msgid "PhD proposal"
 msgstr ""
 
@@ -2000,11 +1996,11 @@ msgstr ""
 msgid "Require changes for \"%(object)s\""
 msgstr ""
 
-msgid "Research institute"
+msgctxt "tab"
+msgid "Research"
 msgstr ""
 
-msgctxt "tab"
-msgid "Research project"
+msgid "Research institute"
 msgstr ""
 
 msgid "Research report"
@@ -2143,9 +2139,6 @@ msgid "Search"
 msgstr ""
 
 msgid "Search a person by surname"
-msgstr ""
-
-msgid "Search a tutor by name"
 msgstr ""
 
 msgid "Search for an EU code (outside the EU of the form)"

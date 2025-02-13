@@ -27,7 +27,9 @@
 from parcours_doctoral.ddd.epreuve_confirmation.commands import *
 from parcours_doctoral.ddd.epreuve_confirmation.use_case.read import *
 from parcours_doctoral.ddd.epreuve_confirmation.use_case.write import *
-from parcours_doctoral.infrastructure.parcours_doctoral.domain.service.in_memory.historique import HistoriqueInMemory
+from parcours_doctoral.infrastructure.parcours_doctoral.domain.service.in_memory.historique import (
+    HistoriqueInMemory,
+)
 
 from ..repository.in_memory.parcours_doctoral import ParcoursDoctoralInMemoryRepository
 from .domain.service.in_memory.notification import NotificationInMemory
