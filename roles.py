@@ -82,6 +82,8 @@ PROGRAM_MANAGER_RULES = {
     'parcours_doctoral.view_doctoral_training': is_part_of_education_group,
     'parcours_doctoral.view_complementary_training': is_part_of_education_group & complementary_training_enabled,
     'parcours_doctoral.view_course_enrollment': is_part_of_education_group,
+    'parcours_doctoral.view_assessment_enrollment': is_part_of_education_group,
+    'parcours_doctoral.change_assessment_enrollment': is_part_of_education_group,
     'parcours_doctoral.change_activity': is_part_of_education_group,
     'parcours_doctoral.delete_activity': is_part_of_education_group,
     'parcours_doctoral.refuse_activity': is_part_of_education_group,

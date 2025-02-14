@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -24,14 +24,14 @@
 #
 # ##############################################################################
 
-from base.ddd.utils.business_validator import MultipleBusinessExceptions
 from rest_framework import status
-from rest_framework.generics import GenericAPIView
+from rest_framework.generics import GenericAPIView, ListAPIView, RetrieveAPIView
 from rest_framework.mixins import RetrieveModelMixin
 from rest_framework.response import Response
 from rest_framework.schemas.openapi import AutoSchema
 from rest_framework.settings import api_settings
 
+from base.ddd.utils.business_validator import MultipleBusinessExceptions
 from infrastructure.messages_bus import message_bus_instance
 from parcours_doctoral.api.permissions import DoctorateAPIPermissionRequiredMixin
 from parcours_doctoral.api.schema import (
@@ -39,6 +39,7 @@ from parcours_doctoral.api.schema import (
     AuthorizationAwareSchemaMixin,
     ChoicesEnumSchema,
 )
+from parcours_doctoral.api.serializers import InscriptionEvaluationDTOSerializer
 from parcours_doctoral.api.serializers.activity import (
     DoctoralTrainingActivitySerializer,
     DoctoralTrainingAssentSerializer,
@@ -47,6 +48,8 @@ from parcours_doctoral.api.serializers.activity import (
 )
 from parcours_doctoral.ddd.formation.commands import (
     DonnerAvisSurActiviteCommand,
+    RecupererInscriptionEvaluationQuery,
+    RecupererInscriptionsEvaluationsQuery,
     SoumettreActivitesCommand,
     SupprimerActiviteCommand,
 )
@@ -61,6 +64,8 @@ __all__ = [
     "TrainingAssentView",
     "ComplementaryTrainingListView",
     "CourseEnrollmentListView",
+    "AssessmentEnrollmentListView",
+    "AssessmentEnrollmentDetailView",
 ]
 
 
@@ -289,3 +294,40 @@ class CourseEnrollmentListView(DoctoralTrainingListView):
 
     def get_queryset(self):
         return Activity.objects.for_enrollment_courses(self.doctorate_uuid)
+
+
+class AssessmentEnrollmentListView(DoctorateAPIPermissionRequiredMixin, ListAPIView):
+    name = "assessment-enrollment-list"
+    http_method_names = ['get']
+    pagination_class = None
+    schema = ChoicesEnumSchema()
+    filter_backends = []
+    permission_mapping = {
+        'GET': 'parcours_doctoral.view_assessment_enrollment',
+    }
+    serializer_class = InscriptionEvaluationDTOSerializer
+
+    def get_queryset(self):
+        return message_bus_instance.invoke(
+            RecupererInscriptionsEvaluationsQuery(
+                parcours_doctoral_uuid=self.doctorate_uuid,
+            )
+        )
+
+
+class AssessmentEnrollmentDetailView(DoctorateAPIPermissionRequiredMixin, RetrieveAPIView):
+    name = "assessment-enrollment-detail"
+    schema = ChoicesEnumSchema()
+    pagination_class = None
+    filter_backends = []
+    permission_mapping = {
+        'GET': 'parcours_doctoral.view_assessment_enrollment',
+    }
+    serializer_class = InscriptionEvaluationDTOSerializer
+
+    def get_object(self):
+        return message_bus_instance.invoke(
+            RecupererInscriptionEvaluationQuery(
+                inscription_uuid=self.kwargs['enrollment_uuid'],
+            )
+        )

@@ -36,8 +36,8 @@ from base.tests.factories.entity_version import EntityVersionFactory
 from base.tests.factories.person import PersonFactory
 from parcours_doctoral.ddd.domain.model.enums import (
     ChoixDoctoratDejaRealise,
-    ChoixTypeFinancement,
     ChoixStatutParcoursDoctoral,
+    ChoixTypeFinancement,
 )
 from parcours_doctoral.tests.factories.parcours_doctoral import ParcoursDoctoralFactory
 from parcours_doctoral.tests.factories.supervision import PromoterFactory
@@ -206,6 +206,7 @@ class ParcoursDoctoralAPIViewTestCase(CheckActionLinksMixin, APITestCase):
                 'list_jury_members',
                 'update_confirmation',
                 'update_confirmation_extension',
+                'retrieve_assessment_enrollment',
             ],
             forbidden_actions=[
                 'retrieve_complementary_training',

@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -27,25 +27,27 @@ import re
 from collections import OrderedDict
 from inspect import getfullargspec
 
-from base.api.serializers.academic_year import RelatedAcademicYearField
-from base.forms.utils.academic_year_field import AcademicYearModelChoiceField
 from django import forms
 from osis_document.contrib import FileUploadField
-from reference.api.serializers.country import RelatedCountryField
 from rest_framework import serializers
 from rest_framework.generics import get_object_or_404
 
+from base.api.serializers.academic_year import RelatedAcademicYearField
+from base.forms.utils.academic_year_field import AcademicYearModelChoiceField
+from base.utils.serializers import DTOSerializer
 from parcours_doctoral.ddd.formation.domain.model.enums import (
     CategorieActivite,
     ContexteFormation,
     StatutActivite,
 )
+from parcours_doctoral.ddd.formation.dtos.evaluation import InscriptionEvaluationDTO
 from parcours_doctoral.forms.fields import SelectOrOtherField
 from parcours_doctoral.forms.training import activity as activity_forms
 from parcours_doctoral.forms.training.activity import ConfigurableActivityTypeField
 from parcours_doctoral.models.activity import Activity
 from parcours_doctoral.models.cdd_config import CddConfiguration
 from parcours_doctoral.models.parcours_doctoral import ParcoursDoctoral
+from reference.api.serializers.country import RelatedCountryField
 
 FORM_SERIALIZER_FIELD_MAPPING = {
     forms.CharField: serializers.CharField,
@@ -438,3 +440,8 @@ class DoctoralTrainingConfigSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'is_complementary_training_enabled': {'help_text': ''},
         }
+
+
+class InscriptionEvaluationDTOSerializer(DTOSerializer):
+    class Meta:
+        source = InscriptionEvaluationDTO
