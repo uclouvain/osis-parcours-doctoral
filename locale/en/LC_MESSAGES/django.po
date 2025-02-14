@@ -153,6 +153,9 @@ msgstr ""
 msgid "A non doctor member must have a justification."
 msgstr ""
 
+msgid "A paper of each type has already been created."
+msgstr ""
+
 msgid "A promoter can not be president."
 msgstr ""
 

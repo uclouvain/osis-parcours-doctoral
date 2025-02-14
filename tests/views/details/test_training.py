@@ -28,7 +28,6 @@ from unittest.mock import patch
 
 import freezegun
 
-from base.forms.utils.choice_field import BLANK_CHOICE_DISPLAY
 from django.conf import settings
 from django.forms import Field
 from django.shortcuts import resolve_url
@@ -39,11 +38,13 @@ from django.utils.translation import pgettext
 from osis_notification.models import WebNotification
 from rest_framework import status
 
+from base.forms.utils.choice_field import BLANK_CHOICE_DISPLAY
 from base.tests.factories.academic_year import AcademicYearFactory
 from base.tests.factories.program_manager import ProgramManagerFactory
 from parcours_doctoral.ddd.formation.domain.model.enums import (
     CategorieActivite,
     ChoixComiteSelection,
+    ChoixTypeEpreuve,
     ContexteFormation,
     StatutActivite,
 )
@@ -235,11 +236,14 @@ class DoctorateTrainingActivityViewTestCase(TestCase):
 
         form = response.context['form']
 
-        self.assertEqual([(str(c[0]), c[1]) for c in form.fields['academic_year'].choices], [
-            ('', BLANK_CHOICE_DISPLAY),
-            ('2023', '2023-2024'),
-            ('2022', '2022-2023'),
-        ])
+        self.assertEqual(
+            [(str(c[0]), c[1]) for c in form.fields['academic_year'].choices],
+            [
+                ('', BLANK_CHOICE_DISPLAY),
+                ('2023', '2023-2024'),
+                ('2022', '2022-2023'),
+            ],
+        )
 
         # On update
         url = resolve_url(
@@ -253,12 +257,15 @@ class DoctorateTrainingActivityViewTestCase(TestCase):
 
         form = response.context['form']
 
-        self.assertListEqual([(str(c[0]), c[1]) for c in form.fields['academic_year'].choices], [
-            ('', BLANK_CHOICE_DISPLAY),
-            ('2023', '2023-2024'),
-            ('2022', '2022-2023'),
-            ('2019', '2019-2020'),
-        ])
+        self.assertEqual(
+            [(str(c[0]), c[1]) for c in form.fields['academic_year'].choices],
+            [
+                ('', BLANK_CHOICE_DISPLAY),
+                ('2023', '2023-2024'),
+                ('2022', '2022-2023'),
+                ('2019', '2019-2020'),
+            ],
+        )
 
         data = {
             'context': ContexteFormation.COMPLEMENTARY_TRAINING.name,
@@ -280,6 +287,67 @@ class DoctorateTrainingActivityViewTestCase(TestCase):
         just_created = Activity.objects.first()
         self.assertEqual(just_created.context, ContexteFormation.COMPLEMENTARY_TRAINING.name)
 
+    def test_paper(self):
+        create_url = resolve_url(
+            f'parcours_doctoral:doctoral-training:add',
+            uuid=self.parcours_doctoral.uuid,
+            category=CategorieActivite.PAPER.name,
+        )
+
+        # No paper has been created -> all types are available
+        response = self.client.get(create_url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        form = response.context['form']
+
+        self.assertCountEqual(form.fields['type'].choices, ((enum.name, enum.value) for enum in ChoixTypeEpreuve))
+
+        # Create a confirmation paper
+        response = self.client.post(
+            create_url,
+            data={
+                'type': ChoixTypeEpreuve.CONFIRMATION_PAPER.name,
+                'ects': 10,
+                'comment': 'comment A',
+            },
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+
+        just_created = Activity.objects.filter(type=ChoixTypeEpreuve.CONFIRMATION_PAPER.name).first()
+
+        self.assertEqual(just_created.context, ContexteFormation.DOCTORAL_TRAINING.name)
+        self.assertEqual(just_created.type, ChoixTypeEpreuve.CONFIRMATION_PAPER.name)
+        self.assertEqual(just_created.ects, 10)
+        self.assertEqual(just_created.comment, 'comment A')
+
+        # A confirmation paper has been created -> its type is not available anymore for another paper
+        response = self.client.get(create_url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        form = response.context['form']
+
+        self.assertCountEqual(
+            form.fields['type'].choices,
+            ((enum.name, enum.value) for enum in [ChoixTypeEpreuve.PRIVATE_DEFENSE, ChoixTypeEpreuve.PUBLIC_DEFENSE]),
+        )
+
+        # A confirmation paper has been created -> its type is available if we want to edit it
+        update_url = resolve_url(
+            'parcours_doctoral:doctoral-training:edit',
+            uuid=self.parcours_doctoral.uuid,
+            activity_id=just_created.uuid,
+        )
+
+        response = self.client.get(update_url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        form = response.context['form']
+
+        self.assertCountEqual(form.fields['type'].choices, ((enum.name, enum.value) for enum in ChoixTypeEpreuve))
+
     def test_missing_form(self):
         add_url = resolve_url(f'{self.namespace}:add', uuid=self.parcours_doctoral.uuid, category='foobar')
         response = self.client.get(add_url)
@@ -300,10 +368,14 @@ class DoctorateTrainingActivityViewTestCase(TestCase):
         response = self.client.get(f"{add_url}?parent={self.conference.uuid}")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        response = self.client.post(f"{add_url}?parent={self.conference.uuid}", {
-            'start_date_year': self.conference.start_date.year,
-            'start_date_month': self.conference.start_date.month,
-        }, follow=True)
+        response = self.client.post(
+            f"{add_url}?parent={self.conference.uuid}",
+            {
+                'start_date_year': self.conference.start_date.year,
+                'start_date_month': self.conference.start_date.month,
+            },
+            follow=True,
+        )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_edit(self):
