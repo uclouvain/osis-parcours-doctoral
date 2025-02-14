@@ -570,6 +570,10 @@ a.no-link {
   background: rgb(50, 200, 50);
 }
 
+.width-0 {
+  width: 0;
+}
+
 /* Badges */
 #main .badge:empty {
   display: none;
