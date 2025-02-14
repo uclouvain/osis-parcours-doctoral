@@ -36,8 +36,14 @@
 
 <p>{% lorem %}</p>
 
-<div class="row">
-  {% bootstrap_field form.type wrapper_class="form-group col-md-4 required_field" %}
-  {% bootstrap_field_with_tooltip form.ects classes="form-group col-md-4 required_field" %}
-</div>
-{% bootstrap_field form.comment %}
+{% if form.fields.type.choices %}
+  <div class="row">
+    {% bootstrap_field form.type wrapper_class="form-group col-md-4 required_field" %}
+    {% bootstrap_field_with_tooltip form.ects classes="form-group col-md-4 required_field" %}
+  </div>
+  {% bootstrap_field form.comment %}
+{% else %}
+  <div class="alert alert-danger">
+    {% translate 'A paper of each type has already been created.' %}
+  </div>
+{% endif %}

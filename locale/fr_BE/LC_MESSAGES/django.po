@@ -193,6 +193,9 @@ msgid "A non doctor member must have a justification."
 msgstr ""
 "Un membre non porteur du titre de docteur doit avoir une justification."
 
+msgid "A paper of each type has already been created."
+msgstr "Une épreuve de chaque type a déjà été créée."
+
 msgid "A promoter can not be president."
 msgstr "Un promoteur ne peut pas être président."
 
