@@ -37,9 +37,7 @@ from django.utils.translation import gettext
 from admission.ddd.admission.doctorat.preparation.domain.model.enums import (
     ChoixTypeAdmission,
 )
-from admission.tests.factories.roles import (
-    SicManagementRoleFactory,
-)
+from admission.tests.factories.roles import SicManagementRoleFactory
 from base.auth.roles.program_manager import ProgramManager
 from base.models.academic_year import AcademicYear
 from base.models.enums.entity_type import EntityType
@@ -70,10 +68,7 @@ from parcours_doctoral.ddd.formation.domain.model.enums import (
 from parcours_doctoral.forms.list import ALL_FEMININE_EMPTY_CHOICE
 from parcours_doctoral.models import ParcoursDoctoral
 from parcours_doctoral.models.entity_proxy import EntityProxy
-from parcours_doctoral.tests.factories.activity import (
-    CourseFactory,
-    VaeFactory,
-)
+from parcours_doctoral.tests.factories.activity import CourseFactory, VaeFactory
 from parcours_doctoral.tests.factories.confirmation_paper import (
     ConfirmationPaperFactory,
 )

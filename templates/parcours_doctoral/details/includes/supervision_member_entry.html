@@ -145,7 +145,18 @@
           <div class="">
             <div class="card col-md-6">
               <div class="card-body">
-                {% bootstrap_form edit_external_member_form %}
+                {% csrf_token %}
+                {% bootstrap_form_errors edit_external_member_form %}
+
+                {% bootstrap_field edit_external_member_form.prenom wrapper_class="mb-3 required_field" %}
+                {% bootstrap_field edit_external_member_form.nom wrapper_class="mb-3 required_field" %}
+                {% bootstrap_field edit_external_member_form.email wrapper_class="mb-3 required_field" %}
+                {% bootstrap_field edit_external_member_form.est_docteur %}
+                {% bootstrap_field edit_external_member_form.institution wrapper_class="mb-3 required_field" %}
+                {% bootstrap_field edit_external_member_form.ville wrapper_class="mb-3 required_field" %}
+                {% bootstrap_field edit_external_member_form.pays wrapper_class="mb-3 required_field" %}
+                {% bootstrap_field edit_external_member_form.langue wrapper_class="mb-3 required_field" %}
+
                 <button type="submit" class="btn btn-primary pull-right" name="edit_external_member_form">
                   {% trans "Save" context 'parcours_doctoral'  %}
                 </button>

@@ -93,8 +93,8 @@ TAB_TREE = {
     # Tab('additional-information', _('Additional information'), 'puzzle-piece'): [
     #     Tab('accounting', _('Accounting')),
     # ],
-    Tab('doctorate', pgettext('tab', 'PhD project'), 'graduation-cap'): [
-        Tab('project', pgettext('tab', 'Research project')),
+    Tab('doctorate', pgettext('tab', 'Research'), 'graduation-cap'): [
+        Tab('project', pgettext('tab', 'Research')),
         Tab('funding', pgettext('tab', 'Funding')),
         Tab('cotutelle', _('Cotutelle')),
         Tab('supervision', _('Supervision')),

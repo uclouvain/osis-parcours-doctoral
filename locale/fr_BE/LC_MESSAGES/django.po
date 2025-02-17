@@ -1264,11 +1264,11 @@ msgstr ""
 "dans lequel vous n’êtes plus inscrit à ce jour."
 
 msgid ""
-"Information about a potential cotutelle are to be inputted in the \"Doctoral "
-"project\" part."
+"Information about a potential cotutelle are to be inputted in the "
+"\"Research\" part."
 msgstr ""
 "Les informations concernant une éventuelle cotutelle sont à indiquer dans la "
-"partie « Projet doctoral »."
+"partie « Recherche »."
 
 msgctxt "jury"
 msgid "Institute"
@@ -1293,8 +1293,8 @@ msgstr "Institution"
 msgid "Institution Federation Wallonie-Bruxelles"
 msgstr "Institution de la Federation Wallonie-Bruxelles"
 
-msgid "Institution in which the PhD has been realised / started."
-msgstr "Institution où le PhD a été réalisé/entamé."
+msgid "Institution in which the PhD thesis has been realised / started"
+msgstr "Institution où la thèse de doctorat a été réalisée/entamée"
 
 msgid "Institution should be set when PhD has been set to yes or partial"
 msgstr ""
@@ -1891,10 +1891,6 @@ msgstr "Doctorat"
 msgid "PhD already done"
 msgstr "Doctorat déjà réalisé"
 
-msgctxt "tab"
-msgid "PhD project"
-msgstr "Projet doctoral"
-
 msgid "PhD proposal"
 msgstr "Projet de formation doctorale"
 
@@ -2160,12 +2156,12 @@ msgstr "Demander des changements"
 msgid "Require changes for \"%(object)s\""
 msgstr "Demander des changements pour \"%(object)s\""
 
+msgctxt "tab"
+msgid "Research"
+msgstr "Recherche"
+
 msgid "Research institute"
 msgstr "Institut de recherche"
-
-msgctxt "tab"
-msgid "Research project"
-msgstr "Projet de recherche doctorale"
 
 msgid "Research report"
 msgstr "Rapport de recherche"
@@ -2306,9 +2302,6 @@ msgstr "Rechercher"
 
 msgid "Search a person by surname"
 msgstr "Rechercher une personne par son nom"
-
-msgid "Search a tutor by name"
-msgstr "Rechercher un tuteur par son nom"
 
 msgid "Search for an EU code (outside the EU of the form)"
 msgstr "Rechercher un code UE (hors UE du formulaire)"
