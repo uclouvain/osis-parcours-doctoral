@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -27,25 +27,26 @@
 # Association between a read-only tab name (path name) and a permission
 READ_ACTIONS_BY_TAB = {
     # Personal data
-    'coordonnees': 'parcours_doctoral.view_parcours_doctoral_coordinates',
-    'cotutelle': 'parcours_doctoral.view_parcours_doctoral_cotutelle',
-    'person': 'parcours_doctoral.view_parcours_doctoral_person',
+    'coordonnees': 'parcours_doctoral.view_coordinates',
+    'cotutelle': 'parcours_doctoral.view_cotutelle',
+    'person': 'parcours_doctoral.view_person',
     # Training choice
-    'training-choice': 'parcours_doctoral.view_parcours_doctoral_training_choice',
+    'training-choice': 'parcours_doctoral.view_training_choice',
     # Previous experience
-    'curriculum': 'parcours_doctoral.view_parcours_doctoral_curriculum',
+    'curriculum': 'parcours_doctoral.view_curriculum',
     'educational': '',
     'educational_create': '',
     'non_educational': '',
     'non_educational_create': '',
-    'education': 'parcours_doctoral.view_parcours_doctoral_secondary_studies',
-    'languages': 'parcours_doctoral.view_parcours_doctoral_languages',
+    'education': 'parcours_doctoral.view_secondary_studies',
+    'languages': 'parcours_doctoral.view_languages',
     # Project
-    'project': 'parcours_doctoral.view_parcours_doctoral_project',
-    'supervision': 'parcours_doctoral.view_parcours_doctoral_supervision',
+    'project': 'parcours_doctoral.view_project',
+    'supervision': 'parcours_doctoral.view_supervision',
     # Confirmation exam
-    'confirmation': 'parcours_doctoral.view_parcours_doctoral_confirmation',
-    'extension-request': 'parcours_doctoral.view_parcours_doctoral_confirmation',
+    'confirmation': 'parcours_doctoral.view_confirmation',
+    'extension-request': 'parcours_doctoral.view_confirmation',
+    'extension-request-opinion': 'parcours_doctoral.view_confirmation',
     # History
     'history': 'parcours_doctoral.view_historyentry',
     'history-all': 'parcours_doctoral.view_historyentry',
@@ -57,12 +58,12 @@ READ_ACTIONS_BY_TAB = {
     'complementary-training': 'parcours_doctoral.view_complementary_training',
     'course-enrollment': 'parcours_doctoral.view_course_enrollment',
     # Jury
-    'jury-preparation': 'parcours_doctoral.view_parcours_doctoral_jury',
-    'jury': 'parcours_doctoral.view_parcours_doctoral_jury',
+    'jury-preparation': 'parcours_doctoral.view_jury',
+    'jury': 'parcours_doctoral.view_jury',
     # Management
     'internal-note': 'parcours_doctoral.view_internalnote',
     'debug': 'parcours_doctoral.view_debug_info',
-    'comments': 'parcours_doctoral.view_enrolment_application',
+    'comments': 'parcours_doctoral.view_comments',
     'checklist': 'parcours_doctoral.view_checklist',
     # Documents
     'documents': 'parcours_doctoral.view_documents_management',
@@ -71,25 +72,26 @@ READ_ACTIONS_BY_TAB = {
 # Association between a write-only tab name (path name) and a permission
 UPDATE_ACTIONS_BY_TAB = {
     # Personal data
-    'coordonnees': 'parcours_doctoral.change_parcours_doctoral_coordinates',
-    'cotutelle': 'parcours_doctoral.change_parcours_doctoral_cotutelle',
-    'person': 'parcours_doctoral.change_parcours_doctoral_person',
+    'coordonnees': 'parcours_doctoral.change_coordinates',
+    'cotutelle': 'parcours_doctoral.change_cotutelle',
+    'person': 'parcours_doctoral.change_person',
     # Training choice
-    'training-choice': 'parcours_doctoral.change_parcours_doctoral_training_choice',
+    'training-choice': 'parcours_doctoral.change_training_choice',
     # Previous experience
-    'curriculum': 'parcours_doctoral.change_parcours_doctoral_curriculum',
+    'curriculum': 'parcours_doctoral.change_curriculum',
     'educational': '',
     'educational_create': '',
     'non_educational': '',
     'non_educational_create': '',
-    'education': 'parcours_doctoral.change_parcours_doctoral_secondary_studies',
-    'languages': 'parcours_doctoral.change_parcours_doctoral_languages',
+    'education': 'parcours_doctoral.change_secondary_studies',
+    'languages': 'parcours_doctoral.change_languages',
     # Project
-    'project': 'parcours_doctoral.change_parcours_doctoral_project',
-    'supervision': 'parcours_doctoral.change_parcours_doctoral_supervision',
+    'project': 'parcours_doctoral.change_project',
+    'supervision': 'parcours_doctoral.change_supervision',
     # Confirmation exam
-    'confirmation': 'parcours_doctoral.change_parcours_doctoral_confirmation',
-    'extension-request': 'parcours_doctoral.change_parcours_doctoral_confirmation_extension',
+    'confirmation': 'parcours_doctoral.change_confirmation',
+    'extension-request': 'parcours_doctoral.change_confirmation_extension',
+    'extension-request-opinion': 'parcours_doctoral.change_confirmation_extension',
     # Mails
     'send-mail': 'parcours_doctoral.send_message',
     # Training
@@ -100,7 +102,8 @@ UPDATE_ACTIONS_BY_TAB = {
     # Management
     'documents': 'parcours_doctoral.view_documents_management',
     'checklist': 'parcours_doctoral.view_checklist',
+    'comments': 'parcours_doctoral.change_comments',
     # Jury
-    'jury-preparation': 'parcours_doctoral.change_parcours_doctoral_jury',
-    'jury': 'parcours_doctoral.change_parcours_doctoral_jury',
+    'jury-preparation': 'parcours_doctoral.change_jury',
+    'jury': 'parcours_doctoral.change_jury',
 }

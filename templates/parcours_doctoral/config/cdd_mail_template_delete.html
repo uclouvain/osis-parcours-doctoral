@@ -1,5 +1,5 @@
-{% extends "layout.html" %}
-{% load bootstrap3 %}
+{% extends "bootstrap5/layout.html" %}
+{% load django_bootstrap5 %}
 {% load i18n %}
 
 {% comment "License" %}
@@ -27,8 +27,9 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-  <li><a href="{% url 'parcours_doctoral:config:cdd-mail-template:list' %}">{% trans 'Custom mail templates' %}</a></li>
-  <li class="active">{{ instances.0.name }}</li>
+  <li class="breadcrumb-item"><a href="{% url 'parcours_doctoral:config:home' %}">{% trans 'CDD configuration' %}</a></li>
+  <li class="breadcrumb-item"><a href="{% url 'parcours_doctoral:config:cdd-mail-template:list' %}">{% trans 'CDD Mail template' %}</a></li>
+  <li class="breadcrumb-item active">{{ instances.0.name }}</li>
 {% endblock %}
 
 {% block content %}
@@ -41,7 +42,7 @@
       <h2>Delete "{{ name }}" custom mail template?</h2>
       <p>Are you sure you want to delete the custom mail template? This cannot be undone.</p>
     {% endblocktrans %}
-    <a class="btn btn-default" href="{% url 'parcours_doctoral:config:cdd-mail-template:list' %}">{% trans 'Cancel' %}</a>
+    <a class="btn btn-default border border-dark-subtle" href="{% url 'parcours_doctoral:config:cdd-mail-template:list' %}">{% trans 'Cancel' %}</a>
     <button type="submit" class="btn btn-danger">{% trans "Delete" context 'parcours_doctoral' %}</button>
   </form>
 {% endblock %}

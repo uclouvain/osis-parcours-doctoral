@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -29,7 +29,7 @@ from django.views.generic import FormView
 
 from infrastructure.messages_bus import message_bus_instance
 from parcours_doctoral.ddd.epreuve_confirmation.commands import (
-    SoumettreAvisProlongationCommand,
+    SoumettreReportDeDateParCDDCommand,
 )
 from parcours_doctoral.forms.extension_request import ExtensionRequestForm
 from parcours_doctoral.views.mixins import (
@@ -54,7 +54,9 @@ class ExtensionRequestFormView(
     def get_initial(self):
         return (
             {
-                'avis_cdd': self.last_confirmation_paper.demande_prolongation.avis_cdd,
+                'nouvelle_echeance': self.last_confirmation_paper.demande_prolongation.nouvelle_echeance,
+                'justification_succincte': self.last_confirmation_paper.demande_prolongation.justification_succincte,
+                'lettre_justification': self.last_confirmation_paper.demande_prolongation.lettre_justification,
             }
             if self.last_confirmation_paper.demande_prolongation
             else {}
@@ -62,7 +64,7 @@ class ExtensionRequestFormView(
 
     def call_command(self, form):
         message_bus_instance.invoke(
-            SoumettreAvisProlongationCommand(
+            SoumettreReportDeDateParCDDCommand(
                 uuid=self.last_confirmation_paper.uuid,
                 **form.cleaned_data,
             )

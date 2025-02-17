@@ -25,21 +25,25 @@
 # ##############################################################################
 import itertools
 
-from base.models.utils.utils import ChoiceEnum
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import pgettext_lazy
 
+from base.models.utils.utils import ChoiceEnum
+
 
 class ChoixStatutParcoursDoctoral(ChoiceEnum):
-    # After enrolment
-    ADMITTED = _('ADMITTED')
+    # En cours de création
+    EN_ATTENTE_INJECTION_EPC = _('EN_ATTENTE_INJECTION_EPC')
+    EN_COURS_DE_CREATION_PAR_GESTIONNAIRE = _('EN_COURS_DE_CREATION_PAR_GESTIONNAIRE')
+    # Après création
+    ADMIS = _('ADMIS')
     # Groupe de supervision
-    EN_ATTENTE_DE_SIGNATURE = _('Waiting for signature')
+    EN_ATTENTE_DE_SIGNATURE = _('EN_ATTENTE_DE_SIGNATURE')
     # Confirmation exam
-    SUBMITTED_CONFIRMATION = _('SUBMITTED_CONFIRMATION')
-    PASSED_CONFIRMATION = _('PASSED_CONFIRMATION')
-    NOT_ALLOWED_TO_CONTINUE = _('NOT_ALLOWED_TO_CONTINUE')
-    CONFIRMATION_TO_BE_REPEATED = _('CONFIRMATION_TO_BE_REPEATED')
+    CONFIRMATION_SOUMISE = _('CONFIRMATION_SOUMISE')
+    CONFIRMATION_REUSSIE = _('CONFIRMATION_REUSSIE')
+    NON_AUTORISE_A_POURSUIVRE = _('NON_AUTORISE_A_POURSUIVRE')
+    CONFIRMATION_A_REPRESENTER = _('CONFIRMATION_A_REPRESENTER')
     # Jury
     JURY_SOUMIS = _('JURY_SOUMIS')
     JURY_APPROUVE_CA = _('JURY_APPROUVE_CA')
@@ -47,12 +51,19 @@ class ChoixStatutParcoursDoctoral(ChoiceEnum):
     JURY_REFUSE_CDD = _('JURY_REFUSE_CDD')
     JURY_APPROUVE_ADRE = _('JURY_APPROUVE_ADRE')
     JURY_REFUSE_ADRE = _('JURY_REFUSE_ADRE')
+    ABANDON = _('ABANDON')
+
+
+STATUTS_DOCTORAT_EN_COURS_DE_CREATION = {
+    ChoixStatutParcoursDoctoral.EN_ATTENTE_INJECTION_EPC.name,
+    ChoixStatutParcoursDoctoral.EN_COURS_DE_CREATION_PAR_GESTIONNAIRE.name,
+}
 
 
 STATUTS_DOCTORAT_EPREUVE_CONFIRMATION_EN_COURS = {
-    ChoixStatutParcoursDoctoral.ADMITTED.name,
-    ChoixStatutParcoursDoctoral.SUBMITTED_CONFIRMATION.name,
-    ChoixStatutParcoursDoctoral.CONFIRMATION_TO_BE_REPEATED.name,
+    ChoixStatutParcoursDoctoral.ADMIS.name,
+    ChoixStatutParcoursDoctoral.CONFIRMATION_SOUMISE.name,
+    ChoixStatutParcoursDoctoral.CONFIRMATION_A_REPRESENTER.name,
 }
 
 
@@ -73,6 +84,10 @@ class ChoixTypeFinancement(ChoiceEnum):
     WORK_CONTRACT = _('WORK_CONTRACT')
     SEARCH_SCHOLARSHIP = _('SEARCH_SCHOLARSHIP')
     SELF_FUNDING = _('SELF_FUNDING')
+
+
+class BourseRecherche(ChoiceEnum):
+    OTHER = _('OTHER')
 
 
 class ChoixStatutSignatureGroupeDeSupervision(ChoiceEnum):
@@ -120,3 +135,43 @@ CHOIX_COMMISSION_PROXIMITE = {
         ChoixSousDomaineSciences,
     )
 }
+
+
+class ChoixEtapeParcoursDoctoral(ChoiceEnum):
+    ADMISSION = _('ADMISSION')
+    JURY = _('JURY')
+    CONFIRMATION = _('CONFIRMATION')
+    DECISION_DE_RECEVABILITE = _('DECISION_DE_RECEVABILITE')
+    DEFENSE_PRIVEE = _('DEFENSE_PRIVEE')
+    SOUTENANCE_PUBLIQUE = _('SOUTENANCE_PUBLIQUE')
+    ABANDON_ECHEC = _('ABANDON_ECHEC')
+
+
+STATUTS_PAR_ETAPE_PARCOURS_DOCTORAL = {
+    ChoixEtapeParcoursDoctoral.ADMISSION: [],
+    ChoixEtapeParcoursDoctoral.CONFIRMATION: [
+        ChoixStatutParcoursDoctoral.ADMIS,
+        ChoixStatutParcoursDoctoral.CONFIRMATION_SOUMISE,
+        ChoixStatutParcoursDoctoral.CONFIRMATION_A_REPRESENTER,
+        ChoixStatutParcoursDoctoral.CONFIRMATION_REUSSIE,
+        ChoixStatutParcoursDoctoral.NON_AUTORISE_A_POURSUIVRE,
+    ],
+    ChoixEtapeParcoursDoctoral.JURY: [
+        ChoixStatutParcoursDoctoral.JURY_SOUMIS,
+        ChoixStatutParcoursDoctoral.JURY_APPROUVE_CA,
+        ChoixStatutParcoursDoctoral.JURY_APPROUVE_CDD,
+        ChoixStatutParcoursDoctoral.JURY_REFUSE_CDD,
+        ChoixStatutParcoursDoctoral.JURY_APPROUVE_ADRE,
+        ChoixStatutParcoursDoctoral.JURY_REFUSE_ADRE,
+    ],
+    ChoixEtapeParcoursDoctoral.DECISION_DE_RECEVABILITE: [],
+    ChoixEtapeParcoursDoctoral.DEFENSE_PRIVEE: [],
+    ChoixEtapeParcoursDoctoral.SOUTENANCE_PUBLIQUE: [],
+    ChoixEtapeParcoursDoctoral.ABANDON_ECHEC: [
+        ChoixStatutParcoursDoctoral.ABANDON,
+    ],
+}
+
+STATUTS_INACTIFS = {ChoixStatutParcoursDoctoral.ABANDON.name}
+
+STATUTS_ACTIFS = {choix.name for choix in ChoixStatutParcoursDoctoral if choix.name not in STATUTS_INACTIFS}

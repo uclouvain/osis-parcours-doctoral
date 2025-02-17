@@ -25,6 +25,8 @@
 ##############################################################################
 
 from django.utils.translation import gettext_lazy as _
+from django.utils.translation import pgettext_lazy
+
 from osis_common.ddd.interface import BusinessException
 
 
@@ -32,7 +34,7 @@ class ParcoursDoctoralNonTrouveException(BusinessException):
     status_code = "PARCOURS-DOCTORAL-1"
 
     def __init__(self, **kwargs):
-        message = _("No doctorate found.")
+        message = pgettext_lazy("parcours_doctoral", "No doctorate found.")
         super().__init__(message, **kwargs)
 
 
@@ -144,7 +146,9 @@ class PropositionNonEnAttenteDeSignatureException(BusinessException):
     status_code = "PARCOURS-DOCTORAL-15"
 
     def __init__(self, **kwargs):
-        message = _("The proposition must be in the 'waiting for signature' status.")
+        message = pgettext_lazy(
+            "parcours_doctoral", "The doctoral training must be in the 'waiting for signature' status."
+        )
         super().__init__(message, **kwargs)
 
 

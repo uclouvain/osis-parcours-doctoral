@@ -1,0 +1,97 @@
+/*
+ *
+ * OSIS stands for Open Student Information System. It's an application
+ * designed to manage the core business of higher education institutions,
+ * such as universities, faculties, institutes and professional schools.
+ * The core business involves the administration of students, teachers,
+ * courses, programs and so on.
+ *
+ * Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * A copy of this license - GNU General Public License - is available
+ * at the root of the source code of this program.  If not,
+ * see http://www.gnu.org/licenses/.
+ *
+ */
+
+#activities .card .badge {
+    background-image: linear-gradient(rgb(0 0 0/40%) 0 0);
+    color: white;
+}
+
+#activities > .card {
+    margin-bottom: 2em;
+}
+
+.card-success > .card-header {
+    color: #3c763d;
+    background-color: #dff0d8;
+    border-color: #d6e9c6;
+}
+
+.card-info > .card-header {
+    color: #31708f;
+    background-color: #d9edf7;
+    border-color: #bce8f1;
+}
+
+.card-warning > .card-header {
+    color: #8a6d3b;
+    background-color: #fcf8e3;
+    border-color: #faebcc;
+}
+
+.card-danger > .card-header {
+    color: #a94442;
+    background-color: #f2dede;
+    border-color: #ebccd1;
+}
+
+.card-light > .card-header {
+    color: black;
+    background-color: var(--bs-light);
+}
+
+.card-header .card-title {
+    line-height: 1.3em;
+    font-size: 1rem;
+}
+
+#activities .card-header .card-title > a {
+    text-decoration: none;
+    width: 20px;
+    color: inherit;
+}
+
+.card-header .card-title > a:after {
+    font-family: 'Font Awesome 5 Pro';
+    font-weight: 900;
+    content: "\f078";
+    font-size: 1.5em;
+}
+
+.card-header .card-title > a.collapsed:after {
+    content: "\f054";
+}
+
+.subpanel {
+    margin-bottom: 0;
+}
+
+.subpanel > * {
+    padding-left: 3em;
+}
+
+label.input-group-text {
+    margin-bottom: 0;
+}

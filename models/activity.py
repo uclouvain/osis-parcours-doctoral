@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -26,10 +26,9 @@
 import contextlib
 from uuid import uuid4
 
-from base.ddd.utils.business_validator import MultipleBusinessExceptions
 from django.core import validators
 from django.db import models
-from django.db.models import Q
+from django.db.models import Q, Sum
 from django.db.models.signals import post_delete, post_save
 from django.dispatch import receiver
 from django.template import Context, Template
@@ -37,6 +36,7 @@ from django.utils.translation import gettext_lazy as _
 from django.utils.translation import pgettext_lazy
 from osis_document.contrib import FileField
 
+from base.ddd.utils.business_validator import MultipleBusinessExceptions
 from parcours_doctoral.ddd.formation.domain.model.enums import (
     CategorieActivite,
     ChoixComiteSelection,
@@ -60,13 +60,15 @@ def training_activity_directory_path(instance: 'Activity', filename: str):
 
 
 class ActivityQuerySet(models.QuerySet):
+    def for_doctoral_training_filter(self):
+        return self.filter(
+            context=ContexteFormation.DOCTORAL_TRAINING.name,
+        ).exclude(Q(category=CategorieActivite.UCL_COURSE.name, course_completed=False))
+
     def for_doctoral_training(self, parcours_doctoral_uuid):
         return (
-            self.filter(
-                parcours_doctoral__uuid=parcours_doctoral_uuid,
-                context=ContexteFormation.DOCTORAL_TRAINING.name,
-            )
-            .exclude(Q(category=CategorieActivite.UCL_COURSE.name, course_completed=False))
+            self.for_doctoral_training_filter()
+            .filter(parcours_doctoral__uuid=parcours_doctoral_uuid)
             .prefetch_related('children')
             .select_related(
                 'country',
@@ -76,19 +78,51 @@ class ActivityQuerySet(models.QuerySet):
             )
         )
 
+    def get_doctoral_training_credits_number(self, parcours_doctoral_uuid) -> int:
+        """
+        Get the total number of credits of the accepted doctoral trainings
+        :param parcours_doctoral_uuid: The related doctorate uuid
+        :return: The total number of credits
+        """
+        return (
+            self.for_doctoral_training_filter()
+            .filter(
+                parcours_doctoral__uuid=parcours_doctoral_uuid,
+                status=StatutActivite.ACCEPTEE.name,
+            )
+            .aggregate(ects_total_sum=Sum('ects', default=0))['ects_total_sum']
+        )
+
+    def for_complementary_training_filter(self):
+        return self.filter(
+            context=ContexteFormation.COMPLEMENTARY_TRAINING.name,
+        ).exclude(Q(category=CategorieActivite.UCL_COURSE.name, course_completed=False))
+
     def for_complementary_training(self, parcours_doctoral_uuid):
         return (
-            self.filter(
-                parcours_doctoral__uuid=parcours_doctoral_uuid,
-                context=ContexteFormation.COMPLEMENTARY_TRAINING.name,
-            )
-            .exclude(Q(category=CategorieActivite.UCL_COURSE.name, course_completed=False))
+            self.for_complementary_training_filter()
+            .filter(parcours_doctoral__uuid=parcours_doctoral_uuid)
             .select_related(
                 'country',
                 'parent',
                 'learning_unit_year__learning_container_year',
                 'learning_unit_year__academic_year',
             )
+        )
+
+    def has_complementary_training(self, parcours_doctoral_uuid) -> bool:
+        """
+        Check if the doctorate has at least one accepted complementary training
+        :param parcours_doctoral_uuid: The related doctorate uuid
+        :return: True if the doctorate has at least one accepted complementary training else False
+        """
+        return (
+            self.for_complementary_training_filter()
+            .filter(
+                parcours_doctoral__uuid=parcours_doctoral_uuid,
+                status=StatutActivite.ACCEPTEE.name,
+            )
+            .exists()
         )
 
     def for_enrollment_courses(self, parcours_doctoral_uuid):

@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -26,9 +26,10 @@
 from typing import Optional
 
 import attr
-from osis_common.ddd import interface
 
+from osis_common.ddd import interface
 from parcours_doctoral.ddd.dtos.campus import CampusDTO
+from parcours_doctoral.utils.formatting import format_address
 
 
 @attr.dataclass(frozen=True, slots=True)
@@ -39,9 +40,20 @@ class EntiteGestionDTO(interface.DTO):
     code_postal: Optional[str] = ''
     ville: Optional[str] = ''
     pays: Optional[str] = ''
+    nom_pays: Optional[str] = ''
     numero_telephone: Optional[str] = ''
     code_secteur: str = ''
     intitule_secteur: str = ''
+
+    @property
+    def adresse_complete(self):
+        return format_address(
+            street=self.lieu,
+            street_number='',
+            postal_code=self.code_postal,
+            city=self.ville,
+            country=self.nom_pays,
+        )
 
 
 @attr.dataclass(frozen=True, slots=True)

@@ -24,6 +24,6 @@
 {% endcomment %}
 
 <span id="parcours-doctoral-status" hx-swap-oob="true">
-  {% translate 'Status:' %} <span class="label label-parcours-doctoral-primary">{{ parcours_doctoral.statut|enum_display:'ChoixStatutParcoursDoctoral' }}</span>
+  {% translate 'Status:' %} <span class="badge label-parcours-doctoral-primary">{{ parcours_doctoral.statut|enum_display:'ChoixStatutParcoursDoctoral' }}</span>
   {{ parcours_doctoral.date_changement_statut|date:'d/m/Y' }}
 </span>

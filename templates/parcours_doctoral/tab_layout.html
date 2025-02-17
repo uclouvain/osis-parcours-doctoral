@@ -1,5 +1,5 @@
-{% extends "layout.html" %}
-{% load academic_year_display bootstrap3 i18n static parcours_doctoral enums %}
+{% extends "bootstrap5/layout.html" %}
+{% load academic_year_display django_bootstrap5 i18n static parcours_doctoral enums %}
 
 {% comment "License" %}
   * OSIS stands for Open Student Information System. It's an application
@@ -8,7 +8,7 @@
   * The core business involves the administration of students, teachers,
   * courses, programs and so on.
   *
-  * Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+  * Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
   *
   * This program is free software: you can redistribute it and/or modify
   * it under the terms of the GNU General Public License as published by
@@ -25,17 +25,20 @@
   * see http://www.gnu.org/licenses/.
 {% endcomment %}
 
-{% url base_namespace|add:request.resolver_match.url_name view.kwargs.pk as cancel_url %}
-{% url base_namespace|add:":update:"|add:request.resolver_match.url_name view.kwargs.pk as change_url %}
-
 {% block breadcrumb %}
-  <li>
+  <li class="breadcrumb-item">
+    <a href="{% url 'studies' %}" id="lnk_studies">{% translate 'Student path' %}</a>
+  </li>
+  <li  class="breadcrumb-item" id="lnk_cohorts_management">
+    <a href="{% url 'cohorts_management' %}">{% translate "Cohorts management" %}</a>
+  </li>
+  <li class="breadcrumb-item">
     <a href="{% url 'parcours_doctoral:list' %}" id="lnk_parcours_doctorals" class="active">
       {% trans 'Doctoral trainings' %}
     </a>
   </li>
-  <li class="active">
-    {{ parcours_doctoral.training.intitule }} ({{ parcours_doctoral.reference }})
+  <li class="breadcrumb-item active">
+    {{ parcours_doctoral.formation.intitule }} ({{ parcours_doctoral.reference }})
   </li>
 {% endblock %}
 
@@ -48,7 +51,7 @@
   {% block page-header %}
     <div class="page-header flex-content">
       <a
-          href=""
+          href="{% url 'parcours_doctoral:list' %}"
           class="text-primary"
       >
         <span class="fa fa-stream"></span>
@@ -57,11 +60,11 @@
     </div>
   {% endblock page-header %}
 
-  <div class="panel panel-default">
-    <div id="parcours_doctoral-panel-header-container" class="panel-heading flex-content">
+  <div class="card">
+    <div id="parcours_doctoral-panel-header-container" class="card-header flex-content">
       <a
         title="{% translate 'Previous doctorate' %}"
-        class="btn btn-default parcours_doctoral-navigation-button {% if not previous_parcours_doctoral_url %} disabled{% endif %}"
+        class="btn btn-default border border-dark-subtle parcours_doctoral-navigation-button {% if not previous_parcours_doctoral_url %} disabled{% endif %}"
         href="{{ previous_parcours_doctoral_url }}">
         <i class="fa-solid fa-chevron-left" aria-hidden="true"></i>
       </a>
@@ -95,7 +98,7 @@
             <span>
                 <a href="{{ access_conditions_url }}" target="_blank">{{ parcours_doctoral.formation.sigle }}</a> -
                 {{ parcours_doctoral.formation.intitule }} ({{ parcours_doctoral.formation.campus.nom }})
-                <span class="label label-default">{{ parcours_doctoral.formation.annee|display_as_academic_year }}</span>
+                <span class="badge bg-secondary">{{ parcours_doctoral.formation.annee|display_as_academic_year }}</span>
             </span>
             <br>
             <span class="copy-to-clipboard">
@@ -103,11 +106,17 @@
               <a href="{{ request.scheme }}://{{ request.get_host }}{{ parcours_doctoral_url }}" class="copy-to-clipboard-element bold-text">{{ parcours_doctoral.reference }}</a>
               <button
                   class="copy-button"
-                  data-html="true"
+                  data-bs-html="true"
               >
                 <i class="far fa-copy"></i>
               </button>
             </span>
+            <a
+              href="{% url 'admission:doctorate' parcours_doctoral.uuid_admission %}"
+              target="_blank"
+            >
+              <span class="badge bg-secondary">{% translate 'Admission' %}</span>
+            </a>
           </div>
           <div class="min-width">
             {% include 'parcours_doctoral/includes/parcours_doctoral_status.html' with display_on_load=True %}
@@ -120,15 +129,15 @@
           <div class="btn-group hidden" id="actions-group-container">
             <button
                 type="button"
-                class="btn btn-default"
-                data-toggle="dropdown"
+                class="btn btn-default border border-dark-subtle"
+                data-bs-toggle="dropdown"
                 aria-haspopup="true"
                 aria-expanded="false"
             >
               {% trans "Actions" %}
-              <span class="caret"></span>
+              <i class="fa-solid fa-caret-down"></i>
             </button>
-            <ul class="dropdown-menu pull-right">
+            <ul class="dropdown-menu float-end">
               {% block actions %}
                 {% if form or force_form %}
                   {# Form -> link to the details page #}
@@ -170,12 +179,13 @@
       </div>
       <a
         title="{% translate 'Next doctorate' %}"
-        class="btn btn-default parcours_doctoral-navigation-button {% if not next_parcours_doctoral_url %} disabled{% endif %}"
+        class="btn btn-default border border-dark-subtle parcours_doctoral-navigation-button {% if not next_parcours_doctoral_url %} disabled{% endif %}"
         href="{{ next_parcours_doctoral_url }}">
         <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
       </a>
     </div>
-    <div class="panel-body">
+
+    <div class="card-body">
     {% if not without_menu %}
       {% parcours_doctoral_tabs %}
       {% current_subtabs as subtabs_context %}
@@ -185,7 +195,7 @@
         <div class="col-md-2 visible-md visible-lg border-right">
           {% subtabs_bar %}
         </div>
-        <div class="col-md-10">
+        <div id=doctorate-tab-content" class="col-md-10">
       {% endif %}
       {% block tab_content %}
         {% if form.visible_fields or force_form %}
@@ -196,21 +206,21 @@
               <p>{% trans "This page is currently under construction." %}</p>
             {% endblock %}
           </form>
-          <div class="text-right">
+          <div class="text-end">
             {% if not next_url %}
             {% can_read_tab tab_context.active_tab as can_read_tab %}
             {% detail_tab_path_from_update view.kwargs.uuid as read_url %}
             {% endif %}
             <a
                 href="{% if next_url %}{{ next_url }}{% else %}{{ read_url }}{% endif %}"
-                class="btn btn-default"
+                class="btn btn-default border border-dark-subtle"
                 style="margin-left: 10px;"
                 role="button"
             >
               {% translate 'Cancel' %}
             </a>
             <button class="btn btn-primary" type="submit" form="parcours_doctoral-form">
-              <span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span>
+              <span class="fa-solid fa-floppy-disk" aria-hidden="true"></span>
               {% translate 'Save' context 'parcours_doctoral' %}
             </button>
           </div>
@@ -237,7 +247,6 @@
 
     $(function () {
       initializePopover();
-      initializeLazyPopover()
       const actionsGroupContainer = $('#actions-group-container');
       if (actionsGroupContainer.find('li').length > 0) {
         actionsGroupContainer.removeClass('hidden');

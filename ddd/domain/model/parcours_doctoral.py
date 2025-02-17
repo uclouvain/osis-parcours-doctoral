@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -28,8 +28,9 @@ from datetime import datetime
 from typing import List, Optional
 
 import attr
-from osis_common.ddd import interface
 
+from ddd.logic.reference.domain.model.bourse import BourseIdentity
+from osis_common.ddd import interface
 from parcours_doctoral.ddd.domain.model._cotutelle import Cotutelle
 from parcours_doctoral.ddd.domain.model._experience_precedente_recherche import (
     ExperiencePrecedenteRecherche,
@@ -39,7 +40,6 @@ from parcours_doctoral.ddd.domain.model._financement import Financement
 from parcours_doctoral.ddd.domain.model._formation import FormationIdentity
 from parcours_doctoral.ddd.domain.model._institut import InstitutIdentity
 from parcours_doctoral.ddd.domain.model._projet import Projet
-from parcours_doctoral.ddd.domain.model.bourse import BourseIdentity
 from parcours_doctoral.ddd.domain.model.enums import (
     ChoixDoctoratDejaRealise,
     ChoixStatutParcoursDoctoral,
@@ -100,16 +100,16 @@ class ParcoursDoctoral(interface.RootEntity):
         ).validate()
 
     def soumettre_epreuve_confirmation(self):
-        self.statut = ChoixStatutParcoursDoctoral.SUBMITTED_CONFIRMATION
+        self.statut = ChoixStatutParcoursDoctoral.CONFIRMATION_SOUMISE
 
     def encoder_decision_reussite_epreuve_confirmation(self):
-        self.statut = ChoixStatutParcoursDoctoral.PASSED_CONFIRMATION
+        self.statut = ChoixStatutParcoursDoctoral.CONFIRMATION_REUSSIE
 
     def encoder_decision_echec_epreuve_confirmation(self):
-        self.statut = ChoixStatutParcoursDoctoral.NOT_ALLOWED_TO_CONTINUE
+        self.statut = ChoixStatutParcoursDoctoral.NON_AUTORISE_A_POURSUIVRE
 
     def encoder_decision_repassage_epreuve_confirmation(self):
-        self.statut = ChoixStatutParcoursDoctoral.CONFIRMATION_TO_BE_REPEATED
+        self.statut = ChoixStatutParcoursDoctoral.CONFIRMATION_A_REPRESENTER
 
     def _modifier_projet(
         self,

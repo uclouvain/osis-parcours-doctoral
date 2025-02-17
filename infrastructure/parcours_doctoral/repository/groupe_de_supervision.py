@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -26,15 +26,14 @@
 from collections import defaultdict
 from typing import List, Optional, Union
 
-from base.models.person import Person
 from django.db.models import F, Prefetch
 from django.db.models.functions import Coalesce
 from django.utils.translation import get_language
 from django.utils.translation import gettext_lazy as _
-from osis_role.contrib.permissions import _get_roles_assigned_to_user
 from osis_signature.models import Actor, Process, StateHistory
-from reference.models.country import Country
 
+from base.models.person import Person
+from osis_role.contrib.permissions import _get_roles_assigned_to_user
 from parcours_doctoral.auth.roles.ca_member import CommitteeMember
 from parcours_doctoral.auth.roles.promoter import Promoter
 from parcours_doctoral.ddd.builder.parcours_doctoral_identity import (
@@ -59,6 +58,7 @@ from parcours_doctoral.models import (
     ParcoursDoctoral,
     ParcoursDoctoralSupervisionActor,
 )
+from reference.models.country import Country
 
 
 class GroupeDeSupervisionRepository(IGroupeDeSupervisionRepository):
@@ -83,19 +83,19 @@ class GroupeDeSupervisionRepository(IGroupeDeSupervisionRepository):
         )
 
     @classmethod
-    def _load(cls, proposition):
-        if not proposition.supervision_group_id:
-            proposition.supervision_group = Process.objects.create()
-            proposition.save(update_fields=['supervision_group'])
+    def _load(cls, parcours_doctoral):
+        if not parcours_doctoral.supervision_group_id:
+            parcours_doctoral.supervision_group = Process.objects.create()
+            parcours_doctoral.save(update_fields=['supervision_group'])
 
-        groupe = proposition.supervision_group
+        groupe = parcours_doctoral.supervision_group
         actors = defaultdict(list)
         for actor in getattr(groupe, 'ordered_members', []):
             actors[actor.parcoursdoctoralsupervisionactor.type].append(actor)
 
         return GroupeDeSupervision(
             entity_id=GroupeDeSupervisionIdentity(uuid=groupe.uuid),
-            parcours_doctoral_id=ParcoursDoctoralIdentityBuilder.build_from_uuid(proposition.uuid),
+            parcours_doctoral_id=ParcoursDoctoralIdentityBuilder.build_from_uuid(parcours_doctoral.uuid),
             signatures_promoteurs=[
                 SignaturePromoteur(
                     promoteur_id=PromoteurIdentity(str(actor.uuid)),
@@ -129,14 +129,14 @@ class GroupeDeSupervisionRepository(IGroupeDeSupervisionRepository):
             statut_signature=None,
             # FIXME
             # statut_signature=ChoixStatutSignatureGroupeDeSupervision.SIGNING_IN_PROGRESS
-            # if proposition.status == ChoixStatutParcoursDoctoral.EN_ATTENTE_DE_SIGNATURE.name
+            # if parcours_doctoral.status == ChoixStatutParcoursDoctoral.EN_ATTENTE_DE_SIGNATURE.name
             # else None,
         )
 
     @classmethod
     def get_by_parcours_doctoral_id(cls, parcours_doctoral_id: 'ParcoursDoctoralIdentity') -> 'GroupeDeSupervision':
-        proposition = cls._get_queryset().get(uuid=parcours_doctoral_id.uuid)
-        return cls._load(proposition)
+        parcours_doctoral = cls._get_queryset().get(uuid=parcours_doctoral_id.uuid)
+        return cls._load(parcours_doctoral)
 
     @classmethod
     def get(cls, entity_id: 'GroupeDeSupervisionIdentity') -> 'GroupeDeSupervision':
@@ -150,13 +150,13 @@ class GroupeDeSupervisionRepository(IGroupeDeSupervisionRepository):
         **kwargs,
     ) -> List['GroupeDeSupervision']:
         if matricule_membre:
-            propositions = (
+            parcours_doctorals = (
                 cls._get_queryset()
                 .filter(supervision_group__actors__person__global_id=matricule_membre)
                 .distinct('pk')
                 .order_by('-pk')
             )
-            return [cls._load(proposition) for proposition in propositions]
+            return [cls._load(parcours_doctoral) for parcours_doctoral in parcours_doctorals]
         raise NotImplementedError
 
     @classmethod
@@ -165,19 +165,19 @@ class GroupeDeSupervisionRepository(IGroupeDeSupervisionRepository):
 
     @classmethod
     def save(cls, entity: 'GroupeDeSupervision') -> None:
-        proposition = (
-            ParcoursDoctoral.objects.get(uuid=entity.parcours_doctoral_id.uuid)
-            .select_related('supervision_group')
+        parcours_doctoral = (
+            ParcoursDoctoral.objects.select_related('supervision_group')
             .only('supervision_group')
+            .get(uuid=entity.parcours_doctoral_id.uuid)
         )
-        if not proposition.supervision_group_id:
-            proposition.supervision_group = groupe = Process.objects.create()
-            proposition.save(update_fields=['supervision_group'])
+        if not parcours_doctoral.supervision_group_id:
+            parcours_doctoral.supervision_group = groupe = Process.objects.create()
+            parcours_doctoral.save(update_fields=['supervision_group'])
         else:
-            groupe = proposition.supervision_group
+            groupe = parcours_doctoral.supervision_group
 
-        current_promoteurs = groupe.actors.filter(supervisionactor__type=ActorType.PROMOTER.name)
-        current_members = groupe.actors.filter(supervisionactor__type=ActorType.CA_MEMBER.name)
+        current_promoteurs = groupe.actors.filter(parcoursdoctoralsupervisionactor__type=ActorType.PROMOTER.name)
+        current_members = groupe.actors.filter(parcoursdoctoralsupervisionactor__type=ActorType.CA_MEMBER.name)
 
         # Remove old CA members (deleted by refusal)
         current_members.exclude(uuid__in=[s.membre_CA_id.uuid for s in entity.signatures_membres_CA]).delete()

@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -23,7 +23,6 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-
 from rest_framework import mixins, status
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
@@ -40,7 +39,7 @@ from parcours_doctoral.api.serializers import (
     SubmitConfirmationPaperExtensionRequestCommandSerializer,
 )
 from parcours_doctoral.ddd.commands import (
-    GetGroupeDeSupervisionCommand,
+    GetGroupeDeSupervisionQuery,
     RecupererParcoursDoctoralQuery,
 )
 from parcours_doctoral.ddd.epreuve_confirmation.commands import (
@@ -60,6 +59,8 @@ __all__ = [
     "LastConfirmationCanvasAPIView",
     "SupervisedConfirmationAPIView",
 ]
+
+from parcours_doctoral.models import Activity
 
 
 class ConfirmationSchema(ResponseSpecificSchema):
@@ -139,10 +140,12 @@ class LastConfirmationAPIView(DoctorateAPIPermissionRequiredMixin, mixins.Retrie
         serializer.is_valid(raise_exception=True)
 
         last_confirmation_paper = self.get_last_confirmation_paper()
+        doctorate = self.get_permission_object()
 
         result = message_bus_instance.invoke(
             SoumettreEpreuveConfirmationCommand(
                 uuid=last_confirmation_paper.uuid,
+                matricule_auteur=doctorate.student.global_id,
                 **serializer.validated_data,
             )
         )
@@ -193,10 +196,18 @@ class LastConfirmationCanvasAPIView(DoctorateAPIPermissionRequiredMixin, mixins.
             [
                 RecupererParcoursDoctoralQuery(self.doctorate_uuid),
                 RecupererDerniereEpreuveConfirmationQuery(parcours_doctoral_uuid=self.doctorate_uuid),
-                GetGroupeDeSupervisionCommand(uuid_parcours_doctoral=self.doctorate_uuid),
+                GetGroupeDeSupervisionQuery(uuid_parcours_doctoral=self.doctorate_uuid),
             ]
         )
         doctorate = self.get_permission_object()
+
+        doctoral_training_ects_nb = Activity.objects.get_doctoral_training_credits_number(
+            parcours_doctoral_uuid=self.doctorate_uuid,
+        )
+
+        has_additional_training = Activity.objects.has_complementary_training(
+            parcours_doctoral_uuid=self.doctorate_uuid,
+        )
 
         uuid = parcours_doctoral_pdf_confirmation_canvas(
             parcours_doctoral=doctorate,
@@ -208,6 +219,8 @@ class LastConfirmationCanvasAPIView(DoctorateAPIPermissionRequiredMixin, mixins.
                 'supervision_people_nb': (
                     len(supervision_group.signatures_promoteurs) + len(supervision_group.signatures_membres_CA)
                 ),
+                'doctoral_training_ects_nb': doctoral_training_ects_nb,
+                'has_additional_training': has_additional_training,
             },
         )
 

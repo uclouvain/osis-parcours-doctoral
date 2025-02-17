@@ -28,11 +28,12 @@ from unittest import mock
 from uuid import uuid4
 
 import freezegun
-from base.tests.factories.person import PersonFactory
 from django.shortcuts import resolve_url
 from rest_framework import status
 from rest_framework.test import APITestCase
 
+from base.tests.factories.person import PersonFactory
+from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from parcours_doctoral.models import ConfirmationPaper
 from parcours_doctoral.tests.factories.confirmation_paper import (
     ConfirmationPaperFactory,
@@ -70,13 +71,6 @@ class ConfirmationAPIViewTestCase(APITestCase):
         cls.committee_member_user = CaMemberFactory(process=cls.process).person.user
         cls.other_committee_member_user = CaMemberFactory().person.user
 
-        cls.doctorate = ParcoursDoctoralFactory(
-            supervision_group=cls.process,
-            student=cls.student,
-        )
-
-        cls.url = resolve_url('parcours_doctoral_api_v1:confirmation', uuid=cls.doctorate.uuid)
-
     def setUp(self):
         patcher = mock.patch(
             "osis_document.contrib.fields.FileField._confirm_multiple_upload",
@@ -84,6 +78,12 @@ class ConfirmationAPIViewTestCase(APITestCase):
         )
         patcher.start()
         self.addCleanup(patcher.stop)
+
+        self.doctorate = ParcoursDoctoralFactory(
+            supervision_group=self.process,
+            student=self.student,
+        )
+        self.url = resolve_url('parcours_doctoral_api_v1:confirmation', uuid=self.doctorate.uuid)
 
     def test_assert_methods_not_allowed(self):
         self.client.force_authenticate(user=self.student.user)
@@ -107,6 +107,34 @@ class ConfirmationAPIViewTestCase(APITestCase):
         self.client.force_authenticate(user=self.no_role_user)
         response = self.client.get(self.url, format='json')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_get_confirmation_of_in_creation_doctorate_is_forbidden(self):
+        in_creation_doctorate = ParcoursDoctoralFactory(
+            supervision_group=self.doctorate.supervision_group,
+            student=self.student,
+            status=ChoixStatutParcoursDoctoral.EN_COURS_DE_CREATION_PAR_GESTIONNAIRE.name,
+        )
+
+        url = resolve_url('parcours_doctoral_api_v1:confirmation', uuid=in_creation_doctorate.uuid)
+
+        users = [
+            self.promoter_user,
+            self.committee_member_user,
+            self.student.user,
+        ]
+
+        for user in users:
+            self.client.force_authenticate(user=user)
+            response = self.client.get(url)
+            self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        in_creation_doctorate.status = ChoixStatutParcoursDoctoral.EN_ATTENTE_INJECTION_EPC.name
+        in_creation_doctorate.save()
+
+        for user in users:
+            self.client.force_authenticate(user=user)
+            response = self.client.get(url)
+            self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_get_confirmation_with_student(self):
         self.client.force_authenticate(user=self.other_student.user)
@@ -139,7 +167,7 @@ class ConfirmationAPIViewTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_get_confirmation_with_several_confirmation_papers(self):
-        self.client.force_login(user=self.student.user)
+        self.client.force_authenticate(user=self.student.user)
 
         with freezegun.freeze_time('2022-01-01'):
             first_paper: ConfirmationPaper = ConfirmationPaperFactory(
@@ -152,6 +180,7 @@ class ConfirmationAPIViewTestCase(APITestCase):
                 research_mandate_renewal_opinion=[self.file_uuids['research_mandate_renewal_opinion']],
                 certificate_of_achievement=[self.file_uuids['certificate_of_achievement']],
                 certificate_of_failure=[self.file_uuids['certificate_of_failure']],
+                is_active=False,
             )
 
         with freezegun.freeze_time('2023-01-01'):
@@ -169,6 +198,7 @@ class ConfirmationAPIViewTestCase(APITestCase):
                 brief_justification='Brief justification',
                 justification_letter=[self.file_uuids['justification_letter']],
                 cdd_opinion='CDD opinion',
+                is_active=True,
             )
 
         response = self.client.get(self.url, format='json')

@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -27,6 +27,7 @@
 from parcours_doctoral.ddd.epreuve_confirmation.commands import *
 from parcours_doctoral.ddd.epreuve_confirmation.use_case.read import *
 from parcours_doctoral.ddd.epreuve_confirmation.use_case.write import *
+from parcours_doctoral.infrastructure.parcours_doctoral.domain.service.in_memory.historique import HistoriqueInMemory
 
 from ..repository.in_memory.parcours_doctoral import ParcoursDoctoralInMemoryRepository
 from .domain.service.in_memory.notification import NotificationInMemory
@@ -37,6 +38,7 @@ from .repository.in_memory.epreuve_confirmation import (
 _epreuve_confirmation_repository = EpreuveConfirmationInMemoryRepository()
 _parcours_doctoral_repository = ParcoursDoctoralInMemoryRepository()
 _notification = NotificationInMemory()
+_historique = HistoriqueInMemory()
 
 
 COMMAND_HANDLERS = {
@@ -57,6 +59,7 @@ COMMAND_HANDLERS = {
         parcours_doctoral_repository=_parcours_doctoral_repository,
         epreuve_confirmation_repository=_epreuve_confirmation_repository,
         notification=_notification,
+        historique=_historique,
     ),
     CompleterEpreuveConfirmationParPromoteurCommand: lambda msg_bus, cmd: completer_epreuve_confirmation_par_promoteur(
         cmd,
@@ -68,6 +71,10 @@ COMMAND_HANDLERS = {
         epreuve_confirmation_repository=_epreuve_confirmation_repository,
         notification=_notification,
     ),
+    SoumettreReportDeDateParCDDCommand: lambda msg_bus, cmd: soumettre_report_de_date_par_cdd(
+        cmd,
+        epreuve_confirmation_repository=_epreuve_confirmation_repository,
+    ),
     SoumettreAvisProlongationCommand: lambda msg_bus, cmd: soumettre_avis_prolongation(
         cmd,
         epreuve_confirmation_repository=_epreuve_confirmation_repository,
@@ -77,18 +84,21 @@ COMMAND_HANDLERS = {
         epreuve_confirmation_repository=_epreuve_confirmation_repository,
         parcours_doctoral_repository=_parcours_doctoral_repository,
         notification=_notification,
+        historique=_historique,
     ),
     ConfirmerEchecCommand: lambda msg_bus, cmd: confirmer_echec(
         cmd,
         epreuve_confirmation_repository=_epreuve_confirmation_repository,
         parcours_doctoral_repository=_parcours_doctoral_repository,
         notification=_notification,
+        historique=_historique,
     ),
     ConfirmerRepassageCommand: lambda msg_bus, cmd: confirmer_repassage(
         cmd,
         epreuve_confirmation_repository=_epreuve_confirmation_repository,
         parcours_doctoral_repository=_parcours_doctoral_repository,
         notification=_notification,
+        historique=_historique,
     ),
     TeleverserAvisRenouvellementMandatRechercheCommand: lambda msg_bus, cmd: televerser_avis_renouvellement_mandat_recherche(
         cmd,

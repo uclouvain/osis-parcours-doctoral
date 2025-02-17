@@ -1,4 +1,4 @@
-{% load enums i18n bootstrap3 parcours_doctoral %}
+{% load doctorate_enums i18n django_bootstrap5 parcours_doctoral %}
 
 {% comment "License" %}
 * OSIS stands for Open Student Information System. It's an application
@@ -33,24 +33,24 @@
         {{ start_index }} to {{ end_index }} of {{ total_counts }} doctoral trainings
       {% endblocktrans %}
     </p>
-    <div id="list-actions" class="text-right">
-      {% bootstrap_field filter_form.taille_page show_label=False form_group_class="fit-content" show_help=False %}
+    <div id="list-actions" class="text-end">
+      {% bootstrap_field filter_form.taille_page show_label=False wrapper_class="fit-content" show_help=False %}
       <span>{% trans "items per page" %}</span>
-      <div class="btn-group">
+      <div class="dropdown">
         <button
             id="dLabel"
-            class="btn btn-default visible-lg-inline-block"
+            class="btn btn-default border border-dark-subtle visible-lg-inline-block dropdown-toggle"
             type="button"
-            data-toggle="dropdown"
+            data-bs-toggle="dropdown"
             aria-haspopup="true"
             aria-expanded="false"
             title="{% trans 'Export' %}"
         >
-          <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
-          <span class="caret"></span>
+          <span class="fa-solid fa-download" aria-hidden="true"></span>
+          <i class="fa-solid fa-caret-down"></i>
         </button>
-        <ul class="dropdown-menu dropdown-menu-right">
-          Export en cours de développement
+        <ul class="dropdown-menu dropdown-menu-end">
+          <li><a class="dropdown-item" href="#">Export en cours de développement</a></li>
         </ul>
       </div>
     </div>
@@ -66,19 +66,47 @@
           hx-target="#table_doctorate_parcours_doctoral"
       >
         {% translate 'Course' context 'parcours_doctoral' as course_label %}
-        {% sortable_header_div 'reference' _('Doctoral training numero') %}
-        {% sortable_header_div 'nom_etudiant' _('Name') %}
+        {% translate 'Status' context 'parcours_doctoral filter' as status_label %}
+        {% translate 'Additional training' context 'parcours_doctoral filter' as additional_training_label %}
+        {% sortable_header_div 'reference' _('Dossier numero') %}
+        {% sortable_header_div 'nom_etudiant' _('Last name / First name') %}
+        {% sortable_header_div 'bourse' _('Scholarship holder') %}
         {% sortable_header_div 'formation' course_label %}
-        {% sortable_header_div 'statut' _('Doctoral training status') %}
+        {% sortable_header_div 'statut' status_label %}
+        {% sortable_header_div 'date_admission' _('Admission date') %}
+        {% sortable_header_div 'pre_admission' _('Pre-admission') %}
+        {% sortable_header_div 'cotutelle' _('Cotutelle') %}
+        {% sortable_header_div 'formation_complementaire' additional_training_label  %}
+        {% sortable_header_div 'en_regle_inscription' _('In order of registration') %}
+        {% sortable_header_div 'total_credits_valides' _('Validated credits total') %}
+
       </tr>
     </thead>
     <tbody>
       {% for parcours_doctoral in object_list %}
         <tr>
           <td><a href="{% url 'parcours_doctoral:base' parcours_doctoral.uuid %}">{{ parcours_doctoral.reference }}</a></td>
-          <td>{{ parcours_doctoral.prenom_doctorant }} {{ parcours_doctoral.nom_doctorant }} </td>
-          <td>{{ parcours_doctoral.formation.intitule }}</td>
-          <td>{{ parcours_doctoral.statut|enum_display:'ChoixStatutPropositionGenerale' }}</td>
+          <td>{{ parcours_doctoral.nom_doctorant }}, {{ parcours_doctoral.prenom_doctorant }} </td>
+          <td>{{ parcours_doctoral.code_bourse }}</td>
+          <td>{{ parcours_doctoral.formation.nom_complet }}</td>
+          <td>{{ parcours_doctoral.statut|enum_display:'ChoixStatutParcoursDoctoral' }}</td>
+          <td>{{ parcours_doctoral.cree_le|date:"d/m/Y" }}</td>
+          <td class="text-center">
+            {% if parcours_doctoral.pre_admission %}<i class="fa-solid fa-flag" style="color: #c01c28;"></i>{% endif %}
+          </td>
+          <td class="text-center">
+            {% if parcours_doctoral.cotutelle %}<i class="fa-solid fa-seedling" style="color: #26a269;"></i>{% endif %}
+          </td>
+          <td class="text-center">
+            {% if parcours_doctoral.formation_complementaire %}
+              <i class="fa-regular fa-calendar-circle-plus" style="color: #2c67b1;"></i>
+            {% endif %}
+          </td>
+          <td>
+            {# <span class="dot {% if parcours_doctoral.en_regle_inscription %}green-dot{% else %}red-dot{% endif %}"></span> #}
+            (TODO)
+          </td>
+          <td>{{ parcours_doctoral.total_credits_valides }}</td>
         </tr>
       {% endfor %}
     </tbody>

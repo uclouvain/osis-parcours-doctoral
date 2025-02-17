@@ -23,12 +23,12 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from base.models.utils.utils import ChoiceEnum
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from osis_document.contrib import FileField
 from osis_signature.models import Actor
 
+from base.models.utils.utils import ChoiceEnum
 from parcours_doctoral.models.parcours_doctoral import ParcoursDoctoral
 
 __all__ = ['ActorType', 'ParcoursDoctoralSupervisionActor']
@@ -76,3 +76,7 @@ class ParcoursDoctoralSupervisionActor(Actor):
     is_reference_promoter = models.BooleanField(
         default=False,
     )
+
+    @property
+    def complete_name(self):
+        return f'{self.last_name}, {self.first_name}'

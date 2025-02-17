@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -26,10 +26,34 @@
 from django import forms
 from django.utils.translation import gettext_lazy as _
 
+from base.forms.utils.datefield import CustomDateInput
+from osis_document.contrib import FileUploadField
 
-class ExtensionRequestForm(forms.Form):
+
+class ExtensionRequestOpinionForm(forms.Form):
     avis_cdd = forms.CharField(
         label=_('CDD opinion'),
         required=True,
         widget=forms.Textarea(),
+    )
+
+
+class ExtensionRequestForm(forms.Form):
+    nouvelle_echeance = forms.DateField(
+        label=_('Proposed new deadline'),
+        required=True,
+        widget=CustomDateInput(),
+    )
+    justification_succincte = forms.CharField(
+        label=_('Brief justification'),
+        required=True,
+        max_length=2000,
+        widget=forms.Textarea(),
+    )
+    lettre_justification = FileUploadField(
+        label=_('Justification letter'),
+        required=False,
+        help_text=_(
+            'If applicable, please upload here the opinion of your support committee on the extension request.',
+        ),
     )

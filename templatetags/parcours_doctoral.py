@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -25,19 +25,24 @@
 # ##############################################################################
 import re
 from dataclasses import dataclass
-from functools import wraps
-from inspect import getfullargspec
+from typing import List, Optional
 
+import attr
 from django import template
 from django.conf import settings
+from django.core.validators import EMPTY_VALUES
+from django.template.defaultfilters import floatformat
 from django.urls import NoReverseMatch, reverse
 from django.utils.safestring import SafeString, mark_safe
 from django.utils.translation import get_language
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import pgettext
+from django_bootstrap5.renderers import FieldRenderer
 from osis_document.api.utils import get_remote_metadata, get_remote_token
-from reference.models.language import Language
 
+from admission.utils import format_school_title, get_superior_institute_queryset
+from base.models.entity_version import EntityVersion
+from base.models.organization import Organization
 from parcours_doctoral.auth.constants import READ_ACTIONS_BY_TAB, UPDATE_ACTIONS_BY_TAB
 from parcours_doctoral.constants import CAMPUSES_UUIDS
 from parcours_doctoral.ddd.dtos import CampusDTO
@@ -47,7 +52,9 @@ from parcours_doctoral.ddd.formation.domain.model.enums import (
     StatutActivite,
 )
 from parcours_doctoral.ddd.repository.i_parcours_doctoral import formater_reference
+from parcours_doctoral.forms.supervision import MemberSupervisionForm
 from parcours_doctoral.models import ParcoursDoctoral
+from reference.models.language import Language
 
 register = template.Library()
 
@@ -75,13 +82,6 @@ TAB_TREE = {
     # Tab('documents', _('Documents'), 'folder-open'): [
     #     Tab('documents', _('Documents'), 'folder-open'),
     # ],
-    # Tab('comments', pgettext('tab', 'Comments'), 'comments'): [
-    #     Tab('comments', pgettext('tab', 'Comments'), 'comments')
-    # ],
-    # Tab('history', pgettext('tab', 'History'), 'history'): [
-    #     Tab('history-all', _('All history')),
-    #     Tab('history', _('Status changes')),
-    # ],
     # Tab('person', _('Personal data'), 'user'): [
     #     Tab('person', _('Identification'), 'user'),
     #     Tab('coordonnees', _('Contact details'), 'user'),
@@ -90,14 +90,14 @@ TAB_TREE = {
     #     Tab('curriculum', _('Curriculum')),
     #     Tab('languages', _('Knowledge of languages')),
     # ],
-    # Tab('doctorate', pgettext('tab', 'PhD project'), 'graduation-cap'): [
-    #     Tab('project', pgettext('tab', 'Research project')),
-    #     Tab('cotutelle', _('Cotutelle')),
-    #     Tab('supervision', _('Supervision')),
-    # ],
     # Tab('additional-information', _('Additional information'), 'puzzle-piece'): [
     #     Tab('accounting', _('Accounting')),
     # ],
+    Tab('doctorate', pgettext('tab', 'PhD project'), 'graduation-cap'): [
+        Tab('project', pgettext('tab', 'Research project')),
+        Tab('cotutelle', _('Cotutelle')),
+        Tab('supervision', _('Supervision')),
+    ],
     Tab('confirmation', pgettext('tab', 'Confirmation'), 'award'): [
         Tab('confirmation', _('Confirmation exam')),
         Tab('extension-request', _('New deadline')),
@@ -110,6 +110,13 @@ TAB_TREE = {
     Tab('defense', pgettext('doctorate tab', 'Defense'), 'person-chalkboard'): [
         Tab('jury-preparation', pgettext('admission tab', 'Defense method')),
         Tab('jury', _('Jury composition')),
+    ],
+    Tab('comments', pgettext('tab', 'Comments'), 'comments'): [
+        Tab('comments', pgettext('tab', 'Comments'), 'comments')
+    ],
+    Tab('history', pgettext('tab', 'History'), 'history'): [
+        Tab('history-all', _('All history')),
+        Tab('history', _('Status changes')),
     ],
     Tab('management', pgettext('tab', 'Management'), 'gear'): [
         Tab('send-mail', _('Send a mail')),
@@ -128,7 +135,7 @@ def get_active_parent(tab_tree, tab_name):
 @register.simple_tag(takes_context=True)
 def default_tab_context(context):
     match = context['request'].resolver_match
-    active_tab = match.url_name
+    active_tab = context.get('active_tab', match.url_name)
     active_parent = get_active_parent(TAB_TREE, active_tab)
 
     if len(match.namespaces) > 1 and match.namespaces[1] != 'update':
@@ -168,6 +175,7 @@ def parcours_doctoral_tabs(context):
     parcours_doctoral = context['view'].get_permission_object()
     current_tab_tree = get_valid_tab_tree(context, parcours_doctoral, TAB_TREE).copy()
     tab_context['tab_tree'] = current_tab_tree
+    tab_context['tab_badges'] = context.get('tab_badges', {})
     return tab_context
 
 
@@ -211,7 +219,7 @@ def can_update_tab(context, tab_name, obj=None):
 def detail_tab_path_from_update(context, parcours_doctoral_uuid):
     """From an update page, get the path of the detail page."""
     match = context['request'].resolver_match
-    current_tab_name = match.url_name
+    current_tab_name = context.get('active_tab', match.url_name)
     if len(match.namespaces) > 1 and match.namespaces[1] != 'update':
         current_tab_name = match.namespaces[1]
     return reverse(
@@ -224,16 +232,17 @@ def detail_tab_path_from_update(context, parcours_doctoral_uuid):
 def update_tab_path_from_detail(context, parcours_doctoral_uuid):
     """From a detail page, get the path of the update page."""
     match = context['request'].resolver_match
+    current_tab_name = context.get('active_tab', match.url_name)
     try:
         return reverse(
-            '{}:update:{}'.format(':'.join(match.namespaces), match.url_name),
+            '{}:update:{}'.format(':'.join(match.namespaces), current_tab_name),
             args=[parcours_doctoral_uuid],
         )
     except NoReverseMatch:
         if len(match.namespaces) > 1:
             path = ':'.join(match.namespaces[:2])
         else:
-            path = '{}:{}'.format(':'.join(match.namespaces), match.url_name)
+            path = '{}:{}'.format(':'.join(match.namespaces), current_tab_name)
         return reverse(
             path,
             args=[parcours_doctoral_uuid],
@@ -250,11 +259,16 @@ def status_list(parcours_doctoral):
 
 @register.filter
 def status_as_class(activity):
+    status = activity
+    if hasattr(activity, 'status'):
+        status = activity.status
+    elif isinstance(activity, dict):
+        status = activity['status']
     return {
         StatutActivite.SOUMISE.name: "warning",
         StatutActivite.ACCEPTEE.name: "success",
         StatutActivite.REFUSEE.name: "danger",
-    }.get(getattr(activity, 'status', activity), 'info')
+    }.get(str(status), 'info')
 
 
 @register.inclusion_tag('parcours_doctoral/includes/training_categories.html')
@@ -417,128 +431,6 @@ def field_data(
     }
 
 
-# PANEL à supprimer après l'intégration de django components dans admission
-
-
-class PanelNode(template.library.InclusionNode):
-    def __init__(self, nodelist: dict, func, takes_context, args, kwargs, filename):
-        super().__init__(func, takes_context, args, kwargs, filename)
-        self.nodelist_dict = nodelist
-
-    def render(self, context):
-        for context_name, nodelist in self.nodelist_dict.items():
-            context[context_name] = nodelist.render(context)
-        return super().render(context)
-
-
-def register_panel(filename, takes_context=None, name=None):
-    def dec(func):
-        params, varargs, varkw, defaults, kwonly, kwonly_defaults, _ = getfullargspec(func)
-        function_name = name or getattr(func, '_decorated_function', func).__name__
-
-        @wraps(func)
-        def compile_func(parser, token):
-            # {% panel %} and its arguments
-            bits = token.split_contents()[1:]
-            args, kwargs = template.library.parse_bits(
-                parser, bits, params, varargs, varkw, defaults, kwonly, kwonly_defaults, takes_context, function_name
-            )
-            nodelist_dict = {'panel_body': parser.parse(('footer', 'endpanel'))}
-            token = parser.next_token()
-
-            # {% footer %} (optional)
-            if token.contents == 'footer':
-                nodelist_dict['panel_footer'] = parser.parse(('endpanel',))
-                parser.next_token()
-
-            return PanelNode(nodelist_dict, func, takes_context, args, kwargs, filename)
-
-        register.tag(function_name, compile_func)
-        return func
-
-    return dec
-
-
-@register.simple_tag
-def display(*args):
-    """Display args if their value is not empty, can be wrapped by parenthesis, or separated by comma or dash"""
-    ret = []
-    iterargs = iter(args)
-    nextarg = next(iterargs)
-    while nextarg != StopIteration:
-        if nextarg == "(":
-            reduce_wrapping = [next(iterargs, None)]
-            while reduce_wrapping[-1] != ")":
-                reduce_wrapping.append(next(iterargs, None))
-            ret.append(reduce_wrapping_parenthesis(*reduce_wrapping[:-1]))
-        elif nextarg == ",":
-            ret, val = ret[:-1], next(iter(ret[-1:]), '')
-            ret.append(reduce_list_separated(val, next(iterargs, None)))
-        elif nextarg in ["-", ':', ' - ']:
-            ret, val = ret[:-1], next(iter(ret[-1:]), '')
-            ret.append(reduce_list_separated(val, next(iterargs, None), separator=f" {nextarg} "))
-        elif isinstance(nextarg, str) and len(nextarg) > 1 and re.match(r'\s', nextarg[0]):
-            ret, suffixed_val = ret[:-1], next(iter(ret[-1:]), '')
-            ret.append(f"{suffixed_val}{nextarg}" if suffixed_val else "")
-        else:
-            ret.append(SafeString(nextarg) if nextarg else '')
-        nextarg = next(iterargs, StopIteration)
-    return SafeString("".join(ret))
-
-
-@register.simple_tag
-def reduce_wrapping_parenthesis(*args):
-    """Display args given their value, wrapped by parenthesis"""
-    ret = display(*args)
-    if ret:
-        return SafeString(f"({ret})")
-    return ret
-
-
-@register.simple_tag
-def reduce_list_separated(arg1, arg2, separator=", "):
-    """Display args given their value, joined by separator"""
-    if arg1 and arg2:
-        return separator.join([SafeString(arg1), SafeString(arg2)])
-    elif arg1:
-        return SafeString(arg1)
-    elif arg2:
-        return SafeString(arg2)
-    return ""
-
-
-@register_panel('panel.html', takes_context=True)
-def panel(
-    context,
-    title='',
-    title_level=4,
-    additional_class='',
-    edit_link_button='',
-    edit_link_button_in_new_tab=False,
-    **kwargs,
-):
-    """
-    Template tag for panel
-    :param title: the panel title
-    :param title_level: the title level
-    :param additional_class: css class to add
-    :param edit_link_button: url of the edit button
-    :param edit_link_button_in_new_tab: open the edit link in a new tab
-    :type context: django.template.context.RequestContext
-    """
-    context['title'] = title
-    context['title_level'] = title_level
-    context['additional_class'] = additional_class
-    if edit_link_button:
-        context['edit_link_button'] = edit_link_button
-        context['edit_link_button_in_new_tab'] = edit_link_button_in_new_tab
-    context['attributes'] = {k.replace('_', '-'): v for k, v in kwargs.items()}
-    return context
-
-
-# / PANEL
-
-
 @register.inclusion_tag('parcours_doctoral/includes/sortable_header_div.html', takes_context=True)
 def sortable_header_div(context, order_field_name, order_field_label):
     # Ascending sorting by default
@@ -615,7 +507,7 @@ def osis_language_name(code):
         return language.name_en
 
 
-@register.inclusion_tag('admission/includes/bootstrap_field_with_tooltip.html')
+@register.inclusion_tag('parcours_doctoral/includes/bootstrap_field_with_tooltip.html')
 def bootstrap_field_with_tooltip(field, classes='', show_help=False, html_tooltip=False, label=None):
     return {
         'field': field,
@@ -624,3 +516,59 @@ def bootstrap_field_with_tooltip(field, classes='', show_help=False, html_toolti
         'html_tooltip': html_tooltip,
         'label': label,
     }
+
+
+class FieldWithoutWrapperRenderer(FieldRenderer):
+    def render(self):
+        return self.get_field_html()
+
+
+@register.simple_tag
+def bootstrap_field_without_wrapper(field):
+    return FieldWithoutWrapperRenderer(field).render()
+
+
+@register.filter(is_safe=False)
+def default_if_none_or_empty(value, arg):
+    """If value is None or empty, use given default."""
+    return value if value not in EMPTY_VALUES else arg
+
+
+@register.filter()
+def format_ects(ects):
+    if not ects:
+        ects = ""
+    ects = floatformat(ects, -2)
+    return f"{ects} ECTS"
+
+
+@register.simple_tag
+def get_superior_institute_name(institute_uuid):
+    if institute_uuid:
+        try:
+            return Organization.objects.only('name').get(uuid=institute_uuid).name
+        except Organization.DoesNotExist:
+            pass
+    return ''
+
+
+@register.filter
+def superior_institute_name(organization_uuid):
+    if not organization_uuid:
+        return ''
+    try:
+        institute = get_superior_institute_queryset().get(organization_uuid=organization_uuid)
+    except EntityVersion.DoesNotExist:
+        return organization_uuid
+    return mark_safe(format_school_title(institute))
+
+
+@register.simple_tag(takes_context=True)
+def edit_external_member_form(context, membre):
+    """Get an edit form"""
+    initial = attr.asdict(membre)
+    initial['pays'] = initial['code_pays']
+    return MemberSupervisionForm(
+        prefix=f"member-{membre.uuid}",
+        initial=initial,
+    )

@@ -23,6 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from django.core.exceptions import PermissionDenied
 from django.shortcuts import resolve_url
 from django.views import generic
 from django.views.generic.edit import FormMixin
@@ -52,15 +53,21 @@ from parcours_doctoral.views.mixins import ParcoursDoctoralViewMixin
 
 
 class TrainingRedirectView(ParcoursDoctoralViewMixin, generic.RedirectView):
-    urlpatterns = {'training': 'training'}
     """Redirect depending on the status of CDD and parcours_doctoral type"""
+
+    urlpatterns = {'training': 'training'}
+
+    def has_permission(self):
+        return True
 
     def get_redirect_url(self, *args, **kwargs):
         if self.request.user.has_perm('parcours_doctoral.view_doctoral_training', self.get_permission_object()):
             return resolve_url('parcours_doctoral:doctoral-training', uuid=self.parcours_doctoral_uuid)
         if self.request.user.has_perm('parcours_doctoral.view_complementary_training', self.get_permission_object()):
             return resolve_url('parcours_doctoral:complementary-training', uuid=self.parcours_doctoral_uuid)
-        return resolve_url('parcours_doctoral:course-enrollment', uuid=self.parcours_doctoral_uuid)
+        if self.request.user.has_perm('parcours_doctoral.view_course_enrollment', self.get_permission_object()):
+            return resolve_url('parcours_doctoral:course-enrollment', uuid=self.parcours_doctoral_uuid)
+        raise PermissionDenied
 
 
 class TrainingListMixin(ParcoursDoctoralViewMixin, FormMixin):
