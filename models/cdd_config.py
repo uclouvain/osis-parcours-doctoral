@@ -24,11 +24,6 @@
 #
 # ##############################################################################
 
-from admission.forms.translation_field import (
-    TextareaArrayField,
-    TranslatedTextareasWidget,
-    TranslatedValueField,
-)
 from base.models.enums.organization_type import MAIN
 from django.conf import settings
 from django.db import models
@@ -36,6 +31,11 @@ from django.utils import translation
 from django.utils.translation import gettext_lazy as _
 
 from parcours_doctoral.ddd.formation.domain.model.enums import CategorieActivite
+from parcours_doctoral.forms.translation_field import (
+    TextareaArrayField,
+    TranslatedTextareasWidget,
+    TranslatedValueField,
+)
 
 __all__ = [
     'CddConfiguration',
