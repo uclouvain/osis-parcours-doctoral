@@ -48,9 +48,7 @@
     <div>
       <p>
         <strong class="d-block">{% trans "Description" %}</strong>
-        {{ parcours_doctoral.nom_doctorant }}, {{ parcours_doctoral.prenom_doctorant.0 }}. ({{ activity.start_date|date:'Y, m' }}).
-        <em>{{ activity.subtitle }}</em> {{ activity.type }}. {{ activity.title }}, {{ activity.city }}, {{ activity.country }}.
-        {% if activity.website %}<a href="{{ activity.website }}" target="_blank">{{ activity.website }}</a>{% endif %}
+        {% include "parcours_doctoral/details/training/description/communication.html" %}
       </p>
       {% if activity.organizing_institution %}
         <div class="mb-3">

@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Parcours Doctoral API
-  version: 1.0.5
+  version: 1.0.6
   description: This API delivers data for the Parcours Doctoral project.
   contact:
     name: UCLouvain - OSIS
@@ -1113,6 +1113,37 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/DoctoralTrainingActivity'
+          description: ''
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+      - doctorate
+  /doctorate/{uuid}/training-recap-pdf:
+    get:
+      operationId: training_recap_pdf
+      description: Get the recap PDF of the doctoral training
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      - $ref: '#/components/parameters/Accept-Language'
+      - $ref: '#/components/parameters/X-User-FirstName'
+      - $ref: '#/components/parameters/X-User-LastName'
+      - $ref: '#/components/parameters/X-User-Email'
+      - $ref: '#/components/parameters/X-User-GlobalID'
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrainingRecapPdf'
           description: ''
         '400':
           $ref: '#/components/responses/BadRequest'
@@ -3706,6 +3737,13 @@ components:
       - PRIVATE_DEFENSE
       - PUBLIC_DEFENSE
       type: string
+    TrainingRecapPdf:
+      type: object
+      properties:
+        url:
+          type: string
+      required:
+      - url
     Tutor:
       type: object
       properties:

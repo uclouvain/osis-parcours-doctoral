@@ -27,6 +27,15 @@ msgid "%(label)s:"
 msgstr "%(label)s :"
 
 #, python-format
+msgid ""
+"%(prenom)s, %(nom)s, born the %(date_naissance)s in %(lieu_naissance)s, "
+"%(pays_naissance)s registered at %(formation)s realized the following third "
+"cycle training:"
+msgstr ""
+"%(prenom)s, %(nom)s, né.e le %(date_naissance)s à %(lieu_naissance)s, "
+"%(pays_naissance)s inscrit.e au %(formation)s a réalisé la formation de troisième cycle suivante :"
+
+#, python-format
 msgid "%(state)s on %(date)s"
 msgstr "%(state)s le %(date)s"
 
@@ -948,6 +957,9 @@ msgstr "Désigner comme promoteur de référence"
 msgid "Detailed curriculum vitae"
 msgstr "Curriculum vitae détaillé"
 
+msgid "Detailed doctoral training"
+msgstr "Formation doctorale détaillée"
+
 msgid "Do not reorder values, and keep the same count"
 msgstr "Ne pas réordonner les valeurs, et garder le même nombre"
 
@@ -999,6 +1011,9 @@ msgstr "Fait à"
 
 msgid "Dossier numero"
 msgstr "Numéro de dossier"
+
+msgid "Download the PDF recap"
+msgstr "Générer le PDF récapitulatif"
 
 msgid "Dr"
 msgstr "Dr."
@@ -1821,6 +1836,9 @@ msgstr "Nombre de jours de participation"
 
 msgid "Number of values mismatch"
 msgstr "Le nombre de valeurs ne correspond pas"
+
+msgid "OSIS DOCTORATE"
+msgstr "OSIS DOCTORAT"
 
 msgid "OTHER"
 msgstr "Autre"

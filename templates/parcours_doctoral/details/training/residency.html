@@ -51,7 +51,7 @@
   >
     <div class="panel-body">
       <strong class="d-block">{% trans "Description" %}</strong>
-      {{ activity.type }}, {{ period }}
+      {% include "parcours_doctoral/details/training/description/residency.html" %}
       {% if activity.subtitle %}
         <p class="col-md-4">
           <strong class="d-block">{% trans "Activity description" %}</strong>

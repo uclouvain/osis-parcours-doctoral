@@ -50,8 +50,7 @@
     <div>
       <p>
         <strong class="d-block">{% trans "Event description" %}</strong>
-        {{ activity.title }}, {{ activity.type }}, {{ period }}, {{ activity.city }}, {{ activity.country }}.
-        {% if activity.website %}<a href="{{ activity.website }}" target="_blank">{{ activity.website }}</a>{% endif %}
+        {% include "parcours_doctoral/details/training/description/conference.html" %}
       </p>
       {% if activity.organizing_institution %}
       <div class="row">

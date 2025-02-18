@@ -38,6 +38,7 @@ from parcours_doctoral.api.schema import (
     AuthorizationAwareSchema,
     AuthorizationAwareSchemaMixin,
     ChoicesEnumSchema,
+    ResponseSpecificSchema,
 )
 from parcours_doctoral.api.serializers.activity import (
     DoctoralTrainingActivitySerializer,
@@ -45,10 +46,16 @@ from parcours_doctoral.api.serializers.activity import (
     DoctoralTrainingBatchSerializer,
     DoctoralTrainingConfigSerializer,
 )
+from parcours_doctoral.api.serializers.training import TrainingRecapPdfSerializer
+from parcours_doctoral.ddd.commands import RecupererParcoursDoctoralQuery
 from parcours_doctoral.ddd.formation.commands import (
     DonnerAvisSurActiviteCommand,
     SoumettreActivitesCommand,
     SupprimerActiviteCommand,
+)
+from parcours_doctoral.ddd.formation.domain.model.enums import StatutActivite
+from parcours_doctoral.exports.training_recap import (
+    parcours_doctoral_pdf_formation_doctorale,
 )
 from parcours_doctoral.models.activity import Activity
 from parcours_doctoral.models.cdd_config import CddConfiguration
@@ -61,6 +68,7 @@ __all__ = [
     "TrainingAssentView",
     "ComplementaryTrainingListView",
     "CourseEnrollmentListView",
+    "TrainingRecapPdfApiView",
 ]
 
 
@@ -289,3 +297,48 @@ class CourseEnrollmentListView(DoctoralTrainingListView):
 
     def get_queryset(self):
         return Activity.objects.for_enrollment_courses(self.doctorate_uuid)
+
+
+class TrainingRecapPdfSchema(ResponseSpecificSchema):
+    def get_operation_id(self, path, method):
+        return "training_recap_pdf"
+
+    serializer_mapping = {
+        'GET': TrainingRecapPdfSerializer,
+    }
+
+
+class TrainingRecapPdfApiView(DoctorateAPIPermissionRequiredMixin, RetrieveModelMixin, GenericAPIView):
+    name = "training-pdf-recap"
+    schema = TrainingRecapPdfSchema()
+    http_method_names = ['get']
+    permission_mapping = {
+        'GET': 'parcours_doctoral.view_doctoral_training',
+    }
+    pagination_class = None
+    filter_backends = []
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['activities'] = Activity.objects.for_doctoral_training(self.doctorate_uuid).filter(
+            status=StatutActivite.ACCEPTEE.name
+        )
+        return context
+
+    def get(self, request, *args, **kwargs):
+        """Get the recap PDF of the doctoral training"""
+        doctorate_object = self.get_permission_object()
+
+        doctorate_dto = message_bus_instance.invoke(
+            RecupererParcoursDoctoralQuery(parcours_doctoral_uuid=self.doctorate_uuid),
+        )
+
+        url = parcours_doctoral_pdf_formation_doctorale(
+            parcours_doctoral=doctorate_dto,
+            context=self.get_serializer_context(),
+            language=doctorate_object.student.language,
+        )
+
+        serializer = TrainingRecapPdfSerializer(data={'url': url})
+        serializer.is_valid()
+        return Response(data=serializer.data)

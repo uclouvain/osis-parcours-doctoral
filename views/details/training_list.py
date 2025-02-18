@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -24,7 +24,7 @@
 #
 # ##############################################################################
 from django.core.exceptions import PermissionDenied
-from django.shortcuts import resolve_url
+from django.shortcuts import redirect, resolve_url
 from django.views import generic
 from django.views.generic.edit import FormMixin
 
@@ -33,6 +33,9 @@ from parcours_doctoral.ddd.formation.commands import (
     SoumettreActivitesCommand,
 )
 from parcours_doctoral.ddd.formation.domain.model.enums import StatutActivite
+from parcours_doctoral.exports.training_recap import (
+    parcours_doctoral_pdf_formation_doctorale,
+)
 from parcours_doctoral.forms.training.activity import get_category_labels
 from parcours_doctoral.forms.training.processus import BatchActivityForm
 from parcours_doctoral.models.activity import Activity
@@ -42,12 +45,12 @@ __all__ = [
     "CourseEnrollmentView",
     "DoctoralTrainingActivityView",
     "TrainingRedirectView",
+    "TrainingRecapPdfView",
 ]
 
 __namespace__ = False
 
 from base.ddd.utils.business_validator import MultipleBusinessExceptions
-
 from infrastructure.messages_bus import message_bus_instance
 from parcours_doctoral.views.mixins import ParcoursDoctoralViewMixin
 
@@ -138,3 +141,23 @@ class CourseEnrollmentView(TrainingListMixin, generic.FormView):  # pylint: disa
 
     def get_queryset(self):
         return Activity.objects.for_enrollment_courses(self.parcours_doctoral_uuid)
+
+
+class TrainingRecapPdfView(ParcoursDoctoralViewMixin, generic.View):
+    urlpatterns = {'training_pdf_recap': 'pdf_recap'}
+    permission_required = "parcours_doctoral.view_doctoral_training"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['activities'] = Activity.objects.for_doctoral_training(self.parcours_doctoral_uuid).filter(
+            status=StatutActivite.ACCEPTEE.name
+        )
+        return context
+
+    def get(self, request, *args, **kwargs):
+        file_url = parcours_doctoral_pdf_formation_doctorale(
+            parcours_doctoral=self.parcours_doctoral_dto,
+            context=self.get_context_data(),
+            language=self.parcours_doctoral.student.language,
+        )
+        return redirect(file_url)

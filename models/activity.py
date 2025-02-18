@@ -421,16 +421,7 @@ class Activity(models.Model):
         return f"{self.get_category_display()} ({self.ects} ects, {self.get_status_display()})"
 
     def __str__(self) -> str:
-        return (
-            Template(
-                """{% load parcours_doctoral %}
-            {% firstof 0 activity.category|lower|add:'.html' as template_name %}
-            {% include "parcours_doctoral/details/training/_activity_title.html" %}
-            """
-            )
-            .render(Context({'activity': self}))
-            .strip()
-        )
+        return f"{self.get_category_display()} - {self.ects} ects"
 
     class Meta:
         verbose_name = _("Training activity")

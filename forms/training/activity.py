@@ -351,7 +351,8 @@ class ConferencePublicationForm(ActivityFormMixin, forms.ModelForm):
 
     def clean(self):
         data = super().clean()
-        data['start_date'] = datetime.date(data['start_date_year'], data['start_date_month'], 1)
+        if 'start_date_year' in data and 'start_date_month' in data:
+            data['start_date'] = datetime.date(data['start_date_year'], data['start_date_month'], 1)
         return data
 
 

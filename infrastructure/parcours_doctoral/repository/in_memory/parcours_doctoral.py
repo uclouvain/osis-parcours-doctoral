@@ -23,6 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+import datetime
 from typing import List
 
 from attr import dataclass
@@ -148,6 +149,9 @@ class ParcoursDoctoralInMemoryRepository(InMemoryGenericRepository, IParcoursDoc
             photo_identite_doctorant=['foo'],
             nom_doctorant=doctorant.nom,
             prenom_doctorant=doctorant.prenom,
+            date_naissance_doctorant=datetime.date.today(),
+            lieu_naissance_doctorant='bar',
+            pays_naissance_doctorant='bar',
             formation=FormationDTO(
                 annee=formation.annee,
                 sigle=formation.sigle,

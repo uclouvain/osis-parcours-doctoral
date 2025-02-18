@@ -26,6 +26,13 @@ msgid "%(label)s:"
 msgstr ""
 
 #, python-format
+msgid ""
+"%(prenom)s, %(nom)s, born the %(date_naissance)s in %(lieu_naissance)s, "
+"%(pays_naissance)s registered at %(formation)s realized the following third "
+"cycle training:"
+msgstr ""
+
+#, python-format
 msgid "%(state)s on %(date)s"
 msgstr ""
 
@@ -885,6 +892,9 @@ msgstr ""
 msgid "Detailed curriculum vitae"
 msgstr ""
 
+msgid "Detailed doctoral training"
+msgstr ""
+
 msgid "Do not reorder values, and keep the same count"
 msgstr ""
 
@@ -935,6 +945,9 @@ msgid "Done in"
 msgstr ""
 
 msgid "Dossier numero"
+msgstr ""
+
+msgid "Download the PDF recap"
 msgstr ""
 
 msgid "Dr"
@@ -1676,6 +1689,9 @@ msgid "Number of days participating"
 msgstr ""
 
 msgid "Number of values mismatch"
+msgstr ""
+
+msgid "OSIS DOCTORATE"
 msgstr ""
 
 msgid "OTHER"

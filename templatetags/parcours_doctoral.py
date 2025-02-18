@@ -54,6 +54,7 @@ from parcours_doctoral.ddd.formation.domain.model.enums import (
 from parcours_doctoral.ddd.repository.i_parcours_doctoral import formater_reference
 from parcours_doctoral.forms.supervision import MemberSupervisionForm
 from parcours_doctoral.models import ParcoursDoctoral
+from reference.models.country import Country
 from reference.models.language import Language
 
 register = template.Library()
@@ -574,3 +575,16 @@ def edit_external_member_form(context, membre):
         prefix=f"member-{membre.uuid}",
         initial=initial,
     )
+
+
+@register.filter
+def country_name_from_iso_code(iso_code: str):
+    """Return the country name from an iso code."""
+    if not iso_code:
+        return ''
+    country = Country.objects.filter(iso_code=iso_code).values('name', 'name_en').first()
+    if not country:
+        return ''
+    if get_language() == settings.LANGUAGE_CODE_FR:
+        return country['name']
+    return country['name_en']
