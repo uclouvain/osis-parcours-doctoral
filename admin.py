@@ -149,7 +149,6 @@ class ActivityAdmin(admin.ModelAdmin):
         context_mapping = {
             ContexteFormation.DOCTORAL_TRAINING.name: 'doctoral-training',
             ContexteFormation.COMPLEMENTARY_TRAINING.name: 'complementary-training',
-            ContexteFormation.FREE_COURSE.name: 'course-enrollment',
         }
         context = (
             context_mapping[obj.context] if obj.category != CategorieActivite.UCL_COURSE.name else 'course-enrollment'

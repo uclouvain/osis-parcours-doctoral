@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -23,15 +23,15 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from base.models.enums.entity_type import EntityType
-from base.tests import QueriesAssertionsMixin
-from base.tests.factories.entity_version import EntityVersionFactory
-from base.tests.factories.person import PersonFactory
 from django.shortcuts import resolve_url
 from django.test import override_settings
 from rest_framework import status
 from rest_framework.test import APITestCase
 
+from base.models.enums.entity_type import EntityType
+from base.tests import QueriesAssertionsMixin
+from base.tests.factories.entity_version import EntityVersionFactory
+from base.tests.factories.person import PersonFactory
 from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from parcours_doctoral.ddd.formation.domain.model.enums import (
     CategorieActivite,
@@ -163,7 +163,7 @@ class TrainingApiTestCase(QueriesAssertionsMixin, APITestCase):
         activities = response.json()
         self.assertEqual(len(activities), 1)
 
-        UclCourseFactory(parcours_doctoral=self.parcours_doctoral, context=ContexteFormation.FREE_COURSE.name)
+        UclCourseFactory(parcours_doctoral=self.parcours_doctoral, context=ContexteFormation.DOCTORAL_TRAINING.name)
         with self.assertNumQueriesLessThan(8):
             response = self.client.get(self.enrollment_url)
         activities = response.json()

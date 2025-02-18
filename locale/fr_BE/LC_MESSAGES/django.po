@@ -1046,9 +1046,6 @@ msgstr "Externe"
 msgid "FNRS, FRIA, FRESH"
 msgstr "FNRS, FRIA, FRESH"
 
-msgid "FREE_COURSE"
-msgstr "Cours libre"
-
 msgid "Failure of the confirmation paper"
 msgstr "Échec de l'épreuve de confirmation"
 
@@ -2228,8 +2225,8 @@ msgstr "Rechercher une personne par son nom"
 msgid "Search a tutor by name"
 msgstr "Rechercher un tuteur par son nom"
 
-msgid "Search for an EU code (outside the EU of the form)"
-msgstr "Rechercher un code UE (hors UE du formulaire)"
+msgid "Search for an EU code"
+msgstr "Rechercher un code UE"
 
 msgid "Search on portal"
 msgstr "Voir sur le portail"

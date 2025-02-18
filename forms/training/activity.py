@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -27,16 +27,16 @@ from functools import partial
 from typing import List, Tuple
 
 import dal.forward
-from base.forms.utils import autocomplete
-from base.forms.utils.academic_year_field import AcademicYearModelChoiceField
-from base.forms.utils.datefield import DatePickerInput
-from base.models.academic_year import AcademicYear
-from base.models.learning_unit_year import LearningUnitYear
 from django import forms
 from django.utils.translation import get_language
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import pgettext_lazy
 
+from base.forms.utils import autocomplete
+from base.forms.utils.academic_year_field import AcademicYearModelChoiceField
+from base.forms.utils.datefield import DatePickerInput
+from base.models.academic_year import AcademicYear
+from base.models.learning_unit_year import LearningUnitYear
 from parcours_doctoral.ddd.formation.domain.model.enums import (
     CategorieActivite,
     ChoixComiteSelection,
@@ -650,7 +650,7 @@ class UclCourseForm(ActivityFormMixin, forms.ModelForm):
             url='admission:autocomplete:learning-unit-years-and-classes',
             attrs={
                 'data-html': True,
-                'data-placeholder': _('Search for an EU code (outside the EU of the form)'),
+                'data-placeholder': _('Search for an EU code'),
                 'data-minimum-input-length': 3,
             },
             forward=[dal.forward.Field("academic_year", "annee")],
