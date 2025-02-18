@@ -251,7 +251,7 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
         try:
             parcours_doctoral: ParcoursDoctoralModel = (
                 ParcoursDoctoralModel.objects.select_related(
-                    'student',
+                    'student__birth_country',
                     'international_scholarship',
                     'training__academic_year',
                     'training__education_group_type',
@@ -293,6 +293,11 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
             nom_doctorant=parcours_doctoral.student.last_name,
             prenom_doctorant=parcours_doctoral.student.first_name,
             genre_doctorant=parcours_doctoral.student.gender,
+            date_naissance_doctorant=parcours_doctoral.student.birth_date,
+            lieu_naissance_doctorant=parcours_doctoral.student.birth_place,
+            pays_naissance_doctorant=(
+                parcours_doctoral.student.birth_country.iso_code if parcours_doctoral.student.birth_country else ''
+            ),
             commission_proximite=parcours_doctoral.proximity_commission,
             intitule_secteur_formation=parcours_doctoral.intitule_secteur_formation,  # from annotation
             justification=parcours_doctoral.justification,

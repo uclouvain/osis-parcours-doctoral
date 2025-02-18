@@ -909,5 +909,6 @@ class UclCourseForm(ActivityFormMixin, forms.ModelForm):
         model = Activity
         fields = [
             'context',
+            'academic_year',
             'learning_unit_year',
         ]

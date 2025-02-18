@@ -114,6 +114,9 @@ class ParcoursDoctoralDTO(interface.DTO):
     noma_doctorant: str
     genre_doctorant: str
     prenom_doctorant: str
+    date_naissance_doctorant: datetime.date
+    lieu_naissance_doctorant: str
+    pays_naissance_doctorant: str
     nom_doctorant: str
     commission_proximite: str
 

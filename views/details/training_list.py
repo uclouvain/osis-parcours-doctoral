@@ -24,7 +24,7 @@
 #
 # ##############################################################################
 from django.core.exceptions import PermissionDenied
-from django.shortcuts import resolve_url
+from django.shortcuts import redirect, resolve_url
 from django.views import generic
 from django.views.generic import TemplateView
 from django.views.generic.edit import FormMixin
@@ -36,6 +36,9 @@ from parcours_doctoral.ddd.formation.commands import (
     SoumettreActivitesCommand,
 )
 from parcours_doctoral.ddd.formation.domain.model.enums import StatutActivite
+from parcours_doctoral.exports.training_recap import (
+    parcours_doctoral_pdf_formation_doctorale,
+)
 from parcours_doctoral.forms.training.activity import get_category_labels
 from parcours_doctoral.forms.training.processus import BatchActivityForm
 from parcours_doctoral.models.activity import Activity
@@ -46,6 +49,7 @@ __all__ = [
     "CourseEnrollmentView",
     "DoctoralTrainingActivityView",
     "TrainingRedirectView",
+    "TrainingRecapPdfView",
 ]
 
 __namespace__ = False
@@ -185,3 +189,23 @@ class AssessmentEnrollmentListView(ParcoursDoctoralViewMixin, TemplateView):
         context_data['editable_assessment_enrollments'] = editable_assessment_enrollments
 
         return context_data
+
+
+class TrainingRecapPdfView(ParcoursDoctoralViewMixin, generic.View):
+    urlpatterns = {'training_pdf_recap': 'pdf_recap'}
+    permission_required = "parcours_doctoral.view_doctoral_training"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['activities'] = Activity.objects.for_doctoral_training(self.parcours_doctoral_uuid).filter(
+            status=StatutActivite.ACCEPTEE.name
+        )
+        return context
+
+    def get(self, request, *args, **kwargs):
+        file_url = parcours_doctoral_pdf_formation_doctorale(
+            parcours_doctoral=self.parcours_doctoral_dto,
+            context=self.get_context_data(),
+            language=self.parcours_doctoral.student.language,
+        )
+        return redirect(file_url)
