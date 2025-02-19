@@ -42,6 +42,7 @@ READ_ACTIONS_BY_TAB = {
     'languages': 'parcours_doctoral.view_languages',
     # Project
     'project': 'parcours_doctoral.view_project',
+    'funding': 'parcours_doctoral.view_funding',
     'supervision': 'parcours_doctoral.view_supervision',
     # Confirmation exam
     'confirmation': 'parcours_doctoral.view_confirmation',
@@ -87,6 +88,7 @@ UPDATE_ACTIONS_BY_TAB = {
     'languages': 'parcours_doctoral.change_languages',
     # Project
     'project': 'parcours_doctoral.change_project',
+    'funding': 'parcours_doctoral.change_funding',
     'supervision': 'parcours_doctoral.change_supervision',
     # Confirmation exam
     'confirmation': 'parcours_doctoral.change_confirmation',

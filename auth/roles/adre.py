@@ -29,6 +29,9 @@ from django.utils.translation import gettext_lazy as _
 from rules import RuleSet
 
 from osis_role.contrib.models import RoleModel
+from parcours_doctoral.auth.predicates.parcours_doctoral import (
+    is_related_to_an_admission,
+)
 
 
 class AdreSecretary(RoleModel):
@@ -55,7 +58,7 @@ class AdreSecretary(RoleModel):
             'parcours_doctoral.view_secondary_studies': rules.always_allow,
             'parcours_doctoral.view_curriculum': rules.always_allow,
             'parcours_doctoral.view_project': rules.always_allow,
-            'parcours_doctoral.view_cotutelle': rules.always_allow,
+            'parcours_doctoral.view_cotutelle': is_related_to_an_admission,
             'parcours_doctoral.view_jury': rules.always_allow,
             'parcours_doctoral.view_languages': rules.always_allow,
             'parcours_doctoral.view_confirmation': rules.always_allow,

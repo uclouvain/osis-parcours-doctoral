@@ -132,6 +132,15 @@ msgstr ""
 "href=\"%(parcours_doctoral_link_front_doctoral_training)s\">%(reference)s</"
 "a> - Des activités de formation doctorale ont été approuvées."
 
+msgid ""
+"<a href='https://uclouvain.be/en/research/valodoc/confirmation-eligibility-"
+"doctoral-programme.html' target='_blank'>https://uclouvain.be/en/research/"
+"valodoc/confirmation-eligibility-doctoral-programme.html</a>"
+msgstr ""
+"<a href='https://uclouvain.be/fr/chercher/valodoc/attestation-acces-au-"
+"doctorat.html' target='_blank'>https://uclouvain.be/fr/chercher/valodoc/"
+"attestation-acces-au-doctorat.html</a>"
+
 #, python-format
 msgid ""
 "<h2>Delete \"%(name)s\" custom mail template?</h2> <p>Are you sure you want "
@@ -793,6 +802,9 @@ msgctxt "confirmation paper"
 msgid "Created at"
 msgstr "Créée le"
 
+msgid "Current funding"
+msgstr "Financement actuel"
+
 msgid "Custom mail template"
 msgstr "Template d'email personnalisé"
 
@@ -878,6 +890,17 @@ msgctxt "admission decision"
 msgid "Denied"
 msgstr "Rejetée"
 
+msgid ""
+"Depending on your previous experience and your research project, the PhD "
+"Committee may require you to take additional PhD training, up to a maximum "
+"of 60 credits. If so, please indicate here a proposal for additional "
+"training."
+msgstr ""
+"En fonction de votre parcours antérieur et de votre projet de recherche, une "
+"formation complémentaire à la formation doctorale peut être imposée par la "
+"CDD, pour un maximum de 60 crédits. Le cas échéant, veuillez indiquer ici "
+"une proposition de formation complémentaire."
+
 msgid "Description"
 msgstr "Description"
 
@@ -929,6 +952,9 @@ msgstr "Formations doctorales"
 
 msgid "Doctorate"
 msgstr "Doctorat"
+
+msgid "Doctorate thesis field"
+msgstr "Domaine de la thèse de doctorat"
 
 msgid "Does not have a doctor title"
 msgstr "N'est pas porteur du titre de docteur"
@@ -1088,6 +1114,13 @@ msgstr ""
 "s'en est suivi avec le candidat, le comité d'accompagnement a évalué "
 "l'avancement du travail et conclut à :"
 
+msgid ""
+"For example, a contract, a letter from a supervisor, or any other document "
+"showing that you have been awarded the scholarship on the dates indicated."
+msgstr ""
+"Par exemple, un contrat, une lettre d'un•e promoteur•trice ou tout autre "
+"document indiquant que la bourse vous est octroyée aux dates indiquées."
+
 msgid "French"
 msgstr "Français"
 
@@ -1099,6 +1132,10 @@ msgid "Full-time equivalent (as %)"
 msgstr "Équivalent temps plein (en %)"
 
 msgctxt "parcours_doctoral"
+msgid "Funding"
+msgstr "Financement"
+
+msgctxt "tab"
 msgid "Funding"
 msgstr "Financement"
 
@@ -1166,6 +1203,13 @@ msgstr ""
 "d’accompagnement sur la demande de prolongation."
 
 msgid ""
+"If known, indicate the name of the laboratory, clinical department or "
+"research centre where the thesis will be carried out"
+msgstr ""
+"Si connu, indiquez ici le nom du laboratoire, du service clinique ou du "
+"centre de recherche où sera réalisée la thèse"
+
+msgid ""
 "If necessary, please finish inputting doctoral activities and complete the "
 "defense preparation below before submitting the jury proposition."
 msgstr ""
@@ -1173,8 +1217,18 @@ msgstr ""
 "doctorale et compléter les modalités de défenses ci-dessous avant de "
 "soumettre la proposition de jury"
 
+msgid "If other scholarship, specify"
+msgstr "Si autre bourse, spécifier"
+
 msgid "If other, specify"
 msgstr "Si autre, préciser"
+
+msgid ""
+"If you don't have any funding yet, please choose \"Self-funding\" and "
+"explain the considered funding in the \"Comment\" area."
+msgstr ""
+"Si vous n’avez pas encore obtenu votre financement, veuillez sélectionner "
+"“Fonds propres” et décrire le financement envisagé dans la zone “Commentaire”"
 
 msgid ""
 "If you submit the activity, you will no longer be able to modify the seminar "
@@ -1203,6 +1257,13 @@ msgid "Incomplete field"
 msgstr "Non renseigné·e"
 
 msgid ""
+"Indicate any completed or interrupted PhD studies in which you are no longer "
+"enrolled."
+msgstr ""
+"Indiquez ici un éventuel parcours doctoral précédent, abouti ou interrompu, "
+"dans lequel vous n’êtes plus inscrit à ce jour."
+
+msgid ""
 "Information about a potential cotutelle are to be inputted in the \"Doctoral "
 "project\" part."
 msgstr ""
@@ -1212,6 +1273,10 @@ msgstr ""
 msgctxt "jury"
 msgid "Institute"
 msgstr "Institution"
+
+msgctxt "parcours_doctoral"
+msgid "Institute"
+msgstr "Établissement"
 
 msgid "Institute / Sector"
 msgstr "Institut / Secteur"
@@ -1227,6 +1292,9 @@ msgstr "Institution"
 
 msgid "Institution Federation Wallonie-Bruxelles"
 msgstr "Institution de la Federation Wallonie-Bruxelles"
+
+msgid "Institution in which the PhD has been realised / started."
+msgstr "Institution où le PhD a été réalisé/entamé."
 
 msgid "Institution should be set when PhD has been set to yes or partial"
 msgstr ""
@@ -1674,6 +1742,9 @@ msgstr "Doctorat suivant"
 msgid "No"
 msgstr "Non"
 
+msgid "No defense"
+msgstr "Non soutenue"
+
 msgid "No defense reason"
 msgstr "Raison de non-soutenance"
 
@@ -1831,10 +1902,10 @@ msgid "PhD proposal"
 msgstr "Projet de formation doctorale"
 
 msgid "PhD research experience"
-msgstr "Expérience de recherche doctoral"
+msgstr "Expérience de recherche doctorale"
 
 msgid "PhD research project"
-msgstr "Projet de recherche doctoral"
+msgstr "Projet de recherche doctorale"
 
 msgid "PhD training"
 msgstr "Formation doctorale"
@@ -1864,6 +1935,13 @@ msgstr "Veuillez corriger les erreurs ci-dessous"
 msgid "Please justify why the member does not have a doctor title"
 msgstr ""
 "Merci de justifier pourquoi le membre n'est pas porteur du titre de docteur"
+
+msgid ""
+"Please look up the website of your domain doctoral committee on how to "
+"download the document."
+msgstr ""
+"Veuillez consulter le site de votre commission doctorale de domaine pour les "
+"modalités de téléchargement du document."
 
 msgid ""
 "Please refer to the specifics disposition of your domain doctoral commission "
@@ -1923,8 +2001,14 @@ msgstr "Projet"
 msgid "Project resume"
 msgstr "Résumé"
 
+msgid "Project resume (max. 2000 characters)"
+msgstr "Résumé (max. 2000 caractères)"
+
 msgid "Project title"
 msgstr "Sujet"
+
+msgid "Project title (max. 100 characters)"
+msgstr "Sujet (max. 100 caractères)"
 
 msgctxt "gender"
 msgid "Promoter"
@@ -2086,7 +2170,7 @@ msgstr "Institut de recherche"
 
 msgctxt "tab"
 msgid "Research project"
-msgstr "Projet de recherche doctoral"
+msgstr "Projet de recherche doctorale"
 
 msgid "Research report"
 msgstr "Rapport de recherche"
@@ -2209,6 +2293,9 @@ msgstr "Enregistrer et voir le résultat"
 msgid "Scholarship end date"
 msgstr "Date de fin de la bourse"
 
+msgid "Scholarship end date prior to any possible renewal."
+msgstr "Date de fin de la bourse avant tout renouvellement éventuel."
+
 msgid "Scholarship holder"
 msgstr "Boursier"
 
@@ -2308,6 +2395,9 @@ msgstr "Orateur ou oratrice"
 
 msgid "Specified"
 msgstr "Renseigné·e"
+
+msgid "Specify employer and function"
+msgstr "Indiquer l'employeur et votre fonction"
 
 msgid "Specify if other"
 msgstr "Si autre, précisez"
@@ -2527,6 +2617,14 @@ msgstr "Le prénom du signataire"
 msgid "The first name of the student"
 msgstr "Le prénom de l'étudiant"
 
+msgid ""
+"The format of the documents to be uploaded below may vary from one CDD to "
+"another. Find out more on your CDD's website or from your doctoral manager."
+msgstr ""
+"Le format des documents à téléverser ci-dessous peut varier d'une commission "
+"doctorale de domaine (CDD) à l'autre. Informez-vous sur le site web de votre "
+"CDD ou auprès de votre gestionnaire de doctorat."
+
 msgid "The jury is not in progress"
 msgstr "Le jury n'est pas en cours"
 
@@ -2619,8 +2717,8 @@ msgstr "L'institut de la thèse est obligatoire."
 msgid "Thesis language"
 msgstr "Langue de rédaction de la thèse"
 
-msgid "Thesis location"
-msgstr "Lieu de la thèse"
+msgid "Thesis location in UCLouvain"
+msgstr "Lieu de la thèse à l'UCLouvain"
 
 msgid "Thesis title"
 msgstr "Titre de la thèse"
@@ -2829,11 +2927,26 @@ msgstr ""
 "Le contrat de travail doit être renseigné quand le type de financement est "
 "un contrat de travail"
 
+msgid "Work contract type"
+msgstr "Type de contrat de travail"
+
 msgid "Work start date"
 msgstr "Date de début des travaux"
 
 msgid "Working contract type"
 msgstr "Type de contrat de travail"
+
+msgid ""
+"Would you like to carry out your thesis under joint supervision with another "
+"institution?"
+msgstr ""
+"Souhaitez-vous réaliser votre thèse en cotutelle avec une autre institution ?"
+
+msgid ""
+"Write your resume in the language decided with your accompanying committee."
+msgstr ""
+"Rédigez votre résumé dans la langue convenue avec votre comité "
+"d'accompagnement."
 
 msgid "YES"
 msgstr "Oui"
@@ -2907,6 +3020,13 @@ msgstr "Vous devez désigner un membre comme secrétaire."
 
 msgid "Your data have been saved."
 msgstr "Vos données ont été sauvegardées."
+
+msgid ""
+"Your joint supervision information can be completed later. Please input "
+"\"No\" if you don't have information yet."
+msgstr ""
+"Vos informations de cotutelle pourront être complétées ultérieurement; "
+"veuillez indiquer \"non\" si vous ne disposez pas encore des informations"
 
 msgid "Your participation in the event"
 msgstr "Votre participation à l'événement"

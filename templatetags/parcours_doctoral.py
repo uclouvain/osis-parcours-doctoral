@@ -95,6 +95,7 @@ TAB_TREE = {
     # ],
     Tab('doctorate', pgettext('tab', 'PhD project'), 'graduation-cap'): [
         Tab('project', pgettext('tab', 'Research project')),
+        Tab('funding', pgettext('tab', 'Funding')),
         Tab('cotutelle', _('Cotutelle')),
         Tab('supervision', _('Supervision')),
     ],
@@ -508,13 +509,14 @@ def osis_language_name(code):
 
 
 @register.inclusion_tag('parcours_doctoral/includes/bootstrap_field_with_tooltip.html')
-def bootstrap_field_with_tooltip(field, classes='', show_help=False, html_tooltip=False, label=None):
+def bootstrap_field_with_tooltip(field, classes='', show_help=False, html_tooltip=False, label=None, label_class=''):
     return {
         'field': field,
         'classes': classes,
         'show_help': show_help,
         'html_tooltip': html_tooltip,
         'label': label,
+        'label_class': label_class,
     }
 
 
@@ -556,9 +558,10 @@ def get_superior_institute_name(institute_uuid):
 def superior_institute_name(organization_uuid):
     if not organization_uuid:
         return ''
-    try:
-        institute = get_superior_institute_queryset().get(organization_uuid=organization_uuid)
-    except EntityVersion.DoesNotExist:
+    institute = (
+        get_superior_institute_queryset().filter(organization_uuid=organization_uuid).order_by('-start_date').first()
+    )
+    if not institute:
         return organization_uuid
     return mark_safe(format_school_title(institute))
 

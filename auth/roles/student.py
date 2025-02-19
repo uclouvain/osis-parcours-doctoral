@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -48,8 +48,10 @@ class Student(RoleModel):
             'parcours_doctoral.view_project': parcours_doctoral.is_parcours_doctoral_student,
             'parcours_doctoral.view_funding': parcours_doctoral.is_parcours_doctoral_student,
             'parcours_doctoral.change_funding': parcours_doctoral.is_parcours_doctoral_student,
-            'parcours_doctoral.view_cotutelle': parcours_doctoral.is_parcours_doctoral_student,
-            'parcours_doctoral.change_cotutelle': parcours_doctoral.is_parcours_doctoral_student,
+            'parcours_doctoral.view_cotutelle': parcours_doctoral.is_parcours_doctoral_student
+            & parcours_doctoral.is_related_to_an_admission,
+            'parcours_doctoral.change_cotutelle': parcours_doctoral.is_parcours_doctoral_student
+            & parcours_doctoral.is_related_to_an_admission,
             'parcours_doctoral.view_supervision': parcours_doctoral.is_parcours_doctoral_student,
             'parcours_doctoral.view_supervision_canvas': parcours_doctoral.is_parcours_doctoral_student,
             'parcours_doctoral.view_confirmation': parcours_doctoral.is_parcours_doctoral_student,

@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -26,8 +26,12 @@
 
 import rules
 from django.utils.translation import gettext_lazy as _
-from osis_role.contrib.models import RoleModel
 from rules import RuleSet
+
+from osis_role.contrib.models import RoleModel
+from parcours_doctoral.auth.predicates.parcours_doctoral import (
+    is_related_to_an_admission,
+)
 
 
 class JurySecretary(RoleModel):
@@ -53,7 +57,7 @@ class JurySecretary(RoleModel):
             'parcours_doctoral.view_secondary_studies': rules.always_allow,
             'parcours_doctoral.view_curriculum': rules.always_allow,
             'parcours_doctoral.view_project': rules.always_allow,
-            'parcours_doctoral.view_cotutelle': rules.always_allow,
+            'parcours_doctoral.view_cotutelle': is_related_to_an_admission,
             'parcours_doctoral.view_supervision': rules.always_allow,
             'parcours_doctoral.view_jury': rules.always_allow,
         }
