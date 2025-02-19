@@ -422,6 +422,8 @@ class DoctoralTrainingActivitySerializer(serializers.Serializer):
             params['parent'] = get_object_or_404(Activity, uuid=self.initial_data.get('parent'))
         data = {**validated_data, **params}
         data.pop('academic_year', None)
+        for field in EXCLUDED_FIELDS:
+            data.pop(field, None)
         return Activity.objects.create(**data)
 
     def update(self, instance, validated_data):
