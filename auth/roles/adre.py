@@ -71,5 +71,13 @@ class AdreSecretary(RoleModel):
             'parcours_doctoral.view_historyentry': rules.always_allow,
             'parcours_doctoral.send_message': rules.always_allow,
             'parcours_doctoral.view_internalnote': rules.always_allow,
+            'parcours_doctoral.view_training': rules.always_allow,
+            'parcours_doctoral.view_doctoral_training': rules.always_allow,
+            'parcours_doctoral.view_complementary_training': rules.always_allow,
+            'parcours_doctoral.view_course_enrollment': rules.always_allow,
+            'parcours_doctoral.change_activity': rules.always_allow,
+            'parcours_doctoral.delete_activity': rules.always_allow,
+            'parcours_doctoral.refuse_activity': rules.always_allow,
+            'parcours_doctoral.restore_activity': rules.always_allow,
         }
         return RuleSet(ruleset)

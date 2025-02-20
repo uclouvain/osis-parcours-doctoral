@@ -436,6 +436,7 @@ msgstr ""
 msgid "Authors"
 msgstr ""
 
+msgctxt "publication-status"
 msgid "Awaiting approval"
 msgstr ""
 
@@ -908,6 +909,7 @@ msgid ""
 "training."
 msgstr ""
 
+msgctxt "publication-status"
 msgid "Deposited"
 msgstr ""
 
@@ -2142,6 +2144,7 @@ msgstr ""
 msgid "Publications"
 msgstr ""
 
+msgctxt "publication-status"
 msgid "Published"
 msgstr ""
 
@@ -2483,6 +2486,9 @@ msgid ""
 "of your commission for more detail."
 msgstr ""
 
+msgid "Specify the title in the language of the activity"
+msgstr ""
+
 msgid ""
 "Specify your participation in a course in the context of your doctoral "
 "training, excepting courses from the catalog of the UCLouvain in which you "
@@ -2538,6 +2544,10 @@ msgid "Submit selected courses"
 msgstr ""
 
 msgctxt "parcours_doctoral"
+msgid "Submitted"
+msgstr ""
+
+msgctxt "publication-status"
 msgid "Submitted"
 msgstr ""
 
@@ -3026,6 +3036,7 @@ msgstr ""
 msgid "Unknown noma"
 msgstr ""
 
+msgctxt "publication-status"
 msgid "Unsubmitted"
 msgstr ""
 

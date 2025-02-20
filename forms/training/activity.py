@@ -271,7 +271,7 @@ class ConferenceCommunicationForm(ActivityFormMixin, forms.ModelForm):
             'ects': forms.NumberInput(attrs={'min': '0', 'step': '0.5'}),
         }
         help_texts = {
-            'title': _("Name in the language of the manifestation"),
+            'title': _("Specify the title in the language of the activity"),
             'participating_proof': _(
                 "A document proving that the communication was done (i.e. communication certificate)"
             ),
@@ -741,6 +741,7 @@ class CourseForm(ActivityFormMixin, forms.ModelForm):
     type = ConfigurableActivityTypeField("course_types", label=pgettext_lazy("parcours_doctoral course", "Course type"))
     subtitle = forms.CharField(
         label=_("Course unit code (if applicable)"),
+        help_text=_("As it appears in an official course catalogue"),
         max_length=200,
         required=False,
     )

@@ -56,12 +56,12 @@ class ChoixComiteSelection(ChoiceEnum):
 
 
 class ChoixStatutPublication(ChoiceEnum):
-    UNSUBMITTED = _("Unsubmitted")
-    SUBMITTED = pgettext_lazy("parcours_doctoral", "Submitted")
-    IN_REVIEW = _("Awaiting approval")
-    DEPOSITED = _("Deposited")
+    UNSUBMITTED = pgettext_lazy("publication-status", "Unsubmitted")
+    SUBMITTED = pgettext_lazy("publication-status", "Submitted")
+    IN_REVIEW = pgettext_lazy("publication-status", "Awaiting approval")
+    DEPOSITED = pgettext_lazy("publication-status", "Deposited")
     ACCEPTED = pgettext_lazy("publication-status", "Accepted")
-    PUBLISHED = _("Published")
+    PUBLISHED = pgettext_lazy("publication-status", "Published")
 
 
 class ChoixTypeVolume(ChoiceEnum):

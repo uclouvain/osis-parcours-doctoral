@@ -7,7 +7,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("parcours_doctoral", "0008_merge_20250127_1311"),
+        ("parcours_doctoral", "0010_document"),
     ]
 
     operations = [
