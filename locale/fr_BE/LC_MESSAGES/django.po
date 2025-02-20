@@ -344,6 +344,9 @@ msgctxt "doctorate-filter"
 msgid "Admission type"
 msgstr "Type d'admission"
 
+msgid "Advanced filters"
+msgstr "Filtres avancés"
+
 #, python-format
 msgid ""
 "After considering the opinion of your supervisory panel, which met on "
@@ -408,6 +411,9 @@ msgstr "Numéro de demande"
 
 msgid "Application status"
 msgstr "État de la demande"
+
+msgid "Apply filters"
+msgstr "Appliquer les filtres"
 
 msgid "Approval by PDF"
 msgstr "Approbation via PDF"
@@ -687,6 +693,10 @@ msgstr "Confirmer et envoyer le message"
 msgid "Confirm restoring activity to submitted"
 msgstr "Confirmer la remise au statut soumise de cette activité"
 
+msgctxt "dashboard-category"
+msgid "Confirmation"
+msgstr "Confirmation"
+
 msgctxt "tab"
 msgid "Confirmation"
 msgstr "Confirmation"
@@ -823,6 +833,12 @@ msgstr "Défense privée"
 msgid "DOCTORAL_TRAINING"
 msgstr "Formation doctorale"
 
+msgid "Dashboard"
+msgstr "Tableau de bord"
+
+msgid "Dashboard indicator"
+msgstr "Indicateur du tableau de bord"
+
 msgid "Date"
 msgstr "Date"
 
@@ -833,8 +849,20 @@ msgstr "Date - Filtre #%s"
 msgid "Date of the confirmation paper (DD/MM/YYYY)"
 msgstr "Date de l'épreuve de confirmation (JJ/MM/AAAA)"
 
+msgctxt "dashboard-indicator confirmation"
+msgid "Date postponement"
+msgstr "Report de date"
+
 msgid "Date type"
 msgstr "Type de date"
+
+msgctxt "dashboard-indicator thesis-distribution"
+msgid "Deadline 15 days"
+msgstr "Echéance 15 jours"
+
+msgctxt "dashboard-indicator confirmation"
+msgid "Deadline 2 months"
+msgstr "Echéance 2 mois"
 
 msgid "Deadline extended"
 msgstr "Nouvelle échéance"
@@ -941,6 +969,10 @@ msgctxt "male gender"
 msgid "Doctoral student"
 msgstr "Doctorant"
 
+msgid "Doctoral training"
+msgstr "Formation doctorale"
+
+msgctxt "dashboard-category"
 msgid "Doctoral training"
 msgstr "Formation doctorale"
 
@@ -1357,6 +1389,10 @@ msgstr "Demande d'ouverture de cotutelle"
 
 msgid "Journal or publishing house name"
 msgstr "Nom de la revue ou de la maison d'édition"
+
+msgctxt "dashboard-category"
+msgid "Jury"
+msgstr "Jury"
 
 msgid "Jury approval"
 msgstr "Approbation du jury"
@@ -1796,6 +1832,9 @@ msgstr "Événement en ligne"
 msgid "Online or in person"
 msgstr "En ligne ou en présentiel"
 
+msgid "Open the related list"
+msgstr "Ouvrir la liste associée"
+
 msgid "Opinion of the CA following the format provided by the CDD"
 msgstr "Avis du comité d'accompagnement suivant le format fourni par la CDD"
 
@@ -1989,6 +2028,14 @@ msgstr "Epreuves de confirmation passées"
 msgid "Previous doctorate"
 msgstr "Doctorat précédent"
 
+msgctxt "dashboard-category"
+msgid "Private defense (formula 1)"
+msgstr "Défense privée (formule 1)"
+
+msgctxt "dashboard-category"
+msgid "Private defense / Public defense (formula 2)"
+msgstr "Défense privée / Soutenance (formule 2)"
+
 msgid "Professor"
 msgstr "Professeur"
 
@@ -2087,6 +2134,10 @@ msgstr "Commission de proximité de recherche expérimentale et clinique (ECLI)"
 msgid "Proximity commission for public health, health and society (SPSS)"
 msgstr "Commission de proximité de santé publique, santé et société (SPSS)"
 
+msgctxt "dashboard-category"
+msgid "Public defense (formula 1)"
+msgstr "Soutenance publique (formule 1)"
+
 msgid "Publication date"
 msgstr "Date de publication"
 
@@ -2119,6 +2170,10 @@ msgstr ""
 msgid "Reason for exceeding the deadline"
 msgstr "Motif du dépassement de l’échéance"
 
+msgctxt "dashboard-category"
+msgid "Recevability (formula 2)"
+msgstr "Recevabilité (formule 2)"
+
 msgid "Recipient"
 msgstr "Destinataire"
 
@@ -2140,6 +2195,18 @@ msgstr "Refuser l'activité"
 
 msgid "Registration Id"
 msgstr "Noma"
+
+msgctxt "dashboard-indicator jury"
+msgid "Rejected by ADRE"
+msgstr "Rejet ADRE"
+
+msgctxt "dashboard-indicator thesis-distribution"
+msgid "Rejected by ADRE"
+msgstr "Rejet ADRE"
+
+msgctxt "dashboard-indicator thesis-distribution"
+msgid "Rejected by SCEB"
+msgstr "Rejet SCEB"
 
 msgid "Related doctorate"
 msgstr "Doctorat associé"
@@ -2445,8 +2512,52 @@ msgctxt "parcours_doctoral"
 msgid "Submitted"
 msgstr "Soumis"
 
+msgctxt "dashboard-indicator confirmation"
+msgid "Submitted PV"
+msgstr "PV téléversé"
+
+msgctxt "dashboard-indicator formula-1-private-defense"
+msgid "Submitted PV"
+msgstr "PV téléversé"
+
+msgctxt "dashboard-indicator formula-1-public-defense"
+msgid "Submitted PV"
+msgstr "PV téléversé"
+
+msgctxt "dashboard-indicator formula-2-admissibility"
+msgid "Submitted PV"
+msgstr "PV téléversé"
+
+msgctxt "dashboard-indicator formula-2-defense"
+msgid "Submitted PV (private defense)"
+msgstr "PV téléversé (dans tuile Défense)"
+
+msgctxt "dashboard-indicator formula-2-defense"
+msgid "Submitted PV (public defense)"
+msgstr "PV téléversé (dans tuile Soutenance)"
+
+msgctxt "dashboard-indicator formula-2-admissibility"
+msgid "Submitted admissibility"
+msgstr "Recevabilité soumise"
+
+msgctxt "dashboard-indicator confirmation"
+msgid "Submitted confirmation"
+msgstr "Confirmation soumise"
+
 msgid "Submitted for publication"
 msgstr "Soumis pour publication"
+
+msgctxt "dashboard-indicator formula-1-private-defense"
+msgid "Submitted private defense"
+msgstr "Défense soumise"
+
+msgctxt "dashboard-indicator formula-2-defense"
+msgid "Submitted private defense / Submitted public defense"
+msgstr "Défense soumise / Soutenance soumise"
+
+msgctxt "dashboard-indicator formula-1-public-defense"
+msgid "Submitted public defense"
+msgstr "Soutenance soumise"
 
 msgid "Successful test"
 msgstr "Epreuve réussie"
@@ -2700,6 +2811,10 @@ msgstr "Il n'y a pas de demande de nouvelle échéance."
 msgid "Thesis defense"
 msgstr "Défense et soutenance"
 
+msgctxt "dashboard-category"
+msgid "Thesis distribution authorisation"
+msgstr "Autorisation de diffusion de thèse"
+
 msgid "Thesis field"
 msgstr "Domaine de la thèse"
 
@@ -2901,6 +3016,18 @@ msgstr "Valider les cours sélectionnées"
 
 msgid "Validated"
 msgstr "Validé"
+
+msgctxt "dashboard-indicator jury"
+msgid "Validated by ADRE"
+msgstr "Validé ADRE"
+
+msgctxt "dashboard-indicator jury"
+msgid "Validated by CA"
+msgstr "Validé CA"
+
+msgctxt "dashboard-indicator training"
+msgid "Validated by promoter"
+msgstr "Validé promoteur"
 
 msgid "Validated credits total"
 msgstr "Total crédits validés"

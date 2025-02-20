@@ -25,15 +25,15 @@
 # ##############################################################################
 import re
 from dataclasses import dataclass
-from typing import List, Optional
 
 import attr
 from django import template
 from django.conf import settings
 from django.core.validators import EMPTY_VALUES
+from django.db.models import QuerySet
 from django.template.defaultfilters import floatformat
 from django.urls import NoReverseMatch, reverse
-from django.utils.safestring import SafeString, mark_safe
+from django.utils.safestring import mark_safe
 from django.utils.translation import get_language
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import pgettext
@@ -575,3 +575,21 @@ def edit_external_member_form(context, membre):
         prefix=f"member-{membre.uuid}",
         initial=initial,
     )
+
+
+@register.simple_tag
+def url_params_from_form(form):
+    """From a django form, return the form data as url request params"""
+    url_params = ''
+
+    if form.is_valid():
+        for field_name, field_value in form.cleaned_data.items():
+            if not field_value:
+                continue
+            if isinstance(field_value, (list, tuple, set, dict, QuerySet)):
+                for sub_value in field_value:
+                    url_params += f'&{field_name}={sub_value}'
+            else:
+                url_params += f'&{field_name}={field_value}'
+
+    return url_params

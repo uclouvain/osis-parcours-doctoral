@@ -23,12 +23,33 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from django import forms
+from django.test import TestCase
 
-from .lister_parcours_doctoraux_service import lister_parcours_doctoraux
-from .recuperer_informations_tableau_bord_service import recuperer_informations_tableau_bord
+from parcours_doctoral.templatetags.parcours_doctoral import url_params_from_form
 
 
-__all__ = [
-    'lister_parcours_doctoraux',
-    'recuperer_informations_tableau_bord',
-]
+class UrlParamsTestCase(TestCase):
+    class MyForm(forms.Form):
+        char_field = forms.CharField(required=False, max_length=5)
+        multiple_choice_field = forms.MultipleChoiceField(required=False, choices=[['a', 'a'], ['b', 'b'], ['c', 'c']])
+
+    def test_with_no_bound_form(self):
+        form = self.MyForm()
+
+        self.assertEqual('', url_params_from_form(form))
+
+    def test_with_invalid_form(self):
+        form = self.MyForm(data={'char_field': '123456'})
+
+        self.assertEqual('', url_params_from_form(form))
+
+    def test_field_valid_form_with_missing_values(self):
+        form = self.MyForm(data={})
+
+        self.assertEqual('', url_params_from_form(form))
+
+    def test_with_valid_form(self):
+        form = self.MyForm(data={'char_field': '123', 'multiple_choice_field': ['a', 'b']})
+
+        self.assertEqual('&char_field=123&multiple_choice_field=a&multiple_choice_field=b', url_params_from_form(form))

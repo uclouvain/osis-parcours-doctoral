@@ -23,12 +23,28 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from typing import Optional, Dict
 
-from .lister_parcours_doctoraux_service import lister_parcours_doctoraux
-from .recuperer_informations_tableau_bord_service import recuperer_informations_tableau_bord
+import attr
+
+from osis_common.ddd import interface
 
 
-__all__ = [
-    'lister_parcours_doctoraux',
-    'recuperer_informations_tableau_bord',
-]
+@attr.dataclass(slots=True, frozen=True)
+class IndicateurTableauBordDTO(interface.DTO):
+    id: str
+    libelle: str
+    valeur: Optional[int]
+
+
+@attr.dataclass(slots=True, frozen=True)
+class CategorieTableauBordDTO(interface.DTO):
+    id: str
+    libelle: str
+    indicateurs: Dict[str, IndicateurTableauBordDTO]
+    type: str
+
+
+@attr.dataclass(slots=True, frozen=True)
+class TableauBordDTO(interface.DTO):
+    categories: Dict[str, CategorieTableauBordDTO]

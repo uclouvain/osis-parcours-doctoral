@@ -23,23 +23,47 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+
+from django.views.generic import FormView
+
+from base.utils.htmx import HtmxPermissionRequiredMixin
+from infrastructure.messages_bus import message_bus_instance
+from osis_common.utils.htmx import HtmxMixin
 from parcours_doctoral.ddd.read_view.queries import (
-    ListerTousParcoursDoctorauxQuery,
     RecupererInformationsTableauBordQuery,
 )
-from parcours_doctoral.ddd.read_view.use_case import recuperer_informations_tableau_bord, lister_parcours_doctoraux
-from parcours_doctoral.infrastructure.parcours_doctoral.read_view.repository.liste_parcours_doctoraux import (
-    ListeParcoursDoctorauxRepository,
-)
-from parcours_doctoral.infrastructure.parcours_doctoral.read_view.repository.tableau_bord import TableauBordRepository
+from parcours_doctoral.forms.dashboard import DashboardForm
 
-COMMAND_HANDLERS = {
-    ListerTousParcoursDoctorauxQuery: lambda msg_bus, cmd: lister_parcours_doctoraux(
-        cmd,
-        lister_tous_parcours_doctoraux_service=ListeParcoursDoctorauxRepository(),
-    ),
-    RecupererInformationsTableauBordQuery: lambda msg_bus, cmd: recuperer_informations_tableau_bord(
-        cmd,
-        tableau_bord_repository=TableauBordRepository(),
-    ),
-}
+__all__ = [
+    'DashboardView',
+]
+
+
+class DashboardView(HtmxPermissionRequiredMixin, HtmxMixin, FormView):
+    permission_required = 'parcours_doctoral.view_parcours_doctoral'
+    template_name = 'parcours_doctoral/dashboard.html'
+    htmx_template_name = 'parcours_doctoral/dashboard_htmx.html'
+    form_class = DashboardForm
+
+    def get_form_kwargs(self):
+        form_kwargs = super().get_form_kwargs()
+        form_kwargs['user'] = self.request.user
+        return form_kwargs
+
+    def form_valid(self, form):
+        return super().form_invalid(form)
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+
+        form = context_data['form']
+
+        if not form.is_bound or form.is_valid():
+            cmd_params = getattr(form, 'cleaned_data', {}).copy()
+
+            if not cmd_params.get('cdds'):
+                cmd_params['cdds'] = form.cdd_acronyms
+
+            context_data['dashboard'] = message_bus_instance.invoke(RecupererInformationsTableauBordQuery(**cmd_params))
+
+        return context_data

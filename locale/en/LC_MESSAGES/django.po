@@ -299,6 +299,9 @@ msgctxt "doctorate-filter"
 msgid "Admission type"
 msgstr ""
 
+msgid "Advanced filters"
+msgstr ""
+
 #, python-format
 msgid ""
 "After considering the opinion of your supervisory panel, which met on "
@@ -357,6 +360,9 @@ msgid "Application numero"
 msgstr ""
 
 msgid "Application status"
+msgstr ""
+
+msgid "Apply filters"
 msgstr ""
 
 msgid "Approval by PDF"
@@ -635,6 +641,10 @@ msgstr ""
 msgid "Confirm restoring activity to submitted"
 msgstr ""
 
+msgctxt "dashboard-category"
+msgid "Confirmation"
+msgstr ""
+
 msgctxt "tab"
 msgid "Confirmation"
 msgstr ""
@@ -765,6 +775,12 @@ msgstr "Private defense"
 msgid "DOCTORAL_TRAINING"
 msgstr "PhD training"
 
+msgid "Dashboard"
+msgstr ""
+
+msgid "Dashboard indicator"
+msgstr ""
+
 msgid "Date"
 msgstr ""
 
@@ -775,7 +791,19 @@ msgstr ""
 msgid "Date of the confirmation paper (DD/MM/YYYY)"
 msgstr ""
 
+msgctxt "dashboard-indicator confirmation"
+msgid "Date postponement"
+msgstr ""
+
 msgid "Date type"
+msgstr ""
+
+msgctxt "dashboard-indicator thesis-distribution"
+msgid "Deadline 15 days"
+msgstr ""
+
+msgctxt "dashboard-indicator confirmation"
+msgid "Deadline 2 months"
 msgstr ""
 
 msgid "Deadline extended"
@@ -879,6 +907,10 @@ msgctxt "male gender"
 msgid "Doctoral student"
 msgstr ""
 
+msgid "Doctoral training"
+msgstr ""
+
+msgctxt "dashboard-category"
 msgid "Doctoral training"
 msgstr ""
 
@@ -1266,6 +1298,10 @@ msgstr ""
 msgid "Journal or publishing house name"
 msgstr ""
 
+msgctxt "dashboard-category"
+msgid "Jury"
+msgstr ""
+
 msgid "Jury approval"
 msgstr ""
 
@@ -1650,6 +1686,9 @@ msgstr ""
 msgid "Online or in person"
 msgstr ""
 
+msgid "Open the related list"
+msgstr ""
+
 msgid "Opinion of the CA following the format provided by the CDD"
 msgstr ""
 
@@ -1834,6 +1873,14 @@ msgstr ""
 msgid "Previous doctorate"
 msgstr ""
 
+msgctxt "dashboard-category"
+msgid "Private defense (formula 1)"
+msgstr ""
+
+msgctxt "dashboard-category"
+msgid "Private defense / Public defense (formula 2)"
+msgstr ""
+
 msgid "Professor"
 msgstr ""
 
@@ -1930,6 +1977,10 @@ msgstr ""
 msgid "Proximity commission for public health, health and society (SPSS)"
 msgstr ""
 
+msgctxt "dashboard-category"
+msgid "Public defense (formula 1)"
+msgstr ""
+
 msgid "Publication date"
 msgstr ""
 
@@ -1961,6 +2012,10 @@ msgstr "Activity types for the advanced research residency category"
 msgid "Reason for exceeding the deadline"
 msgstr ""
 
+msgctxt "dashboard-category"
+msgid "Recevability (formula 2)"
+msgstr ""
+
 msgid "Recipient"
 msgstr ""
 
@@ -1979,6 +2034,18 @@ msgid "Refuse activity"
 msgstr ""
 
 msgid "Registration Id"
+msgstr ""
+
+msgctxt "dashboard-indicator jury"
+msgid "Rejected by ADRE"
+msgstr ""
+
+msgctxt "dashboard-indicator thesis-distribution"
+msgid "Rejected by ADRE"
+msgstr ""
+
+msgctxt "dashboard-indicator thesis-distribution"
+msgid "Rejected by SCEB"
 msgstr ""
 
 msgid "Related doctorate"
@@ -2283,7 +2350,51 @@ msgctxt "parcours_doctoral"
 msgid "Submitted"
 msgstr ""
 
+msgctxt "dashboard-indicator confirmation"
+msgid "Submitted PV"
+msgstr ""
+
+msgctxt "dashboard-indicator formula-1-private-defense"
+msgid "Submitted PV"
+msgstr ""
+
+msgctxt "dashboard-indicator formula-1-public-defense"
+msgid "Submitted PV"
+msgstr ""
+
+msgctxt "dashboard-indicator formula-2-admissibility"
+msgid "Submitted PV"
+msgstr ""
+
+msgctxt "dashboard-indicator formula-2-defense"
+msgid "Submitted PV (private defense)"
+msgstr ""
+
+msgctxt "dashboard-indicator formula-2-defense"
+msgid "Submitted PV (public defense)"
+msgstr ""
+
+msgctxt "dashboard-indicator formula-2-admissibility"
+msgid "Submitted admissibility"
+msgstr ""
+
+msgctxt "dashboard-indicator confirmation"
+msgid "Submitted confirmation"
+msgstr ""
+
 msgid "Submitted for publication"
+msgstr ""
+
+msgctxt "dashboard-indicator formula-1-private-defense"
+msgid "Submitted private defense"
+msgstr ""
+
+msgctxt "dashboard-indicator formula-2-defense"
+msgid "Submitted private defense / Submitted public defense"
+msgstr ""
+
+msgctxt "dashboard-indicator formula-1-public-defense"
+msgid "Submitted public defense"
 msgstr ""
 
 msgid "Successful test"
@@ -2503,6 +2614,10 @@ msgstr ""
 msgid "Thesis defense"
 msgstr ""
 
+msgctxt "dashboard-category"
+msgid "Thesis distribution authorisation"
+msgstr ""
+
 msgid "Thesis field"
 msgstr ""
 
@@ -2686,6 +2801,18 @@ msgid "Validate selected courses"
 msgstr ""
 
 msgid "Validated"
+msgstr ""
+
+msgctxt "dashboard-indicator jury"
+msgid "Validated by ADRE"
+msgstr ""
+
+msgctxt "dashboard-indicator jury"
+msgid "Validated by CA"
+msgstr ""
+
+msgctxt "dashboard-indicator training"
+msgid "Validated by promoter"
 msgstr ""
 
 msgid "Validated credits total"

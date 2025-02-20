@@ -73,6 +73,7 @@ from .event_handlers import reagir_a_approbation_admission
 from .repository.groupe_de_supervision import GroupeDeSupervisionRepository
 from .repository.parcours_doctoral import ParcoursDoctoralRepository
 
+
 COMMAND_HANDLERS = {
     RecupererParcoursDoctoralQuery: lambda msg_bus, cmd: recuperer_parcours_doctoral(
         cmd,
