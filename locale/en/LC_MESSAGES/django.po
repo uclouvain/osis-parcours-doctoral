@@ -1131,7 +1131,7 @@ msgstr ""
 
 msgid ""
 "If known, indicate the name of the laboratory, clinical department or "
-"research centre where the thesis will be carried out"
+"research centre where the thesis will be carried out at UCLouvain"
 msgstr ""
 
 msgid ""
@@ -2506,7 +2506,7 @@ msgstr ""
 msgid "Thesis language"
 msgstr ""
 
-msgid "Thesis location in UCLouvain"
+msgid "Thesis location"
 msgstr ""
 
 msgid "Thesis title"
