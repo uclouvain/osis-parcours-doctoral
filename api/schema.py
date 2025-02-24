@@ -32,7 +32,7 @@ from rest_framework.serializers import Serializer
 from backoffice.settings.rest_framework.fields import ActionLinksField
 from base.models.utils.utils import ChoiceEnum
 
-PARCOURS_DOCTORAL_SDK_VERSION = "1.0.5"
+PARCOURS_DOCTORAL_SDK_VERSION = "1.0.8"
 
 
 class ParcoursDoctoralSchemaGenerator(SchemaGenerator):
