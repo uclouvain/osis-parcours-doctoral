@@ -61,8 +61,14 @@ class AssessmentEnrollmentDeleteViewTestCase(TestCase):
             parcours_doctoral=cls.doctorate,
             status=StatutActivite.ACCEPTEE.name,
         )
+        cls.other_year_course = UclCourseFactory(
+            learning_unit_year__academic_year=cls.academic_years[0],
+            parcours_doctoral=cls.doctorate,
+            status=StatutActivite.ACCEPTEE.name,
+        )
 
         cls.assessment_enrollment = AssessmentEnrollmentFactory(course=cls.course)
+        cls.other_year_assessment_enrollment = AssessmentEnrollmentFactory(course=cls.other_year_course)
 
         cls.manager = ProgramManagerFactory(education_group=cls.doctorate.training.education_group).person
         cls.other_manager = ProgramManagerFactory().person
@@ -72,11 +78,21 @@ class AssessmentEnrollmentDeleteViewTestCase(TestCase):
             uuid=cls.doctorate.uuid,
             enrollment_uuid=cls.assessment_enrollment.uuid,
         )
+        cls.other_year_url = resolve_url(
+            'parcours_doctoral:assessment-enrollment:delete',
+            uuid=cls.doctorate.uuid,
+            enrollment_uuid=cls.other_year_assessment_enrollment.uuid,
+        )
         cls.list_url = resolve_url('parcours_doctoral:assessment-enrollment', uuid=cls.doctorate.uuid)
 
     def test_delete_with_other_manager_is_forbidden(self):
         self.client.force_login(self.other_manager.user)
-        response = self.client.get(self.url)
+        response = self.client.delete(self.url)
+        self.assertEqual(response.status_code, 403)
+
+    def test_delete_past_assessment_is_forbidden(self):
+        self.client.force_login(self.manager.user)
+        response = self.client.delete(self.other_year_url)
         self.assertEqual(response.status_code, 403)
 
     def test_delete(self):

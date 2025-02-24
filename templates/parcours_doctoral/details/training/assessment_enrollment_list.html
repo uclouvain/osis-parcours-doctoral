@@ -39,9 +39,6 @@
 
 {% block tab_content %}
   {% has_perm 'parcours_doctoral.change_assessment_enrollment' as can_change_assessment_enrollment %}
-  {% if can_change_assessment_enrollment %}
-    {% url "parcours_doctoral:assessment-enrollment:add" uuid=view.kwargs.uuid as add_url %}
-  {% endif %}
 
   <h3>{% translate "Assessment enrollments" %}</h3>
 
@@ -106,7 +103,7 @@
                       {% translate 'Visualize' %}
                     </a>
                   </li>
-                  {% if can_change_assessment_enrollment and assessment_enrollment.est_acceptee %}
+                  {% if can_change_assessment_enrollment and assessment_enrollment.uuid in editable_assessment_enrollments %}
                     <li>
                       <a
                         class="dropdown-item"
@@ -137,7 +134,7 @@
     {% empty %}
       {% translate "This student has not been enrolled in any assessment yet." %}
       {% if can_change_assessment_enrollment %}
-        <a href="{{ add_url }}">
+        <a href="{% url "parcours_doctoral:assessment-enrollment:add" uuid=view.kwargs.uuid %}">
           {% translate "Enroll in an assessment" %}
         </a>
       {% endif %}

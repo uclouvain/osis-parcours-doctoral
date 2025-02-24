@@ -48,7 +48,7 @@
 
 {% block actions-group %}
   {% has_perm 'parcours_doctoral.change_assessment_enrollment' as can_change_assessment_enrollment %}
-  {% if can_change_assessment_enrollment and assessment_enrollment.est_acceptee %}
+  {% if can_change_assessment_enrollment and assessment_enrollment_is_editable %}
     {{ block.super }}
   {% endif %}
 {% endblock %}
@@ -62,7 +62,7 @@
     <p class="alert alert-warning">
       {% translate 'The student has been withdrawn from this assessment.' %}
     </p>
-  {% elif can_change_assessment_enrollment %}
+  {% elif can_change_assessment_enrollment and assessment_enrollment_is_editable %}
     {% url 'parcours_doctoral:assessment-enrollment:delete' uuid=view.kwargs.uuid enrollment_uuid=view.kwargs.enrollment_uuid as delete_url %}
     {% translate 'Are you sure you want to withdraw the student from this assessment?' as confirm_message %}
     {% include 'parcours_doctoral/modal/confirm_modal.html' with confirm_id='delete-modal' confirm_url=delete_url confirm_message=confirm_message %}
