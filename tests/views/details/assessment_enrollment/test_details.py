@@ -76,7 +76,7 @@ class AssessmentEnrollmentDetailsViewTestCase(TestCase):
             enrollment_uuid=cls.assessment_enrollment.uuid,
         )
         cls.other_year_url = resolve_url(
-            'parcours_doctoral:assessment-enrollment:update',
+            'parcours_doctoral:assessment-enrollment:details',
             uuid=cls.doctorate.uuid,
             enrollment_uuid=cls.other_year_assessment_enrollment.uuid,
         )

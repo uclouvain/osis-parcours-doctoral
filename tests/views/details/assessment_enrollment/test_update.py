@@ -127,32 +127,7 @@ class AssessmentEnrollmentUpdateViewTestCase(TestCase):
 
         response = self.client.get(self.other_year_url)
 
-        self.assertEqual(response.status_code, 200)
-
-        # Check context data
-        self.assertEqual(
-            response.context['assessment_enrollment'].uuid,
-            str(self.other_year_assessment_enrollment.uuid),
-        )
-        self.assertEqual(response.context['current_year'], self.academic_years[0].year)
-        self.assertCountEqual(response.context['score_exam_submission_sessions'], [self.academic_calendars[0]])
-
-        # Check form
-        form = response.context['form']
-
-        self.assertTrue(form.fields['course'].disabled)
-        self.assertEqual(len(form.fields['course'].choices), 2)
-        self.assertEqual(form.fields['course'].choices[0], EMPTY_CHOICE[0])
-        self.assertEqual(
-            form.fields['course'].choices[1],
-            (
-                str(self.other_year_course.uuid),
-                f'{self.other_year_course.learning_unit_year.acronym} - '
-                f'{self.other_year_course.learning_unit_year.complete_title_i18n}',
-            ),
-        )
-        self.assertFalse(form.fields['session'].disabled)
-        self.assertFalse(form.fields['late_enrollment'].disabled)
+        self.assertEqual(response.status_code, 403)
 
     def test_post_form(self):
         self.client.force_login(self.manager.user)

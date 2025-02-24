@@ -35,10 +35,9 @@ from django.views import View
 from django.views.generic import FormView, TemplateView
 
 from base.models.academic_calendar import AcademicCalendar
-from base.models.academic_year import AcademicYear
+from base.models.academic_year import current_academic_year
 from base.models.enums.academic_calendar_type import AcademicCalendarTypes
 from infrastructure.messages_bus import message_bus_instance
-from osis_role.contrib.views import PermissionRequiredMixin
 from parcours_doctoral.ddd.formation.commands import (
     DesinscrireEvaluationCommand,
     InscrireEvaluationCommand,
@@ -51,6 +50,9 @@ from parcours_doctoral.forms.training.assessment_enrollment import (
     AssessmentEnrollmentForm,
 )
 from parcours_doctoral.models import Activity
+from parcours_doctoral.utils.assessment_enrollment import (
+    assessment_enrollment_is_editable,
+)
 from parcours_doctoral.views.mixins import (
     ParcoursDoctoralFormMixin,
     ParcoursDoctoralViewMixin,
@@ -80,7 +82,17 @@ class BaseAssessmentEnrollmentViewMixin:
         if self.enrollment_uuid:
             return self.assessment_enrollment.annee_unite_enseignement
 
-        return AcademicYear.objects.current().year
+        return self.academic_current_year
+
+    @cached_property
+    def academic_current_year(self) -> int:
+        return current_academic_year().year
+
+    def assessment_enrollment_is_editable(self):
+        return assessment_enrollment_is_editable(
+            assessment_enrollment=self.assessment_enrollment,
+            academic_year=self.academic_current_year,
+        )
 
     @cached_property
     def related_courses(self) -> QuerySet[Activity]:
@@ -96,6 +108,7 @@ class BaseAssessmentEnrollmentViewMixin:
 
         if self.enrollment_uuid:
             context_data['assessment_enrollment'] = self.assessment_enrollment
+            context_data['assessment_enrollment_is_editable'] = self.assessment_enrollment_is_editable()
 
         score_exam_submission_sessions = (
             AcademicCalendar.objects.filter(reference=AcademicCalendarTypes.SCORES_EXAM_SUBMISSION.name)
@@ -148,6 +161,9 @@ class AssessmentEnrollmentUpdateView(BaseAssessmentEnrollmentViewMixin, Parcours
     template_name = 'parcours_doctoral/forms/training/assessment_enrollment.html'
     permission_required = 'parcours_doctoral.change_assessment_enrollment'
 
+    def has_permission(self):
+        return super().has_permission() and self.assessment_enrollment_is_editable()
+
     def get_initial(self):
         assessment_enrollment = self.assessment_enrollment
         return {
@@ -167,10 +183,13 @@ class AssessmentEnrollmentUpdateView(BaseAssessmentEnrollmentViewMixin, Parcours
         return super().form_valid(form)
 
 
-class AssessmentEnrollmentDeleteView(ParcoursDoctoralViewMixin, View):
+class AssessmentEnrollmentDeleteView(BaseAssessmentEnrollmentViewMixin, ParcoursDoctoralFormMixin, View):
     urlpatterns = {'delete': '<uuid:enrollment_uuid>/delete'}
     permission_required = 'parcours_doctoral.change_assessment_enrollment'
     message_on_success = gettext_lazy('The student has been withdrawn from this assessment.')
+
+    def has_permission(self):
+        return super().has_permission() and self.assessment_enrollment_is_editable()
 
     def post(self, request, *args, **kwargs):
         return self.delete(request, *args, **kwargs)

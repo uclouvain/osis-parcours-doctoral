@@ -29,6 +29,7 @@ from django.views import generic
 from django.views.generic import TemplateView
 from django.views.generic.edit import FormMixin
 
+from base.models.academic_year import current_academic_year
 from parcours_doctoral.ddd.formation.commands import (
     AccepterActivitesCommand,
     RecupererInscriptionsEvaluationsQuery,
@@ -51,6 +52,9 @@ __namespace__ = False
 
 from base.ddd.utils.business_validator import MultipleBusinessExceptions
 from infrastructure.messages_bus import message_bus_instance
+from parcours_doctoral.utils.assessment_enrollment import (
+    assessment_enrollment_is_editable,
+)
 from parcours_doctoral.views.mixins import ParcoursDoctoralViewMixin
 
 
@@ -156,9 +160,19 @@ class AssessmentEnrollmentListView(ParcoursDoctoralViewMixin, TemplateView):
             )
         )
 
+        editable_assessment_enrollments = set()
+
         assessment_enrollments_by_session_and_year = {}
 
+        current_year = current_academic_year().year
+
         for assessment_enrollment in assessment_enrollments:
+            if assessment_enrollment_is_editable(
+                assessment_enrollment=assessment_enrollment,
+                academic_year=current_year,
+            ):
+                editable_assessment_enrollments.add(assessment_enrollment.uuid)
+
             year = assessment_enrollment.annee_unite_enseignement
             session = assessment_enrollment.session
 
@@ -168,5 +182,6 @@ class AssessmentEnrollmentListView(ParcoursDoctoralViewMixin, TemplateView):
             assessment_enrollments_by_session_and_year[year][session].append(assessment_enrollment)
 
         context_data['assessment_enrollments'] = assessment_enrollments_by_session_and_year
+        context_data['editable_assessment_enrollments'] = editable_assessment_enrollments
 
         return context_data
