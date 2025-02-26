@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -27,7 +27,6 @@ from admission.ddd.admission.doctorat.preparation.repository.i_proposition impor
     IPropositionRepository,
 )
 from admission.ddd.admission.domain.model.proposition import PropositionIdentity
-
 from parcours_doctoral.ddd.commands import InitialiserParcoursDoctoralCommand
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import (
     ParcoursDoctoralIdentity,
@@ -59,7 +58,10 @@ def initialiser_parcours_doctoral(
     parcours_doctoral_entity_id = parcours_doctoral_service.initier(
         proposition=proposition,
     )
-    epreuve_confirmation = EpreuveConfirmationService.initier(parcours_doctoral_id=parcours_doctoral_entity_id)
+    epreuve_confirmation = EpreuveConfirmationService.initier(
+        parcours_doctoral_id=parcours_doctoral_entity_id,
+        date_reference_pour_date_limite=proposition.approuvee_par_cdd_le,
+    )
 
     # THEN
     epreuve_confirmation_repository.save(epreuve_confirmation)

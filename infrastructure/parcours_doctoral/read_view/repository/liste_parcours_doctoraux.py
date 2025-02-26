@@ -57,7 +57,7 @@ from parcours_doctoral.models import Activity, ParcoursDoctoral
 
 class ListeParcoursDoctorauxRepository(IListeParcoursDoctorauxRepository):
     DATE_FIELD_BY_DATE_TYPE = {
-        ChoixEtapeParcoursDoctoral.ADMISSION.name: 'created_at',
+        ChoixEtapeParcoursDoctoral.ADMISSION.name: 'admission__approved_by_cdd_at__date',
         ChoixEtapeParcoursDoctoral.CONFIRMATION.name: 'confirmationpaper__confirmation_date',
     }
     ADDITIONAL_DATE_CONDITION_BY_DATE_TYPE = {
@@ -269,4 +269,5 @@ class ListeParcoursDoctorauxRepository(IListeParcoursDoctorauxRepository):
             formation_complementaire=parcours_doctoral.follows_an_additional_training,
             en_regle_inscription=False,  # TODO
             total_credits_valides=parcours_doctoral.validated_credits_number,
+            date_admission_par_cdd=parcours_doctoral.admission.approved_by_cdd_at,
         )

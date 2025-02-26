@@ -152,6 +152,7 @@ class ParcoursDoctoralInMemoryRepository(InMemoryGenericRepository, IParcoursDoc
             photo_identite_doctorant=['foo'],
             nom_doctorant=doctorant.nom,
             prenom_doctorant=doctorant.prenom,
+            date_admission_par_cdd=None,
             formation=FormationDTO(
                 annee=formation.annee,
                 sigle=formation.sigle,
