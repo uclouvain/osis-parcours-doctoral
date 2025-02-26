@@ -99,7 +99,7 @@
           <td>{{ parcours_doctoral.code_bourse }}</td>
           <td>{{ parcours_doctoral.formation.nom_complet }}</td>
           <td>{{ parcours_doctoral.statut|enum_display:'ChoixStatutParcoursDoctoral' }}</td>
-          <td>{{ parcours_doctoral.cree_le|date:"d/m/Y" }}</td>
+          <td>{{ parcours_doctoral.date_admission_par_cdd|date:"d/m/Y" }}</td>
           <td class="text-center">
             {% if parcours_doctoral.type_admission == "PRE_ADMISSION" %}<i class="fa-solid fa-flag" style="color: #c01c28;"></i>{% endif %}
           </td>
