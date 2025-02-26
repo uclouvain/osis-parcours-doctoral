@@ -28,6 +28,8 @@ import uuid
 from unittest.mock import patch
 
 import freezegun
+
+from base.forms.utils.choice_field import BLANK_CHOICE_DISPLAY
 from base.tests.factories.academic_year import AcademicYearFactory
 from base.tests.factories.program_manager import ProgramManagerFactory
 from django.conf import settings
@@ -91,7 +93,8 @@ class DoctorateTrainingActivityViewTestCase(TestCase):
         cls.parcours_doctoral = cls.conference.parcours_doctoral
         cls.service = ServiceFactory(parcours_doctoral=cls.parcours_doctoral)
         cls.ucl_course = UclCourseFactory(
-            parcours_doctoral=cls.parcours_doctoral, learning_unit_year__academic_year__current=True
+            parcours_doctoral=cls.parcours_doctoral,
+            learning_unit_year__academic_year__year=2019,
         )
 
         # A manager that can manage both parcours_doctorals
@@ -210,13 +213,48 @@ class DoctorateTrainingActivityViewTestCase(TestCase):
 
     @freezegun.freeze_time('2022-11-01')
     def test_complementary_training_course(self):
+        academic_years = AcademicYearFactory.produce(base_year=2022, number_future=1)
+
+        self.client.force_login(self.manager)
+
+        # On create
+        url = resolve_url(
+            'parcours_doctoral:course-enrollment:add',
+            uuid=self.parcours_doctoral.uuid,
+            category='ucl_course',
+        )
+
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        form = response.context['form']
+
+        self.assertEqual([(str(c[0]), c[1]) for c in form.fields['academic_year'].choices], [
+            ('', BLANK_CHOICE_DISPLAY),
+            ('2023', '2023-2024'),
+            ('2022', '2022-2023'),
+        ])
+
+        # On update
         url = resolve_url(
             f'parcours_doctoral:course-enrollment:edit',
             uuid=self.parcours_doctoral.uuid,
             activity_id=self.ucl_course.uuid,
         )
+
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        form = response.context['form']
+
+        self.assertEqual([(str(c[0]), c[1]) for c in form.fields['academic_year'].choices], [
+            ('', BLANK_CHOICE_DISPLAY),
+            ('2023', '2023-2024'),
+            ('2022', '2022-2023'),
+            ('2019', '2019-2020'),
+        ])
+
         data = {
             'context': ContexteFormation.COMPLEMENTARY_TRAINING.name,
             'academic_year': self.ucl_course.learning_unit_year.academic_year.year,

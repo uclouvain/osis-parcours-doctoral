@@ -30,7 +30,7 @@ import dal.forward
 from base.forms.utils import autocomplete
 from base.forms.utils.academic_year_field import AcademicYearModelChoiceField
 from base.forms.utils.datefield import DatePickerInput
-from base.models.academic_year import AcademicYear
+from base.models.academic_year import AcademicYear, current_academic_year
 from base.models.learning_unit_year import LearningUnitYear
 from django import forms
 from django.utils.translation import get_language
@@ -642,7 +642,6 @@ class UclCourseForm(ActivityFormMixin, forms.ModelForm):
     academic_year = AcademicYearModelChoiceField(
         to_field_name='year',
         widget=autocomplete.ListSelect2(),
-        future_only=True,
     )
     learning_unit_year = forms.CharField(
         label=pgettext_lazy("admission", "Learning unit"),
@@ -677,6 +676,14 @@ class UclCourseForm(ActivityFormMixin, forms.ModelForm):
                     f"{learning_unit_year.acronym} - {learning_unit_year.complete_title_i18n}",
                 ),
             ]
+
+        current_year = current_academic_year().year
+        selectable_years = [current_year, current_year + 1]
+
+        if self.initial.get('academic_year'):
+            selectable_years.append(self.initial['academic_year'])
+
+        self.fields['academic_year'].queryset = self.fields['academic_year'].queryset.filter(year__in=selectable_years)
 
     def clean(self):
         cleaned_data = super().clean()
