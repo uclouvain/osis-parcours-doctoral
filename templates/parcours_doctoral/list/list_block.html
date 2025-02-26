@@ -7,7 +7,7 @@
 * The core business involves the administration of students, teachers,
 * courses, programs and so on.
 *
-* Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+* Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 *
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -90,7 +90,7 @@
           <td>{{ parcours_doctoral.code_bourse }}</td>
           <td>{{ parcours_doctoral.formation.nom_complet }}</td>
           <td>{{ parcours_doctoral.statut|enum_display:'ChoixStatutParcoursDoctoral' }}</td>
-          <td>{{ parcours_doctoral.cree_le|date:"d/m/Y" }}</td>
+          <td>{{ parcours_doctoral.date_admission_par_cdd|date:"d/m/Y" }}</td>
           <td class="text-center">
             {% if parcours_doctoral.pre_admission %}<i class="fa-solid fa-flag" style="color: #c01c28;"></i>{% endif %}
           </td>

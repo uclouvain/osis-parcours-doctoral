@@ -119,6 +119,7 @@ class ParcoursDoctoralDTO(interface.DTO):
     pays_naissance_doctorant: str
     nom_doctorant: str
     commission_proximite: str
+    date_admission_par_cdd: Optional[datetime.datetime]
 
     @property
     def commission_proximite_display(self):
