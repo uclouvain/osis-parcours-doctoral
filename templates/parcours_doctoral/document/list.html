@@ -1,0 +1,73 @@
+{% load i18n %}
+{% comment "License" %}
+* OSIS stands for Open Student Information System. It's an application
+* designed to manage the core business of higher education institutions,
+* such as universities, faculties, institutes and professional schools.
+* The core business involves the administration of students, teachers,
+* courses, programs and so on.
+*
+* Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* A copy of this license - GNU General Public License - is available
+* at the root of the source code of this program.  If not,
+* see http://www.gnu.org/licenses/.
+{% endcomment %}
+
+<table
+  id="document-list"
+  class="table table-hover"
+  {% if refresh_documents %}
+  hx-swap-oob="true"
+  {% endif %}
+>
+  <caption class="sticky-bottom bg-white">{% translate 'Document list' %}</caption>
+  <thead class="sticky-top bg-white">
+  <tr>
+    <th>{% translate 'Document' %}</th>
+    <th>{% translate 'Actor' %}</th>
+    <th>{% translate 'Date' %}</th>
+  </tr>
+  </thead>
+  {% for section, documents in documents_by_section.items %}
+    <tbody>
+    <tr class="document-section-header bg-primary align-middle">
+      <td colspan="3">
+        <button
+          type="button"
+          class="btn btn-collapse d-flex justify-content-between align-items-center text-white w-100 p-0"
+          data-bs-toggle="collapse"
+          data-bs-target=".document-row-section-{{ forloop.counter }}"
+          aria-expanded="true"
+          {% if not documents %}disabled{% endif %}
+        >
+        <span class="">{{ section }} ({{ documents|length }})</span>
+        <span class="collapse-icon fa fa-solid fa-chevron-up"></span>
+        </button>
+      </td>
+    </tr>
+    {% for document in documents %}
+      <tr
+        hx-trigger="click"
+        hx-get="{% url 'parcours_doctoral:document:details' request.resolver_match.kwargs.uuid document.type document.uuids_documents.0 %}?document_identifier={{ document.identifiant }}"
+        hx-target="#document-details"
+        hx-swap="outerHTML"
+        class="document-row document-row-section-{{ forloop.parentloop.counter }} collapse show{% if document.identifiant == document_identifier %} table-active{% endif %}"
+      >
+        <td>{{ document.libelle }}</td>
+        <td>{{ document.auteur|default_if_none:'' }}</td>
+        <td>{{ document.modifie_le }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  {% endfor %}
+</table>

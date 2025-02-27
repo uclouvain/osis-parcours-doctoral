@@ -70,6 +70,9 @@ PROGRAM_MANAGER_RULES = {
     'parcours_doctoral.edit_external_supervision_member': is_part_of_education_group,
     'parcours_doctoral.remove_supervision_member': is_part_of_education_group,
     'parcours_doctoral.approve_member_by_pdf': is_part_of_education_group,
+    # --- Documents
+    'parcours_doctoral.view_documents': is_part_of_education_group,
+    'parcours_doctoral.change_documents': is_part_of_education_group,
     # --- Confirmation
     'parcours_doctoral.view_confirmation': is_part_of_education_group,
     'parcours_doctoral.change_confirmation': is_part_of_education_group,
