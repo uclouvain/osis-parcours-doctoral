@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Parcours Doctoral API
-  version: 1.0.6
+  version: 1.0.8
   description: This API delivers data for the Parcours Doctoral project.
   contact:
     name: UCLouvain - OSIS
@@ -1122,6 +1122,76 @@ paths:
           $ref: '#/components/responses/NotFound'
       tags:
       - doctorate
+  /doctorate/{uuid}/assessment-enrollment:
+    get:
+      operationId: listInscriptionEvaluationDTOs
+      description: ''
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      - $ref: '#/components/parameters/Accept-Language'
+      - $ref: '#/components/parameters/X-User-FirstName'
+      - $ref: '#/components/parameters/X-User-LastName'
+      - $ref: '#/components/parameters/X-User-Email'
+      - $ref: '#/components/parameters/X-User-GlobalID'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/InscriptionEvaluationDTO'
+          description: ''
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+      - doctorate
+  /doctorate/{uuid}/assessment-enrollment/{enrollment_uuid}:
+    get:
+      operationId: retrieveInscriptionEvaluationDTO
+      description: ''
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      - name: enrollment_uuid
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      - $ref: '#/components/parameters/Accept-Language'
+      - $ref: '#/components/parameters/X-User-FirstName'
+      - $ref: '#/components/parameters/X-User-LastName'
+      - $ref: '#/components/parameters/X-User-Email'
+      - $ref: '#/components/parameters/X-User-GlobalID'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InscriptionEvaluationDTO'
+          description: ''
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+      - doctorate
   /autocomplete/tutor:
     get:
       operationId: listTutors
@@ -1880,6 +1950,8 @@ components:
             retrieve_complementary_training:
               $ref: '#/components/schemas/ActionLink'
             retrieve_course_enrollment:
+              $ref: '#/components/schemas/ActionLink'
+            retrieve_assessment_enrollment:
               $ref: '#/components/schemas/ActionLink'
             add_training:
               $ref: '#/components/schemas/ActionLink'
@@ -3709,6 +3781,34 @@ components:
       - PRIVATE_DEFENSE
       - PUBLIC_DEFENSE
       type: string
+    InscriptionEvaluationDTO:
+      type: object
+      properties:
+        uuid:
+          type: string
+        uuid_activite:
+          type: string
+        session:
+          type: string
+        statut:
+          type: string
+        inscription_tardive:
+          type: boolean
+        code_unite_enseignement:
+          type: string
+        intitule_unite_enseignement:
+          type: string
+        annee_unite_enseignement:
+          type: integer
+      required:
+      - uuid
+      - uuid_activite
+      - session
+      - statut
+      - inscription_tardive
+      - code_unite_enseignement
+      - intitule_unite_enseignement
+      - annee_unite_enseignement
     Tutor:
       type: object
       properties:

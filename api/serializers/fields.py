@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -124,6 +124,11 @@ PARCOURS_DOCTORAL_ACTION_LINKS = {
     },
     'retrieve_course_enrollment': {
         'path_name': 'parcours_doctoral_api_v1:course-enrollment',
+        'method': 'GET',
+        'params': ['uuid'],
+    },
+    'retrieve_assessment_enrollment': {
+        'path_name': 'parcours_doctoral_api_v1:assessment-enrollment-list',
         'method': 'GET',
         'params': ['uuid'],
     },

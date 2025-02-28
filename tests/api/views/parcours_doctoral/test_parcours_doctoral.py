@@ -206,6 +206,7 @@ class ParcoursDoctoralAPIViewTestCase(CheckActionLinksMixin, APITestCase):
                 'list_jury_members',
                 'update_confirmation',
                 'update_confirmation_extension',
+                'retrieve_assessment_enrollment',
             ],
             forbidden_actions=[
                 'retrieve_complementary_training',

@@ -173,6 +173,9 @@ msgstr "Admission"
 msgid "Abstract"
 msgstr ""
 
+msgid "Academic year"
+msgstr ""
+
 msgid "Accept"
 msgstr ""
 
@@ -196,6 +199,9 @@ msgid "Acronym / Title"
 msgstr ""
 
 msgid "Actions"
+msgstr ""
+
+msgid "Active"
 msgstr ""
 
 msgid "Activities"
@@ -419,6 +425,12 @@ msgid "Are you sure your want to delete this document?"
 msgstr ""
 
 msgid "As it appears in an official course catalogue"
+msgstr ""
+
+msgid "Are you sure you want to withdraw the student from this assessment?"
+msgstr ""
+
+msgid "Assessment enrollments"
 msgstr ""
 
 msgid "Attachment: PhD training"
@@ -734,6 +746,9 @@ msgstr ""
 msgid "Country"
 msgstr ""
 
+msgid "Course"
+msgstr ""
+
 msgctxt "admission"
 msgid "Course"
 msgstr ""
@@ -810,6 +825,9 @@ msgstr "Admissibility decision"
 
 msgid "DEFENSE_PRIVEE"
 msgstr "Private defense"
+
+msgid "DESINSCRITE"
+msgstr "Withdrawn"
 
 msgid "DOCTORAL_TRAINING"
 msgstr "PhD training"
@@ -1082,6 +1100,9 @@ msgid "English"
 msgstr ""
 
 msgid "Enroll in a course"
+msgstr ""
+
+msgid "Enroll in an assessment"
 msgstr ""
 
 msgctxt "admission"
@@ -1470,6 +1491,9 @@ msgstr ""
 msgid "Last name:"
 msgstr ""
 
+msgid "Late enrollment"
+msgstr ""
+
 msgid "Lead supervisor"
 msgstr ""
 
@@ -1480,6 +1504,9 @@ msgid "Lead supervisor assent"
 msgstr ""
 
 msgid "Lead supervisor comment"
+msgstr ""
+
+msgid "Learning unit"
 msgstr ""
 
 msgctxt "admission"
@@ -2366,6 +2393,9 @@ msgstr ""
 msgid "Scientific residencies"
 msgstr ""
 
+msgid "Score encoding periods:"
+msgstr ""
+
 msgctxt "verb"
 msgid "Search"
 msgstr ""
@@ -2429,6 +2459,13 @@ msgstr ""
 
 msgid "Services"
 msgstr ""
+
+msgid "Session"
+msgstr ""
+
+#, python-format
+msgid "Session %(index)s"
+msgstr "Session n°%(index)s"
 
 msgid "Set as member"
 msgstr ""
@@ -2658,6 +2695,9 @@ msgid ""
 "action \"Add a publication to this conference\""
 msgstr ""
 
+msgid "The assessment enrollment has not been found"
+msgstr ""
+
 msgid "The certificate of achievement is being generated."
 msgstr ""
 
@@ -2797,6 +2837,9 @@ msgstr ""
 msgid "The status has been changed to %(status)s."
 msgstr ""
 
+msgid "The student has been withdrawn from this assessment."
+msgstr ""
+
 msgid "There can be no more CA members in the supervision group."
 msgstr ""
 "There can be no more supervisory panel members in the supervision group."
@@ -2902,6 +2945,9 @@ msgstr ""
 msgid ""
 "This part is about seminars you went to and which can be valued in your "
 "doctoral training depending on your domain commission."
+msgstr ""
+
+msgid "This student has not been enrolled in any assessment yet."
 msgstr ""
 
 msgid "This student has not created any activity yet"
@@ -3079,6 +3125,9 @@ msgstr ""
 msgid "Validated credits total"
 msgstr ""
 
+msgid "Visualize"
+msgstr ""
+
 msgid "WORK_CONTRACT"
 msgstr "Work contract"
 
@@ -3095,6 +3144,9 @@ msgid "With reading committee"
 msgstr ""
 
 msgid "Without reading committee"
+msgstr ""
+
+msgid "Withdraw"
 msgstr ""
 
 msgid "Work contract"
