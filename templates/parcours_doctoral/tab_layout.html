@@ -251,6 +251,10 @@
       if (actionsGroupContainer.find('li').length > 0) {
         actionsGroupContainer.removeClass('hidden');
       }
+      // Close the opened modals if desired
+      document.body.addEventListener("closeModal", function(event) {
+        $('.modal.show').modal('hide');
+      });
     });
   </script>
   {% if form %}

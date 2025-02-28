@@ -29,6 +29,7 @@ from unittest.mock import patch
 
 import freezegun
 from base.tests.factories.academic_year import AcademicYearFactory
+from base.tests.factories.learning_unit_year import LearningUnitYearFactory
 from base.tests.factories.program_manager import ProgramManagerFactory
 from django.conf import settings
 from django.forms import Field
@@ -91,7 +92,12 @@ class DoctorateTrainingActivityViewTestCase(TestCase):
         cls.parcours_doctoral = cls.conference.parcours_doctoral
         cls.service = ServiceFactory(parcours_doctoral=cls.parcours_doctoral)
         cls.ucl_course = UclCourseFactory(
-            parcours_doctoral=cls.parcours_doctoral, learning_unit_year__academic_year__current=True
+            parcours_doctoral=cls.parcours_doctoral,
+            learning_unit_year__academic_year__current=True,
+        )
+        cls.other_ucl_course = UclCourseFactory(
+            parcours_doctoral=cls.parcours_doctoral,
+            learning_unit_year__academic_year__year=2022,
         )
 
         # A manager that can manage both parcours_doctorals
@@ -118,8 +124,7 @@ class DoctorateTrainingActivityViewTestCase(TestCase):
         self.assertEqual(repr(self.conference), "Colloques et conférences (10 ects, Non soumise)")
         self.assertEqual(
             str(self.conference),
-            f"Conférence nationale : {self.conference.title}"
-            f" ({self.conference.city}, {self.conference.country}, ) - 10 ECTS",
+            "Colloques et conférences - 10 ECTS",
         )
 
         # With an unsubmitted conference and unsubmitted service, we should have these links
@@ -213,14 +218,14 @@ class DoctorateTrainingActivityViewTestCase(TestCase):
         url = resolve_url(
             f'parcours_doctoral:course-enrollment:edit',
             uuid=self.parcours_doctoral.uuid,
-            activity_id=self.ucl_course.uuid,
+            activity_id=self.other_ucl_course.uuid,
         )
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = {
             'context': ContexteFormation.COMPLEMENTARY_TRAINING.name,
-            'academic_year': self.ucl_course.learning_unit_year.academic_year.year,
-            'learning_unit_year': self.ucl_course.learning_unit_year.acronym,
+            'academic_year': self.other_ucl_course.learning_unit_year.academic_year.year,
+            'learning_unit_year': self.other_ucl_course.learning_unit_year.acronym,
         }
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
@@ -256,7 +261,10 @@ class DoctorateTrainingActivityViewTestCase(TestCase):
         response = self.client.get(f"{add_url}?parent={self.conference.uuid}")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        response = self.client.post(f"{add_url}?parent={self.conference.uuid}", {}, follow=True)
+        response = self.client.post(f"{add_url}?parent={self.conference.uuid}", {
+            'start_date_year': self.conference.start_date.year,
+            'start_date_month': self.conference.start_date.month,
+        }, follow=True)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_edit(self):

@@ -27,7 +27,7 @@ import factory
 from django.conf import settings
 from factory import SubFactory
 
-from parcours_doctoral.ddd.formation.domain.model.enums import CategorieActivite
+from parcours_doctoral.ddd.formation.domain.model.enums import CategorieActivite, ChoixTypeVolume
 from parcours_doctoral.models.activity import Activity
 from parcours_doctoral.models.cdd_config import CddConfiguration
 from parcours_doctoral.tests.factories.parcours_doctoral import ParcoursDoctoralFactory
@@ -94,6 +94,9 @@ class SeminarFactory(ActivityFactory):
     end_date = factory.Faker('date_this_month')
     hour_volume = factory.Faker('random_int', min=0, max=5)
     participating_proof = ['uuid']
+    hour_volume_type = ChoixTypeVolume.JOURS.name
+    organizing_institution = factory.Faker('company')
+    country = factory.SubFactory('reference.tests.factories.country.CountryFactory')
 
 
 class ResidencyFactory(ActivityFactory):

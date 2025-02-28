@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -33,6 +33,7 @@ from parcours_doctoral.auth.predicates.parcours_doctoral import (
     is_jury_in_progress,
     is_parcours_doctoral_promoter,
     is_parcours_doctoral_reference_promoter,
+    is_related_to_an_admission,
 )
 
 
@@ -64,7 +65,7 @@ class Promoter(RoleModel):
             'parcours_doctoral.fill_thesis': is_parcours_doctoral_promoter,
             # A promoter can view as long as he is one of the PhD promoters
             'parcours_doctoral.view_project': is_parcours_doctoral_promoter,
-            'parcours_doctoral.view_cotutelle': is_parcours_doctoral_promoter,
+            'parcours_doctoral.view_cotutelle': is_parcours_doctoral_promoter & is_related_to_an_admission,
             'parcours_doctoral.view_funding': is_parcours_doctoral_promoter,
             'parcours_doctoral.view_supervision': is_parcours_doctoral_promoter,
             'parcours_doctoral.view_supervision_canvas': is_parcours_doctoral_reference_promoter,

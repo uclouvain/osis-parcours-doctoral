@@ -114,7 +114,6 @@ class PublicationDTOFactory(factory.Factory):
     date = "test"
     auteurs = "test"
     role = "test"
-    nom_revue_maison_edition = "test"
     statut_publication = "test"
     preuve_acceptation = "test"
 
@@ -130,6 +129,7 @@ class ResidencyCommunicationDTOFactory(factory.Factory):
     date = "test"
     institution_organisatrice = "test"
     titre_communication = "test"
+    attestation_communication = "test"
 
 
 class ResidencyDTOFactory(factory.Factory):
@@ -156,6 +156,9 @@ class SeminarDTOFactory(factory.Factory):
     date_fin = "test"
     attestation_participation = "test"
     volume_horaire = "test"
+    volume_horaire_type = "hours"
+    pays = "test"
+    institution_organisatrice = "test"
 
 
 class ServiceDTOFactory(factory.Factory):
@@ -188,9 +191,6 @@ class SeminarCommunicationDTOFactory(factory.Factory):
         abstract = False
 
     date = "test"
-    pays = "test"
-    ville = "test"
-    institution_organisatrice = "test"
     titre_communication = "test"
     orateur_oratrice = "test"
 
@@ -200,6 +200,7 @@ class CourseDTOFactory(factory.Factory):
         model = dtos.CoursDTO
         abstract = False
 
+    avec_evaluation = False
     type = "test"
     nom = "test"
     institution = "test"

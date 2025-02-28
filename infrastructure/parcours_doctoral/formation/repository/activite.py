@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -138,9 +138,6 @@ class ActiviteRepository(IActiviteRepository):
             return SeminaireCommunicationDTO(
                 date=activity.start_date,
                 en_ligne=activity.is_online,
-                pays=activity.country.iso_code if activity.country else None,
-                ville=activity.city,
-                institution_organisatrice=activity.organizing_institution,
                 site_web=activity.website,
                 titre_communication=activity.title,
                 orateur_oratrice=activity.authors,
@@ -198,6 +195,7 @@ class ActiviteRepository(IActiviteRepository):
         elif categorie == CategorieActivite.PUBLICATION:
             return PublicationDTO(
                 type=activity.type,
+                est_publication_nationale=activity.is_publication_national,
                 intitule=activity.title,
                 date=activity.start_date,
                 auteurs=activity.authors,
@@ -205,6 +203,7 @@ class ActiviteRepository(IActiviteRepository):
                 nom_revue_maison_edition=activity.journal,
                 preuve_acceptation=activity.acceptation_proof,
                 statut_publication=activity.publication_status and ChoixStatutPublication[activity.publication_status],
+                avec_comite_de_lecture=activity.with_reading_committee,
                 mots_cles=activity.keywords,
                 resume=activity.summary,
                 reference_dial=activity.dial_reference,
@@ -214,9 +213,13 @@ class ActiviteRepository(IActiviteRepository):
             return SeminaireDTO(
                 type=activity.type,
                 nom=activity.title,
+                pays=activity.country.iso_code if activity.country else None,
+                ville=activity.city,
+                institution_organisatrice=activity.organizing_institution,
                 date_debut=activity.start_date,
                 date_fin=activity.end_date,
                 volume_horaire=activity.hour_volume,
+                volume_horaire_type=activity.hour_volume_type,
                 attestation_participation=activity.participating_proof,
             )
         elif categorie == CategorieActivite.RESIDENCY:
@@ -225,6 +228,7 @@ class ActiviteRepository(IActiviteRepository):
                 description=activity.subtitle,
                 date_debut=activity.start_date,
                 date_fin=activity.end_date,
+                institution=activity.organizing_institution,
                 pays=activity.country.iso_code if activity.country else None,
                 ville=activity.city,
                 preuve=activity.participating_proof,
@@ -257,6 +261,8 @@ class ActiviteRepository(IActiviteRepository):
                 date_debut=activity.start_date,
                 date_fin=activity.end_date,
                 volume_horaire=activity.hour_volume,
+                avec_evaluation=activity.is_online,
+                note=activity.mark,
                 titulaire=activity.authors,
                 certificat=activity.participating_proof,
                 commentaire=activity.comment,

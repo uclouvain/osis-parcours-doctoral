@@ -25,7 +25,10 @@
 # ##############################################################################
 
 from .lister_parcours_doctoraux_service import lister_parcours_doctoraux
+from .recuperer_informations_tableau_bord_service import recuperer_informations_tableau_bord
+
 
 __all__ = [
     'lister_parcours_doctoraux',
+    'recuperer_informations_tableau_bord',
 ]

@@ -45,24 +45,11 @@ def modifier_projet(
     # GIVEN
     entity_id = ParcoursDoctoralIdentityBuilder.build_from_uuid(cmd.uuid)
     parcours_doctoral = parcours_doctoral_repository.get(entity_id=entity_id)
-    bourse_recherche_id = BourseIdentityBuilder.build_from_uuid(cmd.bourse_recherche) if cmd.bourse_recherche else None
 
     # WHEN
     parcours_doctoral.modifier_projet(
-        type_financement=cmd.type_financement,
-        type_contrat_travail=cmd.type_contrat_travail,
-        eft=cmd.eft,
-        bourse_recherche=bourse_recherche_id,
-        autre_bourse_recherche=cmd.autre_bourse_recherche,
-        bourse_date_debut=cmd.bourse_date_debut,
-        bourse_date_fin=cmd.bourse_date_fin,
-        bourse_preuve=cmd.bourse_preuve,
-        duree_prevue=cmd.duree_prevue,
-        temps_consacre=cmd.temps_consacre,
-        est_lie_fnrs_fria_fresh_csc=cmd.est_lie_fnrs_fria_fresh_csc,
-        commentaire_financement=cmd.commentaire_financement,
-        titre=cmd.titre_projet,
-        resume=cmd.resume_projet,
+        titre=cmd.titre,
+        resume=cmd.resume,
         langue_redaction_these=cmd.langue_redaction_these,
         institut_these=cmd.institut_these,
         lieu_these=cmd.lieu_these,

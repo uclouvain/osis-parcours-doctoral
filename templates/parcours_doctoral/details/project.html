@@ -27,8 +27,10 @@
 
 {% block tab_content %}
   <div class="card">
-    <div class="card-body">
+    <div class="card-header">
       <h4 class="card-title">{% translate "Course choice" %}</h4>
+    </div>
+    <div class="card-body">
       {% if parcours_doctoral.justification %}
             {% field_data _("Brief justification") parcours_doctoral.justification|linebreaks %}
         {% endif %}
@@ -41,41 +43,10 @@
   </div>
 
   <div class="card">
-    <div class="card-body">
-      <h4 class="card-title">{% translate "Funding" context "parcours_doctoral" %}</h4>
-      {% if parcours_doctoral.financement.type %}
-        {% field_data _("Funding type") parcours_doctoral.financement.type|enum_display:'ChoixTypeFinancement' %}
-        {% if parcours_doctoral.financement.type == "WORK_CONTRACT" %}
-          {% field_data _("Work contract") parcours_doctoral.financement.type_contrat_travail|enum_display:'ChoixTypeContratTravail' %}
-          {% field_data fte_label parcours_doctoral.financement.eft|default_if_none:'' %}
-        {% elif parcours_doctoral.financement.type == "SEARCH_SCHOLARSHIP" %}
-          <dl>
-            <dt>{% translate "Research scholarship" %}</dt>
-            <dd>
-              {% if parcours_doctoral.financement.bourse_recherche %}
-                {{ parcours_doctoral.financement.bourse_recherche.nom_court }} - {{ parcours_doctoral.financement.bourse_recherche.nom_long }}
-              {% elif parcours_doctoral.financement.autre_bourse_recherche %}
-                {{ parcours_doctoral.financement.autre_bourse_recherche }}
-              {% else %}
-                {% translate "Incomplete field" %}
-              {% endif %}
-            </dd>
-          </dl>
-          {% field_data _("Scholarship start date") parcours_doctoral.financement.bourse_date_debut %}
-          {% field_data _("Scholarship end date") parcours_doctoral.financement.bourse_date_fin %}
-          {% field_data _("Proof of scholarship") parcours_doctoral.financement.bourse_preuve %}
-        {% endif %}
-        {% field_data _("Estimated time to complete the PhD (in months)") parcours_doctoral.financement.duree_prevue|default_if_none:'' %}
-        {% field_data allocated_time_label parcours_doctoral.financement.temps_consacre|default_if_none:'' %}
-        {% field_data _("Is your admission request linked with a FNRS, FRIA, FRESH or CSC application?") parcours_doctoral.financement.est_lie_fnrs_fria_fresh_csc %}
-        {% field_data _("Comment") parcours_doctoral.financement.commentaire|linebreaks %}
-      {% endif %}
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-body">
+    <div class="card-header">
       <h4 class="card-title">{% translate "PhD research project" %}</h4>
+    </div>
+    <div class="card-body">
       {% field_data _("Project title") parcours_doctoral.projet.titre %}
       {% field_data _("Project resume") parcours_doctoral.projet.resume|linebreaks %}
       {% field_data _("Thesis language") parcours_doctoral.projet.langue_redaction_these|osis_language_name %}
@@ -89,7 +60,7 @@
           {% endif %}
         </dd>
       </dl>
-      {% field_data _("Thesis location") parcours_doctoral.projet.lieu_these %}
+      {% field_data _("Thesis location in UCLouvain") parcours_doctoral.projet.lieu_these %}
 
       {% field_data _("PhD research project") parcours_doctoral.projet.documents_projet %}
       {% field_data _("PhD proposal") parcours_doctoral.projet.proposition_programme_doctoral %}
@@ -100,8 +71,10 @@
   </div>
 
   <div class="card">
-    <div class="card-body">
+    <div class="card-header">
       <h4 class="card-title">{% translate "PhD research experience" %}</h4>
+    </div>
+    <div class="card-body">
       {% field_data _("Has your PhD project already started?") parcours_doctoral.projet.projet_doctoral_deja_commence %}
       {% if parcours_doctoral.projet.projet_doctoral_deja_commence %}
         {% field_data _("Institution") parcours_doctoral.projet.projet_doctoral_institution %}

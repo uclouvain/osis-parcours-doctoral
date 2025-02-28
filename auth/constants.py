@@ -42,6 +42,7 @@ READ_ACTIONS_BY_TAB = {
     'languages': 'parcours_doctoral.view_languages',
     # Project
     'project': 'parcours_doctoral.view_project',
+    'funding': 'parcours_doctoral.view_funding',
     'supervision': 'parcours_doctoral.view_supervision',
     # Confirmation exam
     'confirmation': 'parcours_doctoral.view_confirmation',
@@ -66,7 +67,7 @@ READ_ACTIONS_BY_TAB = {
     'comments': 'parcours_doctoral.view_comments',
     'checklist': 'parcours_doctoral.view_checklist',
     # Documents
-    'documents': 'parcours_doctoral.view_documents_management',
+    'documents': 'parcours_doctoral.view_documents',
 }
 
 # Association between a write-only tab name (path name) and a permission
@@ -87,6 +88,7 @@ UPDATE_ACTIONS_BY_TAB = {
     'languages': 'parcours_doctoral.change_languages',
     # Project
     'project': 'parcours_doctoral.change_project',
+    'funding': 'parcours_doctoral.change_funding',
     'supervision': 'parcours_doctoral.change_supervision',
     # Confirmation exam
     'confirmation': 'parcours_doctoral.change_confirmation',
@@ -100,7 +102,7 @@ UPDATE_ACTIONS_BY_TAB = {
     'complementary-training': '',
     'course-enrollment': '',
     # Management
-    'documents': 'parcours_doctoral.view_documents_management',
+    'documents': 'parcours_doctoral.view_documents',
     'checklist': 'parcours_doctoral.view_checklist',
     'comments': 'parcours_doctoral.change_comments',
     # Jury

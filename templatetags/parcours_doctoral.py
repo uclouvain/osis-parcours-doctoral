@@ -25,15 +25,15 @@
 # ##############################################################################
 import re
 from dataclasses import dataclass
-from typing import List, Optional
 
 import attr
 from django import template
 from django.conf import settings
 from django.core.validators import EMPTY_VALUES
+from django.db.models import QuerySet
 from django.template.defaultfilters import floatformat
 from django.urls import NoReverseMatch, reverse
-from django.utils.safestring import SafeString, mark_safe
+from django.utils.safestring import mark_safe
 from django.utils.translation import get_language
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import pgettext
@@ -41,6 +41,7 @@ from django_bootstrap5.renderers import FieldRenderer
 from osis_document.api.utils import get_remote_metadata, get_remote_token
 
 from admission.utils import format_school_title, get_superior_institute_queryset
+from base.forms.utils.file_field import PDF_MIME_TYPE
 from base.models.entity_version import EntityVersion
 from base.models.organization import Organization
 from parcours_doctoral.auth.constants import READ_ACTIONS_BY_TAB, UPDATE_ACTIONS_BY_TAB
@@ -54,6 +55,7 @@ from parcours_doctoral.ddd.formation.domain.model.enums import (
 from parcours_doctoral.ddd.repository.i_parcours_doctoral import formater_reference
 from parcours_doctoral.forms.supervision import MemberSupervisionForm
 from parcours_doctoral.models import ParcoursDoctoral
+from parcours_doctoral.utils.formatting import format_activity_ects
 from reference.models.language import Language
 
 register = template.Library()
@@ -79,9 +81,9 @@ class Tab:
 
 
 TAB_TREE = {
-    # Tab('documents', _('Documents'), 'folder-open'): [
-    #     Tab('documents', _('Documents'), 'folder-open'),
-    # ],
+    Tab('documents', _('Documents'), 'folder-open'): [
+        Tab('documents', _('Documents'), 'folder-open'),
+    ],
     # Tab('person', _('Personal data'), 'user'): [
     #     Tab('person', _('Identification'), 'user'),
     #     Tab('coordonnees', _('Contact details'), 'user'),
@@ -95,6 +97,7 @@ TAB_TREE = {
     # ],
     Tab('doctorate', pgettext('tab', 'PhD project'), 'graduation-cap'): [
         Tab('project', pgettext('tab', 'Research project')),
+        Tab('funding', pgettext('tab', 'Funding')),
         Tab('cotutelle', _('Cotutelle')),
         Tab('supervision', _('Supervision')),
     ],
@@ -105,6 +108,8 @@ TAB_TREE = {
     Tab('training', pgettext('admission', 'Course'), 'book-open-reader'): [
         Tab('doctoral-training', _('PhD training')),
         Tab('complementary-training', _('Complementary training')),
+    ],
+    Tab('course-enrollment', _('Course unit enrolment'), 'book-open-reader'): [
         Tab('course-enrollment', _('Course unit enrolment')),
     ],
     Tab('defense', pgettext('doctorate tab', 'Defense'), 'person-chalkboard'): [
@@ -405,7 +410,7 @@ def field_data(
         elif context.get('load_files') is False:
             data = _('Specified') if data else _('Incomplete field')
         elif data:
-            template_string = "{% load osis_document %}{% document_visualizer files for_modified_upload=True %}"
+            template_string = "{% load osis_document %}{% document_visualizer files %}"
             template_context = {'files': data}
             data = template.Template(template_string).render(template.Context(template_context))
         else:
@@ -508,13 +513,14 @@ def osis_language_name(code):
 
 
 @register.inclusion_tag('parcours_doctoral/includes/bootstrap_field_with_tooltip.html')
-def bootstrap_field_with_tooltip(field, classes='', show_help=False, html_tooltip=False, label=None):
+def bootstrap_field_with_tooltip(field, classes='', show_help=False, html_tooltip=False, label=None, label_class=''):
     return {
         'field': field,
         'classes': classes,
         'show_help': show_help,
         'html_tooltip': html_tooltip,
         'label': label,
+        'label_class': label_class,
     }
 
 
@@ -536,10 +542,7 @@ def default_if_none_or_empty(value, arg):
 
 @register.filter()
 def format_ects(ects):
-    if not ects:
-        ects = ""
-    ects = floatformat(ects, -2)
-    return f"{ects} ECTS"
+    return format_activity_ects(ects=ects)
 
 
 @register.simple_tag
@@ -556,9 +559,10 @@ def get_superior_institute_name(institute_uuid):
 def superior_institute_name(organization_uuid):
     if not organization_uuid:
         return ''
-    try:
-        institute = get_superior_institute_queryset().get(organization_uuid=organization_uuid)
-    except EntityVersion.DoesNotExist:
+    institute = (
+        get_superior_institute_queryset().filter(organization_uuid=organization_uuid).order_by('-start_date').first()
+    )
+    if not institute:
         return organization_uuid
     return mark_safe(format_school_title(institute))
 
@@ -572,3 +576,47 @@ def edit_external_member_form(context, membre):
         prefix=f"member-{membre.uuid}",
         initial=initial,
     )
+
+
+@register.simple_tag
+def url_params_from_form(form):
+    """From a django form, return the form data as url request params"""
+    url_params = ''
+
+    if form.is_valid():
+        for field_name, field_value in form.cleaned_data.items():
+            if not field_value:
+                continue
+            if isinstance(field_value, (list, tuple, set, dict, QuerySet)):
+                for sub_value in field_value:
+                    url_params += f'&{field_name}={sub_value}'
+            else:
+                url_params += f'&{field_name}={field_value}'
+
+    return url_params
+
+
+@register.inclusion_tag('parcours_doctoral/document/dummy.html')
+def document_component(document_write_token, document_metadata, can_edit=True):
+    """Display the right editor component depending on the file type."""
+    if document_metadata:
+        if document_metadata.get('mimetype') == PDF_MIME_TYPE:
+            attrs = {}
+            if not can_edit:
+                attrs = {action: False for action in ['comment', 'highlight', 'rotation']}
+            return {
+                'template': 'osis_document/editor.html',
+                'value': document_write_token,
+                'base_url': settings.OSIS_DOCUMENT_BASE_URL,
+                'attrs': attrs,
+            }
+        elif document_metadata.get('mimetype') in IMAGE_MIME_TYPES:
+            return {
+                'template': 'parcours_doctoral/document/image.html',
+                'url': document_metadata.get('url'),
+                'alt': document_metadata.get('name'),
+            }
+    return {
+        'template': 'parcours_doctoral/document/no_document.html',
+        'message': _('Non-retrievable document') if document_write_token else _('No document'),
+    }

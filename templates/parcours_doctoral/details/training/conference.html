@@ -7,7 +7,7 @@
   * The core business involves the administration of students, teachers,
   * courses, programs and so on.
   *
-  * Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+  * Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
   *
   * This program is free software: you can redistribute it and/or modify
   * it under the terms of the GNU General Public License as published by
@@ -29,12 +29,7 @@
     from {{ start }} to {{ end }}
   {% endblocktrans %}
 {% endif %}
-{% if activity.website %}
-  {% firstof '<a href="'|safe|add:activity.website|add:'" target="_blank">'|safe|add:activity.website|add:'</a>'|safe "" as website %}
-{% endif %}
 
-
-{#  We cannot use {% panel %} as the title contains HTML #}
 <div
   class="card card-{{ activity|status_as_class }}"
   data-status="{{ activity|status_list }}"
@@ -55,10 +50,17 @@
     <div>
       <p>
         <strong class="d-block">{% trans "Event description" %}</strong>
-        {{ activity.title }} - {{ period }} - {{ activity.is_online|format_is_online }} - {{ website }}
-        <br/>
-        {{ activity.organizing_institution }}, {{ activity.city }}, {{ activity.country }}
+        {{ activity.title }}, {{ activity.type }}, {{ period }}, {{ activity.city }}, {{ activity.country }}.
+        {% if activity.website %}<a href="{{ activity.website }}" target="_blank">{{ activity.website }}</a>{% endif %}
       </p>
+      {% if activity.organizing_institution %}
+      <div class="row">
+          <p class="col-md-4">
+            <strong class="d-block">{% trans "Organising institution" %}</strong>
+            {{ activity.organizing_institution }}
+          </p>
+      </div>
+      {% endif %}
       <div class="row">
         {% if activity.participating_days %}
           <p class="col-md-4">
