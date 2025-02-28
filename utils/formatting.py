@@ -23,6 +23,7 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from django.template.defaultfilters import floatformat
 
 
 def format_address(street: str, street_number: str, postal_code: str, city: str, country: str):
@@ -41,3 +42,11 @@ def format_address(street: str, street_number: str, postal_code: str, city: str,
         country,
     ]
     return ', '.join(filter(lambda part: part and len(part) > 1, address_parts))
+
+
+def format_activity_ects(ects):
+    """Format the number of ECTS related to an activity to display them."""
+    if not ects:
+        ects = ''
+    ects = floatformat(ects, -2)
+    return f'{ects} ECTS'

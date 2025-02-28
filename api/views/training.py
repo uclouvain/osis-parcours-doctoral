@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -24,7 +24,6 @@
 #
 # ##############################################################################
 
-from base.ddd.utils.business_validator import MultipleBusinessExceptions
 from rest_framework import status
 from rest_framework.generics import GenericAPIView
 from rest_framework.mixins import RetrieveModelMixin
@@ -32,6 +31,7 @@ from rest_framework.response import Response
 from rest_framework.schemas.openapi import AutoSchema
 from rest_framework.settings import api_settings
 
+from base.ddd.utils.business_validator import MultipleBusinessExceptions
 from infrastructure.messages_bus import message_bus_instance
 from parcours_doctoral.api.permissions import DoctorateAPIPermissionRequiredMixin
 from parcours_doctoral.api.schema import (
@@ -174,7 +174,7 @@ class TrainingView(DoctorateAPIPermissionRequiredMixin, GenericAPIView):
         instance = self.get_object()
         data = {
             **request.data,
-            'doctorate': self.get_permission_object().pk,
+            'parcours_doctoral': self.get_permission_object().pk,
         }
         serializer = DoctoralTrainingActivitySerializer(
             instance, parcours_doctoral=self.get_permission_object(), data=data
