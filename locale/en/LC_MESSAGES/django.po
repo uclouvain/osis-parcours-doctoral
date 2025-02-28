@@ -1280,7 +1280,7 @@ msgstr ""
 
 msgid ""
 "If known, indicate the name of the laboratory, clinical department or "
-"research centre where the thesis will be carried out"
+"research centre where the thesis will be carried out at UCLouvain"
 msgstr ""
 
 msgid ""
@@ -1338,8 +1338,8 @@ msgid ""
 msgstr ""
 
 msgid ""
-"Information about a potential cotutelle are to be inputted in the \"Doctoral "
-"project\" part."
+"Information about a potential cotutelle are to be inputted in the "
+"\"Research\" part."
 msgstr ""
 
 msgctxt "jury"
@@ -1365,7 +1365,7 @@ msgstr ""
 msgid "Institution Federation Wallonie-Bruxelles"
 msgstr ""
 
-msgid "Institution in which the PhD has been realised / started."
+msgid "Institution in which the PhD thesis has been realised / started"
 msgstr ""
 
 msgid "Institution should be set when PhD has been set to yes or partial"
@@ -1889,9 +1889,6 @@ msgctxt "CategorieActivite"
 msgid "PAPER"
 msgstr "Examination"
 
-msgid "PARTIAL"
-msgstr "Partially"
-
 msgid "PDF file"
 msgstr ""
 
@@ -1939,10 +1936,6 @@ msgid "PhD"
 msgstr ""
 
 msgid "PhD already done"
-msgstr ""
-
-msgctxt "tab"
-msgid "PhD project"
 msgstr ""
 
 msgid "PhD proposal"
@@ -2100,9 +2093,6 @@ msgstr ""
 msgid "Proximity Commission for Dental Sciences (DENT)"
 msgstr ""
 
-msgid "Proximity Commission for Genetics and Immunology (GIM)"
-msgstr ""
-
 msgid "Proximity Commission for Motricity Sciences (MOTR)"
 msgstr ""
 
@@ -2119,7 +2109,8 @@ msgid "Proximity commission / Subdomain"
 msgstr ""
 
 msgid ""
-"Proximity commission for cellular and molecular biology, biochemistry (BCM)"
+"Proximity commission for biochemistry, cellular and molecular biology, "
+"genetics, immunology (BCGIM)"
 msgstr ""
 
 msgid "Proximity commission for experimental and clinical research (ECLI)"
@@ -2237,11 +2228,11 @@ msgid ""
 "specifics dispositions."
 msgstr ""
 
-msgid "Research institute"
+msgctxt "tab"
+msgid "Research"
 msgstr ""
 
-msgctxt "tab"
-msgid "Research project"
+msgid "Research institute"
 msgstr ""
 
 msgid "Research report"
@@ -2380,9 +2371,6 @@ msgid "Search"
 msgstr ""
 
 msgid "Search a person by surname"
-msgstr ""
-
-msgid "Search a tutor by name"
 msgstr ""
 
 msgid "Search for an EU code (outside the EU of the form)"
@@ -2841,7 +2829,7 @@ msgstr ""
 msgid "Thesis language"
 msgstr ""
 
-msgid "Thesis location in UCLouvain"
+msgid "Thesis location"
 msgstr ""
 
 msgid "Thesis title"
@@ -3154,9 +3142,9 @@ msgid ""
 "You must add at least one external supervisor in order to request signatures."
 msgstr ""
 
-msgid "You must add at least two CA member in order to request signatures."
+msgid "You must add at least two CA members in order to request signatures."
 msgstr ""
-"You must add at least two supervisory panel member in order to request "
+"You must add at least two supervisory panel members in order to request "
 "signatures."
 
 msgid "You must be a member of the committee to access this doctoral training"

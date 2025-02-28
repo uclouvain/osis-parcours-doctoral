@@ -1365,10 +1365,10 @@ msgstr ""
 
 msgid ""
 "If known, indicate the name of the laboratory, clinical department or "
-"research centre where the thesis will be carried out"
+"research centre where the thesis will be carried out at UCLouvain"
 msgstr ""
 "Si connu, indiquez ici le nom du laboratoire, du service clinique ou du "
-"centre de recherche où sera réalisée la thèse"
+"centre de recherche où sera réalisée la thèse à l'UCLouvain"
 
 msgid ""
 "If necessary, please finish inputting doctoral activities and complete the "
@@ -1438,11 +1438,11 @@ msgstr ""
 "dans lequel vous n’êtes plus inscrit à ce jour."
 
 msgid ""
-"Information about a potential cotutelle are to be inputted in the \"Doctoral "
-"project\" part."
+"Information about a potential cotutelle are to be inputted in the "
+"\"Research\" part."
 msgstr ""
 "Les informations concernant une éventuelle cotutelle sont à indiquer dans la "
-"partie « Projet doctoral »."
+"partie « Recherche »."
 
 msgctxt "jury"
 msgid "Institute"
@@ -1467,8 +1467,8 @@ msgstr "Institution"
 msgid "Institution Federation Wallonie-Bruxelles"
 msgstr "Institution de la Federation Wallonie-Bruxelles"
 
-msgid "Institution in which the PhD has been realised / started."
-msgstr "Institution où le PhD a été réalisé/entamé."
+msgid "Institution in which the PhD thesis has been realised / started"
+msgstr "Institution où la thèse de doctorat a été réalisée/entamée"
 
 msgid "Institution should be set when PhD has been set to yes or partial"
 msgstr ""
@@ -2049,9 +2049,6 @@ msgctxt "CategorieActivite"
 msgid "PAPER"
 msgstr "Épreuve"
 
-msgid "PARTIAL"
-msgstr "En partie"
-
 msgid "PDF file"
 msgstr "Fichier PDF"
 
@@ -2100,10 +2097,6 @@ msgstr "Doctorat"
 
 msgid "PhD already done"
 msgstr "Doctorat déjà réalisé"
-
-msgctxt "tab"
-msgid "PhD project"
-msgstr "Projet doctoral"
 
 msgid "PhD proposal"
 msgstr "Projet de formation doctorale"
@@ -2271,9 +2264,6 @@ msgstr "Titre proposé pour la thèse"
 msgid "Proximity Commission for Dental Sciences (DENT)"
 msgstr "Commission de proximité de sciences dentaires (DENT)"
 
-msgid "Proximity Commission for Genetics and Immunology (GIM)"
-msgstr "Commission de proximité de génétique et immunologie (GIM)"
-
 msgid "Proximity Commission for Motricity Sciences (MOTR)"
 msgstr "Commission de proximité de sciences de la motricité (MOTR)"
 
@@ -2290,10 +2280,11 @@ msgid "Proximity commission / Subdomain"
 msgstr "Commission de proximité"
 
 msgid ""
-"Proximity commission for cellular and molecular biology, biochemistry (BCM)"
+"Proximity commission for biochemistry, cellular and molecular biology, "
+"genetics, immunology (BCGIM)"
 msgstr ""
-"Commission de proximité de biologie cellulaire et moléculaire, biochimie "
-"(BCM)"
+"Commission de proximité de biochimie, biologie cellulaire et moléculaire, "
+"génétique, immunologie (BCGIM)"
 
 msgid "Proximity commission for experimental and clinical research (ECLI)"
 msgstr "Commission de proximité de recherche expérimentale et clinique (ECLI)"
@@ -2417,12 +2408,12 @@ msgstr ""
 "Champ obligatoire dans certaines commissions doctorales, référez-vous aux "
 "dispositions particulières de votre commission."
 
+msgctxt "tab"
+msgid "Research"
+msgstr "Recherche"
+
 msgid "Research institute"
 msgstr "Institut de recherche"
-
-msgctxt "tab"
-msgid "Research project"
-msgstr "Projet de recherche doctorale"
 
 msgid "Research report"
 msgstr "Rapport de recherche"
@@ -2563,9 +2554,6 @@ msgstr "Rechercher"
 
 msgid "Search a person by surname"
 msgstr "Rechercher une personne par son nom"
-
-msgid "Search a tutor by name"
-msgstr "Rechercher un tuteur par son nom"
 
 msgid "Search for an EU code (outside the EU of the form)"
 msgstr "Rechercher un code UE (hors UE du formulaire)"
@@ -3073,8 +3061,8 @@ msgstr "L'institut de la thèse est obligatoire."
 msgid "Thesis language"
 msgstr "Langue de rédaction de la thèse"
 
-msgid "Thesis location in UCLouvain"
-msgstr "Lieu de la thèse à l'UCLouvain"
+msgid "Thesis location"
+msgstr "Lieu de la thèse"
 
 msgid "Thesis title"
 msgstr "Titre de la thèse"
@@ -3236,7 +3224,7 @@ msgstr ""
 "brefs délais après l’épreuve de confirmation"
 
 msgid "To complete"
-msgstr "À compléter"
+msgstr "A compléter"
 
 msgid ""
 "To visualize and edit a document, please select it in the list opposite."
@@ -3438,9 +3426,9 @@ msgstr ""
 "Vous devez ajouter au moins un promoteur externe afin de demander les "
 "signatures."
 
-msgid "You must add at least two CA member in order to request signatures."
+msgid "You must add at least two CA members in order to request signatures."
 msgstr ""
-"Vous devez ajouter au moins deux membre du comité d'accompagnement afin de "
+"Vous devez ajouter au moins deux membres du comité d'accompagnement afin de "
 "demander les signatures."
 
 msgid "You must be a member of the committee to access this doctoral training"

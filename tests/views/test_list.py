@@ -71,10 +71,7 @@ from parcours_doctoral.ddd.formation.domain.model.enums import (
 from parcours_doctoral.forms.list import ALL_FEMININE_EMPTY_CHOICE
 from parcours_doctoral.models import ParcoursDoctoral
 from parcours_doctoral.models.entity_proxy import EntityProxy
-from parcours_doctoral.tests.factories.activity import (
-    CourseFactory,
-    VaeFactory,
-)
+from parcours_doctoral.tests.factories.activity import CourseFactory, VaeFactory
 from parcours_doctoral.tests.factories.confirmation_paper import (
     ConfirmationPaperFactory,
 )

@@ -25,10 +25,12 @@
 # ##############################################################################
 from typing import List, Optional
 
-from base.auth.roles.tutor import Tutor
+from django.db.models import Exists, OuterRef
 from django.utils.translation import get_language
 from django.utils.translation import gettext_lazy as _
 
+from base.models.person import Person
+from base.models.student import Student
 from parcours_doctoral.ddd.domain.model._promoteur import PromoteurIdentity
 from parcours_doctoral.ddd.domain.service.i_promoteur import IPromoteurTranslator
 from parcours_doctoral.ddd.domain.validator.exceptions import (
@@ -85,7 +87,13 @@ class PromoteurTranslator(IPromoteurTranslator):
 
     @classmethod
     def _get_queryset(cls, matricule):
-        return Tutor.objects.filter(
-            person__user_id__isnull=False,
-            person__global_id=matricule,
-        ).select_related("person")
+        return Person.objects.alias(
+            # Is the person a student?
+            is_student=Exists(Student.objects.filter(person=OuterRef('pk'))),
+        ).filter(
+            global_id=matricule,
+            # Remove unexistent users
+            user_id__isnull=False,
+            # Remove students
+            is_student=False,
+        )
