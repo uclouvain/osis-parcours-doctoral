@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -27,12 +27,15 @@ from unittest import mock
 from uuid import uuid4
 
 import freezegun
-from base.tests.factories.organization import OrganizationFactory
-from base.tests.factories.person import PersonFactory
 from django.shortcuts import resolve_url
 from rest_framework import status
 from rest_framework.test import APITestCase
 
+from admission.ddd.admission.doctorat.preparation.domain.model.enums import (
+    ChoixTypeAdmission,
+)
+from base.tests.factories.organization import OrganizationFactory
+from base.tests.factories.person import PersonFactory
 from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from parcours_doctoral.tests.factories.parcours_doctoral import ParcoursDoctoralFactory
 from parcours_doctoral.tests.factories.roles import StudentRoleFactory
@@ -68,6 +71,7 @@ class CotutelleAPIViewTestCase(APITestCase):
         self.doctorate = ParcoursDoctoralFactory(
             supervision_group=self.process,
             student=self.student,
+            admission__type=ChoixTypeAdmission.ADMISSION.name,
         )
         self.url = resolve_url('parcours_doctoral_api_v1:cotutelle', uuid=self.doctorate.uuid)
 
@@ -149,6 +153,16 @@ class CotutelleAPIViewTestCase(APITestCase):
         self.client.force_authenticate(user=self.other_committee_member_user)
         response = self.client.get(self.url, format='json')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_update_cotutelle_with_student_for_a_pre_admission(self):
+        self.client.force_authenticate(user=self.student.user)
+
+        self.doctorate.admission.type = ChoixTypeAdmission.PRE_ADMISSION.name
+        self.doctorate.save()
+
+        response = self.client.get(self.url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_update_cotutelle_with_student(self):
         self.client.force_authenticate(user=self.student.user)

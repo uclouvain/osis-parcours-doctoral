@@ -277,8 +277,6 @@ class ProjetDoctoralValidatorList(TwoStepsMultipleBusinessExceptionListValidator
 
 @attr.dataclass(frozen=True, slots=True)
 class ModifierProjetValidatorList(TwoStepsMultipleBusinessExceptionListValidator):
-    type_financement: Optional[str] = ''
-    type_contrat_travail: Optional[str] = ''
     doctorat_deja_realise: str = ChoixDoctoratDejaRealise.NO.name
     institution: Optional[str] = ''
     domaine_these: Optional[str] = ''
@@ -288,7 +286,6 @@ class ModifierProjetValidatorList(TwoStepsMultipleBusinessExceptionListValidator
 
     def get_invariants_validators(self) -> List[BusinessValidator]:
         return [
-            ShouldTypeContratTravailDependreTypeFinancement(self.type_financement, self.type_contrat_travail),
             ShouldInstitutionDependreDoctoratRealise(self.doctorat_deja_realise, self.institution),
             ShouldDomaineDependreDoctoratRealise(self.doctorat_deja_realise, self.domaine_these),
         ]

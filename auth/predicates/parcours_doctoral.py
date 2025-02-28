@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -27,6 +27,9 @@ from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
 from rules import predicate
 
+from admission.ddd.admission.doctorat.preparation.domain.model.enums import (
+    ChoixTypeAdmission,
+)
 from osis_role.cache import predicate_cache
 from osis_role.errors import predicate_failed_msg
 from parcours_doctoral.ddd.domain.model.enums import (
@@ -58,6 +61,12 @@ def is_parcours_doctoral_student(self, user: User, obj: ParcoursDoctoral):
 @predicate_failed_msg(message=_("The doctorate is not initialized"))
 def is_initialized(self, user: User, obj: ParcoursDoctoral):
     return obj.is_initialized
+
+
+@predicate(bind=True)
+@predicate_failed_msg(message=_("The doctorate is not initialized"))
+def is_related_to_an_admission(self, user: User, obj: ParcoursDoctoral):
+    return obj.admission.type == ChoixTypeAdmission.ADMISSION.name
 
 
 @predicate(bind=True)

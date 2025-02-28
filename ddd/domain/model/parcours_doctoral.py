@@ -47,7 +47,6 @@ from parcours_doctoral.ddd.domain.model.enums import (
 )
 from parcours_doctoral.ddd.domain.validator.validator_by_business_action import (
     ModifierFinancementValidatorList,
-    ModifierProjetValidatorList,
     ProjetDoctoralValidatorList,
 )
 
@@ -181,7 +180,7 @@ class ParcoursDoctoral(interface.RootEntity):
         date_soutenance: Optional[datetime.date],
         raison_non_soutenue: str,
     ):
-        if doctorat_deja_realise == ChoixDoctoratDejaRealise.NO.name:
+        if doctorat_deja_realise == ChoixDoctoratDejaRealise.NO.name or not doctorat_deja_realise:
             self.experience_precedente_recherche = aucune_experience_precedente_recherche
         else:
             self.experience_precedente_recherche = ExperiencePrecedenteRecherche(
@@ -194,18 +193,6 @@ class ParcoursDoctoral(interface.RootEntity):
 
     def modifier_projet(
         self,
-        type_financement: str,
-        type_contrat_travail: str,
-        eft: Optional[int],
-        bourse_recherche: Optional[BourseIdentity],
-        autre_bourse_recherche: str,
-        bourse_date_debut: Optional[datetime.date],
-        bourse_date_fin: Optional[datetime.date],
-        bourse_preuve: List[str],
-        duree_prevue: Optional[int],
-        temps_consacre: Optional[int],
-        est_lie_fnrs_fria_fresh_csc: Optional[bool],
-        commentaire_financement: str,
         langue_redaction_these: str,
         institut_these: str,
         lieu_these: str,
@@ -225,27 +212,6 @@ class ParcoursDoctoral(interface.RootEntity):
         projet_formation_complementaire: List[str],
         lettres_recommandation: List[str],
     ) -> None:
-        ModifierProjetValidatorList(
-            type_financement=type_financement,
-            type_contrat_travail=type_contrat_travail,
-            doctorat_deja_realise=doctorat_deja_realise,
-            institution=institution,
-            domaine_these=domaine_these,
-        ).validate()
-        self._modifier_financement(
-            type=type_financement,
-            type_contrat_travail=type_contrat_travail,
-            eft=eft,
-            bourse_recherche=bourse_recherche,
-            autre_bourse_recherche=autre_bourse_recherche,
-            bourse_date_debut=bourse_date_debut,
-            bourse_date_fin=bourse_date_fin,
-            bourse_preuve=bourse_preuve,
-            duree_prevue=duree_prevue,
-            temps_consacre=temps_consacre,
-            est_lie_fnrs_fria_fresh_csc=est_lie_fnrs_fria_fresh_csc,
-            commentaire=commentaire_financement,
-        )
         self._modifier_projet(
             titre=titre,
             resume=resume,

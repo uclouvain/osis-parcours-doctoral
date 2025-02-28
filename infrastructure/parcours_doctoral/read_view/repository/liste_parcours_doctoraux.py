@@ -47,6 +47,7 @@ from parcours_doctoral.ddd.read_view.dto.parcours_doctoral import (
 from parcours_doctoral.ddd.read_view.repository.i_liste_parcours_doctoraux import (
     IListeParcoursDoctorauxRepository,
 )
+from parcours_doctoral.infrastructure.parcours_doctoral.read_view.repository.tableau_bord import TableauBordRepository
 from parcours_doctoral.infrastructure.utils import (
     filter_doctorate_queryset_according_to_roles,
     get_entities_with_descendants_ids,
@@ -85,6 +86,7 @@ class ListeParcoursDoctorauxRepository(IListeParcoursDoctorauxRepository):
         secteurs: Optional[List[str]] = None,
         dates: Optional[List[Tuple[str, Optional[date], Optional[date]]]] = None,
         sigles_formations: Optional[List[str]] = None,
+        indicateur_tableau_bord: Optional[str] = '',
         tri_inverse: bool = False,
         champ_tri: Optional[str] = None,
         page: Optional[int] = None,
@@ -176,6 +178,12 @@ class ListeParcoursDoctorauxRepository(IListeParcoursDoctorauxRepository):
 
         if fnrs_fria_fresh:
             qs = qs.filter(is_fnrs_fria_fresh_csc_linked=fnrs_fria_fresh)
+
+        if indicateur_tableau_bord:
+            dashboard_filter = TableauBordRepository.DOCTORATE_DJANGO_FILTER_BY_INDICATOR.get(indicateur_tableau_bord)
+
+            if dashboard_filter:
+                qs = qs.filter(dashboard_filter)
 
         if dates:
             date_filters: Dict = {}

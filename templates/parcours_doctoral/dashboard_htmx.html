@@ -1,0 +1,94 @@
+{% load i18n parcours_doctoral django_bootstrap5 %}
+
+{% comment "License" %}
+  * OSIS stands for Open Student Information System. It's an application
+  * designed to manage the core business of higher education institutions,
+  * such as universities, faculties, institutes and professional schools.
+  * The core business involves the administration of students, teachers,
+  * courses, programs and so on.
+  *
+  * Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
+  *
+  * This program is free software: you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License as published by
+  * the Free Software Foundation, either version 3 of the License, or
+  * (at your option) any later version.
+  *
+  * This program is distributed in the hope that it will be useful,
+  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  * GNU General Public License for more details.
+  *
+  * A copy of this license - GNU General Public License - is available
+  * at the root of the source code of this program.  If not,
+  * see http://www.gnu.org/licenses/.
+{% endcomment %}
+<div id="page-container">
+  <form
+    method="POST"
+    action=""
+    hx-boost="true"
+    hx-target="#page-container"
+    hx-indicator="#htmx-overlay"
+  >
+    {% csrf_token %}
+    <div class="row">
+      <div class="col-md-6">
+        {% bootstrap_field form.cdds %}
+      </div>
+      <div class="col-md-6">
+        {% bootstrap_field form.commission_proximite %}
+      </div>
+    </div>
+    <button
+      type="submit"
+      class="btn btn-primary"
+    >
+      {% translate 'Apply filters' %}
+    </button>
+  </form>
+
+  <div class="row mt-3">
+    {% url 'admission:doctorate:cdd:list' as admission_url %}
+    {% url 'parcours_doctoral:list' as doctorate_url %}
+    {% url_params_from_form form as common_url_params %}
+    {% for category in dashboard.categories.values %}
+      <div class="col mb-3">
+        <div class="card card-default h-100">
+          <div class="card-heading fw-bold">
+            {{ category.libelle }}
+          </div>
+          <div class="card-body">
+            <table class="table border">
+              {% for indicator in category.indicateurs.values %}
+                <tr class="{% if indicator.valeur == None %}pe-none opacity-50{% endif %}">
+                  <td class="text-nowrap align-middle">
+                    {{ indicator.libelle }}
+                  </td>
+                  <td class="text-end min-width">
+                    <div class="d-inline-flex p-0 w-100">
+                      <span class="bg-info text-white px-2 py-1 flex-1">
+                        {{ indicator.valeur|default_if_none:'WIP' }}
+                      </span>
+                      <a
+                        {% if category.type == 'ADMISSION' %}
+                          href="{{ admission_url }}?indicateur_tableau_bord={{ indicator.id }}{{ common_url_params }}"
+                        {% elif category.type == 'DOCTORAT' %}
+                          href="{{ doctorate_url }}?indicateur_tableau_bord={{ indicator.id }}&date_form-TOTAL_FORMS=0&date_form-INITIAL_FORMS=0{{ common_url_params }}"
+                        {% endif %}
+                          title="{% translate 'Open the related list' %}"
+                          class="btn btn-default px-2 py-1 border border-start-0 rounded-0"
+                      >
+                        <i class="fa-solid fa-list"></i>
+                      </a>
+                    </div>
+                  </td>
+                </tr>
+              {% endfor %}
+            </table>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>

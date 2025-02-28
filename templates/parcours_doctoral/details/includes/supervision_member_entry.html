@@ -73,8 +73,8 @@
       <button
         type="button"
         class="btn btn-default pull-right"
-        data-toggle="collapse"
-        data-target="#edit_external_member_form-{{ member.uuid }}"
+        data-bs-toggle="collapse"
+        data-bs-target="#edit_external_member_form-{{ member.uuid }}"
       >
         <i class="fas fa-pencil"></i>
         {% trans "Edit" %}
@@ -94,8 +94,8 @@
     {% if can_approve_member_by_pdf and signature.statut != 'APPROVED' %}
       <button
         class="btn btn-default pull-right"
-        data-toggle="collapse"
-        data-target="#approve-by-pdf-{{ member.uuid }}"
+        data-bs-toggle="collapse"
+        data-bs-target="#approve-by-pdf-{{ member.uuid }}"
       >
         <i class="fas fa-file-circle-check"></i>
         {% trans "Approve by PDF" %}

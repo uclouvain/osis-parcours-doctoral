@@ -288,7 +288,7 @@ class ParcoursDoctoral(models.Model):
     )
     thesis_location = models.CharField(
         max_length=255,
-        verbose_name=_("Thesis location"),
+        verbose_name=_("Thesis location in UCLouvain"),
         default='',
         blank=True,
     )

@@ -28,6 +28,9 @@ from typing import List
 from attr import dataclass
 from django.utils import timezone
 
+from admission.ddd.admission.doctorat.preparation.domain.model.enums import (
+    ChoixTypeAdmission,
+)
 from admission.ddd.admission.doctorat.validation.domain.model.enums import ChoixGenre
 from base.ddd.utils.in_memory_repository import InMemoryGenericRepository
 from infrastructure.reference.domain.service.in_memory.bourse import (
@@ -138,6 +141,7 @@ class ParcoursDoctoralInMemoryRepository(InMemoryGenericRepository, IParcoursDoc
         return ParcoursDoctoralDTO(
             uuid=str(entity_id.uuid),
             uuid_admission='',
+            type_admission=ChoixTypeAdmission.ADMISSION.name,
             statut=parcours_doctoral.statut.name,
             date_changement_statut=None,
             justification="",

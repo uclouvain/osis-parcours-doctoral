@@ -161,20 +161,8 @@ class ListerParcoursDoctorauxSupervisesQuery(interface.QueryRequest):
 class ModifierProjetCommand(interface.CommandRequest):
     uuid: str
     matricule_auteur: str
-    type_financement: str
-    type_contrat_travail: str
-    eft: Optional[int]
-    bourse_recherche: str
-    autre_bourse_recherche: str
-    bourse_date_debut: Optional[datetime.date]
-    bourse_date_fin: Optional[datetime.date]
-    bourse_preuve: List[str]
-    duree_prevue: Optional[int]
-    temps_consacre: Optional[int]
-    est_lie_fnrs_fria_fresh_csc: Optional[bool]
-    commentaire_financement: str
-    titre_projet: str
-    resume_projet: str
+    titre: str
+    resume: str
     documents_projet: List[str]
     graphe_gantt: List[str]
     proposition_programme_doctoral: List[str]
@@ -223,3 +211,37 @@ class ModifierCotutelleCommand(interface.CommandRequest):
     demande_ouverture: List[str]
     convention: List[str]
     autres_documents: List[str]
+
+
+@attr.dataclass(frozen=True, slots=True)
+class InitialiserDocumentCommand(interface.CommandRequest):
+    uuid_parcours_doctoral: str
+    uuids_documents: List[str]
+    libelle: str
+    type_document: str
+    auteur: Optional[str]
+
+
+@attr.dataclass(frozen=True, slots=True)
+class ModifierDocumentCommand(interface.CommandRequest):
+    uuid_parcours_doctoral: str
+    identifiant: str
+    uuids_documents: List[str]
+    auteur: str
+
+
+@attr.dataclass(frozen=True, slots=True)
+class SupprimerDocumentCommand(interface.CommandRequest):
+    uuid_parcours_doctoral: str
+    identifiant: str
+
+
+@attr.dataclass(frozen=True, slots=True)
+class ListerDocumentsQuery(interface.QueryRequest):
+    uuid_parcours_doctoral: str
+
+
+@attr.dataclass(frozen=True, slots=True)
+class RecupererDocumentQuery(interface.QueryRequest):
+    uuid_parcours_doctoral: str
+    identifiant: str
