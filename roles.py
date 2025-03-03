@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -30,6 +30,7 @@ from parcours_doctoral.auth.predicates.parcours_doctoral import (
     complementary_training_enabled,
     is_jury_in_progress,
     is_part_of_education_group,
+    is_related_to_an_admission,
     submitted_confirmation_paper,
 )
 from parcours_doctoral.auth.roles.adre import AdreSecretary
@@ -59,12 +60,19 @@ PROGRAM_MANAGER_RULES = {
     'parcours_doctoral.view_internalnote': is_part_of_education_group,
     # --- Projet de recherche
     'parcours_doctoral.view_project': is_part_of_education_group,
-    'parcours_doctoral.view_cotutelle': is_part_of_education_group,
+    'parcours_doctoral.change_project': is_part_of_education_group,
+    'parcours_doctoral.view_funding': is_part_of_education_group,
+    'parcours_doctoral.change_funding': is_part_of_education_group,
+    'parcours_doctoral.view_cotutelle': is_related_to_an_admission & is_part_of_education_group,
+    'parcours_doctoral.change_cotutelle': is_related_to_an_admission & is_part_of_education_group,
     'parcours_doctoral.view_supervision': is_part_of_education_group,
     'parcours_doctoral.add_supervision_member': is_part_of_education_group,
     'parcours_doctoral.edit_external_supervision_member': is_part_of_education_group,
     'parcours_doctoral.remove_supervision_member': is_part_of_education_group,
     'parcours_doctoral.approve_member_by_pdf': is_part_of_education_group,
+    # --- Documents
+    'parcours_doctoral.view_documents': is_part_of_education_group,
+    'parcours_doctoral.change_documents': is_part_of_education_group,
     # --- Confirmation
     'parcours_doctoral.view_confirmation': is_part_of_education_group,
     'parcours_doctoral.change_confirmation': is_part_of_education_group,

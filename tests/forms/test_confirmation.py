@@ -62,21 +62,6 @@ class ConfirmationTestCase(TestCase):
         )
         self.assertTrue(form.is_valid())
 
-    def test_form_validation_with_invalid_dates(self):
-        form = ConfirmationForm(
-            data={
-                'date_limite': datetime.date(2022, 1, 4),
-                'date': datetime.date(2022, 1, 5),
-            },
-        )
-        self.assertFalse(form.is_valid())
-        non_fields_errors = form.non_field_errors()
-        self.assertEqual(len(non_fields_errors), 1)
-        self.assertEqual(
-            non_fields_errors[0],
-            _('The date of the confirmation paper cannot be later than its deadline.'),
-        )
-
 
 class ConfirmationRetakingFormTestCase(TestCase):
     def test_form_validation_with_no_data(self):

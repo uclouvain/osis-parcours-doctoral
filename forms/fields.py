@@ -23,7 +23,7 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from typing import List, Mapping, Optional, Union
+from typing import List, Mapping, Optional, Union, Iterable
 
 from django import forms
 from django.utils.translation import gettext_lazy as _
@@ -105,3 +105,22 @@ class SelectOrOtherField(forms.MultiValueField):
         if self.help_text:
             return {'help_text': self.help_text}
         return super().widget_attrs(widget)
+
+
+class SelectWithDisabledOptions(forms.Select):
+    def __init__(
+        self,
+        enabled_options: Iterable[str] = None,
+        *args,
+        **kwargs,
+    ):
+        super().__init__(*args, **kwargs)
+        self.enabled_options = enabled_options
+
+    def create_option(self, name, value, label, selected, index, subindex=None, attrs=None):
+        created_option = super().create_option(name, value, label, selected, index, subindex, attrs)
+
+        if value not in self.enabled_options:
+            created_option['attrs']['disabled'] = 'disabled'
+
+        return created_option

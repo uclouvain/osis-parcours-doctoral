@@ -27,10 +27,7 @@ from ddd.logic.reference.domain.builder.bourse_identity import BourseIdentityBui
 from parcours_doctoral.ddd.builder.parcours_doctoral_identity import (
     ParcoursDoctoralIdentityBuilder,
 )
-from parcours_doctoral.ddd.commands import (
-    ModifierFinancementCommand,
-    ModifierProjetCommand,
-)
+from parcours_doctoral.ddd.commands import ModifierFinancementCommand
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import (
     ParcoursDoctoralIdentity,
 )

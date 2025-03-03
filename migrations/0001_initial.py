@@ -143,7 +143,7 @@ class Migration(migrations.Migration):
                         blank=True,
                         default="",
                         max_length=255,
-                        verbose_name="Thesis location",
+                        verbose_name="Thesis location in UCLouvain",
                     ),
                 ),
                 (

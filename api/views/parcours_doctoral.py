@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -79,6 +79,7 @@ class DoctorateAPIView(
         # Add a _perm_obj to the instance to optimize permission check performance
         doctorate_permission_obj = ParcoursDoctoral.objects.select_related(
             'student',
+            'admission',
             'training__management_entity__doctorate_config',
         ).get(uuid=doctorate_dto.uuid)
 
@@ -104,6 +105,7 @@ class BaseListView(APIPermissionRequiredMixin, ListAPIView):
     def permission_object_qs(self, doctorate_list: List[ParcoursDoctoralRechercheEtudiantDTO]):
         return ParcoursDoctoral.objects.select_related(
             'student',
+            'admission',
             'training__management_entity__doctorate_config',
         ).filter(uuid__in=[doctorate.uuid for doctorate in doctorate_list])
 

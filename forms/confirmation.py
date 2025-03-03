@@ -68,18 +68,6 @@ class ConfirmationForm(ConfirmationOpinionForm):
         if parcours_doctoral_status == ChoixStatutParcoursDoctoral.ADMIS.name:
             self.fields['date'].required = False
 
-    def clean(self):
-        cleaned_data = super().clean()
-
-        # Check dates
-        date = cleaned_data.get('date')
-        deadline = cleaned_data.get('date_limite')
-
-        if date and deadline and date > deadline:
-            raise ValidationError(_('The date of the confirmation paper cannot be later than its deadline.'))
-
-        return cleaned_data
-
     class Media:
         js = [
             'js/jquery.mask.min.js',

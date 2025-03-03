@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -29,6 +29,7 @@ from parcours_doctoral.models.actor import *
 from parcours_doctoral.models.cdd_config import *
 from parcours_doctoral.models.cdd_mail_template import *
 from parcours_doctoral.models.confirmation_paper import *
+from parcours_doctoral.models.document import *
 from parcours_doctoral.models.jury import *
 from parcours_doctoral.models.parcours_doctoral import *
 from parcours_doctoral.models.task import *

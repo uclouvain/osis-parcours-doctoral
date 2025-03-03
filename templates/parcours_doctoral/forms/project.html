@@ -1,0 +1,142 @@
+{% extends "parcours_doctoral/forms/tab_layout.html" %}
+{% load i18n static parcours_doctoral django_bootstrap5 enums %}
+
+{% comment "License" %}
+* OSIS stands for Open Student Information System. It's an application
+* designed to manage the core business of higher education institutions,
+* such as universities, faculties, institutes and professional schools.
+* The core business involves the administration of students, teachers,
+* courses, programs and so on.
+*
+* Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* A copy of this license - GNU General Public License - is available
+* at the root of the source code of this program.  If not,
+* see http://www.gnu.org/licenses/.
+{% endcomment %}
+
+{% block form_content %}
+  <div class="card">
+    <div class="card-header">
+      <h4 class="card-title">{% translate "Course choice" %}</h4>
+    </div>
+    <div class="card-body">
+      {% if parcours_doctoral.justification %}
+        {% field_data _("Brief justification") parcours_doctoral.justification|linebreaks %}
+      {% endif %}
+      {% field_data _("Sector") parcours_doctoral.intitule_secteur_formation %}
+      <dl><dt>{% translate "PhD" %}</dt><dd>{{ parcours_doctoral.formation.intitule }} ({{ parcours_doctoral.formation.campus }})</dd></dl>
+      {% if parcours_doctoral.commission_proximite %}
+        {% field_data _("Proximity commission / Subdomain") parcours_doctoral.commission_proximite|enum_display:'ChoixCommissionProximiteCDEouCLSM'|enum_display:'ChoixCommissionProximiteCDSS'|enum_display:'ChoixSousDomaineSciences' %}
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h4 class="card-title">{% translate "PhD research project" %}</h4>
+    </div>
+    <div class="card-body">
+      {% bootstrap_field form.titre label_class=form.label_classes.titre placeholder="" %}
+      {% bootstrap_field_with_tooltip form.resume label_class=form.label_classes.resume %}
+      <div class="row">
+        <div class="col-md-6">
+          {% bootstrap_field form.institut_these label_class=form.label_classes.institut_these %}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          {% bootstrap_field form.langue_redaction_these label_class=form.label_classes.langue_redaction_these %}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          {% bootstrap_field_with_tooltip form.lieu_these label_class=form.label_classes.lieu_these %}
+        </div>
+      </div>
+      <p>
+        {% blocktrans trimmed %}
+          The format of the documents to be uploaded below may vary from one CDD to another. Find out more on your CDD's
+          website or from your doctoral manager.
+        {% endblocktrans %}
+      </p>
+      {% bootstrap_field form.documents_projet label_class=form.label_classes.documents_projet %}
+      {% bootstrap_field form.proposition_programme_doctoral label_class=form.label_classes.proposition_programme_doctoral %}
+      {% bootstrap_field_with_tooltip form.projet_formation_complementaire label_class=form.label_classes.projet_formation_complementaire %}
+      {% bootstrap_field form.graphe_gantt label_class=form.label_classes.graphe_gantt %}
+      {% bootstrap_field form.lettres_recommandation label_class=form.label_classes.lettres_recommandation %}
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h4 class="card-title">{% translate "PhD research experience" %}</h4>
+    </div>
+    <div class="card-body">
+      {% bootstrap_field form.projet_doctoral_deja_commence label_class=form.label_classes.projet_doctoral_deja_commence %}
+      <div id="deja_commence">
+        <div class="row">
+          <div class="col-md-6">
+            {% bootstrap_field form.projet_doctoral_institution label_class=form.label_classes.projet_doctoral_institution placeholder="" %}
+          </div>
+          <div class="col-md-6">
+            {% bootstrap_field form.projet_doctoral_date_debut label_class=form.label_classes.projet_doctoral_date_debut %}
+          </div>
+        </div>
+      </div>
+      {% bootstrap_field_with_tooltip form.doctorat_deja_realise label_class=form.label_classes.doctorat_deja_realise %}
+      <div id="previous_experience">
+        <div class="row">
+          <div class="col-md-6">
+            {% bootstrap_field form.institution label_class=form.label_classes.institution placeholder="" %}
+          </div>
+          <div class="col-md-6">
+            {% bootstrap_field form.domaine_these label_class=form.label_classes.domaine_these placeholder="" %}
+          </div>
+        </div>
+        {% bootstrap_field form.non_soutenue label_class=form.label_classes.non_soutenue %}
+        <div class="row" id="soutenue">
+          <div class="col-md-4">
+            {% bootstrap_field form.date_soutenance label_class=form.label_classes.date_soutenance %}
+          </div>
+        </div>
+        <div id="non-soutenue">
+          {% bootstrap_field form.raison_non_soutenue label_class=form.label_classes.raison_non_soutenue placeholder="" %}
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block script %}
+  {{ block.super }}
+
+  <script>
+      $(function () {
+          $('#previous_experience').dependsOn({
+              '#id_doctorat_deja_realise': { values: ['YES', 'PARTIAL'] },
+          });
+          $('#non-soutenue').dependsOn({
+              '#id_non_soutenue': { checked: true },
+          });
+          $('#soutenue').dependsOn({
+              '#id_non_soutenue': { checked: false },
+          });
+          $('#deja_commence').dependsOn({
+              'input[name=projet_doctoral_deja_commence]': { values: ['True'] },
+          });
+
+          document.dispatchEvent(new Event('refreshFormInitial'));
+      });
+  </script>
+{% endblock %}

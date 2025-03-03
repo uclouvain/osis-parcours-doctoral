@@ -31,7 +31,7 @@
 {% block tab_content %}
   {% csrf_token %}
   <div
-    class="comment-viewer"
+    class="comment-thread-viewer"
     data-url="{% url "parcours_doctoral:comments-api" view.kwargs.uuid %}"
     data-tags="{{ COMMENT_TAB_GLOBAL }}"
     data-header-title="{% translate "Global comments" %}"

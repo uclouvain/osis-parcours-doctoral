@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -25,15 +25,21 @@
 # ##############################################################################
 
 from .envoyer_message_au_doctorant_service import envoyer_message_au_doctorant
+from .initialiser_document_service import initialiser_document
 from .initialiser_parcours_doctoral import initialiser_parcours_doctoral
 from .modifier_cotutelle_service import modifier_cotutelle
 from .modifier_financement_service import modifier_financement
 from .modifier_projet_service import modifier_projet
+from .modifier_document_service import modifier_document
+from .supprimer_document_service import supprimer_document
 
 __all__ = [
     "envoyer_message_au_doctorant",
+    "initialiser_document",
     "initialiser_parcours_doctoral",
     "modifier_cotutelle",
     "modifier_financement",
     "modifier_projet",
+    "modifier_document",
+    "supprimer_document",
 ]

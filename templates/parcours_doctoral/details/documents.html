@@ -1,0 +1,161 @@
+{% extends "parcours_doctoral/details/tab_layout.html" %}
+{% load i18n static parcours_doctoral %}
+
+{% comment "License" %}
+* OSIS stands for Open Student Information System. It's an application
+* designed to manage the core business of higher education institutions,
+* such as universities, faculties, institutes and professional schools.
+* The core business involves the administration of students, teachers,
+* courses, programs and so on.
+*
+* Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* A copy of this license - GNU General Public License - is available
+* at the root of the source code of this program.  If not,
+* see http://www.gnu.org/licenses/.
+{% endcomment %}
+
+{% block actions-group %}{% endblock %}
+
+{% block tab_content %}
+  <div
+    id="document-page-container"
+    class="d-flex"
+    hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+    hx-indicator="#htmx-overlay"
+  >
+    <div
+      id="document-page-left-container"
+      class="min-width-fit-content pe-2"
+    >
+      <div
+        id="document-list-container"
+        class="position-relative pe-2"
+      >
+        {% include 'parcours_doctoral/document/list.html' %}
+      </div>
+
+      {% has_perm 'parcours_doctoral.change_documents' as can_change_documents %}
+      {% if can_change_documents %}
+        <div class="mt-1 flex-content">
+          <button
+            type="button"
+            class="btn btn-primary"
+            data-bs-toggle="modal"
+            data-bs-target="#document-create-modal"
+          >
+            <i class="fa-solid fa-upload" aria-hidden="true"></i>
+            {% translate 'Upload a document' %}
+          </button>
+
+          <button
+            type="button"
+            class="btn btn-default"
+            hx-post="{% url 'parcours_doctoral:document:create-archive' parcours_doctoral.uuid %}"
+            hx-swap="none"
+          >
+            {% translate "Generate an archive" %}
+          </button>
+        </div>
+      {% endif %}
+
+      {% include 'parcours_doctoral/document/create_modal.html' %}
+    </div>
+    <div
+      id="document-viewer-container"
+      class="flex-1 ps-2"
+    >
+      {% include 'parcours_doctoral/document/details.html' %}
+    </div>
+  </div>
+{% endblock %}
+
+{% block style %}
+  {{ block.super }}
+  <link href="{% static 'osis_document/osis-document-editor.css' %}" rel="stylesheet" />
+  <link href="{% static "osis_document/osis-document.css" %}" rel="stylesheet" />
+
+  <style>
+      {# Document list #}
+      #document-page-left-container {
+          width: 50%;
+      }
+      #document-list-container {
+          max-height: 75vh;
+          overflow-y: auto;
+      }
+      .document-section-header button[aria-expanded="false"] .collapse-icon {
+          transform: rotate(180deg);
+          transition: 0.5s;
+      }
+      .document-section-header button[aria-expanded="true"] .collapse-icon {
+          transform: rotate(0deg);
+          transition: 0.5s;
+      }
+      .document-row {
+          cursor: pointer;
+          transition: 0s;
+      }
+      .document-row.table-active {
+          pointer-events: none;
+          cursor: initial;
+      }
+
+      {# Document viewer #}
+      #document-viewer-container {
+          height: 75vh;
+      }
+
+      #document-details, #document-editor-container, .osis-document-editor, .editor-container {
+          height: 100%;
+      }
+
+  </style>
+{% endblock %}
+
+{% block script %}
+  {{ block.super }}
+  <script type='text/javascript' src='{% static 'osis_document/osis-document-editor.umd.min.js' %}'></script>
+  <script src='{% static 'osis_document/osis-document.umd.min.js' %}'></script>
+
+  <script>
+      $(function () {
+          // Visually highlight the selected document in the list
+          $('#document-list-container').on('click', '.document-row', function(){
+              $('#document-list-container .document-row').removeClass('table-active');
+              $(this).addClass('table-active');
+          });
+
+          // Make the left panel resizable and save the split size
+          const pageLeftContainer = $('#document-page-left-container');
+          const configurationCache = new BaseCache('doctorate_document_configuration');
+
+          pageLeftContainer.css('width', configurationCache.getItem('split_size', '50%'));
+          pageLeftContainer.resizable({
+              containment: '#document-page-container',
+              handles: 'e',
+              classes: {
+                  'ui-resizable-handle': 'bg-primary cursor-col-resize',
+              },
+              minWidth: 1,
+              stop: function(event, ui) {
+                  // Save the split size
+                  configurationCache.setItem(
+                      'split_size',
+                      `${100 * (ui.size.width / document.getElementById('document-page-container').offsetWidth)}%`,
+                  );
+              },
+          });
+      });
+  </script>
+{% endblock %}
