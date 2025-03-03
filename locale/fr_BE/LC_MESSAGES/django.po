@@ -1170,6 +1170,12 @@ msgstr "Date de fin"
 msgid "English"
 msgstr "Anglais"
 
+msgid "English value"
+msgstr "Valeur en anglais"
+
+msgid "English values"
+msgstr "Valeurs en anglais"
+
 msgid "Enroll in a course"
 msgstr "S'inscrire à un cours"
 
@@ -1219,9 +1225,6 @@ msgstr "Externe"
 
 msgid "FNRS, FRIA, FRESH"
 msgstr "FNRS, FRIA, FRESH"
-
-msgid "FREE_COURSE"
-msgstr "Cours libre"
 
 msgid "Failure of the confirmation paper"
 msgstr "Échec de l'épreuve de confirmation"
@@ -1297,6 +1300,12 @@ msgstr "Libre"
 
 msgid "French"
 msgstr "Français"
+
+msgid "French value"
+msgstr "Valeur en français"
+
+msgid "French values"
+msgstr "Valeurs en français"
 
 msgid "From"
 msgstr "De"
@@ -1578,6 +1587,9 @@ msgstr "Justification"
 
 msgid "Justification letter"
 msgstr "Lettre de justification"
+
+msgid "Keys"
+msgstr "Clés"
 
 msgctxt "parcours_doctoral"
 msgid "Keywords"
@@ -2157,6 +2169,12 @@ msgstr ""
 "Veuillez vérifier le détail de l’activité pour renseigner tous les champs "
 "obligatoires"
 
+msgid "Please choose a correct academic year."
+msgstr "Veuillez choisir une année académique correct."
+
+msgid "Please choose a correct learning unit."
+msgstr "Veuillez choisir une formation correct."
+
 msgid "Please correct the errors below"
 msgstr "Veuillez corriger les erreurs ci-dessous"
 
@@ -2589,8 +2607,8 @@ msgstr "Rechercher"
 msgid "Search a person by surname"
 msgstr "Rechercher une personne par son nom"
 
-msgid "Search for an EU code (outside the EU of the form)"
-msgstr "Rechercher un code UE (hors UE du formulaire)"
+msgid "Search for an EU code"
+msgstr "Rechercher un code UE"
 
 msgid "Search on portal"
 msgstr "Voir sur le portail"
@@ -3040,6 +3058,14 @@ msgstr[1] ""
 
 msgid "The opinion about the extension request is not completed."
 msgstr "L'avis relatif à la demande d'une nouvelle échéance n'est pas complet."
+
+#, python-brace-format
+msgid ""
+"The option {index} must have an identifier and a translation for each "
+"required language."
+msgstr ""
+"L'option {index} doit avoir un identifiant et une traduction pour chaque "
+"langue requise."
 
 msgid "The person has not been found."
 msgstr "La personne n'a pas été trouvée."

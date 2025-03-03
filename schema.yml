@@ -3773,7 +3773,6 @@ components:
       enum:
       - DOCTORAL_TRAINING
       - COMPLEMENTARY_TRAINING
-      - FREE_COURSE
       type: string
     ChoixTypeEpreuve:
       enum:

@@ -34,10 +34,12 @@ from django.utils.translation import get_language
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import pgettext_lazy
 
-from base.forms.utils import EMPTY_CHOICE, autocomplete
+from base.forms.utils import EMPTY_CHOICE
+from base.forms.utils import autocomplete
 from base.forms.utils.academic_year_field import AcademicYearModelChoiceField
 from base.forms.utils.datefield import DatePickerInput
-from base.models.academic_year import AcademicYear, current_academic_year
+from base.models.academic_year import AcademicYear
+from base.models.academic_year import current_academic_year
 from base.models.learning_unit_year import LearningUnitYear
 from parcours_doctoral.ddd.formation.domain.model.enums import (
     CategorieActivite,
@@ -850,7 +852,7 @@ class UclCourseForm(ActivityFormMixin, forms.ModelForm):
             url='admission:autocomplete:learning-unit-years-and-classes',
             attrs={
                 'data-html': True,
-                'data-placeholder': _('Search for an EU code (outside the EU of the form)'),
+                'data-placeholder': _('Search for an EU code'),
                 'data-minimum-input-length': 3,
             },
             forward=[Field("academic_year", "annee")],
@@ -893,6 +895,14 @@ class UclCourseForm(ActivityFormMixin, forms.ModelForm):
                 academic_year=cleaned_data['academic_year'],
                 acronym=cleaned_data['learning_unit_year'],
             )
+        else:
+            if not cleaned_data.get('academic_year'):
+                self.add_error('academic_year', forms.ValidationError(_("Please choose a correct academic year.")))
+            if not cleaned_data.get('learning_unit_year'):
+                self.add_error('learning_unit_year', forms.ValidationError(_("Please choose a correct learning unit.")))
+            else:
+                # Remove the value as it is not a LearningUnitYear instance and it would cause an error later.
+                del cleaned_data['learning_unit_year']
         return cleaned_data
 
     class Meta:

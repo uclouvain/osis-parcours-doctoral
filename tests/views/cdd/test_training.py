@@ -213,7 +213,7 @@ class DoctorateTrainingActivityViewTestCase(TestCase):
             )
             response = self.client.get(url)
             self.assertEqual(response.status_code, status.HTTP_200_OK)
-            self.assertEqual(len(response.context['form'].fields['context'].widget.choices), 2)
+            self.assertEqual(len(response.context['form'].fields['context'].widget.choices), 1)
 
     @freezegun.freeze_time('2022-11-01')
     def test_complementary_training_course(self):

@@ -1099,6 +1099,12 @@ msgstr ""
 msgid "English"
 msgstr ""
 
+msgid "English value"
+msgstr ""
+
+msgid "English values"
+msgstr ""
+
 msgid "Enroll in a course"
 msgstr ""
 
@@ -1148,9 +1154,6 @@ msgstr ""
 
 msgid "FNRS, FRIA, FRESH"
 msgstr ""
-
-msgid "FREE_COURSE"
-msgstr "Open course"
 
 msgid "Failure of the confirmation paper"
 msgstr ""
@@ -1213,6 +1216,12 @@ msgid "Free"
 msgstr ""
 
 msgid "French"
+msgstr ""
+
+msgid "French value"
+msgstr ""
+
+msgid "French values"
 msgstr ""
 
 msgid "From"
@@ -1470,6 +1479,9 @@ msgid "Justification"
 msgstr ""
 
 msgid "Justification letter"
+msgstr ""
+
+msgid "Keys"
 msgstr ""
 
 msgctxt "parcours_doctoral"
@@ -1992,6 +2004,12 @@ msgid ""
 "Please check the details of the activity to fill in all mandatory fields"
 msgstr ""
 
+msgid "Please choose a correct academic year."
+msgstr ""
+
+msgid "Please choose a correct learning unit."
+msgstr ""
+
 msgid "Please correct the errors below"
 msgstr ""
 
@@ -2406,7 +2424,7 @@ msgstr ""
 msgid "Search a person by surname"
 msgstr ""
 
-msgid "Search for an EU code (outside the EU of the form)"
+msgid "Search for an EU code"
 msgstr ""
 
 msgid "Search on portal"
@@ -2810,6 +2828,12 @@ msgstr[0] ""
 msgstr[1] ""
 
 msgid "The opinion about the extension request is not completed."
+msgstr ""
+
+#, python-brace-format
+msgid ""
+"The option {index} must have an identifier and a translation for each "
+"required language."
 msgstr ""
 
 msgid "The person has not been found."
