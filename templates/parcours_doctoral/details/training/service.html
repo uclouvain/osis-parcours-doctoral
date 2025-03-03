@@ -50,7 +50,7 @@
     <div>
       <p>
         <strong class="d-block">{% trans "Description" %}</strong>
-        {{ activity.type }} : {{ activity.title }}, {{ activity.organizing_institution }}, {{ period }}
+        {% include "parcours_doctoral/details/training/description/service.html" %}
       </p>
       <div class="row">
         {% if activity.ects %}

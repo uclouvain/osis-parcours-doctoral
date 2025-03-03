@@ -49,6 +49,7 @@
       {% endfor %}
     </ul>
   </div>
+  <a class="btn btn-default border border-dark-subtle" href="{% url "parcours_doctoral:training_pdf_recap" parcours_doctoral.uuid %}">{% translate "Download the PDF recap" %}</a>
 {% endblock %}
 
 

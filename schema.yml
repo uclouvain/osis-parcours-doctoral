@@ -1192,6 +1192,37 @@ paths:
           $ref: '#/components/responses/NotFound'
       tags:
       - doctorate
+  /doctorate/{uuid}/training-recap-pdf:
+    get:
+      operationId: training_recap_pdf
+      description: Get the recap PDF of the doctoral training
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      - $ref: '#/components/parameters/Accept-Language'
+      - $ref: '#/components/parameters/X-User-FirstName'
+      - $ref: '#/components/parameters/X-User-LastName'
+      - $ref: '#/components/parameters/X-User-Email'
+      - $ref: '#/components/parameters/X-User-GlobalID'
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrainingRecapPdf'
+          description: ''
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+      - doctorate
   /autocomplete/tutor:
     get:
       operationId: listTutors
@@ -1918,6 +1949,13 @@ components:
           type: string
         prenom_doctorant:
           type: string
+        date_naissance_doctorant:
+          type: string
+          format: date
+        lieu_naissance_doctorant:
+          type: string
+        pays_naissance_doctorant:
+          type: string
         nom_doctorant:
           type: string
         commission_proximite:
@@ -1986,6 +2024,9 @@ components:
       - noma_doctorant
       - genre_doctorant
       - prenom_doctorant
+      - date_naissance_doctorant
+      - lieu_naissance_doctorant
+      - pays_naissance_doctorant
       - nom_doctorant
       - commission_proximite
     SupervisionDTO:
@@ -3744,11 +3785,15 @@ components:
         ects:
           type: number
           readOnly: true
+        academic_year:
+          type: integer
+          nullable: true
       required:
       - object_type
       - category
       - context
       - learning_unit_year
+      - academic_year
     CategorieActivite:
       enum:
       - CONFERENCE
@@ -3808,6 +3853,13 @@ components:
       - code_unite_enseignement
       - intitule_unite_enseignement
       - annee_unite_enseignement
+    TrainingRecapPdf:
+      type: object
+      properties:
+        url:
+          type: string
+      required:
+      - url
     Tutor:
       type: object
       properties:
