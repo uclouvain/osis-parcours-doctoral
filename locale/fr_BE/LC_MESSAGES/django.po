@@ -193,6 +193,9 @@ msgid "A non doctor member must have a justification."
 msgstr ""
 "Un membre non porteur du titre de docteur doit avoir une justification."
 
+msgid "A paper of each type has already been created."
+msgstr "Une épreuve de chaque type a déjà été créée."
+
 msgid "A promoter can not be president."
 msgstr "Un promoteur ne peut pas être président."
 
@@ -220,6 +223,9 @@ msgstr "Admission"
 msgid "Abstract"
 msgstr "Résumé"
 
+msgid "Academic year"
+msgstr "Année académique"
+
 msgid "Accept"
 msgstr "Accepter"
 
@@ -244,6 +250,9 @@ msgstr "Sigle / Intitulé"
 
 msgid "Actions"
 msgstr "Actions"
+
+msgid "Active"
+msgstr "Actif"
 
 msgid "Activities"
 msgstr "Activités"
@@ -469,11 +478,18 @@ msgstr "Êtes-vous sûr de vouloir retirer \"%(prenom)s %(nom)s\" du jury ?"
 msgid "Are you sure you want to restore \"%(object)s\"?"
 msgstr "Êtes-vous sûr de vouloir remettre \"%(object)s\" au statut soumis ?"
 
+msgid "Are you sure you want to withdraw the student from this assessment?"
+msgstr ""
+"Êtes-vous sûr de vouloir désinscrire l'étudiant·e de cette évaluation ?"
+
 msgid "Are you sure your want to delete this document?"
 msgstr "Êtes-vous sûr de vouloir supprimer ce document ?"
 
 msgid "As it appears in an official course catalogue"
 msgstr "Tel qu’il apparait dans un catalogue officiel de formation"
+
+msgid "Assessment enrollments"
+msgstr "Inscriptions aux évaluations"
 
 msgid "Attachment: PhD training"
 msgstr "Annexe : Formation doctorale"
@@ -794,6 +810,9 @@ msgstr "Thèse en cotutelle"
 msgid "Country"
 msgstr "Pays"
 
+msgid "Course"
+msgstr "Cours"
+
 msgctxt "admission"
 msgid "Course"
 msgstr "Formation"
@@ -832,8 +851,8 @@ msgctxt "doctorate"
 msgid "Courses"
 msgstr "Formations"
 
-msgid "Courses taken"
-msgstr "Cours suivis"
+msgid "Courses and trainings"
+msgstr "Cours et formation"
 
 #, python-format
 msgid "Create the confirmation paper success attestation (%(reference)s)"
@@ -873,6 +892,9 @@ msgstr "Décision de recevabilité"
 
 msgid "DEFENSE_PRIVEE"
 msgstr "Défense privée"
+
+msgid "DESINSCRITE"
+msgstr "Désinscrite"
 
 msgid "DOCTORAL_TRAINING"
 msgstr "Formation doctorale"
@@ -1154,6 +1176,9 @@ msgstr "Anglais"
 msgid "Enroll in a course"
 msgstr "S'inscrire à un cours"
 
+msgid "Enroll in an assessment"
+msgstr "S'inscrire à une évaluation"
+
 msgctxt "admission"
 msgid "Entity"
 msgstr "Entité"
@@ -1365,10 +1390,10 @@ msgstr ""
 
 msgid ""
 "If known, indicate the name of the laboratory, clinical department or "
-"research centre where the thesis will be carried out"
+"research centre where the thesis will be carried out at UCLouvain"
 msgstr ""
 "Si connu, indiquez ici le nom du laboratoire, du service clinique ou du "
-"centre de recherche où sera réalisée la thèse"
+"centre de recherche où sera réalisée la thèse à l'UCLouvain"
 
 msgid ""
 "If necessary, please finish inputting doctoral activities and complete the "
@@ -1438,11 +1463,11 @@ msgstr ""
 "dans lequel vous n’êtes plus inscrit à ce jour."
 
 msgid ""
-"Information about a potential cotutelle are to be inputted in the \"Doctoral "
-"project\" part."
+"Information about a potential cotutelle are to be inputted in the "
+"\"Research\" part."
 msgstr ""
 "Les informations concernant une éventuelle cotutelle sont à indiquer dans la "
-"partie « Projet doctoral »."
+"partie « Recherche »."
 
 msgctxt "jury"
 msgid "Institute"
@@ -1467,8 +1492,8 @@ msgstr "Institution"
 msgid "Institution Federation Wallonie-Bruxelles"
 msgstr "Institution de la Federation Wallonie-Bruxelles"
 
-msgid "Institution in which the PhD has been realised / started."
-msgstr "Institution où le PhD a été réalisé/entamé."
+msgid "Institution in which the PhD thesis has been realised / started"
+msgstr "Institution où la thèse de doctorat a été réalisée/entamée"
 
 msgid "Institution should be set when PhD has been set to yes or partial"
 msgstr ""
@@ -1576,6 +1601,9 @@ msgstr "Nom / Prénom / NOMA"
 msgid "Last name:"
 msgstr "Nom :"
 
+msgid "Late enrollment"
+msgstr "Inscription tardive"
+
 msgid "Lead supervisor"
 msgstr "Promoteur de référence"
 
@@ -1587,6 +1615,9 @@ msgstr "Avis du promoteur de référence"
 
 msgid "Lead supervisor comment"
 msgstr "Commentaire du promoteur de référence"
+
+msgid "Learning unit"
+msgstr "Unité d'enseignement"
 
 msgctxt "admission"
 msgid "Learning unit"
@@ -2009,9 +2040,6 @@ msgstr "Avis du comité d'accompagnement suivant le format fourni par la CDD"
 msgid "Opinion on research mandate renewal"
 msgstr "Avis sur le renouvellement du mandat de recherche"
 
-msgid "Oral communication"
-msgstr "Communication orale"
-
 msgid "Oral presentation"
 msgstr "Exposé oral"
 
@@ -2049,9 +2077,6 @@ msgctxt "CategorieActivite"
 msgid "PAPER"
 msgstr "Épreuve"
 
-msgid "PARTIAL"
-msgstr "En partie"
-
 msgid "PDF file"
 msgstr "Fichier PDF"
 
@@ -2080,14 +2105,17 @@ msgstr "Page"
 msgid "Page size"
 msgstr "Taille de la page"
 
+msgid "Participating proof"
+msgstr "Preuve de participation"
+
 msgid "Participation"
 msgstr "Participation"
 
 msgid "Participation certification"
 msgstr "Certificat de participation"
 
-msgid "Participation to symposium/conference"
-msgstr "Participation à des colloques/conférences"
+msgid "Participations"
+msgstr "Participations"
 
 msgid "Partner institution"
 msgstr "Institution partenaire"
@@ -2100,10 +2128,6 @@ msgstr "Doctorat"
 
 msgid "PhD already done"
 msgstr "Doctorat déjà réalisé"
-
-msgctxt "tab"
-msgid "PhD project"
-msgstr "Projet doctoral"
 
 msgid "PhD proposal"
 msgstr "Projet de formation doctorale"
@@ -2271,9 +2295,6 @@ msgstr "Titre proposé pour la thèse"
 msgid "Proximity Commission for Dental Sciences (DENT)"
 msgstr "Commission de proximité de sciences dentaires (DENT)"
 
-msgid "Proximity Commission for Genetics and Immunology (GIM)"
-msgstr "Commission de proximité de génétique et immunologie (GIM)"
-
 msgid "Proximity Commission for Motricity Sciences (MOTR)"
 msgstr "Commission de proximité de sciences de la motricité (MOTR)"
 
@@ -2290,10 +2311,11 @@ msgid "Proximity commission / Subdomain"
 msgstr "Commission de proximité"
 
 msgid ""
-"Proximity commission for cellular and molecular biology, biochemistry (BCM)"
+"Proximity commission for biochemistry, cellular and molecular biology, "
+"genetics, immunology (BCGIM)"
 msgstr ""
-"Commission de proximité de biologie cellulaire et moléculaire, biochimie "
-"(BCM)"
+"Commission de proximité de biochimie, biologie cellulaire et moléculaire, "
+"génétique, immunologie (BCGIM)"
 
 msgid "Proximity commission for experimental and clinical research (ECLI)"
 msgstr "Commission de proximité de recherche expérimentale et clinique (ECLI)"
@@ -2417,12 +2439,12 @@ msgstr ""
 "Champ obligatoire dans certaines commissions doctorales, référez-vous aux "
 "dispositions particulières de votre commission."
 
+msgctxt "tab"
+msgid "Research"
+msgstr "Recherche"
+
 msgid "Research institute"
 msgstr "Institut de recherche"
-
-msgctxt "tab"
-msgid "Research project"
-msgstr "Projet de recherche doctorale"
 
 msgid "Research report"
 msgstr "Rapport de recherche"
@@ -2554,8 +2576,14 @@ msgstr "Boursier"
 msgid "Scholarship start date"
 msgstr "Date de démarrage de la bourse"
 
+msgid "Scientific communications"
+msgstr "Communications scientifiques"
+
 msgid "Scientific residencies"
 msgstr "Séjours scientifiques"
+
+msgid "Score encoding periods:"
+msgstr "Périodes d'encodage des notes :"
 
 msgctxt "verb"
 msgid "Search"
@@ -2563,9 +2591,6 @@ msgstr "Rechercher"
 
 msgid "Search a person by surname"
 msgstr "Rechercher une personne par son nom"
-
-msgid "Search a tutor by name"
-msgstr "Rechercher un tuteur par son nom"
 
 msgid "Search for an EU code (outside the EU of the form)"
 msgstr "Rechercher un code UE (hors UE du formulaire)"
@@ -2600,9 +2625,6 @@ msgstr "Sélectionner les états inactifs"
 msgid "Selection committee"
 msgstr "Comité de sélection"
 
-msgid "Seminar taken"
-msgstr "Séminaires suivis"
-
 msgid "Send a mail"
 msgstr "Envoyer un e-mail"
 
@@ -2623,6 +2645,13 @@ msgstr "Type de service"
 
 msgid "Services"
 msgstr "Services"
+
+msgid "Session"
+msgstr "Session"
+
+#, python-format
+msgid "Session %(index)s"
+msgstr "Session n°%(index)s"
 
 msgid "Set as member"
 msgstr "Désigner comme membre"
@@ -2862,6 +2891,9 @@ msgstr "L'acronyme de la bourse d'études"
 msgid "The activity title"
 msgstr "Le titre de l'activité"
 
+msgid "The assessment enrollment has not been found"
+msgstr "L'inscription à l'évaluation n'a pas été trouvée"
+
 msgid ""
 "The authorized publications and their valuation in credits are specified on "
 "the website of you domain doctoral commission. If the publication must be "
@@ -3037,6 +3069,9 @@ msgstr "La date de début ne peut être postérieure à la date de fin"
 msgid "The status has been changed to %(status)s."
 msgstr "Le statut a bien été modifié pour : %(status)s."
 
+msgid "The student has been withdrawn from this assessment."
+msgstr "L'étudiant·e a été désinscrit·e de cette évaluation."
+
 msgid "There can be no more CA members in the supervision group."
 msgstr ""
 "Il ne peut y avoir davantage de membres du comité d'accompagnement dans le "
@@ -3073,8 +3108,8 @@ msgstr "L'institut de la thèse est obligatoire."
 msgid "Thesis language"
 msgstr "Langue de rédaction de la thèse"
 
-msgid "Thesis location in UCLouvain"
-msgstr "Lieu de la thèse à l'UCLouvain"
+msgid "Thesis location"
+msgstr "Lieu de la thèse"
 
 msgid "Thesis title"
 msgstr "Titre de la thèse"
@@ -3162,6 +3197,9 @@ msgstr ""
 "dispositions particulières de votre commission de domaine permettent de "
 "valoriser dans votre formation doctorale."
 
+msgid "This student has not been enrolled in any assessment yet."
+msgstr "Cet étudiant·e n'a pas encore été inscrit·e à une évaluation."
+
 msgid "This student has not created any activity yet"
 msgstr "Cet étudiant n'a pas encore créé d'activité"
 
@@ -3236,7 +3274,7 @@ msgstr ""
 "brefs délais après l’épreuve de confirmation"
 
 msgid "To complete"
-msgstr "À compléter"
+msgstr "A compléter"
 
 msgid ""
 "To visualize and edit a document, please select it in the list opposite."
@@ -3250,6 +3288,9 @@ msgstr "Token"
 msgctxt "parcours_doctoral"
 msgid "Tokens that can be used for replacement"
 msgstr "Tokens pouvant être utilisés"
+
+msgid "Total"
+msgstr "Total"
 
 msgid "Total hourly volume"
 msgstr "Volume horaire total"
@@ -3335,7 +3376,7 @@ msgid "Upload the opinion on the renewal of the research mandate"
 msgstr "Téléverser l'avis sur le renouvellement du mandat de recherche"
 
 msgid "VAE"
-msgstr "Valorisation des acquis de l'expérience"
+msgstr "VAE"
 
 msgctxt "CategorieActivite"
 msgid "VAE"
@@ -3362,6 +3403,9 @@ msgstr "Validé promoteur"
 msgid "Validated credits total"
 msgstr "Total crédits validés"
 
+msgid "Visualize"
+msgstr "Visualiser"
+
 msgid "WORK_CONTRACT"
 msgstr "Contrat de travail"
 
@@ -3378,6 +3422,9 @@ msgstr "Site web"
 
 msgid "With reading committee"
 msgstr "Avec comité de lecture"
+
+msgid "Withdraw"
+msgstr "Désinscrire"
 
 msgid "Without reading committee"
 msgstr "Sans comité de lecture"
@@ -3438,9 +3485,9 @@ msgstr ""
 "Vous devez ajouter au moins un promoteur externe afin de demander les "
 "signatures."
 
-msgid "You must add at least two CA member in order to request signatures."
+msgid "You must add at least two CA members in order to request signatures."
 msgstr ""
-"Vous devez ajouter au moins deux membre du comité d'accompagnement afin de "
+"Vous devez ajouter au moins deux membres du comité d'accompagnement afin de "
 "demander les signatures."
 
 msgid "You must be a member of the committee to access this doctoral training"

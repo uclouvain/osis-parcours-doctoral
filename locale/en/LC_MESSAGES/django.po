@@ -146,6 +146,9 @@ msgstr ""
 msgid "A non doctor member must have a justification."
 msgstr ""
 
+msgid "A paper of each type has already been created."
+msgstr ""
+
 msgid "A promoter can not be president."
 msgstr ""
 
@@ -173,6 +176,9 @@ msgstr "Admission"
 msgid "Abstract"
 msgstr ""
 
+msgid "Academic year"
+msgstr ""
+
 msgid "Accept"
 msgstr ""
 
@@ -196,6 +202,9 @@ msgid "Acronym / Title"
 msgstr ""
 
 msgid "Actions"
+msgstr ""
+
+msgid "Active"
 msgstr ""
 
 msgid "Activities"
@@ -415,10 +424,16 @@ msgstr ""
 msgid "Are you sure you want to restore \"%(object)s\"?"
 msgstr ""
 
+msgid "Are you sure you want to withdraw the student from this assessment?"
+msgstr ""
+
 msgid "Are you sure your want to delete this document?"
 msgstr ""
 
 msgid "As it appears in an official course catalogue"
+msgstr ""
+
+msgid "Assessment enrollments"
 msgstr ""
 
 msgid "Attachment: PhD training"
@@ -734,6 +749,9 @@ msgstr ""
 msgid "Country"
 msgstr ""
 
+msgid "Course"
+msgstr ""
+
 msgctxt "admission"
 msgid "Course"
 msgstr ""
@@ -772,7 +790,7 @@ msgctxt "doctorate"
 msgid "Courses"
 msgstr ""
 
-msgid "Courses taken"
+msgid "Courses and trainings"
 msgstr ""
 
 #, python-format
@@ -810,6 +828,9 @@ msgstr "Admissibility decision"
 
 msgid "DEFENSE_PRIVEE"
 msgstr "Private defense"
+
+msgid "DESINSCRITE"
+msgstr "Withdrawn"
 
 msgid "DOCTORAL_TRAINING"
 msgstr "PhD training"
@@ -1084,6 +1105,9 @@ msgstr ""
 msgid "Enroll in a course"
 msgstr ""
 
+msgid "Enroll in an assessment"
+msgstr ""
+
 msgctxt "admission"
 msgid "Entity"
 msgstr ""
@@ -1280,7 +1304,7 @@ msgstr ""
 
 msgid ""
 "If known, indicate the name of the laboratory, clinical department or "
-"research centre where the thesis will be carried out"
+"research centre where the thesis will be carried out at UCLouvain"
 msgstr ""
 
 msgid ""
@@ -1338,8 +1362,8 @@ msgid ""
 msgstr ""
 
 msgid ""
-"Information about a potential cotutelle are to be inputted in the \"Doctoral "
-"project\" part."
+"Information about a potential cotutelle are to be inputted in the "
+"\"Research\" part."
 msgstr ""
 
 msgctxt "jury"
@@ -1365,7 +1389,7 @@ msgstr ""
 msgid "Institution Federation Wallonie-Bruxelles"
 msgstr ""
 
-msgid "Institution in which the PhD has been realised / started."
+msgid "Institution in which the PhD thesis has been realised / started"
 msgstr ""
 
 msgid "Institution should be set when PhD has been set to yes or partial"
@@ -1470,6 +1494,9 @@ msgstr ""
 msgid "Last name:"
 msgstr ""
 
+msgid "Late enrollment"
+msgstr ""
+
 msgid "Lead supervisor"
 msgstr ""
 
@@ -1480,6 +1507,9 @@ msgid "Lead supervisor assent"
 msgstr ""
 
 msgid "Lead supervisor comment"
+msgstr ""
+
+msgid "Learning unit"
 msgstr ""
 
 msgctxt "admission"
@@ -1849,9 +1879,6 @@ msgstr ""
 msgid "Opinion on research mandate renewal"
 msgstr ""
 
-msgid "Oral communication"
-msgstr ""
-
 msgid "Oral presentation"
 msgstr "Oral exposé"
 
@@ -1889,9 +1916,6 @@ msgctxt "CategorieActivite"
 msgid "PAPER"
 msgstr "Examination"
 
-msgid "PARTIAL"
-msgstr "Partially"
-
 msgid "PDF file"
 msgstr ""
 
@@ -1920,13 +1944,16 @@ msgstr ""
 msgid "Page size"
 msgstr ""
 
+msgid "Participating proof"
+msgstr ""
+
 msgid "Participation"
 msgstr ""
 
 msgid "Participation certification"
 msgstr ""
 
-msgid "Participation to symposium/conference"
+msgid "Participations"
 msgstr ""
 
 msgid "Partner institution"
@@ -1939,10 +1966,6 @@ msgid "PhD"
 msgstr ""
 
 msgid "PhD already done"
-msgstr ""
-
-msgctxt "tab"
-msgid "PhD project"
 msgstr ""
 
 msgid "PhD proposal"
@@ -2100,9 +2123,6 @@ msgstr ""
 msgid "Proximity Commission for Dental Sciences (DENT)"
 msgstr ""
 
-msgid "Proximity Commission for Genetics and Immunology (GIM)"
-msgstr ""
-
 msgid "Proximity Commission for Motricity Sciences (MOTR)"
 msgstr ""
 
@@ -2119,7 +2139,8 @@ msgid "Proximity commission / Subdomain"
 msgstr ""
 
 msgid ""
-"Proximity commission for cellular and molecular biology, biochemistry (BCM)"
+"Proximity commission for biochemistry, cellular and molecular biology, "
+"genetics, immunology (BCGIM)"
 msgstr ""
 
 msgid "Proximity commission for experimental and clinical research (ECLI)"
@@ -2237,11 +2258,11 @@ msgid ""
 "specifics dispositions."
 msgstr ""
 
-msgid "Research institute"
+msgctxt "tab"
+msgid "Research"
 msgstr ""
 
-msgctxt "tab"
-msgid "Research project"
+msgid "Research institute"
 msgstr ""
 
 msgid "Research report"
@@ -2372,7 +2393,13 @@ msgstr ""
 msgid "Scholarship start date"
 msgstr ""
 
+msgid "Scientific communications"
+msgstr ""
+
 msgid "Scientific residencies"
+msgstr ""
+
+msgid "Score encoding periods:"
 msgstr ""
 
 msgctxt "verb"
@@ -2380,9 +2407,6 @@ msgid "Search"
 msgstr ""
 
 msgid "Search a person by surname"
-msgstr ""
-
-msgid "Search a tutor by name"
 msgstr ""
 
 msgid "Search for an EU code (outside the EU of the form)"
@@ -2418,9 +2442,6 @@ msgstr ""
 msgid "Selection committee"
 msgstr ""
 
-msgid "Seminar taken"
-msgstr ""
-
 msgid "Send a mail"
 msgstr ""
 
@@ -2441,6 +2462,13 @@ msgstr ""
 
 msgid "Services"
 msgstr ""
+
+msgid "Session"
+msgstr ""
+
+#, python-format
+msgid "Session %(index)s"
+msgstr "Session n°%(index)s"
 
 msgid "Set as member"
 msgstr ""
@@ -2663,6 +2691,9 @@ msgstr ""
 msgid "The activity title"
 msgstr ""
 
+msgid "The assessment enrollment has not been found"
+msgstr ""
+
 msgid ""
 "The authorized publications and their valuation in credits are specified on "
 "the website of you domain doctoral commission. If the publication must be "
@@ -2809,6 +2840,9 @@ msgstr ""
 msgid "The status has been changed to %(status)s."
 msgstr ""
 
+msgid "The student has been withdrawn from this assessment."
+msgstr ""
+
 msgid "There can be no more CA members in the supervision group."
 msgstr ""
 "There can be no more supervisory panel members in the supervision group."
@@ -2841,7 +2875,7 @@ msgstr ""
 msgid "Thesis language"
 msgstr ""
 
-msgid "Thesis location in UCLouvain"
+msgid "Thesis location"
 msgstr ""
 
 msgid "Thesis title"
@@ -2916,6 +2950,9 @@ msgid ""
 "doctoral training depending on your domain commission."
 msgstr ""
 
+msgid "This student has not been enrolled in any assessment yet."
+msgstr ""
+
 msgid "This student has not created any activity yet"
 msgstr ""
 
@@ -2986,6 +3023,9 @@ msgstr ""
 
 msgctxt "parcours_doctoral"
 msgid "Tokens that can be used for replacement"
+msgstr ""
+
+msgid "Total"
 msgstr ""
 
 msgid "Total hourly volume"
@@ -3091,6 +3131,9 @@ msgstr ""
 msgid "Validated credits total"
 msgstr ""
 
+msgid "Visualize"
+msgstr ""
+
 msgid "WORK_CONTRACT"
 msgstr "Work contract"
 
@@ -3104,6 +3147,9 @@ msgid "Website"
 msgstr ""
 
 msgid "With reading committee"
+msgstr ""
+
+msgid "Withdraw"
 msgstr ""
 
 msgid "Without reading committee"
@@ -3154,9 +3200,9 @@ msgid ""
 "You must add at least one external supervisor in order to request signatures."
 msgstr ""
 
-msgid "You must add at least two CA member in order to request signatures."
+msgid "You must add at least two CA members in order to request signatures."
 msgstr ""
-"You must add at least two supervisory panel member in order to request "
+"You must add at least two supervisory panel members in order to request "
 "signatures."
 
 msgid "You must be a member of the committee to access this doctoral training"

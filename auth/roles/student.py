@@ -63,6 +63,7 @@ class Student(RoleModel):
             & parcours_doctoral.complementary_training_enabled,
             'parcours_doctoral.view_course_enrollment': parcours_doctoral.is_parcours_doctoral_student,
             'parcours_doctoral.view_doctoral_training': parcours_doctoral.is_parcours_doctoral_student,
+            'parcours_doctoral.view_assessment_enrollment': parcours_doctoral.is_parcours_doctoral_student,
             'parcours_doctoral.add_training': parcours_doctoral.is_parcours_doctoral_student,
             'parcours_doctoral.update_training': parcours_doctoral.is_parcours_doctoral_student,
             'parcours_doctoral.submit_training': parcours_doctoral.is_parcours_doctoral_student,

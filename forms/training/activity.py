@@ -27,6 +27,7 @@ import datetime
 from functools import partial
 from typing import List, Tuple
 
+from dal.forward import Field
 from django import forms
 from django.utils.dates import MONTHS_ALT
 from django.utils.translation import get_language
@@ -836,18 +837,38 @@ class PaperForm(ActivityFormMixin, forms.ModelForm):
             'ects': forms.NumberInput(attrs={'min': '0', 'step': '0.5'}),
         }
 
+    def __init__(self, parcours_doctoral: ParcoursDoctoral, *args, **kwargs):
+        super().__init__(parcours_doctoral, *args, **kwargs)
+
+        # Only one paper of each type can be created
+        paper_qs = parcours_doctoral.activity_set.filter(category=CategorieActivite.PAPER.name)
+
+        if self.instance:
+            paper_qs = paper_qs.exclude(type=self.instance.type)
+
+        unavailable_papers_types = paper_qs.values_list('type', flat=True)
+
+        self.fields['type'].choices = (
+            (enum.name, enum.value) for enum in ChoixTypeEpreuve if enum.name not in unavailable_papers_types
+        )
+
 
 class UclCourseForm(ActivityFormMixin, forms.ModelForm):
     template_name = "parcours_doctoral/forms/training/ucl_course.html"
+    academic_year = AcademicYearModelChoiceField(
+        to_field_name='year',
+        widget=autocomplete.ListSelect2(),
+    )
     learning_unit_year = forms.CharField(
         label=pgettext_lazy("admission", "Learning unit"),
         widget=autocomplete.ListSelect2(
-            url='parcours_doctoral:autocomplete:current-learning-unit-years-and-classes',
+            url='admission:autocomplete:learning-unit-years-and-classes',
             attrs={
                 'data-html': True,
                 'data-placeholder': _('Search for an EU code (outside the EU of the form)'),
                 'data-minimum-input-length': 3,
             },
+            forward=[Field("academic_year", "annee")],
         ),
     )
 
@@ -863,6 +884,7 @@ class UclCourseForm(ActivityFormMixin, forms.ModelForm):
         # Initialize values
         if self.initial.get('learning_unit_year'):
             learning_unit_year = LearningUnitYear.objects.get(pk=self.initial['learning_unit_year'])
+            self.initial['academic_year'] = learning_unit_year.academic_year.year
             self.initial['learning_unit_year'] = learning_unit_year.acronym
             self.fields['learning_unit_year'].widget.choices = [
                 (
@@ -871,11 +893,19 @@ class UclCourseForm(ActivityFormMixin, forms.ModelForm):
                 ),
             ]
 
+        current_year = current_academic_year().year
+        selectable_years = [current_year, current_year + 1]
+
+        if self.initial.get('academic_year'):
+            selectable_years.append(self.initial['academic_year'])
+
+        self.fields['academic_year'].queryset = self.fields['academic_year'].queryset.filter(year__in=selectable_years)
+
     def clean(self):
         cleaned_data = super().clean()
-        if cleaned_data.get('learning_unit_year'):
+        if cleaned_data.get('academic_year') and cleaned_data.get('learning_unit_year'):
             cleaned_data['learning_unit_year'] = LearningUnitYear.objects.get(
-                academic_year=current_academic_year(),
+                academic_year=cleaned_data['academic_year'],
                 acronym=cleaned_data['learning_unit_year'],
             )
         return cleaned_data

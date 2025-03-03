@@ -25,7 +25,7 @@
 # ##############################################################################
 
 from rest_framework import status
-from rest_framework.generics import GenericAPIView
+from rest_framework.generics import GenericAPIView, ListAPIView, RetrieveAPIView
 from rest_framework.mixins import RetrieveModelMixin
 from rest_framework.response import Response
 from rest_framework.schemas.openapi import AutoSchema
@@ -39,6 +39,7 @@ from parcours_doctoral.api.schema import (
     AuthorizationAwareSchemaMixin,
     ChoicesEnumSchema,
 )
+from parcours_doctoral.api.serializers import InscriptionEvaluationDTOSerializer
 from parcours_doctoral.api.serializers.activity import (
     DoctoralTrainingActivitySerializer,
     DoctoralTrainingAssentSerializer,
@@ -47,6 +48,8 @@ from parcours_doctoral.api.serializers.activity import (
 )
 from parcours_doctoral.ddd.formation.commands import (
     DonnerAvisSurActiviteCommand,
+    RecupererInscriptionEvaluationQuery,
+    RecupererInscriptionsEvaluationsQuery,
     SoumettreActivitesCommand,
     SupprimerActiviteCommand,
 )
@@ -61,6 +64,8 @@ __all__ = [
     "TrainingAssentView",
     "ComplementaryTrainingListView",
     "CourseEnrollmentListView",
+    "AssessmentEnrollmentListView",
+    "AssessmentEnrollmentDetailView",
 ]
 
 
@@ -138,6 +143,11 @@ class TrainingConfigView(DoctorateAPIPermissionRequiredMixin, RetrieveModelMixin
     def get_object(self):
         management_entity_id = self.get_permission_object().training.management_entity_id
         return CddConfiguration.objects.get_or_create(cdd_id=management_entity_id)[0]
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['doctorate'] = self.get_permission_object() if self.doctorate_uuid else None
+        return context
 
     def get(self, request, *args, **kwargs):
         serializer = self.get_serializer(self.get_object())
@@ -289,3 +299,40 @@ class CourseEnrollmentListView(DoctoralTrainingListView):
 
     def get_queryset(self):
         return Activity.objects.for_enrollment_courses(self.doctorate_uuid)
+
+
+class AssessmentEnrollmentListView(DoctorateAPIPermissionRequiredMixin, ListAPIView):
+    name = "assessment-enrollment-list"
+    http_method_names = ['get']
+    pagination_class = None
+    schema = ChoicesEnumSchema()
+    filter_backends = []
+    permission_mapping = {
+        'GET': 'parcours_doctoral.view_assessment_enrollment',
+    }
+    serializer_class = InscriptionEvaluationDTOSerializer
+
+    def get_queryset(self):
+        return message_bus_instance.invoke(
+            RecupererInscriptionsEvaluationsQuery(
+                parcours_doctoral_uuid=self.doctorate_uuid,
+            )
+        )
+
+
+class AssessmentEnrollmentDetailView(DoctorateAPIPermissionRequiredMixin, RetrieveAPIView):
+    name = "assessment-enrollment-detail"
+    schema = ChoicesEnumSchema()
+    pagination_class = None
+    filter_backends = []
+    permission_mapping = {
+        'GET': 'parcours_doctoral.view_assessment_enrollment',
+    }
+    serializer_class = InscriptionEvaluationDTOSerializer
+
+    def get_object(self):
+        return message_bus_instance.invoke(
+            RecupererInscriptionEvaluationQuery(
+                inscription_uuid=self.kwargs['enrollment_uuid'],
+            )
+        )

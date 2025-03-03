@@ -34,11 +34,14 @@ from rest_framework.generics import get_object_or_404
 
 from base.api.serializers.academic_year import RelatedAcademicYearField
 from base.forms.utils.academic_year_field import AcademicYearModelChoiceField
+from base.utils.serializers import DTOSerializer
 from parcours_doctoral.ddd.formation.domain.model.enums import (
     CategorieActivite,
+    ChoixTypeEpreuve,
     ContexteFormation,
     StatutActivite,
 )
+from parcours_doctoral.ddd.formation.dtos.evaluation import InscriptionEvaluationDTO
 from parcours_doctoral.forms.fields import SelectOrOtherField
 from parcours_doctoral.forms.training import activity as activity_forms
 from parcours_doctoral.forms.training.activity import ConfigurableActivityTypeField
@@ -331,6 +334,7 @@ class UclCourseSerializer(ActivitySerializerBase):
 
     class Meta:
         form = activity_forms.UclCourseForm
+        exclude = ['academic_year']
 
     def to_internal_value(self, data):
         # Don't let DRF rework the data structure before calling UclCourseForm
@@ -445,10 +449,37 @@ class DoctoralTrainingAssentSerializer(serializers.Serializer):
     commentaire = serializers.CharField(allow_blank=True)
 
 
+class MultipleChoiceFieldFromMethod(serializers.SerializerMethodField, serializers.MultipleChoiceField):
+    """A multiple choice field whose the value is computed via a method."""
+
+
 class DoctoralTrainingConfigSerializer(serializers.ModelSerializer):
+    creatable_papers_types = MultipleChoiceFieldFromMethod(
+        choices=ChoixTypeEpreuve.choices(),
+        source='get_creatable_papers_types',
+    )
+
+    def get_creatable_papers_types(self, _):
+        # Only one paper by type can be created
+
+        doctorate = self.context.get('doctorate')
+        already_created_papers_types = []
+
+        if doctorate:
+            already_created_papers_types = doctorate.activity_set.filter(
+                category=CategorieActivite.PAPER.name,
+            ).values_list('type', flat=True)
+
+        return ChoixTypeEpreuve.get_names_except(*already_created_papers_types)
+
     class Meta:
         model = CddConfiguration
         exclude = ['id', 'cdd']
         extra_kwargs = {
             'is_complementary_training_enabled': {'help_text': ''},
         }
+
+
+class InscriptionEvaluationDTOSerializer(DTOSerializer):
+    class Meta:
+        source = InscriptionEvaluationDTO

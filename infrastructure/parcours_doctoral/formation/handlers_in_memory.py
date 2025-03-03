@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -24,7 +24,11 @@
 #
 ##############################################################################
 from parcours_doctoral.ddd.formation.commands import *
+from parcours_doctoral.ddd.formation.use_case.read import *
 from parcours_doctoral.ddd.formation.use_case.write import *
+from parcours_doctoral.ddd.formation.use_case.write.inscrire_evaluation_service import (
+    inscrire_evaluation,
+)
 
 from ..repository.in_memory.groupe_de_supervision import (
     GroupeDeSupervisionInMemoryRepository,
@@ -32,11 +36,15 @@ from ..repository.in_memory.groupe_de_supervision import (
 from ..repository.in_memory.parcours_doctoral import ParcoursDoctoralInMemoryRepository
 from .domain.service.in_memory.notification import NotificationInMemory
 from .repository.in_memory.activite import ActiviteInMemoryRepository
+from .repository.in_memory.inscription_evaluation import (
+    InscriptionEvaluationInMemoryRepository,
+)
 
 _activite_repository = ActiviteInMemoryRepository()
 _parcours_doctoral_repository = ParcoursDoctoralInMemoryRepository()
 _groupe_de_supervision_repository = GroupeDeSupervisionInMemoryRepository()
 _notification = NotificationInMemory()
+_inscription_evaluation_repository = InscriptionEvaluationInMemoryRepository()
 
 
 COMMAND_HANDLERS = {
@@ -70,5 +78,25 @@ COMMAND_HANDLERS = {
     RevenirSurStatutActiviteCommand: lambda msg_bus, cmd: revenir_sur_statut_activite(
         cmd,
         activite_repository=_activite_repository,
+    ),
+    RecupererInscriptionsEvaluationsQuery: lambda msg_bus, cmd: recuperer_inscriptions_evaluations(
+        cmd,
+        inscription_evaluation_repository=_inscription_evaluation_repository,
+    ),
+    RecupererInscriptionEvaluationQuery: lambda msg_bus, cmd: recuperer_inscription_evaluation(
+        cmd,
+        inscription_evaluation_repository=_inscription_evaluation_repository,
+    ),
+    InscrireEvaluationCommand: lambda msg_bus, cmd: inscrire_evaluation(
+        cmd,
+        inscription_evaluation_repository=_inscription_evaluation_repository,
+    ),
+    ModifierInscriptionEvaluationCommand: lambda msg_bus, cmd: modifier_inscription_evaluation(
+        cmd,
+        inscription_evaluation_repository=_inscription_evaluation_repository,
+    ),
+    DesinscrireEvaluationCommand: lambda msg_bus, cmd: desinscrire_evaluation(
+        cmd,
+        inscription_evaluation_repository=_inscription_evaluation_repository,
     ),
 }

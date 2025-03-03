@@ -49,11 +49,11 @@ LANGUAGE_UNDECIDED = 'XX'
 
 class ProjectForm(forms.Form):
     lieu_these = forms.CharField(
-        label=_('Thesis location in UCLouvain'),
+        label=_('Thesis location'),
         required=False,
         help_text=_(
             'If known, indicate the name of the laboratory, clinical department or research centre where the thesis '
-            'will be carried out'
+            'will be carried out at UCLouvain'
         ),
         max_length=255,
     )
@@ -104,7 +104,7 @@ class ProjectForm(forms.Form):
         label=_('Research institute'),
         required=False,
         widget=ListSelect2(
-            url='parcours_doctoral:autocomplete:entities',
+            url='admission:autocomplete:entities',
             forward=[
                 forward.Const(MAIN, 'organization_type'),
                 forward.Const(EntityType.INSTITUTE.name, 'entity_type'),
@@ -135,7 +135,7 @@ class ProjectForm(forms.Form):
         help_text=_('Indicate any completed or interrupted PhD studies in which you are no longer enrolled.'),
     )
     institution = forms.CharField(
-        label=_('Institution in which the PhD has been realised / started.'),
+        label=_('Institution in which the PhD thesis has been realised / started'),
         required=False,
         max_length=255,
     )
@@ -210,7 +210,6 @@ class ProjectForm(forms.Form):
         # Some consistency checks and cleaning
         if cleaned_data['doctorat_deja_realise'] not in [
             ChoixDoctoratDejaRealise.YES.name,
-            ChoixDoctoratDejaRealise.PARTIAL.name,
         ]:
             cleaned_data['institution'] = ''
             cleaned_data['domaine_these'] = ''

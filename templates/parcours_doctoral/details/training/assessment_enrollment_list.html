@@ -1,0 +1,170 @@
+{% extends "parcours_doctoral/details/tab_layout.html" %}
+{% load i18n parcours_doctoral enums academic_year_display %}
+
+{% comment "License" %}
+  * OSIS stands for Open Student Information System. It's an application
+  * designed to manage the core business of higher education institutions,
+  * such as universities, faculties, institutes and professional schools.
+  * The core business involves the administration of students, teachers,
+  * courses, programs and so on.
+  *
+  * Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
+  *
+  * This program is free software: you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License as published by
+  * the Free Software Foundation, either version 3 of the License, or
+  * (at your option) any later version.
+  *
+  * This program is distributed in the hope that it will be useful,
+  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  * GNU General Public License for more details.
+  *
+  * A copy of this license - GNU General Public License - is available
+  * at the root of the source code of this program.  If not,
+  * see http://www.gnu.org/licenses/.
+{% endcomment %}
+
+
+{% block actions-group %}
+  {% has_perm 'parcours_doctoral.change_assessment_enrollment' as can_change_assessment_enrollment %}
+  {% if can_change_assessment_enrollment %}
+    {% url "parcours_doctoral:assessment-enrollment:add" uuid=view.kwargs.uuid as add_url %}
+    <a href="{{ add_url }}" class="btn btn-default border border-dark-subtle">
+      {% translate "Enroll in an assessment" %}
+    </a>
+  {% endif %}
+{% endblock %}
+
+
+{% block tab_content %}
+  {% has_perm 'parcours_doctoral.change_assessment_enrollment' as can_change_assessment_enrollment %}
+
+  <h3>{% translate "Assessment enrollments" %}</h3>
+
+  <table id="enrollment-list" class="table">
+    {% for year, year_assessment_enrollments in assessment_enrollments.items %}
+      <tbody>
+      {% for session, session_assessment_enrollments in year_assessment_enrollments.items %}
+        {% for assessment_enrollment in session_assessment_enrollments %}
+          <tr>
+            {% if forloop.parentloop.first and forloop.first %}
+              <td
+                rowspan="{% if year_assessment_enrollments|length == 1 and session_assessment_enrollments|length == 1 %}1{% else %}0{% endif %}"
+                class="width-0 bg-primary text-white"
+              >
+                {{ year|get_short_academic_year }}
+              </td>
+            {% endif %}
+            {% if forloop.first %}
+              <td
+                rowspan="{{ session_assessment_enrollments|length }}"
+                class="width-0"
+              >
+                {{ assessment_enrollment.session|enum_display:'Session' }}
+              </td>
+            {% endif %}
+            <td class="width-0">
+              {{ assessment_enrollment.code_unite_enseignement }}
+            </td>
+            <td>
+              {{ assessment_enrollment.intitule_unite_enseignement }}
+              {% if assessment_enrollment.inscription_tardive %}
+                <span
+                  class="fa-regular fa-clock ms-1"
+                  title="{% translate 'Late enrollment' %}"
+                >
+                </span>
+              {% endif %}
+              {% if assessment_enrollment.est_annulee %}
+                <span
+                  class="fa-solid fa-calendar-xmark ms-1"
+                  title="{% translate 'The student has been withdrawn from this assessment.' %}"
+                >
+                </span>
+              {% endif %}
+            </td>
+            <td class="width-0">
+              <div class="dropdown">
+                <button
+                  class="btn btn-light border-dark-subtle dropdown-toggle"
+                  type="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  {% translate 'Actions' %}
+                </button>
+                <ul class="dropdown-menu">
+                  <li>
+                    <a
+                      class="dropdown-item"
+                      href="{% url 'parcours_doctoral:assessment-enrollment:details' uuid=view.kwargs.uuid enrollment_uuid=assessment_enrollment.uuid %}"
+                    >
+                      {% translate 'Visualize' %}
+                    </a>
+                  </li>
+                  {% if can_change_assessment_enrollment and assessment_enrollment.uuid in editable_assessment_enrollments %}
+                    <li>
+                      <a
+                        class="dropdown-item"
+                        href="{% url 'parcours_doctoral:assessment-enrollment:update' uuid=view.kwargs.uuid enrollment_uuid=assessment_enrollment.uuid %}"
+                      >
+                        {% translate 'Update' context 'verb' %}
+                      </a>
+                    </li>
+                    <li>
+                      <button
+                        type="button"
+                        class="dropdown-item btn btn-link delete-btn"
+                        data-bs-toggle="modal"
+                        data-bs-target="#delete-modal"
+                        data-target-url="{% url 'parcours_doctoral:assessment-enrollment:delete' uuid=view.kwargs.uuid enrollment_uuid=assessment_enrollment.uuid %}"
+                      >
+                        {% translate 'Withdraw' %}
+                      </button>
+                    </li>
+                  {% endif %}
+                </ul>
+              </div>
+            </td>
+          </tr>
+        {% endfor %}
+      {% endfor %}
+      </tbody>
+    {% empty %}
+      {% translate "This student has not been enrolled in any assessment yet." %}
+      {% if can_change_assessment_enrollment %}
+        <a href="{% url "parcours_doctoral:assessment-enrollment:add" uuid=view.kwargs.uuid %}">
+          {% translate "Enroll in an assessment" %}
+        </a>
+      {% endif %}
+    {% endfor %}
+  </table>
+
+  {% include 'parcours_doctoral/modal/confirm_modal.html' with confirm_id='delete-modal' %}
+
+{% endblock %}
+
+{% block script %}
+  {{ block.super }}
+  <script>
+      $(function () {
+          const deleteConfirmForm = $('#delete-modal-form')[0];
+          $('#delete-modal').on('show.bs.modal', function(event) {
+              deleteConfirmForm.action = event.relatedTarget.dataset['targetUrl'];
+          });
+      });
+  </script>
+{% endblock %}
+
+
+
+{% block style %}
+  {{ block.super }}
+  <style>
+    table td {
+        border-color: #ddd !important;
+        vertical-align: middle;
+    }
+  </style>
+{% endblock %}

@@ -135,7 +135,7 @@ class ProjectFormViewTestCase(TestCase):
             phd_alread_started=True,
             phd_alread_started_institute='Institute A',
             work_start_date=datetime.date(2023, 1, 1),
-            phd_already_done=ChoixDoctoratDejaRealise.PARTIAL.name,
+            phd_already_done=ChoixDoctoratDejaRealise.YES.name,
             phd_already_done_institution='Institute B',
             phd_already_done_thesis_domain='Thesis domain',
             phd_already_done_defense_date=datetime.date(2023, 1, 2),

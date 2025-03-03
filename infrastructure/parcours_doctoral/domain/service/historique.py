@@ -188,8 +188,8 @@ class Historique(IHistorique):
         auteur = PersonneConnueUclTranslator().get(matricule_auteur)
         add_history_entry(
             parcours_doctoral.entity_id.uuid,
-            "Le parcours doctoral a été modifié (Projet de recherche).",
-            "The doctoral training has been completed (Research project).",
+            "Le parcours doctoral a été modifié (Recherche).",
+            "The doctoral training has been completed (Research).",
             "{auteur.prenom} {auteur.nom}".format(auteur=auteur),
             tags=["parcours_doctoral", "modification"],
         )
@@ -203,8 +203,8 @@ class Historique(IHistorique):
         auteur = PersonneConnueUclTranslator().get(matricule_auteur)
         add_history_entry(
             parcours_doctoral_identity.uuid,
-            "Le parcours doctoral a été modifié (Projet de recherche).",
-            "The doctoral training has been completed (Research project).",
+            "Le parcours doctoral a été modifié (Cotutelle).",
+            "The doctoral training has been completed (Cotutelle).",
             "{auteur.prenom} {auteur.nom}".format(auteur=auteur),
             tags=["parcours_doctoral", "modification"],
         )

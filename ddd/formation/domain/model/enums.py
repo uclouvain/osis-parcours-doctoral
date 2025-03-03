@@ -88,3 +88,8 @@ class ContexteFormation(ChoiceEnum):
     DOCTORAL_TRAINING = _("DOCTORAL_TRAINING")
     COMPLEMENTARY_TRAINING = _("COMPLEMENTARY_TRAINING")
     FREE_COURSE = _("FREE_COURSE")
+
+
+class StatutInscriptionEvaluation(ChoiceEnum):
+    ACCEPTEE = _("ACCEPTEE")
+    DESINSCRITE = _("DESINSCRITE")

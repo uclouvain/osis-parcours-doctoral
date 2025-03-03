@@ -1,0 +1,47 @@
+{% load i18n %}
+{% comment 'License' %}
+  * OSIS stands for Open Student Information System. It's an application
+  * designed to manage the core business of higher education institutions,
+  * such as universities, faculties, institutes and professional schools.
+  * The core business involves the administration of students, teachers,
+  * courses, programs and so on.
+  *
+  * Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
+  *
+  * This program is free software: you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License as published by
+  * the Free Software Foundation, either version 3 of the License, or
+  * (at your option) any later version.
+  *
+  * This program is distributed in the hope that it will be useful,
+  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  * GNU General Public License for more details.
+  *
+  * A copy of this license - GNU General Public License - is available
+  * at the root of the source code of this program.  If not,
+  * see http://www.gnu.org/licenses/.
+{% endcomment %}
+
+<table class="table table-condensed caption-top p-0">
+  <caption class="pt-0">{% translate "Score encoding periods:" %}</caption>
+  <tbody>
+  {% for score_session in score_exam_submission_sessions %}
+    <tr>
+      {% if score_session.start_date <= today and score_session.end_date <= end_date %}
+        <td class="width-0 no-wrap fit-content">
+          <i class="text-warning fa fa-exclamation-triangle"></i>
+        </td>
+      {% endif %}
+      <td class="width-0 no-wrap fit-content">
+        {% blocktranslate with index=forloop.counter %}Session {{ index }}{% endblocktranslate %}
+      </td>
+      <td class="width-0 no-wrap fit-content">
+        {% blocktranslate with start=score_session.start_date|date:'d/m/Y' end=score_session.end_date|date:'d/m/Y' trimmed %}
+          from {{ start }} to {{ end }}
+        {% endblocktranslate %}
+      </td>
+    </tr>
+    </tbody>
+  {% endfor %}
+</table>

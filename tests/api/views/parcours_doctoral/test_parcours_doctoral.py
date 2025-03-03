@@ -36,8 +36,8 @@ from base.tests.factories.entity_version import EntityVersionFactory
 from base.tests.factories.person import PersonFactory
 from parcours_doctoral.ddd.domain.model.enums import (
     ChoixDoctoratDejaRealise,
-    ChoixTypeFinancement,
     ChoixStatutParcoursDoctoral,
+    ChoixTypeFinancement,
 )
 from parcours_doctoral.tests.factories.parcours_doctoral import ParcoursDoctoralFactory
 from parcours_doctoral.tests.factories.supervision import PromoterFactory
@@ -88,7 +88,7 @@ class ParcoursDoctoralAPIViewTestCase(CheckActionLinksMixin, APITestCase):
             phd_alread_started=True,
             phd_alread_started_institute='Institute A',
             work_start_date=datetime.date(2023, 1, 1),
-            phd_already_done=ChoixDoctoratDejaRealise.PARTIAL.name,
+            phd_already_done=ChoixDoctoratDejaRealise.YES.name,
             phd_already_done_institution='Institute B',
             phd_already_done_thesis_domain='Thesis domain',
             phd_already_done_defense_date=datetime.date(2023, 1, 2),
@@ -206,6 +206,7 @@ class ParcoursDoctoralAPIViewTestCase(CheckActionLinksMixin, APITestCase):
                 'list_jury_members',
                 'update_confirmation',
                 'update_confirmation_extension',
+                'retrieve_assessment_enrollment',
             ],
             forbidden_actions=[
                 'retrieve_complementary_training',

@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -23,9 +23,10 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from typing import List
+from typing import List, Optional
 
 import attr
+
 from osis_common.ddd.interface import CommandRequest
 
 
@@ -65,3 +66,33 @@ class RefuserActiviteCommand(CommandRequest):
 @attr.dataclass(frozen=True, slots=True)
 class RevenirSurStatutActiviteCommand(CommandRequest):
     activite_uuid: str
+
+
+@attr.dataclass(frozen=True, slots=True)
+class RecupererInscriptionsEvaluationsQuery(CommandRequest):
+    parcours_doctoral_uuid: Optional[str] = None
+    cours_uuid: Optional[str] = None
+
+
+@attr.dataclass(frozen=True, slots=True)
+class RecupererInscriptionEvaluationQuery(CommandRequest):
+    inscription_uuid: str
+
+
+@attr.dataclass(frozen=True, slots=True)
+class InscrireEvaluationCommand(CommandRequest):
+    cours_uuid: str
+    session: str
+    inscription_tardive: bool
+
+
+@attr.dataclass(frozen=True, slots=True)
+class ModifierInscriptionEvaluationCommand(CommandRequest):
+    inscription_uuid: str
+    session: str
+    inscription_tardive: bool
+
+
+@attr.dataclass(frozen=True, slots=True)
+class DesinscrireEvaluationCommand(CommandRequest):
+    inscription_uuid: str

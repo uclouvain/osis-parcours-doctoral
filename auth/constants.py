@@ -58,6 +58,7 @@ READ_ACTIONS_BY_TAB = {
     'doctoral-training': 'parcours_doctoral.view_doctoral_training',
     'complementary-training': 'parcours_doctoral.view_complementary_training',
     'course-enrollment': 'parcours_doctoral.view_course_enrollment',
+    'assessment-enrollment': 'parcours_doctoral.view_assessment_enrollment',
     # Jury
     'jury-preparation': 'parcours_doctoral.view_jury',
     'jury': 'parcours_doctoral.view_jury',
@@ -101,6 +102,7 @@ UPDATE_ACTIONS_BY_TAB = {
     'doctoral-training': '',
     'complementary-training': '',
     'course-enrollment': '',
+    'assessment-enrollment': 'parcours_doctoral.change_assessment_enrollment',
     # Management
     'documents': 'parcours_doctoral.view_documents',
     'checklist': 'parcours_doctoral.view_checklist',

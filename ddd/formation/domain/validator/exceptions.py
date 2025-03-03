@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -24,6 +24,7 @@
 #
 # ##############################################################################
 from django.utils.translation import gettext_lazy as _
+
 from osis_common.ddd.interface import BusinessException
 
 
@@ -93,4 +94,12 @@ class EctsDoitEtrePositif(BusinessException):
 
     def __init__(self, *args, **kwargs):
         message = _("ECTS must be positive")
+        super().__init__(message, **kwargs)
+
+
+class InscriptionEvaluationNonTrouveeException(BusinessException):
+    status_code = "FORMATION-9"
+
+    def __init__(self, *args, **kwargs):
+        message = _('The assessment enrollment has not been found')
         super().__init__(message, **kwargs)

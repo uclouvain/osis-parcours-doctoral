@@ -27,6 +27,7 @@ import datetime
 from typing import List
 
 import attr
+
 from osis_common.ddd import interface
 
 
