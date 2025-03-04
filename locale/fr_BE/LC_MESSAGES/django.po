@@ -326,6 +326,9 @@ msgstr "Ajouter un filtre de date"
 msgid "Add validation of prior experience (VAE)"
 msgstr "Ajouter une valorisation des acquis d'expérience"
 
+msgid "Additional training"
+msgstr "Formation complémentaire"
+
 msgctxt "parcours_doctoral filter"
 msgid "Additional training"
 msgstr "Formation complémentaire"
@@ -751,6 +754,9 @@ msgstr "Thèse en cotutelle"
 msgid "Country"
 msgstr "Pays"
 
+msgid "Course"
+msgstr "Cours"
+
 msgctxt "admission"
 msgid "Course"
 msgstr "Formation"
@@ -982,6 +988,9 @@ msgstr "Configuration formation doctorale"
 msgid "Doctoral trainings"
 msgstr "Formations doctorales"
 
+msgid "Doctoral trainings export"
+msgstr "Export des parcours doctoraux"
+
 msgid "Doctorate"
 msgstr "Doctorat"
 
@@ -1078,6 +1087,9 @@ msgstr "Site web de l'événement"
 
 msgid "Example"
 msgstr "Exemple"
+
+msgid "Excel export of doctoral trainings"
+msgstr "Export excel des parcours doctoraux"
 
 msgid "Exit without saving"
 msgstr "Quitter sans enregistrer"
@@ -2489,6 +2501,9 @@ msgstr "État d’avancement de la formation doctorale"
 msgid "Status:"
 msgstr "État :"
 
+msgid "Student"
+msgstr "Étudiant"
+
 msgctxt "parcours_doctoral"
 msgid "Student"
 msgstr "Étudiant"
@@ -2718,6 +2733,9 @@ msgstr ""
 
 msgid "The doctorate is not initialized"
 msgstr "Le doctorat n'est pas initialisé"
+
+msgid "The export has failed"
+msgstr "L'export a échoué"
 
 msgid "The first name of the recipient"
 msgstr "Le prénom du destinataire"
@@ -3084,6 +3102,9 @@ msgstr "Année"
 msgid "Yes"
 msgstr "Oui"
 
+msgid "Yes,No,All"
+msgstr "Oui,Non,Tous"
+
 msgid "You appear to have unsaved changes, which will be lost."
 msgstr ""
 "Vous semblez avoir des modifications non enregistrées, celles-ci seront "
@@ -3147,6 +3168,16 @@ msgstr "Vous devez désigner un membre comme secrétaire."
 
 msgid "Your data have been saved."
 msgstr "Vos données ont été sauvegardées."
+
+msgid "Your document is available here"
+msgstr "Votre document est disponible ici"
+
+msgid ""
+"Your export request has been planned, you will receive a notification as "
+"soon as it is available."
+msgstr ""
+"Votre demande d’export a été planifiée, vous recevrez une notification dès "
+"qu’il sera disponible."
 
 msgid ""
 "Your joint supervision information can be completed later. Please input "
