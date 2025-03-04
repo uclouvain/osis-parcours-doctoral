@@ -52,6 +52,13 @@ from parcours_doctoral.models.activity import Activity
 
 class ActiviteRepository(IActiviteRepository):
     @classmethod
+    def get_complementaries_training_for_doctoral_training(cls, entity_id: 'ParcoursDoctoralIdentity') -> List['CoursDTO']:  # type: ignore[override]
+        activities = Activity.objects.select_related('parcours_doctoral', 'parent').filter(
+            parcours_doctoral__uuid=entity_id.uuid, category=CategorieActivite.COURSE.name
+        )
+        return [cls._get_dto(activity) for activity in activities]
+
+    @classmethod
     def get(cls, entity_id: 'ActiviteIdentity') -> 'Activite':
         activity = Activity.objects.select_related('parcours_doctoral', 'parent').get(uuid=entity_id.uuid)
         return cls._get(activity, entity_id)
@@ -266,6 +273,7 @@ class ActiviteRepository(IActiviteRepository):
                 titulaire=activity.authors,
                 certificat=activity.participating_proof,
                 commentaire=activity.comment,
+                ects=activity.ects,
             )
         elif categorie == CategorieActivite.UCL_COURSE:
             return CoursUclDTO(
