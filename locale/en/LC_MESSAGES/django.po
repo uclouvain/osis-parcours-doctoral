@@ -305,6 +305,9 @@ msgstr ""
 msgid "Add validation of prior experience (VAE)"
 msgstr ""
 
+msgid "Additional training"
+msgstr ""
+
 msgctxt "parcours_doctoral filter"
 msgid "Additional training"
 msgstr ""
@@ -1003,6 +1006,9 @@ msgstr ""
 msgid "Doctoral trainings"
 msgstr ""
 
+msgid "Doctoral trainings export"
+msgstr ""
+
 msgid "Doctorate"
 msgstr ""
 
@@ -1141,6 +1147,9 @@ msgid "Event website"
 msgstr ""
 
 msgid "Example"
+msgstr ""
+
+msgid "Excel export of doctoral trainings"
 msgstr ""
 
 msgid "Exit without saving"
@@ -2578,6 +2587,9 @@ msgstr ""
 msgid "Status:"
 msgstr ""
 
+msgid "Student"
+msgstr ""
+
 msgctxt "parcours_doctoral"
 msgid "Student"
 msgstr ""
@@ -2796,6 +2808,9 @@ msgid "The doctoral training must be in the 'waiting for signature' status."
 msgstr ""
 
 msgid "The doctorate is not initialized"
+msgstr ""
+
+msgid "The export has failed"
 msgstr ""
 
 msgid "The first name of the recipient"
@@ -3225,6 +3240,9 @@ msgstr ""
 msgid "Yes"
 msgstr ""
 
+msgid "Yes,No,All"
+msgstr ""
+
 msgid "You appear to have unsaved changes, which will be lost."
 msgstr ""
 
@@ -3272,6 +3290,14 @@ msgid "You need to set a member as secretary."
 msgstr ""
 
 msgid "Your data have been saved."
+msgstr ""
+
+msgid "Your document is available here"
+msgstr ""
+
+msgid ""
+"Your export request has been planned, you will receive a notification as "
+"soon as it is available."
 msgstr ""
 
 msgid ""
