@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -26,7 +26,6 @@
 from typing import List, Mapping, Optional
 
 from base.ddd.utils.in_memory_repository import InMemoryGenericRepository
-
 from parcours_doctoral.ddd.formation.domain.model.activite import (
     Activite,
     ActiviteIdentity,
@@ -42,6 +41,14 @@ from parcours_doctoral.ddd.formation.test.factory.activite import ActiviteFactor
 
 class ActiviteInMemoryRepository(InMemoryGenericRepository, IActiviteRepository):
     entities: List['Activite']
+
+    @classmethod
+    def get_complementaries_training_for_doctoral_training(cls, entity_id: 'ParcoursDoctoralIdentity') -> List['CoursDTO']:  # type: ignore[override]
+        return [
+            activite
+            for activite in cls.entities
+            if activite.parcours_doctoral_id == entity_id and activite.categorie == CategorieActivite.COURSE
+        ]
 
     @classmethod
     def get(cls, entity_id: 'ActiviteIdentity') -> 'Activite':

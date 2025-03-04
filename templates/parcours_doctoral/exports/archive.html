@@ -1,5 +1,5 @@
 {% extends "parcours_doctoral/exports/base_pdf.html" %}
-{% load i18n %}
+{% load i18n doctorate_enums parcours_doctoral strings %}
 
 {% comment "License" %}
   * OSIS stands for Open Student Information System. It's an application
@@ -25,13 +25,160 @@
   * see http://www.gnu.org/licenses/.
 {% endcomment %}
 
+{% block extra_head %}
+  <style>
+    h1 {
+        font-size: 2rem;
+        text-transform: uppercase;
+    }
+
+    h2 {
+        font-size: 1rem;
+        font-weight: bold;
+        color: #5db3e6 !important;
+        font-style: normal;
+        text-transform: uppercase;
+        margin-top: 1em;
+    }
+
+    h3 {
+        font-weight: bold;
+        font-size: 1rem;
+        margin-top: 1em;
+        text-decoration: underline;
+    }
+
+  </style>
+{% endblock %}
+
 {% block content %}
   <div class="container">
     <div id="title">
-      <h1>{% translate "Doctorate archive" %}</h1>
-      <h2>
-        ({% translate "To complete" %})
-      </h2>
+      <h1>{% translate "Doctoral training dossier" %}</h1>
     </div>
+
+    <h2>{% translate "General data" %}</h2>
+    {% field_data _("Student") parcours_doctoral.nom_doctorant|add:" "|add:parcours_doctoral.prenom_doctorant inline=True %}
+    {% field_data _("Noma") parcours_doctoral.noma_doctorant inline=True %}
+    <div class="inline-field-data"><dl><dt>{% translate "PhD" %}</dt><dd>{{ parcours_doctoral.formation.intitule }} ({{ parcours_doctoral.formation.campus }})</dd></dl></div>
+    {% field_data _("Sector") parcours_doctoral.intitule_secteur_formation inline=True %}
+    {% field_data _("Domain doctoral committee") parcours_doctoral.projet.domaine_these inline=True %}
+    {% field_data _("Proximity commission") parcours_doctoral.commission_proximite|enum_display:'ChoixCommissionProximiteCDEouCLSM'|enum_display:'ChoixCommissionProximiteCDSS'|enum_display:'ChoixSousDomaineSciences' inline=True %}
+    {% get_superior_institute_name parcours_doctoral.projet.institut_these.uuid as institut_these %}
+    {% field_data _("Thesis institute") institut_these inline=True %}
+    {% field_data _("Financing type") parcours_doctoral.financement.type|enum_display:"ChoixTypeFinancement" inline=True %}
+
+    {# Uncomment after OS-1395 merge #}
+    {# {% field_data _("Temporary / definitive admission date") parcours_doctoral.date_admission_par_cdd inline=True %} #}
+    {% field_data _("Temporary / definitive admission date") "En cours de développement (OS-1395)" inline=True %}
+
+    {% field_data _("PhD first inscription date") propriete_pae.specificites.date_inscription_formation inline=True %}
+    {% field_data _("Thesis title") parcours_doctoral.projet.titre inline=True %}
+
+    {% if parcours_doctoral.cotutelle.institution or parcours_doctoral.cotutelle.autre_institution_nom %}
+      <h2>{% translate "Cotutelle" %}</h2>
+
+      {% firstof parcours_doctoral.cotutelle.institution parcours_doctoral.cotutelle.autre_institution_nom as institute_name %}
+      <p>{% blocktranslate with institute_name=institute_name %}Thesis with cotutelle with {{ institute_name }}{% endblocktranslate %}</p>
+    {% endif %}
+
+    <h2>{% translate "Supervisory panel" %}</h2>
+
+    <h3>{% translate "Promotion" %}</h3>
+    {% for member in groupe_supervision.signatures_promoteurs %}
+      {{ member.promoteur.nom }} {{ member.promoteur.prenom }}
+      {% if member.promoteur.est_docteur %} - {% translate "Doctor" %} {% endif %}
+      {% if member.promoteur.institution %} - {{ member.promoteur.institution }}{% endif %}
+      {% if member.promoteur.ville %} - {{ member.promoteur.ville }}{% endif %}
+      {% if member.promoteur.pays %} - {{ member.promoteur.pays }}{% endif %}
+      {% if member.promoteur.uuid == groupe_supervision.promoteur_reference %}
+        - {% translate "Lead supervisor" %}
+      {% endif %}
+      {% if not forloop.last %}<br>{% endif %}
+    {% empty %}
+      {% translate "No one invited" %}
+    {% endfor %}
+
+    <h3>{% translate "Other members of the supervisory panel" %}</h3>
+    {% for member in groupe_supervision.signatures_membres_CA %}
+      {{ member.membre_CA.nom }} {{ member.membre_CA.prenom }}
+      {% if member.membre_CA.est_docteur %} - {% translate "Doctor" %} {% endif %}
+      {% if member.membre_CA.institution %} - {{ member.membre_CA.institution }}{% endif %}
+      {% if member.membre_CA.ville %} - {{ member.membre_CA.ville }}{% endif %}
+      {% if member.membre_CA.pays %} - {{ member.membre_CA.pays }}{% endif %}
+      {% if not forloop.last %}<br>{% endif %}
+    {% empty %}
+      {% translate "No one invited" %}
+    {% endfor %}
+
+    <h2>{% translate "Confirmation paper" %}</h2>
+
+    {% for current_confirmation_paper in epreuves_confirmation %}
+      <div class="confirmation-paper">
+        {% field_data _("Confirmation deadline:") current_confirmation_paper.date_limite inline=True %}
+        {% field_data _("Confirmation exam date:") current_confirmation_paper.date inline=True %}
+      </div>
+    {% empty %}
+      {% translate "No confirmation paper yet" %}
+    {% endfor %}
+
+    {% if epreuves_confirmation %}
+      {% get_confirmation_status parcours_doctoral as confirmation_status %}
+      {% field_data _("Current status of the confirmation") confirmation_status inline=True %}
+    {% endif %}
+
+    <h2>{% translate "Additional training" %}</h2>
+
+    {% for cours in cours_complementaires %}
+      {% if cours.code %}{{ cours.code }} {% endif %}
+      {{ cours.nom }} - {{ cours.ects }} {% translate "credits" %}
+      {% if not forloop.last %}<br>{% endif %}
+    {% endfor %}
+
+    <h2>{% translate "Doctoral training" %}</h2>
+
+    {% training_categories_credits_table parcours_doctoral.uuid %}
+
+    <h2>{% translate "Defense jury composition" %}</h2>
+
+    {% for membre in jury.membres %}
+      {% if membre.est_promoteur %}{% translate "Supervisor" %}{% else %}{% translate "CA Member" %} : {% endif %}
+      {% if membre.titre and membre.titre %}{{ membre.titre|enum_display:'TitreMembre' }} {% endif %}
+      {{ membre.nom }} {{ membre.prenom }}
+      {% if membre.role %}{{ membre.role|enum_display:'RoleJury' }} {% endif %}
+      {% if membre.institution %} - {{ membre.institution }}{% endif %}
+      {% if membre.ville %} - {{ membre.ville }}{% endif %}
+      {% if membre.pays %} - {{ membre.pays }}{% endif %}
+      {% if membre.email %} - {{ membre.email }}{% endif %}
+{#      [TODO statut de signature][date]#}
+      {% if not forloop.last %}<br>{% endif %}
+    {% empty %}
+      {% translate "No one invited" %}
+    {% endfor %}
+
+    {% comment %}
+
+    <h2>{% translate "Recevability" %}</h2>
+
+    Titre de la thèse : [...]
+    Date de décision de recevabilité : [...]
+    Statut actuel de la recevabilité : [soumise, etc]
+
+    <h2>{% translate "Private defense" %}</h2>
+
+    Titre de la thèse : [...]
+    Date de la défense privée : [...]
+    Lieu de la défense privée : [...]
+    Statut actuel de la défense: [soumise, etc]
+
+    <h2>{% translate "Public defense" %}</h2>
+
+    Titre de la thèse : [...]
+    Date de la soutenance publique : [...]
+    Lieu de la soutenance publique : [...]
+    Statut actuel de la soutenance : [soumise, etc]
+
+    {% endcomment %}
+
   </div>
 {% endblock %}

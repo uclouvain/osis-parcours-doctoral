@@ -46,7 +46,12 @@ from base.models.entity_version import EntityVersion
 from base.models.organization import Organization
 from parcours_doctoral.auth.constants import READ_ACTIONS_BY_TAB, UPDATE_ACTIONS_BY_TAB
 from parcours_doctoral.constants import CAMPUSES_UUIDS
-from parcours_doctoral.ddd.dtos import CampusDTO
+from parcours_doctoral.ddd.domain.model.enums import (
+    STATUTS_PAR_ETAPE_PARCOURS_DOCTORAL,
+    ChoixEtapeParcoursDoctoral,
+    ChoixStatutParcoursDoctoral,
+)
+from parcours_doctoral.ddd.dtos import CampusDTO, ParcoursDoctoralDTO
 from parcours_doctoral.ddd.formation.domain.model.enums import (
     CategorieActivite,
     ChoixTypeEpreuve,
@@ -54,7 +59,7 @@ from parcours_doctoral.ddd.formation.domain.model.enums import (
 )
 from parcours_doctoral.ddd.repository.i_parcours_doctoral import formater_reference
 from parcours_doctoral.forms.supervision import MemberSupervisionForm
-from parcours_doctoral.models import ParcoursDoctoral
+from parcours_doctoral.models import Activity, ParcoursDoctoral
 from parcours_doctoral.utils.formatting import format_activity_ects
 from reference.models.language import Language
 
@@ -277,8 +282,7 @@ def status_as_class(activity):
     }.get(str(status), 'info')
 
 
-@register.inclusion_tag('parcours_doctoral/includes/training_categories.html')
-def training_categories(activities):
+def _training_categories_stats(activities):
     added, validated = 0, 0
 
     categories = {
@@ -337,6 +341,12 @@ def training_categories(activities):
             categories[_("Confirmation exam")][index] += activity.ects
         elif activity.category == CategorieActivite.PAPER.name:
             categories[_("Thesis defense")][index] += activity.ects
+    return added, validated, categories
+
+
+@register.inclusion_tag('parcours_doctoral/includes/training_categories.html')
+def training_categories(activities):
+    added, validated, categories = _training_categories_stats(activities)
     if not added:
         return {}
     return {
@@ -344,6 +354,17 @@ def training_categories(activities):
         'categories': categories,
         'added': added,
         'validated': validated,
+    }
+
+
+@register.inclusion_tag('parcours_doctoral/includes/training_categories_credits_table.html')
+def training_categories_credits_table(parcours_doctoral_uuid):
+    activities = Activity.objects.for_doctoral_training(parcours_doctoral_uuid)
+    added, _, categories = _training_categories_stats(activities)
+    if not added:
+        return {}
+    return {
+        'categories': categories,
     }
 
 
@@ -385,7 +406,7 @@ def footer_campus(campus: CampusDTO):
 
     return mark_safe(
         ' | '.join(
-            f'<strong>{campus_name}</strong>' if campus.uuid in campuses[campus_name] else campus_name
+            f'<strong>{campus_name}</strong>' if getattr(campus, 'uuid', None) in campuses[campus_name] else campus_name
             for campus_name in campuses
         )
     )
@@ -623,3 +644,18 @@ def document_component(document_write_token, document_metadata, can_edit=True):
         'template': 'parcours_doctoral/document/no_document.html',
         'message': _('Non-retrievable document') if document_write_token else _('No document'),
     }
+
+
+@register.simple_tag
+def get_confirmation_status(parcours_doctoral: ParcoursDoctoralDTO):
+    if (
+        ChoixStatutParcoursDoctoral[parcours_doctoral.statut]
+        in STATUTS_PAR_ETAPE_PARCOURS_DOCTORAL[ChoixEtapeParcoursDoctoral.ADMISSION]
+    ):
+        return ""
+    if (
+        ChoixStatutParcoursDoctoral[parcours_doctoral.statut]
+        in STATUTS_PAR_ETAPE_PARCOURS_DOCTORAL[ChoixEtapeParcoursDoctoral.CONFIRMATION]
+    ):
+        return ChoixStatutParcoursDoctoral[parcours_doctoral.statut].value
+    return ChoixStatutParcoursDoctoral.CONFIRMATION_REUSSIE.value

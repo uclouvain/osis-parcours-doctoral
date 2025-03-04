@@ -26,7 +26,9 @@
 from admission.infrastructure.admission.doctorat.preparation.repository.in_memory.proposition import (
     PropositionInMemoryRepository,
 )
-
+from infrastructure.parcours_interne.domain.service.in_memory.pae import (
+    InMemoryPaeTranslator,
+)
 from parcours_doctoral.ddd.commands import *
 from parcours_doctoral.ddd.commands import ListerDocumentsQuery, RecupererDocumentQuery
 from parcours_doctoral.ddd.use_case.read import *
@@ -43,6 +45,9 @@ from parcours_doctoral.ddd.use_case.write.demander_signatures_service import (
 )
 from parcours_doctoral.ddd.use_case.write.designer_promoteur_reference_service import (
     designer_promoteur_reference,
+)
+from parcours_doctoral.ddd.use_case.write.generer_pdf_archive_service import (
+    generer_pdf_archive,
 )
 from parcours_doctoral.ddd.use_case.write.identifier_membre_CA_service import (
     identifier_membre_ca,
@@ -77,11 +82,20 @@ from parcours_doctoral.infrastructure.parcours_doctoral.domain.service.in_memory
 from parcours_doctoral.infrastructure.parcours_doctoral.domain.service.in_memory.parcours_doctoral import (
     ParcoursDoctoralInMemoryService,
 )
+from parcours_doctoral.infrastructure.parcours_doctoral.domain.service.in_memory.pdf_generation import (
+    InMemoryPDFGeneration,
+)
 from parcours_doctoral.infrastructure.parcours_doctoral.domain.service.in_memory.promoteur import (
     PromoteurInMemoryTranslator,
 )
 from parcours_doctoral.infrastructure.parcours_doctoral.epreuve_confirmation.repository.in_memory.epreuve_confirmation import (
     EpreuveConfirmationInMemoryRepository,
+)
+from parcours_doctoral.infrastructure.parcours_doctoral.formation.repository.in_memory.activite import (
+    ActiviteInMemoryRepository,
+)
+from parcours_doctoral.infrastructure.parcours_doctoral.jury.repository.in_memory.jury import (
+    JuryInMemoryRepository,
 )
 from parcours_doctoral.infrastructure.parcours_doctoral.read_view.handlers_in_memory import (
     COMMAND_HANDLERS as READ_VIEW_COMMAND_HANDLERS,
@@ -106,6 +120,10 @@ _historique = HistoriqueInMemory()
 _membre_ca_translator = MembreCAInMemoryTranslator()
 _promoteur_translator = PromoteurInMemoryTranslator()
 _document_repository = DocumentInMemoryRepository()
+_pdf_generation_service = InMemoryPDFGeneration()
+_jury_repository = JuryInMemoryRepository()
+_activite_repository = ActiviteInMemoryRepository()
+_pae_translator = InMemoryPaeTranslator()
 
 
 COMMAND_HANDLERS = {
@@ -240,6 +258,20 @@ COMMAND_HANDLERS = {
     RecupererDocumentQuery: lambda msg_bus, cmd: recuperer_document(
         cmd,
         document_repository=_document_repository,
+    ),
+    GenererPdfArchiveCommand: lambda msg_bus, cmd: generer_pdf_archive(
+        msg_bus,
+        cmd,
+        parcours_doctoral_repository=_parcours_doctoral_repository,
+        pdf_generation_service=_pdf_generation_service,
+        groupe_supervision_repository=_groupe_de_supervision_repository,
+        promoteur_translator=_promoteur_translator,
+        membre_ca_translator=_membre_ca_translator,
+        epreuve_confirmation_repository=_epreuve_confirmation_repository,
+        jury_repository=_jury_repository,
+        activite_repository=_activite_repository,
+        document_repository=_document_repository,
+        pae_translator=_pae_translator,
     ),
     **READ_VIEW_COMMAND_HANDLERS,
 }

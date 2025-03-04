@@ -30,6 +30,7 @@ from admission.ddd.admission.doctorat.events import (
 from admission.infrastructure.admission.doctorat.preparation.repository.proposition import (
     PropositionRepository,
 )
+from infrastructure.parcours_interne.domain.service.pae import PaeTranslator
 from parcours_doctoral.ddd.commands import *
 from parcours_doctoral.ddd.use_case.read import *
 from parcours_doctoral.ddd.use_case.write import *
@@ -51,6 +52,7 @@ from ...ddd.use_case.write.demander_signatures_service import demander_signature
 from ...ddd.use_case.write.designer_promoteur_reference_service import (
     designer_promoteur_reference,
 )
+from ...ddd.use_case.write.generer_pdf_archive_service import generer_pdf_archive
 from ...ddd.use_case.write.identifier_membre_CA_service import identifier_membre_ca
 from ...ddd.use_case.write.identifier_promoteur_service import identifier_promoteur
 from ...ddd.use_case.write.initialiser_parcours_doctoral import (
@@ -68,14 +70,16 @@ from .domain.service.historique import Historique
 from .domain.service.membre_CA import MembreCATranslator
 from .domain.service.notification import Notification
 from .domain.service.parcours_doctoral import ParcoursDoctoralService
+from .domain.service.pdf_generation import PDFGeneration
 from .domain.service.promoteur import PromoteurTranslator
 from .epreuve_confirmation.repository.epreuve_confirmation import (
     EpreuveConfirmationRepository,
 )
 from .event_handlers import reagir_a_approbation_admission
+from .formation.repository.activite import ActiviteRepository
+from .jury.repository.jury import JuryRepository
 from .repository.groupe_de_supervision import GroupeDeSupervisionRepository
 from .repository.parcours_doctoral import ParcoursDoctoralRepository
-
 
 COMMAND_HANDLERS = {
     RecupererParcoursDoctoralQuery: lambda msg_bus, cmd: recuperer_parcours_doctoral(
@@ -209,6 +213,20 @@ COMMAND_HANDLERS = {
     RecupererDocumentQuery: lambda msg_bus, cmd: recuperer_document(
         cmd,
         document_repository=DocumentRepository(),
+    ),
+    GenererPdfArchiveCommand: lambda msg_bus, cmd: generer_pdf_archive(
+        msg_bus,
+        cmd,
+        parcours_doctoral_repository=ParcoursDoctoralRepository(),
+        pdf_generation_service=PDFGeneration(),
+        groupe_supervision_repository=GroupeDeSupervisionRepository(),
+        promoteur_translator=PromoteurTranslator(),
+        membre_ca_translator=MembreCATranslator(),
+        epreuve_confirmation_repository=EpreuveConfirmationRepository(),
+        jury_repository=JuryRepository(),
+        activite_repository=ActiviteRepository(),
+        document_repository=DocumentRepository(),
+        pae_translator=PaeTranslator(),
     ),
     **READ_VIEW_COMMAND_HANDLERS,
 }
