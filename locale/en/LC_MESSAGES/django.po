@@ -1040,10 +1040,10 @@ msgstr ""
 msgid "Dossier numero"
 msgstr ""
 
-msgid "Download the document"
+msgid "Download the PDF recap"
 msgstr ""
 
-msgid "Download the PDF recap"
+msgid "Download the document"
 msgstr ""
 
 msgid "Dr"
@@ -3285,6 +3285,7 @@ msgstr ""
 msgid "Your participation in the event"
 msgstr ""
 
+msgctxt "doctorate"
 msgid "city"
 msgstr ""
 
