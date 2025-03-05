@@ -354,6 +354,9 @@ msgstr "Ajouter un filtre de date"
 msgid "Add validation of prior experience (VAE)"
 msgstr "Ajouter une valorisation des acquis de l'expérience"
 
+msgid "Additional training"
+msgstr "Formation complémentaire"
+
 msgctxt "parcours_doctoral filter"
 msgid "Additional training"
 msgstr "Formation complémentaire"
@@ -787,6 +790,9 @@ msgstr "Épreuve de confirmation non complète."
 msgid "Confirmation exam not found."
 msgstr "Épreuve de confirmation non trouvée."
 
+msgid "Confirmation paper"
+msgstr "Épreuve de confirmation"
+
 msgid "Confirmation success attestation"
 msgstr "Attestation de réussite de l'épreuve de confirmation"
 
@@ -884,6 +890,9 @@ msgstr "Créée le"
 msgid "Current funding"
 msgstr "Financement actuel"
 
+msgid "Current status of the confirmation"
+msgstr "Statut actuel de la confirmation"
+
 msgid "Custom mail template"
 msgstr "Template d'email personnalisé"
 
@@ -957,6 +966,9 @@ msgstr "Défense"
 
 msgid "Defense indicative date"
 msgstr "Date de soutenance indicative"
+
+msgid "Defense jury composition"
+msgstr "Composition du jury de défense"
 
 msgid "Defense language"
 msgstr "Langue de la soutenance"
@@ -1073,14 +1085,14 @@ msgstr "Formation doctorale"
 msgid "Doctoral training configuration"
 msgstr "Configuration formation doctorale"
 
+msgid "Doctoral training dossier"
+msgstr "Dossier du parcours doctoral"
+
 msgid "Doctoral trainings"
 msgstr "Formations doctorales"
 
 msgid "Doctorate"
 msgstr "Doctorat"
-
-msgid "Doctorate archive"
-msgstr "Archive du doctorat"
 
 msgid "Doctorate thesis field"
 msgstr "Domaine de la thèse de doctorat"
@@ -1106,6 +1118,9 @@ msgstr "Documents"
 
 msgid "Does not have a doctor title"
 msgstr "N'est pas porteur du titre de docteur"
+
+msgid "Domain doctoral committee"
+msgstr "Commission doctorale de domaine"
 
 msgid "Done in"
 msgstr "Fait à"
@@ -1257,6 +1272,9 @@ msgstr "Fichier"
 msgid "Financing comment"
 msgstr "Commentaire sur le financement"
 
+msgid "Financing type"
+msgstr "Type de financement"
+
 msgid "First author"
 msgstr "Premier auteur.trice"
 
@@ -1348,6 +1366,9 @@ msgstr "Graphe de Gantt"
 
 msgid "Gender"
 msgstr "Genre"
+
+msgid "General data"
+msgstr "Données générales"
 
 msgid "Generate an archive"
 msgstr "Générer une archive"
@@ -1989,6 +2010,9 @@ msgstr "Doctorat suivant"
 msgid "No"
 msgstr "Non"
 
+msgid "No confirmation paper yet"
+msgstr "Pas encore d'épreuve de confirmation"
+
 msgid "No defense"
 msgstr "Non soutenue"
 
@@ -2013,6 +2037,9 @@ msgstr "Pas de jury trouvé."
 
 msgid "No one invited"
 msgstr "Aucun invité"
+
+msgid "Noma"
+msgstr "Noma"
 
 msgid "Non doctor reason"
 msgstr "Justification"
@@ -2100,6 +2127,9 @@ msgstr "Autre institution nom"
 msgid "Other international scholarship"
 msgstr "Autre bourse internationale"
 
+msgid "Other members of the supervisory panel"
+msgstr "Autres membres du comité d’accompagnement"
+
 msgctxt "CategorieActivite"
 msgid "PAPER"
 msgstr "Épreuve"
@@ -2155,6 +2185,9 @@ msgstr "Doctorat"
 
 msgid "PhD already done"
 msgstr "Doctorat déjà réalisé"
+
+msgid "PhD first inscription date"
+msgstr "Date de la première inscription au doctorat"
 
 msgid "PhD proposal"
 msgstr "Projet de formation doctorale"
@@ -2771,6 +2804,9 @@ msgstr "État d’avancement de la formation doctorale"
 msgid "Status:"
 msgstr "État :"
 
+msgid "Student"
+msgstr "Étudiant"
+
 msgctxt "parcours_doctoral"
 msgid "Student"
 msgstr "Étudiant"
@@ -2889,6 +2925,9 @@ msgstr "Nom"
 
 msgid "Template title"
 msgstr "Intitulé du template"
+
+msgid "Temporary / definitive admission date"
+msgstr "Date de l’admission provisoire / définitive"
 
 msgid ""
 "The \"doctoral training\" must be completed before submitting the defense "
@@ -3314,9 +3353,6 @@ msgstr ""
 "À téléverser dans votre dossier sur la plateforme doctorale dans les plus "
 "brefs délais après l’épreuve de confirmation"
 
-msgid "To complete"
-msgstr "A compléter"
-
 msgid ""
 "To visualize and edit a document, please select it in the list opposite."
 msgstr ""
@@ -3587,6 +3623,9 @@ msgstr "Votre participation à l'événement"
 
 msgid "city"
 msgstr "ville"
+
+msgid "credits"
+msgstr "crédits"
 
 msgid "days"
 msgstr "jours"
