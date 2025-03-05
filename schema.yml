@@ -3787,7 +3787,6 @@ components:
           readOnly: true
         academic_year:
           type: integer
-          nullable: true
       required:
       - object_type
       - category
