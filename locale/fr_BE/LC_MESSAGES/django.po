@@ -33,7 +33,8 @@ msgid ""
 "cycle training:"
 msgstr ""
 "%(prenom)s, %(nom)s, né.e le %(date_naissance)s à %(lieu_naissance)s, "
-"%(pays_naissance)s inscrit.e au %(formation)s a réalisé la formation de troisième cycle suivante :"
+"%(pays_naissance)s inscrit.e au %(formation)s a réalisé la formation de "
+"troisième cycle suivante :"
 
 #, python-format
 msgid "%(state)s on %(date)s"
@@ -1113,11 +1114,11 @@ msgstr "Fait à"
 msgid "Dossier numero"
 msgstr "Numéro de dossier"
 
-msgid "Download the document"
-msgstr "Télécharger un document"
-
 msgid "Download the PDF recap"
 msgstr "Générer le PDF récapitulatif"
+
+msgid "Download the document"
+msgstr "Télécharger un document"
 
 msgid "Dr"
 msgstr "Dr."
@@ -3585,6 +3586,7 @@ msgstr "Votre participation"
 msgid "Your participation in the event"
 msgstr "Votre participation à l'événement"
 
+msgctxt "doctorate"
 msgid "city"
 msgstr "ville"
 
