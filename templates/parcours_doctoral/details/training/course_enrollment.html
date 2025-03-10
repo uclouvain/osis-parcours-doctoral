@@ -87,6 +87,9 @@
       {% endfor %}
       <button class="btn btn-default border border-dark-subtle" type="submit" name="_submit">{% trans "Submit selected courses" %}</button>
       <button class="btn btn-default border border-dark-subtle" type="submit" name="_accept">{% trans "Validate selected courses" %}</button>
+      <a href="{{ add_url }}" class="btn btn-default border border-dark-subtle">
+        {% trans "Enroll in a course" %}
+      </a>
     </form>
   {% else %}
     {% trans "This student has not created any course yet." %}

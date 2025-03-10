@@ -34,7 +34,6 @@ from parcours_doctoral.api.permissions import DoctorateAPIPermissionRequiredMixi
 from parcours_doctoral.constants import COMMENT_TAB_GLOBAL
 from parcours_doctoral.views.mixins import ParcoursDoctoralViewMixin
 
-
 __namespace__ = False
 
 __all__ = [

@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -62,6 +62,7 @@ class ParcoursDoctoralDTOSerializer(DTOSerializer):
                 'retrieve_doctorate_training',
                 'retrieve_complementary_training',
                 'retrieve_course_enrollment',
+                'retrieve_assessment_enrollment',
                 'add_training',
                 'submit_training',
                 'assent_training',

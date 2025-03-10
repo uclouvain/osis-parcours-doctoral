@@ -43,7 +43,7 @@
   >
     <div>
       <p>
-        {{ activity.subtitle }} {{ activity.title }}
+        {% include "parcours_doctoral/details/training/description/course.html" %}
       </p>
       <div class="row">
         {% if activity.organizing_institution %}

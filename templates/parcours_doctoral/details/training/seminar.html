@@ -50,8 +50,7 @@
     <div>
       <p>
         <strong class="d-block">{% trans "Description" %}</strong>
-        {{ activity.title }}, {{ activity.type }}, {{ period }}.
-
+        {% include "parcours_doctoral/details/training/description/seminar.html" %}
       </p>
       <div class="row mb-3">
         {% if activity.organizing_institution %}
@@ -68,7 +67,7 @@
         {% endif %}
         {% if activity.city %}
           <div class="col-md-4">
-            <strong class="d-block">{% trans "city" %}</strong>
+            <strong class="d-block">{% trans "city" context "doctorate" %}</strong>
             {{ activity.city }}
           </div>
         {% endif %}
