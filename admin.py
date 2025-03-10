@@ -49,8 +49,13 @@ from parcours_doctoral.auth.roles.student import Student
 from parcours_doctoral.ddd.formation.domain.model.enums import (
     CategorieActivite,
     ContexteFormation,
+    StatutInscriptionEvaluation,
 )
-from parcours_doctoral.models import ConfirmationPaper, ParcoursDoctoral
+from parcours_doctoral.models import (
+    AssessmentEnrollment,
+    ConfirmationPaper,
+    ParcoursDoctoral,
+)
 from parcours_doctoral.models.activity import Activity
 from parcours_doctoral.models.cdd_config import CddConfiguration
 from parcours_doctoral.models.cdd_mail_template import CddMailTemplate
@@ -149,13 +154,58 @@ class ActivityAdmin(admin.ModelAdmin):
         context_mapping = {
             ContexteFormation.DOCTORAL_TRAINING.name: 'doctoral-training',
             ContexteFormation.COMPLEMENTARY_TRAINING.name: 'complementary-training',
-            ContexteFormation.FREE_COURSE.name: 'course-enrollment',
         }
         context = (
             context_mapping[obj.context] if obj.category != CategorieActivite.UCL_COURSE.name else 'course-enrollment'
         )
         url = resolve_url(f'parcours_doctoral:{context}', uuid=obj.parcours_doctoral.uuid)
         return url + f'#{obj.uuid}'
+
+
+@admin.register(AssessmentEnrollment)
+class AssessmentEnrollmentAdmin(admin.ModelAdmin):
+    list_display = (
+        'uuid',
+        'related_doctorate',
+        'course_year',
+        'session',
+        'course_acronym',
+        'active',
+    )
+    autocomplete_fields = [
+        'course',
+    ]
+
+    @admin.display(description=_('Active'), boolean=True)
+    def active(self, obj):
+        return obj.status == StatutInscriptionEvaluation.ACCEPTEE.name
+
+    @admin.display(description=_('Academic year'))
+    def course_year(self, obj):
+        return obj.course.learning_unit_year.academic_year.year
+
+    @admin.display(description=_('Related doctorate'))
+    def related_doctorate(self, obj):
+        return obj.course.parcours_doctoral.reference
+
+    @admin.display(description=_('Learning unit'))
+    def course_acronym(self, obj):
+        return obj.course.learning_unit_year.acronym
+
+    def get_queryset(self, request):
+        return (
+            super()
+            .get_queryset(request)
+            .select_related(
+                'course__learning_unit_year__academic_year',
+                'course__parcours_doctoral',
+            )
+            .order_by(
+                'course__parcours_doctoral__reference',
+                'course__learning_unit_year__academic_year__year',
+                'course__learning_unit_year__acronym',
+            )
+        )
 
 
 @admin.register(CddMailTemplate)

@@ -36,6 +36,7 @@ from django.utils.translation import pgettext_lazy
 from osis_document.contrib import FileField
 
 from base.ddd.utils.business_validator import MultipleBusinessExceptions
+from deliberation.models.enums.numero_session import Session
 from parcours_doctoral.ddd.formation.domain.model.enums import (
     CategorieActivite,
     ChoixComiteSelection,
@@ -44,11 +45,13 @@ from parcours_doctoral.ddd.formation.domain.model.enums import (
     ChoixTypeVolume,
     ContexteFormation,
     StatutActivite,
+    StatutInscriptionEvaluation,
 )
 from parcours_doctoral.utils.formatting import format_activity_ects
 
 __all__ = [
     "Activity",
+    "AssessmentEnrollment",
 ]
 
 
@@ -473,3 +476,35 @@ def _activity_update_seminar_can_be_submitted(sender, instance, **kwargs):
         and instance.parent_id == CategorieActivite.SEMINAR.name
     ):
         instance.parent.save()
+
+
+class AssessmentEnrollment(models.Model):
+    uuid = models.UUIDField(
+        db_index=True,
+        default=uuid4,
+        editable=False,
+        unique=True,
+    )
+
+    course = models.ForeignKey(
+        limit_choices_to=Q(category=CategorieActivite.UCL_COURSE.name),
+        on_delete=models.CASCADE,
+        to=Activity,
+        verbose_name=_("Course"),
+    )
+
+    session = models.CharField(
+        choices=Session.choices(),
+        max_length=255,
+        verbose_name=_("Session"),
+    )
+
+    status = models.CharField(
+        choices=StatutInscriptionEvaluation.choices(),
+        max_length=255,
+        verbose_name=_("Status"),
+    )
+
+    late_enrollment = models.BooleanField(
+        verbose_name=_("Late enrollment"),
+    )

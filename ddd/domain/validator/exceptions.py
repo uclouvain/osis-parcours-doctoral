@@ -130,7 +130,7 @@ class MembreCAManquantException(BusinessException):
     status_code = "PARCOURS-DOCTORAL-13"
 
     def __init__(self, **kwargs):
-        message = _("You must add at least two CA member in order to request signatures.")
+        message = _("You must add at least two CA members in order to request signatures.")
         super().__init__(message, **kwargs)
 
 

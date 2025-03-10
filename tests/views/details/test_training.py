@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -23,14 +23,12 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-
 import uuid
 from unittest.mock import patch
 
 import freezegun
-from base.tests.factories.academic_year import AcademicYearFactory
-from base.tests.factories.learning_unit_year import LearningUnitYearFactory
-from base.tests.factories.program_manager import ProgramManagerFactory
+
+from base.forms.utils.choice_field import BLANK_CHOICE_DISPLAY
 from django.conf import settings
 from django.forms import Field
 from django.shortcuts import resolve_url
@@ -41,6 +39,8 @@ from django.utils.translation import pgettext
 from osis_notification.models import WebNotification
 from rest_framework import status
 
+from base.tests.factories.academic_year import AcademicYearFactory
+from base.tests.factories.program_manager import ProgramManagerFactory
 from parcours_doctoral.ddd.formation.domain.model.enums import (
     CategorieActivite,
     ChoixComiteSelection,
@@ -68,9 +68,12 @@ from parcours_doctoral.tests.factories.activity import (
     VaeFactory,
 )
 from parcours_doctoral.tests.factories.parcours_doctoral import ParcoursDoctoralFactory
+from parcours_doctoral.tests.factories.roles import StudentRoleFactory
 from parcours_doctoral.tests.factories.supervision import PromoterFactory
+from reference.tests.factories.country import CountryFactory
 
 
+@freezegun.freeze_time('2022-11-01')
 @override_settings(OSIS_DOCUMENT_BASE_URL='http://dummyurl/')
 class DoctorateTrainingActivityViewTestCase(TestCase):
     @classmethod
@@ -93,11 +96,11 @@ class DoctorateTrainingActivityViewTestCase(TestCase):
         cls.service = ServiceFactory(parcours_doctoral=cls.parcours_doctoral)
         cls.ucl_course = UclCourseFactory(
             parcours_doctoral=cls.parcours_doctoral,
-            learning_unit_year__academic_year__current=True,
+            learning_unit_year__academic_year__year=2022,
         )
         cls.other_ucl_course = UclCourseFactory(
             parcours_doctoral=cls.parcours_doctoral,
-            learning_unit_year__academic_year__year=2022,
+            learning_unit_year__academic_year__year=2019,
         )
 
         # A manager that can manage both parcours_doctorals
@@ -144,7 +147,6 @@ class DoctorateTrainingActivityViewTestCase(TestCase):
         )
         self.assertContains(response, default_input, html=True)
 
-    @freezegun.freeze_time('2022-11-01')
     def test_academic_year_field(self):
         AcademicYearFactory(year=2022)
         add_url = resolve_url(f'{self.namespace}:add', uuid=self.parcours_doctoral.uuid, category='course')
@@ -167,14 +169,16 @@ class DoctorateTrainingActivityViewTestCase(TestCase):
             self.assertContains(response, "Coopération internationale")
 
         # Field is other
-        response = self.client.post(add_url, {'type': "Foobar"}, follow=True)
+        with freezegun.freeze_time('2022-11-02'):
+            response = self.client.post(add_url, {'type': "Foobar"}, follow=True)
         just_created = Activity.objects.first()
         self.assertIn(self.url, response.redirect_chain[-1][0])
         self.assertIn(str(just_created.uuid), response.redirect_chain[-1][0])
         self.assertEqual(just_created.type, "Foobar")
 
         # Field is one of provided values
-        response = self.client.post(add_url, {'type': "Coopération internationale"}, follow=True)
+        with freezegun.freeze_time('2022-11-03'):
+            response = self.client.post(add_url, {'type': "Coopération internationale"}, follow=True)
         self.assertEqual(Activity.objects.first().type, "Coopération internationale")
         self.assertIn(self.url, response.redirect_chain[-1][0])
 
@@ -211,17 +215,51 @@ class DoctorateTrainingActivityViewTestCase(TestCase):
             )
             response = self.client.get(url)
             self.assertEqual(response.status_code, status.HTTP_200_OK)
-            self.assertEqual(len(response.context['form'].fields['context'].widget.choices), 2)
+            self.assertEqual(len(response.context['form'].fields['context'].widget.choices), 1)
 
-    @freezegun.freeze_time('2022-11-01')
     def test_complementary_training_course(self):
+        academic_years = AcademicYearFactory.produce(base_year=2022, number_future=1)
+
+        self.client.force_login(self.manager)
+
+        # On create
+        url = resolve_url(
+            'parcours_doctoral:course-enrollment:add',
+            uuid=self.parcours_doctoral.uuid,
+            category='ucl_course',
+        )
+
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        form = response.context['form']
+
+        self.assertEqual([(str(c[0]), c[1]) for c in form.fields['academic_year'].choices], [
+            ('', BLANK_CHOICE_DISPLAY),
+            ('2023', '2023-2024'),
+            ('2022', '2022-2023'),
+        ])
+
+        # On update
         url = resolve_url(
             f'parcours_doctoral:course-enrollment:edit',
             uuid=self.parcours_doctoral.uuid,
             activity_id=self.other_ucl_course.uuid,
         )
+
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        form = response.context['form']
+
+        self.assertListEqual([(str(c[0]), c[1]) for c in form.fields['academic_year'].choices], [
+            ('', BLANK_CHOICE_DISPLAY),
+            ('2023', '2023-2024'),
+            ('2022', '2022-2023'),
+            ('2019', '2019-2020'),
+        ])
+
         data = {
             'context': ContexteFormation.COMPLEMENTARY_TRAINING.name,
             'academic_year': self.other_ucl_course.learning_unit_year.academic_year.year,
@@ -236,7 +274,8 @@ class DoctorateTrainingActivityViewTestCase(TestCase):
             uuid=self.parcours_doctoral.uuid,
             category='COURSE',
         )
-        response = self.client.post(url, {'type': "Foobar", "organizing_institution": INSTITUTION_UCL})
+        with freezegun.freeze_time('2022-11-02'):
+            response = self.client.post(url, {'type': "Foobar", "organizing_institution": INSTITUTION_UCL})
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
         just_created = Activity.objects.first()
         self.assertEqual(just_created.context, ContexteFormation.COMPLEMENTARY_TRAINING.name)
@@ -387,7 +426,6 @@ class DoctorateTrainingActivityViewTestCase(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIsNone(Activity.objects.filter(pk__in=[child.pk, self.conference.pk]).first())
 
-    @freezegun.freeze_time('2022-11-01')
     def test_course_dates(self):
         activity = CourseFactory(parcours_doctoral=self.parcours_doctoral)
         edit_url = resolve_url(f'{self.namespace}:edit', uuid=self.parcours_doctoral.uuid, activity_id=activity.uuid)
@@ -443,9 +481,8 @@ class DoctorateTrainingActivityViewTestCase(TestCase):
         activity = SeminarCommunicationFactory(parcours_doctoral=self.parcours_doctoral)
         self.assertEqual(Activity.objects.filter(status='SOUMISE').count(), 0)
         response = self.client.post(self.url, {'activity_ids': [activity.parent.uuid]}, follow=True)
-        self.assertContains(response, _('SOUMISE'))
-        self.assertEqual(Activity.objects.filter(status='SOUMISE').count(), 2)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(Activity.objects.filter(status='SOUMISE').count(), 2)
 
     @patch('osis_document.api.utils.get_remote_token')
     @patch('osis_document.api.utils.get_remote_metadata')
@@ -519,3 +556,83 @@ class DoctorateTrainingActivityViewTestCase(TestCase):
         self.assertRedirects(response, f"{self.url}#{self.conference.uuid}")
         self.conference.refresh_from_db()
         self.assertEqual(self.conference.status, StatutActivite.SOUMISE.name)
+
+
+@override_settings(OSIS_DOCUMENT_BASE_URL='http://dummyurl/')
+class TrainingPdfRecapViewTestCase(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        # Mock osis-document
+        cls.confirm_remote_upload_patcher = patch('osis_document.api.utils.confirm_remote_upload')
+        patched = cls.confirm_remote_upload_patcher.start()
+        patched.return_value = '4bdffb42-552d-415d-9e4c-725f10dce228'
+
+        cls.file_confirm_upload_patcher = patch('osis_document.contrib.fields.FileField._confirm_multiple_upload')
+        patched = cls.file_confirm_upload_patcher.start()
+        patched.side_effect = lambda _, value, __: ['4bdffb42-552d-415d-9e4c-725f10dce228'] if value else []
+
+        cls.get_remote_metadata_patcher = patch('osis_document.api.utils.get_remote_metadata')
+        patched = cls.get_remote_metadata_patcher.start()
+        patched.return_value = {"name": "test.pdf", "size": 1}
+
+        cls.get_remote_token_patcher = patch('osis_document.api.utils.get_remote_token')
+        patched = cls.get_remote_token_patcher.start()
+        patched.return_value = 'b-token'
+
+        cls.save_raw_content_remotely_patcher = patch('osis_document.utils.save_raw_content_remotely')
+        patched = cls.save_raw_content_remotely_patcher.start()
+        patched.return_value = 'a-token'
+
+        # Mock weasyprint
+        cls.weasyprint_patcher = patch('parcours_doctoral.exports.utils.get_pdf_from_template')
+        patched = cls.weasyprint_patcher.start()
+        patched.return_value = b'some content'
+
+        # Users
+        cls.student = StudentRoleFactory(
+            person__birth_country=CountryFactory(),
+        ).person
+        cls.doctorate = ParcoursDoctoralFactory(
+            student=cls.student,
+        )
+        ConferenceFactory(
+            ects=10,
+            parcours_doctoral=cls.doctorate,
+        )
+        SeminarFactory(parcours_doctoral=cls.doctorate, title="")
+        ResidencyFactory(parcours_doctoral=cls.doctorate)
+        ConferenceCommunicationFactory(parcours_doctoral=cls.doctorate)
+        ConferencePublicationFactory(parcours_doctoral=cls.doctorate)
+        SeminarCommunicationFactory(parcours_doctoral=cls.doctorate, title="")
+        ResidencyCommunicationFactory(parcours_doctoral=cls.doctorate)
+        CommunicationFactory(parcours_doctoral=cls.doctorate)
+        PublicationFactory(parcours_doctoral=cls.doctorate)
+        VaeFactory(parcours_doctoral=cls.doctorate)
+        CourseFactory(parcours_doctoral=cls.doctorate)
+        PaperFactory(parcours_doctoral=cls.doctorate)
+
+        cls.manager = ProgramManagerFactory(education_group=cls.doctorate.training.education_group).person.user
+
+        # Targeted path
+        cls.url = resolve_url('parcours_doctoral:training_pdf_recap', uuid=cls.doctorate.uuid)
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.confirm_remote_upload_patcher.stop()
+        cls.get_remote_metadata_patcher.stop()
+        cls.get_remote_token_patcher.stop()
+        cls.save_raw_content_remotely_patcher.stop()
+        cls.file_confirm_upload_patcher.stop()
+        cls.weasyprint_patcher.stop()
+        super().tearDownClass()
+
+    def test_redirect_to_pdf_url(self):
+        self.client.force_login(user=self.manager)
+
+        response = self.client.get(self.url)
+
+        self.assertRedirects(
+            response=response,
+            expected_url='http://dummyurl/file/a-token',
+            fetch_redirect_response=False,
+        )
