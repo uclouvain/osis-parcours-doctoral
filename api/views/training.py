@@ -152,6 +152,11 @@ class TrainingConfigView(DoctorateAPIPermissionRequiredMixin, RetrieveModelMixin
         management_entity_id = self.get_permission_object().training.management_entity_id
         return CddConfiguration.objects.get_or_create(cdd_id=management_entity_id)[0]
 
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['doctorate'] = self.get_permission_object() if self.doctorate_uuid else None
+        return context
+
     def get(self, request, *args, **kwargs):
         serializer = self.get_serializer(self.get_object())
         return Response(serializer.data)

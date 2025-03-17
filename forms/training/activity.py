@@ -839,6 +839,21 @@ class PaperForm(ActivityFormMixin, forms.ModelForm):
             'ects': forms.NumberInput(attrs={'min': '0', 'step': '0.5'}),
         }
 
+    def __init__(self, parcours_doctoral: ParcoursDoctoral, *args, **kwargs):
+        super().__init__(parcours_doctoral, *args, **kwargs)
+
+        # Only one paper of each type can be created
+        paper_qs = parcours_doctoral.activity_set.filter(category=CategorieActivite.PAPER.name)
+
+        if self.instance:
+            paper_qs = paper_qs.exclude(type=self.instance.type)
+
+        unavailable_papers_types = paper_qs.values_list('type', flat=True)
+
+        self.fields['type'].choices = (
+            (enum.name, enum.value) for enum in ChoixTypeEpreuve if enum.name not in unavailable_papers_types
+        )
+
 
 class UclCourseForm(ActivityFormMixin, forms.ModelForm):
     template_name = "parcours_doctoral/forms/training/ucl_course.html"
