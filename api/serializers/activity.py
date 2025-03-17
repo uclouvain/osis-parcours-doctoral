@@ -34,11 +34,13 @@ from rest_framework.generics import get_object_or_404
 
 from base.api.serializers.academic_year import RelatedAcademicYearField
 from base.forms.utils.academic_year_field import AcademicYearModelChoiceField
+from base.utils.serializers import DTOSerializer
 from parcours_doctoral.ddd.formation.domain.model.enums import (
     CategorieActivite,
     ContexteFormation,
     StatutActivite,
 )
+from parcours_doctoral.ddd.formation.dtos.evaluation import InscriptionEvaluationDTO
 from parcours_doctoral.forms.fields import SelectOrOtherField
 from parcours_doctoral.forms.training import activity as activity_forms
 from parcours_doctoral.forms.training.activity import ConfigurableActivityTypeField
@@ -328,6 +330,7 @@ class UclCourseSerializer(ActivitySerializerBase):
     learning_unit_year = serializers.CharField(source="learning_unit_year.acronym")
     learning_unit_title = serializers.CharField(source="learning_unit_year.complete_title_i18n", read_only=True)
     ects = serializers.FloatField(read_only=True)
+    academic_year = serializers.IntegerField(source="learning_unit_year.academic_year.year")
 
     class Meta:
         form = activity_forms.UclCourseForm
@@ -452,3 +455,8 @@ class DoctoralTrainingConfigSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'is_complementary_training_enabled': {'help_text': ''},
         }
+
+
+class InscriptionEvaluationDTOSerializer(DTOSerializer):
+    class Meta:
+        source = InscriptionEvaluationDTO

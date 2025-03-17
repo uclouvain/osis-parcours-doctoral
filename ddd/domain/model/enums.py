@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -77,7 +77,6 @@ class ChoixLangueDefense(ChoiceEnum):
 class ChoixDoctoratDejaRealise(ChoiceEnum):
     YES = _('YES')
     NO = _('NO')
-    PARTIAL = _('PARTIAL')
 
 
 class ChoixTypeFinancement(ChoiceEnum):
@@ -109,9 +108,8 @@ class ChoixCommissionProximiteCDEouCLSM(ChoiceEnum):
 
 class ChoixCommissionProximiteCDSS(ChoiceEnum):
     ECLI = _("Proximity commission for experimental and clinical research (ECLI)")
-    GIM = _("Proximity Commission for Genetics and Immunology (GIM)")
+    BCGIM = _("Proximity commission for biochemistry, cellular and molecular biology, genetics, immunology (BCGIM)")
     NRSC = _("Proximity Commission for Neuroscience (NRSC)")
-    BCM = _("Proximity commission for cellular and molecular biology, biochemistry (BCM)")
     SPSS = _("Proximity commission for public health, health and society (SPSS)")
     DENT = _("Proximity Commission for Dental Sciences (DENT)")
     DFAR = _("Proximity Commission for Pharmaceutical Sciences (DFAR)")

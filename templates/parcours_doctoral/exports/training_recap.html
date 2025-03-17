@@ -1,0 +1,75 @@
+{% extends "parcours_doctoral/exports/base_pdf.html" %}
+{% load i18n doctorate_enums parcours_doctoral %}
+
+{% comment "License" %}
+  * OSIS stands for Open Student Information System. It's an application
+  * designed to manage the core business of higher education institutions,
+  * such as universities, faculties, institutes and professional schools.
+  * The core business involves the administration of students, teachers,
+  * courses, programs and so on.
+  *
+  * Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
+  *
+  * This program is free software: you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License as published by
+  * the Free Software Foundation, either version 3 of the License, or
+  * (at your option) any later version.
+  *
+  * This program is distributed in the hope that it will be useful,
+  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  * GNU General Public License for more details.
+  *
+  * A copy of this license - GNU General Public License - is available
+  * at the root of the source code of this program.  If not,
+  * see http://www.gnu.org/licenses/.
+{% endcomment %}
+
+{% block content %}
+  <div class="container">
+    <div id="title">
+      <h1>{% translate "OSIS DOCTORATE" %}</h1>
+      <h2>
+        {% translate "Detailed doctoral training" %}
+      </h2>
+    </div>
+
+    <hr>
+
+    {% blocktranslate with prenom=parcours_doctoral.prenom_doctorant nom=parcours_doctoral.nom_doctorant date_naissance=parcours_doctoral.date_naissance_doctorant lieu_naissance=parcours_doctoral.lieu_naissance_doctorant pays_naissance=parcours_doctoral.pays_naissance_doctorant|country_name_from_iso_code formation=parcours_doctoral.formation.intitule_fr trimmed %}
+      {{ prenom }}, {{ nom }}, born the {{ date_naissance }} in {{ lieu_naissance }}, {{ pays_naissance }}
+      registered at {{ formation }} realized the following third cycle training:
+    {% endblocktranslate %}
+
+    {% for activity in activities %}
+      {% if not activity.parent_id and activity.category != 'PAPER' and activity.category != 'VAE' %}
+        <h3 class="mt-3"><strong>{{ activity.category|enum_display:'CategorieActivite' }}</strong></h3>
+
+        <table>
+          <tr>
+            <td class="pe-2">{{ activity.ects|format_ects }}</td>
+            <td>
+              {% with template_name=activity.category|lower|add:'.html' %}
+                {% include "parcours_doctoral/details/training/description/"|add:template_name %}
+              {% endwith %}
+            </td>
+          </tr>
+        </table>
+
+        {% for children_activity in activity.children.all %}
+          <h3 class="mt-2"><strong>{{ children_activity.category|enum_display:'CategorieActivite' }}</strong></h3>
+
+          <table>
+            <tr>
+              <td class="pe-2">{{ children_activity.ects|format_ects }}</td>
+              <td>
+                {% include "parcours_doctoral/details/training/description/"|add:activity.category|add:"_"|add:children_activity.category|lower|add:'.html' with activity=children_activity %}
+              </td>
+            </tr>
+          </table>
+
+        {% endfor %}
+      {% endif %}
+    {% endfor %}
+  </div>
+{% endblock %}

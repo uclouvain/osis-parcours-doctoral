@@ -69,6 +69,9 @@ urlpatterns = [
     path('doctorate/<uuid:uuid>/training/<uuid:activity_id>', views.TrainingView),
     path('doctorate/<uuid:uuid>/complementary-training', views.ComplementaryTrainingListView),
     path('doctorate/<uuid:uuid>/course-enrollment', views.CourseEnrollmentListView),
+    path('doctorate/<uuid:uuid>/assessment-enrollment', views.AssessmentEnrollmentListView),
+    path('doctorate/<uuid:uuid>/assessment-enrollment/<uuid:enrollment_uuid>', views.AssessmentEnrollmentDetailView),
+    path('doctorate/<uuid:uuid>/training-recap-pdf', views.TrainingRecapPdfApiView),
     # Autocomplete
     path('autocomplete/tutor', views.AutocompleteTutorView),
     path('autocomplete/person', views.AutocompletePersonView),

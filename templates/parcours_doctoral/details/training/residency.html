@@ -51,7 +51,7 @@
   >
     <div class="panel-body">
       <strong class="d-block">{% trans "Description" %}</strong>
-      {{ activity.type }}, {{ period }}
+      {% include "parcours_doctoral/details/training/description/residency.html" %}
       {% if activity.subtitle %}
         <p class="col-md-4">
           <strong class="d-block">{% trans "Activity description" %}</strong>
@@ -79,6 +79,12 @@
         {% endif %}
       </div>
       <div class="row">
+        {% if activity.participating_days %}
+          <p class="col-md-4">
+            <strong class="d-block">{% trans "Number of days participating" %}</strong>
+            {{ activity.participating_days|floatformat }}
+          </p>
+        {% endif %}
         {% if activity.ects %}
           <p class="col-md-4">
             <strong class="d-block">{% trans "ECTS" %}</strong>
@@ -86,17 +92,17 @@
           </p>
         {% endif %}
       </div>
-      {% if activity.participating_proof %}
-        <div class="mb-3">
-          <strong class="d-block">{% trans "Attestation" %}</strong>
-          {% document_visualizer activity.participating_proof for_modified_upload=True %}
-        </div>
-      {% endif %}
-      {% if activity.comment %}
-        <strong class="d-block">{% trans "Comments" %}</strong>
-        {{ activity.comment|linebreaks }}
-      {% endif %}
     </div>
+    {% if activity.participating_proof %}
+      <div class="mb-3">
+        <strong class="d-block">{% trans "Participating proof" %}</strong>
+        {% document_visualizer activity.participating_proof for_modified_upload=True %}
+      </div>
+    {% endif %}
+    {% if activity.comment %}
+      <strong class="d-block">{% trans "Comments" %}</strong>
+      {{ activity.comment|linebreaks }}
+    {% endif %}
   </div>
   {% for activity in activity.children.all %}
     {% include "parcours_doctoral/details/training/residency_"|add:activity.category|lower|add:'.html' %}
