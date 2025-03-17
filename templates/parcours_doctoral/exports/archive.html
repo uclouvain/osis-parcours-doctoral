@@ -64,7 +64,7 @@
     {% field_data _("Sector") parcours_doctoral.intitule_secteur_formation inline=True %}
     {% field_data _("Domain doctoral committee") parcours_doctoral.projet.domaine_these inline=True %}
     {% field_data _("Proximity commission") parcours_doctoral.commission_proximite|enum_display:'ChoixCommissionProximiteCDEouCLSM'|enum_display:'ChoixCommissionProximiteCDSS'|enum_display:'ChoixSousDomaineSciences' inline=True %}
-    {% get_superior_institute_name parcours_doctoral.projet.institut_these.uuid as institut_these %}
+    {% get_thesis_institute_name parcours_doctoral.projet.institut_these as institut_these %}
     {% field_data _("Thesis institute") institut_these inline=True %}
     {% field_data _("Financing type") parcours_doctoral.financement.type|enum_display:"ChoixTypeFinancement" inline=True %}
 
@@ -78,7 +78,8 @@
     {% if parcours_doctoral.cotutelle.institution or parcours_doctoral.cotutelle.autre_institution_nom %}
       <h2>{% translate "Cotutelle" %}</h2>
 
-      {% firstof parcours_doctoral.cotutelle.institution parcours_doctoral.cotutelle.autre_institution_nom as institute_name %}
+      {% get_superior_institute_name parcours_doctoral.cotutelle.institution as institut_cotutelle %}
+      {% firstof institut_cotutelle parcours_doctoral.cotutelle.autre_institution_nom as institute_name %}
       <p>{% blocktranslate with institute_name=institute_name %}Thesis with cotutelle with {{ institute_name }}{% endblocktranslate %}</p>
     {% endif %}
 

@@ -580,6 +580,17 @@ def get_superior_institute_name(institute_uuid):
     return ''
 
 
+@register.simple_tag
+def get_thesis_institute_name(institute_uuid):
+    if institute_uuid:
+        try:
+            institute = EntityVersion.objects.only('title', 'acronym').get(uuid=institute_uuid)
+            return f'{institute.title} ({institute.acronym})'
+        except EntityVersion.DoesNotExist:
+            pass
+    return ''
+
+
 @register.filter
 def superior_institute_name(organization_uuid):
     if not organization_uuid:
