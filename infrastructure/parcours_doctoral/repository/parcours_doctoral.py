@@ -265,6 +265,7 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
                 .annotate(
                     admission_uuid=F('admission__uuid'),
                     admission_type=F('admission__type'),
+                    admission_date=F('admission__approved_by_cdd_at'),
                 )
                 .annotate_intitule_secteur_formation()
                 .get(uuid=entity_id.uuid)
@@ -283,6 +284,7 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
             uuid=str(entity_id.uuid),
             uuid_admission=str(parcours_doctoral.admission_uuid),  # from annotation
             type_admission=parcours_doctoral.admission_type,  # from annotation
+            date_admission_par_cdd=parcours_doctoral.admission_date,  # from annotation
             statut=parcours_doctoral.status,
             date_changement_statut=parcours_doctoral.status_updated_at,  # from annotation
             cree_le=parcours_doctoral.created_at,
