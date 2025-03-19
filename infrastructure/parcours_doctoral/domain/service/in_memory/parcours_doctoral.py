@@ -23,6 +23,9 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+import datetime
+from typing import Optional
+
 from admission.ddd.admission.doctorat.preparation.domain.model.proposition import (
     Proposition,
 )
@@ -35,10 +38,18 @@ from parcours_doctoral.ddd.domain.model.parcours_doctoral import (
 from parcours_doctoral.ddd.domain.service.i_parcours_doctoral import (
     IParcoursDoctoralService,
 )
+from parcours_doctoral.ddd.epreuve_confirmation.repository.i_epreuve_confirmation import (
+    IEpreuveConfirmationRepository,
+)
 
 
 class ParcoursDoctoralInMemoryService(IParcoursDoctoralService):
 
     @classmethod
-    def initier(cls, proposition: 'Proposition') -> ParcoursDoctoralIdentity:
+    def initier(
+        cls,
+        proposition: 'Proposition',
+        epreuve_confirmation_repository: 'IEpreuveConfirmationRepository',
+        date_reference_pour_date_limite_confirmation: Optional[datetime.date] = None,
+    ) -> ParcoursDoctoralIdentity:
         return ParcoursDoctoralIdentityBuilder.build_from_uuid(uuid=proposition.entity_id.uuid)
