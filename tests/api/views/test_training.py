@@ -117,30 +117,18 @@ class TrainingApiTestCase(QueriesAssertionsMixin, APITestCase):
             response = getattr(self.client, method)(self.url)
             self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
 
-    def test_get_of_in_creation_doctorate_is_forbidden(self):
+    def test_get_with_invalid_enrolment_is_forbidden(self):
         self.client.force_authenticate(user=self.student.user)
 
         in_creation_doctorate = ParcoursDoctoralFactory(
             supervision_group=self.parcours_doctoral.supervision_group,
             student=self.student,
-            status=ChoixStatutParcoursDoctoral.EN_COURS_DE_CREATION_PAR_GESTIONNAIRE.name,
+            create_student__with_valid_enrolment=False,
         )
 
         training_url = resolve_url(self.training_base_url, uuid=in_creation_doctorate.uuid)
         complementary_url = resolve_url(self.complementary_base_url, uuid=in_creation_doctorate.uuid)
         enrollment_url = resolve_url(self.enrollment_base_url, uuid=in_creation_doctorate.uuid)
-
-        response = self.client.get(training_url)
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
-        response = self.client.get(complementary_url)
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
-        response = self.client.get(enrollment_url)
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
-        in_creation_doctorate.status = ChoixStatutParcoursDoctoral.EN_ATTENTE_INJECTION_EPC.name
-        in_creation_doctorate.save()
 
         response = self.client.get(training_url)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
