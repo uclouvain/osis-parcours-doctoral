@@ -54,13 +54,13 @@ def _build_queryset_cache_key_from_role_qs(role_qs, suffix):
 @predicate(bind=True)
 @predicate_failed_msg(message=_("You must be the request author to access this doctoral training"))
 def is_parcours_doctoral_student(self, user: User, obj: ParcoursDoctoral):
-    return obj.student == user.person and obj.is_initialized
+    return obj.student == user.person and obj.has_valid_enrollment
 
 
 @predicate(bind=True)
-@predicate_failed_msg(message=_("The doctorate is not initialized"))
-def is_initialized(self, user: User, obj: ParcoursDoctoral):
-    return obj.is_initialized
+@predicate_failed_msg(message=_("The doctorate hasn't got a valid enrolment"))
+def has_valid_enrollment(self, user: User, obj: ParcoursDoctoral):
+    return obj.has_valid_enrollment
 
 
 @predicate(bind=True)
@@ -110,7 +110,7 @@ def is_part_of_doctoral_commission(self, user: User, obj: ParcoursDoctoral):
 @predicate_failed_msg(message=_("You must be the request promoter to access this doctoral training"))
 def is_parcours_doctoral_promoter(self, user: User, obj: ParcoursDoctoral):
     return (
-        obj.is_initialized
+        obj.has_valid_enrollment
         and obj.supervision_group
         and user.person.pk
         in [
@@ -125,7 +125,7 @@ def is_parcours_doctoral_promoter(self, user: User, obj: ParcoursDoctoral):
 @predicate_failed_msg(message=_("You must be the reference promoter to access this doctoral training"))
 def is_parcours_doctoral_reference_promoter(self, user: User, obj: ParcoursDoctoral):
     return (
-        obj.is_initialized
+        obj.has_valid_enrollment
         and obj.supervision_group
         and user.person.pk
         in [
@@ -141,7 +141,7 @@ def is_parcours_doctoral_reference_promoter(self, user: User, obj: ParcoursDocto
 @predicate_failed_msg(message=_("You must be a member of the committee to access this doctoral training"))
 def is_part_of_committee(self, user: User, obj: ParcoursDoctoral):
     return (
-        obj.is_initialized
+        obj.has_valid_enrollment
         and obj.supervision_group
         and user.person.pk in [actor.person_id for actor in obj.supervision_group.actors.all()]
     )

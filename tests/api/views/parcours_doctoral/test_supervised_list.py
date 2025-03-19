@@ -82,6 +82,7 @@ class SupervisedDoctorateListViewTestCase(QueriesAssertionsMixin, APITestCase):
             cls.second_doctorate = ParcoursDoctoralFactory(
                 training__management_entity=cls.second_commission.entity,
                 supervision_group=cls.promoter.process,
+                create_student__with_valid_enrolment=False,
             )
             cls.second_teaching_campus = (
                 cls.first_doctorate.training.educationgroupversion_set.first().root_group.main_teaching_campus
@@ -128,7 +129,7 @@ class SupervisedDoctorateListViewTestCase(QueriesAssertionsMixin, APITestCase):
     def test_list_with_promoter(self):
         self.client.force_authenticate(user=self.promoter.person.user)
 
-        with self.assertNumQueriesLessThan(11, verbose=True):
+        with self.assertNumQueriesLessThan(12, verbose=True):
             response = self.client.get(self.url, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -189,7 +190,7 @@ class SupervisedDoctorateListViewTestCase(QueriesAssertionsMixin, APITestCase):
     def test_list_with_ca_member(self):
         self.client.force_authenticate(user=self.committee_member.person.user)
 
-        with self.assertNumQueriesLessThan(11, verbose=True):
+        with self.assertNumQueriesLessThan(12, verbose=True):
             response = self.client.get(self.url, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)

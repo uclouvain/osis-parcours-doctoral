@@ -117,7 +117,7 @@ class SupervisionCanvasAPIViewTestCase(QueriesAssertionsMixin, APITestCase):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        with self.assertNumQueriesLessThan(6):
+        with self.assertNumQueriesLessThan(7):
             response = self.client.get(self.url)
             url = response.json().get('url', '')
             self.assertEqual(url, 'http://dummyurl/file/a-token')

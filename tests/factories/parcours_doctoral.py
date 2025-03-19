@@ -25,6 +25,7 @@
 # ##############################################################################
 
 import uuid
+from typing import Optional
 
 import factory
 
@@ -39,6 +40,9 @@ from base.tests.factories.education_group_year import EducationGroupYearFactory
 from base.tests.factories.entity import EntityWithVersionFactory
 from base.tests.factories.person import PersonFactory
 from base.tests.factories.student import StudentFactory
+from epc.models.enums.etat_inscription import EtatInscriptionFormation
+from epc.models.inscription_programme_annuel import InscriptionProgrammeAnnuel
+from epc.tests.factories.inscription_programme_annuel import InscriptionProgrammeAnnuelFactory
 from parcours_doctoral.ddd.domain.model.enums import (
     ChoixStatutParcoursDoctoral,
     ChoixTypeFinancement,
@@ -126,9 +130,16 @@ class ParcoursDoctoralFactory(factory.django.DjangoModelFactory):
     reference = factory.LazyAttribute(lambda obj: obj.admission.reference)
 
     @factory.post_generation
-    def create_student(self, create, extracted, **kwargs):
-        StudentFactory(person=self.student)
+    def create_student(self, create, extracted, with_valid_enrolment=True, **kwargs):
         StudentRoleFactory(person=self.student)
+        student = StudentFactory(person=self.student)
+
+        if with_valid_enrolment:
+            InscriptionProgrammeAnnuelFactory(
+                programme__offer=self.training,
+                programme_cycle__etudiant=student,
+                etat_inscription=EtatInscriptionFormation.INSCRIT_AU_ROLE.name,
+            )
 
     @factory.post_generation
     def create_supervision_group(self, create, extracted, **kwargs):

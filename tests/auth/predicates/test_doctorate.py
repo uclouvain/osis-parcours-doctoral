@@ -29,6 +29,8 @@ from unittest import mock
 from django.test import TestCase
 
 from base.tests.factories.entity import EntityFactory
+from epc.models.enums.etat_inscription import EtatInscriptionFormation
+from epc.tests.factories.inscription_programme_annuel import InscriptionProgrammeAnnuelFactory
 from parcours_doctoral.auth.predicates import (
     parcours_doctoral as parcours_doctoral_predicates,
 )
@@ -95,56 +97,47 @@ class PredicatesTestCase(TestCase):
                 'This status must not be accepted: {}'.format(status),
             )
 
-    def test_is_initialized(self):
-        parcours_doctoral = ParcoursDoctoralFactory()
+    def test_has_valid_enrollment(self):
+        doctorate = ParcoursDoctoralFactory(create_student__with_valid_enrolment=False)
+        self.assertFalse(parcours_doctoral_predicates.has_valid_enrollment(doctorate.student.user, doctorate))
 
-        invalid_statuses = [
-            ChoixStatutParcoursDoctoral.EN_ATTENTE_INJECTION_EPC.name,
-            ChoixStatutParcoursDoctoral.EN_COURS_DE_CREATION_PAR_GESTIONNAIRE.name,
-        ]
+        enrolment = InscriptionProgrammeAnnuelFactory(
+            programme__offer=doctorate.training,
+            programme_cycle__etudiant__person=doctorate.student,
+            etat_inscription=EtatInscriptionFormation.DEMANDE_INCOMPLETE.name,
+        )
 
-        for status in invalid_statuses:
-            parcours_doctoral.status = status
-            self.assertFalse(
-                parcours_doctoral_predicates.is_initialized(parcours_doctoral.student.user, parcours_doctoral),
-                'This status must not be accepted: {}'.format(status),
-            )
+        self.assertFalse(parcours_doctoral_predicates.has_valid_enrollment(doctorate.student.user, doctorate))
 
-        valid_statuses = ChoixStatutParcoursDoctoral.get_names_except(*invalid_statuses)
+        del doctorate.has_valid_enrollment
 
-        for status in valid_statuses:
-            parcours_doctoral.status = status
-            self.assertTrue(
-                parcours_doctoral_predicates.is_initialized(parcours_doctoral.student.user, parcours_doctoral),
-                'This status must be accepted: {}'.format(status),
-            )
+        enrolment.etat_inscription = EtatInscriptionFormation.INSCRIT_AU_ROLE.name
+        enrolment.save()
+
+        self.assertTrue(parcours_doctoral_predicates.has_valid_enrollment(doctorate.student.user, doctorate))
 
     def test_is_parcours_doctoral_student(self):
-        parcours_doctoral = ParcoursDoctoralFactory()
+        doctorate = ParcoursDoctoralFactory(create_student__with_valid_enrolment=False)
 
-        invalid_statuses = [
-            ChoixStatutParcoursDoctoral.EN_ATTENTE_INJECTION_EPC.name,
-            ChoixStatutParcoursDoctoral.EN_COURS_DE_CREATION_PAR_GESTIONNAIRE.name,
-        ]
+        self.assertFalse(
+            parcours_doctoral_predicates.is_parcours_doctoral_student(
+                doctorate.student.user,
+                doctorate,
+            ),
+        )
 
-        for status in invalid_statuses:
-            parcours_doctoral.status = status
-            self.assertFalse(
-                parcours_doctoral_predicates.is_parcours_doctoral_student(
-                    parcours_doctoral.student.user,
-                    parcours_doctoral,
-                ),
-                'This status must not be accepted: {}'.format(status),
-            )
+        del doctorate.has_valid_enrollment
 
-        valid_statuses = ChoixStatutParcoursDoctoral.get_names_except(*invalid_statuses)
+        enrolment = InscriptionProgrammeAnnuelFactory(
+            programme__offer=doctorate.training,
+            programme_cycle__etudiant__person=doctorate.student,
+            etat_inscription=EtatInscriptionFormation.DEMANDE_INCOMPLETE.name,
+        )
+        self.assertFalse(parcours_doctoral_predicates.is_parcours_doctoral_student(doctorate.student.user, doctorate))
 
-        for status in valid_statuses:
-            parcours_doctoral.status = status
-            self.assertTrue(
-                parcours_doctoral_predicates.is_parcours_doctoral_student(
-                    parcours_doctoral.student.user,
-                    parcours_doctoral,
-                ),
-                'This status must be accepted: {}'.format(status),
-            )
+        del doctorate.has_valid_enrollment
+
+        enrolment.etat_inscription = EtatInscriptionFormation.INSCRIT_AU_ROLE.name
+        enrolment.save()
+
+        self.assertTrue(parcours_doctoral_predicates.is_parcours_doctoral_student(doctorate.student.user, doctorate))

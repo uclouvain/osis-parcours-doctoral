@@ -40,7 +40,4 @@ def process(
     msg_bus: Any,
     event: Union[InscriptionDoctoraleApprouveeParSicEvent, AdmissionDoctoraleApprouveeParSicEvent],
 ) -> None:
-    if event.type_admission == ChoixTypeAdmission.PRE_ADMISSION.name:
-        return
-
     msg_bus.invoke(InitialiserParcoursDoctoralCommand(proposition_uuid=event.entity_id.uuid))

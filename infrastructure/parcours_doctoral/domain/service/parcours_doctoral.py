@@ -38,6 +38,7 @@ from admission.models import DoctorateAdmission, SupervisionActor
 from admission.models.enums.actor_type import ActorType as AdmissionActorType
 from parcours_doctoral.auth.roles.ca_member import CommitteeMember
 from parcours_doctoral.auth.roles.promoter import Promoter
+from parcours_doctoral.auth.roles.student import Student
 from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import (
     ParcoursDoctoralIdentity,
@@ -94,6 +95,8 @@ class ParcoursDoctoralService(IParcoursDoctoralService):
 
     @classmethod
     def _duplicate_roles(cls, admission: DoctorateAdmission) -> None:
+        Student.objects.get_or_create(person=admission.candidate)
+
         promoters = []
         ca_members = []
 
@@ -134,6 +137,19 @@ class ParcoursDoctoralService(IParcoursDoctoralService):
     @transaction.atomic
     def initier(cls, proposition: 'Proposition') -> ParcoursDoctoralIdentity:
         admission: DoctorateAdmission = DoctorateAdmission.objects.get(uuid=proposition.entity_id.uuid)
+
+        if admission.related_pre_admission_id:
+            # TODO how to resolve the conflicts between the existing doctorate and the admission ?
+            pass
+            # related_pre_admission_doctorate = ParcoursDoctoralModel.objects.get(
+            #     admission_id=admission.related_pre_admission_id,
+            # ).select_related('admission')
+            #
+            # related_pre_admission_doctorate.admission = admission
+            # related_pre_admission_doctorate.reference = admission.reference
+            # related_pre_admission_doctorate.save()
+            #
+            # return ParcoursDoctoralIdentity(uuid=str(related_pre_admission_doctorate.uuid))
 
         supervision_group = cls._duplicate_supervision_group(admission)
         cls._duplicate_roles(admission)
@@ -176,7 +192,6 @@ class ParcoursDoctoralService(IParcoursDoctoralService):
             dedicated_time=admission.dedicated_time,
             is_fnrs_fria_fresh_csc_linked=admission.is_fnrs_fria_fresh_csc_linked,
             financing_comment=admission.financing_comment,
-            status=ChoixStatutParcoursDoctoral.EN_ATTENTE_INJECTION_EPC.name,
         )
 
         uploaded_files = cls._duplicate_uploaded_files(admission, parcours_doctoral)

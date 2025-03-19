@@ -66,6 +66,7 @@ class CotutelleAPIViewTestCase(APITestCase):
         cls.other_promoter_user = PromoterFactory().person.user
         cls.committee_member_user = CaMemberFactory(process=cls.process).person.user
         cls.other_committee_member_user = CaMemberFactory().person.user
+        cls.base_namespace = 'parcours_doctoral_api_v1:cotutelle'
 
     def setUp(self):
         self.doctorate = ParcoursDoctoralFactory(
@@ -73,7 +74,7 @@ class CotutelleAPIViewTestCase(APITestCase):
             student=self.student,
             admission__type=ChoixTypeAdmission.ADMISSION.name,
         )
-        self.url = resolve_url('parcours_doctoral_api_v1:cotutelle', uuid=self.doctorate.uuid)
+        self.url = resolve_url(self.base_namespace, uuid=self.doctorate.uuid)
 
         patcher = mock.patch(
             "osis_document.contrib.fields.FileField._confirm_multiple_upload",
@@ -104,9 +105,14 @@ class CotutelleAPIViewTestCase(APITestCase):
         response = self.client.get(self.url, format='json')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-    def test_get_cotutelle_of_in_creation_doctorate_is_forbidden(self):
-        self.doctorate.status = ChoixStatutParcoursDoctoral.EN_COURS_DE_CREATION_PAR_GESTIONNAIRE.name
-        self.doctorate.save()
+    def test_get_cotutelle_with_invalid_enrolment_is_forbidden(self):
+        in_creation_doctorate = ParcoursDoctoralFactory(
+            supervision_group=self.doctorate.supervision_group,
+            student=self.student,
+            create_student__with_valid_enrolment=False,
+        )
+
+        url = resolve_url(self.base_namespace, uuid=in_creation_doctorate.uuid)
 
         users = [
             self.promoter_user,
@@ -116,15 +122,7 @@ class CotutelleAPIViewTestCase(APITestCase):
 
         for user in users:
             self.client.force_authenticate(user=user)
-            response = self.client.get(self.url)
-            self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
-        self.doctorate.status = ChoixStatutParcoursDoctoral.EN_ATTENTE_INJECTION_EPC.name
-        self.doctorate.save()
-
-        for user in users:
-            self.client.force_authenticate(user=user)
-            response = self.client.get(self.url)
+            response = self.client.get(url)
             self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_get_cotutelle_with_student(self):
