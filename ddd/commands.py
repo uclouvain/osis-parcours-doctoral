@@ -37,6 +37,11 @@ class RecupererParcoursDoctoralQuery(interface.QueryRequest):
 
 
 @attr.dataclass(frozen=True, slots=True)
+class RecupererParcoursDoctoralPropositionQuery(interface.QueryRequest):
+    proposition_uuid: str
+
+
+@attr.dataclass(frozen=True, slots=True)
 class GetCotutelleQuery(interface.QueryRequest):
     uuid_parcours_doctoral: str
 

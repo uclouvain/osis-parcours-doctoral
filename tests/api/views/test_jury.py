@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -60,7 +60,8 @@ class JuryApiTestCase(APITestCase):
             'commentaire': 'commentaire',
         }
         # Targeted url
-        cls.url = resolve_url("parcours_doctoral_api_v1:jury-preparation", uuid=cls.parcours_doctoral.uuid)
+        cls.base_namespace = "parcours_doctoral_api_v1:jury-preparation"
+        cls.url = resolve_url(cls.base_namespace, uuid=cls.parcours_doctoral.uuid)
         # Create an parcours_doctoral supervision group
         promoter = PromoterFactory()
         committee_member = CaMemberFactory(process=promoter.process)
@@ -103,9 +104,14 @@ class JuryApiTestCase(APITestCase):
         response = self.client.post(self.url, data=self.updated_data, format="json")
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN, response.content)
 
-    def test_jury_get_of_in_creation_doctorate_is_forbidden(self):
-        self.parcours_doctoral.status = ChoixStatutParcoursDoctoral.EN_COURS_DE_CREATION_PAR_GESTIONNAIRE.name
-        self.parcours_doctoral.save()
+    def test_jury_get_with_invalid_enrolment_is_forbidden(self):
+        in_creation_doctorate = ParcoursDoctoralFactory(
+            supervision_group=self.parcours_doctoral.supervision_group,
+            student=self.student,
+            create_student__with_valid_enrolment=False,
+        )
+
+        url = resolve_url(self.base_namespace, uuid=in_creation_doctorate.uuid)
 
         users = [
             self.promoter_user,
@@ -115,15 +121,7 @@ class JuryApiTestCase(APITestCase):
 
         for user in users:
             self.client.force_authenticate(user=user)
-            response = self.client.get(self.url)
-            self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
-        self.parcours_doctoral.status = ChoixStatutParcoursDoctoral.EN_ATTENTE_INJECTION_EPC.name
-        self.parcours_doctoral.save()
-
-        for user in users:
-            self.client.force_authenticate(user=user)
-            response = self.client.get(self.url)
+            response = self.client.get(url)
             self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_jury_get_student(self):

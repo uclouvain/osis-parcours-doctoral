@@ -25,12 +25,14 @@
 # ##############################################################################
 from typing import List
 
-from django.db.models import Prefetch
+from django.db.models import Prefetch, Q
 from osis_signature.models import Actor
 from rest_framework import mixins
 from rest_framework.generics import GenericAPIView, ListAPIView
 from rest_framework.response import Response
 
+from epc.models.enums.etat_inscription import EtatInscriptionFormation
+from epc.models.inscription_programme_annuel import InscriptionProgrammeAnnuel
 from infrastructure.messages_bus import message_bus_instance
 from osis_role.contrib.views import APIPermissionRequiredMixin
 from parcours_doctoral.api import serializers
@@ -113,12 +115,31 @@ class BaseListView(APIPermissionRequiredMixin, ListAPIView):
         doctorate_list = self.doctorate_list(request)
 
         # Add a _perm_obj to each instance to optimize permission check performance
-        permission_object_qs = {
-            str(doctorate.uuid): doctorate for doctorate in self.permission_object_qs(doctorate_list=doctorate_list)
-        }
+        permission_object_qs = {}
+        related_enrolment_filters = Q()
+        for doctorate in self.permission_object_qs(doctorate_list=doctorate_list):
+            doctorate_uuid = str(doctorate.uuid)
+            permission_object_qs[doctorate_uuid] = doctorate
+            related_enrolment_filters |= Q(
+                programme__offer_id=doctorate.training_id,
+                programme_cycle__etudiant__person_id=doctorate.student_id,
+            )
+
+        enrolments = set(
+            InscriptionProgrammeAnnuel.objects.filter(etat_inscription=EtatInscriptionFormation.INSCRIT_AU_ROLE.name)
+            .filter(related_enrolment_filters)
+            .values_list(
+                'programme__offer_id',
+                'programme_cycle__etudiant__person_id',
+            )
+        )
 
         for doctorate in doctorate_list:
             doctorate._perm_obj = permission_object_qs[doctorate.uuid]
+            doctorate._perm_obj.has_valid_enrollment = (
+                doctorate._perm_obj.training_id,
+                doctorate._perm_obj.student_id,
+            ) in enrolments
 
         serializer = serializers.ParcoursDoctoralRechercheDTOSerializer(
             instance=doctorate_list,
