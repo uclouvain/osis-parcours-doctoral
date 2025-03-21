@@ -128,7 +128,7 @@
       {% field_data _("Current status of the confirmation") confirmation_status inline=True %}
     {% endif %}
 
-    <h2>{% translate "Additional training" %}</h2>
+    <h2>{% translate "Additional training" context 'parcours_doctoral' %}</h2>
 
     {% for cours in cours_complementaires %}
       {% if cours.code %}{{ cours.code }} {% endif %}

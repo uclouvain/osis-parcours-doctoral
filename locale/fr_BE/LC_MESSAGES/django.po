@@ -358,6 +358,7 @@ msgstr "Ajouter un filtre de date"
 msgid "Add validation of prior experience (VAE)"
 msgstr "Ajouter une valorisation des acquis de l'expérience"
 
+msgctxt "parcours_doctoral"
 msgid "Additional training"
 msgstr "Formation complémentaire"
 
