@@ -146,7 +146,10 @@ class ChoixEtapeParcoursDoctoral(ChoiceEnum):
 
 
 STATUTS_PAR_ETAPE_PARCOURS_DOCTORAL = {
-    ChoixEtapeParcoursDoctoral.ADMISSION: [],
+    ChoixEtapeParcoursDoctoral.ADMISSION: [
+        ChoixStatutParcoursDoctoral.EN_ATTENTE_INJECTION_EPC,
+        ChoixStatutParcoursDoctoral.EN_COURS_DE_CREATION_PAR_GESTIONNAIRE,
+    ],
     ChoixEtapeParcoursDoctoral.CONFIRMATION: [
         ChoixStatutParcoursDoctoral.ADMIS,
         ChoixStatutParcoursDoctoral.CONFIRMATION_SOUMISE,

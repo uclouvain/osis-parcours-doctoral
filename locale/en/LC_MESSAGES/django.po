@@ -308,6 +308,9 @@ msgstr ""
 msgid "Add validation of prior experience (VAE)"
 msgstr ""
 
+msgid "Additional training"
+msgstr ""
+
 msgctxt "parcours_doctoral filter"
 msgid "Additional training"
 msgstr ""
@@ -730,6 +733,9 @@ msgstr ""
 msgid "Confirmation exam not found."
 msgstr ""
 
+msgid "Confirmation paper"
+msgstr ""
+
 msgid "Confirmation success attestation"
 msgstr ""
 
@@ -821,6 +827,9 @@ msgstr ""
 msgid "Current funding"
 msgstr ""
 
+msgid "Current status of the confirmation"
+msgstr ""
+
 msgid "Custom mail template"
 msgstr ""
 
@@ -893,6 +902,9 @@ msgid "Defense"
 msgstr ""
 
 msgid "Defense indicative date"
+msgstr ""
+
+msgid "Defense jury composition"
 msgstr ""
 
 msgid "Defense language"
@@ -1003,13 +1015,13 @@ msgstr ""
 msgid "Doctoral training configuration"
 msgstr ""
 
+msgid "Doctoral training dossier"
+msgstr ""
+
 msgid "Doctoral trainings"
 msgstr ""
 
 msgid "Doctorate"
-msgstr ""
-
-msgid "Doctorate archive"
 msgstr ""
 
 msgid "Doctorate thesis field"
@@ -1035,6 +1047,9 @@ msgid "Documents"
 msgstr ""
 
 msgid "Does not have a doctor title"
+msgstr ""
+
+msgid "Domain doctoral committee"
 msgstr ""
 
 msgid "Done in"
@@ -1187,6 +1202,9 @@ msgstr ""
 msgid "Financing comment"
 msgstr ""
 
+msgid "Financing type"
+msgstr ""
+
 msgid "First author"
 msgstr ""
 
@@ -1265,6 +1283,9 @@ msgid "Gantt chart"
 msgstr ""
 
 msgid "Gender"
+msgstr ""
+
+msgid "General data"
 msgstr ""
 
 msgid "Generate an archive"
@@ -1830,6 +1851,9 @@ msgstr ""
 msgid "No"
 msgstr ""
 
+msgid "No confirmation paper yet"
+msgstr ""
+
 msgid "No defense"
 msgstr ""
 
@@ -1853,6 +1877,9 @@ msgid "No jury found."
 msgstr ""
 
 msgid "No one invited"
+msgstr ""
+
+msgid "Noma"
 msgstr ""
 
 msgid "Non doctor reason"
@@ -1940,6 +1967,9 @@ msgstr ""
 msgid "Other international scholarship"
 msgstr ""
 
+msgid "Other members of the supervisory panel"
+msgstr ""
+
 msgctxt "CategorieActivite"
 msgid "PAPER"
 msgstr "Examination"
@@ -1994,6 +2024,9 @@ msgid "PhD"
 msgstr ""
 
 msgid "PhD already done"
+msgstr ""
+
+msgid "PhD first inscription date"
 msgstr ""
 
 msgid "PhD proposal"
@@ -2581,6 +2614,9 @@ msgstr ""
 msgid "Status:"
 msgstr ""
 
+msgid "Student"
+msgstr ""
+
 msgctxt "parcours_doctoral"
 msgid "Student"
 msgstr ""
@@ -2696,6 +2732,9 @@ msgid "Surname"
 msgstr ""
 
 msgid "Template title"
+msgstr ""
+
+msgid "Temporary / definitive admission date"
 msgstr ""
 
 msgid ""
@@ -3051,9 +3090,6 @@ msgid ""
 "after the confirmation test"
 msgstr ""
 
-msgid "To complete"
-msgstr ""
-
 msgid ""
 "To visualize and edit a document, please select it in the list opposite."
 msgstr ""
@@ -3290,6 +3326,9 @@ msgstr ""
 
 msgctxt "doctorate"
 msgid "city"
+msgstr ""
+
+msgid "credits"
 msgstr ""
 
 msgid "days"
