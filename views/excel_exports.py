@@ -35,7 +35,7 @@ from django.template.defaultfilters import yesno
 from django.urls import reverse
 from django.utils.html import format_html
 from django.utils.text import slugify
-from django.utils.translation import gettext as _
+from django.utils.translation import gettext as _, pgettext
 from django.utils.translation import gettext_lazy
 from django.views import View
 from osis_async.models import AsyncTask
@@ -227,7 +227,7 @@ class ParcoursDoctoralListExcelExportView(
             _('Admission date'),
             _('Pre-admission'),
             _('Cotutelle'),
-            _('Additional training'),
+            pgettext('parcours_doctoral', 'Additional training'),
             _('In order of registration'),
             _('Validated credits total'),
         ]

@@ -308,6 +308,7 @@ msgstr ""
 msgid "Add validation of prior experience (VAE)"
 msgstr ""
 
+msgctxt "parcours_doctoral"
 msgid "Additional training"
 msgstr ""
 
