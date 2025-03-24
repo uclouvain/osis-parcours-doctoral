@@ -47,7 +47,8 @@ class DocumentArchiveCreationViewTestCase(DocumentBaseTestCase):
         self.created_archive_uuid = str(uuid.uuid4())
 
         patcher = patch(
-            "parcours_doctoral.exports.archive.parcours_doctoral_generate_pdf",
+            "parcours_doctoral.infrastructure.parcours_doctoral.domain"
+            ".service.pdf_generation.PDFGeneration.generer_pdf_archive",
             return_value=self.created_archive_uuid,
         )
         patcher.start()

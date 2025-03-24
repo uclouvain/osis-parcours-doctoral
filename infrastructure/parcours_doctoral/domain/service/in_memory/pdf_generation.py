@@ -23,30 +23,25 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from typing import List
 
-from django.forms.forms import Form
-
-from infrastructure.messages_bus import message_bus_instance
-from parcours_doctoral.ddd.commands import GenererPdfArchiveCommand
-from parcours_doctoral.views.document.mixins import DocumentFormView
-
-__all__ = [
-    'DocumentArchiveCreationView',
-]
-
-__namespace__ = None
+from ddd.logic.parcours_interne.dto.info import ProprietesPaeDTO
+from parcours_doctoral.ddd.domain.service.i_pdf_generation import IPDFGeneration
+from parcours_doctoral.ddd.dtos import GroupeDeSupervisionDTO, ParcoursDoctoralDTO
+from parcours_doctoral.ddd.epreuve_confirmation.dtos import EpreuveConfirmationDTO
+from parcours_doctoral.ddd.formation.dtos import CoursDTO
+from parcours_doctoral.ddd.jury.dtos.jury import JuryDTO
 
 
-class DocumentArchiveCreationView(DocumentFormView):
-    urlpatterns = 'create-archive'
-    form_class = Form
-
-    def form_valid(self, form):
-        self.document_identifier = message_bus_instance.invoke(
-            GenererPdfArchiveCommand(
-                uuid_parcours_doctoral=self.parcours_doctoral_uuid,
-                auteur=self.request.user.person.global_id,
-            )
-        ).identifiant
-
-        return super().form_valid(form)
+class InMemoryPDFGeneration(IPDFGeneration):
+    @classmethod
+    def generer_pdf_archive(
+        cls,
+        parcours_doctoral: ParcoursDoctoralDTO,
+        groupe_supervision: GroupeDeSupervisionDTO,
+        epreuves_confirmation: List[EpreuveConfirmationDTO],
+        jury: JuryDTO,
+        cours_complementaires: List[CoursDTO],
+        proprietes_pae: List['ProprietesPaeDTO'],
+    ) -> str:
+        return ''
