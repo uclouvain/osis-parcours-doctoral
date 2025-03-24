@@ -245,3 +245,9 @@ class ListerDocumentsQuery(interface.QueryRequest):
 class RecupererDocumentQuery(interface.QueryRequest):
     uuid_parcours_doctoral: str
     identifiant: str
+
+
+@attr.dataclass(frozen=True, slots=True)
+class GenererPdfArchiveCommand(interface.CommandRequest):
+    uuid_parcours_doctoral: str
+    auteur: str

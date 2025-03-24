@@ -23,23 +23,23 @@
   * at the root of the source code of this program.  If not,
   * see http://www.gnu.org/licenses/.
 {% endcomment %}
-
-{% if categories %}
-  <h4>{% trans "ECTS added" context "summary" %}</h4>
-  <p>
-    {% blocktrans with added=added|floatformat validated=validated|floatformat trimmed %}
-      {{ added }} ECTS added with {{ validated }} validated by the CDD.
-    {% endblocktrans %}
-    {% if display_table %}
-      <a data-bs-toggle="collapse" href="#show-details" aria-expanded="false" aria-controls="show-details">
-        {% trans "Show details" %}
-      </a>
-      </p>
+<table class="table table-condensed table-bordered">
+  <thead>
+  <tr>
+    <th>{% translate "Reporting categories" %}</th>
+    <th>{% translate "Submitted" context 'parcours_doctoral' %}</th>
+    <th>{% translate "Validated" %}</th>
+  </tr>
+  </thead>
+  <tbody>
+  {% for category_label, counts in categories.items %}
+    {% if counts.0 or counts.1 %}
+      <tr>
+        <th>{{ category_label }}</th>
+        <td>{{ counts.0|floatformat }}</td>
+        <td>{{ counts.1|floatformat }}</td>
+      </tr>
     {% endif %}
-
-  {% if display_table %}
-    <div class="collapse" id="show-details">
-      {% include "parcours_doctoral/includes/training_categories_credits_table.html" %}
-    </div>
-  {% endif %}
-{% endif %}
+  {% endfor %}
+  </tbody>
+</table>

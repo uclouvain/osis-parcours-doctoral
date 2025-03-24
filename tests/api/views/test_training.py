@@ -35,6 +35,7 @@ from base.tests.factories.person import PersonFactory
 from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from parcours_doctoral.ddd.formation.domain.model.enums import (
     CategorieActivite,
+    ChoixTypeEpreuve,
     ContexteFormation,
     StatutActivite,
 )
@@ -45,6 +46,7 @@ from parcours_doctoral.tests.factories.activity import (
     ConferenceCommunicationFactory,
     ConferenceFactory,
     CourseFactory,
+    PaperFactory,
     ServiceFactory,
     UclCourseFactory,
 )
@@ -260,9 +262,67 @@ class TrainingApiTestCase(QueriesAssertionsMixin, APITestCase):
 
     def test_training_config(self):
         self.client.force_authenticate(user=self.student.user)
-        config_url = resolve_url("parcours_doctoral_api_v1:training-config", uuid=self.parcours_doctoral.uuid)
+
+        doctorate = ParcoursDoctoralFactory(student=self.student)
+
+        config_url = resolve_url("parcours_doctoral_api_v1:training-config", uuid=doctorate.uuid)
+
         response = self.client.get(config_url)
+
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        json_response = response.json()
+
+        self.assertCountEqual(
+            json_response['creatable_papers_types'],
+            [
+                ChoixTypeEpreuve.CONFIRMATION_PAPER.name,
+                ChoixTypeEpreuve.PRIVATE_DEFENSE.name,
+                ChoixTypeEpreuve.PUBLIC_DEFENSE.name,
+            ],
+        )
+
+        PaperFactory(
+            parcours_doctoral=doctorate,
+            type=ChoixTypeEpreuve.CONFIRMATION_PAPER.name,
+        )
+
+        response = self.client.get(config_url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        json_response = response.json()
+
+        self.assertCountEqual(
+            json_response['creatable_papers_types'],
+            [ChoixTypeEpreuve.PRIVATE_DEFENSE.name, ChoixTypeEpreuve.PUBLIC_DEFENSE.name],
+        )
+
+        PaperFactory(
+            parcours_doctoral=doctorate,
+            type=ChoixTypeEpreuve.PUBLIC_DEFENSE.name,
+        )
+
+        response = self.client.get(config_url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        json_response = response.json()
+
+        self.assertCountEqual(json_response['creatable_papers_types'], [ChoixTypeEpreuve.PRIVATE_DEFENSE.name])
+
+        PaperFactory(
+            parcours_doctoral=doctorate,
+            type=ChoixTypeEpreuve.PRIVATE_DEFENSE.name,
+        )
+
+        response = self.client.get(config_url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        json_response = response.json()
+
+        self.assertCountEqual(json_response['creatable_papers_types'], [])
 
     def test_training_should_delete_unsubmitted(self):
         service = ServiceFactory(parcours_doctoral=self.parcours_doctoral)
