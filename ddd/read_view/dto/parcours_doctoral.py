@@ -53,6 +53,7 @@ class ParcoursDoctoralRechercheDTO(interface.DTO):
     total_credits_valides: int
 
     cree_le: datetime.datetime
+    date_admission_par_cdd: datetime.datetime
 
 
 @attr.dataclass(slots=True)

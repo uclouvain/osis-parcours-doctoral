@@ -997,7 +997,7 @@ msgid "Definitive admission date to doctorate"
 msgstr "Date de l'admission définitive au doctorat"
 
 msgid "Definitive admission date:"
-msgstr "Date de l'admission définitive au doctorat:"
+msgstr "Date de l'admission définitive au doctorat :"
 
 msgctxt "parcours_doctoral"
 msgid "Delete"

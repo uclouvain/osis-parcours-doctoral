@@ -1960,6 +1960,10 @@ components:
           type: string
         commission_proximite:
           type: string
+        date_admission_par_cdd:
+          type: string
+          format: date-time
+          nullable: true
         links:
           type: object
           properties:
