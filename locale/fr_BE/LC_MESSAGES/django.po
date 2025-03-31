@@ -203,6 +203,9 @@ msgid "A non doctor member must have a justification."
 msgstr ""
 "Un membre non porteur du titre de docteur doit avoir une justification."
 
+msgid "A paper of each type has already been created."
+msgstr "Une épreuve de chaque type a déjà été créée."
+
 msgid "A promoter can not be president."
 msgstr "Un promoteur ne peut pas être président."
 
@@ -354,6 +357,10 @@ msgstr "Ajouter un filtre de date"
 
 msgid "Add validation of prior experience (VAE)"
 msgstr "Ajouter une valorisation des acquis de l'expérience"
+
+msgctxt "parcours_doctoral"
+msgid "Additional training"
+msgstr "Formation complémentaire"
 
 msgctxt "parcours_doctoral filter"
 msgid "Additional training"
@@ -788,6 +795,9 @@ msgstr "Épreuve de confirmation non complète."
 msgid "Confirmation exam not found."
 msgstr "Épreuve de confirmation non trouvée."
 
+msgid "Confirmation paper"
+msgstr "Épreuve de confirmation"
+
 msgid "Confirmation success attestation"
 msgstr "Attestation de réussite de l'épreuve de confirmation"
 
@@ -885,6 +895,9 @@ msgstr "Créée le"
 msgid "Current funding"
 msgstr "Financement actuel"
 
+msgid "Current status of the confirmation"
+msgstr "Statut actuel de la confirmation"
+
 msgid "Custom mail template"
 msgstr "Template d'email personnalisé"
 
@@ -958,6 +971,9 @@ msgstr "Défense"
 
 msgid "Defense indicative date"
 msgstr "Date de soutenance indicative"
+
+msgid "Defense jury composition"
+msgstr "Composition du jury de défense"
 
 msgid "Defense language"
 msgstr "Langue de la soutenance"
@@ -1074,14 +1090,17 @@ msgstr "Formation doctorale"
 msgid "Doctoral training configuration"
 msgstr "Configuration formation doctorale"
 
+msgid "Doctoral training dossier"
+msgstr "Dossier du parcours doctoral"
+
 msgid "Doctoral trainings"
 msgstr "Formations doctorales"
 
+msgid "Doctoral trainings export"
+msgstr "Export des parcours doctoraux"
+
 msgid "Doctorate"
 msgstr "Doctorat"
-
-msgid "Doctorate archive"
-msgstr "Archive du doctorat"
 
 msgid "Doctorate thesis field"
 msgstr "Domaine de la thèse de doctorat"
@@ -1107,6 +1126,9 @@ msgstr "Documents"
 
 msgid "Does not have a doctor title"
 msgstr "N'est pas porteur du titre de docteur"
+
+msgid "Domain doctoral committee"
+msgstr "Commission doctorale de domaine"
 
 msgid "Done in"
 msgstr "Fait à"
@@ -1217,6 +1239,9 @@ msgstr "Site web de l'événement"
 msgid "Example"
 msgstr "Exemple"
 
+msgid "Excel export of doctoral trainings"
+msgstr "Export excel des parcours doctoraux"
+
 msgid "Exit without saving"
 msgstr "Quitter sans enregistrer"
 
@@ -1257,6 +1282,9 @@ msgstr "Fichier"
 
 msgid "Financing comment"
 msgstr "Commentaire sur le financement"
+
+msgid "Financing type"
+msgstr "Type de financement"
 
 msgid "First author"
 msgstr "Premier auteur.trice"
@@ -1349,6 +1377,9 @@ msgstr "Graphe de Gantt"
 
 msgid "Gender"
 msgstr "Genre"
+
+msgid "General data"
+msgstr "Données générales"
 
 msgid "Generate an archive"
 msgstr "Générer une archive"
@@ -1990,6 +2021,9 @@ msgstr "Doctorat suivant"
 msgid "No"
 msgstr "Non"
 
+msgid "No confirmation paper yet"
+msgstr "Pas encore d'épreuve de confirmation"
+
 msgid "No defense"
 msgstr "Non soutenue"
 
@@ -2014,6 +2048,9 @@ msgstr "Pas de jury trouvé."
 
 msgid "No one invited"
 msgstr "Aucun invité"
+
+msgid "Noma"
+msgstr "Noma"
 
 msgid "Non doctor reason"
 msgstr "Justification"
@@ -2101,6 +2138,9 @@ msgstr "Autre institution nom"
 msgid "Other international scholarship"
 msgstr "Autre bourse internationale"
 
+msgid "Other members of the supervisory panel"
+msgstr "Autres membres du comité d’accompagnement"
+
 msgctxt "CategorieActivite"
 msgid "PAPER"
 msgstr "Épreuve"
@@ -2156,6 +2196,9 @@ msgstr "Doctorat"
 
 msgid "PhD already done"
 msgstr "Doctorat déjà réalisé"
+
+msgid "PhD first inscription date"
+msgstr "Date de la première inscription au doctorat"
 
 msgid "PhD proposal"
 msgstr "Projet de formation doctorale"
@@ -2772,6 +2815,9 @@ msgstr "État d’avancement de la formation doctorale"
 msgid "Status:"
 msgstr "État :"
 
+msgid "Student"
+msgstr "Étudiant"
+
 msgctxt "parcours_doctoral"
 msgid "Student"
 msgstr "Étudiant"
@@ -2890,6 +2936,9 @@ msgstr "Nom"
 
 msgid "Template title"
 msgstr "Intitulé du template"
+
+msgid "Temporary / definitive admission date"
+msgstr "Date de l’admission provisoire / définitive"
 
 msgid ""
 "The \"doctoral training\" must be completed before submitting the defense "
@@ -3022,6 +3071,9 @@ msgstr ""
 
 msgid "The doctorate is not initialized"
 msgstr "Le doctorat n'est pas initialisé"
+
+msgid "The export has failed"
+msgstr "L'export a échoué"
 
 msgid "The first name of the recipient"
 msgstr "Le prénom du destinataire"
@@ -3315,9 +3367,6 @@ msgstr ""
 "À téléverser dans votre dossier sur la plateforme doctorale dans les plus "
 "brefs délais après l’épreuve de confirmation"
 
-msgid "To complete"
-msgstr "A compléter"
-
 msgid ""
 "To visualize and edit a document, please select it in the list opposite."
 msgstr ""
@@ -3509,6 +3558,9 @@ msgstr "Année"
 msgid "Yes"
 msgstr "Oui"
 
+msgid "Yes,No,All"
+msgstr "Oui,Non,Tous"
+
 msgid "You appear to have unsaved changes, which will be lost."
 msgstr ""
 "Vous semblez avoir des modifications non enregistrées, celles-ci seront "
@@ -3573,6 +3625,16 @@ msgstr "Vous devez désigner un membre comme secrétaire."
 msgid "Your data have been saved."
 msgstr "Vos données ont été sauvegardées."
 
+msgid "Your document is available here"
+msgstr "Votre document est disponible ici"
+
+msgid ""
+"Your export request has been planned, you will receive a notification as "
+"soon as it is available."
+msgstr ""
+"Votre demande d’export a été planifiée, vous recevrez une notification dès "
+"qu’il sera disponible."
+
 msgid ""
 "Your joint supervision information can be completed later. Please input "
 "\"No\" if you don't have information yet."
@@ -3589,6 +3651,9 @@ msgstr "Votre participation à l'événement"
 msgctxt "doctorate"
 msgid "city"
 msgstr "ville"
+
+msgid "credits"
+msgstr "crédits"
 
 msgid "days"
 msgstr "jours"

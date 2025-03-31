@@ -24,6 +24,7 @@
 #
 # ##############################################################################
 from datetime import date
+from decimal import Decimal
 from typing import List, Optional
 
 import attr
@@ -45,3 +46,4 @@ class CoursDTO(interface.DTO):
     titulaire: str = ""
     certificat: List[str] = attr.Factory(list)
     commentaire: str = ""
+    ects: Decimal = Decimal(0)
