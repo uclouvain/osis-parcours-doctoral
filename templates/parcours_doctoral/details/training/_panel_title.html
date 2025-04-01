@@ -87,9 +87,9 @@
             </li>
             <li>
               <a
-                  class="dropdown-item"
+                  class="dropdown-item accept-activity-btn"
                   href="#"
-                  onclick="$('[name=activity_ids]').val(['{{ activity.uuid }}']);$('button[name=_accept]').click();return false;"
+                  data-uuid="{{ activity.uuid }}"
               >
                 {% trans "Accept" %}
               </a>
@@ -115,9 +115,9 @@
                 {% endif %}
             >
               <a
-                  class="dropdown-item"
+                  class="dropdown-item submit-activity-btn"
                   href="#"
-                  onclick="$('[name=activity_ids]').val(['{{ activity.uuid }}']);$('form#activities').submit();return false;"
+                  data-uuid="{{ activity.uuid }}"
               >
                 {% trans "Submit" %}
               </a>

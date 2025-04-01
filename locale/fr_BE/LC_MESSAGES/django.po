@@ -728,6 +728,9 @@ msgstr "Commentaire à destination du candidat :"
 msgid "Comments"
 msgstr "Commentaires"
 
+msgid "Please use the following format for inputting the first and last name: \"Monteiro, M. et Martí, A. C.\""
+msgstr "Veuillez utiliser le format suivant pour l’encodage du nom et du prénom : \"Monteiro, M. et Martí, A. C.\""
+
 msgctxt "tab"
 msgid "Comments"
 msgstr "Commentaires"
@@ -1997,8 +2000,8 @@ msgstr "Pas encore invité à signer"
 msgid "Name"
 msgstr "Nom"
 
-msgid "Name in the language of the manifestation"
-msgstr "Nom dans la langue de la manifestation"
+msgid "Please specify the title in the language of the manifestation"
+msgstr "Veuillez indiquer le nom dans la langue de l’événement"
 
 msgid "Name or brief description"
 msgstr "Nom ou description brève"
