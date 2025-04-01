@@ -807,7 +807,7 @@ class CourseForm(ActivityFormMixin, forms.ModelForm):
         }
         labels = {
             'title': pgettext_lazy("parcours_doctoral course", "Title"),
-            'authors': _("Organisers or academic responsibles"),
+            'authors': _("Organisers"),
             'hour_volume': _("Hourly volume"),
             'participating_proof': _("Proof of participation or success"),
         }
