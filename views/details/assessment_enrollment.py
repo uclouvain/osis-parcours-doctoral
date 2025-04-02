@@ -26,7 +26,7 @@
 import datetime
 
 from django.contrib import messages
-from django.db.models import QuerySet
+from django.db.models import QuerySet, Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import resolve_url
 from django.utils.functional import cached_property
@@ -96,12 +96,19 @@ class BaseAssessmentEnrollmentViewMixin:
 
     @cached_property
     def related_courses(self) -> QuerySet[Activity]:
-        return (
+        queryset = (
             Activity.objects.filter(status=StatutActivite.ACCEPTEE.name)
             .filter(learning_unit_year__academic_year__year=self.current_year)
             .for_enrollment_courses(self.parcours_doctoral_uuid)
             .order_by('learning_unit_year__acronym')
         )
+        if self.enrollment_uuid:
+            queryset = queryset.exclude(
+                Q(assessmentenrollment__isnull=False) & ~Q(assessmentenrollment__uuid=self.enrollment_uuid)
+            )
+        else:
+            queryset = queryset.exclude(assessmentenrollment__isnull=False)
+        return queryset
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)

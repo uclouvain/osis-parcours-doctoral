@@ -516,7 +516,7 @@ msgstr "Chemistry"
 
 msgctxt "CategorieActivite"
 msgid "COMMUNICATION"
-msgstr "Oral communication (excluding conference)"
+msgstr "Oral communications (excluding conference)"
 
 msgid "COMMUNICATION types"
 msgstr ""
@@ -1979,7 +1979,7 @@ msgstr ""
 
 msgctxt "CategorieActivite"
 msgid "PAPER"
-msgstr "Examination"
+msgstr "Examinations"
 
 msgid "PDF file"
 msgstr ""
@@ -1995,7 +1995,7 @@ msgstr "Private defence"
 
 msgctxt "CategorieActivite"
 msgid "PUBLICATION"
-msgstr "Publication"
+msgstr "Publications"
 
 msgid "PUBLICATION types"
 msgstr "Activity types for the publication category"
@@ -2248,7 +2248,7 @@ msgstr "Denied"
 
 msgctxt "CategorieActivite"
 msgid "RESIDENCY"
-msgstr "Advanced research residency"
+msgstr "Advanced research residencies"
 
 msgid "RESIDENCY types"
 msgstr "Activity types for the advanced research residency category"
@@ -2424,7 +2424,7 @@ msgstr "Self-funding"
 
 msgctxt "CategorieActivite"
 msgid "SEMINAR"
-msgstr "Seminar taken"
+msgstr "Seminars taken"
 
 msgid "SEMINAR types"
 msgstr "Activity types for the seminar category"
@@ -3194,7 +3194,7 @@ msgstr "Validation of prior experience (VAE)"
 
 msgctxt "CategorieActivite"
 msgid "VAE"
-msgstr "Validation of prior experience (VAE)"
+msgstr "Validations of prior experience (VAE)"
 
 msgid "Validate selected courses"
 msgstr ""

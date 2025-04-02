@@ -133,13 +133,13 @@
       </tbody>
     {% empty %}
       {% translate "This student has not been enrolled in any assessment yet." %}
-      {% if can_change_assessment_enrollment %}
-        <a href="{% url "parcours_doctoral:assessment-enrollment:add" uuid=view.kwargs.uuid %}">
-          {% translate "Enroll in an assessment" %}
-        </a>
-      {% endif %}
     {% endfor %}
   </table>
+  {% if can_change_assessment_enrollment %}
+    <a href="{% url "parcours_doctoral:assessment-enrollment:add" uuid=view.kwargs.uuid %}" class="btn btn-default border border-dark-subtle">
+      {% translate "Enroll in an assessment" %}
+    </a>
+  {% endif %}
 
   {% include 'parcours_doctoral/modal/confirm_modal.html' with confirm_id='delete-modal' %}
 

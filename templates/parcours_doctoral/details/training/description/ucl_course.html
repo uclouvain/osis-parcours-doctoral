@@ -24,5 +24,4 @@
   * see http://www.gnu.org/licenses/.
 {% endcomment %}
 
-{{ activity.type }}&nbsp;: {{ activity.authors }}, {{ activity.start_date|date:'Y' }},
-{{ activity.title }}{% if activity.journal %}, {{ activity.journal }}{% endif %}, {{ activity.publication_status|enum_display:'ChoixStatutPublication' }}
+{{ activity.learning_unit_year.acronym }} - {{ activity.learning_unit_year.complete_title_i18n }} - {{ activity.learning_unit_year.academic_year }}

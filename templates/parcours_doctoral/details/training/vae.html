@@ -44,7 +44,9 @@
     <div>
       <div class="mb-3">
         <strong class="d-block">{% trans "Title" context "admission" %}</strong>
-        {{ activity.title }}
+        <p>
+          {% include "parcours_doctoral/details/training/description/vae.html" %}
+        </p>
       </div>
       <div class="mb-3">
         <strong class="d-block">{% trans "Description" %}</strong>

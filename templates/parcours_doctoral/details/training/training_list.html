@@ -210,10 +210,15 @@
           $(this).show();
           if ((current_filter_type !== ALL_VALUES && $(this).data('type') !== current_filter_type)
             || (current_filter_status !== ALL_VALUES && !$(this).data('status').match(reStatus))) {
+            if (current_filter_type === 'COURSE' && $(this).data('type') === 'UCL_COURSE') {
+              return ;
+            }
             $(this).hide();
           }
         });
       }
+
+      document.dispatchEvent(new Event('refreshFormInitial'));
     });
   </script>
 {% endblock %}

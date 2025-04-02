@@ -577,7 +577,7 @@ msgstr "Chimie"
 
 msgctxt "CategorieActivite"
 msgid "COMMUNICATION"
-msgstr "Communication orale (hors conférence)"
+msgstr "Communications orale (hors conférence)"
 
 msgid "COMMUNICATION types"
 msgstr ""
@@ -613,7 +613,7 @@ msgstr "Confirmation soumise"
 
 msgctxt "CategorieActivite"
 msgid "COURSE"
-msgstr "Cours, formation et écoles"
+msgstr "Cours, formations et écoles"
 
 msgid "COURSE types"
 msgstr "Types d'activité pour la catégorie Cours"
@@ -871,8 +871,8 @@ msgctxt "doctorate"
 msgid "Courses"
 msgstr "Formations"
 
-msgid "Courses and trainings"
-msgstr "Cours et formation"
+msgid "Followed courses"
+msgstr "Cours suivis"
 
 #, python-format
 msgid "Create the confirmation paper success attestation (%(reference)s)"
@@ -2112,10 +2112,7 @@ msgid "Oral presentation"
 msgstr "Exposé oral"
 
 msgid "Organisers or academic responsibles"
-msgstr "Organisateurs.trice.s ou responsables académiques"
-
-msgid "Organisers"
-msgstr "Organisateurs.trice.s"
+msgstr "Organisateur.trice.s ou responsables académiques"
 
 msgid "Organising institution"
 msgstr "Institution organisatrice"
@@ -2149,7 +2146,7 @@ msgstr "Autres membres du comité d’accompagnement"
 
 msgctxt "CategorieActivite"
 msgid "PAPER"
-msgstr "Épreuve"
+msgstr "Épreuves"
 
 msgid "PDF file"
 msgstr "Fichier PDF"
@@ -3477,7 +3474,7 @@ msgstr "VAE"
 
 msgctxt "CategorieActivite"
 msgid "VAE"
-msgstr "Valorisation des acquis de l'expérience"
+msgstr "Valorisations des acquis de l'expérience"
 
 msgid "Validate selected courses"
 msgstr "Valider les cours sélectionnées"
