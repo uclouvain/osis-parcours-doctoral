@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Parcours Doctoral API
-  version: 1.0.9
+  version: 1.0.10
   description: This API delivers data for the Parcours Doctoral project.
   contact:
     name: UCLouvain - OSIS
@@ -1960,6 +1960,10 @@ components:
           type: string
         commission_proximite:
           type: string
+        date_admission_par_cdd:
+          type: string
+          format: date-time
+          nullable: true
         links:
           type: object
           properties:
