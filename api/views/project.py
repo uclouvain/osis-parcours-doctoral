@@ -45,7 +45,7 @@ class ProjectApiView(
     GenericAPIView,
 ):
     name = "project"
-    schema = ProjectSchema()
+    # schema = ProjectSchema()
     pagination_class = None
     filter_backends = []
     permission_mapping = {

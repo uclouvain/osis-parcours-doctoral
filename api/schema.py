@@ -23,9 +23,9 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-
+from drf_spectacular.generators import SchemaGenerator
+from drf_spectacular.openapi import AutoSchema
 from rest_framework import status
-from rest_framework.schemas.openapi import AutoSchema, SchemaGenerator
 from rest_framework.schemas.utils import is_list_view
 from rest_framework.serializers import Serializer
 
@@ -38,13 +38,9 @@ PARCOURS_DOCTORAL_SDK_VERSION = "1.0.10"
 class ParcoursDoctoralSchemaGenerator(SchemaGenerator):
     """This generator adds extra information and reshape the schema for admission"""
 
-    def __init__(self, *args, **kwargs):
-        kwargs.pop('version', None)
-        super().__init__(version=PARCOURS_DOCTORAL_SDK_VERSION, *args, **kwargs)
-
     def get_schema(self, *args, **kwargs):
         schema = super().get_schema(*args, **kwargs)
-        schema["openapi"] = "3.0.0"
+        schema["info"]["version"] = PARCOURS_DOCTORAL_SDK_VERSION
         schema["info"]["title"] = "Parcours Doctoral API"
         schema["info"]["description"] = "This API delivers data for the Parcours Doctoral project."
         schema["info"]["contact"] = {
@@ -70,17 +66,8 @@ class ParcoursDoctoralSchemaGenerator(SchemaGenerator):
                 "description": "Production server",
             },
         ]
-        schema["security"] = [{"Token": []}]
-        schema['components']["securitySchemes"] = {
-            "Token": {
-                "type": "apiKey",
-                "in": "header",
-                "name": "Authorization",
-                "description": "Enter your token in the format **Token &lt;token>**",
-            }
-        }
         # Add extra global headers
-        schema['components']['parameters'] = {
+        schema['components'].setdefault('parameters', {}).update({
             "X-User-FirstName": {
                 "in": "header",
                 "name": "X-User-FirstName",
@@ -114,9 +101,9 @@ class ParcoursDoctoralSchemaGenerator(SchemaGenerator):
                 "schema": {"$ref": "#/components/schemas/AcceptedLanguageEnum"},
                 "required": False,
             },
-        }
+        })
         # Add error responses
-        schema['components']['responses'] = {
+        schema['components'].setdefault('responses', {}).update({
             "Unauthorized": {
                 "description": "Unauthorized",
                 "content": {
@@ -141,7 +128,7 @@ class ParcoursDoctoralSchemaGenerator(SchemaGenerator):
                     }
                 },
             },
-        }
+        })
         schema['components']['schemas']['Error'] = {
             "type": "object",
             "properties": {
@@ -165,7 +152,12 @@ class ParcoursDoctoralSchemaGenerator(SchemaGenerator):
                     method_content['requestBody']['content'] = {
                         k: v for k, v in method_content['requestBody']['content'].items() if k == 'application/json'
                     }
+
+                # TODO Add paremeter for ESBAuthentication here?
         return schema
+
+
+############### OBSOLETE ##################
 
 
 class ActionLinksFieldSchemaMixin:
@@ -235,8 +227,8 @@ class AuthorizationAwareSchemaMixin:
 
     authorization_method = 'ESB'
 
-    def get_operation(self, path, method):
-        operation = super().get_operation(path, method)
+    def get_operation(self, *args, **kwargs):
+        operation = super().get_operation(*args, **kwargs)
         operation['parameters'] += self.get_authorization_params()
         return operation
 
@@ -299,7 +291,7 @@ class ChoicesEnumSchema(BetterChoicesSchema):
         return components
 
 
-class DetailedAutoSchema(ChoicesEnumSchema):
+class DetailedAutoSchema(AuthorizationAwareSchemaMixin, ActionLinksFieldSchemaMixin, AutoSchema):
     """This schema allows to specify a serializer given an HTTP verb and dissociate for the response body"""
 
     def get_request_body(self, path, method):

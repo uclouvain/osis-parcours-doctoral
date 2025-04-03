@@ -68,7 +68,6 @@ class AutocompleteTutorView(ListAPIView):
     """Autocomplete tutors"""
 
     name = "tutor"
-    schema = AuthorizationAwareSchema()
     filter_backends = [PersonSearchingBackend]
     serializer_class = serializers.TutorSerializer
     queryset = (
@@ -87,7 +86,7 @@ class AutocompletePersonView(ListAPIView):
     """Autocomplete person"""
 
     name = "person"
-    schema = AuthorizationAwareSchema()
+    # schema = AuthorizationAwareSchema()
     filter_backends = [PersonSearchingBackend]
     serializer_class = serializers.PersonSerializer
     queryset = (

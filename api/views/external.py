@@ -98,7 +98,7 @@ class ExternalDoctorateSupervisionSchema(ResponseSpecificSchema):
 
 class ExternalDoctorateSupervisionAPIView(ExternalDoctorateAPIView):
     name = 'external-supervision'
-    schema = ExternalDoctorateSupervisionSchema()
+    # schema = ExternalDoctorateSupervisionSchema()
 
     def get(self, request, *args, **kwargs):
         """Returns necessary info about the doctorate and the supervision."""

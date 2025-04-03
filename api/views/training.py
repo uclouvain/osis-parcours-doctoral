@@ -23,12 +23,11 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-
+from drf_spectacular.openapi import AutoSchema
 from rest_framework import status
 from rest_framework.generics import GenericAPIView, ListAPIView, RetrieveAPIView
 from rest_framework.mixins import RetrieveModelMixin
 from rest_framework.response import Response
-from rest_framework.schemas.openapi import AutoSchema
 from rest_framework.settings import api_settings
 
 from base.ddd.utils.business_validator import MultipleBusinessExceptions
@@ -37,7 +36,6 @@ from parcours_doctoral.api.permissions import DoctorateAPIPermissionRequiredMixi
 from parcours_doctoral.api.schema import (
     AuthorizationAwareSchema,
     AuthorizationAwareSchemaMixin,
-    ChoicesEnumSchema,
     ResponseSpecificSchema,
 )
 from parcours_doctoral.api.serializers import InscriptionEvaluationDTOSerializer
@@ -77,40 +75,12 @@ __all__ = [
 ]
 
 
-class TrainingListSchema(ChoicesEnumSchema):
-    def get_operation_id_base(self, path: str, method: str, action) -> str:
-        return f"_{self.view.name.replace('-', '_')}"
-
-    def map_serializer(self, serializer):
-        if isinstance(serializer, DoctoralTrainingActivitySerializer):
-            possible_classes = serializer.serializer_class_mapping.values()
-            if serializer.only_classes:
-                # Only one of specified classes (for children)
-                possible_classes = serializer.only_classes
-            return {
-                'oneOf': [self._get_reference(s()) for s in possible_classes],
-                'discriminator': {'propertyName': 'object_type'},
-            }
-        return super().map_serializer(serializer)
-
-    def get_components(self, path, method):
-        components = super().get_components(path, method)
-        for mapping_key, serializer in DoctoralTrainingActivitySerializer.serializer_class_mapping.items():
-            # Specify the children classes if needed, by looking for parent category in the mapping key
-            child_classes = DoctoralTrainingActivitySerializer.get_child_classes(mapping_key)
-
-            serializer_dummy_instance = serializer(child_classes=child_classes)
-            component_name = self.get_component_name(serializer_dummy_instance)
-            components.setdefault(component_name, self.map_serializer(serializer_dummy_instance))
-        return components
-
 
 class DoctoralTrainingListView(DoctorateAPIPermissionRequiredMixin, GenericAPIView):
     name = "doctoral-training"
     pagination_class = None
     filter_backends = []
     serializer_class = DoctoralTrainingActivitySerializer
-    schema = TrainingListSchema()
     lookup_field = 'uuid'
     lookup_url_kwarg = 'activity_id'
     permission_mapping = {
@@ -139,7 +109,7 @@ class DoctoralTrainingListView(DoctorateAPIPermissionRequiredMixin, GenericAPIVi
 
 class TrainingConfigView(DoctorateAPIPermissionRequiredMixin, RetrieveModelMixin, GenericAPIView):
     name = "training-config"
-    schema = AuthorizationAwareSchema()
+    # schema = AuthorizationAwareSchema()
     pagination_class = None
     filter_backends = []
     serializer_class = DoctoralTrainingConfigSerializer
@@ -167,7 +137,6 @@ class TrainingView(DoctorateAPIPermissionRequiredMixin, GenericAPIView):
     pagination_class = None
     filter_backends = []
     serializer_class = DoctoralTrainingActivitySerializer
-    schema = TrainingListSchema()
     lookup_field = 'uuid'
     lookup_url_kwarg = 'activity_id'
     permission_mapping = {
@@ -207,7 +176,7 @@ class TrainingView(DoctorateAPIPermissionRequiredMixin, GenericAPIView):
 
 
 class TrainingBatchSchema(AuthorizationAwareSchemaMixin, AutoSchema):
-    def get_operation_id(self, path, method):
+    def get_operation_id(self):
         return "submit_training"
 
 
@@ -216,7 +185,7 @@ class TrainingSubmitView(DoctorateAPIPermissionRequiredMixin, GenericAPIView):
     pagination_class = None
     filter_backends = []
     serializer_class = DoctoralTrainingBatchSerializer
-    schema = TrainingBatchSchema()
+    # schema = TrainingBatchSchema()
     lookup_field = 'uuid'
     permission_mapping = {
         'POST': 'parcours_doctoral.submit_training',
@@ -249,7 +218,7 @@ class TrainingSubmitView(DoctorateAPIPermissionRequiredMixin, GenericAPIView):
 
 
 class TrainingAssentSchema(AuthorizationAwareSchemaMixin, AutoSchema):
-    def get_operation_id(self, path, method):
+    def get_operation_id(self):
         return "assent_training"
 
     def get_path_parameters(self, path, method):
@@ -268,7 +237,7 @@ class TrainingAssentView(DoctorateAPIPermissionRequiredMixin, GenericAPIView):
     pagination_class = None
     filter_backends = []
     serializer_class = DoctoralTrainingAssentSerializer
-    schema = TrainingAssentSchema()
+    # schema = TrainingAssentSchema()
     lookup_field = 'uuid'
     permission_mapping = {
         'POST': 'parcours_doctoral.assent_training',
@@ -313,7 +282,6 @@ class AssessmentEnrollmentListView(DoctorateAPIPermissionRequiredMixin, ListAPIV
     name = "assessment-enrollment-list"
     http_method_names = ['get']
     pagination_class = None
-    schema = ChoicesEnumSchema()
     filter_backends = []
     permission_mapping = {
         'GET': 'parcours_doctoral.view_assessment_enrollment',
@@ -330,7 +298,6 @@ class AssessmentEnrollmentListView(DoctorateAPIPermissionRequiredMixin, ListAPIV
 
 class AssessmentEnrollmentDetailView(DoctorateAPIPermissionRequiredMixin, RetrieveAPIView):
     name = "assessment-enrollment-detail"
-    schema = ChoicesEnumSchema()
     pagination_class = None
     filter_backends = []
     permission_mapping = {
@@ -347,7 +314,7 @@ class AssessmentEnrollmentDetailView(DoctorateAPIPermissionRequiredMixin, Retrie
 
 
 class TrainingRecapPdfSchema(ResponseSpecificSchema):
-    def get_operation_id(self, path, method):
+    def get_operation_id(self):
         return "training_recap_pdf"
 
     serializer_mapping = {
@@ -357,7 +324,7 @@ class TrainingRecapPdfSchema(ResponseSpecificSchema):
 
 class TrainingRecapPdfApiView(DoctorateAPIPermissionRequiredMixin, RetrieveModelMixin, GenericAPIView):
     name = "training-pdf-recap"
-    schema = TrainingRecapPdfSchema()
+    # schema = TrainingRecapPdfSchema()
     http_method_names = ['get']
     permission_mapping = {
         'GET': 'parcours_doctoral.view_doctoral_training',

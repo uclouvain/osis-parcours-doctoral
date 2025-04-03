@@ -26,6 +26,7 @@
 from typing import List
 
 from django.db.models import Prefetch
+from drf_spectacular.utils import extend_schema
 from osis_signature.models import Actor
 from rest_framework import mixins
 from rest_framework.generics import GenericAPIView, ListAPIView
@@ -51,12 +52,16 @@ __all__ = [
 ]
 
 
-class DoctorateSchema(ResponseSpecificSchema):
-    serializer_mapping = {
-        'GET': serializers.ParcoursDoctoralDTOSerializer,
-    }
+# class DoctorateSchema(ResponseSpecificSchema):
+#     serializer_mapping = {
+#         'GET': serializers.ParcoursDoctoralDTOSerializer,
+#     }
 
 
+@extend_schema(
+    responses=serializers.ParcoursDoctoralDTOSerializer,
+    request=serializers.ParcoursDoctoralDTOSerializer,
+)
 class DoctorateAPIView(
     DoctorateAPIPermissionRequiredMixin,
     mixins.RetrieveModelMixin,
@@ -65,7 +70,7 @@ class DoctorateAPIView(
     name = "doctorate"
     pagination_class = None
     filter_backends = []
-    schema = DoctorateSchema()
+    # schema = DoctorateSchema()
     permission_mapping = {
         'GET': 'parcours_doctoral.view_parcours_doctoral',
     }
@@ -138,7 +143,7 @@ class DoctorateListSchema(ResponseSpecificSchema):
 
 class DoctorateListView(BaseListView):
     name = "list"
-    schema = DoctorateListSchema()
+    # schema = DoctorateListSchema()
     permission_mapping = {
         'GET': 'parcours_doctoral.view_list',
     }
@@ -156,7 +161,7 @@ class SupervisedDoctorateListSchema(DoctorateListSchema):
 
 class SupervisedDoctorateListView(BaseListView):
     name = "supervised_list"
-    schema = SupervisedDoctorateListSchema()
+    # schema = SupervisedDoctorateListSchema()
     permission_mapping = {
         'GET': 'parcours_doctoral.view_supervised_list',
     }

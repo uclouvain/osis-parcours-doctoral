@@ -58,6 +58,6 @@ class PersonSerializer(ModelSerializer):
 
 
 class TutorSerializer(PersonSerializer):
-    first_name = ReadOnlyField(source='person.first_name')
-    last_name = ReadOnlyField(source='person.last_name')
-    global_id = ReadOnlyField(source='person.global_id')
+    first_name = ReadOnlyField()
+    last_name = ReadOnlyField()
+    global_id = ReadOnlyField()

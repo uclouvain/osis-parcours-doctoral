@@ -43,7 +43,7 @@ class DashboardSchema(ResponseSpecificSchema):
 
 class DashboardApiView(RetrieveAPIView):
     name = "dashboard"
-    schema = DashboardSchema()
+    # schema = DashboardSchema()
 
     def get_queryset(self):
         # We must override this to bypass AssertionError from GenericAPIView

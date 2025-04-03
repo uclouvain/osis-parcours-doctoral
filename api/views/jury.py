@@ -78,7 +78,7 @@ class JuryPreparationAPIView(
     GenericAPIView,
 ):
     name = "jury-preparation"
-    schema = JuryPreparationSchema()
+    # schema = JuryPreparationSchema()
     pagination_class = None
     filter_backends = []
     permission_mapping = {
@@ -128,7 +128,7 @@ class JuryMembersListAPIView(
     GenericAPIView,
 ):
     name = "jury-members-list"
-    schema = JuryMembersListSchema()
+    # schema = JuryMembersListSchema()
     pagination_class = None
     filter_backends = []
     permission_mapping = {
@@ -181,7 +181,7 @@ class JuryMemberDetailAPIView(
     GenericAPIView,
 ):
     name = "jury-member-detail"
-    schema = JuryMemberDetailSchema()
+    # schema = JuryMemberDetailSchema()
     pagination_class = None
     filter_backends = []
     permission_mapping = {

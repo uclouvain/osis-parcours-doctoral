@@ -53,7 +53,7 @@ class CotutelleAPIView(
     GenericAPIView,
 ):
     name = "cotutelle"
-    schema = CotutelleSchema()
+    # schema = CotutelleSchema()
     pagination_class = None
     filter_backends = []
     permission_mapping = {

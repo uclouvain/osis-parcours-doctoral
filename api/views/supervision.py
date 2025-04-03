@@ -58,7 +58,7 @@ class SupervisionAPIView(
     GenericAPIView,
 ):
     name = "supervision"
-    schema = SupervisionSchema()
+    # schema = SupervisionSchema()
     pagination_class = None
     filter_backends = []
     permission_mapping = {
@@ -83,7 +83,7 @@ class SupervisionCanvasSchema(ResponseSpecificSchema):
 
 class SupervisionCanvasApiView(SupervisionAPIView):
     name = "supervision_canvas"
-    schema = SupervisionCanvasSchema()
+    # schema = SupervisionCanvasSchema()
     permission_mapping = {
         'GET': 'parcours_doctoral.view_supervision_canvas',
     }

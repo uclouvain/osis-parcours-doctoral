@@ -52,7 +52,7 @@ class FundingApiView(
     GenericAPIView,
 ):
     name = "funding"
-    schema = FundingSchema()
+    # schema = FundingSchema()
     pagination_class = None
     filter_backends = []
     permission_mapping = {

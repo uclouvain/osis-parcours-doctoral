@@ -68,15 +68,15 @@ class ConfirmationSchema(ResponseSpecificSchema):
         'GET': ConfirmationPaperDTOSerializer,
     }
 
-    def get_operation_id(self, path, method):
-        if method == 'GET':
+    def get_operation_id(self):
+        if self.method == 'GET':
             return 'retrieve_confirmation_papers'
-        return super().get_operation_id(path, method)
+        return super().get_operation_id()
 
 
 class ConfirmationAPIView(DoctorateAPIPermissionRequiredMixin, GenericAPIView):
     name = "confirmation"
-    schema = ConfirmationSchema()
+    # schema = ConfirmationSchema()
     pagination_class = None
     filter_backends = []
     permission_mapping = {
@@ -105,17 +105,17 @@ class LastConfirmationSchema(ResponseSpecificSchema):
         ),
     }
 
-    def get_operation_id(self, path, method):
+    def get_operation_id(self):
         return {
             'GET': 'retrieve_last_confirmation_paper',
             'POST': 'submit_confirmation_paper_extension_request',
             'PUT': 'submit_confirmation_paper',
-        }.get(method) or super().get_operation_id(path, method)
+        }.get(self.method) or super().get_operation_id()
 
 
 class LastConfirmationAPIView(DoctorateAPIPermissionRequiredMixin, mixins.RetrieveModelMixin, GenericAPIView):
     name = "last_confirmation"
-    schema = LastConfirmationSchema()
+    # schema = LastConfirmationSchema()
     filter_backends = []
     permission_mapping = {
         'GET': 'parcours_doctoral.view_confirmation',
@@ -178,13 +178,13 @@ class LastConfirmationCanvasSchema(ResponseSpecificSchema):
         'GET': ConfirmationPaperCanvasSerializer,
     }
 
-    def get_operation_id(self, path, method):
+    def get_operation_id(self):
         return 'retrieve_last_confirmation_paper_canvas'
 
 
 class LastConfirmationCanvasAPIView(DoctorateAPIPermissionRequiredMixin, mixins.RetrieveModelMixin, GenericAPIView):
     name = "last_confirmation_canvas"
-    schema = LastConfirmationCanvasSchema()
+    # schema = LastConfirmationCanvasSchema()
     filter_backends = []
     permission_mapping = {
         'GET': 'parcours_doctoral.view_confirmation',
@@ -237,7 +237,7 @@ class PromoterConfirmationSchema(ResponseSpecificSchema):
         ),
     }
 
-    def get_operation_id(self, path, method):
+    def get_operation_id(self):
         return 'complete_confirmation_paper_by_promoter'
 
 
@@ -247,7 +247,7 @@ class SupervisedConfirmationAPIView(
     GenericAPIView,
 ):
     name = "supervised_confirmation"
-    schema = PromoterConfirmationSchema()
+    # schema = PromoterConfirmationSchema()
     pagination_class = None
     filter_backends = []
     permission_mapping = {
