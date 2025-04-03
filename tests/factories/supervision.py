@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -28,11 +28,8 @@ import factory
 from django.conf import settings
 from osis_signature.models import Actor, Process
 
+from admission.tests.factories.roles import CaMemberRoleFactory, PromoterRoleFactory
 from parcours_doctoral.models.actor import ActorType, ParcoursDoctoralSupervisionActor
-from parcours_doctoral.tests.factories.roles import (
-    CaMemberRoleFactory,
-    PromoterRoleFactory,
-)
 
 
 class _ProcessFactory(factory.django.DjangoModelFactory):

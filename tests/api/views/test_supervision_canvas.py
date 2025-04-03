@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -117,7 +117,7 @@ class SupervisionCanvasAPIViewTestCase(QueriesAssertionsMixin, APITestCase):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        with self.assertNumQueriesLessThan(6):
+        with self.assertNumQueriesLessThan(7):
             response = self.client.get(self.url)
             url = response.json().get('url', '')
             self.assertEqual(url, 'http://dummyurl/file/a-token')

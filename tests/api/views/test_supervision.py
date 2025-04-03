@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -24,12 +24,12 @@
 #
 # ##############################################################################
 import freezegun
-from base.tests import QueriesAssertionsMixin
-from base.tests.factories.person import PersonFactory
 from django.shortcuts import resolve_url
 from rest_framework import status
 from rest_framework.test import APITestCase
 
+from base.tests import QueriesAssertionsMixin
+from base.tests.factories.person import PersonFactory
 from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from parcours_doctoral.tests.factories.parcours_doctoral import ParcoursDoctoralFactory
 from parcours_doctoral.tests.factories.roles import StudentRoleFactory
@@ -83,11 +83,11 @@ class SupervisionAPIViewTestCase(QueriesAssertionsMixin, APITestCase):
         response = self.client.get(self.url, format='json')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-    def test_get_project_of_in_creation_doctorate_is_forbidden(self):
+    def test_get_project_with_invalid_enrolment_is_forbidden(self):
         in_creation_doctorate = ParcoursDoctoralFactory(
             supervision_group=self.doctorate.supervision_group,
             student=self.student,
-            status=ChoixStatutParcoursDoctoral.EN_COURS_DE_CREATION_PAR_GESTIONNAIRE.name,
+            create_student__with_valid_enrolment=False,
         )
 
         url = resolve_url(self.base_url, uuid=in_creation_doctorate.uuid)
@@ -103,20 +103,12 @@ class SupervisionAPIViewTestCase(QueriesAssertionsMixin, APITestCase):
             response = self.client.get(url)
             self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-        in_creation_doctorate.status = ChoixStatutParcoursDoctoral.EN_ATTENTE_INJECTION_EPC.name
-        in_creation_doctorate.save()
-
-        for user in users:
-            self.client.force_authenticate(user=user)
-            response = self.client.get(url)
-            self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
     def test_get_supervision_with_student(self):
         self.client.force_authenticate(user=self.student.user)
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        with self.assertNumQueriesLessThan(8):
+        with self.assertNumQueriesLessThan(9):
             response = self.client.get(self.url)
         promoteurs = response.json()['signatures_promoteurs']
         self.assertEqual(len(promoteurs), 1)

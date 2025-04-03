@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -27,9 +27,7 @@
 import factory
 
 from parcours_doctoral.auth.roles.adre import AdreSecretary
-from parcours_doctoral.auth.roles.ca_member import CommitteeMember
 from parcours_doctoral.auth.roles.cdd_configurator import CddConfigurator
-from parcours_doctoral.auth.roles.promoter import Promoter
 from parcours_doctoral.auth.roles.student import Student
 
 
@@ -46,18 +44,6 @@ class CddConfiguratorFactory(BaseFactory):
         organization=None,
     )
     with_child = False
-
-
-class PromoterRoleFactory(BaseFactory):
-    class Meta:
-        model = Promoter
-        django_get_or_create = ('person',)
-
-
-class CaMemberRoleFactory(BaseFactory):
-    class Meta:
-        model = CommitteeMember
-        django_get_or_create = ('person',)
 
 
 class StudentRoleFactory(BaseFactory):

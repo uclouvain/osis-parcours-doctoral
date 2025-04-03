@@ -1099,12 +1099,6 @@ msgstr ""
 msgid "EN_ATTENTE_DE_SIGNATURE"
 msgstr "Waiting for signature"
 
-msgid "EN_ATTENTE_INJECTION_EPC"
-msgstr "Waiting for EPC injection"
-
-msgid "EN_COURS_DE_CREATION_PAR_GESTIONNAIRE"
-msgstr "Being created by a manager"
-
 msgid "Edit"
 msgstr ""
 
@@ -1898,6 +1892,9 @@ msgstr ""
 msgid "Not free"
 msgstr ""
 
+msgid "Not in order of registration"
+msgstr ""
+
 msgid "Number of days participating"
 msgstr ""
 
@@ -2386,12 +2383,6 @@ msgstr ""
 msgid "Role: CDD configurators"
 msgstr ""
 
-msgid "Role: Committee member"
-msgstr ""
-
-msgid "Role: Committee members"
-msgstr ""
-
 msgid "Role: Doctorate reader"
 msgstr ""
 
@@ -2402,12 +2393,6 @@ msgid "Role: Jury secretaries"
 msgstr ""
 
 msgid "Role: Jury secretary"
-msgstr ""
-
-msgid "Role: Promoter"
-msgstr ""
-
-msgid "Role: Promoters"
 msgstr ""
 
 msgid "Role: Student"
@@ -2842,6 +2827,9 @@ msgstr ""
 
 msgctxt "parcours_doctoral"
 msgid "The doctoral training must be in the 'waiting for signature' status."
+msgstr ""
+
+msgid "The doctorate hasn't got a valid enrolment"
 msgstr ""
 
 msgid "The doctorate is not initialized"

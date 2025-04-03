@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -77,7 +77,11 @@ class IParcoursDoctoralRepository(interface.AbstractRepository, metaclass=ABCMet
 
     @classmethod
     @abc.abstractmethod
-    def get_dto(cls, entity_id: 'ParcoursDoctoralIdentity') -> 'ParcoursDoctoralDTO':  # type: ignore[override]
+    def get_dto(
+        cls,
+        entity_id: 'ParcoursDoctoralIdentity' = None,
+        proposition_id: 'PropositionIdentity' = None,
+    ) -> 'ParcoursDoctoralDTO':
         raise NotImplementedError
 
     @classmethod
