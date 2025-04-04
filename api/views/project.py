@@ -27,7 +27,6 @@ from drf_spectacular.utils import extend_schema
 from rest_framework import mixins
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
-from rest_framework.serializers import Serializer
 
 from parcours_doctoral.api.permissions import DoctorateAPIPermissionRequiredMixin
 
@@ -49,8 +48,8 @@ class ProjectApiView(
     }
 
     @extend_schema(
-        request=Serializer,
-        responses=Serializer,
+        request=None,
+        responses=None,
         operation_id='retrieve_project',
     )
     def get(self, request, *args, **kwargs):

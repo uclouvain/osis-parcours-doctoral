@@ -1354,6 +1354,67 @@ components:
           type: string
         email:
           type: string
+    BourseDTONested:
+      type: object
+      description: |-
+        A `DTOSerializer` is just a regular `Serializer`, except that:
+
+        * A set of default fields are automatically populated from the Meta.source dataclass.
+        * All fields are set to read-only if needed when Meta.read_only is True.
+      properties:
+        uuid:
+          type: string
+        nom_court:
+          type: string
+        nom_long:
+          type: string
+        type:
+          type: string
+      required:
+      - nom_court
+      - nom_long
+      - type
+      - uuid
+    CampusDTONested:
+      type: object
+      description: |-
+        A `DTOSerializer` is just a regular `Serializer`, except that:
+
+        * A set of default fields are automatically populated from the Meta.source dataclass.
+        * All fields are set to read-only if needed when Meta.read_only is True.
+      properties:
+        uuid:
+          type: string
+          format: uuid
+        nom:
+          type: string
+        code_postal:
+          type: string
+        ville:
+          type: string
+        pays_iso_code:
+          type: string
+        nom_pays:
+          type: string
+        rue:
+          type: string
+        numero_rue:
+          type: string
+        boite_postale:
+          type: string
+        localisation:
+          type: string
+      required:
+      - boite_postale
+      - code_postal
+      - localisation
+      - nom
+      - nom_pays
+      - numero_rue
+      - pays_iso_code
+      - rue
+      - uuid
+      - ville
     CompleteConfirmationPaperByPromoterCommand:
       type: object
       description: |-
@@ -1404,7 +1465,7 @@ components:
             type: string
         demande_prolongation:
           allOf:
-          - $ref: '#/components/schemas/Nested'
+          - $ref: '#/components/schemas/DemandeProlongationDTONested'
           nullable: true
         proces_verbal_ca:
           type: array
@@ -1435,6 +1496,51 @@ components:
       - proces_verbal_ca
       - rapport_recherche
       - uuid
+    CotutelleDTONested:
+      type: object
+      description: |-
+        A `DTOSerializer` is just a regular `Serializer`, except that:
+
+        * A set of default fields are automatically populated from the Meta.source dataclass.
+        * All fields are set to read-only if needed when Meta.read_only is True.
+      properties:
+        cotutelle:
+          type: boolean
+          nullable: true
+        motivation:
+          type: string
+        institution_fwb:
+          type: boolean
+          nullable: true
+        institution:
+          type: string
+        autre_institution:
+          type: boolean
+          nullable: true
+        autre_institution_nom:
+          type: string
+        autre_institution_adresse:
+          type: string
+        demande_ouverture:
+          type: array
+          items:
+            type: string
+        convention:
+          type: array
+          items:
+            type: string
+        autres_documents:
+          type: array
+          items:
+            type: string
+      required:
+      - autre_institution_adresse
+      - autre_institution_nom
+      - autres_documents
+      - convention
+      - demande_ouverture
+      - institution
+      - motivation
     CreatablePapersTypesEnum:
       enum:
       - CONFIRMATION_PAPER
@@ -1455,6 +1561,89 @@ components:
           default: {}
       required:
       - links
+    DemandeProlongationDTONested:
+      type: object
+      description: |-
+        A `DTOSerializer` is just a regular `Serializer`, except that:
+
+        * A set of default fields are automatically populated from the Meta.source dataclass.
+        * All fields are set to read-only if needed when Meta.read_only is True.
+      properties:
+        nouvelle_echeance:
+          type: string
+          format: date
+        justification_succincte:
+          type: string
+        lettre_justification:
+          type: array
+          items:
+            type: string
+        avis_cdd:
+          type: string
+      required:
+      - justification_succincte
+      - lettre_justification
+      - nouvelle_echeance
+    DetailSignatureMembreCADTONested:
+      type: object
+      description: |-
+        A `DTOSerializer` is just a regular `Serializer`, except that:
+
+        * A set of default fields are automatically populated from the Meta.source dataclass.
+        * All fields are set to read-only if needed when Meta.read_only is True.
+      properties:
+        membre_CA:
+          $ref: '#/components/schemas/MembreCADTONested'
+        statut:
+          type: string
+        date:
+          type: string
+          format: date-time
+          nullable: true
+        commentaire_externe:
+          type: string
+        commentaire_interne:
+          type: string
+        motif_refus:
+          type: string
+        pdf:
+          type: array
+          items:
+            type: string
+      required:
+      - membre_CA
+      - pdf
+      - statut
+    DetailSignaturePromoteurDTONested:
+      type: object
+      description: |-
+        A `DTOSerializer` is just a regular `Serializer`, except that:
+
+        * A set of default fields are automatically populated from the Meta.source dataclass.
+        * All fields are set to read-only if needed when Meta.read_only is True.
+      properties:
+        promoteur:
+          $ref: '#/components/schemas/PromoteurDTONested'
+        statut:
+          type: string
+        date:
+          type: string
+          format: date-time
+          nullable: true
+        commentaire_externe:
+          type: string
+        commentaire_interne:
+          type: string
+        motif_refus:
+          type: string
+        pdf:
+          type: array
+          items:
+            type: string
+      required:
+      - pdf
+      - promoteur
+      - statut
     DoctoralTrainingAssent:
       type: object
       properties:
@@ -1509,6 +1698,39 @@ components:
           title: Type de cours pour la formation complémentaire
       required:
       - creatable_papers_types
+    EntiteGestionDTONested:
+      type: object
+      description: |-
+        A `DTOSerializer` is just a regular `Serializer`, except that:
+
+        * A set of default fields are automatically populated from the Meta.source dataclass.
+        * All fields are set to read-only if needed when Meta.read_only is True.
+      properties:
+        sigle:
+          type: string
+        intitule:
+          type: string
+        lieu:
+          type: string
+        code_postal:
+          type: string
+        ville:
+          type: string
+        pays:
+          type: string
+        nom_pays:
+          type: string
+        numero_telephone:
+          type: string
+        code_secteur:
+          type: string
+        intitule_secteur:
+          type: string
+      required:
+      - code_secteur
+      - intitule
+      - intitule_secteur
+      - sigle
     ExternalParcoursDoctoralDTO:
       type: object
       description: |-
@@ -1522,7 +1744,7 @@ components:
         reference:
           type: string
         formation:
-          $ref: '#/components/schemas/Nested'
+          $ref: '#/components/schemas/FormationDTONested'
         matricule_doctorant:
           type: string
         projet:
@@ -1565,6 +1787,93 @@ components:
       required:
       - parcours_doctoral
       - supervision
+    FinancementDTONested:
+      type: object
+      description: |-
+        A `DTOSerializer` is just a regular `Serializer`, except that:
+
+        * A set of default fields are automatically populated from the Meta.source dataclass.
+        * All fields are set to read-only if needed when Meta.read_only is True.
+      properties:
+        type:
+          type: string
+        type_contrat_travail:
+          type: string
+        eft:
+          type: integer
+          nullable: true
+        bourse_recherche:
+          allOf:
+          - $ref: '#/components/schemas/BourseDTONested'
+          nullable: true
+        autre_bourse_recherche:
+          type: string
+        bourse_date_debut:
+          type: string
+          format: date
+          nullable: true
+        bourse_date_fin:
+          type: string
+          format: date
+          nullable: true
+        bourse_preuve:
+          type: array
+          items:
+            type: string
+        duree_prevue:
+          type: integer
+          nullable: true
+        temps_consacre:
+          type: integer
+          nullable: true
+        est_lie_fnrs_fria_fresh_csc:
+          type: boolean
+          nullable: true
+        commentaire:
+          type: string
+      required:
+      - autre_bourse_recherche
+      - bourse_preuve
+      - commentaire
+      - type
+      - type_contrat_travail
+    FormationDTONested:
+      type: object
+      description: |-
+        A `DTOSerializer` is just a regular `Serializer`, except that:
+
+        * A set of default fields are automatically populated from the Meta.source dataclass.
+        * All fields are set to read-only if needed when Meta.read_only is True.
+      properties:
+        sigle:
+          type: string
+        code:
+          type: string
+        annee:
+          type: integer
+        intitule:
+          type: string
+        intitule_fr:
+          type: string
+        intitule_en:
+          type: string
+        entite_gestion:
+          $ref: '#/components/schemas/EntiteGestionDTONested'
+        campus:
+          allOf:
+          - $ref: '#/components/schemas/CampusDTONested'
+          nullable: true
+        type:
+          type: string
+      required:
+      - annee
+      - code
+      - entite_gestion
+      - intitule
+      - intitule_en
+      - intitule_fr
+      - sigle
+      - type
     InscriptionEvaluationDTO:
       type: object
       description: |-
@@ -1613,7 +1922,7 @@ components:
         membres:
           type: array
           items:
-            $ref: '#/components/schemas/Nested'
+            $ref: '#/components/schemas/MembreJuryDTONested'
         formule_defense:
           type: string
         date_indicative:
@@ -1647,10 +1956,100 @@ components:
       properties:
         uuid:
           type: string
+          format: uuid
           readOnly: true
       required:
       - uuid
+    MembreCADTONested:
+      type: object
+      description: |-
+        A `DTOSerializer` is just a regular `Serializer`, except that:
+
+        * A set of default fields are automatically populated from the Meta.source dataclass.
+        * All fields are set to read-only if needed when Meta.read_only is True.
+      properties:
+        uuid:
+          type: string
+        matricule:
+          type: string
+        nom:
+          type: string
+        prenom:
+          type: string
+        email:
+          type: string
+        est_docteur:
+          type: boolean
+        institution:
+          type: string
+        ville:
+          type: string
+        code_pays:
+          type: string
+        pays:
+          type: string
+        est_externe:
+          type: boolean
+      required:
+      - code_pays
+      - email
+      - est_docteur
+      - est_externe
+      - institution
+      - nom
+      - pays
+      - prenom
+      - uuid
+      - ville
     MembreJuryDTO:
+      type: object
+      description: |-
+        A `DTOSerializer` is just a regular `Serializer`, except that:
+
+        * A set of default fields are automatically populated from the Meta.source dataclass.
+        * All fields are set to read-only if needed when Meta.read_only is True.
+      properties:
+        uuid:
+          type: string
+        role:
+          type: string
+        est_promoteur:
+          type: boolean
+        matricule:
+          type: string
+        institution:
+          type: string
+        autre_institution:
+          type: string
+        pays:
+          type: string
+        nom:
+          type: string
+        prenom:
+          type: string
+        titre:
+          type: string
+        justification_non_docteur:
+          type: string
+        genre:
+          type: string
+        email:
+          type: string
+      required:
+      - autre_institution
+      - email
+      - est_promoteur
+      - genre
+      - institution
+      - justification_non_docteur
+      - matricule
+      - nom
+      - pays
+      - prenom
+      - role
+      - titre
+      - uuid
+    MembreJuryDTONested:
       type: object
       description: |-
         A `DTOSerializer` is just a regular `Serializer`, except that:
@@ -1703,6 +2102,7 @@ components:
       properties:
         uuid:
           type: string
+          format: uuid
           readOnly: true
       required:
       - uuid
@@ -1814,43 +2214,6 @@ components:
           type: string
         email:
           type: string
-    Nested:
-      type: object
-      description: |-
-        A `DTOSerializer` is just a regular `Serializer`, except that:
-
-        * A set of default fields are automatically populated from the Meta.source dataclass.
-        * All fields are set to read-only if needed when Meta.read_only is True.
-      properties:
-        sigle:
-          type: string
-        code:
-          type: string
-        annee:
-          type: integer
-        intitule:
-          type: string
-        intitule_fr:
-          type: string
-        intitule_en:
-          type: string
-        entite_gestion:
-          $ref: '#/components/schemas/Nested'
-        campus:
-          allOf:
-          - $ref: '#/components/schemas/Nested'
-          nullable: true
-        type:
-          type: string
-      required:
-      - annee
-      - code
-      - entite_gestion
-      - intitule
-      - intitule_en
-      - intitule_fr
-      - sigle
-      - type
     PaginatedPersonList:
       type: object
       required:
@@ -1927,13 +2290,13 @@ components:
           type: string
           format: date-time
         formation:
-          $ref: '#/components/schemas/Nested'
+          $ref: '#/components/schemas/FormationDTONested'
         projet:
-          $ref: '#/components/schemas/Nested'
+          $ref: '#/components/schemas/ProjetDTONested'
         cotutelle:
-          $ref: '#/components/schemas/Nested'
+          $ref: '#/components/schemas/CotutelleDTONested'
         financement:
-          $ref: '#/components/schemas/Nested'
+          $ref: '#/components/schemas/FinancementDTONested'
         photo_identite_doctorant:
           type: array
           items:
@@ -1994,6 +2357,7 @@ components:
       properties:
         uuid:
           type: string
+          format: uuid
           readOnly: true
       required:
       - uuid
@@ -2012,7 +2376,7 @@ components:
         statut:
           type: string
         formation:
-          $ref: '#/components/schemas/Nested'
+          $ref: '#/components/schemas/FormationDTONested'
         matricule_doctorant:
           type: string
         genre_doctorant:
@@ -2063,6 +2427,132 @@ components:
           type: string
           nullable: true
           maxLength: 10
+    ProjetDTONested:
+      type: object
+      description: |-
+        A `DTOSerializer` is just a regular `Serializer`, except that:
+
+        * A set of default fields are automatically populated from the Meta.source dataclass.
+        * All fields are set to read-only if needed when Meta.read_only is True.
+      properties:
+        titre:
+          type: string
+        resume:
+          type: string
+        langue_redaction_these:
+          type: string
+        nom_langue_redaction_these:
+          type: string
+        institut_these:
+          type: string
+          format: uuid
+          nullable: true
+        nom_institut_these:
+          type: string
+        sigle_institut_these:
+          type: string
+        lieu_these:
+          type: string
+        projet_doctoral_deja_commence:
+          type: boolean
+          nullable: true
+        projet_doctoral_institution:
+          type: string
+        projet_doctoral_date_debut:
+          type: string
+          format: date
+          nullable: true
+        documents_projet:
+          type: array
+          items:
+            type: string
+        graphe_gantt:
+          type: array
+          items:
+            type: string
+        proposition_programme_doctoral:
+          type: array
+          items:
+            type: string
+        projet_formation_complementaire:
+          type: array
+          items:
+            type: string
+        lettres_recommandation:
+          type: array
+          items:
+            type: string
+        doctorat_deja_realise:
+          type: string
+        institution:
+          type: string
+        domaine_these:
+          type: string
+        date_soutenance:
+          type: string
+          format: date
+          nullable: true
+        raison_non_soutenue:
+          type: string
+      required:
+      - doctorat_deja_realise
+      - documents_projet
+      - domaine_these
+      - graphe_gantt
+      - institution
+      - langue_redaction_these
+      - lettres_recommandation
+      - lieu_these
+      - nom_institut_these
+      - nom_langue_redaction_these
+      - projet_doctoral_institution
+      - projet_formation_complementaire
+      - proposition_programme_doctoral
+      - raison_non_soutenue
+      - resume
+      - sigle_institut_these
+      - titre
+    PromoteurDTONested:
+      type: object
+      description: |-
+        A `DTOSerializer` is just a regular `Serializer`, except that:
+
+        * A set of default fields are automatically populated from the Meta.source dataclass.
+        * All fields are set to read-only if needed when Meta.read_only is True.
+      properties:
+        uuid:
+          type: string
+        matricule:
+          type: string
+        nom:
+          type: string
+        prenom:
+          type: string
+        email:
+          type: string
+        est_docteur:
+          type: boolean
+        institution:
+          type: string
+        ville:
+          type: string
+        code_pays:
+          type: string
+        pays:
+          type: string
+        est_externe:
+          type: boolean
+      required:
+      - code_pays
+      - email
+      - est_docteur
+      - est_externe
+      - institution
+      - nom
+      - pays
+      - prenom
+      - uuid
+      - ville
     SubmitConfirmationPaperCommand:
       type: object
       description: |-
@@ -2130,11 +2620,11 @@ components:
         signatures_promoteurs:
           type: array
           items:
-            $ref: '#/components/schemas/Nested'
+            $ref: '#/components/schemas/DetailSignaturePromoteurDTONested'
         signatures_membres_CA:
           type: array
           items:
-            $ref: '#/components/schemas/Nested'
+            $ref: '#/components/schemas/DetailSignatureMembreCADTONested'
         promoteur_reference:
           type: string
       required:

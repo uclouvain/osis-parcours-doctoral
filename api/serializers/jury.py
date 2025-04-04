@@ -54,7 +54,7 @@ class JuryDTOSerializer(DTOSerializer):
 
 
 class JuryIdentityDTOSerializer(serializers.Serializer):
-    uuid = serializers.ReadOnlyField()
+    uuid = serializers.UUIDField(read_only=True)
 
 
 class MembreJuryDTOSerializer(DTOSerializer):
@@ -63,7 +63,7 @@ class MembreJuryDTOSerializer(DTOSerializer):
 
 
 class MembreJuryIdentityDTOSerializer(serializers.Serializer):
-    uuid = serializers.ReadOnlyField()
+    uuid = serializers.UUIDField(read_only=True)
 
 
 class ModifierJuryCommandSerializer(DTOSerializer):

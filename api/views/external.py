@@ -36,7 +36,6 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from infrastructure.messages_bus import message_bus_instance
-from parcours_doctoral.api.schema import ResponseSpecificSchema
 from parcours_doctoral.api.serializers import ExternalSupervisionDTOSerializer
 from parcours_doctoral.ddd.commands import (
     GetGroupeDeSupervisionQuery,

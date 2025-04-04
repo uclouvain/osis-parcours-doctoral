@@ -27,12 +27,10 @@ from drf_spectacular.utils import extend_schema
 from rest_framework import mixins, status
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
-from rest_framework.serializers import Serializer
 
 from infrastructure.messages_bus import message_bus_instance
 from parcours_doctoral.api import serializers
 from parcours_doctoral.api.permissions import DoctorateAPIPermissionRequiredMixin
-from parcours_doctoral.api.schema import ResponseSpecificSchema
 from parcours_doctoral.ddd.commands import ModifierCotutelleCommand
 
 __all__ = [
@@ -54,8 +52,8 @@ class CotutelleAPIView(
     }
 
     @extend_schema(
-        request=Serializer,
-        responses=Serializer,
+        request=None,
+        responses=None,
         operation_id='retrieve_cotutelle',
     )
     def get(self, request, *args, **kwargs):
@@ -66,8 +64,8 @@ class CotutelleAPIView(
         return Response(data={})
 
     @extend_schema(
-        request=Serializer,
-        responses=Serializer,
+        request=None,
+        responses=None,
         operation_id='update_cotutelle',
     )
     def put(self, request, *args, **kwargs):
