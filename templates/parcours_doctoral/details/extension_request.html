@@ -26,6 +26,12 @@
 * see http://www.gnu.org/licenses/.
 {% endcomment %}
 
+{% block actions-group %}
+  {% if parcours_doctoral.statut == 'ADMIS' or parcours_doctoral.statut == 'CONFIRMATION_SOUMISE' %}
+    {{ block.super }}
+  {% endif %}
+{% endblock %}
+
 {% block additional_actions %}
   <li>
     <a class="dropdown-item" href="{% url 'parcours_doctoral:update:extension-request-opinion' uuid=view.kwargs.uuid %}">
