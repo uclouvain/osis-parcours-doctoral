@@ -23,7 +23,7 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-
+from drf_spectacular.utils import extend_schema
 from rest_framework import mixins
 from rest_framework.generics import GenericAPIView
 from rest_framework.renderers import JSONRenderer
@@ -45,26 +45,23 @@ __all__ = [
 ]
 
 
-class SupervisionSchema(ResponseSpecificSchema):
-    operation_id_base = '_supervision'
-    serializer_mapping = {
-        'GET': serializers.SupervisionDTOSerializer,
-    }
-
-
 class SupervisionAPIView(
     DoctorateAPIPermissionRequiredMixin,
     mixins.RetrieveModelMixin,
     GenericAPIView,
 ):
     name = "supervision"
-    # schema = SupervisionSchema()
     pagination_class = None
     filter_backends = []
     permission_mapping = {
         'GET': 'parcours_doctoral.view_supervision',
     }
 
+    @extend_schema(
+        request=serializers.SupervisionDTOSerializer,
+        responses=serializers.SupervisionDTOSerializer,
+        operation_id='retrieve_supervision',
+    )
     def get(self, request, *args, **kwargs):
         """Get the supervision group of the PhD"""
         supervision = message_bus_instance.invoke(
@@ -74,21 +71,18 @@ class SupervisionAPIView(
         return Response(serializer.data)
 
 
-class SupervisionCanvasSchema(ResponseSpecificSchema):
-    operation_id_base = '_supervision_canvas'
-    serializer_mapping = {
-        'GET': serializers.SupervisionCanvasSerializer,
-    }
-
-
 class SupervisionCanvasApiView(SupervisionAPIView):
     name = "supervision_canvas"
-    # schema = SupervisionCanvasSchema()
     permission_mapping = {
         'GET': 'parcours_doctoral.view_supervision_canvas',
     }
     renderer_classes = [JSONRenderer]
 
+    @extend_schema(
+        request=serializers.SupervisionCanvasSerializer,
+        responses=serializers.SupervisionCanvasSerializer,
+        operation_id='retrieve_supervision_canvas',
+    )
     def get(self, request, *args, **kwargs):
         """Get the supervision group of the PhD"""
         doctorate_object = self.get_permission_object()

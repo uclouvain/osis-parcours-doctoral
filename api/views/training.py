@@ -24,6 +24,8 @@
 #
 # ##############################################################################
 from drf_spectacular.openapi import AutoSchema
+from drf_spectacular.types import OpenApiTypes
+from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import status
 from rest_framework.generics import GenericAPIView, ListAPIView, RetrieveAPIView
 from rest_framework.mixins import RetrieveModelMixin
@@ -109,7 +111,6 @@ class DoctoralTrainingListView(DoctorateAPIPermissionRequiredMixin, GenericAPIVi
 
 class TrainingConfigView(DoctorateAPIPermissionRequiredMixin, RetrieveModelMixin, GenericAPIView):
     name = "training-config"
-    # schema = AuthorizationAwareSchema()
     pagination_class = None
     filter_backends = []
     serializer_class = DoctoralTrainingConfigSerializer
@@ -175,22 +176,19 @@ class TrainingView(DoctorateAPIPermissionRequiredMixin, GenericAPIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class TrainingBatchSchema(AuthorizationAwareSchemaMixin, AutoSchema):
-    def get_operation_id(self):
-        return "submit_training"
-
-
 class TrainingSubmitView(DoctorateAPIPermissionRequiredMixin, GenericAPIView):
     name = "training-submit"
     pagination_class = None
     filter_backends = []
     serializer_class = DoctoralTrainingBatchSerializer
-    # schema = TrainingBatchSchema()
     lookup_field = 'uuid'
     permission_mapping = {
         'POST': 'parcours_doctoral.submit_training',
     }
 
+    @extend_schema(
+        operation_id='submit_training',
+    )
     def post(self, request, *args, **kwargs):
         """Submit doctoral training activities."""
         serializer = DoctoralTrainingBatchSerializer(data=request.data)
@@ -217,32 +215,28 @@ class TrainingSubmitView(DoctorateAPIPermissionRequiredMixin, GenericAPIView):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
-class TrainingAssentSchema(AuthorizationAwareSchemaMixin, AutoSchema):
-    def get_operation_id(self):
-        return "assent_training"
-
-    def get_path_parameters(self, path, method):
-        return super().get_path_parameters(path, method) + [
-            {
-                "name": 'activity_id',
-                "in": "query",
-                "required": True,
-                'schema': {'type': 'string'},
-            }
-        ]
-
-
 class TrainingAssentView(DoctorateAPIPermissionRequiredMixin, GenericAPIView):
     name = "training-assent"
     pagination_class = None
     filter_backends = []
     serializer_class = DoctoralTrainingAssentSerializer
-    # schema = TrainingAssentSchema()
     lookup_field = 'uuid'
     permission_mapping = {
         'POST': 'parcours_doctoral.assent_training',
     }
 
+    @extend_schema(
+        parameters=[
+            DoctoralTrainingAssentSerializer,
+            OpenApiParameter(
+                name='activity_id',
+                type=OpenApiTypes.STR,
+                location=OpenApiParameter.QUERY,
+                required=True,
+            ),
+        ],
+        operation_id='assent_training',
+    )
     def post(self, request, *args, **kwargs):
         """Assent on a doctoral training activity."""
         serializer = DoctoralTrainingAssentSerializer(data=request.data)
@@ -313,18 +307,8 @@ class AssessmentEnrollmentDetailView(DoctorateAPIPermissionRequiredMixin, Retrie
         )
 
 
-class TrainingRecapPdfSchema(ResponseSpecificSchema):
-    def get_operation_id(self):
-        return "training_recap_pdf"
-
-    serializer_mapping = {
-        'GET': TrainingRecapPdfSerializer,
-    }
-
-
 class TrainingRecapPdfApiView(DoctorateAPIPermissionRequiredMixin, RetrieveModelMixin, GenericAPIView):
     name = "training-pdf-recap"
-    # schema = TrainingRecapPdfSchema()
     http_method_names = ['get']
     permission_mapping = {
         'GET': 'parcours_doctoral.view_doctoral_training',
@@ -339,6 +323,11 @@ class TrainingRecapPdfApiView(DoctorateAPIPermissionRequiredMixin, RetrieveModel
         )
         return context
 
+    @extend_schema(
+        request=TrainingRecapPdfSerializer,
+        responses=TrainingRecapPdfSerializer,
+        operation_id='training_recap_pdf',
+    )
     def get(self, request, *args, **kwargs):
         """Get the recap PDF of the doctoral training"""
         doctorate_object = self.get_permission_object()

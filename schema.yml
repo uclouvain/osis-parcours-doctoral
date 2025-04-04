@@ -216,7 +216,7 @@ paths:
           $ref: '#/components/responses/NotFound'
   /doctorate/{uuid}/confirmation:
     get:
-      operationId: doctorate_confirmation_retrieve
+      operationId: retrieve_confirmation_papers
       description: Get the confirmation papers related to the doctorate
       parameters:
       - in: path
@@ -233,7 +233,11 @@ paths:
       - cookieAuth: []
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConfirmationPaperDTO'
+          description: ''
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -242,7 +246,7 @@ paths:
           $ref: '#/components/responses/NotFound'
   /doctorate/{uuid}/confirmation/last:
     get:
-      operationId: doctorate_confirmation_last_retrieve
+      operationId: retrieve_last_confirmation_paper
       description: Get the last confirmation paper related to the doctorate
       parameters:
       - in: path
@@ -259,7 +263,11 @@ paths:
       - cookieAuth: []
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConfirmationPaperDTO'
+          description: ''
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -267,7 +275,7 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
     post:
-      operationId: doctorate_confirmation_last_create
+      operationId: submit_confirmation_paper_extension_request
       description: Submit the extension request of the last confirmation paper of
         a doctorate
       parameters:
@@ -279,13 +287,23 @@ paths:
         required: true
       tags:
       - doctorate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubmitConfirmationPaperExtensionRequestCommand'
+        required: true
       security:
       - tokenAuth: []
       - ESBAuthentication: []
       - cookieAuth: []
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParcoursDoctoralIdentityDTO'
+          description: ''
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -293,7 +311,7 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
     put:
-      operationId: doctorate_confirmation_last_update
+      operationId: submit_confirmation_paper
       description: Submit the last confirmation paper related to a doctorate
       parameters:
       - in: path
@@ -304,13 +322,23 @@ paths:
         required: true
       tags:
       - doctorate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubmitConfirmationPaperCommand'
+        required: true
       security:
       - tokenAuth: []
       - ESBAuthentication: []
       - cookieAuth: []
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParcoursDoctoralIdentityDTO'
+          description: ''
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -319,7 +347,7 @@ paths:
           $ref: '#/components/responses/NotFound'
   /doctorate/{uuid}/confirmation/last/canvas:
     get:
-      operationId: doctorate_confirmation_last_canvas_retrieve
+      operationId: retrieve_last_confirmation_paper_canvas
       description: Get the last confirmation paper canvas related to the doctorate
       parameters:
       - in: path
@@ -336,7 +364,11 @@ paths:
       - cookieAuth: []
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConfirmationPaperCanvas'
+          description: ''
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -345,7 +377,7 @@ paths:
           $ref: '#/components/responses/NotFound'
   /doctorate/{uuid}/cotutelle:
     get:
-      operationId: doctorate_cotutelle_retrieve
+      operationId: retrieve_cotutelle
       description: |-
         This method is only used to check the permission.
         We have to return some data as the schema expects a 200 status and the deserializer expects some data.
@@ -372,7 +404,7 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
     put:
-      operationId: doctorate_cotutelle_update
+      operationId: update_cotutelle
       description: Set the cotutelle of the PhD.
       parameters:
       - in: path
@@ -472,7 +504,7 @@ paths:
           $ref: '#/components/responses/NotFound'
   /doctorate/{uuid}/funding:
     get:
-      operationId: doctorate_funding_retrieve
+      operationId: retrieve_funding
       description: |-
         This method is only used to check the permission.
         We have to return some data as the schema expects a 200 status and the deserializer expects some data.
@@ -499,7 +531,7 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
     put:
-      operationId: doctorate_funding_update
+      operationId: update_funding
       description: Edit the project
       parameters:
       - in: path
@@ -510,13 +542,23 @@ paths:
         required: true
       tags:
       - doctorate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ModifierFinancementCommand'
+        required: true
       security:
       - tokenAuth: []
       - ESBAuthentication: []
       - cookieAuth: []
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParcoursDoctoralIdentityDTO'
+          description: ''
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -525,7 +567,7 @@ paths:
           $ref: '#/components/responses/NotFound'
   /doctorate/{uuid}/jury/members:
     get:
-      operationId: doctorate_jury_members_retrieve
+      operationId: list_jury_members
       description: Get the members of a jury
       parameters:
       - in: path
@@ -542,7 +584,13 @@ paths:
       - cookieAuth: []
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MembreJuryDTO'
+          description: ''
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -550,7 +598,7 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
     post:
-      operationId: doctorate_jury_members_create
+      operationId: create_jury_members
       description: Add a new member to the jury
       parameters:
       - in: path
@@ -561,13 +609,22 @@ paths:
         required: true
       tags:
       - doctorate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AjouterMembreCommand'
       security:
       - tokenAuth: []
       - ESBAuthentication: []
       - cookieAuth: []
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MembreJuryIdentityDTO'
+          description: ''
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -576,7 +633,7 @@ paths:
           $ref: '#/components/responses/NotFound'
   /doctorate/{uuid}/jury/members/{member_uuid}:
     get:
-      operationId: doctorate_jury_members_retrieve_2
+      operationId: retrieve_jury_member
       description: Get the members of a jury
       parameters:
       - in: path
@@ -599,7 +656,11 @@ paths:
       - cookieAuth: []
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MembreJuryDTO'
+          description: ''
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -607,7 +668,7 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
     put:
-      operationId: doctorate_jury_members_update
+      operationId: update_jury_member
       description: Update a member of the jury
       parameters:
       - in: path
@@ -624,13 +685,22 @@ paths:
         required: true
       tags:
       - doctorate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ModifierMembreCommand'
       security:
       - tokenAuth: []
       - ESBAuthentication: []
       - cookieAuth: []
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JuryIdentityDTO'
+          description: ''
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -638,7 +708,7 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
     patch:
-      operationId: doctorate_jury_members_partial_update
+      operationId: update_role_jury_member
       description: Update the role of a member of the jury
       parameters:
       - in: path
@@ -655,13 +725,22 @@ paths:
         required: true
       tags:
       - doctorate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedModifierRoleMembreCommand'
       security:
       - tokenAuth: []
       - ESBAuthentication: []
       - cookieAuth: []
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JuryIdentityDTO'
+          description: ''
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -669,7 +748,7 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
     delete:
-      operationId: doctorate_jury_members_destroy
+      operationId: remove_jury_member
       description: Remove a member
       parameters:
       - in: path
@@ -701,7 +780,7 @@ paths:
           $ref: '#/components/responses/NotFound'
   /doctorate/{uuid}/jury/preparation:
     get:
-      operationId: doctorate_jury_preparation_retrieve
+      operationId: retrieve_jury_preparation
       description: Get the Jury of a doctorate
       parameters:
       - in: path
@@ -718,7 +797,11 @@ paths:
       - cookieAuth: []
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JuryDTO'
+          description: ''
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -726,7 +809,7 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
     post:
-      operationId: doctorate_jury_preparation_create
+      operationId: update_jury_preparation
       description: Update the jury preparation information
       parameters:
       - in: path
@@ -737,13 +820,23 @@ paths:
         required: true
       tags:
       - doctorate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ModifierJuryCommand'
+        required: true
       security:
       - tokenAuth: []
       - ESBAuthentication: []
       - cookieAuth: []
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JuryIdentityDTO'
+          description: ''
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -752,7 +845,7 @@ paths:
           $ref: '#/components/responses/NotFound'
   /doctorate/{uuid}/project:
     get:
-      operationId: doctorate_project_retrieve
+      operationId: retrieve_project
       description: |-
         This method is only used to check the permission.
         We have to return some data as the schema expects a 200 status and the deserializer expects some data.
@@ -780,7 +873,7 @@ paths:
           $ref: '#/components/responses/NotFound'
   /doctorate/{uuid}/supervised_confirmation:
     put:
-      operationId: doctorate_supervised_confirmation_update
+      operationId: complete_confirmation_paper_by_promoter
       description: Complete the confirmation paper related to a parcours_doctoral
       parameters:
       - in: path
@@ -791,13 +884,23 @@ paths:
         required: true
       tags:
       - doctorate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompleteConfirmationPaperByPromoterCommand'
+        required: true
       security:
       - tokenAuth: []
       - ESBAuthentication: []
       - cookieAuth: []
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParcoursDoctoralIdentityDTO'
+          description: ''
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -806,7 +909,7 @@ paths:
           $ref: '#/components/responses/NotFound'
   /doctorate/{uuid}/supervision:
     get:
-      operationId: doctorate_supervision_retrieve
+      operationId: retrieve_supervision
       description: Get the supervision group of the PhD
       parameters:
       - in: path
@@ -823,7 +926,11 @@ paths:
       - cookieAuth: []
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SupervisionDTO'
+          description: ''
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -832,7 +939,7 @@ paths:
           $ref: '#/components/responses/NotFound'
   /doctorate/{uuid}/supervision/external/{token}:
     get:
-      operationId: doctorate_supervision_external_retrieve
+      operationId: retrieve_external_doctorate_supervision
       description: Returns necessary info about the doctorate and the supervision.
       parameters:
       - in: path
@@ -848,9 +955,15 @@ paths:
         required: true
       tags:
       - doctorate
+      security:
+      - Token
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalSupervisionDTO'
+          description: ''
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -859,7 +972,7 @@ paths:
           $ref: '#/components/responses/NotFound'
   /doctorate/{uuid}/supervision_canvas:
     get:
-      operationId: doctorate_supervision_canvas_retrieve
+      operationId: retrieve_supervision_canvas
       description: Get the supervision group of the PhD
       parameters:
       - in: path
@@ -876,7 +989,11 @@ paths:
       - cookieAuth: []
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SupervisionCanvas'
+          description: ''
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -885,7 +1002,7 @@ paths:
           $ref: '#/components/responses/NotFound'
   /doctorate/{uuid}/training-recap-pdf:
     get:
-      operationId: doctorate_training_recap_pdf_retrieve
+      operationId: training_recap_pdf
       description: Get the recap PDF of the doctoral training
       parameters:
       - in: path
@@ -902,7 +1019,11 @@ paths:
       - cookieAuth: []
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrainingRecapPdf'
+          description: ''
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -1002,9 +1123,24 @@ paths:
           $ref: '#/components/responses/NotFound'
   /doctorate/{uuid}/training/assent:
     post:
-      operationId: doctorate_training_assent_create
+      operationId: assent_training
       description: Assent on a doctoral training activity.
       parameters:
+      - in: query
+        name: activity_id
+        schema:
+          type: string
+        required: true
+      - in: query
+        name: approbation
+        schema:
+          type: boolean
+        required: true
+      - in: query
+        name: commentaire
+        schema:
+          type: string
+        required: true
       - in: path
         name: uuid
         schema:
@@ -1067,7 +1203,7 @@ paths:
           $ref: '#/components/responses/NotFound'
   /doctorate/{uuid}/training/submit:
     post:
-      operationId: doctorate_training_submit_create
+      operationId: submit_training
       description: Submit doctoral training activities.
       parameters:
       - in: path
@@ -1103,7 +1239,7 @@ paths:
           $ref: '#/components/responses/NotFound'
   /doctorate/dashboard:
     get:
-      operationId: doctorate_dashboard_retrieve
+      operationId: retrieve_dashboard
       description: Get the actions links for the application
       tags:
       - doctorate
@@ -1113,7 +1249,11 @@ paths:
       - cookieAuth: []
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Dashboard'
+          description: ''
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -1186,6 +1326,115 @@ components:
         - url
       - required:
         - error
+    AjouterMembreCommand:
+      type: object
+      description: |-
+        A `DTOSerializer` is just a regular `Serializer`, except that:
+
+        * A set of default fields are automatically populated from the Meta.source dataclass.
+        * All fields are set to read-only if needed when Meta.read_only is True.
+      properties:
+        matricule:
+          type: string
+        institution:
+          type: string
+        autre_institution:
+          type: string
+        pays:
+          type: string
+        nom:
+          type: string
+        prenom:
+          type: string
+        titre:
+          type: string
+        justification_non_docteur:
+          type: string
+        genre:
+          type: string
+        email:
+          type: string
+    CompleteConfirmationPaperByPromoterCommand:
+      type: object
+      description: |-
+        A `DTOSerializer` is just a regular `Serializer`, except that:
+
+        * A set of default fields are automatically populated from the Meta.source dataclass.
+        * All fields are set to read-only if needed when Meta.read_only is True.
+      properties:
+        proces_verbal_ca:
+          type: array
+          items:
+            type: string
+        avis_renouvellement_mandat_recherche:
+          type: array
+          items:
+            type: string
+      required:
+      - avis_renouvellement_mandat_recherche
+      - proces_verbal_ca
+    ConfirmationPaperCanvas:
+      type: object
+      properties:
+        uuid:
+          type: string
+          format: uuid
+      required:
+      - uuid
+    ConfirmationPaperDTO:
+      type: object
+      description: |-
+        A `DTOSerializer` is just a regular `Serializer`, except that:
+
+        * A set of default fields are automatically populated from the Meta.source dataclass.
+        * All fields are set to read-only if needed when Meta.read_only is True.
+      properties:
+        uuid:
+          type: string
+        date_limite:
+          type: string
+          format: date
+        date:
+          type: string
+          format: date
+          nullable: true
+        rapport_recherche:
+          type: array
+          items:
+            type: string
+        demande_prolongation:
+          allOf:
+          - $ref: '#/components/schemas/Nested'
+          nullable: true
+        proces_verbal_ca:
+          type: array
+          items:
+            type: string
+        attestation_reussite:
+          type: array
+          items:
+            type: string
+        attestation_echec:
+          type: array
+          items:
+            type: string
+        canevas_proces_verbal_ca:
+          type: array
+          items:
+            type: string
+        avis_renouvellement_mandat_recherche:
+          type: array
+          items:
+            type: string
+      required:
+      - attestation_echec
+      - attestation_reussite
+      - avis_renouvellement_mandat_recherche
+      - canevas_proces_verbal_ca
+      - date_limite
+      - proces_verbal_ca
+      - rapport_recherche
+      - uuid
     CreatablePapersTypesEnum:
       enum:
       - CONFIRMATION_PAPER
@@ -1196,6 +1445,16 @@ components:
         * `CONFIRMATION_PAPER` - Épreuve de confirmation
         * `PRIVATE_DEFENSE` - Défense privée
         * `PUBLIC_DEFENSE` - Soutenance publique
+    Dashboard:
+      type: object
+      properties:
+        links:
+          allOf:
+          - $ref: '#/components/schemas/ActionLink'
+          readOnly: true
+          default: {}
+      required:
+      - links
     DoctoralTrainingAssent:
       type: object
       properties:
@@ -1250,6 +1509,62 @@ components:
           title: Type de cours pour la formation complémentaire
       required:
       - creatable_papers_types
+    ExternalParcoursDoctoralDTO:
+      type: object
+      description: |-
+        A `DTOSerializer` is just a regular `Serializer`, except that:
+
+        * A set of default fields are automatically populated from the Meta.source dataclass.
+        * All fields are set to read-only if needed when Meta.read_only is True.
+      properties:
+        uuid:
+          type: string
+        reference:
+          type: string
+        formation:
+          $ref: '#/components/schemas/Nested'
+        matricule_doctorant:
+          type: string
+        projet:
+          $ref: '#/components/schemas/ExternalProjetDTO'
+        statut:
+          type: string
+      required:
+      - formation
+      - matricule_doctorant
+      - projet
+      - reference
+      - statut
+      - uuid
+    ExternalProjetDTO:
+      type: object
+      description: |-
+        A `DTOSerializer` is just a regular `Serializer`, except that:
+
+        * A set of default fields are automatically populated from the Meta.source dataclass.
+        * All fields are set to read-only if needed when Meta.read_only is True.
+      properties:
+        institut_these:
+          type: string
+          format: uuid
+          nullable: true
+        institution:
+          type: string
+        domaine_these:
+          type: string
+      required:
+      - domaine_these
+      - institution
+    ExternalSupervisionDTO:
+      type: object
+      properties:
+        parcours_doctoral:
+          $ref: '#/components/schemas/ExternalParcoursDoctoralDTO'
+        supervision:
+          $ref: '#/components/schemas/SupervisionDTO'
+      required:
+      - parcours_doctoral
+      - supervision
     InscriptionEvaluationDTO:
       type: object
       description: |-
@@ -1283,6 +1598,114 @@ components:
       - statut
       - uuid
       - uuid_activite
+    JuryDTO:
+      type: object
+      description: |-
+        A `DTOSerializer` is just a regular `Serializer`, except that:
+
+        * A set of default fields are automatically populated from the Meta.source dataclass.
+        * All fields are set to read-only if needed when Meta.read_only is True.
+      properties:
+        uuid:
+          type: string
+        titre_propose:
+          type: string
+        membres:
+          type: array
+          items:
+            $ref: '#/components/schemas/Nested'
+        formule_defense:
+          type: string
+        date_indicative:
+          type: string
+          format: date
+          nullable: true
+        langue_redaction:
+          type: string
+        langue_soutenance:
+          type: string
+        commentaire:
+          type: string
+        situation_comptable:
+          type: boolean
+          nullable: true
+        approbation_pdf:
+          type: array
+          items:
+            type: string
+      required:
+      - approbation_pdf
+      - commentaire
+      - formule_defense
+      - langue_redaction
+      - langue_soutenance
+      - membres
+      - titre_propose
+      - uuid
+    JuryIdentityDTO:
+      type: object
+      properties:
+        uuid:
+          type: string
+          readOnly: true
+      required:
+      - uuid
+    MembreJuryDTO:
+      type: object
+      description: |-
+        A `DTOSerializer` is just a regular `Serializer`, except that:
+
+        * A set of default fields are automatically populated from the Meta.source dataclass.
+        * All fields are set to read-only if needed when Meta.read_only is True.
+      properties:
+        uuid:
+          type: string
+        role:
+          type: string
+        est_promoteur:
+          type: boolean
+        matricule:
+          type: string
+        institution:
+          type: string
+        autre_institution:
+          type: string
+        pays:
+          type: string
+        nom:
+          type: string
+        prenom:
+          type: string
+        titre:
+          type: string
+        justification_non_docteur:
+          type: string
+        genre:
+          type: string
+        email:
+          type: string
+      required:
+      - autre_institution
+      - email
+      - est_promoteur
+      - genre
+      - institution
+      - justification_non_docteur
+      - matricule
+      - nom
+      - pays
+      - prenom
+      - role
+      - titre
+      - uuid
+    MembreJuryIdentityDTO:
+      type: object
+      properties:
+        uuid:
+          type: string
+          readOnly: true
+      required:
+      - uuid
     MethodEnum:
       type: string
       enum:
@@ -1291,6 +1714,106 @@ components:
       - PATCH
       - POST
       - PUT
+    ModifierFinancementCommand:
+      type: object
+      description: |-
+        A `DTOSerializer` is just a regular `Serializer`, except that:
+
+        * A set of default fields are automatically populated from the Meta.source dataclass.
+        * All fields are set to read-only if needed when Meta.read_only is True.
+      properties:
+        type:
+          type: string
+        type_contrat_travail:
+          type: string
+        eft:
+          type: integer
+          nullable: true
+        bourse_recherche:
+          type: string
+        autre_bourse_recherche:
+          type: string
+        bourse_date_debut:
+          type: string
+          format: date
+          nullable: true
+        bourse_date_fin:
+          type: string
+          format: date
+          nullable: true
+        bourse_preuve:
+          type: array
+          items:
+            type: string
+        duree_prevue:
+          type: integer
+          nullable: true
+        temps_consacre:
+          type: integer
+          nullable: true
+        est_lie_fnrs_fria_fresh_csc:
+          type: boolean
+          nullable: true
+        commentaire:
+          type: string
+      required:
+      - bourse_preuve
+    ModifierJuryCommand:
+      type: object
+      description: |-
+        A `DTOSerializer` is just a regular `Serializer`, except that:
+
+        * A set of default fields are automatically populated from the Meta.source dataclass.
+        * All fields are set to read-only if needed when Meta.read_only is True.
+      properties:
+        titre_propose:
+          type: string
+        formule_defense:
+          type: string
+        date_indicative:
+          type: string
+          format: date
+        langue_redaction:
+          type: string
+        langue_soutenance:
+          type: string
+        commentaire:
+          type: string
+      required:
+      - commentaire
+      - date_indicative
+      - formule_defense
+      - langue_redaction
+      - langue_soutenance
+      - titre_propose
+    ModifierMembreCommand:
+      type: object
+      description: |-
+        A `DTOSerializer` is just a regular `Serializer`, except that:
+
+        * A set of default fields are automatically populated from the Meta.source dataclass.
+        * All fields are set to read-only if needed when Meta.read_only is True.
+      properties:
+        matricule:
+          type: string
+        institution:
+          type: string
+        autre_institution:
+          type: string
+        pays:
+          type: string
+        nom:
+          type: string
+        prenom:
+          type: string
+        titre:
+          type: string
+        justification_non_docteur:
+          type: string
+        genre:
+          type: string
+        email:
+          type: string
     Nested:
       type: object
       description: |-
@@ -1466,6 +1989,14 @@ components:
       - type_admission
       - uuid
       - uuid_admission
+    ParcoursDoctoralIdentityDTO:
+      type: object
+      properties:
+        uuid:
+          type: string
+          readOnly: true
+      required:
+      - uuid
     ParcoursDoctoralRechercheDTO:
       type: object
       description: |-
@@ -1509,6 +2040,16 @@ components:
       - reference
       - statut
       - uuid
+    PatchedModifierRoleMembreCommand:
+      type: object
+      description: |-
+        A `DTOSerializer` is just a regular `Serializer`, except that:
+
+        * A set of default fields are automatically populated from the Meta.source dataclass.
+        * All fields are set to read-only if needed when Meta.read_only is True.
+      properties:
+        role:
+          type: string
     Person:
       type: object
       properties:
@@ -1522,6 +2063,90 @@ components:
           type: string
           nullable: true
           maxLength: 10
+    SubmitConfirmationPaperCommand:
+      type: object
+      description: |-
+        A `DTOSerializer` is just a regular `Serializer`, except that:
+
+        * A set of default fields are automatically populated from the Meta.source dataclass.
+        * All fields are set to read-only if needed when Meta.read_only is True.
+      properties:
+        date:
+          type: string
+          format: date
+        rapport_recherche:
+          type: array
+          items:
+            type: string
+        proces_verbal_ca:
+          type: array
+          items:
+            type: string
+        avis_renouvellement_mandat_recherche:
+          type: array
+          items:
+            type: string
+      required:
+      - avis_renouvellement_mandat_recherche
+      - date
+      - proces_verbal_ca
+      - rapport_recherche
+    SubmitConfirmationPaperExtensionRequestCommand:
+      type: object
+      description: |-
+        A `DTOSerializer` is just a regular `Serializer`, except that:
+
+        * A set of default fields are automatically populated from the Meta.source dataclass.
+        * All fields are set to read-only if needed when Meta.read_only is True.
+      properties:
+        nouvelle_echeance:
+          type: string
+          format: date
+        justification_succincte:
+          type: string
+        lettre_justification:
+          type: array
+          items:
+            type: string
+      required:
+      - justification_succincte
+      - lettre_justification
+      - nouvelle_echeance
+    SupervisionCanvas:
+      type: object
+      properties:
+        url:
+          type: string
+      required:
+      - url
+    SupervisionDTO:
+      type: object
+      description: |-
+        A `DTOSerializer` is just a regular `Serializer`, except that:
+
+        * A set of default fields are automatically populated from the Meta.source dataclass.
+        * All fields are set to read-only if needed when Meta.read_only is True.
+      properties:
+        signatures_promoteurs:
+          type: array
+          items:
+            $ref: '#/components/schemas/Nested'
+        signatures_membres_CA:
+          type: array
+          items:
+            $ref: '#/components/schemas/Nested'
+        promoteur_reference:
+          type: string
+      required:
+      - signatures_membres_CA
+      - signatures_promoteurs
+    TrainingRecapPdf:
+      type: object
+      properties:
+        url:
+          type: string
+      required:
+      - url
     Tutor:
       type: object
       properties:

@@ -23,10 +23,11 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-
+from drf_spectacular.utils import extend_schema
 from rest_framework import mixins, status
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
+from rest_framework.serializers import Serializer
 
 from infrastructure.messages_bus import message_bus_instance
 from parcours_doctoral.api import serializers
@@ -38,14 +39,6 @@ __all__ = [
     "CotutelleAPIView",
 ]
 
-
-class CotutelleSchema(ResponseSpecificSchema):
-    operation_id_base = '_cotutelle'
-    serializer_mapping = {
-        'PUT': (serializers.ModifierCotutelleCommandSerializer, serializers.ParcoursDoctoralIdentityDTOSerializer),
-    }
-
-
 class CotutelleAPIView(
     DoctorateAPIPermissionRequiredMixin,
     mixins.RetrieveModelMixin,
@@ -53,7 +46,6 @@ class CotutelleAPIView(
     GenericAPIView,
 ):
     name = "cotutelle"
-    # schema = CotutelleSchema()
     pagination_class = None
     filter_backends = []
     permission_mapping = {
@@ -61,6 +53,11 @@ class CotutelleAPIView(
         'PUT': 'parcours_doctoral.change_cotutelle',
     }
 
+    @extend_schema(
+        request=Serializer,
+        responses=Serializer,
+        operation_id='retrieve_cotutelle',
+    )
     def get(self, request, *args, **kwargs):
         """
         This method is only used to check the permission.
@@ -68,6 +65,11 @@ class CotutelleAPIView(
         """
         return Response(data={})
 
+    @extend_schema(
+        request=Serializer,
+        responses=Serializer,
+        operation_id='update_cotutelle',
+    )
     def put(self, request, *args, **kwargs):
         """Set the cotutelle of the PhD."""
         serializer = serializers.ModifierCotutelleCommandSerializer(data=request.data)

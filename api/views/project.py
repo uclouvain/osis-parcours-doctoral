@@ -23,20 +23,17 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from drf_spectacular.utils import extend_schema
 from rest_framework import mixins
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
+from rest_framework.serializers import Serializer
 
 from parcours_doctoral.api.permissions import DoctorateAPIPermissionRequiredMixin
-from parcours_doctoral.api.schema import ResponseSpecificSchema
 
 __all__ = [
     "ProjectApiView",
 ]
-
-
-class ProjectSchema(ResponseSpecificSchema):
-    operation_id_base = '_project'
 
 
 class ProjectApiView(
@@ -45,13 +42,17 @@ class ProjectApiView(
     GenericAPIView,
 ):
     name = "project"
-    # schema = ProjectSchema()
     pagination_class = None
     filter_backends = []
     permission_mapping = {
         'GET': 'parcours_doctoral.view_project',
     }
 
+    @extend_schema(
+        request=Serializer,
+        responses=Serializer,
+        operation_id='retrieve_project',
+    )
     def get(self, request, *args, **kwargs):
         """
         This method is only used to check the permission.

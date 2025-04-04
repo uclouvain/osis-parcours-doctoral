@@ -23,26 +23,20 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from drf_spectacular.utils import extend_schema
 from rest_framework import mixins, status
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
+from rest_framework.serializers import Serializer
 
 from infrastructure.messages_bus import message_bus_instance
 from parcours_doctoral.api import serializers
 from parcours_doctoral.api.permissions import DoctorateAPIPermissionRequiredMixin
-from parcours_doctoral.api.schema import ResponseSpecificSchema
 from parcours_doctoral.ddd.commands import ModifierFinancementCommand
 
 __all__ = [
     "FundingApiView",
 ]
-
-
-class FundingSchema(ResponseSpecificSchema):
-    operation_id_base = '_funding'
-    serializer_mapping = {
-        'PUT': (serializers.ModifierFinancementCommandSerializer, serializers.ParcoursDoctoralIdentityDTOSerializer),
-    }
 
 
 class FundingApiView(
@@ -52,7 +46,6 @@ class FundingApiView(
     GenericAPIView,
 ):
     name = "funding"
-    # schema = FundingSchema()
     pagination_class = None
     filter_backends = []
     permission_mapping = {
@@ -60,6 +53,11 @@ class FundingApiView(
         'PUT': 'parcours_doctoral.change_funding',
     }
 
+    @extend_schema(
+        request=Serializer,
+        responses=Serializer,
+        operation_id='retrieve_funding',
+    )
     def get(self, request, *args, **kwargs):
         """
         This method is only used to check the permission.
@@ -67,6 +65,11 @@ class FundingApiView(
         """
         return Response(data={})
 
+    @extend_schema(
+        request=serializers.ModifierFinancementCommandSerializer,
+        responses=serializers.ParcoursDoctoralIdentityDTOSerializer,
+        operation_id='update_funding',
+    )
     def put(self, request, *args, **kwargs):
         """Edit the project"""
         serializer = serializers.ModifierFinancementCommandSerializer(data=request.data)

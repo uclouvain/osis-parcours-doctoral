@@ -23,6 +23,7 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from drf_spectacular.utils import extend_schema
 from rest_framework import mixins, status
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
@@ -57,20 +58,6 @@ __all__ = [
 ]
 
 
-class JuryPreparationSchema(ResponseSpecificSchema):
-    serializer_mapping = {
-        'GET': JuryDTOSerializer,
-        'POST': (ModifierJuryCommandSerializer, JuryIdentityDTOSerializer),
-    }
-
-    method_mapping = {
-        'get': 'retrieve',
-        'post': 'update',
-    }
-
-    operation_id_base = '_jury_preparation'
-
-
 class JuryPreparationAPIView(
     DoctorateAPIPermissionRequiredMixin,
     mixins.RetrieveModelMixin,
@@ -78,7 +65,6 @@ class JuryPreparationAPIView(
     GenericAPIView,
 ):
     name = "jury-preparation"
-    # schema = JuryPreparationSchema()
     pagination_class = None
     filter_backends = []
     permission_mapping = {
@@ -86,12 +72,22 @@ class JuryPreparationAPIView(
         'POST': 'parcours_doctoral.change_jury',
     }
 
+    @extend_schema(
+        request=JuryDTOSerializer,
+        responses=JuryDTOSerializer,
+        operation_id='retrieve_jury_preparation',
+    )
     def get(self, request, *args, **kwargs):
         """Get the Jury of a doctorate"""
         jury = message_bus_instance.invoke(RecupererJuryQuery(uuid_jury=self.doctorate_uuid))
         serializer = JuryDTOSerializer(instance=jury)
         return Response(serializer.data)
 
+    @extend_schema(
+        request=ModifierJuryCommandSerializer,
+        responses=JuryIdentityDTOSerializer,
+        operation_id='update_jury_preparation',
+    )
     def post(self, request, *args, **kwargs):
         """Update the jury preparation information"""
         serializer = ModifierJuryCommandSerializer(data=request.data)
@@ -107,20 +103,6 @@ class JuryPreparationAPIView(
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class JuryMembersListSchema(ResponseSpecificSchema):
-    serializer_mapping = {
-        'GET': MembreJuryDTOSerializer,
-        'POST': (AjouterMembreCommandSerializer, MembreJuryIdentityDTOSerializer),
-    }
-
-    method_mapping = {
-        'get': 'list',
-        'post': 'create',
-    }
-
-    operation_id_base = '_jury_members'
-
-
 class JuryMembersListAPIView(
     DoctorateAPIPermissionRequiredMixin,
     mixins.ListModelMixin,
@@ -128,7 +110,6 @@ class JuryMembersListAPIView(
     GenericAPIView,
 ):
     name = "jury-members-list"
-    # schema = JuryMembersListSchema()
     pagination_class = None
     filter_backends = []
     permission_mapping = {
@@ -136,12 +117,22 @@ class JuryMembersListAPIView(
         'POST': 'parcours_doctoral.change_jury',
     }
 
+    @extend_schema(
+        request=MembreJuryDTOSerializer,
+        responses=MembreJuryDTOSerializer,
+        operation_id='list_jury_members',
+    )
     def get(self, request, *args, **kwargs):
         """Get the members of a jury"""
         jury = message_bus_instance.invoke(RecupererJuryQuery(uuid_jury=self.doctorate_uuid))
         serializer = MembreJuryDTOSerializer(instance=jury.membres, many=True)
         return Response(serializer.data)
 
+    @extend_schema(
+        request=AjouterMembreCommandSerializer,
+        responses=MembreJuryIdentityDTOSerializer,
+        operation_id='create_jury_members',
+    )
     def post(self, request, *args, **kwargs):
         """Add a new member to the jury"""
         serializer = AjouterMembreCommandSerializer(data=request.data)
@@ -156,24 +147,6 @@ class JuryMembersListAPIView(
         return Response({'uuid': result}, status=status.HTTP_201_CREATED)
 
 
-class JuryMemberDetailSchema(ResponseSpecificSchema):
-    serializer_mapping = {
-        'GET': MembreJuryDTOSerializer,
-        'PUT': (ModifierMembreCommandSerializer, JuryIdentityDTOSerializer),
-        'PATCH': (ModifierRoleMembreCommandSerializer, JuryIdentityDTOSerializer),
-        'DELETE': None,
-    }
-
-    method_mapping = {
-        'get': 'retrieve',
-        'put': 'update',
-        'patch': 'update_role',
-        'delete': 'remove',
-    }
-
-    operation_id_base = '_jury_member'
-
-
 class JuryMemberDetailAPIView(
     DoctorateAPIPermissionRequiredMixin,
     mixins.UpdateModelMixin,
@@ -181,7 +154,6 @@ class JuryMemberDetailAPIView(
     GenericAPIView,
 ):
     name = "jury-member-detail"
-    # schema = JuryMemberDetailSchema()
     pagination_class = None
     filter_backends = []
     permission_mapping = {
@@ -191,6 +163,11 @@ class JuryMemberDetailAPIView(
         'DELETE': 'parcours_doctoral.change_jury',
     }
 
+    @extend_schema(
+        request=MembreJuryDTOSerializer,
+        responses=MembreJuryDTOSerializer,
+        operation_id='retrieve_jury_member',
+    )
     def get(self, request, *args, **kwargs):
         """Get the members of a jury"""
         membre = message_bus_instance.invoke(
@@ -202,6 +179,11 @@ class JuryMemberDetailAPIView(
         serializer = MembreJuryDTOSerializer(instance=membre)
         return Response(serializer.data)
 
+    @extend_schema(
+        request=ModifierMembreCommandSerializer,
+        responses=JuryIdentityDTOSerializer,
+        operation_id='update_jury_member',
+    )
     def put(self, request, *args, **kwargs):
         """Update a member of the jury"""
         serializer = ModifierMembreCommandSerializer(data=request.data)
@@ -217,6 +199,11 @@ class JuryMemberDetailAPIView(
         serializer = JuryIdentityDTOSerializer(instance=result)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    @extend_schema(
+        request=ModifierRoleMembreCommandSerializer,
+        responses=JuryIdentityDTOSerializer,
+        operation_id='update_role_jury_member',
+    )
     def patch(self, request, *args, **kwargs):
         """Update the role of a member of the jury"""
         serializer = ModifierRoleMembreCommandSerializer(data=request.data)
@@ -232,6 +219,11 @@ class JuryMemberDetailAPIView(
         serializer = JuryIdentityDTOSerializer(instance=result)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    @extend_schema(
+        request=None,
+        responses=None,
+        operation_id='remove_jury_member',
+    )
     def delete(self, request, *args, **kwargs):
         """Remove a member"""
         message_bus_instance.invoke(
