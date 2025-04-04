@@ -146,8 +146,8 @@ class DoctorateListView(BaseListView):
     @extend_schema(
         operation_id='list_doctorates',
     )
-    def list(self, request, **kwargs):
-        return super().list(request, **kwargs)
+    def get(self, request, **kwargs):
+        return super().get(request, **kwargs)
 
 
 class SupervisedDoctorateListView(BaseListView):
@@ -174,5 +174,5 @@ class SupervisedDoctorateListView(BaseListView):
     @extend_schema(
         operation_id='list_supervised_doctorates',
     )
-    def list(self, request, **kwargs):
-        return super().list(request, **kwargs)
+    def get(self, request, **kwargs):
+        return super().get(request, **kwargs)

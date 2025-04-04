@@ -32,7 +32,6 @@ from rest_framework.response import Response
 from infrastructure.messages_bus import message_bus_instance
 from parcours_doctoral.api import serializers
 from parcours_doctoral.api.permissions import DoctorateAPIPermissionRequiredMixin
-from parcours_doctoral.api.schema import ResponseSpecificSchema
 from parcours_doctoral.ddd.commands import (
     GetGroupeDeSupervisionQuery,
     RecupererParcoursDoctoralQuery,

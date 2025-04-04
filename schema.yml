@@ -1262,7 +1262,7 @@ paths:
           $ref: '#/components/responses/NotFound'
   /doctorate/list:
     get:
-      operationId: doctorate_list_list
+      operationId: list_doctorates
       tags:
       - doctorate
       security:
@@ -1286,7 +1286,7 @@ paths:
           $ref: '#/components/responses/NotFound'
   /doctorate/supervised-list:
     get:
-      operationId: doctorate_supervised_list_list
+      operationId: list_supervised_doctorates
       tags:
       - doctorate
       security:
