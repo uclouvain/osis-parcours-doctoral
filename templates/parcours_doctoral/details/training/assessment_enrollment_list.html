@@ -123,6 +123,18 @@
                         {% translate 'Withdraw' %}
                       </button>
                     </li>
+                  {% elif can_change_assessment_enrollment and assessment_enrollment.statut == 'DESINSCRITE' and assessment_enrollment.annee_unite_enseignement == current_year %}
+                    <li>
+                      <button
+                        type="button"
+                        class="dropdown-item btn btn-link reenroll-btn"
+                        data-bs-toggle="modal"
+                        data-bs-target="#reenroll-modal"
+                        data-target-url="{% url 'parcours_doctoral:assessment-enrollment:reenroll' uuid=view.kwargs.uuid enrollment_uuid=assessment_enrollment.uuid %}"
+                      >
+                        {% translate 'Re-enroll' %}
+                      </button>
+                    </li>
                   {% endif %}
                 </ul>
               </div>
@@ -142,6 +154,7 @@
   {% endif %}
 
   {% include 'parcours_doctoral/modal/confirm_modal.html' with confirm_id='delete-modal' %}
+  {% include 'parcours_doctoral/modal/confirm_modal.html' with confirm_id='reenroll-modal' %}
 
 {% endblock %}
 
@@ -152,6 +165,10 @@
           const deleteConfirmForm = $('#delete-modal-form')[0];
           $('#delete-modal').on('show.bs.modal', function(event) {
               deleteConfirmForm.action = event.relatedTarget.dataset['targetUrl'];
+          });
+          const reenrollConfirmForm = $('#reenroll-modal-form')[0];
+          $('#reenroll-modal').on('show.bs.modal', function(event) {
+              reenrollConfirmForm.action = event.relatedTarget.dataset['targetUrl'];
           });
       });
   </script>

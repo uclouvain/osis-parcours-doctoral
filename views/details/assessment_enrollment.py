@@ -42,7 +42,7 @@ from parcours_doctoral.ddd.formation.commands import (
     DesinscrireEvaluationCommand,
     InscrireEvaluationCommand,
     ModifierInscriptionEvaluationCommand,
-    RecupererInscriptionEvaluationQuery,
+    RecupererInscriptionEvaluationQuery, ReinscrireEvaluationCommand,
 )
 from parcours_doctoral.ddd.formation.domain.model.enums import StatutActivite
 from parcours_doctoral.ddd.formation.dtos.evaluation import InscriptionEvaluationDTO
@@ -62,6 +62,7 @@ __all__ = [
     'AssessmentEnrollmentCreateView',
     'AssessmentEnrollmentDeleteView',
     'AssessmentEnrollmentDetailsView',
+    'AssessmentEnrollmentReenrollView',
     'AssessmentEnrollmentUpdateView',
 ]
 
@@ -204,6 +205,22 @@ class AssessmentEnrollmentDeleteView(BaseAssessmentEnrollmentViewMixin, Parcours
     def delete(self, request, *args, **kwargs):
         message_bus_instance.invoke(
             DesinscrireEvaluationCommand(inscription_uuid=self.kwargs['enrollment_uuid']),
+        )
+        messages.success(request, self.message_on_success)
+        return HttpResponseRedirect(resolve_url('parcours_doctoral:assessment-enrollment', uuid=self.kwargs['uuid']))
+
+
+class AssessmentEnrollmentReenrollView(BaseAssessmentEnrollmentViewMixin, ParcoursDoctoralFormMixin, View):
+    urlpatterns = {'reenroll': '<uuid:enrollment_uuid>/reenroll'}
+    permission_required = 'parcours_doctoral.change_assessment_enrollment'
+    message_on_success = gettext_lazy('The student has been re-enrolled to this assessment.')
+
+    def post(self, request, *args, **kwargs):
+        return self.delete(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        message_bus_instance.invoke(
+            ReinscrireEvaluationCommand(inscription_uuid=self.kwargs['enrollment_uuid']),
         )
         messages.success(request, self.message_on_success)
         return HttpResponseRedirect(resolve_url('parcours_doctoral:assessment-enrollment', uuid=self.kwargs['uuid']))

@@ -188,6 +188,7 @@ class AssessmentEnrollmentListView(ParcoursDoctoralViewMixin, TemplateView):
 
         context_data['assessment_enrollments'] = assessment_enrollments_by_session_and_year
         context_data['editable_assessment_enrollments'] = editable_assessment_enrollments
+        context_data['current_year'] = current_year
 
         return context_data
 
