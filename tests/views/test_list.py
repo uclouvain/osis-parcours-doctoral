@@ -166,6 +166,7 @@ class ParcoursDoctoralListTestView(QueriesAssertionsMixin, TestCase):
             supervision_group=cls.promoter.process,
             status=ChoixStatutParcoursDoctoral.JURY_APPROUVE_CA.name,
             admission__type=ChoixTypeAdmission.PRE_ADMISSION.name,
+            admission__approved_by_cdd_at=datetime.datetime(2023, 1, 1),
             training__enrollment_campus__name='Mons',
             # Cotutelle information
             cotutelle=True,
