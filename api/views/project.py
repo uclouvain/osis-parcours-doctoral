@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -23,20 +23,16 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from drf_spectacular.utils import extend_schema
 from rest_framework import mixins
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 
 from parcours_doctoral.api.permissions import DoctorateAPIPermissionRequiredMixin
-from parcours_doctoral.api.schema import ResponseSpecificSchema
 
 __all__ = [
     "ProjectApiView",
 ]
-
-
-class ProjectSchema(ResponseSpecificSchema):
-    operation_id_base = '_project'
 
 
 class ProjectApiView(
@@ -45,13 +41,17 @@ class ProjectApiView(
     GenericAPIView,
 ):
     name = "project"
-    schema = ProjectSchema()
     pagination_class = None
     filter_backends = []
     permission_mapping = {
         'GET': 'parcours_doctoral.view_project',
     }
 
+    @extend_schema(
+        request=None,
+        responses=None,
+        operation_id='retrieve_project',
+    )
     def get(self, request, *args, **kwargs):
         """
         This method is only used to check the permission.

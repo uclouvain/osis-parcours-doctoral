@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -23,32 +23,28 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from drf_spectacular.utils import extend_schema
 from rest_framework.generics import RetrieveAPIView
 from rest_framework.response import Response
 
 from parcours_doctoral.api import serializers
-from parcours_doctoral.api.schema import ResponseSpecificSchema
 
 __all__ = [
     'DashboardApiView',
 ]
 
 
-class DashboardSchema(ResponseSpecificSchema):
-    operation_id_base = '_dashboard'
-    serializer_mapping = {
-        'GET': serializers.DashboardSerializer,
-    }
-
-
 class DashboardApiView(RetrieveAPIView):
     name = "dashboard"
-    schema = DashboardSchema()
 
     def get_queryset(self):
         # We must override this to bypass AssertionError from GenericAPIView
         return None
 
+    @extend_schema(
+        responses=serializers.DashboardSerializer,
+        operation_id='retrieve_dashboard',
+    )
     def get(self, request, **kwargs):
         """Get the actions links for the application"""
         serializer = serializers.DashboardSerializer(
