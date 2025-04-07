@@ -49,7 +49,8 @@
 ></a>
 <span class="badge bg-{{ activity|status_as_class }} text-bg-{{ activity|status_as_class }}">{{ activity.status|enum_display:'StatutActivite' }}</span>
 
-{{ activity.category|enum_display:'CategorieActivite' }} - {{ activity.ects|format_ects }}
+{{ activity.category|enum_display:'CategorieActivite' }}{% if activity.ects %} - {{ activity.ects|format_ects }}{% endif %}
+{% if activity.category == 'UCL_COURSE' %}<br>{{ activity.learning_unit_year.acronym }} - {{ activity.learning_unit_year.complete_title_i18n }} - {{ activity.learning_unit_year.academic_year }}{% endif %}
 
 {% trans "Please check the details of the activity (and sub-activities) to fill in all the mandatory fields" as not_complete_sub %}
 {% trans "Please check the details of the activity to fill in all mandatory fields" as not_complete %}
@@ -87,9 +88,9 @@
             </li>
             <li>
               <a
-                  class="dropdown-item"
+                  class="dropdown-item accept-activity-btn"
                   href="#"
-                  onclick="$('[name=activity_ids]').val(['{{ activity.uuid }}']);$('button[name=_accept]').click();return false;"
+                  data-uuid="{{ activity.uuid }}"
               >
                 {% trans "Accept" %}
               </a>
@@ -115,9 +116,9 @@
                 {% endif %}
             >
               <a
-                  class="dropdown-item"
+                  class="dropdown-item submit-activity-btn"
                   href="#"
-                  onclick="$('[name=activity_ids]').val(['{{ activity.uuid }}']);$('form#activities').submit();return false;"
+                  data-uuid="{{ activity.uuid }}"
               >
                 {% trans "Submit" %}
               </a>

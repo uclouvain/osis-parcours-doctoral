@@ -96,3 +96,8 @@ class ModifierInscriptionEvaluationCommand(CommandRequest):
 @attr.dataclass(frozen=True, slots=True)
 class DesinscrireEvaluationCommand(CommandRequest):
     inscription_uuid: str
+
+
+@attr.dataclass(frozen=True, slots=True)
+class ReinscrireEvaluationCommand(CommandRequest):
+    inscription_uuid: str

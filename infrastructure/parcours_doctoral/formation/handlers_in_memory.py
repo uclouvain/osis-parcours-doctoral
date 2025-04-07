@@ -29,6 +29,9 @@ from parcours_doctoral.ddd.formation.use_case.write import *
 from parcours_doctoral.ddd.formation.use_case.write.inscrire_evaluation_service import (
     inscrire_evaluation,
 )
+from parcours_doctoral.ddd.formation.use_case.write.reinscrire_evaluation_service import (
+    reinscrire_evaluation,
+)
 
 from ..repository.in_memory.groupe_de_supervision import (
     GroupeDeSupervisionInMemoryRepository,
@@ -96,6 +99,10 @@ COMMAND_HANDLERS = {
         inscription_evaluation_repository=_inscription_evaluation_repository,
     ),
     DesinscrireEvaluationCommand: lambda msg_bus, cmd: desinscrire_evaluation(
+        cmd,
+        inscription_evaluation_repository=_inscription_evaluation_repository,
+    ),
+    ReinscrireEvaluationCommand: lambda msg_bus, cmd: reinscrire_evaluation(
         cmd,
         inscription_evaluation_repository=_inscription_evaluation_repository,
     ),

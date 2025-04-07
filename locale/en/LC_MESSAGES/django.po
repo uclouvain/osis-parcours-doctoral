@@ -516,7 +516,7 @@ msgstr "Chemistry"
 
 msgctxt "CategorieActivite"
 msgid "COMMUNICATION"
-msgstr "Oral communication (excluding conference)"
+msgstr "Oral communications (excluding conference)"
 
 msgid "COMMUNICATION types"
 msgstr ""
@@ -802,9 +802,6 @@ msgstr ""
 
 msgctxt "doctorate"
 msgid "Courses"
-msgstr ""
-
-msgid "Courses and trainings"
 msgstr ""
 
 #, python-format
@@ -1222,6 +1219,9 @@ msgid "First name and last name of the speaker"
 msgstr ""
 
 msgid "First name:"
+msgstr ""
+
+msgid "Followed courses"
 msgstr ""
 
 msgctxt "female gender"
@@ -1834,9 +1834,6 @@ msgstr "Not invited to sign"
 msgid "Name"
 msgstr ""
 
-msgid "Name in the language of the manifestation"
-msgstr ""
-
 msgid "Name or brief description"
 msgstr ""
 
@@ -1979,7 +1976,7 @@ msgstr ""
 
 msgctxt "CategorieActivite"
 msgid "PAPER"
-msgstr "Examination"
+msgstr "Examinations"
 
 msgid "PDF file"
 msgstr ""
@@ -1995,7 +1992,7 @@ msgstr "Private defence"
 
 msgctxt "CategorieActivite"
 msgid "PUBLICATION"
-msgstr "Publication"
+msgstr "Publications"
 
 msgid "PUBLICATION types"
 msgstr "Activity types for the publication category"
@@ -2089,6 +2086,14 @@ msgid "Please select at least one date."
 msgstr ""
 
 msgid "Please specify either a hourly volume or a number of participating days"
+msgstr ""
+
+msgid "Please specify the title in the language of the manifestation"
+msgstr ""
+
+msgid ""
+"Please use the following format for inputting the first and last name: "
+"\"Monteiro, M. et Marti, A. C.\""
 msgstr ""
 
 msgid "Poster"
@@ -2248,10 +2253,13 @@ msgstr "Denied"
 
 msgctxt "CategorieActivite"
 msgid "RESIDENCY"
-msgstr "Advanced research residency"
+msgstr "Advanced research residencies"
 
 msgid "RESIDENCY types"
 msgstr "Activity types for the advanced research residency category"
+
+msgid "Re-enroll"
+msgstr ""
 
 msgid "Reason for exceeding the deadline"
 msgstr ""
@@ -2424,7 +2432,7 @@ msgstr "Self-funding"
 
 msgctxt "CategorieActivite"
 msgid "SEMINAR"
-msgstr "Seminar taken"
+msgstr "Seminars taken"
 
 msgid "SEMINAR types"
 msgstr "Activity types for the seminar category"
@@ -2929,6 +2937,9 @@ msgstr ""
 msgid "The status has been changed to %(status)s."
 msgstr ""
 
+msgid "The student has been re-enrolled to this assessment."
+msgstr ""
+
 msgid "The student has been withdrawn from this assessment."
 msgstr ""
 
@@ -3194,7 +3205,7 @@ msgstr "Validation of prior experience (VAE)"
 
 msgctxt "CategorieActivite"
 msgid "VAE"
-msgstr "Validation of prior experience (VAE)"
+msgstr "Validations of prior experience (VAE)"
 
 msgid "Validate selected courses"
 msgstr ""

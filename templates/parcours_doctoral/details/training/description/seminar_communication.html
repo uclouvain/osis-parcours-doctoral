@@ -24,6 +24,6 @@
   * see http://www.gnu.org/licenses/.
 {% endcomment %}
 
-{{ parcours_doctoral.nom_doctorant }}, {{ parcours_doctoral.prenom_doctorant.0 }}. ({{ activity.parent.start_date|date:'Y, m' }}).
-<em>{{ activity.title }}</em> {{ activity.type }}. {{ activity.parent.title }}, {{ activity.parent.city }}, {{ activity.parent.country }}.
-{% if activity.parent.website %}<a href="{{ activity.parent.website }}" target="_blank">{{ activity.parent.website }}</a>{% endif %}
+{{ parcours_doctoral.nom_doctorant }}, {{ parcours_doctoral.prenom_doctorant.0 }}, ({{ activity.parent.start_date|date:'Y, m' }}),
+<em>{{ activity.title }}</em>, {{ activity.type }}, {{ activity.parent.title }}, {{ activity.parent.city }}, {{ activity.parent.country }}
+{% if activity.parent.website %}, <a href="{{ activity.parent.website }}" target="_blank">{{ activity.parent.website }}</a>{% endif %}

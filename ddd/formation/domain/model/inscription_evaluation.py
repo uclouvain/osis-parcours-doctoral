@@ -57,3 +57,6 @@ class InscriptionEvaluation(interface.RootEntity):
 
     def desinscrire(self):
         self.statut = StatutInscriptionEvaluation.DESINSCRITE
+
+    def reinscrire(self):
+        self.statut = StatutInscriptionEvaluation.ACCEPTEE

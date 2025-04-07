@@ -76,6 +76,8 @@ __all__ = [
     "TrainingRecapPdfApiView",
 ]
 
+from parcours_doctoral.utils.trainings import training_categories_activities
+
 
 class TrainingListSchema(ChoicesEnumSchema):
     def get_operation_id_base(self, path: str, method: str, action) -> str:
@@ -367,9 +369,10 @@ class TrainingRecapPdfApiView(DoctorateAPIPermissionRequiredMixin, RetrieveModel
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
-        context['activities'] = Activity.objects.for_doctoral_training(self.doctorate_uuid).filter(
+        activities = Activity.objects.for_doctoral_training(self.doctorate_uuid).filter(
             status=StatutActivite.ACCEPTEE.name
         )
+        context['categories'] = training_categories_activities(activities)
         return context
 
     def get(self, request, *args, **kwargs):
