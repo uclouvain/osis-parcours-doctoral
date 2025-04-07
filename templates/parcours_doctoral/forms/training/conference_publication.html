@@ -42,7 +42,7 @@
   {% bootstrap_field form.journal wrapper_class="form-group col-md-6 required_field" %}
 </div>
 {% bootstrap_field form.title wrapper_class="form-group required_field" %}
-{% bootstrap_field form.authors wrapper_class="form-group required_field" %}
+{% bootstrap_field_with_tooltip form.authors classes="form-group required_field" %}
 <div class="row">
   {% bootstrap_field form.role wrapper_class="form-group col-md-6 required_field" %}
   {% bootstrap_field_with_tooltip form.publication_status classes="form-group col-md-6 required_field" %}

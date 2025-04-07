@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Parcours Doctoral API
-  version: 1.1.0
+  version: 1.1.0.dev1398
   description: This API delivers data for the Parcours Doctoral project.
   contact:
     name: UCLouvain - OSIS
@@ -1566,22 +1566,6 @@ paths:
       - $ref: '#/components/parameters/X-User-GlobalID'
 components:
   schemas:
-    ActionLink:
-      type: object
-      properties:
-        error:
-          type: string
-        method:
-          $ref: '#/components/schemas/MethodEnum'
-        url:
-          type: string
-          format: uri
-      oneOf:
-      - required:
-        - method
-        - url
-      - required:
-        - error
     AjouterMembreCommand:
       type: object
       description: |-
@@ -2340,8 +2324,12 @@ components:
       type: object
       properties:
         links:
-          allOf:
-          - $ref: '#/components/schemas/ActionLink'
+          type: object
+          properties:
+            list:
+              $ref: '#/components/schemas/ActionLink'
+            supervised_list:
+              $ref: '#/components/schemas/ActionLink'
           readOnly: true
           default: {}
     DemandeProlongationDTONested:
@@ -2889,14 +2877,6 @@ components:
           type: string
           format: uuid
           readOnly: true
-    MethodEnum:
-      type: string
-      enum:
-      - DELETE
-      - GET
-      - PATCH
-      - POST
-      - PUT
     ModifierCotutelleCommand:
       type: object
       description: |-
@@ -3203,8 +3183,50 @@ components:
           format: date-time
           nullable: true
         links:
-          allOf:
-          - $ref: '#/components/schemas/ActionLink'
+          type: object
+          properties:
+            retrieve_project:
+              $ref: '#/components/schemas/ActionLink'
+            retrieve_cotutelle:
+              $ref: '#/components/schemas/ActionLink'
+            update_cotutelle:
+              $ref: '#/components/schemas/ActionLink'
+            retrieve_funding:
+              $ref: '#/components/schemas/ActionLink'
+            update_funding:
+              $ref: '#/components/schemas/ActionLink'
+            retrieve_supervision:
+              $ref: '#/components/schemas/ActionLink'
+            retrieve_supervision_canvas:
+              $ref: '#/components/schemas/ActionLink'
+            retrieve_confirmation:
+              $ref: '#/components/schemas/ActionLink'
+            update_confirmation:
+              $ref: '#/components/schemas/ActionLink'
+            update_confirmation_extension:
+              $ref: '#/components/schemas/ActionLink'
+            retrieve_doctorate_training:
+              $ref: '#/components/schemas/ActionLink'
+            retrieve_complementary_training:
+              $ref: '#/components/schemas/ActionLink'
+            retrieve_course_enrollment:
+              $ref: '#/components/schemas/ActionLink'
+            retrieve_assessment_enrollment:
+              $ref: '#/components/schemas/ActionLink'
+            add_training:
+              $ref: '#/components/schemas/ActionLink'
+            submit_training:
+              $ref: '#/components/schemas/ActionLink'
+            assent_training:
+              $ref: '#/components/schemas/ActionLink'
+            retrieve_jury_preparation:
+              $ref: '#/components/schemas/ActionLink'
+            update_jury_preparation:
+              $ref: '#/components/schemas/ActionLink'
+            list_jury_members:
+              $ref: '#/components/schemas/ActionLink'
+            create_jury_members:
+              $ref: '#/components/schemas/ActionLink'
           readOnly: true
           default: {}
       required:
@@ -3264,8 +3286,48 @@ components:
           type: string
           format: date-time
         links:
-          allOf:
-          - $ref: '#/components/schemas/ActionLink'
+          type: object
+          properties:
+            retrieve_project:
+              $ref: '#/components/schemas/ActionLink'
+            retrieve_funding:
+              $ref: '#/components/schemas/ActionLink'
+            update_funding:
+              $ref: '#/components/schemas/ActionLink'
+            retrieve_cotutelle:
+              $ref: '#/components/schemas/ActionLink'
+            update_cotutelle:
+              $ref: '#/components/schemas/ActionLink'
+            retrieve_supervision:
+              $ref: '#/components/schemas/ActionLink'
+            retrieve_supervision_canvas:
+              $ref: '#/components/schemas/ActionLink'
+            retrieve_confirmation:
+              $ref: '#/components/schemas/ActionLink'
+            update_confirmation:
+              $ref: '#/components/schemas/ActionLink'
+            update_confirmation_extension:
+              $ref: '#/components/schemas/ActionLink'
+            retrieve_doctorate_training:
+              $ref: '#/components/schemas/ActionLink'
+            retrieve_complementary_training:
+              $ref: '#/components/schemas/ActionLink'
+            retrieve_course_enrollment:
+              $ref: '#/components/schemas/ActionLink'
+            add_training:
+              $ref: '#/components/schemas/ActionLink'
+            submit_training:
+              $ref: '#/components/schemas/ActionLink'
+            assent_training:
+              $ref: '#/components/schemas/ActionLink'
+            retrieve_jury_preparation:
+              $ref: '#/components/schemas/ActionLink'
+            update_jury_preparation:
+              $ref: '#/components/schemas/ActionLink'
+            list_jury_members:
+              $ref: '#/components/schemas/ActionLink'
+            create_jury_members:
+              $ref: '#/components/schemas/ActionLink'
           readOnly: true
           default: {}
       required:
@@ -4222,6 +4284,28 @@ components:
       required:
       - code
       - message
+    ActionLink:
+      type: object
+      properties:
+        error:
+          type: string
+        method:
+          type: string
+          enum:
+          - DELETE
+          - GET
+          - PATCH
+          - POST
+          - PUT
+        url:
+          type: string
+          format: uri
+      oneOf:
+      - required:
+        - method
+        - url
+      - required:
+        - error
     AcceptedLanguageEnum:
       type: string
       enum:

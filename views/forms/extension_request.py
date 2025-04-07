@@ -23,11 +23,12 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-
+from django.shortcuts import redirect
 from django.urls import reverse
 from django.views.generic import FormView
 
 from infrastructure.messages_bus import message_bus_instance
+from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from parcours_doctoral.ddd.epreuve_confirmation.commands import (
     SoumettreReportDeDateParCDDCommand,
 )
@@ -50,6 +51,14 @@ class ExtensionRequestFormView(
     template_name = 'parcours_doctoral/forms/extension_request.html'
     permission_required = 'parcours_doctoral.change_confirmation_extension'
     form_class = ExtensionRequestForm
+
+    def dispatch(self, request, *args, **kwargs):
+        if (
+            self.parcours_doctoral.status != ChoixStatutParcoursDoctoral.ADMIS.name
+            and self.parcours_doctoral.status != ChoixStatutParcoursDoctoral.CONFIRMATION_SOUMISE.name
+        ):
+            return redirect("parcours_doctoral:extension-request", uuid=self.parcours_doctoral.uuid)
+        return super().dispatch(request, *args, **kwargs)
 
     def get_initial(self):
         return (
