@@ -25,6 +25,7 @@
 # ##############################################################################
 
 import ast
+import datetime
 from decimal import Decimal
 from typing import List
 
@@ -145,6 +146,7 @@ class ParcoursDoctoralListExcelExportViewTestCase(QueriesAssertionsMixin, TestCa
             en_regle_inscription=False,
             total_credits_valides=0,
             cree_le=cls.parcours_doctoral.created_at,
+            date_admission_par_cdd=datetime.datetime(2020, 1, 1),
         )
         cls.default_params = {
             'annee_academique': 2022,

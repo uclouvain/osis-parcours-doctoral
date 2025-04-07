@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -28,8 +28,8 @@ import uuid
 from typing import Optional
 
 from dateutil.relativedelta import relativedelta
-from osis_common.ddd import interface
 
+from osis_common.ddd import interface
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import (
     ParcoursDoctoralIdentity,
 )
@@ -49,9 +49,13 @@ class EpreuveConfirmationService(interface.DomainService):
         cls,
         parcours_doctoral_id: 'ParcoursDoctoralIdentity',
         date_limite: Optional[datetime.date] = None,
+        date_reference_pour_date_limite: Optional[datetime.date] = None,
     ) -> EpreuveConfirmation:
+        if not date_reference_pour_date_limite:
+            date_reference_pour_date_limite = datetime.date.today()
+
         if not date_limite:
-            date_limite = datetime.date.today() + relativedelta(months=cls.NB_MOIS_INTERVALLE_DATE_LIMITE)
+            date_limite = date_reference_pour_date_limite + relativedelta(months=cls.NB_MOIS_INTERVALLE_DATE_LIMITE)
 
         return EpreuveConfirmation(
             entity_id=EpreuveConfirmationIdentityBuilder.build_from_uuid(
