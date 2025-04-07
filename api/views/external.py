@@ -28,6 +28,7 @@ from datetime import timedelta
 
 from django.utils.functional import cached_property
 from django.utils.timezone import now
+from drf_spectacular.utils import extend_schema
 from osis_signature.utils import get_actor_from_token
 from rest_framework import status
 from rest_framework.exceptions import PermissionDenied
@@ -35,7 +36,6 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from infrastructure.messages_bus import message_bus_instance
-from parcours_doctoral.api.schema import ResponseSpecificSchema
 from parcours_doctoral.api.serializers import ExternalSupervisionDTOSerializer
 from parcours_doctoral.ddd.commands import (
     GetGroupeDeSupervisionQuery,
@@ -88,18 +88,13 @@ class ExternalDoctorateAPIView(APIView):
         request.data['uuid_membre'] = str(self.actor.uuid)
 
 
-class ExternalDoctorateSupervisionSchema(ResponseSpecificSchema):
-    authorization_method = 'Token'
-    operation_id_base = '_external_doctorate_supervision'
-    serializer_mapping = {
-        'GET': ExternalSupervisionDTOSerializer,
-    }
-
-
 class ExternalDoctorateSupervisionAPIView(ExternalDoctorateAPIView):
     name = 'external-supervision'
-    schema = ExternalDoctorateSupervisionSchema()
 
+    @extend_schema(
+        responses=ExternalSupervisionDTOSerializer,
+        operation_id='retrieve_external_doctorate_supervision',
+    )
     def get(self, request, *args, **kwargs):
         """Returns necessary info about the doctorate and the supervision."""
         doctorate, supervision = message_bus_instance.invoke_multiple(
