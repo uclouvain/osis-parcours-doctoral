@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -108,11 +108,11 @@ class ConfirmationAPIViewTestCase(APITestCase):
         response = self.client.get(self.url, format='json')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-    def test_get_confirmation_of_in_creation_doctorate_is_forbidden(self):
+    def test_get_confirmation_with_invalid_enrolment_is_forbidden(self):
         in_creation_doctorate = ParcoursDoctoralFactory(
             supervision_group=self.doctorate.supervision_group,
             student=self.student,
-            status=ChoixStatutParcoursDoctoral.EN_COURS_DE_CREATION_PAR_GESTIONNAIRE.name,
+            create_student__with_valid_enrolment=False,
         )
 
         url = resolve_url('parcours_doctoral_api_v1:confirmation', uuid=in_creation_doctorate.uuid)
@@ -122,14 +122,6 @@ class ConfirmationAPIViewTestCase(APITestCase):
             self.committee_member_user,
             self.student.user,
         ]
-
-        for user in users:
-            self.client.force_authenticate(user=user)
-            response = self.client.get(url)
-            self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
-        in_creation_doctorate.status = ChoixStatutParcoursDoctoral.EN_ATTENTE_INJECTION_EPC.name
-        in_creation_doctorate.save()
 
         for user in users:
             self.client.force_authenticate(user=user)

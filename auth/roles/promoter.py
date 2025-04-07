@@ -23,11 +23,9 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from django.db.models import UniqueConstraint
-from django.utils.translation import gettext_lazy as _
 from rules import RuleSet, always_allow
 
-from osis_role.contrib.models import RoleModel
+from admission.auth.roles.promoter import Promoter as AdmissionPromoter
 from parcours_doctoral.auth.predicates.parcours_doctoral import (
     complementary_training_enabled,
     is_jury_in_progress,
@@ -37,7 +35,7 @@ from parcours_doctoral.auth.predicates.parcours_doctoral import (
 )
 
 
-class Promoter(RoleModel):
+class Promoter(AdmissionPromoter):
     """
     Promoteur
 
@@ -47,20 +45,16 @@ class Promoter(RoleModel):
     """
 
     class Meta:
-        verbose_name = _("Role: Promoter")
-        verbose_name_plural = _("Role: Promoters")
         group_name = "promoters"
-        constraints = [
-            UniqueConstraint(fields=['person'], name='unique_promoter_by_person'),
-        ]
+        proxy = True
 
     @classmethod
     def rule_set(cls):
         rules = {
             'parcours_doctoral.view_supervised_list': always_allow,
             'parcours_doctoral.view_parcours_doctoral': is_parcours_doctoral_promoter,
-            'parcours_doctoral.download_pdf_confirmation': is_parcours_doctoral_promoter,
-            'parcours_doctoral.approve_confirmation_paper': is_parcours_doctoral_promoter,
+            'parcours_doctoral.download_pdf_confirmation': is_parcours_doctoral_promoter & is_related_to_an_admission,
+            'parcours_doctoral.approve_confirmation_paper': is_parcours_doctoral_promoter & is_related_to_an_admission,
             'parcours_doctoral.validate_doctoral_training': is_parcours_doctoral_promoter,
             'parcours_doctoral.fill_thesis': is_parcours_doctoral_promoter,
             # A promoter can view as long as he is one of the PhD promoters
@@ -70,8 +64,8 @@ class Promoter(RoleModel):
             'parcours_doctoral.view_supervision': is_parcours_doctoral_promoter,
             'parcours_doctoral.view_supervision_canvas': is_parcours_doctoral_reference_promoter,
             'parcours_doctoral.view_jury': is_parcours_doctoral_promoter,
-            'parcours_doctoral.view_confirmation': is_parcours_doctoral_promoter,
-            'parcours_doctoral.upload_pdf_confirmation': is_parcours_doctoral_promoter,
+            'parcours_doctoral.view_confirmation': is_parcours_doctoral_promoter & is_related_to_an_admission,
+            'parcours_doctoral.upload_pdf_confirmation': is_parcours_doctoral_promoter & is_related_to_an_admission,
             'parcours_doctoral.change_jury': is_parcours_doctoral_promoter & is_jury_in_progress,
             # PhD training
             'parcours_doctoral.view_complementary_training': is_parcours_doctoral_promoter

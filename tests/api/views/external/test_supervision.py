@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -24,13 +24,13 @@
 #
 # ##############################################################################
 import freezegun
-from base.tests import QueriesAssertionsMixin
 from django.shortcuts import resolve_url
 from osis_signature.enums import SignatureState
 from osis_signature.utils import get_signing_token
 from rest_framework import status
 from rest_framework.test import APITestCase
 
+from base.tests import QueriesAssertionsMixin
 from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from parcours_doctoral.tests.factories.parcours_doctoral import ParcoursDoctoralFactory
 from parcours_doctoral.tests.factories.roles import StudentRoleFactory
@@ -101,18 +101,11 @@ class ExternalDoctorateSupervisionAPIViewTestCase(QueriesAssertionsMixin, APITes
         in_creation_doctorate = ParcoursDoctoralFactory(
             supervision_group=self.doctorate.supervision_group,
             student=self.student,
-            status=ChoixStatutParcoursDoctoral.EN_COURS_DE_CREATION_PAR_GESTIONNAIRE.name,
+            create_student__with_valid_enrolment=False,
         )
 
         token = get_signing_token(self.external_promoter)
         url = resolve_url(self.base_url, uuid=in_creation_doctorate.uuid, token=token)
-
-        response = self.client.get(url)
-
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
-        in_creation_doctorate.status = ChoixStatutParcoursDoctoral.EN_ATTENTE_INJECTION_EPC.name
-        in_creation_doctorate.save()
 
         response = self.client.get(url)
 
