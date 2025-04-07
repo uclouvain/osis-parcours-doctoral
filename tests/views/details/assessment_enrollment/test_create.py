@@ -136,12 +136,5 @@ class AssessmentEnrollmentCreateViewTestCase(TestCase):
                 'session': Session.JANUARY.name,
             },
         )
-
-        self.assertRedirects(response=response, expected_url=self.list_url)
-
-        created_enrollment = AssessmentEnrollment.objects.last()
-
-        self.assertEqual(created_enrollment.course, self.course)
-        self.assertEqual(created_enrollment.session, Session.JANUARY.name)
-        self.assertEqual(created_enrollment.status, StatutActivite.ACCEPTEE.name)
-        self.assertEqual(created_enrollment.late_enrollment, False)
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(response.context['form'].is_valid())
