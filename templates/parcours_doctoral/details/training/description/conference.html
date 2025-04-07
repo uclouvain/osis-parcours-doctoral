@@ -30,5 +30,5 @@
   {% endblocktrans %}
 {% endif %}
 
-{{ activity.title }}, {{ activity.type }}, {{ period }}, {{ activity.city }}, {{ activity.country }}.
-{% if activity.website %}<a href="{{ activity.website }}" target="_blank">{{ activity.website }}</a>{% endif %}
+{{ activity.title }}, {{ activity.type }}, {{ period }}, {{ activity.city }}, {{ activity.country }}
+{% if activity.website %}, <a href="{{ activity.website }}" target="_blank">{{ activity.website }}</a>{% endif %}
