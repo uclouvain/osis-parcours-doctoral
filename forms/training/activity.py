@@ -216,7 +216,7 @@ class ConferenceForm(ActivityFormMixin, forms.ModelForm):
             'ects': forms.NumberInput(attrs={'min': '0', 'step': '0.5'}),
         }
         help_texts = {
-            'title': _("Name in the language of the manifestation"),
+            'title': _("Please specify the title in the language of the manifestation"),
             'participating_days': _("Please specify either a hourly volume or a number of participating days"),
             'hour_volume': _("Please specify either a hourly volume or a number of participating days"),
         }
@@ -340,6 +340,9 @@ class ConferencePublicationForm(ActivityFormMixin, forms.ModelForm):
                 "Submit a proof, for example a letter from the editor,"
                 " a delivery attestation, the first page of the publication, ..."
             ),
+            'authors': _(
+                'Please use the following format for inputting the first and last name: "Monteiro, M. et Marti, A. C."'
+            ),
         }
 
     def __init__(self, *args, **kwargs):
@@ -371,7 +374,7 @@ class CommunicationForm(ActivityFormMixin, forms.ModelForm):
         ],
     )
     subtitle = forms.CharField(
-        label=_("Title of the communication"),
+        label=_("Communication title (in the activity language)"),
         max_length=200,
         required=False,
     )
@@ -406,7 +409,6 @@ class CommunicationForm(ActivityFormMixin, forms.ModelForm):
         ]
         labels = {
             'title': _("Event name"),
-            'subtitle': _("Communication title (in the activity language)"),
             'start_date': _("Activity date"),
             'website': _("Event website"),
             'acceptation_proof': _("Proof of acceptation by the committee"),
@@ -487,13 +489,16 @@ class PublicationForm(ActivityFormMixin, forms.ModelForm):
                 "Submit a proof, for example a letter from the editor,"
                 " a delivery attestation, the first page of the publication, ..."
             ),
+            'authors': _(
+                'Please use the following format for inputting the first and last name: "Monteiro, M. et Marti, A. C."'
+            ),
         }
 
     def __init__(self, *args, **kwargs):
         instance = kwargs.get('instance')
         kwargs.setdefault('initial', {})
 
-        if instance:
+        if instance is not None and instance.pk is not None:
             if instance.start_date:
                 kwargs['initial'].update(
                     {
@@ -846,8 +851,10 @@ class PaperForm(ActivityFormMixin, forms.ModelForm):
         # Only one paper of each type can be created
         paper_qs = parcours_doctoral.activity_set.filter(category=CategorieActivite.PAPER.name)
 
-        if self.instance:
+        if self.instance.pk is not None:
             paper_qs = paper_qs.exclude(type=self.instance.type)
+        elif self.data.get('type'):
+            paper_qs = paper_qs.exclude(type=self.data.get('type'))
 
         unavailable_papers_types = paper_qs.values_list('type', flat=True)
 

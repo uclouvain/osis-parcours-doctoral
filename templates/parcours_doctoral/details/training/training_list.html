@@ -146,6 +146,18 @@
     $(function () {
       $('[data-bs-toggle="popover"]').popover();
 
+      $('.accept-activity-btn').on('click', function (event) {
+          event.preventDefault();
+          $('[name=activity_ids]').val([$(this).attr('data-uuid')]);
+          $('button[name=_accept]').click();
+      });
+
+      $('.submit-activity-btn').on('click', function (event) {
+          event.preventDefault();
+          $('[name=activity_ids]').val([$(this).attr('data-uuid')]);
+          $('form#activities').submit();
+      });
+
       // User must confirm submission of seminars
       let confirmed = false;
       let acceptedButtonClicked = true;
@@ -194,14 +206,19 @@
 
       function apply_filters () {
         const reStatus = new RegExp(`\\b${current_filter_status}\\b`);
-        $('#activities .card').each(function () {
+        $('#activities > .card').each(function () {
           $(this).show();
           if ((current_filter_type !== ALL_VALUES && $(this).data('type') !== current_filter_type)
             || (current_filter_status !== ALL_VALUES && !$(this).data('status').match(reStatus))) {
+            if (current_filter_type === 'COURSE' && $(this).data('type') === 'UCL_COURSE') {
+              return ;
+            }
             $(this).hide();
           }
         });
       }
+
+      document.dispatchEvent(new Event('refreshFormInitial'));
     });
   </script>
 {% endblock %}
