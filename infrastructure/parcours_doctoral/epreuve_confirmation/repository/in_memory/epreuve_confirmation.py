@@ -44,6 +44,7 @@ from parcours_doctoral.ddd.epreuve_confirmation.test.factory.epreuve_confirmatio
     EpreuveConfirmation0DoctoratSC3DPFactory,
     EpreuveConfirmation1DoctoratSC3DPFactory,
     EpreuveConfirmation2DoctoratSC3DPFactory,
+    EpreuveConfirmationDoctoratSC3DPRefusFactory,
 )
 from parcours_doctoral.ddd.epreuve_confirmation.validators.exceptions import (
     EpreuveConfirmationNonTrouveeException,
@@ -90,6 +91,7 @@ class EpreuveConfirmationInMemoryRepository(InMemoryGenericRepository, IEpreuveC
             EpreuveConfirmation0DoctoratSC3DPFactory(id=0, est_active=False),
             EpreuveConfirmation2DoctoratSC3DPFactory(id=1, est_active=False),
             EpreuveConfirmation1DoctoratSC3DPFactory(id=2, est_active=True),
+            EpreuveConfirmationDoctoratSC3DPRefusFactory(id=3, est_active=True),
         ]
 
     @classmethod

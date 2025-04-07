@@ -86,3 +86,12 @@ class EpreuveConfirmation2DoctoratSC3DPFactory(_EpreuveConfirmationFactory):
         nouvelle_echeance=datetime.date(2023, 1, 1),
     )
     proces_verbal_ca = factory.LazyFunction(lambda: [str(uuid.uuid4())])
+
+
+class EpreuveConfirmationDoctoratSC3DPRefusFactory(_EpreuveConfirmationFactory):
+    entity_id = factory.SubFactory(_EpreuveConfirmationIdentityFactory, uuid='c10')
+    parcours_doctoral_id = factory.SubFactory(
+        _ParcoursDoctoralIdentityFactory,
+        uuid='uuid-SC3DP-promoteur-refus-membre-deja-approuve-refus',
+    )
+    date_limite = datetime.date(2022, 4, 5)
