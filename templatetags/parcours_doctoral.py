@@ -61,6 +61,7 @@ from parcours_doctoral.ddd.repository.i_parcours_doctoral import formater_refere
 from parcours_doctoral.forms.supervision import MemberSupervisionForm
 from parcours_doctoral.models import Activity, ParcoursDoctoral
 from parcours_doctoral.utils.formatting import format_activity_ects
+from parcours_doctoral.utils.trainings import training_categories_stats
 from reference.models.country import Country
 from reference.models.language import Language
 
@@ -283,71 +284,9 @@ def status_as_class(activity):
     }.get(str(status), 'info')
 
 
-def _training_categories_stats(activities):
-    added, validated = 0, 0
-
-    categories = {
-        _("Participations"): [0, 0],
-        _("Scientific communications"): [0, 0],
-        _("Publications"): [0, 0],
-        _("Courses and trainings"): [0, 0],
-        _("Services"): [0, 0],
-        _("VAE"): [0, 0],
-        _("Scientific residencies"): [0, 0],
-        _("Confirmation exam"): [0, 0],
-        _("Thesis defense"): [0, 0],
-        _("Total"): [0, 0],
-    }
-    for activity in activities:
-        # Increment global counts
-        if activity.status not in [StatutActivite.SOUMISE.name, StatutActivite.ACCEPTEE.name]:
-            continue
-        added += activity.ects
-        if activity.status == StatutActivite.ACCEPTEE.name:
-            validated += activity.ects
-
-        # Increment category counts
-        index = int(activity.status == StatutActivite.ACCEPTEE.name)
-        categories[_("Total")][index] += activity.ects
-
-        if (
-            activity.category == CategorieActivite.CONFERENCE.name
-            or activity.category == CategorieActivite.SEMINAR.name
-        ):
-            categories[_("Participations")][index] += activity.ects
-        elif activity.category == CategorieActivite.COMMUNICATION.name and (
-            activity.parent_id is None or activity.parent.category == CategorieActivite.CONFERENCE.name
-        ):
-            categories[_("Scientific communications")][index] += activity.ects
-        elif activity.category == CategorieActivite.PUBLICATION.name and (
-            activity.parent_id is None or activity.parent.category == CategorieActivite.CONFERENCE.name
-        ):
-            categories[_("Publications")][index] += activity.ects
-        elif activity.category == CategorieActivite.SERVICE.name:
-            categories[_("Services")][index] += activity.ects
-        elif (
-            activity.category == CategorieActivite.RESIDENCY.name
-            or activity.parent_id
-            and activity.parent.category == CategorieActivite.RESIDENCY.name
-        ):
-            categories[_("Scientific residencies")][index] += activity.ects
-        elif activity.category == CategorieActivite.VAE.name:
-            categories[_("VAE")][index] += activity.ects
-        elif activity.category in [CategorieActivite.COURSE.name, CategorieActivite.UCL_COURSE.name]:
-            categories[_("Courses and trainings")][index] += activity.ects
-        elif (
-            activity.category == CategorieActivite.PAPER.name
-            and activity.type == ChoixTypeEpreuve.CONFIRMATION_PAPER.name
-        ):
-            categories[_("Confirmation exam")][index] += activity.ects
-        elif activity.category == CategorieActivite.PAPER.name:
-            categories[_("Thesis defense")][index] += activity.ects
-    return added, validated, categories
-
-
 @register.inclusion_tag('parcours_doctoral/includes/training_categories.html')
 def training_categories(activities):
-    added, validated, categories = _training_categories_stats(activities)
+    added, validated, categories = training_categories_stats(activities)
     if not added:
         return {}
     return {
@@ -361,7 +300,7 @@ def training_categories(activities):
 @register.inclusion_tag('parcours_doctoral/includes/training_categories_credits_table.html')
 def training_categories_credits_table(parcours_doctoral_uuid):
     activities = Activity.objects.for_doctoral_training(parcours_doctoral_uuid)
-    added, _, categories = _training_categories_stats(activities)
+    added, _, categories = training_categories_stats(activities)
     if not added:
         return {}
     return {
