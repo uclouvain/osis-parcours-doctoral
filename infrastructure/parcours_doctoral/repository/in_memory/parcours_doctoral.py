@@ -156,6 +156,7 @@ class ParcoursDoctoralInMemoryRepository(InMemoryGenericRepository, IParcoursDoc
             date_naissance_doctorant=datetime.date.today(),
             lieu_naissance_doctorant='bar',
             pays_naissance_doctorant='bar',
+            date_admission_par_cdd=None,
             formation=FormationDTO(
                 annee=formation.annee,
                 sigle=formation.sigle,

@@ -31,7 +31,7 @@ from django.shortcuts import resolve_url
 
 def get_parcours_doctoral_link_back(uuid: UUID, tab='base') -> str:
     return "{}{}".format(
-        settings.ADMISSION_BACKEND_LINK_PREFIX,
+        settings.BACKEND_LINK_PREFIX,
         resolve_url('parcours_doctoral:{}'.format(tab), uuid=uuid),
     )
 
