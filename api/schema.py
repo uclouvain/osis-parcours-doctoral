@@ -25,7 +25,7 @@
 # ##############################################################################
 from drf_spectacular.generators import SchemaGenerator
 
-PARCOURS_DOCTORAL_SDK_VERSION = "1.0.11"
+PARCOURS_DOCTORAL_SDK_VERSION = "1.1.0"
 
 
 class ParcoursDoctoralSchemaGenerator(SchemaGenerator):
@@ -133,6 +133,41 @@ class ParcoursDoctoralSchemaGenerator(SchemaGenerator):
                 "message": {"type": "string"},
             },
             "required": ["code", "message"],
+        }
+        schema['components']['schemas']['ActionLink'] = {
+            'type': 'object',
+            'properties': {
+                'error': {
+                    'type': 'string',
+                },
+                'method': {
+                    'type': 'string',
+                    'enum': [
+                        'DELETE',
+                        'GET',
+                        'PATCH',
+                        'POST',
+                        'PUT',
+                    ],
+                },
+                'url': {
+                    'type': 'string',
+                    'format': 'uri',
+                },
+            },
+            'oneOf': [
+                {
+                    'required': [
+                        'method',
+                        'url',
+                    ],
+                },
+                {
+                    'required': [
+                        'error',
+                    ],
+                },
+            ],
         }
         schema['components']['schemas']['AcceptedLanguageEnum'] = {"type": "string", "enum": ["en", "fr-be"]}
         for path, path_content in schema['paths'].items():

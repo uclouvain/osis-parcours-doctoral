@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Parcours Doctoral API
-  version: 1.0.11
+  version: 1.1.0
   description: This API delivers data for the Parcours Doctoral project.
   contact:
     name: UCLouvain - OSIS
@@ -1796,9 +1796,7 @@ components:
         comment:
           type: string
       required:
-      - can_be_submitted
       - category
-      - cdd_comment
       - city
       - comment
       - committee
@@ -1809,15 +1807,11 @@ components:
       - is_online
       - object_type
       - organizing_institution
-      - reference_promoter_assent
-      - reference_promoter_comment
       - start_date
-      - status
       - subtitle
       - subtype
       - title
       - type
-      - uuid
       - website
     CompleteConfirmationPaperByPromoterCommand:
       type: object
@@ -1920,9 +1914,7 @@ components:
         comment:
           type: string
       required:
-      - can_be_submitted
       - category
-      - cdd_comment
       - city
       - comment
       - context
@@ -1934,13 +1926,9 @@ components:
       - object_type
       - organizing_institution
       - participating_days
-      - reference_promoter_assent
-      - reference_promoter_comment
       - start_date
-      - status
       - title
       - type
-      - uuid
       - website
     ConferenceCommunication:
       type: object
@@ -2015,9 +2003,7 @@ components:
         parent:
           type: string
       required:
-      - can_be_submitted
       - category
-      - cdd_comment
       - comment
       - committee
       - context
@@ -2025,12 +2011,8 @@ components:
       - ects
       - object_type
       - parent
-      - reference_promoter_assent
-      - reference_promoter_comment
-      - status
       - title
       - type
-      - uuid
     ConferencePublication:
       type: object
       description: |-
@@ -2123,9 +2105,7 @@ components:
           type: string
       required:
       - authors
-      - can_be_submitted
       - category
-      - cdd_comment
       - comment
       - committee
       - context
@@ -2136,14 +2116,10 @@ components:
       - object_type
       - parent
       - publication_status
-      - reference_promoter_assent
-      - reference_promoter_comment
       - role
       - start_date
-      - status
       - title
       - type
-      - uuid
     ConfirmationPaperCanvas:
       type: object
       properties:
@@ -2336,9 +2312,7 @@ components:
           type: string
       required:
       - authors
-      - can_be_submitted
       - category
-      - cdd_comment
       - comment
       - context
       - ects
@@ -2348,14 +2322,10 @@ components:
       - mark
       - object_type
       - organizing_institution
-      - reference_promoter_assent
-      - reference_promoter_comment
       - start_date
-      - status
       - subtitle
       - title
       - type
-      - uuid
     CreatablePapersTypesEnum:
       enum:
       - CONFIRMATION_PAPER
@@ -2374,8 +2344,6 @@ components:
           - $ref: '#/components/schemas/ActionLink'
           readOnly: true
           default: {}
-      required:
-      - links
     DemandeProlongationDTONested:
       type: object
       description: |-
@@ -2544,8 +2512,6 @@ components:
           title: Types d'activité pour la catégorie Cours
         complementary_course_types:
           title: Type de cours pour la formation complémentaire
-      required:
-      - creatable_papers_types
     EntiteGestionDTONested:
       type: object
       description: |-
@@ -2779,8 +2745,6 @@ components:
           type: string
           format: uuid
           readOnly: true
-      required:
-      - uuid
     MembreCADTONested:
       type: object
       description: |-
@@ -2925,8 +2889,6 @@ components:
           type: string
           format: uuid
           readOnly: true
-      required:
-      - uuid
     MethodEnum:
       type: string
       enum:
@@ -3170,18 +3132,12 @@ components:
         comment:
           type: string
       required:
-      - can_be_submitted
       - category
-      - cdd_comment
       - comment
       - context
       - ects
       - object_type
-      - reference_promoter_assent
-      - reference_promoter_comment
-      - status
       - type
-      - uuid
     ParcoursDoctoralDTO:
       type: object
       description: |-
@@ -3261,7 +3217,6 @@ components:
       - genre_doctorant
       - intitule_secteur_formation
       - lieu_naissance_doctorant
-      - links
       - matricule_doctorant
       - nom_doctorant
       - noma_doctorant
@@ -3281,8 +3236,6 @@ components:
           type: string
           format: uuid
           readOnly: true
-      required:
-      - uuid
     ParcoursDoctoralRechercheDTO:
       type: object
       description: |-
@@ -3319,7 +3272,6 @@ components:
       - cree_le
       - formation
       - genre_doctorant
-      - links
       - matricule_doctorant
       - nom_doctorant
       - prenom_doctorant
@@ -3565,9 +3517,7 @@ components:
           type: string
       required:
       - authors
-      - can_be_submitted
       - category
-      - cdd_comment
       - comment
       - context
       - dial_reference
@@ -3577,14 +3527,10 @@ components:
       - keywords
       - object_type
       - publication_status
-      - reference_promoter_assent
-      - reference_promoter_comment
       - role
       - start_date
-      - status
       - title
       - type
-      - uuid
       - with_reading_committee
     PublicationStatusEnum:
       enum:
@@ -3668,9 +3614,7 @@ components:
         comment:
           type: string
       required:
-      - can_be_submitted
       - category
-      - cdd_comment
       - city
       - comment
       - context
@@ -3679,13 +3623,9 @@ components:
       - end_date
       - object_type
       - organizing_institution
-      - reference_promoter_assent
-      - reference_promoter_comment
       - start_date
-      - status
       - subtitle
       - type
-      - uuid
     ResidencyCommunication:
       type: object
       description: |-
@@ -3762,9 +3702,7 @@ components:
         parent:
           type: string
       required:
-      - can_be_submitted
       - category
-      - cdd_comment
       - comment
       - context
       - ects
@@ -3772,15 +3710,11 @@ components:
       - object_type
       - organizing_institution
       - parent
-      - reference_promoter_assent
-      - reference_promoter_comment
       - start_date
-      - status
       - subtitle
       - subtype
       - title
       - type
-      - uuid
       - website
     RoleEnum:
       enum:
@@ -3875,9 +3809,7 @@ components:
           minimum: 0
           nullable: true
       required:
-      - can_be_submitted
       - category
-      - cdd_comment
       - city
       - context
       - country
@@ -3887,13 +3819,9 @@ components:
       - hour_volume_type
       - object_type
       - organizing_institution
-      - reference_promoter_assent
-      - reference_promoter_comment
       - start_date
-      - status
       - title
       - type
-      - uuid
     SeminarCommunication:
       type: object
       description: |-
@@ -3956,20 +3884,14 @@ components:
           type: string
       required:
       - authors
-      - can_be_submitted
       - category
-      - cdd_comment
       - comment
       - context
       - is_online
       - object_type
       - parent
-      - reference_promoter_assent
-      - reference_promoter_comment
       - start_date
-      - status
       - title
-      - uuid
       - website
     Service:
       type: object
@@ -4038,9 +3960,7 @@ components:
         comment:
           type: string
       required:
-      - can_be_submitted
       - category
-      - cdd_comment
       - comment
       - context
       - ects
@@ -4048,13 +3968,9 @@ components:
       - hour_volume
       - object_type
       - organizing_institution
-      - reference_promoter_assent
-      - reference_promoter_comment
       - start_date
-      - status
       - title
       - type
-      - uuid
     StatusEnum:
       enum:
       - NON_SOUMISE
@@ -4164,10 +4080,6 @@ components:
           type: string
           nullable: true
           readOnly: true
-      required:
-      - first_name
-      - global_id
-      - last_name
     TypeEnum:
       enum:
       - CONFIRMATION_PAPER
@@ -4230,18 +4142,10 @@ components:
           type: integer
       required:
       - academic_year
-      - can_be_submitted
       - category
-      - cdd_comment
       - context
-      - ects
-      - learning_unit_title
       - learning_unit_year
       - object_type
-      - reference_promoter_assent
-      - reference_promoter_comment
-      - status
-      - uuid
     Valorisation:
       type: object
       description: |-
@@ -4301,19 +4205,13 @@ components:
         comment:
           type: string
       required:
-      - can_be_submitted
       - category
-      - cdd_comment
       - comment
       - context
       - ects
       - object_type
-      - reference_promoter_assent
-      - reference_promoter_comment
-      - status
       - subtitle
       - title
-      - uuid
     Error:
       type: object
       properties:
