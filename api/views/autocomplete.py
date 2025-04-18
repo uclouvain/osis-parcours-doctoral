@@ -31,7 +31,6 @@ from base.auth.roles.tutor import Tutor
 from base.models.person import Person
 from base.models.student import Student
 from parcours_doctoral.api import serializers
-from parcours_doctoral.api.schema import AuthorizationAwareSchema
 
 __all__ = [
     "AutocompleteTutorView",
@@ -68,7 +67,6 @@ class AutocompleteTutorView(ListAPIView):
     """Autocomplete tutors"""
 
     name = "tutor"
-    schema = AuthorizationAwareSchema()
     filter_backends = [PersonSearchingBackend]
     serializer_class = serializers.TutorSerializer
     queryset = (
@@ -87,7 +85,6 @@ class AutocompletePersonView(ListAPIView):
     """Autocomplete person"""
 
     name = "person"
-    schema = AuthorizationAwareSchema()
     filter_backends = [PersonSearchingBackend]
     serializer_class = serializers.PersonSerializer
     queryset = (
