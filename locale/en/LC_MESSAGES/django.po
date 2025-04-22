@@ -1292,6 +1292,9 @@ msgstr ""
 msgid "Doctoral trainings export"
 msgstr ""
 
+msgid "Doctoral trainings list"
+msgstr ""
+
 msgid "Doctorate"
 msgstr ""
 
@@ -1608,6 +1611,9 @@ msgid "Generic mail that can be manually sent"
 msgstr ""
 
 msgid "Global comments"
+msgstr ""
+
+msgid "Go to the doctoral trainings list"
 msgstr ""
 
 msgid "Grounds for denied"
@@ -1970,6 +1976,9 @@ msgid "Link to the thesis distribution authorization form (backoffice)"
 msgstr ""
 
 msgid "Link to the thesis distribution authorization form (frontoffice)"
+msgstr ""
+
+msgid "List"
 msgstr ""
 
 msgid ""
