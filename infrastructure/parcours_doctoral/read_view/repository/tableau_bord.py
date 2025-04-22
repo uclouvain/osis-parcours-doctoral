@@ -40,6 +40,7 @@ from admission.infrastructure.admission.doctorat.preparation.read_view.repositor
 )
 from admission.models import DoctorateAdmission
 from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
+from parcours_doctoral.ddd.formation.domain.model.enums import StatutActivite
 from parcours_doctoral.ddd.read_view.repository.i_tableau_bord import (
     ITableauBordRepository,
 )
@@ -78,7 +79,10 @@ class TableauBordRepository(TableauBordRepositoryAdmissionMixin, ITableauBordRep
             confirmationpaper__is_active=True,
             confirmationpaper__extended_deadline__isnull=False,
         ),
-        # IndicateurTableauBordEnum.FORMATION_DOCTORALE_VALIDE_PROMOTEUR.name: Q(),
+        IndicateurTableauBordEnum.FORMATION_DOCTORALE_VALIDE_PROMOTEUR.name: Q(
+            activity__reference_promoter_assent=True,
+            activity__status=StatutActivite.SOUMISE.name,
+        ),
         IndicateurTableauBordEnum.JURY_VALIDE_CA.name: Q(
             status=ChoixStatutParcoursDoctoral.JURY_APPROUVE_CA.name,
         ),
@@ -114,14 +118,14 @@ class TableauBordRepository(TableauBordRepositoryAdmissionMixin, ITableauBordRep
 
         doctorate_results = ParcoursDoctoral.objects.aggregate(
             **{
-                indicator: Count('pk', filter=django_filter & common_filters)
+                indicator: Count('pk', filter=django_filter & common_filters, distinct=True)
                 for indicator, django_filter in cls.DOCTORATE_DJANGO_FILTER_BY_INDICATOR.items()
             }
         )
 
         admission_results = DoctorateAdmission.objects.aggregate(
             **{
-                indicator: Count('pk', filter=django_filter & common_filters)
+                indicator: Count('pk', filter=django_filter & common_filters, distinct=True)
                 for indicator, django_filter in cls.ADMISSION_DJANGO_FILTER_BY_INDICATOR.items()
             }
         )
