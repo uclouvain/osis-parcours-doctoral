@@ -51,6 +51,10 @@ from base.tests.factories.entity_version import (
     MainEntityVersionFactory,
 )
 from base.tests.factories.program_manager import ProgramManagerFactory
+from epc.models.enums.etat_inscription import EtatInscriptionFormation
+from epc.tests.factories.inscription_programme_annuel import (
+    InscriptionProgrammeAnnuelFactory,
+)
 from infrastructure.messages_bus import message_bus_instance
 from parcours_doctoral.ddd.domain.model.enums import (
     ChoixCommissionProximiteCDEouCLSM,
@@ -65,10 +69,12 @@ from parcours_doctoral.ddd.domain.model.parcours_doctoral import (
     ENTITY_SCIENCES,
     SIGLE_SCIENCES,
 )
+from parcours_doctoral.ddd.formation.domain.model.enums import StatutActivite
 from parcours_doctoral.ddd.read_view.dto.tableau_bord import TableauBordDTO
 from parcours_doctoral.ddd.read_view.queries import (
     RecupererInformationsTableauBordQuery,
 )
+from parcours_doctoral.tests.factories.activity import ConferenceFactory
 from parcours_doctoral.tests.factories.confirmation_paper import (
     ConfirmationPaperFactory,
 )
@@ -181,6 +187,129 @@ class DashboardCommandTestCase(TestCase):
 
         self.assert_dashboard_value(category, indicator, 0)
 
+    def test_pre_admission_without_valid_enrolment(self):
+        category = CategorieTableauBordEnum.PRE_ADMISSION.name
+        indicator = IndicateurTableauBordEnum.PRE_ADMISSION_PAS_EN_ORDRE_INSCRIPTION.name
+
+        self.assert_dashboard_value(category, indicator, 0)
+
+        admission = DoctorateAdmissionFactory(
+            status=ChoixStatutPropositionDoctorale.INSCRIPTION_AUTORISEE.name,
+            type=ChoixTypeAdmission.PRE_ADMISSION.name,
+        )
+
+        self.assert_dashboard_value(category, indicator, 1)
+
+        annual_enrolment = InscriptionProgrammeAnnuelFactory(
+            admission_uuid=admission.uuid,
+            programme__offer=admission.training,
+            programme_cycle__etudiant__person=admission.candidate,
+            etat_inscription=EtatInscriptionFormation.INSCRIT_AU_ROLE.name,
+        )
+
+        self.assert_dashboard_value(category, indicator, 0)
+
+        admission.status = ChoixStatutPropositionDoctorale.INSCRIPTION_REFUSEE.name
+        admission.save()
+
+        self.assert_dashboard_value(category, indicator, 0)
+
+        admission.status = ChoixStatutPropositionDoctorale.INSCRIPTION_AUTORISEE.name
+        admission.type = ChoixTypeAdmission.ADMISSION.name
+        admission.save()
+
+        self.assert_dashboard_value(category, indicator, 0)
+
+        admission.type = ChoixTypeAdmission.PRE_ADMISSION.name
+        admission.save()
+
+        annual_enrolment.etat_inscription = EtatInscriptionFormation.PROVISOIRE.name
+        annual_enrolment.save()
+
+        self.assert_dashboard_value(category, indicator, 1)
+
+    @mock.patch('django.db.models.functions.datetime.Now.resolve_expression')
+    def test_pre_admission_with_deadline(self, mock_resolve):
+        category = CategorieTableauBordEnum.PRE_ADMISSION.name
+        indicator = IndicateurTableauBordEnum.PRE_ADMISSION_ECHEANCE_3_MOIS.name
+
+        approved_by_cdd_at = datetime.datetime(2020, 1, 1)  # => Deadline (2020, 9, 30)
+
+        admission = DoctorateAdmissionFactory(
+            status=ChoixStatutPropositionDoctorale.INSCRIPTION_AUTORISEE.name,
+            type=ChoixTypeAdmission.PRE_ADMISSION.name,
+            approved_by_cdd_at=approved_by_cdd_at,
+        )
+
+        today_date = datetime.date(2020, 1, 1)
+        with freezegun.freeze_time(today_date):
+            current_date = Value(today_date)
+            mock_resolve.side_effect = current_date.resolve_expression
+
+            self.assert_dashboard_value(category, indicator, 0)
+
+            admission.approved_by_cdd_at = approved_by_cdd_at
+            admission.save()
+
+            self.assert_dashboard_value(category, indicator, 0)
+
+        today_date = datetime.date(2020, 9, 30)
+        with freezegun.freeze_time(today_date):
+            current_date = Value(today_date)
+            mock_resolve.side_effect = current_date.resolve_expression
+
+            self.assert_dashboard_value(category, indicator, 0)
+
+        today_date = datetime.date(2020, 10, 1)
+        with freezegun.freeze_time(today_date):
+            current_date = Value(today_date)
+            mock_resolve.side_effect = current_date.resolve_expression
+
+            self.assert_dashboard_value(category, indicator, 1)
+
+            admission.type = ChoixTypeAdmission.ADMISSION.name
+            admission.save()
+
+            self.assert_dashboard_value(category, indicator, 0)
+
+            admission.type = ChoixTypeAdmission.PRE_ADMISSION.name
+            admission.approved_by_cdd_at = None
+            admission.save()
+
+            self.assert_dashboard_value(category, indicator, 0)
+
+            admission.approved_by_cdd_at = approved_by_cdd_at
+            admission.save()
+
+            admission_following_the_pre_admission = DoctorateAdmissionFactory(
+                related_pre_admission=admission,
+                candidate=admission.candidate,
+                training=admission.training,
+            )
+
+            admission_following_the_pre_admission.status = ChoixStatutPropositionDoctorale.CONFIRMEE.name
+            admission_following_the_pre_admission.save()
+            self.assert_dashboard_value(category, indicator, 0)
+
+            for status in [
+                ChoixStatutPropositionDoctorale.EN_BROUILLON.name,
+                ChoixStatutPropositionDoctorale.EN_ATTENTE_DE_SIGNATURE.name,
+                ChoixStatutPropositionDoctorale.ANNULEE.name,
+            ]:
+                admission_following_the_pre_admission.status = status
+                admission_following_the_pre_admission.save()
+                self.assert_dashboard_value(category, indicator, 1)
+
+            # Add another following admission to check if we do not count the pre admission twice
+            second_admission_following_the_pre_admission = DoctorateAdmissionFactory(
+                related_pre_admission=admission,
+                candidate=admission.candidate,
+                training=admission.training,
+                status=ChoixStatutPropositionDoctorale.EN_BROUILLON.name,
+            )
+
+            self.assert_dashboard_value(category, indicator, 1)
+
     def test_admission_submitted(self):
         category = CategorieTableauBordEnum.ADMISSION.name
         indicator = IndicateurTableauBordEnum.ADMISSION_DOSSIER_SOUMIS.name
@@ -286,6 +415,47 @@ class DashboardCommandTestCase(TestCase):
 
         self.assert_dashboard_value(category, indicator, 0)
 
+    def test_admission_without_valid_enrolment(self):
+        category = CategorieTableauBordEnum.ADMISSION.name
+        indicator = IndicateurTableauBordEnum.ADMISSION_PAS_EN_ORDRE_INSCRIPTION.name
+
+        self.assert_dashboard_value(category, indicator, 0)
+
+        admission = DoctorateAdmissionFactory(
+            status=ChoixStatutPropositionDoctorale.INSCRIPTION_AUTORISEE.name,
+            type=ChoixTypeAdmission.ADMISSION.name,
+        )
+
+        self.assert_dashboard_value(category, indicator, 1)
+
+        annual_enrolment = InscriptionProgrammeAnnuelFactory(
+            admission_uuid=admission.uuid,
+            programme__offer=admission.training,
+            programme_cycle__etudiant__person=admission.candidate,
+            etat_inscription=EtatInscriptionFormation.INSCRIT_AU_ROLE.name,
+        )
+
+        self.assert_dashboard_value(category, indicator, 0)
+
+        admission.status = ChoixStatutPropositionDoctorale.INSCRIPTION_REFUSEE.name
+        admission.save()
+
+        self.assert_dashboard_value(category, indicator, 0)
+
+        admission.status = ChoixStatutPropositionDoctorale.INSCRIPTION_AUTORISEE.name
+        admission.type = ChoixTypeAdmission.PRE_ADMISSION.name
+        admission.save()
+
+        self.assert_dashboard_value(category, indicator, 0)
+
+        admission.type = ChoixTypeAdmission.ADMISSION.name
+        admission.save()
+
+        annual_enrolment.etat_inscription = EtatInscriptionFormation.PROVISOIRE.name
+        annual_enrolment.save()
+
+        self.assert_dashboard_value(category, indicator, 1)
+
     def test_confirmation_submitted(self):
         category = CategorieTableauBordEnum.CONFIRMATION.name
         indicator = IndicateurTableauBordEnum.CONFIRMATION_SOUMISE.name
@@ -380,8 +550,6 @@ class DashboardCommandTestCase(TestCase):
         category = CategorieTableauBordEnum.CONFIRMATION.name
         indicator = IndicateurTableauBordEnum.CONFIRMATION_ECHEANCE_2_MOIS.name
 
-        # self.assert_dashboard_value(category, indicator, 0)
-
         # Admission date: 2024/01/01
         # Confirmation deadline date: 2024/12/31
         # Today date: 2024/01/01
@@ -437,6 +605,58 @@ class DashboardCommandTestCase(TestCase):
             )
 
             self.assert_dashboard_value(category, indicator, 0)
+
+    def test_doctoral_training_validated_by_promoter(self):
+        category = CategorieTableauBordEnum.FORMATION_DOCTORALE.name
+        indicator = IndicateurTableauBordEnum.FORMATION_DOCTORALE_VALIDE_PROMOTEUR.name
+
+        self.assert_dashboard_value(category, indicator, 0)
+
+        first_doctorate = ParcoursDoctoralFactory()
+        other_doctorate = ParcoursDoctoralFactory()
+
+        ConferenceFactory(
+            parcours_doctoral=first_doctorate,
+            reference_promoter_assent=True,
+            status=StatutActivite.SOUMISE.name,
+        )
+
+        ConferenceFactory(
+            parcours_doctoral=first_doctorate,
+            reference_promoter_assent=True,
+            status=StatutActivite.SOUMISE.name,
+        )
+
+        ConferenceFactory(
+            parcours_doctoral=first_doctorate,
+            reference_promoter_assent=False,
+            status=StatutActivite.SOUMISE.name,
+        )
+
+        other_activity = ConferenceFactory(
+            parcours_doctoral=other_doctorate,
+            reference_promoter_assent=True,
+            status=StatutActivite.SOUMISE.name,
+        )
+
+        self.assert_dashboard_value(category, indicator, 2)
+
+        other_activity.reference_promoter_assent = False
+        other_activity.save()
+
+        self.assert_dashboard_value(category, indicator, 1)
+
+        other_activity.reference_promoter_assent = True
+
+        for status in [
+            StatutActivite.NON_SOUMISE.name,
+            StatutActivite.ACCEPTEE.name,
+            StatutActivite.REFUSEE.name,
+        ]:
+            other_activity.status = status
+            other_activity.save()
+
+            self.assert_dashboard_value(category, indicator, 1)
 
     def test_jury_ca_approved(self):
         category = CategorieTableauBordEnum.JURY.name
