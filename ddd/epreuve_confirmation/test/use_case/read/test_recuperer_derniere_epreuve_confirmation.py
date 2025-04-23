@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -26,9 +26,6 @@
 
 from django.test import TestCase
 
-from parcours_doctoral.ddd.domain.validator.exceptions import (
-    ParcoursDoctoralNonTrouveException,
-)
 from parcours_doctoral.ddd.epreuve_confirmation.commands import (
     RecupererDerniereEpreuveConfirmationQuery,
 )
@@ -64,7 +61,7 @@ class TestRecupererDerniereEpreuveConfirmation(TestCase):
     def test_should_retourner_epreuve_confirmation_si_parcours_doctoral_connu_avec_epreuves(self):
         epreuve_confirmation: EpreuveConfirmationDTO = self.message_bus.invoke(
             RecupererDerniereEpreuveConfirmationQuery(
-                parcours_doctoral_uuid='uuid-pre-SC3DP-promoteurs-membres-deja-approuves',
+                parcours_doctoral_uuid='uuid-SC3DP-promoteur-refus-membre-deja-approuve-refus',
             )
         )
-        self.assertEqual(epreuve_confirmation.uuid, 'c1')
+        self.assertEqual(epreuve_confirmation.uuid, 'c10')
