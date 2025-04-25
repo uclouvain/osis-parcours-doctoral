@@ -55,6 +55,8 @@ from base.tests.factories.learning_unit_year import LearningUnitYearFactory
 from base.tests.factories.person import PersonFactory
 from base.tests.factories.program_manager import ProgramManagerFactory
 from base.tests.factories.user import UserFactory
+from epc.models.enums.etat_inscription import EtatInscriptionFormation
+from epc.tests.factories.inscription_programme_annuel import InscriptionProgrammeAnnuelFactory
 from parcours_doctoral.ddd.domain.model.enums import (
     STATUTS_ACTIFS,
     BourseRecherche,
@@ -231,6 +233,11 @@ class ParcoursDoctoralListTestView(QueriesAssertionsMixin, TestCase):
             entity_type=EntityType.SCHOOL.name,
             parent=faculty_entity,
         ).entity
+
+        cls.enrollment = InscriptionProgrammeAnnuelFactory(
+            admission_uuid=cls.doctorate.admission.uuid,
+            etat_inscription=EtatInscriptionFormation.INSCRIT_AU_ROLE.name,
+        )
 
         cls.default_params = {
             'annee_academique': 2023,
@@ -416,7 +423,7 @@ class ParcoursDoctoralListTestView(QueriesAssertionsMixin, TestCase):
         self.assertEqual(dto.code_bourse, self.doctorate.international_scholarship.short_name)
         self.assertEqual(dto.cotutelle, self.doctorate.cotutelle)
         self.assertEqual(dto.formation_complementaire, False)
-        self.assertEqual(dto.en_regle_inscription, False)
+        self.assertEqual(dto.en_regle_inscription, True)
         self.assertEqual(dto.total_credits_valides, 0)
 
     def test_dto_with_complementary_training_activity(self):

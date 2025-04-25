@@ -33,6 +33,8 @@ from django.db.models.functions import Coalesce
 from django.utils.translation import get_language
 
 from admission.views import PaginatedList
+from epc.models.enums.etat_inscription import EtatInscriptionFormation
+from epc.models.inscription_programme_annuel import InscriptionProgrammeAnnuel
 from parcours_doctoral.ddd.domain.model.enums import (
     BourseRecherche,
     ChoixEtapeParcoursDoctoral,
@@ -47,7 +49,9 @@ from parcours_doctoral.ddd.read_view.dto.parcours_doctoral import (
 from parcours_doctoral.ddd.read_view.repository.i_liste_parcours_doctoraux import (
     IListeParcoursDoctorauxRepository,
 )
-from parcours_doctoral.infrastructure.parcours_doctoral.read_view.repository.tableau_bord import TableauBordRepository
+from parcours_doctoral.infrastructure.parcours_doctoral.read_view.repository.tableau_bord import (
+    TableauBordRepository,
+)
 from parcours_doctoral.infrastructure.utils import (
     filter_doctorate_queryset_according_to_roles,
     get_entities_with_descendants_ids,
@@ -100,6 +104,12 @@ class ListeParcoursDoctorauxRepository(IListeParcoursDoctorauxRepository):
             .annotate_with_reference()
             .annotate(
                 scholarship=Coalesce('international_scholarship__short_name', 'other_international_scholarship'),
+                in_order_of_registration=Exists(
+                    InscriptionProgrammeAnnuel.objects.filter(
+                        admission_uuid=OuterRef('admission__uuid'),
+                        etat_inscription=EtatInscriptionFormation.INSCRIT_AU_ROLE.name,
+                    )
+                ),
             )
             .annotate(
                 follows_an_additional_training=Exists(
@@ -216,7 +226,7 @@ class ListeParcoursDoctorauxRepository(IListeParcoursDoctorauxRepository):
                 'pre_admission': ['admission__type'],
                 'cotutelle': ['cotutelle'],
                 'formation_complementaire': ['follows_an_additional_training'],
-                'en_regle_inscription': [''],  # TODO
+                'en_regle_inscription': ['in_order_of_registration'],
                 'total_credits_valides': ['validated_credits_number'],
             }[champ_tri]
 
@@ -266,8 +276,8 @@ class ListeParcoursDoctorauxRepository(IListeParcoursDoctorauxRepository):
             cree_le=parcours_doctoral.created_at,
             code_bourse=parcours_doctoral.scholarship,  # From annotation
             cotutelle=parcours_doctoral.cotutelle,
-            formation_complementaire=parcours_doctoral.follows_an_additional_training,
-            en_regle_inscription=False,  # TODO
-            total_credits_valides=parcours_doctoral.validated_credits_number,
+            formation_complementaire=parcours_doctoral.follows_an_additional_training,  # From annotation
+            en_regle_inscription=parcours_doctoral.in_order_of_registration,  # From annotation
+            total_credits_valides=parcours_doctoral.validated_credits_number,  # From annotation
             date_admission_par_cdd=parcours_doctoral.admission.approved_by_cdd_at,
         )
