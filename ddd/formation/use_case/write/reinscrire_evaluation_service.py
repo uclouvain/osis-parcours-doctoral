@@ -23,41 +23,27 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from rest_framework.fields import CharField
-from rest_framework.serializers import ModelSerializer, ReadOnlyField, Serializer
-
-from base.models.person import Person
-from base.utils.serializers import DTOSerializer
-from parcours_doctoral.ddd.dtos import GroupeDeSupervisionDTO
-
-__all__ = [
-    'SupervisionDTOSerializer',
-    'SupervisionCanvasSerializer',
-    'PersonSerializer',
-    'TutorSerializer',
-]
+from parcours_doctoral.ddd.formation.builder.inscription_evaluation_builder import (
+    InscriptionEvaluationIdentityBuilder,
+)
+from parcours_doctoral.ddd.formation.commands import ReinscrireEvaluationCommand
+from parcours_doctoral.ddd.formation.repository.i_inscription_evaluation import (
+    IInscriptionEvaluationRepository,
+)
 
 
-class SupervisionCanvasSerializer(Serializer):
-    url = CharField()
+def reinscrire_evaluation(
+    cmd: ReinscrireEvaluationCommand,
+    inscription_evaluation_repository: IInscriptionEvaluationRepository,
+):
+    # GIVEN
+    entity_id = InscriptionEvaluationIdentityBuilder.build_from_uuid(uuid=cmd.inscription_uuid)
+    entity = inscription_evaluation_repository.get(entity_id=entity_id)
 
+    # WHEN
+    entity.reinscrire()
 
-class SupervisionDTOSerializer(DTOSerializer):
-    class Meta:
-        source = GroupeDeSupervisionDTO
+    # THEN
+    inscription_evaluation_repository.save(entity)
 
-
-class PersonSerializer(ModelSerializer):
-    class Meta:
-        model = Person
-        fields = (
-            'first_name',
-            'last_name',
-            'global_id',
-        )
-
-
-class TutorSerializer(PersonSerializer):
-    first_name = ReadOnlyField()
-    last_name = ReadOnlyField()
-    global_id = ReadOnlyField()
+    return entity_id

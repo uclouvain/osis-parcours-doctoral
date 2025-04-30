@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -24,9 +24,9 @@
 #
 # ##############################################################################
 
-from base.utils.serializers import DTOSerializer
 from rest_framework import serializers
 
+from base.utils.serializers import DTOSerializer
 from parcours_doctoral.ddd.jury.commands import (
     AjouterMembreCommand,
     ModifierJuryCommand,
@@ -54,7 +54,7 @@ class JuryDTOSerializer(DTOSerializer):
 
 
 class JuryIdentityDTOSerializer(serializers.Serializer):
-    uuid = serializers.ReadOnlyField()
+    uuid = serializers.UUIDField(read_only=True)
 
 
 class MembreJuryDTOSerializer(DTOSerializer):
@@ -63,7 +63,7 @@ class MembreJuryDTOSerializer(DTOSerializer):
 
 
 class MembreJuryIdentityDTOSerializer(serializers.Serializer):
-    uuid = serializers.ReadOnlyField()
+    uuid = serializers.UUIDField(read_only=True)
 
 
 class ModifierJuryCommandSerializer(DTOSerializer):
