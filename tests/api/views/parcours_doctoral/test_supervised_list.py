@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -25,20 +25,20 @@
 # ##############################################################################
 
 import freezegun
+from django.shortcuts import resolve_url
+from rest_framework import status
+from rest_framework.test import APITestCase
+
 from base.models.enums.entity_type import EntityType
 from base.tests import QueriesAssertionsMixin
 from base.tests.factories.entity_version import EntityVersionFactory
 from base.tests.factories.person import PersonFactory
-from django.shortcuts import resolve_url
-from reference.tests.factories.country import CountryFactory
-from rest_framework import status
-from rest_framework.test import APITestCase
-
 from parcours_doctoral.tests.factories.parcours_doctoral import ParcoursDoctoralFactory
 from parcours_doctoral.tests.factories.supervision import (
     CaMemberFactory,
     PromoterFactory,
 )
+from reference.tests.factories.country import CountryFactory
 
 
 class SupervisedDoctorateListViewTestCase(QueriesAssertionsMixin, APITestCase):
@@ -82,6 +82,7 @@ class SupervisedDoctorateListViewTestCase(QueriesAssertionsMixin, APITestCase):
             cls.second_doctorate = ParcoursDoctoralFactory(
                 training__management_entity=cls.second_commission.entity,
                 supervision_group=cls.promoter.process,
+                create_student__with_valid_enrolment=False,
             )
             cls.second_teaching_campus = (
                 cls.first_doctorate.training.educationgroupversion_set.first().root_group.main_teaching_campus
@@ -128,7 +129,7 @@ class SupervisedDoctorateListViewTestCase(QueriesAssertionsMixin, APITestCase):
     def test_list_with_promoter(self):
         self.client.force_authenticate(user=self.promoter.person.user)
 
-        with self.assertNumQueriesLessThan(11, verbose=True):
+        with self.assertNumQueriesLessThan(12, verbose=True):
             response = self.client.get(self.url, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -189,7 +190,7 @@ class SupervisedDoctorateListViewTestCase(QueriesAssertionsMixin, APITestCase):
     def test_list_with_ca_member(self):
         self.client.force_authenticate(user=self.committee_member.person.user)
 
-        with self.assertNumQueriesLessThan(11, verbose=True):
+        with self.assertNumQueriesLessThan(12, verbose=True):
             response = self.client.get(self.url, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)

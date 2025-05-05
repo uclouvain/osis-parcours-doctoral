@@ -32,9 +32,6 @@ from base.models.utils.utils import ChoiceEnum
 
 
 class ChoixStatutParcoursDoctoral(ChoiceEnum):
-    # En cours de création
-    EN_ATTENTE_INJECTION_EPC = _('EN_ATTENTE_INJECTION_EPC')
-    EN_COURS_DE_CREATION_PAR_GESTIONNAIRE = _('EN_COURS_DE_CREATION_PAR_GESTIONNAIRE')
     # Après création
     ADMIS = _('ADMIS')
     # Groupe de supervision
@@ -52,12 +49,6 @@ class ChoixStatutParcoursDoctoral(ChoiceEnum):
     JURY_APPROUVE_ADRE = _('JURY_APPROUVE_ADRE')
     JURY_REFUSE_ADRE = _('JURY_REFUSE_ADRE')
     ABANDON = _('ABANDON')
-
-
-STATUTS_DOCTORAT_EN_COURS_DE_CREATION = {
-    ChoixStatutParcoursDoctoral.EN_ATTENTE_INJECTION_EPC.name,
-    ChoixStatutParcoursDoctoral.EN_COURS_DE_CREATION_PAR_GESTIONNAIRE.name,
-}
 
 
 STATUTS_DOCTORAT_EPREUVE_CONFIRMATION_EN_COURS = {
@@ -146,10 +137,6 @@ class ChoixEtapeParcoursDoctoral(ChoiceEnum):
 
 
 STATUTS_PAR_ETAPE_PARCOURS_DOCTORAL = {
-    ChoixEtapeParcoursDoctoral.ADMISSION: [
-        ChoixStatutParcoursDoctoral.EN_ATTENTE_INJECTION_EPC,
-        ChoixStatutParcoursDoctoral.EN_COURS_DE_CREATION_PAR_GESTIONNAIRE,
-    ],
     ChoixEtapeParcoursDoctoral.CONFIRMATION: [
         ChoixStatutParcoursDoctoral.ADMIS,
         ChoixStatutParcoursDoctoral.CONFIRMATION_SOUMISE,

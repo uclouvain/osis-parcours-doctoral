@@ -154,22 +154,16 @@ class ParcoursDoctoralAPIViewTestCase(CheckActionLinksMixin, APITestCase):
         response = self.client.get(self.url, format='json')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-    def test_get_parcours_doctoral_of_in_creation_doctorate_is_forbidden(self):
+    def test_get_parcours_doctoral_with_invalid_enrolment_is_forbidden(self):
         self.client.force_authenticate(user=self.student.user)
 
         in_creation_doctorate = ParcoursDoctoralFactory(
             supervision_group=self.doctorate.supervision_group,
             student=self.student,
-            status=ChoixStatutParcoursDoctoral.EN_COURS_DE_CREATION_PAR_GESTIONNAIRE.name,
+            create_student__with_valid_enrolment=False,
         )
 
         url = resolve_url(self.base_url, uuid=in_creation_doctorate.uuid)
-
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
-        in_creation_doctorate.status = ChoixStatutParcoursDoctoral.EN_ATTENTE_INJECTION_EPC.name
-        in_creation_doctorate.save()
 
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)

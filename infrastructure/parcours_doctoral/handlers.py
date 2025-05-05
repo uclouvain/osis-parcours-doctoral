@@ -86,6 +86,10 @@ COMMAND_HANDLERS = {
         cmd,
         parcours_doctoral_repository=ParcoursDoctoralRepository(),
     ),
+    RecupererParcoursDoctoralPropositionQuery: lambda msg_bus, cmd: recuperer_parcours_doctoral_proposition(
+        cmd,
+        parcours_doctoral_repository=ParcoursDoctoralRepository(),
+    ),
     GetCotutelleQuery: lambda msg_bus, cmd: get_cotutelle(
         cmd,
         parcours_doctoral_repository=ParcoursDoctoralRepository(),

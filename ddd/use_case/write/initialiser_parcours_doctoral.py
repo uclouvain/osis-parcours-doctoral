@@ -35,9 +35,6 @@ from parcours_doctoral.ddd.domain.service.i_historique import IHistorique
 from parcours_doctoral.ddd.domain.service.i_parcours_doctoral import (
     IParcoursDoctoralService,
 )
-from parcours_doctoral.ddd.epreuve_confirmation.domain.service.epreuve_confirmation import (
-    EpreuveConfirmationService,
-)
 from parcours_doctoral.ddd.epreuve_confirmation.repository.i_epreuve_confirmation import (
     IEpreuveConfirmationRepository,
 )
@@ -57,14 +54,11 @@ def initialiser_parcours_doctoral(
     # WHEN
     parcours_doctoral_entity_id = parcours_doctoral_service.initier(
         proposition=proposition,
-    )
-    epreuve_confirmation = EpreuveConfirmationService.initier(
-        parcours_doctoral_id=parcours_doctoral_entity_id,
-        date_reference_pour_date_limite=proposition.approuvee_par_cdd_le,
+        epreuve_confirmation_repository=epreuve_confirmation_repository,
+        date_reference_pour_date_limite_confirmation=proposition.approuvee_par_cdd_le,
     )
 
     # THEN
-    epreuve_confirmation_repository.save(epreuve_confirmation)
     historique.historiser_initialisation(parcours_doctoral_entity_id)
 
     return parcours_doctoral_entity_id
