@@ -71,7 +71,7 @@ class ExternalDoctorateAPIView(APIView):
 
         # Load actor from token
         if (
-            not doctorate.is_initialized
+            not doctorate.has_valid_enrollment
             or not self.actor
             # must be part of supervision group
             or self.actor.process_id != doctorate.supervision_group_id
