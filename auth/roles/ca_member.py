@@ -23,18 +23,16 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from django.db.models import UniqueConstraint
-from django.utils.translation import gettext_lazy as _
 from rules import RuleSet, always_allow
 
-from osis_role.contrib.models import RoleModel
+from admission.auth.roles.ca_member import CommitteeMember as AdmissionCommitteeMember
 from parcours_doctoral.auth.predicates.parcours_doctoral import (
     is_part_of_committee,
     is_related_to_an_admission,
 )
 
 
-class CommitteeMember(RoleModel):
+class CommitteeMember(AdmissionCommitteeMember):
     """
     Membre du comité
 
@@ -43,10 +41,8 @@ class CommitteeMember(RoleModel):
     """
 
     class Meta:
-        verbose_name = _("Role: Committee member")
-        verbose_name_plural = _("Role: Committee members")
         group_name = "committee_members"
-        constraints = [UniqueConstraint(fields=['person'], name='unique_committee_member_by_person')]
+        proxy = True
 
     @classmethod
     def rule_set(cls):
@@ -58,7 +54,7 @@ class CommitteeMember(RoleModel):
             'parcours_doctoral.view_cotutelle': is_part_of_committee & is_related_to_an_admission,
             'parcours_doctoral.view_funding': is_part_of_committee,
             'parcours_doctoral.view_supervision': is_part_of_committee,
-            'parcours_doctoral.view_confirmation': is_part_of_committee,
+            'parcours_doctoral.view_confirmation': is_part_of_committee & is_related_to_an_admission,
             'parcours_doctoral.view_jury': is_part_of_committee,
             'parcours_doctoral.approve_jury': is_part_of_committee,
         }

@@ -125,7 +125,11 @@ class ParcoursDoctoralInMemoryRepository(InMemoryGenericRepository, IParcoursDoc
             raise ParcoursDoctoralNonTrouveException
 
     @classmethod
-    def get_dto(cls, entity_id: 'ParcoursDoctoralIdentity') -> 'ParcoursDoctoralDTO':
+    def get_dto(
+        cls,
+        entity_id: 'ParcoursDoctoralIdentity' = None,
+        proposition_id: 'PropositionIdentity' = None,
+    ) -> 'ParcoursDoctoralDTO':
         parcours_doctoral = cls.get(entity_id)
         doctorant = next(
             d for d in cls.doctorants if d.matricule == parcours_doctoral.matricule_doctorant

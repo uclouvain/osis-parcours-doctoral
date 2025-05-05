@@ -42,6 +42,7 @@ from django.db.models import (
 from django.db.models.functions import Coalesce, Concat, JSONObject, Mod, Replace
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import pgettext_lazy
 from osis_document.contrib import FileField
@@ -57,8 +58,9 @@ from base.models.enums.entity_type import SECTOR
 from base.models.person import Person
 from base.models.student import Student
 from base.utils.cte import CTESubquery
+from epc.models.enums.etat_inscription import EtatInscriptionFormation
+from epc.models.inscription_programme_annuel import InscriptionProgrammeAnnuel
 from parcours_doctoral.ddd.domain.model.enums import (
-    STATUTS_DOCTORAT_EN_COURS_DE_CREATION,
     ChoixCommissionProximiteCDEouCLSM,
     ChoixCommissionProximiteCDSS,
     ChoixDoctoratDejaRealise,
@@ -255,6 +257,7 @@ class ParcoursDoctoral(models.Model):
 
     status = models.CharField(
         choices=ChoixStatutParcoursDoctoral.choices(),
+        default=ChoixStatutParcoursDoctoral.ADMIS.name,
         max_length=64,
         verbose_name=_("Status"),
     )
@@ -363,7 +366,10 @@ class ParcoursDoctoral(models.Model):
 
     # Cotutelle
 
-    cotutelle = models.BooleanField()
+    cotutelle = models.BooleanField(
+        null=True,
+        blank=True,
+    )
     cotutelle_motivation = models.CharField(
         max_length=255,
         verbose_name=_("Motivation"),
@@ -538,9 +544,13 @@ class ParcoursDoctoral(models.Model):
             ),
         ]
 
-    @property
-    def is_initialized(self):
-        return self.status not in STATUTS_DOCTORAT_EN_COURS_DE_CREATION
+    @cached_property
+    def has_valid_enrollment(self):
+        return InscriptionProgrammeAnnuel.objects.filter(
+            programme__offer_id=self.training_id,
+            programme_cycle__etudiant__person_id=self.student_id,
+            etat_inscription=EtatInscriptionFormation.INSCRIT_AU_ROLE.name,
+        ).exists()
 
     def save(self, *args, **kwargs) -> None:
         super().save(*args, **kwargs)

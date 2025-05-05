@@ -26,7 +26,7 @@
 from typing import Dict, List, Optional
 
 from django.conf import settings
-from django.db.models import F, QuerySet
+from django.db.models import F, Q, QuerySet
 from django.utils.translation import get_language
 
 from base.models.education_group_year import EducationGroupYear
@@ -45,7 +45,10 @@ from parcours_doctoral.ddd.domain.model._formation import FormationIdentity
 from parcours_doctoral.ddd.domain.model._institut import InstitutIdentity
 from parcours_doctoral.ddd.domain.model._projet import Projet
 from parcours_doctoral.ddd.domain.model.enums import (
+    ChoixCommissionProximiteCDEouCLSM,
+    ChoixCommissionProximiteCDSS,
     ChoixDoctoratDejaRealise,
+    ChoixSousDomaineSciences,
     ChoixStatutParcoursDoctoral,
     ChoixTypeFinancement,
 )
@@ -99,6 +102,14 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
         except ParcoursDoctoralModel.DoesNotExist:
             raise ParcoursDoctoralNonTrouveException
 
+        commission_proximite = None
+        if hasattr(ChoixCommissionProximiteCDEouCLSM, parcours_doctoral.proximity_commission):
+            commission_proximite = ChoixCommissionProximiteCDEouCLSM[parcours_doctoral.proximity_commission]
+        elif hasattr(ChoixCommissionProximiteCDSS, parcours_doctoral.proximity_commission):
+            commission_proximite = ChoixCommissionProximiteCDSS[parcours_doctoral.proximity_commission]
+        elif hasattr(ChoixSousDomaineSciences, parcours_doctoral.proximity_commission):
+            commission_proximite = ChoixSousDomaineSciences[parcours_doctoral.proximity_commission]
+
         return ParcoursDoctoral(
             entity_id=entity_id,
             statut=ChoixStatutParcoursDoctoral[parcours_doctoral.status],
@@ -107,6 +118,8 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
                 parcours_doctoral.training.acronym,
                 parcours_doctoral.training.academic_year.year,
             ),
+            commission_proximite=commission_proximite,
+            justification=parcours_doctoral.justification,
             experience_precedente_recherche=ExperiencePrecedenteRecherche(
                 doctorat_deja_realise=ChoixDoctoratDejaRealise[parcours_doctoral.phd_already_done],
                 institution=parcours_doctoral.phd_already_done_institution,
@@ -243,11 +256,24 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
                 'dedicated_time': entity.financement.temps_consacre,
                 'is_fnrs_fria_fresh_csc_linked': entity.financement.est_lie_fnrs_fria_fresh_csc,
                 'financing_comment': entity.financement.commentaire,
+                'proximity_commission': entity.commission_proximite.name if entity.commission_proximite else '',
+                'justification': entity.justification,
             },
         )
 
     @classmethod
-    def get_dto(cls, entity_id: 'ParcoursDoctoralIdentity') -> 'ParcoursDoctoralDTO':
+    def get_dto(
+        cls,
+        entity_id: 'ParcoursDoctoralIdentity' = None,
+        proposition_id: 'PropositionIdentity' = None,
+    ) -> 'ParcoursDoctoralDTO':
+        search_filter = (
+            Q(uuid=entity_id.uuid) if entity_id else Q(admission__uuid=proposition_id.uuid) if proposition_id else None
+        )
+
+        if not search_filter:
+            raise ParcoursDoctoralNonTrouveException
+
         try:
             parcours_doctoral: ParcoursDoctoralModel = (
                 ParcoursDoctoralModel.objects.select_related(
@@ -268,7 +294,7 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
                     admission_date=F('admission__approved_by_cdd_at'),
                 )
                 .annotate_intitule_secteur_formation()
-                .get(uuid=entity_id.uuid)
+                .get(search_filter)
             )
         except ParcoursDoctoralModel.DoesNotExist:
             raise ParcoursDoctoralNonTrouveException
@@ -281,7 +307,7 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
         management_entity = management_entities.get(parcours_doctoral.training.management_entity_id)
 
         return ParcoursDoctoralDTO(
-            uuid=str(entity_id.uuid),
+            uuid=str(parcours_doctoral.uuid),
             uuid_admission=str(parcours_doctoral.admission_uuid),  # from annotation
             type_admission=parcours_doctoral.admission_type,  # from annotation
             date_admission_par_cdd=parcours_doctoral.admission_date,  # from annotation
@@ -389,7 +415,7 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
 
     @classmethod
     def get_cotutelle_dto(cls, entity_id: 'ParcoursDoctoralIdentity') -> 'CotutelleDTO':
-        return cls.get_dto(entity_id).cotutelle
+        return cls.get_dto(entity_id=entity_id).cotutelle
 
     @classmethod
     def get_teaching_campuses_dtos(cls, training_ids: List[int]) -> Dict[int, CampusDTO]:

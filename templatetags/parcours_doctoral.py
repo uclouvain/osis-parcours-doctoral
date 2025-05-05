@@ -675,11 +675,6 @@ def country_name_from_iso_code(iso_code: str):
 def get_confirmation_status(parcours_doctoral: ParcoursDoctoralDTO):
     if (
         ChoixStatutParcoursDoctoral[parcours_doctoral.statut]
-        in STATUTS_PAR_ETAPE_PARCOURS_DOCTORAL[ChoixEtapeParcoursDoctoral.ADMISSION]
-    ):
-        return ""
-    if (
-        ChoixStatutParcoursDoctoral[parcours_doctoral.statut]
         in STATUTS_PAR_ETAPE_PARCOURS_DOCTORAL[ChoixEtapeParcoursDoctoral.CONFIRMATION]
     ):
         return ChoixStatutParcoursDoctoral[parcours_doctoral.statut].value

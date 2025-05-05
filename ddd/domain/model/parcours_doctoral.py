@@ -25,7 +25,7 @@
 # ##############################################################################
 import uuid
 from datetime import datetime
-from typing import List, Optional
+from typing import List, Optional, Union
 
 import attr
 
@@ -41,7 +41,10 @@ from parcours_doctoral.ddd.domain.model._formation import FormationIdentity
 from parcours_doctoral.ddd.domain.model._institut import InstitutIdentity
 from parcours_doctoral.ddd.domain.model._projet import Projet
 from parcours_doctoral.ddd.domain.model.enums import (
+    ChoixCommissionProximiteCDEouCLSM,
+    ChoixCommissionProximiteCDSS,
     ChoixDoctoratDejaRealise,
+    ChoixSousDomaineSciences,
     ChoixStatutParcoursDoctoral,
     ChoixTypeFinancement,
 )
@@ -81,6 +84,14 @@ class ParcoursDoctoral(interface.RootEntity):
     reference: int
     bourse_recherche: Optional[BourseIdentity] = None
     autre_bourse_recherche: Optional[str] = ''
+    commission_proximite: Optional[
+        Union[
+            ChoixCommissionProximiteCDEouCLSM,
+            ChoixCommissionProximiteCDSS,
+            ChoixSousDomaineSciences,
+        ]
+    ] = None
+    justification: str = ''
 
     def verrouiller_parcours_doctoral_pour_signature(self):
         self.statut = ChoixStatutParcoursDoctoral.EN_ATTENTE_DE_SIGNATURE

@@ -117,6 +117,9 @@
             >
               <span class="badge bg-secondary">{% translate 'Admission' %}</span>
             </a>
+            {% if not original_parcours_doctoral.has_valid_enrollment %}
+              <span class="badge bg-warning">{% translate 'Not in order of registration' %}</span>
+            {% endif %}
           </div>
           <div class="min-width">
             {% include 'parcours_doctoral/includes/parcours_doctoral_status.html' with display_on_load=True %}
