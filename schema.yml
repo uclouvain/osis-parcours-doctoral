@@ -166,7 +166,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/DoctoralTrainingActivity'
+                  $ref: '#/components/schemas/InscriptionEvaluationDTO'
           description: ''
         '400':
           $ref: '#/components/responses/BadRequest'
@@ -206,9 +206,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/DoctoralTrainingActivity'
+                $ref: '#/components/schemas/InscriptionEvaluationDTO'
           description: ''
         '400':
           $ref: '#/components/responses/BadRequest'
@@ -1566,22 +1564,6 @@ paths:
       - $ref: '#/components/parameters/X-User-GlobalID'
 components:
   schemas:
-    ActionLink:
-      type: object
-      properties:
-        error:
-          type: string
-        method:
-          $ref: '#/components/schemas/MethodEnum'
-        url:
-          type: string
-          format: uri
-      oneOf:
-      - required:
-        - method
-        - url
-      - required:
-        - error
     AjouterMembreCommand:
       type: object
       description: |-
@@ -1689,14 +1671,14 @@ components:
       type: string
       description: |-
         * `CONFERENCE` - Colloques et conférences
-        * `COMMUNICATION` - Communications orale (hors conférence)
+        * `COMMUNICATION` - Communication orale (hors conférence)
         * `SEMINAR` - Séminaires suivis
         * `PUBLICATION` - Publications
         * `SERVICE` - Services
         * `RESIDENCY` - Séjours de recherche
-        * `VAE` - Valorisations des acquis de l'expérience
-        * `COURSE` - Cours, formations et écoles
-        * `PAPER` - Épreuves
+        * `VAE` - Valorisation des acquis de l'expérience
+        * `COURSE` - Cours, formation et écoles
+        * `PAPER` - Épreuve
         * `UCL_COURSE` - Cours UCL
     CommitteeEnum:
       enum:
@@ -2340,8 +2322,12 @@ components:
       type: object
       properties:
         links:
-          allOf:
-          - $ref: '#/components/schemas/ActionLink'
+          type: object
+          properties:
+            list:
+              $ref: '#/components/schemas/ActionLink'
+            supervised_list:
+              $ref: '#/components/schemas/ActionLink'
           readOnly: true
           default: {}
     DemandeProlongationDTONested:
@@ -2694,6 +2680,39 @@ components:
       - JOURS
       type: string
       description: "* `` - \n* `HEURES` - HEURES\n* `JOURS` - JOURS"
+    InscriptionEvaluationDTO:
+      type: object
+      description: |-
+        A `DTOSerializer` is just a regular `Serializer`, except that:
+
+        * A set of default fields are automatically populated from the Meta.source dataclass.
+        * All fields are set to read-only if needed when Meta.read_only is True.
+      properties:
+        uuid:
+          type: string
+        uuid_activite:
+          type: string
+        session:
+          type: string
+        statut:
+          type: string
+        inscription_tardive:
+          type: boolean
+        code_unite_enseignement:
+          type: string
+        intitule_unite_enseignement:
+          type: string
+        annee_unite_enseignement:
+          type: integer
+      required:
+      - annee_unite_enseignement
+      - code_unite_enseignement
+      - inscription_tardive
+      - intitule_unite_enseignement
+      - session
+      - statut
+      - uuid
+      - uuid_activite
     JuryDTO:
       type: object
       description: |-
@@ -2889,14 +2908,6 @@ components:
           type: string
           format: uuid
           readOnly: true
-    MethodEnum:
-      type: string
-      enum:
-      - DELETE
-      - GET
-      - PATCH
-      - POST
-      - PUT
     ModifierCotutelleCommand:
       type: object
       description: |-
@@ -3203,8 +3214,50 @@ components:
           format: date-time
           nullable: true
         links:
-          allOf:
-          - $ref: '#/components/schemas/ActionLink'
+          type: object
+          properties:
+            retrieve_project:
+              $ref: '#/components/schemas/ActionLink'
+            retrieve_cotutelle:
+              $ref: '#/components/schemas/ActionLink'
+            update_cotutelle:
+              $ref: '#/components/schemas/ActionLink'
+            retrieve_funding:
+              $ref: '#/components/schemas/ActionLink'
+            update_funding:
+              $ref: '#/components/schemas/ActionLink'
+            retrieve_supervision:
+              $ref: '#/components/schemas/ActionLink'
+            retrieve_supervision_canvas:
+              $ref: '#/components/schemas/ActionLink'
+            retrieve_confirmation:
+              $ref: '#/components/schemas/ActionLink'
+            update_confirmation:
+              $ref: '#/components/schemas/ActionLink'
+            update_confirmation_extension:
+              $ref: '#/components/schemas/ActionLink'
+            retrieve_doctorate_training:
+              $ref: '#/components/schemas/ActionLink'
+            retrieve_complementary_training:
+              $ref: '#/components/schemas/ActionLink'
+            retrieve_course_enrollment:
+              $ref: '#/components/schemas/ActionLink'
+            retrieve_assessment_enrollment:
+              $ref: '#/components/schemas/ActionLink'
+            add_training:
+              $ref: '#/components/schemas/ActionLink'
+            submit_training:
+              $ref: '#/components/schemas/ActionLink'
+            assent_training:
+              $ref: '#/components/schemas/ActionLink'
+            retrieve_jury_preparation:
+              $ref: '#/components/schemas/ActionLink'
+            update_jury_preparation:
+              $ref: '#/components/schemas/ActionLink'
+            list_jury_members:
+              $ref: '#/components/schemas/ActionLink'
+            create_jury_members:
+              $ref: '#/components/schemas/ActionLink'
           readOnly: true
           default: {}
       required:
@@ -3264,8 +3317,48 @@ components:
           type: string
           format: date-time
         links:
-          allOf:
-          - $ref: '#/components/schemas/ActionLink'
+          type: object
+          properties:
+            retrieve_project:
+              $ref: '#/components/schemas/ActionLink'
+            retrieve_funding:
+              $ref: '#/components/schemas/ActionLink'
+            update_funding:
+              $ref: '#/components/schemas/ActionLink'
+            retrieve_cotutelle:
+              $ref: '#/components/schemas/ActionLink'
+            update_cotutelle:
+              $ref: '#/components/schemas/ActionLink'
+            retrieve_supervision:
+              $ref: '#/components/schemas/ActionLink'
+            retrieve_supervision_canvas:
+              $ref: '#/components/schemas/ActionLink'
+            retrieve_confirmation:
+              $ref: '#/components/schemas/ActionLink'
+            update_confirmation:
+              $ref: '#/components/schemas/ActionLink'
+            update_confirmation_extension:
+              $ref: '#/components/schemas/ActionLink'
+            retrieve_doctorate_training:
+              $ref: '#/components/schemas/ActionLink'
+            retrieve_complementary_training:
+              $ref: '#/components/schemas/ActionLink'
+            retrieve_course_enrollment:
+              $ref: '#/components/schemas/ActionLink'
+            add_training:
+              $ref: '#/components/schemas/ActionLink'
+            submit_training:
+              $ref: '#/components/schemas/ActionLink'
+            assent_training:
+              $ref: '#/components/schemas/ActionLink'
+            retrieve_jury_preparation:
+              $ref: '#/components/schemas/ActionLink'
+            update_jury_preparation:
+              $ref: '#/components/schemas/ActionLink'
+            list_jury_members:
+              $ref: '#/components/schemas/ActionLink'
+            create_jury_members:
+              $ref: '#/components/schemas/ActionLink'
           readOnly: true
           default: {}
       required:
@@ -4222,6 +4315,28 @@ components:
       required:
       - code
       - message
+    ActionLink:
+      type: object
+      properties:
+        error:
+          type: string
+        method:
+          type: string
+          enum:
+          - DELETE
+          - GET
+          - PATCH
+          - POST
+          - PUT
+        url:
+          type: string
+          format: uri
+      oneOf:
+      - required:
+        - method
+        - url
+      - required:
+        - error
     AcceptedLanguageEnum:
       type: string
       enum:

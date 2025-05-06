@@ -349,7 +349,7 @@ class CourseEnrollmentListView(DoctoralTrainingListView):
 
 @extend_schema_view(
     get=extend_schema(
-        responses=DoctoralTrainingManyActivitiesSerializerScheme,
+        responses=serializers.InscriptionEvaluationDTOSerializer,
         operation_id='list_inscription_evaluation_dtos',
     ),
 )
@@ -373,7 +373,7 @@ class AssessmentEnrollmentListView(DoctorateAPIPermissionRequiredMixin, ListAPIV
 
 @extend_schema_view(
     get=extend_schema(
-        responses=DoctoralTrainingManyActivitiesSerializerScheme,
+        responses=serializers.InscriptionEvaluationDTOSerializer,
         operation_id='retrieve_inscription_evaluation_dto',
     ),
 )
