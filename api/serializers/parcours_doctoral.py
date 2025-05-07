@@ -35,7 +35,7 @@ from parcours_doctoral.ddd.dtos.parcours_doctoral import (
 
 
 class ParcoursDoctoralIdentityDTOSerializer(serializers.Serializer):
-    uuid = serializers.ReadOnlyField()
+    uuid = serializers.UUIDField(read_only=True)
 
 
 class ParcoursDoctoralDTOSerializer(DTOSerializer):

@@ -26,6 +26,7 @@
 from typing import List
 
 from django.db.models import Prefetch, Q
+from drf_spectacular.utils import extend_schema
 from osis_signature.models import Actor
 from rest_framework import mixins
 from rest_framework.generics import GenericAPIView, ListAPIView
@@ -37,7 +38,6 @@ from infrastructure.messages_bus import message_bus_instance
 from osis_role.contrib.views import APIPermissionRequiredMixin
 from parcours_doctoral.api import serializers
 from parcours_doctoral.api.permissions import DoctorateAPIPermissionRequiredMixin
-from parcours_doctoral.api.schema import ResponseSpecificSchema
 from parcours_doctoral.ddd.commands import (
     ListerParcoursDoctorauxDoctorantQuery,
     ListerParcoursDoctorauxSupervisesQuery,
@@ -53,12 +53,6 @@ __all__ = [
 ]
 
 
-class DoctorateSchema(ResponseSpecificSchema):
-    serializer_mapping = {
-        'GET': serializers.ParcoursDoctoralDTOSerializer,
-    }
-
-
 class DoctorateAPIView(
     DoctorateAPIPermissionRequiredMixin,
     mixins.RetrieveModelMixin,
@@ -67,11 +61,14 @@ class DoctorateAPIView(
     name = "doctorate"
     pagination_class = None
     filter_backends = []
-    schema = DoctorateSchema()
     permission_mapping = {
         'GET': 'parcours_doctoral.view_parcours_doctoral',
     }
 
+    @extend_schema(
+        request=serializers.ParcoursDoctoralDTOSerializer,
+        responses=serializers.ParcoursDoctoralDTOSerializer,
+    )
     def get(self, request, *args, **kwargs):
         """Get the parcours doctoral"""
         doctorate_dto = message_bus_instance.invoke(
@@ -150,16 +147,8 @@ class BaseListView(APIPermissionRequiredMixin, ListAPIView):
         return Response(serializer.data)
 
 
-class DoctorateListSchema(ResponseSpecificSchema):
-    operation_id_base = '_doctorates'
-    serializer_mapping = {
-        'GET': serializers.ParcoursDoctoralRechercheDTOSerializer,
-    }
-
-
 class DoctorateListView(BaseListView):
     name = "list"
-    schema = DoctorateListSchema()
     permission_mapping = {
         'GET': 'parcours_doctoral.view_list',
     }
@@ -170,14 +159,15 @@ class DoctorateListView(BaseListView):
             ListerParcoursDoctorauxDoctorantQuery(matricule_doctorant=request.user.person.global_id),
         )
 
-
-class SupervisedDoctorateListSchema(DoctorateListSchema):
-    operation_id_base = '_supervised_doctorates'
+    @extend_schema(
+        operation_id='list_doctorates',
+    )
+    def get(self, request, **kwargs):
+        return super().get(request, **kwargs)
 
 
 class SupervisedDoctorateListView(BaseListView):
     name = "supervised_list"
-    schema = SupervisedDoctorateListSchema()
     permission_mapping = {
         'GET': 'parcours_doctoral.view_supervised_list',
     }
@@ -196,3 +186,9 @@ class SupervisedDoctorateListView(BaseListView):
         return message_bus_instance.invoke(
             ListerParcoursDoctorauxSupervisesQuery(matricule_membre=request.user.person.global_id),
         )
+
+    @extend_schema(
+        operation_id='list_supervised_doctorates',
+    )
+    def get(self, request, **kwargs):
+        return super().get(request, **kwargs)
