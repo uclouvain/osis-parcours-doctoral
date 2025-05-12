@@ -23,7 +23,8 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from typing import Dict
+import datetime
+from typing import Dict, Optional
 from uuid import UUID
 
 from django.db import transaction
@@ -31,6 +32,9 @@ from osis_document.api.utils import documents_remote_duplicate
 from osis_signature.enums import SignatureState
 from osis_signature.models import Process, StateHistory
 
+from admission.ddd.admission.doctorat.preparation.domain.model.enums import (
+    ChoixTypeAdmission,
+)
 from admission.ddd.admission.doctorat.preparation.domain.model.proposition import (
     Proposition,
 )
@@ -38,12 +42,19 @@ from admission.models import DoctorateAdmission, SupervisionActor
 from admission.models.enums.actor_type import ActorType as AdmissionActorType
 from parcours_doctoral.auth.roles.ca_member import CommitteeMember
 from parcours_doctoral.auth.roles.promoter import Promoter
+from parcours_doctoral.auth.roles.student import Student
 from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import (
     ParcoursDoctoralIdentity,
 )
 from parcours_doctoral.ddd.domain.service.i_parcours_doctoral import (
     IParcoursDoctoralService,
+)
+from parcours_doctoral.ddd.epreuve_confirmation.domain.service.epreuve_confirmation import (
+    EpreuveConfirmationService,
+)
+from parcours_doctoral.ddd.epreuve_confirmation.repository.i_epreuve_confirmation import (
+    IEpreuveConfirmationRepository,
 )
 from parcours_doctoral.models.actor import ParcoursDoctoralSupervisionActor
 from parcours_doctoral.models.parcours_doctoral import (
@@ -94,19 +105,21 @@ class ParcoursDoctoralService(IParcoursDoctoralService):
 
     @classmethod
     def _duplicate_roles(cls, admission: DoctorateAdmission) -> None:
+        Student.objects.get_or_create(person=admission.candidate)
+
         promoters = []
         ca_members = []
 
-        for admission_actor in SupervisionActor.objects.select_related('person', 'country').filter(
+        for admission_actor in SupervisionActor.objects.filter(
             process__uuid=admission.supervision_group.uuid,
         ):
-            if not admission_actor.person:
+            if not admission_actor.person_id:
                 continue
 
             if admission_actor.type == AdmissionActorType.PROMOTER.name:
-                promoters.append(Promoter(person=admission_actor.person))
+                promoters.append(Promoter(person_id=admission_actor.person_id))
             else:
-                ca_members.append(CommitteeMember(person=admission_actor.person))
+                ca_members.append(CommitteeMember(person_id=admission_actor.person_id))
 
         Promoter.objects.bulk_create(promoters, ignore_conflicts=True)
         CommitteeMember.objects.bulk_create(ca_members, ignore_conflicts=True)
@@ -132,52 +145,67 @@ class ParcoursDoctoralService(IParcoursDoctoralService):
 
     @classmethod
     @transaction.atomic
-    def initier(cls, proposition: 'Proposition') -> ParcoursDoctoralIdentity:
+    def initier(
+        cls,
+        proposition: 'Proposition',
+        epreuve_confirmation_repository: 'IEpreuveConfirmationRepository',
+        date_reference_pour_date_limite_confirmation: Optional[datetime.date] = None,
+    ) -> ParcoursDoctoralIdentity:
         admission: DoctorateAdmission = DoctorateAdmission.objects.get(uuid=proposition.entity_id.uuid)
 
-        supervision_group = cls._duplicate_supervision_group(admission)
-        cls._duplicate_roles(admission)
+        if admission.related_pre_admission_id:
+            # With an admission following a pre-admission, we use the existing doctorate
+            parcours_doctoral = ParcoursDoctoralModel.objects.get(admission_id=admission.related_pre_admission_id)
 
-        parcours_doctoral = ParcoursDoctoralModel.objects.create(
-            admission=admission,
-            reference=admission.reference,
-            justification=admission.comment,
-            student=admission.candidate,
-            training=admission.training,
-            project_title=admission.project_title,
-            project_abstract=admission.project_abstract,
-            thesis_language=admission.thesis_language,
-            thesis_institute=admission.thesis_institute,
-            thesis_location=admission.thesis_location,
-            phd_alread_started=admission.phd_alread_started,
-            phd_alread_started_institute=admission.phd_alread_started_institute,
-            work_start_date=admission.work_start_date,
-            phd_already_done=admission.phd_already_done,
-            phd_already_done_institution=admission.phd_already_done_institution,
-            phd_already_done_thesis_domain=admission.phd_already_done_thesis_domain,
-            phd_already_done_defense_date=admission.phd_already_done_defense_date,
-            phd_already_done_no_defense_reason=admission.phd_already_done_no_defense_reason,
-            cotutelle=admission.cotutelle,
-            cotutelle_motivation=admission.cotutelle_motivation,
-            cotutelle_institution_fwb=admission.cotutelle_institution_fwb,
-            cotutelle_institution=admission.cotutelle_institution,
-            cotutelle_other_institution_name=admission.cotutelle_other_institution_name,
-            cotutelle_other_institution_address=admission.cotutelle_other_institution_address,
-            financing_type=admission.financing_type,
-            other_international_scholarship=admission.other_international_scholarship,
-            international_scholarship=admission.international_scholarship,
-            supervision_group=supervision_group,
-            proximity_commission=admission.proximity_commission,
-            financing_work_contract=admission.financing_work_contract,
-            financing_eft=admission.financing_eft,
-            scholarship_start_date=admission.scholarship_start_date,
-            scholarship_end_date=admission.scholarship_end_date,
-            planned_duration=admission.planned_duration,
-            dedicated_time=admission.dedicated_time,
-            is_fnrs_fria_fresh_csc_linked=admission.is_fnrs_fria_fresh_csc_linked,
-            financing_comment=admission.financing_comment,
-            status=ChoixStatutParcoursDoctoral.EN_ATTENTE_INJECTION_EPC.name,
-        )
+        else:
+            # Otherwise, we create a new doctorate
+            parcours_doctoral = ParcoursDoctoralModel()
+
+        supervision_group = cls._duplicate_supervision_group(admission)
+
+        # The doctorate is initialized / updated with the admission data
+        parcours_doctoral.admission = admission
+        parcours_doctoral.reference = admission.reference
+        parcours_doctoral.justification = admission.comment
+        parcours_doctoral.student = admission.candidate
+        parcours_doctoral.training = admission.training
+        parcours_doctoral.project_title = admission.project_title
+        parcours_doctoral.project_abstract = admission.project_abstract
+        parcours_doctoral.thesis_language = admission.thesis_language
+        parcours_doctoral.thesis_institute = admission.thesis_institute
+        parcours_doctoral.thesis_location = admission.thesis_location
+        parcours_doctoral.phd_alread_started = admission.phd_alread_started
+        parcours_doctoral.phd_alread_started_institute = admission.phd_alread_started_institute
+        parcours_doctoral.work_start_date = admission.work_start_date
+        parcours_doctoral.phd_already_done = admission.phd_already_done
+        parcours_doctoral.phd_already_done_institution = admission.phd_already_done_institution
+        parcours_doctoral.phd_already_done_thesis_domain = admission.phd_already_done_thesis_domain
+        parcours_doctoral.phd_already_done_defense_date = admission.phd_already_done_defense_date
+        parcours_doctoral.phd_already_done_no_defense_reason = admission.phd_already_done_no_defense_reason
+        parcours_doctoral.cotutelle = admission.cotutelle
+        parcours_doctoral.cotutelle_motivation = admission.cotutelle_motivation
+        parcours_doctoral.cotutelle_institution_fwb = admission.cotutelle_institution_fwb
+        parcours_doctoral.cotutelle_institution = admission.cotutelle_institution
+        parcours_doctoral.cotutelle_other_institution_name = admission.cotutelle_other_institution_name
+        parcours_doctoral.cotutelle_other_institution_address = admission.cotutelle_other_institution_address
+        parcours_doctoral.financing_type = admission.financing_type
+        parcours_doctoral.other_international_scholarship = admission.other_international_scholarship
+        parcours_doctoral.international_scholarship = admission.international_scholarship
+        parcours_doctoral.supervision_group = supervision_group
+        parcours_doctoral.proximity_commission = admission.proximity_commission
+        parcours_doctoral.financing_work_contract = admission.financing_work_contract
+        parcours_doctoral.financing_eft = admission.financing_eft
+        parcours_doctoral.scholarship_start_date = admission.scholarship_start_date
+        parcours_doctoral.scholarship_end_date = admission.scholarship_end_date
+        parcours_doctoral.planned_duration = admission.planned_duration
+        parcours_doctoral.dedicated_time = admission.dedicated_time
+        parcours_doctoral.is_fnrs_fria_fresh_csc_linked = admission.is_fnrs_fria_fresh_csc_linked
+        parcours_doctoral.financing_comment = admission.financing_comment
+        parcours_doctoral.status = ChoixStatutParcoursDoctoral.ADMIS.name
+
+        parcours_doctoral.save()
+
+        cls._duplicate_roles(admission)
 
         uploaded_files = cls._duplicate_uploaded_files(admission, parcours_doctoral)
         for field in cls.FILES_FIELDS:
@@ -188,4 +216,13 @@ class ParcoursDoctoralService(IParcoursDoctoralService):
             setattr(parcours_doctoral, field, [UUID(uploaded_files.get(file_uuid))])
         parcours_doctoral.save(update_fields=cls.FILES_FIELDS)
 
-        return ParcoursDoctoralIdentity(uuid=str(parcours_doctoral.uuid))
+        parcours_doctoral_identity = ParcoursDoctoralIdentity(uuid=str(parcours_doctoral.uuid))
+
+        if admission.type == ChoixTypeAdmission.ADMISSION.name:
+            epreuve_confirmation = EpreuveConfirmationService.initier(
+                parcours_doctoral_id=parcours_doctoral_identity,
+                date_reference_pour_date_limite=date_reference_pour_date_limite_confirmation,
+            )
+            epreuve_confirmation_repository.save(entity=epreuve_confirmation)
+
+        return parcours_doctoral_identity

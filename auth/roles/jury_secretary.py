@@ -30,6 +30,7 @@ from rules import RuleSet
 
 from osis_role.contrib.models import RoleModel
 from parcours_doctoral.auth.predicates.parcours_doctoral import (
+    has_valid_enrollment,
     is_related_to_an_admission,
 )
 
@@ -50,7 +51,7 @@ class JurySecretary(RoleModel):
     @classmethod
     def rule_set(cls):
         ruleset = {
-            'parcours_doctoral.upload_defense_report': rules.always_allow,
+            'parcours_doctoral.upload_defense_report': has_valid_enrollment,
             'parcours_doctoral.view_doctorateadmission': rules.always_allow,
             'parcours_doctoral.view_person': rules.always_allow,
             'parcours_doctoral.view_coordinates': rules.always_allow,

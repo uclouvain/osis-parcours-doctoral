@@ -23,24 +23,21 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from .lister_documents_service import lister_documents
-from .lister_parcours_doctoraux_doctorant_service import (
-    lister_parcours_doctoraux_doctorant,
+from admission.ddd.admission.doctorat.preparation.builder.proposition_identity_builder import (
+    PropositionIdentityBuilder,
 )
-from .lister_parcours_doctoraux_supervises_service import (
-    lister_parcours_doctoraux_supervises,
+from parcours_doctoral.ddd.commands import RecupererParcoursDoctoralPropositionQuery
+from parcours_doctoral.ddd.dtos import ParcoursDoctoralDTO
+from parcours_doctoral.ddd.repository.i_parcours_doctoral import (
+    IParcoursDoctoralRepository,
 )
-from .recuperer_document_service import recuperer_document
-from .recuperer_parcours_doctoral_proposition_service import (
-    recuperer_parcours_doctoral_proposition,
-)
-from .recuperer_parcours_doctoral_service import recuperer_parcours_doctoral
 
-__all__ = [
-    'lister_documents',
-    'lister_parcours_doctoraux_doctorant',
-    'lister_parcours_doctoraux_supervises',
-    'recuperer_document',
-    'recuperer_parcours_doctoral',
-    'recuperer_parcours_doctoral_proposition',
-]
+
+def recuperer_parcours_doctoral_proposition(
+    cmd: 'RecupererParcoursDoctoralPropositionQuery',
+    parcours_doctoral_repository: 'IParcoursDoctoralRepository',
+) -> ParcoursDoctoralDTO:
+    # GIVEN
+    proposition_id = PropositionIdentityBuilder.build_from_uuid(cmd.proposition_uuid)
+    # THEN
+    return parcours_doctoral_repository.get_dto(proposition_id=proposition_id)

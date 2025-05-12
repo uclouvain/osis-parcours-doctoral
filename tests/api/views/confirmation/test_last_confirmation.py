@@ -147,11 +147,11 @@ class LastConfirmationAPIViewTestCase(APITestCase):
         response = self.client.put(self.url, format='json')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-    def test_get_last_confirmation_of_in_creation_doctorate_is_forbidden(self):
+    def test_get_last_confirmation_with_invalid_enrolment_is_forbidden(self):
         in_creation_doctorate = ParcoursDoctoralFactory(
             supervision_group=self.doctorate.supervision_group,
             student=self.student,
-            status=ChoixStatutParcoursDoctoral.EN_COURS_DE_CREATION_PAR_GESTIONNAIRE.name,
+            create_student__with_valid_enrolment=False,
         )
 
         url = resolve_url(self.base_url, uuid=in_creation_doctorate.uuid)
@@ -161,14 +161,6 @@ class LastConfirmationAPIViewTestCase(APITestCase):
             self.committee_member_user,
             self.student.user,
         ]
-
-        for user in users:
-            self.client.force_authenticate(user=user)
-            response = self.client.get(url)
-            self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
-        in_creation_doctorate.status = ChoixStatutParcoursDoctoral.EN_ATTENTE_INJECTION_EPC.name
-        in_creation_doctorate.save()
 
         for user in users:
             self.client.force_authenticate(user=user)
