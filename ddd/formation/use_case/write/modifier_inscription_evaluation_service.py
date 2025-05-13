@@ -24,15 +24,10 @@
 #
 # ##############################################################################
 from deliberation.models.enums.numero_session import Session
-from parcours_doctoral.ddd.formation.builder.activite_identity_builder import (
-    ActiviteIdentityBuilder,
-)
 from parcours_doctoral.ddd.formation.builder.inscription_evaluation_builder import (
-    InscriptionEvaluationBuilder,
     InscriptionEvaluationIdentityBuilder,
 )
 from parcours_doctoral.ddd.formation.commands import (
-    InscrireEvaluationCommand,
     ModifierInscriptionEvaluationCommand,
 )
 from parcours_doctoral.ddd.formation.repository.i_inscription_evaluation import (

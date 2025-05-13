@@ -103,3 +103,11 @@ class InscriptionEvaluationNonTrouveeException(BusinessException):
     def __init__(self, *args, **kwargs):
         message = _('The assessment enrollment has not been found')
         super().__init__(message, **kwargs)
+
+
+class EvaluationNonTrouveeException(BusinessException):
+    status_code = "FORMATION-10"
+
+    def __init__(self, *args, **kwargs):
+        message = _('The enrollment has not been found')
+        super().__init__(message, **kwargs)

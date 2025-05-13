@@ -55,6 +55,7 @@ class ModifierInscriptionEvaluationTestCase(TestCase):
             statut=StatutInscriptionEvaluation.ACCEPTEE,
             session=Session.SEPTEMBER,
             inscription_tardive=True,
+            desinscription_tardive=True,
         )
 
         cls.inscription_evaluation_repository = InscriptionEvaluationInMemoryRepository()
@@ -78,3 +79,4 @@ class ModifierInscriptionEvaluationTestCase(TestCase):
         self.assertEqual(inscription_modifiee.inscription_tardive, cmd.inscription_tardive)
         self.assertEqual(inscription_modifiee.est_acceptee, True)
         self.assertEqual(inscription_modifiee.est_annulee, False)
+        self.assertTrue(inscription_modifiee.desinscription_tardive)

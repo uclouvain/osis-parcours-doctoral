@@ -27,7 +27,6 @@ import uuid
 from unittest.mock import patch
 
 import freezegun
-
 from django.conf import settings
 from django.forms import Field
 from django.shortcuts import resolve_url
@@ -41,6 +40,7 @@ from rest_framework import status
 from base.forms.utils.choice_field import BLANK_CHOICE_DISPLAY
 from base.tests.factories.academic_year import AcademicYearFactory
 from base.tests.factories.program_manager import ProgramManagerFactory
+from deliberation.models.enums.numero_session import Session
 from parcours_doctoral.ddd.formation.domain.model.enums import (
     CategorieActivite,
     ChoixComiteSelection,
@@ -48,7 +48,10 @@ from parcours_doctoral.ddd.formation.domain.model.enums import (
     ContexteFormation,
     StatutActivite,
 )
-from parcours_doctoral.forms.training.activity import INSTITUTION_UCL
+from parcours_doctoral.forms.training.activity import (
+    INSTITUTION_UCL,
+    UclCompletedCourseForm,
+)
 from parcours_doctoral.models.activity import Activity
 from parcours_doctoral.models.cdd_config import CddConfiguration
 from parcours_doctoral.tests.factories.activity import (
@@ -67,6 +70,9 @@ from parcours_doctoral.tests.factories.activity import (
     ServiceFactory,
     UclCourseFactory,
     VaeFactory,
+)
+from parcours_doctoral.tests.factories.assessment_enrollment import (
+    AssessmentEnrollmentFactory,
 )
 from parcours_doctoral.tests.factories.parcours_doctoral import ParcoursDoctoralFactory
 from parcours_doctoral.tests.factories.roles import StudentRoleFactory
@@ -274,6 +280,137 @@ class DoctorateTrainingActivityViewTestCase(TestCase):
         }
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+
+        # On update after completion
+        url = resolve_url(
+            f'parcours_doctoral:complementary-training:edit',
+            uuid=self.parcours_doctoral.uuid,
+            activity_id=self.other_ucl_course.uuid,
+        )
+
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        form = response.context['form']
+
+        self.assertIsInstance(form, UclCompletedCourseForm)
+        self.assertIsNone(form.final_assessment)
+        self.assertIsNone(form['corrected_mark'].value())
+
+        data = {
+            'hour_volume': '1',
+            'authors': 'Mr John',
+            'ects': 10,
+            'participating_proof': [],
+        }
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+
+        self.other_ucl_course.refresh_from_db()
+
+        self.assertEqual(self.other_ucl_course.hour_volume, '1')
+        self.assertEqual(self.other_ucl_course.authors, 'Mr John')
+        self.assertEqual(self.other_ucl_course.ects, 10)
+        self.assertEqual(self.other_ucl_course.participating_proof, [])
+
+        # On update after completion with assessments
+        january_assessment = AssessmentEnrollmentFactory(
+            session=Session.JANUARY.name,
+            course=self.other_ucl_course,
+            submitted_mark='15',
+            corrected_mark='',
+        )
+        june_assessment = AssessmentEnrollmentFactory(
+            session=Session.JUNE.name,
+            course=self.other_ucl_course,
+            submitted_mark='16',
+            corrected_mark='',
+        )
+        september_assessment = AssessmentEnrollmentFactory(
+            session=Session.SEPTEMBER.name,
+            course=self.other_ucl_course,
+            submitted_mark='17',
+            corrected_mark='',
+        )
+        url = resolve_url(
+            f'parcours_doctoral:complementary-training:edit',
+            uuid=self.parcours_doctoral.uuid,
+            activity_id=self.other_ucl_course.uuid,
+        )
+
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        form = response.context['form']
+
+        self.assertIsInstance(form, UclCompletedCourseForm)
+        self.assertEqual(form.final_assessment, september_assessment)
+        self.assertEqual(form['corrected_mark'].value(), '')
+
+        data = {
+            'hour_volume': '1',
+            'authors': 'Mr John',
+            'corrected_mark': '18',
+            'ects': 10,
+            'participating_proof': [],
+        }
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        form = response.context['form']
+        self.assertFalse(form.is_valid())
+
+        self.assertIn(
+            'Merci de vérifier que la note corrigée est bien associée à la bonne session '
+            '(initialement : "Non déterminée", maintenant : "Septembre").',
+            form.errors.get('corrected_mark', []),
+        )
+
+        data = {
+            'hour_volume': '1',
+            'authors': 'Mr John',
+            'assessment_to_correct_uuid': june_assessment.uuid,
+            'corrected_mark': '18',
+            'ects': 10,
+            'participating_proof': [],
+        }
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        form = response.context['form']
+        self.assertFalse(form.is_valid())
+
+        self.assertIn(
+            'Merci de vérifier que la note corrigée est bien associée à la bonne session '
+            '(initialement : "Juin", maintenant : "Septembre").',
+            form.errors.get('corrected_mark', []),
+        )
+
+        data = {
+            'hour_volume': '1',
+            'authors': 'Mr John',
+            'assessment_to_correct_uuid': september_assessment.uuid,
+            'corrected_mark': '18',
+            'ects': 10,
+            'participating_proof': [],
+        }
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+
+        self.other_ucl_course.refresh_from_db()
+        self.assertEqual(self.other_ucl_course.hour_volume, '1')
+        self.assertEqual(self.other_ucl_course.authors, 'Mr John')
+        self.assertEqual(self.other_ucl_course.ects, 10)
+        self.assertEqual(self.other_ucl_course.participating_proof, [])
+
+        january_assessment.refresh_from_db()
+        self.assertEqual(january_assessment.corrected_mark, '')
+
+        june_assessment.refresh_from_db()
+        self.assertEqual(june_assessment.corrected_mark, '')
+
+        september_assessment.refresh_from_db()
+        self.assertEqual(september_assessment.corrected_mark, '18')
 
     def test_ucl_course(self):
         url = resolve_url(

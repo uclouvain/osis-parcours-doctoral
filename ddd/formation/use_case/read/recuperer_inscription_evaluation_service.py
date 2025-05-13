@@ -36,4 +36,6 @@ def recuperer_inscription_evaluation(
     cmd: RecupererInscriptionEvaluationQuery,
     inscription_evaluation_repository: IInscriptionEvaluationRepository,
 ):
-    return inscription_evaluation_repository.get_dto(entity_id=InscriptionEvaluationIdentity(uuid=cmd.inscription_uuid))
+    return inscription_evaluation_repository.get_dto(
+        entity_id=InscriptionEvaluationIdentity(uuid=cmd.inscription_uuid),
+    )

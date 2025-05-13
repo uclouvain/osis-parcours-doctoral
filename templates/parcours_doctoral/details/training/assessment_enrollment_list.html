@@ -77,11 +77,21 @@
                 </span>
               {% endif %}
               {% if assessment_enrollment.est_annulee %}
-                <span
-                  class="fa-solid fa-calendar-xmark ms-1"
-                  title="{% translate 'The student has been withdrawn from this assessment.' %}"
-                >
-                </span>
+                {% if assessment_enrollment.desinscription_tardive %}
+                  <div
+                    class="ms-1 d-inline-block cursor-default"
+                    title="{% translate 'The student has been withdrawn lately from this assessment.' %}"
+                  >
+                    <span class="fa-regular fa-calendar-xmark"></span>
+                    <span class="fa-regular fa-clock upper-icon"></span>
+                  </div>
+                {% else %}
+                  <span
+                    class="fa-regular fa-calendar-xmark ms-1"
+                    title="{% translate 'The student has been withdrawn from this assessment.' %}"
+                  >
+                  </span>
+                {% endif %}
               {% endif %}
             </td>
             <td class="width-0">
@@ -162,9 +172,9 @@
 {% block style %}
   {{ block.super }}
   <style>
-    table td {
-        border-color: #ddd !important;
-        vertical-align: middle;
-    }
+      table td {
+          border-color: #ddd !important;
+          vertical-align: middle;
+      }
   </style>
 {% endblock %}
