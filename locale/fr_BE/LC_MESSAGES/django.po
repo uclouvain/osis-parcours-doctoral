@@ -851,6 +851,9 @@ msgctxt "parcours_doctoral course"
 msgid "Course type"
 msgstr "Type de cours"
 
+msgid "Course unit code"
+msgstr "Code du cours"
+
 msgid "Course unit code (if applicable)"
 msgstr "Code du cours (le cas échéant)"
 
@@ -1660,6 +1663,9 @@ msgstr "Nom :"
 msgid "Late enrollment"
 msgstr "Inscription tardive"
 
+msgid "Late unenrollment"
+msgstr "Désinscription tardive"
+
 msgid "Lead supervisor"
 msgstr "Promoteur de référence"
 
@@ -1905,6 +1911,9 @@ msgstr "Les champs requis de la cotutelle sont manquants."
 msgid "Mandatory fields are missing in the project details of the proposition."
 msgstr ""
 "Les champs requis des details du projet de la proposition sont manquants."
+
+msgid "Mark"
+msgstr "Note"
 
 msgid "Mark or honours obtained"
 msgstr "Note ou mention obtenue"
@@ -2663,6 +2672,9 @@ msgstr "Voir sur le portail"
 msgid "Second author"
 msgstr "Deuxième auteur.trice"
 
+msgid "Second cycle course"
+msgstr "Cours de deuxième cycle"
+
 msgid "Secretary"
 msgstr "Secrétaire"
 
@@ -3060,6 +3072,9 @@ msgstr "Le doctorat n'a pas d'inscription valide"
 msgid "The doctorate is not initialized"
 msgstr "Le doctorat n'est pas initialisé"
 
+msgid "The enrollment has not been found"
+msgstr "L'évaluation n'a pas été trouvée"
+
 msgid "The export has failed"
 msgstr "L'export a échoué"
 
@@ -3153,6 +3168,9 @@ msgstr "Le statut a bien été modifié pour : %(status)s."
 
 msgid "The student has been withdrawn from this assessment."
 msgstr "L'étudiant·e a été désinscrit·e de cette évaluation."
+
+msgid "The student has been withdrawn lately from this assessment."
+msgstr "L'étudiant·e a été désinscrit·e tardivement de cette évaluation."
 
 msgid "There can be no more CA members in the supervision group."
 msgstr ""

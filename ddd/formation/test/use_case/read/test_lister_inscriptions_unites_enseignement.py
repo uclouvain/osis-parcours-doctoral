@@ -23,16 +23,22 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from parcours_doctoral.ddd.formation.dtos.inscription_evaluation import (
-    InscriptionEvaluationDTO,
+from unittest import TestCase
+
+from parcours_doctoral.ddd.formation.commands import (
+    ListerInscriptionsUnitesEnseignementQuery,
+)
+from parcours_doctoral.infrastructure.message_bus_in_memory import (
+    message_bus_in_memory_instance,
 )
 
 
-def assessment_enrollment_is_editable(assessment_enrollment: InscriptionEvaluationDTO, academic_year: int):
-    """
-    Check if an assessment enrollment is editable.
-    :param assessment_enrollment: The assessment enrollment dto.
-    :param academic_year: The current academic year
-    :return: True if the assessment enrollment is editable, False otherwise.
-    """
-    return assessment_enrollment.est_acceptee and assessment_enrollment.annee_unite_enseignement == academic_year
+class ListerInscriptionsUnitesEnseignementTestCase(TestCase):
+    def test_list(self):
+        resultats = message_bus_in_memory_instance.invoke(
+            ListerInscriptionsUnitesEnseignementQuery(
+                annee=2020,
+                code_unite_enseignement='UE1',
+            )
+        )
+        self.assertEqual(resultats, [])

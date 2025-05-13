@@ -787,6 +787,9 @@ msgctxt "parcours_doctoral course"
 msgid "Course type"
 msgstr ""
 
+msgid "Course unit code"
+msgstr ""
+
 msgid "Course unit code (if applicable)"
 msgstr ""
 
@@ -1550,6 +1553,9 @@ msgstr ""
 msgid "Late enrollment"
 msgstr ""
 
+msgid "Late unenrollment"
+msgstr ""
+
 msgid "Lead supervisor"
 msgstr ""
 
@@ -1745,6 +1751,9 @@ msgid "Mandatory fields are missing in the cotutelle."
 msgstr ""
 
 msgid "Mandatory fields are missing in the project details of the proposition."
+msgstr ""
+
+msgid "Mark"
 msgstr ""
 
 msgid "Mark or honours obtained"
@@ -2477,6 +2486,9 @@ msgstr ""
 msgid "Second author"
 msgstr ""
 
+msgid "Second cycle course"
+msgstr ""
+
 msgid "Secretary"
 msgstr ""
 
@@ -2835,6 +2847,9 @@ msgstr ""
 msgid "The doctorate is not initialized"
 msgstr ""
 
+msgid "The enrollment has not been found"
+msgstr ""
+
 msgid "The export has failed"
 msgstr ""
 
@@ -2918,6 +2933,9 @@ msgid "The status has been changed to %(status)s."
 msgstr ""
 
 msgid "The student has been withdrawn from this assessment."
+msgstr ""
+
+msgid "The student has been withdrawn lately from this assessment."
 msgstr ""
 
 msgid "There can be no more CA members in the supervision group."
