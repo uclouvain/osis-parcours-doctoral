@@ -36,7 +36,9 @@ from parcours_doctoral.ddd.formation.domain.model.inscription_evaluation import 
     InscriptionEvaluation,
     InscriptionEvaluationIdentity,
 )
-from parcours_doctoral.ddd.formation.dtos.evaluation import InscriptionEvaluationDTO
+from parcours_doctoral.ddd.formation.dtos.inscription_evaluation import (
+    InscriptionEvaluationDTO,
+)
 
 
 class IInscriptionEvaluationRepository(interface.AbstractRepository):
@@ -47,7 +49,10 @@ class IInscriptionEvaluationRepository(interface.AbstractRepository):
 
     @classmethod
     @abc.abstractmethod
-    def get_dto(cls, entity_id: 'InscriptionEvaluationIdentity') -> 'InscriptionEvaluationDTO':
+    def get_dto(
+        cls,
+        entity_id: 'InscriptionEvaluationIdentity',
+    ) -> 'InscriptionEvaluationDTO':
         raise NotImplementedError
 
     @classmethod

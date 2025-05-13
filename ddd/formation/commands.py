@@ -27,6 +27,7 @@ from typing import List, Optional
 
 import attr
 
+from osis_common.ddd import interface
 from osis_common.ddd.interface import CommandRequest
 
 
@@ -79,6 +80,13 @@ class RecupererInscriptionEvaluationQuery(CommandRequest):
     inscription_uuid: str
 
 
+@attr.dataclass
+class ListerEvaluationsQuery(interface.QueryRequest):
+    annee: int
+    session: int
+    code_unite_enseignement: str
+
+
 @attr.dataclass(frozen=True, slots=True)
 class InscrireEvaluationCommand(CommandRequest):
     cours_uuid: str
@@ -96,3 +104,18 @@ class ModifierInscriptionEvaluationCommand(CommandRequest):
 @attr.dataclass(frozen=True, slots=True)
 class DesinscrireEvaluationCommand(CommandRequest):
     inscription_uuid: str
+
+
+@attr.dataclass(frozen=True, slots=True)
+class EncoderNoteCommand(CommandRequest):
+    annee: int
+    session: int
+    noma: str
+    code_unite_enseignement: str
+    note: str
+
+
+@attr.dataclass
+class ListerInscriptionsUnitesEnseignementQuery(interface.QueryRequest):
+    annee: int
+    code_unite_enseignement: str

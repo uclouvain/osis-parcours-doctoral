@@ -23,7 +23,6 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-
 from typing import List, Optional
 
 from django.db.models import Case, When
@@ -34,6 +33,7 @@ from parcours_doctoral.ddd.domain.model.parcours_doctoral import (
 )
 from parcours_doctoral.ddd.formation.domain.model.activite import ActiviteIdentity
 from parcours_doctoral.ddd.formation.domain.model.enums import (
+    MAPPING_SESSION_EVALUATION_TEXTE_NUMERO,
     StatutInscriptionEvaluation,
 )
 from parcours_doctoral.ddd.formation.domain.model.inscription_evaluation import (
@@ -44,7 +44,9 @@ from parcours_doctoral.ddd.formation.domain.validator.exceptions import (
     ActiviteNonTrouvee,
     InscriptionEvaluationNonTrouveeException,
 )
-from parcours_doctoral.ddd.formation.dtos.evaluation import InscriptionEvaluationDTO
+from parcours_doctoral.ddd.formation.dtos.inscription_evaluation import (
+    InscriptionEvaluationDTO,
+)
 from parcours_doctoral.ddd.formation.repository.i_inscription_evaluation import (
     IInscriptionEvaluationRepository,
 )
@@ -53,7 +55,10 @@ from parcours_doctoral.models.activity import AssessmentEnrollment
 
 
 class InscriptionEvaluationRepository(IInscriptionEvaluationRepository):
-    SESSION_MAPPING = [When(session=current_session.name, then=index) for index, current_session in enumerate(Session)]
+    SESSION_MAPPING = [
+        When(session=session_text, then=session_numero)
+        for session_text, session_numero in MAPPING_SESSION_EVALUATION_TEXTE_NUMERO.items()
+    ]
 
     @classmethod
     def _get_domain_object_from_db_object(cls, enrollment: AssessmentEnrollment) -> InscriptionEvaluation:
@@ -63,15 +68,20 @@ class InscriptionEvaluationRepository(IInscriptionEvaluationRepository):
             session=Session[enrollment.session],
             inscription_tardive=enrollment.late_enrollment,
             statut=StatutInscriptionEvaluation[enrollment.status],
+            desinscription_tardive=enrollment.late_unenrollment,
         )
 
     @classmethod
-    def _get_dto_from_db_object(cls, enrollment: AssessmentEnrollment) -> InscriptionEvaluationDTO:
+    def _get_dto_from_db_object(
+        cls,
+        enrollment: AssessmentEnrollment,
+    ) -> InscriptionEvaluationDTO:
         return InscriptionEvaluationDTO(
             uuid=str(enrollment.uuid),
             uuid_activite=str(enrollment.course.uuid),
             session=enrollment.session,
             inscription_tardive=enrollment.late_enrollment,
+            desinscription_tardive=enrollment.late_unenrollment,
             code_unite_enseignement=enrollment.course.learning_unit_year.acronym,
             intitule_unite_enseignement=enrollment.course.learning_unit_year.complete_title_i18n,
             annee_unite_enseignement=enrollment.course.learning_unit_year.academic_year.year,
@@ -129,6 +139,7 @@ class InscriptionEvaluationRepository(IInscriptionEvaluationRepository):
                 'session': entity.session.name,
                 'late_enrollment': entity.inscription_tardive,
                 'status': entity.statut.name,
+                'late_unenrollment': entity.desinscription_tardive,
             },
         )
 
