@@ -751,6 +751,9 @@ msgstr ""
 msgid "Context"
 msgstr ""
 
+msgid "Corrected mark"
+msgstr ""
+
 msgid "Cotutelle"
 msgstr ""
 
@@ -785,6 +788,9 @@ msgstr ""
 
 msgctxt "parcours_doctoral course"
 msgid "Course type"
+msgstr ""
+
+msgid "Course unit code"
 msgstr ""
 
 msgid "Course unit code (if applicable)"
@@ -1550,6 +1556,9 @@ msgstr ""
 msgid "Late enrollment"
 msgstr ""
 
+msgid "Late unenrollment"
+msgstr ""
+
 msgid "Lead supervisor"
 msgstr ""
 
@@ -1895,6 +1904,9 @@ msgstr ""
 msgid "Non-retrievable document"
 msgstr ""
 
+msgid "Not determined"
+msgstr ""
+
 msgid "Not free"
 msgstr ""
 
@@ -2049,6 +2061,12 @@ msgid "Plain text"
 msgstr ""
 
 msgid "Planned duration"
+msgstr ""
+
+#, python-format
+msgid ""
+"Please be sure the corrected mark is related to the desired session "
+"(initially: \"%(initial_session)s\", now: \"%(target_session)s\")."
 msgstr ""
 
 msgid ""
@@ -2477,6 +2495,9 @@ msgstr ""
 msgid "Second author"
 msgstr ""
 
+msgid "Second cycle course"
+msgstr ""
+
 msgid "Secretary"
 msgstr ""
 
@@ -2673,6 +2694,9 @@ msgctxt "dashboard-indicator confirmation"
 msgid "Submitted confirmation"
 msgstr ""
 
+msgid "Submitted mark"
+msgstr ""
+
 msgctxt "dashboard-indicator formula-1-private-defense"
 msgid "Submitted private defense"
 msgstr ""
@@ -2835,6 +2859,9 @@ msgstr ""
 msgid "The doctorate is not initialized"
 msgstr ""
 
+msgid "The enrollment has not been found"
+msgstr ""
+
 msgid "The export has failed"
 msgstr ""
 
@@ -2918,6 +2945,9 @@ msgid "The status has been changed to %(status)s."
 msgstr ""
 
 msgid "The student has been withdrawn from this assessment."
+msgstr ""
+
+msgid "The student has been withdrawn lately from this assessment."
 msgstr ""
 
 msgid "There can be no more CA members in the supervision group."

@@ -25,7 +25,7 @@
 # ##############################################################################
 import datetime
 from functools import partial
-from typing import List, Tuple
+from typing import List, Optional, Tuple
 
 from dal.forward import Field
 from django import forms
@@ -34,13 +34,12 @@ from django.utils.translation import get_language
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import pgettext_lazy
 
-from base.forms.utils import EMPTY_CHOICE
-from base.forms.utils import autocomplete
+from base.forms.utils import EMPTY_CHOICE, autocomplete
 from base.forms.utils.academic_year_field import AcademicYearModelChoiceField
 from base.forms.utils.datefield import DatePickerInput
-from base.models.academic_year import AcademicYear
-from base.models.academic_year import current_academic_year
+from base.models.academic_year import AcademicYear, current_academic_year
 from base.models.learning_unit_year import LearningUnitYear
+from deliberation.models.enums.numero_session import Session
 from parcours_doctoral.ddd.formation.domain.model.enums import (
     CategorieActivite,
     ChoixComiteSelection,
@@ -48,6 +47,7 @@ from parcours_doctoral.ddd.formation.domain.model.enums import (
     ContexteFormation,
 )
 from parcours_doctoral.forms.fields import SelectOrOtherField
+from parcours_doctoral.models import AssessmentEnrollment
 from parcours_doctoral.models.activity import Activity
 from parcours_doctoral.models.cdd_config import CddConfiguration
 
@@ -68,6 +68,7 @@ __all__ = [
     "PaperForm",
     "ComplementaryCourseForm",
     "UclCourseForm",
+    "UclCompletedCourseForm",
     "get_category_labels",
 ]
 
@@ -927,3 +928,80 @@ class UclCourseForm(ActivityFormMixin, forms.ModelForm):
             'academic_year',
             'learning_unit_year',
         ]
+
+
+class UclCompletedCourseForm(ActivityFormMixin, forms.ModelForm):
+    template_name = "parcours_doctoral/forms/training/ucl_completed_course.html"
+
+    corrected_mark = forms.CharField(
+        label=_('Corrected mark'),
+        required=False,
+        max_length=200,
+    )
+
+    assessment_to_correct_uuid = forms.UUIDField(
+        required=False,
+        widget=forms.HiddenInput,
+    )
+
+    class Meta(CourseForm.Meta):
+        model = Activity
+        fields = [
+            'hour_volume',
+            'authors',
+            'ects',
+            'participating_proof',
+        ]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Initialize the corrected mark of the last assessment, if any
+        self.final_assessment: Optional[AssessmentEnrollment] = None
+        self.assessments = []
+
+        if self.instance:
+            self.assessments = self.instance.assessmentenrollment_set.with_session_numero().order_by('-session_numero')
+            self.final_assessment = self.assessments.first()
+
+            if self.final_assessment:
+                self.fields['corrected_mark'].initial = self.final_assessment.corrected_mark
+                self.fields['assessment_to_correct_uuid'].initial = self.final_assessment.uuid
+
+    def clean_assessment_to_correct_uuid(self):
+        assessment_to_correct_uuid = self.cleaned_data.get('assessment_to_correct_uuid')
+
+        # Check that the submitted mark is specified for the right assessment
+        if self.final_assessment and self.final_assessment.uuid != assessment_to_correct_uuid:
+            initial_session = next(
+                (
+                    Session.get_value(assessment.session)
+                    for assessment in self.assessments
+                    if assessment.uuid == assessment_to_correct_uuid
+                ),
+                _('Not determined'),
+            )
+
+            self.add_error(
+                'corrected_mark',
+                _(
+                    'Please be sure the corrected mark is related to the desired session '
+                    '(initially: "%(initial_session)s", now: "%(target_session)s").'
+                )
+                % {
+                    'initial_session': initial_session,
+                    'target_session': Session.get_value(self.final_assessment.session),
+                },
+            )
+
+        return assessment_to_correct_uuid
+
+    def save(self, *args, **kwargs):
+        instance = super().save(*args, **kwargs)
+
+        # Save the final assessment corrected mark if any
+        if self.final_assessment:
+            self.final_assessment.corrected_mark = self.cleaned_data['corrected_mark']
+            self.final_assessment.save(update_fields=['corrected_mark'])
+
+        return instance

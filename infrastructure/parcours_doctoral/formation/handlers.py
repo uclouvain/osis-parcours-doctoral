@@ -23,18 +23,26 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-
+from infrastructure.encodage_de_notes.shared_kernel.service.periode_encodage_notes import (
+    PeriodeEncodageNotesTranslator,
+)
 from parcours_doctoral.ddd.formation.commands import *
 from parcours_doctoral.ddd.formation.use_case.read import *
 from parcours_doctoral.ddd.formation.use_case.write import *
 from parcours_doctoral.ddd.formation.use_case.write.inscrire_evaluation_service import (
     inscrire_evaluation,
 )
+from parcours_doctoral.infrastructure.parcours_doctoral.formation.domain.service.inscription_unite_enseignement import (
+    InscriptionUniteEnseignementTranslator,
+)
 from parcours_doctoral.infrastructure.parcours_doctoral.formation.domain.service.notification import (
     Notification,
 )
 from parcours_doctoral.infrastructure.parcours_doctoral.formation.repository.activite import (
     ActiviteRepository,
+)
+from parcours_doctoral.infrastructure.parcours_doctoral.formation.repository.evaluation import (
+    EvaluationRepository,
 )
 from parcours_doctoral.infrastructure.parcours_doctoral.formation.repository.inscription_evaluation import (
     InscriptionEvaluationRepository,
@@ -96,6 +104,20 @@ COMMAND_HANDLERS = {
     ),
     DesinscrireEvaluationCommand: lambda msg_bus, cmd: desinscrire_evaluation(
         cmd,
+        evaluation_repository=EvaluationRepository(),
         inscription_evaluation_repository=InscriptionEvaluationRepository(),
+    ),
+    ListerEvaluationsQuery: lambda msg_bus, cmd: lister_evaluations(
+        cmd,
+        evaluation_repository=EvaluationRepository(),
+    ),
+    EncoderNoteCommand: lambda msg_bus, cmd: encoder_note(
+        cmd,
+        evaluation_repository=EvaluationRepository(),
+        activite_repository=ActiviteRepository(),
+    ),
+    ListerInscriptionsUnitesEnseignementQuery: lambda msg_bus, cmd: lister_inscriptions_unites_enseignement(
+        cmd,
+        inscriptions_unites_enseignement_translator=InscriptionUniteEnseignementTranslator(),
     ),
 }

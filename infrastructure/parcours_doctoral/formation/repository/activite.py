@@ -108,6 +108,7 @@ class ActiviteRepository(IActiviteRepository):
             avis_promoteur_reference=activity.reference_promoter_assent,
             commentaire_promoteur_reference=activity.reference_promoter_comment,
             commentaire_gestionnaire=activity.cdd_comment,
+            cours_complete=activity.course_completed,
         )
 
     @classmethod
@@ -300,6 +301,8 @@ class ActiviteRepository(IActiviteRepository):
             reference_promoter_assent=activite.avis_promoteur_reference,
             reference_promoter_comment=activite.commentaire_promoteur_reference,
             cdd_comment=activite.commentaire_gestionnaire,
+            # UCL course fields
+            course_completed=activite.cours_complete,
         )
 
     @classmethod

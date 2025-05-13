@@ -155,6 +155,7 @@ class AssessmentEnrollmentListViewTestCase(APITestCase):
         self.assertEqual(json_response[0]['session'], first_enrollment.session)
         self.assertEqual(json_response[0]['statut'], first_enrollment.status)
         self.assertEqual(json_response[0]['inscription_tardive'], first_enrollment.late_enrollment)
+        self.assertEqual(json_response[0]['desinscription_tardive'], first_enrollment.late_unenrollment)
         self.assertEqual(
             json_response[0]['code_unite_enseignement'],
             first_enrollment.course.learning_unit_year.acronym,

@@ -23,12 +23,18 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from .lister_evaluations_service import lister_evaluations
+from .lister_inscriptions_unites_enseignement_service import (
+    lister_inscriptions_unites_enseignement,
+)
 from .recuperer_inscription_evaluation_service import recuperer_inscription_evaluation
 from .recuperer_inscriptions_evaluations_service import (
     recuperer_inscriptions_evaluations,
 )
 
 __all__ = [
+    'lister_evaluations',
+    'lister_inscriptions_unites_enseignement',
     'recuperer_inscription_evaluation',
     'recuperer_inscriptions_evaluations',
 ]

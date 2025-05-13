@@ -25,62 +25,70 @@
 # ##############################################################################
 
 import abc
-from typing import List, Optional
+import datetime
+from typing import List, Optional, Tuple
+
+from dateutil.relativedelta import relativedelta
 
 from osis_common.ddd import interface
-from parcours_doctoral.ddd.domain.model.parcours_doctoral import (
-    ParcoursDoctoralIdentity,
+from parcours_doctoral.ddd.formation.domain.model.evaluation import (
+    Evaluation,
+    EvaluationIdentity,
 )
-from parcours_doctoral.ddd.formation.domain.model.activite import ActiviteIdentity
 from parcours_doctoral.ddd.formation.domain.model.inscription_evaluation import (
-    InscriptionEvaluation,
     InscriptionEvaluationIdentity,
 )
-from parcours_doctoral.ddd.formation.dtos.inscription_evaluation import (
-    InscriptionEvaluationDTO,
-)
+from parcours_doctoral.ddd.formation.dtos.evaluation import EvaluationDTO
 
 
-class IInscriptionEvaluationRepository(interface.AbstractRepository):
+class IEvaluationRepository(interface.AbstractRepository):
+    ECHEANCE_NOMBRE_JOURS_AVANT_DEFENSE_PRIVEE = 2
+
     @classmethod
     @abc.abstractmethod
-    def get(cls, entity_id: 'InscriptionEvaluationIdentity') -> 'InscriptionEvaluation':  # type: ignore[override]
+    def get(cls, entity_id: 'EvaluationIdentity') -> 'Evaluation':  # type: ignore[override]
         raise NotImplementedError
 
     @classmethod
     @abc.abstractmethod
-    def get_dto(
-        cls,
-        entity_id: 'InscriptionEvaluationIdentity',
-    ) -> 'InscriptionEvaluationDTO':
+    def get_dto(cls, inscription_id: 'InscriptionEvaluationIdentity') -> EvaluationDTO:
+        raise NotImplementedError
+
+    @classmethod
+    def delete(cls, entity_id: 'EvaluationIdentity', **kwargs) -> None:  # type: ignore[override]
         raise NotImplementedError
 
     @classmethod
     @abc.abstractmethod
-    def delete(cls, entity_id: 'InscriptionEvaluationIdentity', **kwargs) -> None:  # type: ignore[override]
+    def save(cls, entity: 'Evaluation') -> None:  # type: ignore[override]
         raise NotImplementedError
 
     @classmethod
-    @abc.abstractmethod
-    def save(cls, entity: 'InscriptionEvaluation') -> None:  # type: ignore[override]
-        raise NotImplementedError
-
-    @classmethod
-    @abc.abstractmethod
-    def search(
-        cls,
-        cours_id: Optional[ActiviteIdentity] = None,
-        parcours_doctoral_id: Optional[ParcoursDoctoralIdentity] = None,
-        **kwargs,
-    ) -> List[InscriptionEvaluation]:  # type: ignore[override]
+    def search(cls, **kwargs) -> List[Evaluation]:  # type: ignore[override]
         raise NotImplementedError
 
     @classmethod
     @abc.abstractmethod
     def search_dto(
         cls,
-        cours_uuid: Optional[str] = None,
-        parcours_doctoral_id: Optional[str] = None,
-        **kwargs,
-    ) -> List[InscriptionEvaluationDTO]:  # type: ignore[override]
+        annee: int,
+        session: int,
+        code_unite_enseignement: str,
+    ) -> List[EvaluationDTO]:  # type: ignore[override]
         raise NotImplementedError
+
+    @classmethod
+    def get_echeance_encodage_enseignant(
+        cls,
+        date_defense_privee: Optional[datetime.date],
+        periode_encodage: Optional[Tuple[datetime.date, datetime.date]],
+    ) -> Optional[datetime.date]:
+        deadlines: List[datetime.date] = []
+
+        if date_defense_privee:
+            deadlines.append(date_defense_privee - relativedelta(days=cls.ECHEANCE_NOMBRE_JOURS_AVANT_DEFENSE_PRIVEE))
+
+        if periode_encodage:
+            deadlines.append(periode_encodage[1])
+
+        return min(deadlines, default=None)

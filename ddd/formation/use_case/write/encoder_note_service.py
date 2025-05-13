@@ -23,16 +23,37 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from parcours_doctoral.ddd.formation.dtos.inscription_evaluation import (
-    InscriptionEvaluationDTO,
+from parcours_doctoral.ddd.formation.builder.evaluation_builder import (
+    EvaluationIdentityBuilder,
+)
+from parcours_doctoral.ddd.formation.commands import EncoderNoteCommand
+from parcours_doctoral.ddd.formation.repository.i_activite import IActiviteRepository
+from parcours_doctoral.ddd.formation.repository.i_evaluation import (
+    IEvaluationRepository,
 )
 
 
-def assessment_enrollment_is_editable(assessment_enrollment: InscriptionEvaluationDTO, academic_year: int):
-    """
-    Check if an assessment enrollment is editable.
-    :param assessment_enrollment: The assessment enrollment dto.
-    :param academic_year: The current academic year
-    :return: True if the assessment enrollment is editable, False otherwise.
-    """
-    return assessment_enrollment.est_acceptee and assessment_enrollment.annee_unite_enseignement == academic_year
+def encoder_note(
+    cmd: EncoderNoteCommand,
+    evaluation_repository: IEvaluationRepository,
+    activite_repository: IActiviteRepository,
+):
+    # GIVEN
+    identite_evaluation = EvaluationIdentityBuilder.build(
+        annee=cmd.annee,
+        session=cmd.session,
+        code_unite_enseignement=cmd.code_unite_enseignement,
+        noma=cmd.noma,
+    )
+    evaluation = evaluation_repository.get(entity_id=identite_evaluation)
+    cours = activite_repository.get(entity_id=evaluation.cours_id)
+
+    # WHEN
+    evaluation.encoder_note(note=cmd.note)
+    cours.encoder_note_cours_ucl(note=cmd.note)
+
+    # THEN
+    evaluation_repository.save(evaluation)
+    activite_repository.save(cours)
+
+    return evaluation.entity_id

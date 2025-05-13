@@ -28,7 +28,7 @@ from uuid import uuid4
 
 from django.core import validators
 from django.db import models
-from django.db.models import Q, Sum
+from django.db.models import Prefetch, Q, Sum, When
 from django.db.models.signals import post_delete, post_save
 from django.dispatch import receiver
 from django.utils.translation import gettext_lazy as _
@@ -38,6 +38,7 @@ from osis_document.contrib import FileField
 from base.ddd.utils.business_validator import MultipleBusinessExceptions
 from deliberation.models.enums.numero_session import Session
 from parcours_doctoral.ddd.formation.domain.model.enums import (
+    MAPPING_SESSION_EVALUATION_TEXTE_NUMERO,
     CategorieActivite,
     ChoixComiteSelection,
     ChoixRolePublication,
@@ -65,6 +66,15 @@ def training_activity_directory_path(instance: 'Activity', filename: str):
 
 
 class ActivityQuerySet(models.QuerySet):
+    def prefetch_with_assessment_enrollments(self):
+        return self.prefetch_related(
+            models.Prefetch(
+                'assessmentenrollment_set',
+                AssessmentEnrollment.objects.with_session_numero().order_by('-session_numero'),
+                to_attr='ordered_assessment_enrollments',
+            )
+        )
+
     def for_doctoral_training_filter(self):
         return self.filter(
             context=ContexteFormation.DOCTORAL_TRAINING.name,
@@ -75,6 +85,7 @@ class ActivityQuerySet(models.QuerySet):
             self.for_doctoral_training_filter()
             .filter(parcours_doctoral__uuid=parcours_doctoral_uuid)
             .prefetch_related('children')
+            .prefetch_with_assessment_enrollments()
             .select_related(
                 'country',
                 'parent',
@@ -107,6 +118,7 @@ class ActivityQuerySet(models.QuerySet):
         return (
             self.for_complementary_training_filter()
             .filter(parcours_doctoral__uuid=parcours_doctoral_uuid)
+            .prefetch_with_assessment_enrollments()
             .select_related(
                 'country',
                 'parent',
@@ -478,7 +490,18 @@ def _activity_update_seminar_can_be_submitted(sender, instance, **kwargs):
         instance.parent.save()
 
 
+class AssessmentEnrollmentQuerySet(models.QuerySet):
+    SESSION_MAPPING = [
+        When(session=session_enum.name, then=Session.get_numero_session(session_enum.name)) for session_enum in Session
+    ]
+
+    def with_session_numero(self):
+        return self.annotate(session_numero=models.Case(*self.SESSION_MAPPING))
+
+
 class AssessmentEnrollment(models.Model):
+    objects = models.Manager.from_queryset(AssessmentEnrollmentQuerySet)()
+
     uuid = models.UUIDField(
         db_index=True,
         default=uuid4,
@@ -507,4 +530,25 @@ class AssessmentEnrollment(models.Model):
 
     late_enrollment = models.BooleanField(
         verbose_name=_("Late enrollment"),
+    )
+
+    late_unenrollment = models.BooleanField(
+        verbose_name=_("Late unenrollment"),
+        default=False,
+    )
+
+    submitted_mark = models.CharField(
+        verbose_name=_('Submitted mark'),
+        max_length=20,
+        default='',
+        blank=True,
+        null=False,
+    )
+
+    corrected_mark = models.CharField(
+        verbose_name=_("Corrected mark"),
+        max_length=20,
+        default="",
+        blank=True,
+        null=False,
     )
