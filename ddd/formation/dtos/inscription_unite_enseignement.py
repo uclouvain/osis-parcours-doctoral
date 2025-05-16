@@ -23,41 +23,15 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-import datetime
-from typing import Optional
 
 import attr
 
-from deliberation.models.enums.numero_session import Session
 from osis_common.ddd import interface
-from parcours_doctoral.ddd.formation.domain.model.activite import ActiviteIdentity
-from parcours_doctoral.ddd.formation.domain.model.enums import (
-    StatutInscriptionEvaluation,
-)
 
 
-@attr.dataclass(frozen=True, slots=True)
-class InscriptionEvaluationIdentity(interface.EntityIdentity):
-    uuid: str
-
-
-@attr.dataclass(slots=True, hash=False, eq=False)
-class InscriptionEvaluation(interface.RootEntity):
-    entity_id: 'InscriptionEvaluationIdentity'
-    cours_id: 'ActiviteIdentity'
-    statut: StatutInscriptionEvaluation
-    session: Session
-    inscription_tardive: bool
-    desinscription_tardive: bool
-
-    def modifier(
-        self,
-        session: Session,
-        inscription_tardive: bool,
-    ):
-        self.session = session
-        self.inscription_tardive = inscription_tardive
-
-    def desinscrire(self, echeance_encodage_note: Optional[datetime.date]):
-        self.statut = StatutInscriptionEvaluation.DESINSCRITE
-        self.desinscription_tardive = bool(echeance_encodage_note and datetime.date.today() > echeance_encodage_note)
+@attr.dataclass(slots=True, frozen=True)
+class InscriptionUniteEnseignementDTO(interface.DTO):
+    noma: str
+    annee: int
+    sigle_formation: str
+    code_unite_enseignement: str

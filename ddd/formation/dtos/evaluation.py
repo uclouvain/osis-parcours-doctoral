@@ -23,37 +23,26 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+import datetime
 
 import attr
 
 from osis_common.ddd import interface
-from parcours_doctoral.ddd.formation.domain.model.enums import (
-    StatutInscriptionEvaluation,
-)
 
 
 @attr.dataclass(slots=True, frozen=True)
-class InscriptionEvaluationDTO(interface.DTO):
+class EvaluationDTO(interface.DTO):
     uuid: str
-
     uuid_activite: str
 
-    session: str
     statut: str
-    inscription_tardive: bool
-
+    annee: int
+    session: int
+    noma: str
     code_unite_enseignement: str
-    intitule_unite_enseignement: str
-    annee_unite_enseignement: int
 
-    @property
-    def unite_enseignement(self):
-        return f'{self.code_unite_enseignement} - {self.intitule_unite_enseignement}'
+    note: str
 
-    @property
-    def est_annulee(self):
-        return self.statut == StatutInscriptionEvaluation.DESINSCRITE.name
-
-    @property
-    def est_acceptee(self):
-        return self.statut == StatutInscriptionEvaluation.ACCEPTEE.name
+    echeance_enseignant: datetime.date
+    est_desinscrit_tardivement: bool
+    est_inscrit_tardivement: bool

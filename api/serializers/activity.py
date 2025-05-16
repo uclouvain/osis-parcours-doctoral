@@ -41,7 +41,9 @@ from parcours_doctoral.ddd.formation.domain.model.enums import (
     ContexteFormation,
     StatutActivite,
 )
-from parcours_doctoral.ddd.formation.dtos.evaluation import InscriptionEvaluationDTO
+from parcours_doctoral.ddd.formation.dtos.inscription_evaluation import (
+    InscriptionEvaluationDTO,
+)
 from parcours_doctoral.forms.fields import SelectOrOtherField
 from parcours_doctoral.forms.training import activity as activity_forms
 from parcours_doctoral.forms.training.activity import ConfigurableActivityTypeField
@@ -488,5 +490,7 @@ class DoctoralTrainingConfigSerializer(serializers.ModelSerializer):
 
 
 class InscriptionEvaluationDTOSerializer(DTOSerializer):
+    desinscription_tardive = None
+
     class Meta:
         source = InscriptionEvaluationDTO

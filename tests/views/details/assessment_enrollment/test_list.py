@@ -36,7 +36,9 @@ from deliberation.models.enums.numero_session import Session
 from parcours_doctoral.ddd.formation.domain.model.enums import (
     StatutInscriptionEvaluation,
 )
-from parcours_doctoral.ddd.formation.dtos.evaluation import InscriptionEvaluationDTO
+from parcours_doctoral.ddd.formation.dtos.inscription_evaluation import (
+    InscriptionEvaluationDTO,
+)
 from parcours_doctoral.models import AssessmentEnrollment
 from parcours_doctoral.tests.factories.assessment_enrollment import (
     AssessmentEnrollmentFactory,

@@ -31,7 +31,9 @@ from parcours_doctoral.ddd.formation.commands import InscrireEvaluationCommand
 from parcours_doctoral.ddd.formation.domain.model.enums import (
     StatutInscriptionEvaluation,
 )
-from parcours_doctoral.ddd.formation.dtos.evaluation import InscriptionEvaluationDTO
+from parcours_doctoral.ddd.formation.dtos.inscription_evaluation import (
+    InscriptionEvaluationDTO,
+)
 from parcours_doctoral.infrastructure.message_bus_in_memory import (
     message_bus_in_memory_instance,
 )

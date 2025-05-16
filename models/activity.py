@@ -508,3 +508,15 @@ class AssessmentEnrollment(models.Model):
     late_enrollment = models.BooleanField(
         verbose_name=_("Late enrollment"),
     )
+
+    late_unenrollment = models.BooleanField(
+        verbose_name=_("Late unenrollment"),
+        default=False,
+    )
+
+    mark = models.CharField(
+        verbose_name=_('Mark'),
+        default='',
+        blank=True,
+        null=False,
+    )
