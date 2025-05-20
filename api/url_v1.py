@@ -51,7 +51,7 @@ urlpatterns = [
     # Supervision
     path('doctorate/<uuid:uuid>/supervision', views.SupervisionAPIView),
     path('doctorate/<uuid:uuid>/supervision_canvas', views.SupervisionCanvasApiView),
-    path('doctorate/<uuid:uuid>/supervision/external/<token>', views.ExternalDoctorateSupervisionAPIView),
+    path('doctorate/<uuid:uuid>/supervision/external/<str:token>', views.ExternalDoctorateSupervisionAPIView),
     # Submission confirmation
     path('doctorate/<uuid:uuid>/confirmation', views.ConfirmationAPIView),
     path('doctorate/<uuid:uuid>/confirmation/last', views.LastConfirmationAPIView),
