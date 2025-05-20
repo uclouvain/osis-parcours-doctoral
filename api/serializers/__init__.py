@@ -23,7 +23,6 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-
 from .activity import *
 from .confirmation import *
 from .cotutelle import *

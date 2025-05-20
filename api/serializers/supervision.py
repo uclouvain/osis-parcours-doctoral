@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -58,6 +58,6 @@ class PersonSerializer(ModelSerializer):
 
 
 class TutorSerializer(PersonSerializer):
-    first_name = ReadOnlyField(source='person.first_name')
-    last_name = ReadOnlyField(source='person.last_name')
-    global_id = ReadOnlyField(source='person.global_id')
+    first_name = ReadOnlyField()
+    last_name = ReadOnlyField()
+    global_id = ReadOnlyField()

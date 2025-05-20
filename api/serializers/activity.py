@@ -136,7 +136,7 @@ class ActivitySerializerBase(serializers.Serializer):
 
     def get_form(self, data=None, **kwargs):
         """Create an instance of configured form class."""
-        return self.Meta.form(parcours_doctoral=self.parcours_doctoral, data=data, **kwargs)
+        return self.Meta.form(parcours_doctoral=self.parcours_doctoral, data=data, instance=self.instance, **kwargs)
 
     def get_fields(self):
         """
@@ -411,10 +411,16 @@ class DoctoralTrainingActivitySerializer(serializers.Serializer):
         return serializer_class
 
     def to_internal_value(self, data):
-        return self.get_serializer_class(data)(parcours_doctoral=self.parcours_doctoral).to_internal_value(data)
+        return self.get_serializer_class(data)(
+            instance=self.instance,
+            parcours_doctoral=self.parcours_doctoral,
+        ).to_internal_value(data)
 
     def validate(self, data):
-        return self.get_serializer_class(data)(parcours_doctoral=self.parcours_doctoral).validate(data)
+        return self.get_serializer_class(data)(
+            instance=self.instance,
+            parcours_doctoral=self.parcours_doctoral,
+        ).validate(data)
 
     def create(self, validated_data):
         """Save a new activity object (simplified ModelSerializer mechanic)"""
