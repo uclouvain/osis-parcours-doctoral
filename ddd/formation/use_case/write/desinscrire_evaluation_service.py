@@ -23,9 +23,6 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from parcours_doctoral.ddd.formation.builder.evaluation_builder import (
-    EvaluationIdentityBuilder,
-)
 from parcours_doctoral.ddd.formation.builder.inscription_evaluation_builder import (
     InscriptionEvaluationBuilder,
 )
@@ -44,8 +41,7 @@ def desinscrire_evaluation(
     evaluation_repository: IEvaluationRepository,
 ):
     # GIVEN
-    evaluation_entity_id = EvaluationIdentityBuilder.build_from_uuid(uuid=cmd.inscription_uuid)
-    evaluation_dto = evaluation_repository.get_dto(entity_id=evaluation_entity_id)
+    evaluation_dto = evaluation_repository.get_dto(entity_uuid=cmd.inscription_uuid)
     inscription_evaluation = InscriptionEvaluationBuilder.build_from_evaluation_dto(evaluation_dto)
 
     # WHEN

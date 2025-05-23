@@ -762,6 +762,7 @@ class CourseForm(ActivityFormMixin, forms.ModelForm):
         # Convert from dates to year if UCLouvain
         if (
             self.instance
+            and self.instance.category != CategorieActivite.UCL_COURSE.name
             and self.instance.organizing_institution == INSTITUTION_UCL
             and self.instance.start_date
             and self.instance.end_date
@@ -773,6 +774,10 @@ class CourseForm(ActivityFormMixin, forms.ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
+
+        if self.instance and self.instance.category == CategorieActivite.UCL_COURSE.name:
+            return cleaned_data
+
         # Convert from academic year to dates if UCLouvain
         if cleaned_data.get('organizing_institution') == INSTITUTION_UCL and cleaned_data.get('academic_year'):
             cleaned_data['start_date'] = cleaned_data['academic_year'].start_date
@@ -927,3 +932,10 @@ class UclCourseForm(ActivityFormMixin, forms.ModelForm):
             'academic_year',
             'learning_unit_year',
         ]
+
+
+class UclCompletedCourseForm(CourseForm, UclCourseForm):
+    template_name = "parcours_doctoral/forms/training/ucl_completed_course.html"
+    class Meta(CourseForm.Meta):
+        model = Activity
+        fields = CourseForm.Meta.fields + UclCourseForm.Meta.fields
