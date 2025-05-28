@@ -1171,7 +1171,7 @@ msgid "EFT"
 msgstr "EFT"
 
 msgid "EN_ATTENTE_DE_SIGNATURE"
-msgstr "En attente de signature"
+msgstr "En cours de signature"
 
 msgid "Edit"
 msgstr "Modifier"
