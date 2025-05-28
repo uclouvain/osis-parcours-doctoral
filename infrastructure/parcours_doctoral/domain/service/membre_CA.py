@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -25,12 +25,12 @@
 # ##############################################################################
 from typing import List, Optional
 
-from base.models.person import Person
-from base.models.student import Student
 from django.db.models import Exists, OuterRef
 from django.utils.translation import get_language
 from django.utils.translation import gettext_lazy as _
 
+from base.models.person import Person
+from base.models.student import Student
 from parcours_doctoral.ddd.domain.model._membre_CA import MembreCAIdentity
 from parcours_doctoral.ddd.domain.service.i_membre_CA import IMembreCATranslator
 from parcours_doctoral.ddd.domain.validator.exceptions import MembreCANonTrouveException
@@ -84,12 +84,12 @@ class MembreCATranslator(IMembreCATranslator):
     @classmethod
     def _get_queryset(cls, matricule):
         return Person.objects.alias(
-            # Is the person a student?
-            is_student=Exists(Student.objects.filter(person=OuterRef('pk'))),
+            # Is the person a student and not a tutor?
+            is_student_and_not_tutor=Exists(Student.objects.filter(person=OuterRef('pk'), person__tutor__isnull=True)),
         ).filter(
             global_id=matricule,
             # Remove unexistent users
             user_id__isnull=False,
-            # Remove students
-            is_student=False,
+            # Remove students who aren't tutors
+            is_student_and_not_tutor=False,
         )

@@ -1097,7 +1097,7 @@ msgid "EFT"
 msgstr ""
 
 msgid "EN_ATTENTE_DE_SIGNATURE"
-msgstr "Waiting for signature"
+msgstr "In the process of signing"
 
 msgid "Edit"
 msgstr ""
