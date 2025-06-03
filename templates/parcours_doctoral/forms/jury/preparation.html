@@ -33,6 +33,19 @@
   {% include 'parcours_doctoral/includes/jury_description.html' %}
 
   {% bootstrap_field_with_tooltip form.titre_propose "required_field" %}
+
+  <div class="row">
+    <div class="col-md-4">
+      {% trans 'Information about a potential cotutelle are to be inputted in the "Research" part.' as cotutelle_tooltip %}
+      {% field_data _("Cotutelle thesis") cotutelle.cotutelle tooltip=cotutelle_tooltip %}
+    </div>
+    {% if cotutelle.cotutelle %}
+    <div class="col-md-4">
+      {% field_data _("Partner institution") cotutelle.institution %}
+    </div>
+    {% endif %}
+  </div>
+
   {% bootstrap_field_with_tooltip form.formule_defense "required_field" %}
   {% bootstrap_field form.date_indicative %}
   {% bootstrap_field form.langue_redaction wrapper_class="form-group required_field" %}
