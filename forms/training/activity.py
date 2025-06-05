@@ -34,12 +34,10 @@ from django.utils.translation import get_language
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import pgettext_lazy
 
-from base.forms.utils import EMPTY_CHOICE
-from base.forms.utils import autocomplete
+from base.forms.utils import EMPTY_CHOICE, autocomplete
 from base.forms.utils.academic_year_field import AcademicYearModelChoiceField
 from base.forms.utils.datefield import DatePickerInput
-from base.models.academic_year import AcademicYear
-from base.models.academic_year import current_academic_year
+from base.models.academic_year import AcademicYear, current_academic_year
 from base.models.learning_unit_year import LearningUnitYear
 from parcours_doctoral.ddd.formation.domain.model.enums import (
     CategorieActivite,
@@ -68,6 +66,7 @@ __all__ = [
     "PaperForm",
     "ComplementaryCourseForm",
     "UclCourseForm",
+    "UclCompletedCourseForm",
     "get_category_labels",
 ]
 
@@ -926,4 +925,18 @@ class UclCourseForm(ActivityFormMixin, forms.ModelForm):
             'context',
             'academic_year',
             'learning_unit_year',
+        ]
+
+
+class UclCompletedCourseForm(ActivityFormMixin, forms.ModelForm):
+    template_name = "parcours_doctoral/forms/training/ucl_completed_course.html"
+
+    class Meta(CourseForm.Meta):
+        model = Activity
+        fields = [
+            'hour_volume',
+            'authors',
+            'mark',
+            'ects',
+            'participating_proof',
         ]

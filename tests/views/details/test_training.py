@@ -27,7 +27,6 @@ import uuid
 from unittest.mock import patch
 
 import freezegun
-
 from django.conf import settings
 from django.forms import Field
 from django.shortcuts import resolve_url
@@ -48,7 +47,10 @@ from parcours_doctoral.ddd.formation.domain.model.enums import (
     ContexteFormation,
     StatutActivite,
 )
-from parcours_doctoral.forms.training.activity import INSTITUTION_UCL
+from parcours_doctoral.forms.training.activity import (
+    INSTITUTION_UCL,
+    UclCompletedCourseForm,
+)
 from parcours_doctoral.models.activity import Activity
 from parcours_doctoral.models.cdd_config import CddConfiguration
 from parcours_doctoral.tests.factories.activity import (
@@ -274,6 +276,38 @@ class DoctorateTrainingActivityViewTestCase(TestCase):
         }
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+
+        # On update after completion
+        url = resolve_url(
+            f'parcours_doctoral:complementary-training:edit',
+            uuid=self.parcours_doctoral.uuid,
+            activity_id=self.other_ucl_course.uuid,
+        )
+
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        form = response.context['form']
+
+        self.assertIsInstance(form, UclCompletedCourseForm)
+
+        data = {
+            'hour_volume': '1',
+            'authors': 'Mr John',
+            'mark': '16',
+            'ects': 10,
+            'participating_proof': [],
+        }
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+
+        self.other_ucl_course.refresh_from_db()
+
+        self.assertEqual(self.other_ucl_course.hour_volume, '1')
+        self.assertEqual(self.other_ucl_course.authors, 'Mr John')
+        self.assertEqual(self.other_ucl_course.mark, '16')
+        self.assertEqual(self.other_ucl_course.ects, 10)
+        self.assertEqual(self.other_ucl_course.participating_proof, [])
 
     def test_ucl_course(self):
         url = resolve_url(

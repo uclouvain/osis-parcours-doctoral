@@ -32,7 +32,10 @@ from parcours_doctoral.ddd.formation.domain.model.activite import ActiviteIdenti
 
 @attr.dataclass(frozen=True, slots=True)
 class EvaluationIdentity(interface.EntityIdentity):
-    uuid: str
+    annee: int
+    session: int
+    code_unite_enseignement: str
+    noma: str
 
 
 @attr.dataclass(slots=True, hash=False, eq=False)
@@ -40,6 +43,7 @@ class Evaluation(interface.RootEntity):
     entity_id: 'EvaluationIdentity'
     cours_id: 'ActiviteIdentity'
     note: str
+    uuid: str
 
     def encoder_note(self, note):
         self.note = note

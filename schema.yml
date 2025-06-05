@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Parcours Doctoral API
-  version: 1.1.0
+  version: 1.1.0.dev1378
   description: This API delivers data for the Parcours Doctoral project.
   contact:
     name: UCLouvain - OSIS
@@ -4193,6 +4193,20 @@ components:
           readOnly: true
         academic_year:
           type: integer
+        authors:
+          type: string
+          readOnly: true
+        hour_volume:
+          type: string
+          readOnly: true
+        mark:
+          type: string
+          readOnly: true
+        participating_proof:
+          type: array
+          items:
+            type: string
+          readOnly: true
       required:
       - academic_year
       - category

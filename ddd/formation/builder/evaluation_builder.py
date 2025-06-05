@@ -30,5 +30,10 @@ from parcours_doctoral.ddd.formation.domain.model.evaluation import EvaluationId
 
 class EvaluationIdentityBuilder(EntityIdentityBuilder):
     @classmethod
-    def build_from_uuid(cls, uuid: str) -> EvaluationIdentity:
-        return EvaluationIdentity(uuid=uuid)
+    def build(cls, annee: int, session: int, code_unite_enseignement: str, noma: str) -> EvaluationIdentity:
+        return EvaluationIdentity(
+            annee=annee,
+            session=session,
+            code_unite_enseignement=code_unite_enseignement,
+            noma=noma,
+        )

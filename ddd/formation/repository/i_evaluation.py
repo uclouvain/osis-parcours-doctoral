@@ -48,18 +48,7 @@ class IEvaluationRepository(interface.AbstractRepository):
 
     @classmethod
     @abc.abstractmethod
-    def get_dto(cls, entity_id: 'EvaluationIdentity') -> EvaluationDTO:
-        raise NotImplementedError
-
-    @classmethod
-    @abc.abstractmethod
-    def get_from_properties(
-        cls,
-        annee: int,
-        session: int,
-        code_unite_enseignement: str,
-        noma: str,
-    ) -> 'Evaluation':
+    def get_dto(cls, entity_uuid: str) -> EvaluationDTO:
         raise NotImplementedError
 
     @classmethod
@@ -72,10 +61,7 @@ class IEvaluationRepository(interface.AbstractRepository):
         raise NotImplementedError
 
     @classmethod
-    def search(
-        cls,
-        **kwargs,
-    ) -> List[Evaluation]:  # type: ignore[override]
+    def search(cls, **kwargs) -> List[Evaluation]:  # type: ignore[override]
         raise NotImplementedError
 
     @classmethod

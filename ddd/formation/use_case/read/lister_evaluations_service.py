@@ -23,7 +23,10 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from typing import List
+
 from parcours_doctoral.ddd.formation.commands import ListerEvaluationsQuery
+from parcours_doctoral.ddd.formation.dtos.evaluation import EvaluationDTO
 from parcours_doctoral.ddd.formation.repository.i_evaluation import (
     IEvaluationRepository,
 )
@@ -32,7 +35,7 @@ from parcours_doctoral.ddd.formation.repository.i_evaluation import (
 def lister_evaluations(
     cmd: ListerEvaluationsQuery,
     evaluation_repository: IEvaluationRepository,
-):
+) -> List[EvaluationDTO]:
     return evaluation_repository.search_dto(
         session=cmd.session,
         annee=cmd.annee,

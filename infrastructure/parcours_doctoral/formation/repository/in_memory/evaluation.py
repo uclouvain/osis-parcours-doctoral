@@ -28,10 +28,7 @@ from typing import Dict, List, Tuple
 
 from base.ddd.utils.in_memory_repository import InMemoryGenericRepository
 from parcours_doctoral.ddd.formation.domain.model.enums import StatutActivite
-from parcours_doctoral.ddd.formation.domain.model.evaluation import (
-    Evaluation,
-    EvaluationIdentity,
-)
+from parcours_doctoral.ddd.formation.domain.model.evaluation import Evaluation
 from parcours_doctoral.ddd.formation.domain.validator.exceptions import (
     EvaluationNonTrouveeException,
 )
@@ -51,36 +48,37 @@ class EvaluationInMemoryRepository(InMemoryGenericRepository, IEvaluationReposit
         cls,
         enrollment: Evaluation,
     ) -> EvaluationDTO:
-        annee = 2020
-        periode_encodage = cls.periodes_encodage.get(enrollment.entity_id.uuid)
-        date_defense_privee = cls.dates_defenses_privees.get(enrollment.entity_id.uuid)
+        periode_encodage = cls.periodes_encodage.get(enrollment.uuid)
+        date_defense_privee = cls.dates_defenses_privees.get(enrollment.uuid)
         date_limite_encodage = cls.get_echeance_encodage_enseignant(
             date_defense_privee=date_defense_privee,
             periode_encodage=periode_encodage,
         )
         return EvaluationDTO(
-            uuid=str(enrollment.entity_id.uuid),
+            uuid=str(enrollment.uuid),
             note=enrollment.note,
             echeance_enseignant=date_limite_encodage,
             uuid_activite='',
-            session=3,
+            session=enrollment.entity_id.session,
             est_inscrit_tardivement=False,
-            code_unite_enseignement='',
-            annee=annee,
+            code_unite_enseignement=enrollment.entity_id.code_unite_enseignement,
+            annee=enrollment.entity_id.annee,
             statut=StatutActivite.ACCEPTEE.name,
-            noma='',
+            noma=enrollment.entity_id.noma,
             est_desinscrit_tardivement=False,
         )
 
     @classmethod
-    def get_dto(cls, entity_id: 'EvaluationIdentity') -> 'EvaluationDTO':
-        return cls._get_dto_from_domain_object(cls.get(entity_id))
+    def get_dto(cls, entity_uuid: str) -> EvaluationDTO:
+        entity = next((entity for entity in cls.entities if entity.uuid == entity_uuid), None)
+
+        if not entity:
+            raise EvaluationNonTrouveeException
+
+        return cls._get_dto_from_domain_object(entity)
 
     @classmethod
-    def search(
-        cls,
-        **kwargs,
-    ) -> List[Evaluation]:
+    def search(cls, **kwargs) -> List[Evaluation]:
         return cls.entities
 
     @classmethod
@@ -98,15 +96,3 @@ class EvaluationInMemoryRepository(InMemoryGenericRepository, IEvaluationReposit
                 code_unite_enseignement=code_unite_enseignement,
             )
         ]
-
-    @classmethod
-    def get_from_properties(
-        cls,
-        annee: int,
-        session: int,
-        code_unite_enseignement: str,
-        noma: str,
-    ) -> 'Evaluation':
-        if cls.entities:
-            return cls.entities[0]
-        raise EvaluationNonTrouveeException
