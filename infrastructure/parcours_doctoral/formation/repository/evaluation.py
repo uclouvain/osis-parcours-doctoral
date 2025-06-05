@@ -66,45 +66,28 @@ class EvaluationRepository(IEvaluationRepository):
         return (academic_session.start_date, academic_session.end_date) if academic_session else None
 
     @classmethod
-    def build_domain_object_from_db_object(cls, assessment: AssessmentEnrollment) -> Evaluation:
-        return Evaluation(
-            entity_id=EvaluationIdentity(uuid=str(assessment.uuid)),
-            note=assessment.mark,
-            cours_id=ActiviteIdentity(uuid=str(assessment.course_uuid)),
-        )
-
-    @classmethod
     def get(cls, entity_id: 'EvaluationIdentity') -> 'Evaluation':
-        try:
-            assessment = AssessmentEnrollment.objects.annotate(course_uuid=F('course__uuid')).get(uuid=entity_id.uuid)
-            return cls.build_domain_object_from_db_object(assessment=assessment)
-        except AssessmentEnrollment.DoesNotExist:
-            raise EvaluationNonTrouveeException
-
-    @classmethod
-    def get_from_properties(
-        cls,
-        annee: int,
-        session: int,
-        code_unite_enseignement: str,
-        noma: str,
-    ) -> 'Evaluation':
-        session_as_text = MAPPING_SESSION_EVALUATION_NUMERO_TEXTE[session]
+        session_as_text = MAPPING_SESSION_EVALUATION_NUMERO_TEXTE[entity_id.session]
         try:
             assessment = AssessmentEnrollment.objects.annotate(course_uuid=F('course__uuid')).get(
                 session=session_as_text,
-                course__learning_unit_year__academic_year__year=annee,
-                course__learning_unit_year__acronym=code_unite_enseignement,
-                course__parcours_doctoral__student__student__registration_id=noma,
+                course__learning_unit_year__academic_year__year=entity_id.annee,
+                course__learning_unit_year__acronym=entity_id.code_unite_enseignement,
+                course__parcours_doctoral__student__student__registration_id=entity_id.noma,
             )
-            return cls.build_domain_object_from_db_object(assessment=assessment)
+            return Evaluation(
+                entity_id=entity_id,
+                uuid=str(assessment.uuid),
+                note=assessment.mark,
+                cours_id=ActiviteIdentity(uuid=str(assessment.course_uuid)),  # From annotation
+            )
         except AssessmentEnrollment.DoesNotExist:
             raise EvaluationNonTrouveeException
 
     @classmethod
     def save(cls, entity: 'Evaluation') -> None:
         AssessmentEnrollment.objects.update_or_create(
-            uuid=entity.entity_id.uuid,
+            uuid=entity.uuid,
             defaults={
                 'mark': entity.note,
             },
@@ -169,7 +152,7 @@ class EvaluationRepository(IEvaluationRepository):
         return dtos
 
     @classmethod
-    def get_dto(cls, entity_id: EvaluationIdentity) -> EvaluationDTO:
+    def get_dto(cls, entity_uuid: str) -> EvaluationDTO:
         try:
             assessment = (
                 cls.get_dto_queryset()
@@ -180,7 +163,7 @@ class EvaluationRepository(IEvaluationRepository):
                         )[:1]
                     ),
                 )
-                .get(uuid=entity_id.uuid)
+                .get(uuid=entity_uuid)
             )
 
         except AssessmentEnrollment.DoesNotExist:

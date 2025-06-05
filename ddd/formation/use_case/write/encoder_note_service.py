@@ -23,6 +23,9 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from parcours_doctoral.ddd.formation.builder.evaluation_builder import (
+    EvaluationIdentityBuilder,
+)
 from parcours_doctoral.ddd.formation.commands import EncoderNoteCommand
 from parcours_doctoral.ddd.formation.repository.i_activite import IActiviteRepository
 from parcours_doctoral.ddd.formation.repository.i_evaluation import (
@@ -36,12 +39,13 @@ def encoder_note(
     activite_repository: IActiviteRepository,
 ):
     # GIVEN
-    evaluation = evaluation_repository.get_from_properties(
+    identite_evaluation = EvaluationIdentityBuilder.build(
         annee=cmd.annee,
         session=cmd.session,
         code_unite_enseignement=cmd.code_unite_enseignement,
         noma=cmd.noma,
     )
+    evaluation = evaluation_repository.get(entity_id=identite_evaluation)
     cours = activite_repository.get(entity_id=evaluation.cours_id)
 
     # WHEN

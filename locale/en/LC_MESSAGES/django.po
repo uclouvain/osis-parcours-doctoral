@@ -787,6 +787,9 @@ msgctxt "parcours_doctoral course"
 msgid "Course type"
 msgstr ""
 
+msgid "Course unit code"
+msgstr ""
+
 msgid "Course unit code (if applicable)"
 msgstr ""
 
@@ -2481,6 +2484,9 @@ msgid "Search on portal"
 msgstr ""
 
 msgid "Second author"
+msgstr ""
+
+msgid "Second cycle course"
 msgstr ""
 
 msgid "Secretary"
