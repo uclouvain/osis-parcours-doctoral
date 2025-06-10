@@ -31,12 +31,11 @@ from django import template
 from django.conf import settings
 from django.core.validators import EMPTY_VALUES
 from django.db.models import QuerySet
-from django.template.defaultfilters import floatformat
 from django.urls import NoReverseMatch, reverse
 from django.utils.safestring import mark_safe
 from django.utils.translation import get_language
 from django.utils.translation import gettext_lazy as _
-from django.utils.translation import pgettext
+from django.utils.translation import pgettext_lazy
 from django_bootstrap5.renderers import FieldRenderer
 from osis_document.api.utils import get_remote_metadata, get_remote_token
 
@@ -101,17 +100,17 @@ TAB_TREE = {
     # Tab('additional-information', _('Additional information'), 'puzzle-piece'): [
     #     Tab('accounting', _('Accounting')),
     # ],
-    Tab('doctorate', pgettext('tab', 'Research'), 'graduation-cap'): [
-        Tab('project', pgettext('tab', 'Research')),
-        Tab('funding', pgettext('tab', 'Funding')),
+    Tab('doctorate', pgettext_lazy('tab', 'Research'), 'graduation-cap'): [
+        Tab('project', pgettext_lazy('tab', 'Research')),
+        Tab('funding', pgettext_lazy('tab', 'Funding')),
         Tab('cotutelle', _('Cotutelle')),
         Tab('supervision', _('Supervision')),
     ],
-    Tab('confirmation', pgettext('tab', 'Confirmation'), 'award'): [
+    Tab('confirmation', pgettext_lazy('tab', 'Confirmation'), 'award'): [
         Tab('confirmation', _('Confirmation exam')),
         Tab('extension-request', _('New deadline')),
     ],
-    Tab('training', pgettext('admission', 'Course'), 'book-open-reader'): [
+    Tab('training', pgettext_lazy('admission', 'Course'), 'book-open-reader'): [
         Tab('doctoral-training', _('PhD training')),
         Tab('complementary-training', _('Complementary training')),
     ],
@@ -119,18 +118,18 @@ TAB_TREE = {
         Tab('course-enrollment', _('Course unit enrolment')),
         Tab('assessment-enrollment', _('Assessment enrollments')),
     ],
-    Tab('defense', pgettext('doctorate tab', 'Defense'), 'person-chalkboard'): [
-        Tab('jury-preparation', pgettext('admission tab', 'Defense method')),
+    Tab('defense', pgettext_lazy('doctorate tab', 'Defense'), 'person-chalkboard'): [
+        Tab('jury-preparation', pgettext_lazy('admission tab', 'Defense method')),
         Tab('jury', _('Jury composition')),
     ],
-    Tab('comments', pgettext('tab', 'Comments'), 'comments'): [
-        Tab('comments', pgettext('tab', 'Comments'), 'comments')
+    Tab('comments', pgettext_lazy('tab', 'Comments'), 'comments'): [
+        Tab('comments', pgettext_lazy('tab', 'Comments'), 'comments')
     ],
-    Tab('history', pgettext('tab', 'History'), 'history'): [
+    Tab('history', pgettext_lazy('tab', 'History'), 'history'): [
         Tab('history-all', _('All history')),
         Tab('history', _('Status changes')),
     ],
-    Tab('management', pgettext('tab', 'Management'), 'gear'): [
+    Tab('management', pgettext_lazy('tab', 'Management'), 'gear'): [
         Tab('send-mail', _('Send a mail')),
         # Tab('debug', _('Debug'), 'bug'),
     ],
