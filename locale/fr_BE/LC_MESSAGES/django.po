@@ -947,6 +947,10 @@ msgctxt "confirmation paper"
 msgid "Created at"
 msgstr "Créée le"
 
+msgctxt "private defense"
+msgid "Created at"
+msgstr "Créée le"
+
 msgid "Current funding"
 msgstr "Financement actuel"
 
@@ -964,6 +968,18 @@ msgstr "Décision de recevabilité"
 
 msgid "DEFENSE_PRIVEE"
 msgstr "Défense privée"
+
+msgid "DEFENSE_PRIVEE_AUTORISEE"
+msgstr "Défense privée autorisée"
+
+msgid "DEFENSE_PRIVEE_A_RECOMMENCER"
+msgstr "Défense privée à recommencer"
+
+msgid "DEFENSE_PRIVEE_REUSSIE"
+msgstr "Défense privée réussie"
+
+msgid "DEFENSE_PRIVEE_SOUMISE"
+msgstr "Défense privée soumise"
 
 msgid "DESINSCRITE"
 msgstr "Désinscrite"
@@ -983,6 +999,9 @@ msgstr "Date"
 #, python-format
 msgid "Date - Filter #%s"
 msgstr "Date - Filtre #%s"
+
+msgid "Date of manuscript submission to the thesis exam board"
+msgstr "Date d'envoi du manuscrit au jury"
 
 msgid "Date of the confirmation paper (DD/MM/YYYY)"
 msgstr "Date de l'épreuve de confirmation (JJ/MM/AAAA)"
@@ -1172,6 +1191,9 @@ msgstr "Doctorat"
 
 msgid "Doctorate thesis field"
 msgstr "Domaine de la thèse de doctorat"
+
+msgid "Doctorate whose this private defense is the active one"
+msgstr "Doctorat dont cette défense privée est la courante"
 
 msgid "Document"
 msgstr "Document"
@@ -2479,6 +2501,18 @@ msgstr "Epreuves de confirmation passées"
 msgid "Previous doctorate"
 msgstr "Doctorat précédent"
 
+msgid "Private defence date and time"
+msgstr "Date et heure de la défense privée"
+
+msgid "Private defence location"
+msgstr "Lieu de la défense privée"
+
+msgid "Private defence minutes"
+msgstr "Procès verbal de la défense privée"
+
+msgid "Private defence minutes canvas"
+msgstr "Canevas du procès verbal de la défense privée"
+
 msgctxt "dashboard-category"
 msgid "Private defense (formula 1)"
 msgstr "Défense privée (formule 1)"
@@ -2486,6 +2520,15 @@ msgstr "Défense privée (formule 1)"
 msgctxt "dashboard-category"
 msgid "Private defense / Public defense (formula 2)"
 msgstr "Défense privée / Soutenance (formule 2)"
+
+msgid "Private defense not activated."
+msgstr "Défense privée non activée."
+
+msgid "Private defense not completed."
+msgstr "Défense privée non complétée."
+
+msgid "Private defense not found."
+msgstr "Défense privée non trouvée."
 
 msgid "Professor"
 msgstr "Professeur.e"
@@ -3370,6 +3413,9 @@ msgstr "La personne n'a pas été trouvée."
 
 msgid "The person is not a president, a secretary or a member."
 msgstr "La personne n'est pas président, secrétaire ou membre."
+
+msgid "The private defense is not in progress"
+msgstr "La défense privée n'est pas en cours"
 
 msgid "The public comment about the approval/refusal"
 msgstr "Le commentaire public de la décision"

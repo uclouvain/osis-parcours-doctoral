@@ -93,6 +93,7 @@ class ParcoursDoctoral(interface.RootEntity):
         ]
     ] = None
     justification: str = ''
+    titre_these_propose: str = ''
 
     def verrouiller_parcours_doctoral_pour_signature(self):
         self.statut = ChoixStatutParcoursDoctoral.EN_ATTENTE_DE_SIGNATURE
@@ -327,3 +328,7 @@ class ParcoursDoctoral(interface.RootEntity):
     def changer_statut_si_approbation_jury(self, jury: 'Jury'):
         if all(member.signature.etat == ChoixEtatSignature.APPROVED for member in jury.membres):
             self.statut = ChoixStatutParcoursDoctoral.JURY_APPROUVE_CA
+
+    def soumettre_defense_privee(self, titre_these: str):
+        self.statut = ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_SOUMISE
+        self.titre_these_propose = titre_these

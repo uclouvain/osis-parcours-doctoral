@@ -31,6 +31,7 @@ from admission.ddd.admission.doctorat.preparation.domain.model.enums import (
     ChoixStatutPropositionDoctorale,
 )
 from osis_common.ddd import interface
+from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from parcours_doctoral.ddd.domain.model.groupe_de_supervision import (
     GroupeDeSupervision,
     SignataireIdentity,
@@ -148,5 +149,20 @@ class IHistorique(interface.DomainService):
 
     @classmethod
     @abstractmethod
-    def historiser_soumission_epreuve_confirmation(cls, parcours_doctoral: ParcoursDoctoral, matricule_auteur: str):
+    def historiser_soumission_epreuve_confirmation(
+        cls,
+        parcours_doctoral: ParcoursDoctoral,
+        matricule_auteur: str,
+        statut_original_parcours_doctoral: ChoixStatutParcoursDoctoral,
+    ):
+        raise NotImplementedError
+
+    @classmethod
+    @abstractmethod
+    def historiser_soumission_defense_privee(
+        cls,
+        parcours_doctoral: ParcoursDoctoral,
+        matricule_auteur: str,
+        statut_original_parcours_doctoral: ChoixStatutParcoursDoctoral,
+    ):
         raise NotImplementedError
