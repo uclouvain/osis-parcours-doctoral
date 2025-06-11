@@ -124,6 +124,7 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
             ),
             commission_proximite=commission_proximite,
             justification=parcours_doctoral.justification,
+            titre_these_propose=parcours_doctoral.thesis_proposed_title,
             experience_precedente_recherche=ExperiencePrecedenteRecherche(
                 doctorat_deja_realise=ChoixDoctoratDejaRealise[parcours_doctoral.phd_already_done],
                 institution=parcours_doctoral.phd_already_done_institution,
@@ -262,6 +263,8 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
                 'financing_comment': entity.financement.commentaire,
                 'proximity_commission': entity.commission_proximite.name if entity.commission_proximite else '',
                 'justification': entity.justification,
+                # Thesis
+                'thesis_proposed_title': entity.titre_these_propose,
             },
         )
 
