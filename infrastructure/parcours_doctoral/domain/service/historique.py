@@ -311,12 +311,43 @@ class Historique(IHistorique):
         )
 
     @classmethod
-    def historiser_soumission_epreuve_confirmation(cls, parcours_doctoral: ParcoursDoctoral, matricule_auteur: str):
+    def historiser_soumission_epreuve_confirmation(
+        cls,
+        parcours_doctoral: ParcoursDoctoral,
+        matricule_auteur: str,
+        statut_original_parcours_doctoral: ChoixStatutParcoursDoctoral,
+    ):
         auteur = PersonneConnueUclTranslator().get(matricule_auteur)
+        tags = ["parcours_doctoral", "confirmation"]
+
+        if parcours_doctoral.statut != statut_original_parcours_doctoral:
+            tags.append("status-changed")
+
         add_history_entry(
             parcours_doctoral.entity_id.uuid,
             "Le candidat a renseigné des informations relatives à son épreuve de confirmation.",
             "The candidate has filled in information relating to his confirmation paper exam.",
             "{auteur.prenom} {auteur.nom}".format(auteur=auteur),
-            tags=["parcours_doctoral", "confirmation", "status-changed"],
+            tags=tags,
+        )
+
+    @classmethod
+    def historiser_soumission_defense_privee(
+        cls,
+        parcours_doctoral: ParcoursDoctoral,
+        matricule_auteur: str,
+        statut_original_parcours_doctoral: ChoixStatutParcoursDoctoral,
+    ):
+        auteur = PersonneConnueUclTranslator().get(matricule_auteur)
+        tags = ["parcours_doctoral", "private-defense"]
+
+        if parcours_doctoral.statut != statut_original_parcours_doctoral:
+            tags.append("status-changed")
+
+        add_history_entry(
+            parcours_doctoral.entity_id.uuid,
+            "Le doctorant a renseigné des informations relatives à la défense privée.",
+            "The doctoral student has filled in information relating to the private defense.",
+            "{auteur.prenom} {auteur.nom}".format(auteur=auteur),
+            tags=tags,
         )

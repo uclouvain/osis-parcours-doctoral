@@ -48,6 +48,12 @@ class ChoixStatutParcoursDoctoral(ChoiceEnum):
     JURY_REFUSE_CDD = _('JURY_REFUSE_CDD')
     JURY_APPROUVE_ADRE = _('JURY_APPROUVE_ADRE')
     JURY_REFUSE_ADRE = _('JURY_REFUSE_ADRE')
+    # Défense privée
+    DEFENSE_PRIVEE_SOUMISE = _('DEFENSE_PRIVEE_SOUMISE')
+    DEFENSE_PRIVEE_AUTORISEE = _('DEFENSE_PRIVEE_AUTORISEE')
+    DEFENSE_PRIVEE_A_RECOMMENCER = _('DEFENSE_PRIVEE_A_RECOMMENCER')
+    DEFENSE_PRIVEE_REUSSIE = _('DEFENSE_PRIVEE_REUSSIE')
+    # Autres
     ABANDON = _('ABANDON')
 
 
@@ -55,6 +61,13 @@ STATUTS_DOCTORAT_EPREUVE_CONFIRMATION_EN_COURS = {
     ChoixStatutParcoursDoctoral.ADMIS.name,
     ChoixStatutParcoursDoctoral.CONFIRMATION_SOUMISE.name,
     ChoixStatutParcoursDoctoral.CONFIRMATION_A_REPRESENTER.name,
+}
+
+
+STATUTS_DOCTORAT_DEFENSE_PRIVEE_EN_COURS = {
+    ChoixStatutParcoursDoctoral.JURY_APPROUVE_ADRE.name,
+    ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_SOUMISE.name,
+    ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_A_RECOMMENCER.name,
 }
 
 
