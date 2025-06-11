@@ -135,3 +135,7 @@ class HistoriqueInMemory(IHistorique):
     @classmethod
     def historiser_soumission_epreuve_confirmation(cls, parcours_doctoral: ParcoursDoctoral, matricule_auteur: str):
         pass
+
+    @classmethod
+    def historiser_soumission_defense_privee(cls, parcours_doctoral: ParcoursDoctoral, matricule_auteur: str):
+        pass

@@ -301,3 +301,6 @@ class ParcoursDoctoral(interface.RootEntity):
             convention=convention,
             autres_documents=autres_documents,
         )
+
+    def soumettre_defense_privee(self):
+        self.statut = ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_SOUMISE

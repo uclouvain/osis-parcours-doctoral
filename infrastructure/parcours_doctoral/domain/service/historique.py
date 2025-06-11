@@ -320,3 +320,14 @@ class Historique(IHistorique):
             "{auteur.prenom} {auteur.nom}".format(auteur=auteur),
             tags=["parcours_doctoral", "confirmation", "status-changed"],
         )
+
+    @classmethod
+    def historiser_soumission_defense_privee(cls, parcours_doctoral: ParcoursDoctoral, matricule_auteur: str):
+        auteur = PersonneConnueUclTranslator().get(matricule_auteur)
+        add_history_entry(
+            parcours_doctoral.entity_id.uuid,
+            "Le candidat a renseigné des informations relatives à sa défense privée.",
+            "The candidate has filled in information relating to his private defense.",
+            "{auteur.prenom} {auteur.nom}".format(auteur=auteur),
+            tags=["parcours_doctoral", "private-defense", "status-changed"],
+        )

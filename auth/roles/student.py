@@ -77,5 +77,8 @@ class Student(RoleModel):
             'parcours_doctoral.change_confirmation_extension': parcours_doctoral.is_parcours_doctoral_student
             & parcours_doctoral.confirmation_paper_in_progress
             & parcours_doctoral.is_related_to_an_admission,
+            # Private defense
+            'parcours_doctoral.view_private_defense': parcours_doctoral.is_parcours_doctoral_student,
+            'parcours_doctoral.change_private_defense': parcours_doctoral.is_parcours_doctoral_student,
         }
         return RuleSet(rules)

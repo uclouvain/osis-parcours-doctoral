@@ -150,3 +150,8 @@ class IHistorique(interface.DomainService):
     @abstractmethod
     def historiser_soumission_epreuve_confirmation(cls, parcours_doctoral: ParcoursDoctoral, matricule_auteur: str):
         raise NotImplementedError
+
+    @classmethod
+    @abstractmethod
+    def historiser_soumission_defense_privee(cls, parcours_doctoral: ParcoursDoctoral, matricule_auteur: str):
+        raise NotImplementedError

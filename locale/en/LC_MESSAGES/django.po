@@ -111,6 +111,20 @@ msgid ""
 "a> - Some doctoral training activities have been approved."
 msgstr ""
 
+#, python-format
+msgid ""
+"<a href=\"%(private_defense_link_back)s\">%(reference)s</a> - "
+"%(student_first_name)s %(student_last_name)s submitted data for the first "
+"time for the private defense for %(training_title)s"
+msgstr ""
+
+#, python-format
+msgid ""
+"<a href=\"%(private_defense_link_back)s\">%(reference)s</a> - "
+"%(student_first_name)s %(student_last_name)s submitted new data for the "
+"private defense for %(training_title)s"
+msgstr ""
+
 msgid ""
 "<a href='https://uclouvain.be/en/research/valodoc/confirmation-eligibility-"
 "doctoral-programme.html' target='_blank'>https://uclouvain.be/en/research/"
@@ -825,6 +839,10 @@ msgctxt "confirmation paper"
 msgid "Created at"
 msgstr ""
 
+msgctxt "private defense"
+msgid "Created at"
+msgstr ""
+
 msgid "Current funding"
 msgstr ""
 
@@ -846,6 +864,18 @@ msgstr "Admissibility decision"
 msgid "DEFENSE_PRIVEE"
 msgstr "Private defense"
 
+msgid "DEFENSE_PRIVEE_AUTORISEE"
+msgstr "Authorized private defense"
+
+msgid "DEFENSE_PRIVEE_A_RECOMMENCER"
+msgstr "Private defense to be repeated"
+
+msgid "DEFENSE_PRIVEE_REUSSIE"
+msgstr "Passed private defense"
+
+msgid "DEFENSE_PRIVEE_SOUMISE"
+msgstr "Submitted private defense"
+
 msgid "DESINSCRITE"
 msgstr "Withdrawn"
 
@@ -863,6 +893,9 @@ msgstr ""
 
 #, python-format
 msgid "Date - Filter #%s"
+msgstr ""
+
+msgid "Date of manuscript submission to the thesis exam board"
 msgstr ""
 
 msgid "Date of the confirmation paper (DD/MM/YYYY)"
@@ -2124,6 +2157,18 @@ msgstr ""
 msgid "Previous doctorate"
 msgstr ""
 
+msgid "Private defence date and time"
+msgstr ""
+
+msgid "Private defence location"
+msgstr ""
+
+msgid "Private defence minutes"
+msgstr ""
+
+msgid "Private defence minutes canvas"
+msgstr ""
+
 msgctxt "dashboard-category"
 msgid "Private defense (formula 1)"
 msgstr ""
@@ -2131,6 +2176,17 @@ msgstr ""
 msgctxt "dashboard-category"
 msgid "Private defense / Public defense (formula 2)"
 msgstr ""
+
+msgid "Private defense not activated."
+msgstr ""
+
+msgid "Private defense not completed."
+msgstr ""
+
+#, fuzzy
+#| msgid "Membre CA not found."
+msgid "Private defense not found."
+msgstr "Supervisory panel member not found."
 
 msgid "Professor"
 msgstr ""
@@ -3374,3 +3430,8 @@ msgstr "UCLouvain"
 #, python-brace-format
 msgid "{items} types out of {total}"
 msgstr ""
+
+#, fuzzy
+#~| msgid "DEFENSE_PRIVEE"
+#~ msgid "DEFENSE_PRIVEE_ECHEC"
+#~ msgstr "Private defense"

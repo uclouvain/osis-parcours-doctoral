@@ -142,6 +142,26 @@ msgstr ""
 "href=\"%(parcours_doctoral_link_front_doctoral_training)s\">%(reference)s</"
 "a> - Des activités de formation doctorale ont été approuvées."
 
+#, python-format
+msgid ""
+"<a href=\"%(private_defense_link_back)s\">%(reference)s</a> - "
+"%(student_first_name)s %(student_last_name)s submitted data for the first "
+"time for the private defense for %(training_title)s"
+msgstr ""
+"<a href=\"%(private_defense_link_back)s\">%(reference)s</a> - "
+"%(student_first_name)s %(student_last_name)s a soumis pour la première fois "
+"des données pour sa défense privée pour %(training_title)s"
+
+#, python-format
+msgid ""
+"<a href=\"%(private_defense_link_back)s\">%(reference)s</a> - "
+"%(student_first_name)s %(student_last_name)s submitted new data for the "
+"private defense for %(training_title)s"
+msgstr ""
+"<a href=\"%(private_defense_link_back)s\">%(reference)s</a> - "
+"%(student_first_name)s %(student_last_name)s a soumis de nouvelles données "
+"pour sa défense privée pour %(training_title)s"
+
 msgid ""
 "<a href='https://uclouvain.be/en/research/valodoc/confirmation-eligibility-"
 "doctoral-programme.html' target='_blank'>https://uclouvain.be/en/research/"
@@ -892,6 +912,10 @@ msgctxt "confirmation paper"
 msgid "Created at"
 msgstr "Créée le"
 
+msgctxt "private defense"
+msgid "Created at"
+msgstr "Créée le"
+
 msgid "Current funding"
 msgstr "Financement actuel"
 
@@ -913,6 +937,18 @@ msgstr "Décision de recevabilité"
 msgid "DEFENSE_PRIVEE"
 msgstr "Défense privée"
 
+msgid "DEFENSE_PRIVEE_AUTORISEE"
+msgstr "Défense privée autorisée"
+
+msgid "DEFENSE_PRIVEE_A_RECOMMENCER"
+msgstr "Défense privée à recommencer"
+
+msgid "DEFENSE_PRIVEE_REUSSIE"
+msgstr "Défense privée réussie"
+
+msgid "DEFENSE_PRIVEE_SOUMISE"
+msgstr "Défense privée soumise"
+
 msgid "DESINSCRITE"
 msgstr "Désinscrite"
 
@@ -931,6 +967,9 @@ msgstr "Date"
 #, python-format
 msgid "Date - Filter #%s"
 msgstr "Date - Filtre #%s"
+
+msgid "Date of manuscript submission to the thesis exam board"
+msgstr "Date d'envoi du manuscrit au jury"
 
 msgid "Date of the confirmation paper (DD/MM/YYYY)"
 msgstr "Date de l'épreuve de confirmation (JJ/MM/AAAA)"
@@ -2299,6 +2338,18 @@ msgstr "Epreuves de confirmation passées"
 msgid "Previous doctorate"
 msgstr "Doctorat précédent"
 
+msgid "Private defence date and time"
+msgstr "Date et heure de la défense privée"
+
+msgid "Private defence location"
+msgstr "Lieu de la défense privée"
+
+msgid "Private defence minutes"
+msgstr "Procès verbal de la défense privée"
+
+msgid "Private defence minutes canvas"
+msgstr "Canevas du procès verbal de la défense privée"
+
 msgctxt "dashboard-category"
 msgid "Private defense (formula 1)"
 msgstr "Défense privée (formule 1)"
@@ -2306,6 +2357,15 @@ msgstr "Défense privée (formule 1)"
 msgctxt "dashboard-category"
 msgid "Private defense / Public defense (formula 2)"
 msgstr "Défense privée / Soutenance (formule 2)"
+
+msgid "Private defense not activated."
+msgstr "Défense privée non activée."
+
+msgid "Private defense not completed."
+msgstr "Défense privée non complétée."
+
+msgid "Private defense not found."
+msgstr "Défense privée non trouvée."
 
 msgid "Professor"
 msgstr "Professeur"

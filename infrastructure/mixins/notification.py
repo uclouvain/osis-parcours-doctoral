@@ -27,7 +27,7 @@ import datetime
 from typing import Optional
 
 from admission.utils import get_doctoral_cdd_managers
-from base.forms.utils.datefield import DATE_FORMAT
+from base.forms.utils.datefield import DATE_FORMAT, DATETIME_FORMAT
 from base.models.person import Person
 from django.conf import settings
 from django.utils.functional import Promise, lazy
@@ -48,6 +48,11 @@ class NotificationMixin:
     def _format_date(cls, date: Optional[datetime.date]) -> str:
         """Format the date to be used in email notifications"""
         return datetime.date.strftime(date, DATE_FORMAT) if date else ''
+
+    @classmethod
+    def _format_datetime(cls, date_time: Optional[datetime.datetime]) -> str:
+        """Format the date to be used in email notifications"""
+        return datetime.date.strftime(date_time, DATETIME_FORMAT) if date_time else ''
 
     @classmethod
     def _get_supervision_actor_email_cc(cls, parcours_doctoral: ParcoursDoctoral):
