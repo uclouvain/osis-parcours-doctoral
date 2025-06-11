@@ -92,6 +92,7 @@ class ParcoursDoctoral(interface.RootEntity):
         ]
     ] = None
     justification: str = ''
+    titre_these_propose: str = ''
 
     def verrouiller_parcours_doctoral_pour_signature(self):
         self.statut = ChoixStatutParcoursDoctoral.EN_ATTENTE_DE_SIGNATURE
@@ -301,3 +302,7 @@ class ParcoursDoctoral(interface.RootEntity):
             convention=convention,
             autres_documents=autres_documents,
         )
+
+    def soumettre_defense_privee(self, titre_these: str):
+        self.statut = ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_SOUMISE
+        self.titre_these_propose = titre_these
