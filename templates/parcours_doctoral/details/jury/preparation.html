@@ -49,7 +49,7 @@
       {% field_data _("Thesis language") jury.langue_redaction|osis_language_name %}
     </div>
     <div class="col-md-4">
-      {% field_data _("Defense language") jury.langue_soutenance|enum_display:'ChoixLangueRedactionThese' %}
+      {% field_data _("Defense language") jury.langue_soutenance|osis_language_name %}
     </div>
   </div>
   {% if jury.commentaire %}{% field_data _("Comment") jury.commentaire|linebreaks %}{% endif %}

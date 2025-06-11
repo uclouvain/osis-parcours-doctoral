@@ -64,7 +64,6 @@ from parcours_doctoral.ddd.domain.model.enums import (
     ChoixCommissionProximiteCDEouCLSM,
     ChoixCommissionProximiteCDSS,
     ChoixDoctoratDejaRealise,
-    ChoixLangueDefense,
     ChoixSousDomaineSciences,
     ChoixStatutParcoursDoctoral,
     ChoixTypeFinancement,
@@ -278,6 +277,7 @@ class ParcoursDoctoral(models.Model):
         'reference.Language',
         on_delete=models.PROTECT,
         verbose_name=_("Thesis language"),
+        related_name='+',
         null=True,
         blank=True,
     )
@@ -433,11 +433,12 @@ class ParcoursDoctoral(models.Model):
         null=True,
         blank=True,
     )
-    defense_language = models.CharField(
-        max_length=255,
+    defense_language = models.ForeignKey(
+        'reference.Language',
+        on_delete=models.PROTECT,
         verbose_name=_("Defense language"),
-        choices=ChoixLangueDefense.choices(),
-        default=ChoixLangueDefense.UNDECIDED.name,
+        related_name='+',
+        null=True,
         blank=True,
     )
     comment_about_jury = models.TextField(

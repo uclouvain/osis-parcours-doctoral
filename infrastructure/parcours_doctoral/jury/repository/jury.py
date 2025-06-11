@@ -25,6 +25,9 @@
 # ##############################################################################
 from typing import List, Optional
 
+from django.conf import settings
+from django.utils.translation import get_language
+
 from base.models.person import Person
 from django.db import transaction
 from django.db.models import Prefetch, Q
@@ -68,6 +71,9 @@ class JuryRepository(IJuryRepository):
             "comment_about_jury",
             "accounting_situation",
             "jury_approval",
+        ).select_related(
+            "thesis_language",
+            "defense_language",
         ).prefetch_related(
             Prefetch(
                 'jury_members',
@@ -126,12 +132,15 @@ class JuryRepository(IJuryRepository):
         thesis_language = (
             Language.objects.filter(code=entity.langue_redaction).first() if entity.langue_redaction else None
         )
+        defense_language = (
+            Language.objects.filter(code=entity.langue_soutenance).first() if entity.langue_soutenance else None
+        )
         ParcoursDoctoral.objects.filter(uuid=str(entity.entity_id.uuid)).update(
             thesis_proposed_title=entity.titre_propose,
             defense_method=entity.formule_defense,
             defense_indicative_date=entity.date_indicative,
             thesis_language=thesis_language,
-            defense_language=entity.langue_soutenance,
+            defense_language=defense_language,
             comment_about_jury=entity.commentaire,
             accounting_situation=entity.situation_comptable,
             jury_approval=entity.approbation_pdf,
@@ -206,6 +215,10 @@ class JuryRepository(IJuryRepository):
     @classmethod
     def _load_jury_dto(cls, parcours_doctoral: ParcoursDoctoral) -> JuryDTO:
         jury = cls._load_jury(parcours_doctoral)
+        if get_language() == settings.LANGUAGE_CODE_FR:
+            lang_name_attribute = 'name'
+        else:
+            lang_name_attribute = 'name_en'
 
         return JuryDTO(
             uuid=jury.entity_id.uuid,
@@ -230,7 +243,9 @@ class JuryRepository(IJuryRepository):
             ],
             formule_defense=jury.formule_defense,
             date_indicative=jury.date_indicative,
+            nom_langue_redaction=getattr(parcours_doctoral.thesis_language, lang_name_attribute) if parcours_doctoral.thesis_language else '',
             langue_redaction=jury.langue_redaction,
+            nom_langue_soutenance=getattr(parcours_doctoral.defense_language, lang_name_attribute) if parcours_doctoral.thesis_language else '',
             langue_soutenance=jury.langue_soutenance,
             commentaire=jury.commentaire,
             situation_comptable=jury.situation_comptable,
@@ -319,7 +334,7 @@ class JuryRepository(IJuryRepository):
             formule_defense=parcours_doctoral.defense_method,
             date_indicative=parcours_doctoral.defense_indicative_date,
             langue_redaction=parcours_doctoral.thesis_language.code if parcours_doctoral.thesis_language else '',
-            langue_soutenance=parcours_doctoral.defense_language,
+            langue_soutenance=parcours_doctoral.defense_language.code if parcours_doctoral.defense_language else '',
             commentaire=parcours_doctoral.comment_about_jury,
             situation_comptable=parcours_doctoral.accounting_situation,
             approbation_pdf=parcours_doctoral.jury_approval,

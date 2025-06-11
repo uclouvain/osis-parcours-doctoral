@@ -34,7 +34,6 @@ from rest_framework.status import HTTP_200_OK, HTTP_404_NOT_FOUND
 from base.tests.factories.academic_year import AcademicYearFactory
 from base.tests.factories.program_manager import ProgramManagerFactory
 from parcours_doctoral.ddd.domain.model.enums import (
-    ChoixLangueDefense,
     ChoixStatutParcoursDoctoral,
 )
 from parcours_doctoral.ddd.jury.domain.model.enums import FormuleDefense
@@ -98,7 +97,7 @@ class JuryFormViewTestCase(TestCase):
                 'langue_redaction': (
                     self.parcours_doctoral.thesis_language if self.parcours_doctoral.thesis_language else ''
                 ),
-                'langue_soutenance': self.parcours_doctoral.defense_language,
+                'langue_soutenance': self.parcours_doctoral.defense_language  if self.parcours_doctoral.defense_language else '',
                 'commentaire': self.parcours_doctoral.comment_about_jury,
             },
         )
@@ -114,7 +113,7 @@ class JuryFormViewTestCase(TestCase):
                 'formule_defense': FormuleDefense.FORMULE_2.name,
                 'date_indicative': '01/01/2023',
                 'langue_redaction': language.code,
-                'langue_soutenance': ChoixLangueDefense.ENGLISH.name,
+                'langue_soutenance': language.code,
                 'commentaire': 'Nouveau commentaire',
             },
         )
@@ -128,5 +127,5 @@ class JuryFormViewTestCase(TestCase):
         self.assertEqual(updated_parcours_doctoral.defense_method, FormuleDefense.FORMULE_2.name)
         self.assertEqual(updated_parcours_doctoral.defense_indicative_date, datetime.date(2023, 1, 1))
         self.assertEqual(updated_parcours_doctoral.thesis_language, language)
-        self.assertEqual(updated_parcours_doctoral.defense_language, ChoixLangueDefense.ENGLISH.name)
+        self.assertEqual(updated_parcours_doctoral.defense_language, language)
         self.assertEqual(updated_parcours_doctoral.comment_about_jury, 'Nouveau commentaire')
