@@ -878,6 +878,10 @@ msgctxt "confirmation paper"
 msgid "Created at"
 msgstr ""
 
+msgctxt "private defense"
+msgid "Created at"
+msgstr ""
+
 msgid "Current funding"
 msgstr ""
 
@@ -896,6 +900,18 @@ msgstr "Admissibility decision"
 msgid "DEFENSE_PRIVEE"
 msgstr "Private defense"
 
+msgid "DEFENSE_PRIVEE_AUTORISEE"
+msgstr "Authorized private defense"
+
+msgid "DEFENSE_PRIVEE_A_RECOMMENCER"
+msgstr "Private defense to be repeated"
+
+msgid "DEFENSE_PRIVEE_REUSSIE"
+msgstr "Passed private defense"
+
+msgid "DEFENSE_PRIVEE_SOUMISE"
+msgstr "Submitted private defense"
+
 msgid "DESINSCRITE"
 msgstr "Withdrawn"
 
@@ -913,6 +929,9 @@ msgstr ""
 
 #, python-format
 msgid "Date - Filter #%s"
+msgstr ""
+
+msgid "Date of manuscript submission to the thesis exam board"
 msgstr ""
 
 msgid "Date of the confirmation paper (DD/MM/YYYY)"
@@ -1095,6 +1114,9 @@ msgid "Doctorate"
 msgstr ""
 
 msgid "Doctorate thesis field"
+msgstr ""
+
+msgid "Doctorate whose this private defense is the active one"
 msgstr ""
 
 msgid "Document"
@@ -2269,12 +2291,33 @@ msgstr ""
 msgid "Previous doctorate"
 msgstr ""
 
+msgid "Private defence date and time"
+msgstr ""
+
+msgid "Private defence location"
+msgstr ""
+
+msgid "Private defence minutes"
+msgstr ""
+
+msgid "Private defence minutes canvas"
+msgstr ""
+
 msgctxt "dashboard-category"
 msgid "Private defense (formula 1)"
 msgstr ""
 
 msgctxt "dashboard-category"
 msgid "Private defense / Public defense (formula 2)"
+msgstr ""
+
+msgid "Private defense not activated."
+msgstr ""
+
+msgid "Private defense not completed."
+msgstr ""
+
+msgid "Private defense not found."
 msgstr ""
 
 msgid "Professor"
@@ -3097,6 +3140,9 @@ msgid "The person has not been found."
 msgstr ""
 
 msgid "The person is not a president, a secretary or a member."
+msgstr ""
+
+msgid "The private defense is not in progress"
 msgstr ""
 
 msgid "The public comment about the approval/refusal"

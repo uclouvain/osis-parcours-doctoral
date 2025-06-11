@@ -62,6 +62,7 @@ from parcours_doctoral.models import (
     ParcoursDoctoral,
     ParcoursDoctoralSupervisionActor,
 )
+from parcours_doctoral.models.private_defense import PrivateDefense
 from reference.tests.factories.language import LanguageFactory
 from reference.tests.factories.scholarship import ErasmusMundusScholarshipFactory
 
@@ -381,6 +382,9 @@ class DoctorateInitializationTestCase(TestCase):
         # Check that no confirmation paper has been created
         self.assertFalse(ConfirmationPaper.objects.filter(parcours_doctoral=doctorate).exists())
 
+        # Check that no private defense has been created
+        self.assertFalse(PrivateDefense.objects.filter(parcours_doctoral=doctorate).exists())
+
         # Check the duplication of the supervision group
         self.assertIsNotNone(doctorate.supervision_group)
 
@@ -512,6 +516,9 @@ class DoctorateInitializationTestCase(TestCase):
 
         self.assertEqual(confirmation_paper.confirmation_deadline, datetime.date(2025, 1, 1))
 
+        # Check that a private defense has been created
+        self.assertTrue(PrivateDefense.objects.filter(parcours_doctoral=doctorate).exists())
+
         # Check the duplication of the supervision group
         self.assertIsNotNone(doctorate.supervision_group)
 
@@ -582,6 +589,9 @@ class DoctorateInitializationTestCase(TestCase):
 
         # Check that no confirmation paper has been created
         self.assertFalse(ConfirmationPaper.objects.filter(parcours_doctoral=original_doctorate).exists())
+
+        # Check that no private defense has been created
+        self.assertFalse(PrivateDefense.objects.filter(parcours_doctoral=original_doctorate).exists())
 
         # Update the doctorate
         original_doctorate.thesis_proposed_title = 'T1'
@@ -669,6 +679,9 @@ class DoctorateInitializationTestCase(TestCase):
         self.assertIsNotNone(confirmation_paper)
 
         self.assertEqual(confirmation_paper.confirmation_deadline, datetime.date(2025, 1, 1))
+
+        # Check that a private defense has been created
+        self.assertTrue(PrivateDefense.objects.filter(parcours_doctoral=original_doctorate).exists())
 
         # Check that the doctorate data has not been updated
         self.assertEqual(original_doctorate.thesis_proposed_title, doctorate.thesis_proposed_title)

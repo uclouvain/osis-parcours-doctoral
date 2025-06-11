@@ -201,6 +201,7 @@ class ParcoursDoctoralAPIViewTestCase(CheckActionLinksMixin, APITestCase):
                 'update_confirmation',
                 'update_confirmation_extension',
                 'retrieve_assessment_enrollment',
+                'retrieve_private_defense',
             ],
             forbidden_actions=[
                 'jury_add_approval',
@@ -210,6 +211,7 @@ class ParcoursDoctoralAPIViewTestCase(CheckActionLinksMixin, APITestCase):
                 'assent_training',
                 'update_jury_preparation',
                 'create_jury_members',
+                'update_private_defense',
             ],
         )
 
