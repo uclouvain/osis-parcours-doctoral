@@ -153,6 +153,17 @@ PARCOURS_DOCTORAL_ACTION_LINKS = {
         'method': 'POST',
         'params': ['uuid'],
     },
+    # Private defense
+    'retrieve_private_defense': {
+        'path_name': 'parcours_doctoral_api_v1:private-defense-list',
+        'method': 'GET',
+        'params': ['uuid'],
+    },
+    'update_private_defense': {
+        'path_name': 'parcours_doctoral_api_v1:private-defense-list',
+        'method': 'PUT',
+        'params': ['uuid'],
+    },
 }
 
 

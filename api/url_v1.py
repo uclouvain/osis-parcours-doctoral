@@ -61,6 +61,9 @@ urlpatterns = [
     path('doctorate/<uuid:uuid>/jury/preparation', views.JuryPreparationAPIView),
     path('doctorate/<uuid:uuid>/jury/members', views.JuryMembersListAPIView),
     path('doctorate/<uuid:uuid>/jury/members/<uuid:member_uuid>', views.JuryMemberDetailAPIView),
+    # Private defense
+    path('doctorate/<uuid:uuid>/private-defense', views.PrivateDefenseListAPIView),
+    path('doctorate/<uuid:uuid>/private-defense/<uuid:private_defense_uuid>', views.PrivateDefenseAPIView),
     # Training
     path('doctorate/<uuid:uuid>/training/config', views.TrainingConfigView),
     path('doctorate/<uuid:uuid>/doctoral-training', views.DoctoralTrainingListView),

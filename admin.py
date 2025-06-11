@@ -57,6 +57,7 @@ from parcours_doctoral.models import (
 from parcours_doctoral.models.activity import Activity
 from parcours_doctoral.models.cdd_config import CddConfiguration
 from parcours_doctoral.models.cdd_mail_template import CddMailTemplate
+from parcours_doctoral.models.private_defense import PrivateDefense
 
 
 @admin.register(Activity)
@@ -346,6 +347,34 @@ class ConfirmationPaperAdmin(ReadOnlyFilesMixin, admin.ModelAdmin):
         'parcours_doctoral_reference',
         'is_active',
         'confirmation_date',
+    ]
+    search_fields = [
+        'parcours_doctoral__reference',
+        'parcours_doctoral__student__last_name',
+        'parcours_doctoral__student__first_name',
+    ]
+    autocomplete_fields = [
+        'parcours_doctoral',
+    ]
+    ordering = [
+        'parcours_doctoral__reference',
+        '-created_at',
+    ]
+    list_select_related = [
+        'parcours_doctoral',
+    ]
+
+    @admin.display(description=_('Related doctorate'))
+    def parcours_doctoral_reference(self, obj):
+        return obj.parcours_doctoral.reference
+
+
+@admin.register(PrivateDefense)
+class PrivateDefenseAdmin(ReadOnlyFilesMixin, admin.ModelAdmin):
+    list_display = [
+        'parcours_doctoral_reference',
+        'is_active',
+        'datetime',
     ]
     search_fields = [
         'parcours_doctoral__reference',

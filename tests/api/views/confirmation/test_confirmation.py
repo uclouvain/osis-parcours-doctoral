@@ -33,7 +33,6 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 
 from base.tests.factories.person import PersonFactory
-from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from parcours_doctoral.models import ConfirmationPaper
 from parcours_doctoral.tests.factories.confirmation_paper import (
     ConfirmationPaperFactory,

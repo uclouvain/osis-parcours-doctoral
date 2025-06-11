@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -26,9 +26,6 @@
 import datetime
 from typing import Optional
 
-from admission.utils import get_doctoral_cdd_managers
-from base.forms.utils.datefield import DATE_FORMAT
-from base.models.person import Person
 from django.conf import settings
 from django.utils.functional import Promise, lazy
 from django.utils.translation import get_language, override
@@ -36,6 +33,9 @@ from osis_async.models import AsyncTask
 from osis_notification.contrib.handlers import WebNotificationHandler
 from osis_notification.contrib.notification import WebNotification
 
+from admission.utils import get_doctoral_cdd_managers
+from base.forms.utils.datefield import DATE_FORMAT, DATETIME_FORMAT
+from base.models.person import Person
 from parcours_doctoral.models import ParcoursDoctoral, ParcoursDoctoralSupervisionActor
 from parcours_doctoral.models.task import ParcoursDoctoralTask
 
@@ -48,6 +48,11 @@ class NotificationMixin:
     def _format_date(cls, date: Optional[datetime.date]) -> str:
         """Format the date to be used in email notifications"""
         return datetime.date.strftime(date, DATE_FORMAT) if date else ''
+
+    @classmethod
+    def _format_datetime(cls, date_time: Optional[datetime.datetime]) -> str:
+        """Format the datetime to be used in email notifications"""
+        return datetime.date.strftime(date_time, DATETIME_FORMAT) if date_time else ''
 
     @classmethod
     def _get_supervision_actor_email_cc(cls, parcours_doctoral: ParcoursDoctoral):
