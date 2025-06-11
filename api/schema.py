@@ -25,7 +25,7 @@
 # ##############################################################################
 from drf_spectacular.generators import SchemaGenerator
 
-PARCOURS_DOCTORAL_SDK_VERSION = "1.1.3"
+PARCOURS_DOCTORAL_SDK_VERSION = "1.1.3dev329"
 
 
 class ParcoursDoctoralSchemaGenerator(SchemaGenerator):
