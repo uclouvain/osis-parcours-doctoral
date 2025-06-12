@@ -55,7 +55,7 @@ class JuryDTO(interface.DTO):
     membres: List[MembreJuryDTO]
 
     formule_defense: str
-    date_indicative: Optional[datetime.date]
+    date_indicative: str
     nom_langue_redaction: str
     langue_redaction: str
     nom_langue_soutenance: str

@@ -2693,8 +2693,6 @@ components:
           type: string
         date_indicative:
           type: string
-          format: date
-          nullable: true
         nom_langue_redaction:
           type: string
         langue_redaction:
@@ -2715,6 +2713,7 @@ components:
       required:
       - approbation_pdf
       - commentaire
+      - date_indicative
       - formule_defense
       - langue_redaction
       - langue_soutenance
