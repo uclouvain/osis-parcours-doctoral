@@ -71,7 +71,7 @@ class JuryFactory(factory.Factory):
     membres = factory.LazyFunction(lambda: [])
 
     formule_defense = 'DEUX_TEMPS'
-    date_indicative = datetime.date(2022, 1, 1)
+    date_indicative = ''
     langue_redaction = 'english'
     langue_soutenance = 'english'
     commentaire = ''

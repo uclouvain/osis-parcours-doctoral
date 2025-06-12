@@ -46,7 +46,7 @@ class ModifierJuryCommand(interface.CommandRequest):
     uuid_parcours_doctoral: str
     titre_propose: str
     formule_defense: str
-    date_indicative: Optional[datetime.date]
+    date_indicative: str
     langue_redaction: str
     langue_soutenance: str
     commentaire: Optional[str]

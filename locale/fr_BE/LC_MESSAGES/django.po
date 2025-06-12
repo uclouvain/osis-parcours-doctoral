@@ -1063,7 +1063,10 @@ msgid "Do you wish to move the doctorate to the \"%(status)s\" state?"
 msgstr "Souhaitez-vous passer la demande dans l'état \"%(status)s\" ?"
 
 msgid "Doctor"
-msgstr "Docteur"
+msgstr "Docteur.e"
+
+msgid "Without PhD degree"
+msgstr "Sans grade de doctorat"
 
 msgid "Doctoral commissions"
 msgstr "Commissions doctorales"
@@ -2308,7 +2311,7 @@ msgid "Private defense / Public defense (formula 2)"
 msgstr "Défense privée / Soutenance (formule 2)"
 
 msgid "Professor"
-msgstr "Professeur"
+msgstr "Professeur.e"
 
 msgid "Program proposition"
 msgstr "Proposition de programme"

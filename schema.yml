@@ -2969,8 +2969,6 @@ components:
           type: string
         date_indicative:
           type: string
-          format: date
-          nullable: true
         langue_redaction:
           type: string
         langue_soutenance:
@@ -2978,6 +2976,7 @@ components:
         commentaire:
           type: string
       required:
+      - date_indicative
       - formule_defense
       - langue_redaction
       - langue_soutenance

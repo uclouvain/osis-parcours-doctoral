@@ -428,9 +428,10 @@ class ParcoursDoctoral(models.Model):
         default='',
         blank=True,
     )
-    defense_indicative_date = models.DateField(
+    defense_indicative_date = models.CharField(
+        max_length=255,
         verbose_name=_("Defense indicative date"),
-        null=True,
+        default='',
         blank=True,
     )
     defense_language = models.ForeignKey(
