@@ -102,7 +102,7 @@ class JuryRepository(IJuryRepository):
                         promoter_id=promoter,
                     )
                     for promoter in parcours_doctoral.supervision_group.actors.filter(
-                        supervisionactor__type=ActorType.PROMOTER.name
+                        parcoursdoctoralsupervisionactor__type=ActorType.PROMOTER.name
                     ).values_list('pk', flat=True)
                 ]
             )
