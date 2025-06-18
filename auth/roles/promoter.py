@@ -68,7 +68,7 @@ class Promoter(AdmissionPromoter):
             'parcours_doctoral.api_view_jury': is_parcours_doctoral_promoter,
             'parcours_doctoral.api_view_confirmation': is_parcours_doctoral_promoter & is_related_to_an_admission,
             'parcours_doctoral.api_upload_pdf_confirmation': is_parcours_doctoral_promoter & is_related_to_an_admission,
-            'parcours_doctoral.api_change_jury': is_parcours_doctoral_promoter & is_jury_in_progress,
+            'parcours_doctoral.api_change_jury': is_parcours_doctoral_reference_promoter & is_jury_in_progress,
             # PhD training
             'parcours_doctoral.api_view_complementary_training': is_parcours_doctoral_promoter
             & complementary_training_enabled,
