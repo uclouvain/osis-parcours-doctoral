@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -23,14 +23,15 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from admission.forms import DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS
-from base.forms.utils.datefield import CustomDateInput
 from dal import autocomplete
 from django import forms
 from django.utils.translation import gettext_lazy as _
 
-from parcours_doctoral.ddd.domain.model.enums import ChoixLangueDefense
+from admission.forms import DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS
+from admission.utils import get_language_initial_choices
+from base.forms.utils.datefield import CustomDateInput
 from parcours_doctoral.ddd.jury.domain.model.enums import FormuleDefense
+from parcours_doctoral.forms.project import LANGUAGE_UNDECIDED
 
 
 class JuryPreparationForm(forms.Form):
@@ -50,10 +51,9 @@ class JuryPreparationForm(forms.Form):
         initial=FormuleDefense.FORMULE_1.name,
         required=False,
     )
-    date_indicative = forms.DateField(
-        label=_("Defense indicative date"),
+    date_indicative = forms.CharField(
+        label=_("Anticipated date or period for private defence (Format 1) or admissibility (Format 2)"),
         required=False,
-        widget=CustomDateInput(),
     )
     langue_redaction = forms.CharField(
         label=_("Thesis language"),
@@ -65,14 +65,42 @@ class JuryPreparationForm(forms.Form):
             },
         ),
     )
-    langue_soutenance = forms.ChoiceField(
+    langue_soutenance = forms.CharField(
         label=_("Defense language"),
-        choices=ChoixLangueDefense.choices(),
-        initial=ChoixLangueDefense.UNDECIDED.name,
         required=False,
+        widget=autocomplete.ListSelect2(
+            url="admission:autocomplete:language",
+            attrs={
+                **DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS,
+            },
+        ),
     )
     commentaire = forms.CharField(
         label=_("Comment"),
         widget=forms.Textarea(),
         required=False,
     )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Initialize the fields with dynamic choices
+        lang_code = self.data.get(self.add_prefix('langue_redaction'), self.initial.get('langue_redaction'))
+
+        if lang_code == LANGUAGE_UNDECIDED:
+            choices = ((LANGUAGE_UNDECIDED, _('Undecided')),)
+        else:
+            choices = get_language_initial_choices(lang_code)
+
+        self.fields['langue_redaction'].widget.choices = choices
+        self.fields['langue_redaction'].choices = choices
+
+        lang_code = self.data.get(self.add_prefix('langue_soutenance'), self.initial.get('langue_soutenance'))
+
+        if lang_code == LANGUAGE_UNDECIDED:
+            choices = ((LANGUAGE_UNDECIDED, _('Undecided')),)
+        else:
+            choices = get_language_initial_choices(lang_code)
+
+        self.fields['langue_soutenance'].widget.choices = choices
+        self.fields['langue_soutenance'].choices = choices
