@@ -587,8 +587,8 @@ class DoctorateInitializationTestCase(TestCase):
         # Update the doctorate
         original_doctorate.thesis_proposed_title = 'T1'
         original_doctorate.defense_method = FormuleDefense.FORMULE_1.name
-        original_doctorate.defense_indicative_date = datetime.date(2024, 1, 1)
-        original_doctorate.defense_language = 'FR'
+        original_doctorate.defense_indicative_date = '2024-01-01'
+        original_doctorate.defense_language = self.other_language
         original_doctorate.comment_about_jury = 'C1'
         original_doctorate.accounting_situation = True
         original_doctorate.status = ChoixStatutParcoursDoctoral.JURY_SOUMIS.name
