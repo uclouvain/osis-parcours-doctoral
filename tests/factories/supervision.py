@@ -28,7 +28,7 @@ import factory
 from django.conf import settings
 from osis_signature.models import Actor, Process
 
-from admission.tests.factories.roles import CaMemberRoleFactory, PromoterRoleFactory
+from parcours_doctoral.tests.factories.roles import CaMemberRoleFactory, PromoterRoleFactory
 from parcours_doctoral.models.actor import ActorType, ParcoursDoctoralSupervisionActor
 
 
