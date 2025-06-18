@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -25,13 +25,13 @@
 # ##############################################################################
 from typing import List, Optional
 
-from base.models.person import Person
+from django.conf import settings
 from django.db import transaction
 from django.db.models import Prefetch, Q
-from osis_common.ddd.interface import ApplicationService, EntityIdentity, RootEntity
-from reference.models.country import Country
-from reference.models.language import Language
+from django.utils.translation import get_language
 
+from base.models.person import Person
+from osis_common.ddd.interface import ApplicationService, EntityIdentity, RootEntity
 from parcours_doctoral.ddd.jury.domain.model.enums import RoleJury
 from parcours_doctoral.ddd.jury.domain.model.jury import Jury, JuryIdentity, MembreJury
 from parcours_doctoral.ddd.jury.dtos.jury import JuryDTO, MembreJuryDTO
@@ -43,6 +43,8 @@ from parcours_doctoral.ddd.jury.validator.exceptions import (
 from parcours_doctoral.models import ActorType, ParcoursDoctoralSupervisionActor
 from parcours_doctoral.models.jury import JuryMember
 from parcours_doctoral.models.parcours_doctoral import ParcoursDoctoral
+from reference.models.country import Country
+from reference.models.language import Language
 
 INSTITUTION_UCL = "UCLouvain"
 
@@ -58,25 +60,32 @@ class JuryRepository(IJuryRepository):
 
     @classmethod
     def _get_queryset(cls):
-        return ParcoursDoctoral.objects.only(
-            "uuid",
-            "thesis_language",
-            "thesis_proposed_title",
-            "defense_method",
-            "defense_indicative_date",
-            "defense_language",
-            "comment_about_jury",
-            "accounting_situation",
-            "jury_approval",
-        ).prefetch_related(
-            Prefetch(
-                'jury_members',
-                queryset=JuryMember.objects.select_related(
-                    'promoter__country',
-                    'promoter__person',
-                    'person',
-                    'country',
-                ),
+        return (
+            ParcoursDoctoral.objects.only(
+                "uuid",
+                "thesis_language",
+                "thesis_proposed_title",
+                "defense_method",
+                "defense_indicative_date",
+                "defense_language",
+                "comment_about_jury",
+                "accounting_situation",
+                "jury_approval",
+            )
+            .select_related(
+                "thesis_language",
+                "defense_language",
+            )
+            .prefetch_related(
+                Prefetch(
+                    'jury_members',
+                    queryset=JuryMember.objects.select_related(
+                        'promoter__country',
+                        'promoter__person',
+                        'person',
+                        'country',
+                    ),
+                )
             )
         )
 
@@ -96,7 +105,7 @@ class JuryRepository(IJuryRepository):
                         promoter_id=promoter,
                     )
                     for promoter in parcours_doctoral.supervision_group.actors.filter(
-                        supervisionactor__type=ActorType.PROMOTER.name
+                        parcoursdoctoralsupervisionactor__type=ActorType.PROMOTER.name
                     ).values_list('pk', flat=True)
                 ]
             )
@@ -126,12 +135,15 @@ class JuryRepository(IJuryRepository):
         thesis_language = (
             Language.objects.filter(code=entity.langue_redaction).first() if entity.langue_redaction else None
         )
+        defense_language = (
+            Language.objects.filter(code=entity.langue_soutenance).first() if entity.langue_soutenance else None
+        )
         ParcoursDoctoral.objects.filter(uuid=str(entity.entity_id.uuid)).update(
             thesis_proposed_title=entity.titre_propose,
             defense_method=entity.formule_defense,
             defense_indicative_date=entity.date_indicative,
             thesis_language=thesis_language,
-            defense_language=entity.langue_soutenance,
+            defense_language=defense_language,
             comment_about_jury=entity.commentaire,
             accounting_situation=entity.situation_comptable,
             jury_approval=entity.approbation_pdf,
@@ -206,6 +218,10 @@ class JuryRepository(IJuryRepository):
     @classmethod
     def _load_jury_dto(cls, parcours_doctoral: ParcoursDoctoral) -> JuryDTO:
         jury = cls._load_jury(parcours_doctoral)
+        if get_language() == settings.LANGUAGE_CODE_FR:
+            lang_name_attribute = 'name'
+        else:
+            lang_name_attribute = 'name_en'
 
         return JuryDTO(
             uuid=jury.entity_id.uuid,
@@ -230,7 +246,17 @@ class JuryRepository(IJuryRepository):
             ],
             formule_defense=jury.formule_defense,
             date_indicative=jury.date_indicative,
+            nom_langue_redaction=(
+                getattr(parcours_doctoral.thesis_language, lang_name_attribute)
+                if parcours_doctoral.thesis_language
+                else ''
+            ),
             langue_redaction=jury.langue_redaction,
+            nom_langue_soutenance=(
+                getattr(parcours_doctoral.defense_language, lang_name_attribute)
+                if parcours_doctoral.thesis_language
+                else ''
+            ),
             langue_soutenance=jury.langue_soutenance,
             commentaire=jury.commentaire,
             situation_comptable=jury.situation_comptable,
@@ -319,7 +345,7 @@ class JuryRepository(IJuryRepository):
             formule_defense=parcours_doctoral.defense_method,
             date_indicative=parcours_doctoral.defense_indicative_date,
             langue_redaction=parcours_doctoral.thesis_language.code if parcours_doctoral.thesis_language else '',
-            langue_soutenance=parcours_doctoral.defense_language,
+            langue_soutenance=parcours_doctoral.defense_language.code if parcours_doctoral.defense_language else '',
             commentaire=parcours_doctoral.comment_about_jury,
             situation_comptable=parcours_doctoral.accounting_situation,
             approbation_pdf=parcours_doctoral.jury_approval,

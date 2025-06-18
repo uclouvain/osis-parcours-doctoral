@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -27,6 +27,7 @@ import datetime
 from typing import List, Optional
 
 import attr
+
 from osis_common.ddd import interface
 
 
@@ -46,10 +47,10 @@ class ModifierJuryCommand(interface.CommandRequest):
     uuid_parcours_doctoral: str
     titre_propose: str
     formule_defense: str
-    date_indicative: datetime.date
+    date_indicative: str
     langue_redaction: str
     langue_soutenance: str
-    commentaire: str
+    commentaire: Optional[str]
 
 
 @attr.dataclass(frozen=True, slots=True)
