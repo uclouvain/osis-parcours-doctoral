@@ -49,11 +49,13 @@ from parcours_doctoral.ddd.domain.model.groupe_de_supervision import (
     SignataireIdentity,
 )
 from parcours_doctoral.ddd.dtos import MembreCADTO, PromoteurDTO
+from parcours_doctoral.ddd.jury.domain.model.enums import RoleJury
 from parcours_doctoral.ddd.repository.i_groupe_de_supervision import (
     IGroupeDeSupervisionRepository,
 )
 from parcours_doctoral.models import (
     ActorType,
+    JuryMember,
     ParcoursDoctoral,
     ParcoursDoctoralSupervisionActor,
 )
@@ -261,6 +263,11 @@ class GroupeDeSupervisionRepository(IGroupeDeSupervisionRepository):
         if type == ActorType.PROMOTER:
             group_name, model = 'promoters', Promoter
             signataire_id = PromoteurIdentity(str(new_actor.uuid))
+            JuryMember.objects.create(
+                role=RoleJury.MEMBRE.name,
+                parcours_doctoral=ParcoursDoctoral.objects.only('id').get(supervision_group=groupe),
+                promoter=new_actor,
+            )
         else:
             group_name, model = 'committee_members', CommitteeMember
             signataire_id = MembreCAIdentity(str(new_actor.uuid))
@@ -271,7 +278,17 @@ class GroupeDeSupervisionRepository(IGroupeDeSupervisionRepository):
 
     @classmethod
     def remove_member(cls, groupe_id: 'GroupeDeSupervisionIdentity', signataire: 'SignataireIdentity') -> None:
-        ParcoursDoctoralSupervisionActor.objects.filter(process__uuid=groupe_id.uuid, uuid=signataire.uuid).delete()
+        member = (
+            ParcoursDoctoralSupervisionActor.objects.only('id', 'type')
+            .select_related(None)
+            .get(
+                process__uuid=groupe_id.uuid,
+                uuid=signataire.uuid,
+            )
+        )
+        if member.type == ActorType.PROMOTER.name:
+            JuryMember.objects.filter(promoter_id=member.id).delete()
+        member.delete()
 
     @classmethod
     def get_members(cls, groupe_id: 'GroupeDeSupervisionIdentity') -> List[Union['PromoteurDTO', 'MembreCADTO']]:

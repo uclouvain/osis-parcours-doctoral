@@ -2696,9 +2696,11 @@ components:
           type: string
         date_indicative:
           type: string
-          format: date
-          nullable: true
+        nom_langue_redaction:
+          type: string
         langue_redaction:
+          type: string
+        nom_langue_soutenance:
           type: string
         langue_soutenance:
           type: string
@@ -2714,10 +2716,13 @@ components:
       required:
       - approbation_pdf
       - commentaire
+      - date_indicative
       - formule_defense
       - langue_redaction
       - langue_soutenance
       - membres
+      - nom_langue_redaction
+      - nom_langue_soutenance
       - titre_propose
       - uuid
     JuryIdentityDTO:
@@ -2966,7 +2971,6 @@ components:
           type: string
         date_indicative:
           type: string
-          format: date
         langue_redaction:
           type: string
         langue_soutenance:
@@ -2974,7 +2978,6 @@ components:
         commentaire:
           type: string
       required:
-      - commentaire
       - date_indicative
       - formule_defense
       - langue_redaction
