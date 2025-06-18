@@ -87,11 +87,7 @@ class JuryFormViewTestCase(TestCase):
             {
                 'titre_propose': self.parcours_doctoral.thesis_proposed_title,
                 'formule_defense': self.parcours_doctoral.defense_method,
-                'date_indicative': (
-                    self.parcours_doctoral.defense_indicative_date.isoformat()
-                    if self.parcours_doctoral.defense_indicative_date
-                    else None
-                ),
+                'date_indicative': self.parcours_doctoral.defense_indicative_date,
                 'langue_redaction': (
                     self.parcours_doctoral.thesis_language if self.parcours_doctoral.thesis_language else ''
                 ),
@@ -125,7 +121,7 @@ class JuryFormViewTestCase(TestCase):
         )
         self.assertEqual(updated_parcours_doctoral.thesis_proposed_title, 'Nouveau titre')
         self.assertEqual(updated_parcours_doctoral.defense_method, FormuleDefense.FORMULE_2.name)
-        self.assertEqual(updated_parcours_doctoral.defense_indicative_date, datetime.date(2023, 1, 1))
+        self.assertEqual(updated_parcours_doctoral.defense_indicative_date, '01/01/2023')
         self.assertEqual(updated_parcours_doctoral.thesis_language, language)
         self.assertEqual(updated_parcours_doctoral.defense_language, language)
         self.assertEqual(updated_parcours_doctoral.comment_about_jury, 'Nouveau commentaire')
