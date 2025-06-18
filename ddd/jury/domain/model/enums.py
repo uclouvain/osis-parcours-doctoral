@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -24,9 +24,10 @@
 #
 # ##############################################################################
 
-from base.models.utils.utils import ChoiceEnum
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import pgettext_lazy
+
+from base.models.utils.utils import ChoiceEnum
 
 
 class RoleJury(ChoiceEnum):
@@ -38,7 +39,7 @@ class RoleJury(ChoiceEnum):
 class TitreMembre(ChoiceEnum):
     DOCTEUR = _('Doctor')
     PROFESSEUR = _('Professor')
-    NON_DOCTEUR = _('Does not have a doctor title')
+    NON_DOCTEUR = _('Without PhD degree')
 
 
 class GenreMembre(ChoiceEnum):

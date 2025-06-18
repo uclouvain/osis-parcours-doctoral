@@ -442,6 +442,11 @@ msgstr "Un membre externe doit avoir un email."
 msgid "An external member must have an institute."
 msgstr "Un membre externe doit avoir une institution."
 
+msgid ""
+"Anticipated date or period for private defence (Format 1) or admissibility "
+"(Format 2)"
+msgstr "Date ou période envisagée de la défense privée (formule 1) ou de la recevabilité (formule 2)"
+
 msgid "Application numero"
 msgstr "Numéro de demande"
 
@@ -1063,7 +1068,7 @@ msgid "Do you wish to move the doctorate to the \"%(status)s\" state?"
 msgstr "Souhaitez-vous passer la demande dans l'état \"%(status)s\" ?"
 
 msgid "Doctor"
-msgstr "Docteur"
+msgstr "Docteur.e"
 
 msgid "Doctoral commissions"
 msgstr "Commissions doctorales"
@@ -1123,9 +1128,6 @@ msgstr "Type de document"
 
 msgid "Documents"
 msgstr "Documents"
-
-msgid "Does not have a doctor title"
-msgstr "N'est pas porteur du titre de docteur"
 
 msgid "Domain doctoral committee"
 msgstr "Commission doctorale de domaine"
@@ -2237,10 +2239,6 @@ msgstr "Veuillez choisir une formation correct."
 msgid "Please correct the errors below"
 msgstr "Veuillez corriger les erreurs ci-dessous"
 
-msgid "Please justify why the member does not have a doctor title"
-msgstr ""
-"Merci de justifier pourquoi le membre n'est pas porteur du titre de docteur"
-
 msgid ""
 "Please look up the website of your domain doctoral committee on how to "
 "download the document."
@@ -2308,7 +2306,7 @@ msgid "Private defense / Public defense (formula 2)"
 msgstr "Défense privée / Soutenance (formule 2)"
 
 msgid "Professor"
-msgstr "Professeur"
+msgstr "Professeur.e"
 
 msgid "Program proposition"
 msgstr "Proposition de programme"
@@ -3504,6 +3502,9 @@ msgstr "Avec comité de lecture"
 
 msgid "Withdraw"
 msgstr "Désinscrire"
+
+msgid "Without PhD degree"
+msgstr "Sans grade de doctorat"
 
 msgid "Without reading committee"
 msgstr "Sans comité de lecture"

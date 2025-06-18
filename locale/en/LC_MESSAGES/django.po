@@ -387,6 +387,11 @@ msgstr ""
 msgid "An external member must have an institute."
 msgstr ""
 
+msgid ""
+"Anticipated date or period for private defence (Format 1) or admissibility "
+"(Format 2)"
+msgstr ""
+
 msgid "Application numero"
 msgstr ""
 
@@ -1048,9 +1053,6 @@ msgid "Document type"
 msgstr ""
 
 msgid "Documents"
-msgstr ""
-
-msgid "Does not have a doctor title"
 msgstr ""
 
 msgid "Domain doctoral committee"
@@ -2067,9 +2069,6 @@ msgid "Please choose a correct learning unit."
 msgstr ""
 
 msgid "Please correct the errors below"
-msgstr ""
-
-msgid "Please justify why the member does not have a doctor title"
 msgstr ""
 
 msgid ""
@@ -3224,6 +3223,9 @@ msgid "With reading committee"
 msgstr ""
 
 msgid "Withdraw"
+msgstr ""
+
+msgid "Without PhD degree"
 msgstr ""
 
 msgid "Without reading committee"
