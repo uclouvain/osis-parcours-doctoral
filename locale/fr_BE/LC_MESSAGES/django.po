@@ -1068,6 +1068,9 @@ msgstr "Docteur"
 msgid "Doctoral commissions"
 msgstr "Commissions doctorales"
 
+msgid "Doctoral research project"
+msgstr "Projet de recherche doctorale"
+
 msgctxt "female gender"
 msgid "Doctoral student"
 msgstr "Doctorante"
@@ -1092,6 +1095,9 @@ msgstr "Configuration formation doctorale"
 
 msgid "Doctoral training dossier"
 msgstr "Dossier du parcours doctoral"
+
+msgid "Doctoral training proposal"
+msgstr "Projet de formation doctorale"
 
 msgid "Doctoral trainings"
 msgstr "Formations doctorales"
@@ -2197,14 +2203,8 @@ msgstr "Doctorat déjà réalisé"
 msgid "PhD first inscription date"
 msgstr "Date de la première inscription au doctorat"
 
-msgid "PhD proposal"
-msgstr "Projet de formation doctorale"
-
 msgid "PhD research experience"
 msgstr "Expérience de recherche doctorale"
-
-msgid "PhD research project"
-msgstr "Projet de recherche doctorale"
 
 msgid "PhD training"
 msgstr "Formation doctorale"
