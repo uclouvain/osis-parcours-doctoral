@@ -104,6 +104,7 @@
 {% endblock %}
 
 {% block script %}
+  {{ block.super }}
   {{ add_form.media }}
   {{ approve_by_pdf_form.media }}
   <script type="application/javascript">
