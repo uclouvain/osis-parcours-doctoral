@@ -994,6 +994,9 @@ msgstr ""
 msgid "Doctoral commissions"
 msgstr ""
 
+msgid "Doctoral research project"
+msgstr ""
+
 msgctxt "female gender"
 msgid "Doctoral student"
 msgstr ""
@@ -1017,6 +1020,9 @@ msgid "Doctoral training configuration"
 msgstr ""
 
 msgid "Doctoral training dossier"
+msgstr ""
+
+msgid "Doctoral training proposal"
 msgstr ""
 
 msgid "Doctoral trainings"
@@ -2033,13 +2039,7 @@ msgstr ""
 msgid "PhD first inscription date"
 msgstr ""
 
-msgid "PhD proposal"
-msgstr ""
-
 msgid "PhD research experience"
-msgstr ""
-
-msgid "PhD research project"
 msgstr ""
 
 msgid "PhD training"

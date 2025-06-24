@@ -69,7 +69,7 @@ class ProjectForm(forms.Form):
         widget=forms.Textarea,
     )
     documents_projet = FileUploadField(
-        label=_('PhD research project'),
+        label=_('Doctoral research project'),
         required=False,
     )
     graphe_gantt = FileUploadField(
@@ -77,7 +77,7 @@ class ProjectForm(forms.Form):
         required=False,
     )
     proposition_programme_doctoral = FileUploadField(
-        label=_('PhD proposal'),
+        label=_('Doctoral training proposal'),
         required=False,
     )
     projet_formation_complementaire = FileUploadField(
