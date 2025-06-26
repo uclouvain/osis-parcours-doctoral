@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -38,6 +38,7 @@ __all__ = [
     'PersonsAutocomplete',
     'SupervisionActorsAutocomplete',
     'StudentsAutocomplete',
+    'AuditorAutocomplete',
 ]
 
 __namespace__ = False
@@ -203,4 +204,24 @@ class JuryMembersAutocomplete(LoginRequiredMixin, autocomplete.Select2QuerySetVi
             'uuid',
             'current_first_name',
             'current_last_name',
+        )
+
+
+class AuditorAutocomplete(LoginRequiredMixin, autocomplete.Select2QuerySetView):
+    urlpatterns = 'auditors'
+
+    def get_queryset(self):
+        q = self.request.GET.get('q', '')
+
+        return (
+            Person.objects.annotate(
+                name=SearchVector(
+                    'first_name',
+                    'last_name',
+                ),
+            )
+            .filter(Q(name=q) | Q(global_id__contains=q))
+            .exclude(student__isnull=False)
+            .order_by('last_name', 'first_name')
+            .distinct()
         )
