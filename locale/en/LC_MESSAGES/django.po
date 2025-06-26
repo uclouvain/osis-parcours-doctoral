@@ -360,6 +360,9 @@ msgstr ""
 msgid "Allow you to manage the doctoral training activities"
 msgstr ""
 
+msgid "Allow you to manage who are auditors for institutes."
+msgstr ""
+
 msgid "Already a member."
 msgstr "Already a member of the supervisory panel."
 
@@ -696,6 +699,9 @@ msgid "Complementary training not enabled"
 msgstr ""
 
 msgid "Complementary training proposition"
+msgstr ""
+
+msgid "Configuration"
 msgstr ""
 
 msgid "Configuration saved."
@@ -1460,6 +1466,9 @@ msgid "Institute address"
 msgstr ""
 
 msgid "Institute name"
+msgstr ""
+
+msgid "Institutes auditors configuration"
 msgstr ""
 
 msgid "Institution"
@@ -2418,6 +2427,9 @@ msgstr ""
 msgid "Role: ADRE secretary"
 msgstr ""
 
+msgid "Role: Auditor"
+msgstr ""
+
 msgid "Role: CDD configurator"
 msgstr ""
 
@@ -2434,6 +2446,12 @@ msgid "Role: Jury secretaries"
 msgstr ""
 
 msgid "Role: Jury secretary"
+msgstr ""
+
+msgid "Role: Sector administrative director"
+msgstr ""
+
+msgid "Role: Sector administrative directors"
 msgstr ""
 
 msgid "Role: Student"
