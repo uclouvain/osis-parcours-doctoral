@@ -418,6 +418,9 @@ msgstr ""
 msgid "Allow you to manage the doctoral training activities"
 msgstr "Permet d’administrer les activités de formation doctorale"
 
+msgid "Allow you to manage who are auditors for institutes."
+msgstr "Permet d’administrer qui sont les vérificateurs pour les instituts"
+
 msgid "Already a member."
 msgstr "Déjà membre."
 
@@ -749,6 +752,9 @@ msgstr "Formation complémentaire non activée"
 
 msgid "Complementary training proposition"
 msgstr "Proposition de formation complémentaire"
+
+msgid "Configuration"
+msgstr "Configuration"
 
 msgid "Configuration saved."
 msgstr "Configuration enregistrée."
@@ -1532,6 +1538,9 @@ msgstr "Adresse de l'établissement"
 
 msgid "Institute name"
 msgstr "Nom de l'établissement"
+
+msgid "Institutes auditors configuration"
+msgstr "Configuration des vérificateurs des instituts"
 
 msgid "Institution"
 msgstr "Institution"
@@ -2561,6 +2570,9 @@ msgstr "Rôle: Secrétaires ADRE"
 msgid "Role: ADRE secretary"
 msgstr "Rôle: Secrétaire ADRE"
 
+msgid "Role: Auditor"
+msgstr "Rôle: Vérificateur"
+
 msgid "Role: CDD configurator"
 msgstr "Rôle: Configurateur CDD"
 
@@ -2578,6 +2590,12 @@ msgstr "Rôle: Secrétaires de jury"
 
 msgid "Role: Jury secretary"
 msgstr "Rôle: Secrétaire de jury"
+
+msgid "Role: Sector administrative director"
+msgstr "Rôle: Directeur.trices administratif de secteur"
+
+msgid "Role: Sector administrative directors"
+msgstr "Rôle: Directeur.trice administratif de secteur"
 
 msgid "Role: Student"
 msgstr "Rôle: Étudiant"

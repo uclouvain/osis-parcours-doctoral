@@ -27,7 +27,9 @@
 import factory
 
 from parcours_doctoral.auth.roles.adre import AdreSecretary
+from parcours_doctoral.auth.roles.auditor import Auditor
 from parcours_doctoral.auth.roles.cdd_configurator import CddConfigurator
+from parcours_doctoral.auth.roles.das import SectorAdministrativeDirector
 from parcours_doctoral.auth.roles.student import Student
 
 
@@ -44,6 +46,22 @@ class CddConfiguratorFactory(BaseFactory):
         organization=None,
     )
     with_child = False
+
+
+class AuditorFactory(BaseFactory):
+    class Meta:
+        model = Auditor
+
+    entity = factory.SubFactory(
+        'base.tests.factories.entity.EntityWithVersionFactory',
+        organization=None,
+    )
+
+
+class SectorAdministrativeDirectorFactory(BaseFactory):
+    class Meta:
+        model = SectorAdministrativeDirector
+        django_get_or_create = ('person',)
 
 
 class StudentRoleFactory(BaseFactory):
