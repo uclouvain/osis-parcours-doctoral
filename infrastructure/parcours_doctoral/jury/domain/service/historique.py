@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -23,19 +23,33 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from osis_mail_template.exceptions import DuplicateMailTemplateIdentifier
 
-PARCOURS_DOCTORAL_TAG = 'Parcours doctoral'
+from osis_history.utilities import add_history_entry
 
-# When running tests, the test runner try to import it directly, re-registrering the identifiers
-try:
-    from .confirmation_paper import *
-    from .generic import *
-    from .jury import *
-    from .signatures import *
-    from .training import *
-except DuplicateMailTemplateIdentifier:
-    import sys
+from infrastructure.shared_kernel.personne_connue_ucl.personne_connue_ucl import (
+    PersonneConnueUclTranslator,
+)
+from parcours_doctoral.ddd.domain.model.parcours_doctoral import (
+    ParcoursDoctoral,
+)
+from parcours_doctoral.ddd.jury.domain.model.jury import Jury
+from parcours_doctoral.ddd.jury.domain.service.i_historique import IHistorique
 
-    if 'test' not in sys.argv:
-        raise
+
+class Historique(IHistorique):
+
+    @classmethod
+    def historiser_demande_signatures(
+        cls,
+        parcours_doctoral: ParcoursDoctoral,
+        jury: Jury,
+        matricule_auteur: str,
+    ):
+        auteur = PersonneConnueUclTranslator().get(matricule_auteur)
+        add_history_entry(
+            parcours_doctoral.entity_id.uuid,
+            "Les demandes de signatures ont été envoyées.",
+            "Signing requests have been sent.",
+            "{auteur.prenom} {auteur.nom}".format(auteur=auteur),
+            tags=["parcours_doctoral", "jury", "status-changed"],
+        )

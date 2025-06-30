@@ -153,6 +153,21 @@ PARCOURS_DOCTORAL_ACTION_LINKS = {
         'method': 'POST',
         'params': ['uuid'],
     },
+    # 'add_approval': {
+    #     'path_name': 'parcours_doctoral_api_v1:jury-approvals',
+    #     'method': 'POST',
+    #     'params': ['uuid'],
+    # },
+    'request_signatures': {
+        'path_name': 'parcours_doctoral_api_v1:jury-request-signatures',
+        'method': 'POST',
+        'params': ['uuid'],
+    },
+    # 'approve_by_pdf': {
+    #     'path_name': 'parcours_doctoral_api_v1:jury-approve-by-pdf',
+    #     'method': 'POST',
+    #     'params': ['uuid'],
+    # },
 }
 
 

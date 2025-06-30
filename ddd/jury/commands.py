@@ -95,3 +95,41 @@ class ModifierRoleMembreCommand(interface.CommandRequest):
     uuid_jury: str
     uuid_membre: str
     role: str
+
+
+@attr.dataclass(frozen=True, slots=True)
+class DemanderSignaturesCommand(interface.CommandRequest):
+    uuid_parcours_doctoral: str
+    matricule_auteur: str
+
+
+# @attr.dataclass(frozen=True, slots=True)
+# class RenvoyerInvitationSignatureExterneCommand(interface.CommandRequest):
+#     uuid_proposition: str
+#     uuid_membre: str
+#
+#
+# @attr.dataclass(frozen=True, slots=True)
+# class ApprouverJuryParPdfCommand(interface.CommandRequest):
+#     uuid_proposition: str
+#     matricule_auteur: str
+#     uuid_membre: str
+#     pdf: List[str] = attr.Factory(list)
+#
+#
+# @attr.dataclass(frozen=True, slots=True)
+# class ApprouverJuryCommand(interface.CommandRequest):
+#     uuid_proposition: str
+#     uuid_membre: str
+#     institut_these: Optional[str] = ''
+#     commentaire_interne: Optional[str] = ''
+#     commentaire_externe: Optional[str] = ''
+#
+#
+# @attr.dataclass(frozen=True, slots=True)
+# class RefuserJuryCommand(interface.CommandRequest):
+#     uuid_proposition: str
+#     uuid_membre: str
+#     motif_refus: str
+#     commentaire_interne: Optional[str] = ''
+#     commentaire_externe: Optional[str] = ''

@@ -31,7 +31,7 @@ from parcours_doctoral.ddd.jury.commands import (
     ModifierRoleMembreCommand,
     RecupererJuryMembreQuery,
     RecupererJuryQuery,
-    RetirerMembreCommand,
+    RetirerMembreCommand, DemanderSignaturesCommand,
 )
 from parcours_doctoral.ddd.jury.use_case.read.recuperer_jury_membre_service import (
     recuperer_jury_membre,
@@ -42,6 +42,7 @@ from parcours_doctoral.ddd.jury.use_case.read.recuperer_jury_service import (
 from parcours_doctoral.ddd.jury.use_case.write.ajouter_membre_service import (
     ajouter_membre,
 )
+from parcours_doctoral.ddd.jury.use_case.write.demander_signatures_service import demander_signatures
 from parcours_doctoral.ddd.jury.use_case.write.modifier_jury_service import (
     modifier_jury,
 )
@@ -54,15 +55,24 @@ from parcours_doctoral.ddd.jury.use_case.write.modifier_role_membre import (
 from parcours_doctoral.ddd.jury.use_case.write.retirer_membre_service import (
     retirer_membre,
 )
+from parcours_doctoral.infrastructure.parcours_doctoral.jury.domain.service.in_memory.historique import \
+    HistoriqueInMemory
+from parcours_doctoral.infrastructure.parcours_doctoral.jury.domain.service.in_memory.notification import \
+    NotificationInMemory
 from parcours_doctoral.infrastructure.parcours_doctoral.jury.repository.in_memory.jury import (
     JuryInMemoryRepository,
 )
 from parcours_doctoral.infrastructure.parcours_doctoral.repository.in_memory.groupe_de_supervision import (
     GroupeDeSupervisionInMemoryRepository,
 )
+from parcours_doctoral.infrastructure.parcours_doctoral.repository.in_memory.parcours_doctoral import \
+    ParcoursDoctoralInMemoryRepository
 
 _jury_repository = JuryInMemoryRepository()
 _groupe_de_supervisition_repository = GroupeDeSupervisionInMemoryRepository()
+_parcours_doctoral_repository = ParcoursDoctoralInMemoryRepository()
+_historique = HistoriqueInMemory()
+_notification = NotificationInMemory()
 
 
 COMMAND_HANDLERS = {
@@ -93,5 +103,12 @@ COMMAND_HANDLERS = {
     ModifierRoleMembreCommand: lambda msg_bus, cmd: modifier_role_membre(
         cmd,
         jury_repository=_jury_repository,
+    ),
+    DemanderSignaturesCommand: lambda msg_bus, cmd: demander_signatures(
+        cmd,
+        jury_repository=_jury_repository,
+        parcours_doctoral_repository=_parcours_doctoral_repository,
+        historique=_historique,
+        notification=_notification,
     ),
 }

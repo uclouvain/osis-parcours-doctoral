@@ -986,6 +986,40 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '404':
           $ref: '#/components/responses/NotFound'
+  /doctorate/{uuid}/jury/request-signatures:
+    post:
+      operationId: create_signatures
+      description: Ask for all promoters and members to sign the proposition.
+      parameters:
+      - in: path
+        name: uuid
+        schema:
+          type: string
+          format: uuid
+        required: true
+      - $ref: '#/components/parameters/Accept-Language'
+      - $ref: '#/components/parameters/X-User-FirstName'
+      - $ref: '#/components/parameters/X-User-LastName'
+      - $ref: '#/components/parameters/X-User-Email'
+      - $ref: '#/components/parameters/X-User-GlobalID'
+      tags:
+      - doctorate
+      security:
+      - tokenAuth: []
+      - Token: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JuryIdentityDTO'
+          description: ''
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
   /doctorate/{uuid}/project:
     get:
       operationId: retrieve_project
@@ -3220,6 +3254,8 @@ components:
             list_jury_members:
               $ref: '#/components/schemas/ActionLink'
             create_jury_members:
+              $ref: '#/components/schemas/ActionLink'
+            request_signatures:
               $ref: '#/components/schemas/ActionLink'
           readOnly: true
           default: {}

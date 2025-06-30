@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -23,19 +23,20 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from osis_mail_template.exceptions import DuplicateMailTemplateIdentifier
+from abc import abstractmethod
 
-PARCOURS_DOCTORAL_TAG = 'Parcours doctoral'
+from osis_common.ddd import interface
+from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoral
+from parcours_doctoral.ddd.jury.domain.model.jury import Jury
 
-# When running tests, the test runner try to import it directly, re-registrering the identifiers
-try:
-    from .confirmation_paper import *
-    from .generic import *
-    from .jury import *
-    from .signatures import *
-    from .training import *
-except DuplicateMailTemplateIdentifier:
-    import sys
 
-    if 'test' not in sys.argv:
-        raise
+class IHistorique(interface.DomainService):
+    @classmethod
+    @abstractmethod
+    def historiser_demande_signatures(
+        cls,
+        parcours_doctoral: ParcoursDoctoral,
+        jury: Jury,
+        matricule_auteur: str,
+    ):
+        raise NotImplementedError

@@ -30,7 +30,7 @@ from parcours_doctoral.ddd.jury.commands import (
     ModifierRoleMembreCommand,
     RecupererJuryMembreQuery,
     RecupererJuryQuery,
-    RetirerMembreCommand,
+    RetirerMembreCommand, DemanderSignaturesCommand,
 )
 from parcours_doctoral.ddd.jury.use_case.read.recuperer_jury_membre_service import (
     recuperer_jury_membre,
@@ -41,6 +41,7 @@ from parcours_doctoral.ddd.jury.use_case.read.recuperer_jury_service import (
 from parcours_doctoral.ddd.jury.use_case.write.ajouter_membre_service import (
     ajouter_membre,
 )
+from parcours_doctoral.ddd.jury.use_case.write.demander_signatures_service import demander_signatures
 from parcours_doctoral.ddd.jury.use_case.write.modifier_jury_service import (
     modifier_jury,
 )
@@ -53,15 +54,21 @@ from parcours_doctoral.ddd.jury.use_case.write.modifier_role_membre import (
 from parcours_doctoral.ddd.jury.use_case.write.retirer_membre_service import (
     retirer_membre,
 )
+from parcours_doctoral.infrastructure.parcours_doctoral.jury.domain.service.historique import Historique
+from parcours_doctoral.infrastructure.parcours_doctoral.jury.domain.service.notification import Notification
 from parcours_doctoral.infrastructure.parcours_doctoral.jury.repository.jury import (
     JuryRepository,
 )
 from parcours_doctoral.infrastructure.parcours_doctoral.repository.groupe_de_supervision import (
     GroupeDeSupervisionRepository,
 )
+from parcours_doctoral.infrastructure.parcours_doctoral.repository.parcours_doctoral import ParcoursDoctoralRepository
 
 _jury_repository = JuryRepository()
+_parcours_doctoral_repository = ParcoursDoctoralRepository()
 _groupe_de_supervisition_repository = GroupeDeSupervisionRepository()
+_historique = Historique()
+_notification = Notification()
 
 
 COMMAND_HANDLERS = {
@@ -92,5 +99,12 @@ COMMAND_HANDLERS = {
     ModifierRoleMembreCommand: lambda msg_bus, cmd: modifier_role_membre(
         cmd,
         jury_repository=_jury_repository,
+    ),
+    DemanderSignaturesCommand: lambda msg_bus, cmd: demander_signatures(
+        cmd,
+        jury_repository=_jury_repository,
+        parcours_doctoral_repository=_parcours_doctoral_repository,
+        historique=_historique,
+        notification=_notification,
     ),
 }

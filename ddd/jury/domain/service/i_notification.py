@@ -23,19 +23,18 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from osis_mail_template.exceptions import DuplicateMailTemplateIdentifier
+from abc import abstractmethod
 
-PARCOURS_DOCTORAL_TAG = 'Parcours doctoral'
+from osis_common.ddd import interface
 
-# When running tests, the test runner try to import it directly, re-registrering the identifiers
-try:
-    from .confirmation_paper import *
-    from .generic import *
-    from .jury import *
-    from .signatures import *
-    from .training import *
-except DuplicateMailTemplateIdentifier:
-    import sys
+from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoral
+from parcours_doctoral.ddd.jury.domain.model.jury import Jury
 
-    if 'test' not in sys.argv:
-        raise
+
+class INotification(interface.DomainService):
+    @classmethod
+    @abstractmethod
+    def envoyer_signatures(
+        cls, parcours_doctoral: ParcoursDoctoral, jury: Jury
+    ) -> None:
+        raise NotImplementedError
