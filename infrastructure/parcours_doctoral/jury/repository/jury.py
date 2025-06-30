@@ -254,7 +254,7 @@ class JuryRepository(IJuryRepository):
             langue_redaction=jury.langue_redaction,
             nom_langue_soutenance=(
                 getattr(parcours_doctoral.defense_language, lang_name_attribute)
-                if parcours_doctoral.thesis_language
+                if parcours_doctoral.defense_language
                 else ''
             ),
             langue_soutenance=jury.langue_soutenance,
