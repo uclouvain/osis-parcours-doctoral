@@ -57,7 +57,7 @@ class TestRecupererJury(TestCase):
         self.assertEqual(jury_dto.titre_propose, 'titre_propose')
         self.assertEqual(len(jury_dto.membres), 2)
         self.assertEqual(jury_dto.formule_defense, 'DEUX_TEMPS')
-        self.assertEqual(jury_dto.date_indicative, datetime.date(2022, 1, 1))
+        self.assertEqual(jury_dto.date_indicative, '01/01/2022')
         self.assertEqual(jury_dto.langue_redaction, 'english')
         self.assertEqual(jury_dto.langue_soutenance, 'english')
         self.assertEqual(jury_dto.commentaire, '')
