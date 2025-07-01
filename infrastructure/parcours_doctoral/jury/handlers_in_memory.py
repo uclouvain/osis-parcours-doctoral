@@ -31,7 +31,7 @@ from parcours_doctoral.ddd.jury.commands import (
     ModifierRoleMembreCommand,
     RecupererJuryMembreQuery,
     RecupererJuryQuery,
-    RetirerMembreCommand, DemanderSignaturesCommand,
+    RetirerMembreCommand, DemanderSignaturesCommand, VerifierJuryConditionSignatureQuery,
 )
 from parcours_doctoral.ddd.jury.use_case.read.recuperer_jury_membre_service import (
     recuperer_jury_membre,
@@ -39,6 +39,8 @@ from parcours_doctoral.ddd.jury.use_case.read.recuperer_jury_membre_service impo
 from parcours_doctoral.ddd.jury.use_case.read.recuperer_jury_service import (
     recuperer_jury,
 )
+from parcours_doctoral.ddd.jury.use_case.read.verifier_jury_condition_signature_service import \
+    verifier_jury_condition_signature
 from parcours_doctoral.ddd.jury.use_case.write.ajouter_membre_service import (
     ajouter_membre,
 )
@@ -110,5 +112,9 @@ COMMAND_HANDLERS = {
         parcours_doctoral_repository=_parcours_doctoral_repository,
         historique=_historique,
         notification=_notification,
+    ),
+    VerifierJuryConditionSignatureQuery: lambda msg_bus, cmd: verifier_jury_condition_signature(
+        cmd,
+        jury_repository=_jury_repository,
     ),
 }

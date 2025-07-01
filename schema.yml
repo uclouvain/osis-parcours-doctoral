@@ -987,8 +987,48 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
   /doctorate/{uuid}/jury/request-signatures:
+    get:
+      operationId: signature_conditions
+      description: Gather the exceptions from signature validation.
+      parameters:
+      - in: path
+        name: uuid
+        schema:
+          type: string
+          format: uuid
+        required: true
+      - $ref: '#/components/parameters/Accept-Language'
+      - $ref: '#/components/parameters/X-User-FirstName'
+      - $ref: '#/components/parameters/X-User-LastName'
+      - $ref: '#/components/parameters/X-User-Email'
+      - $ref: '#/components/parameters/X-User-GlobalID'
+      tags:
+      - doctorate
+      security:
+      - tokenAuth: []
+      - Token: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    status_code:
+                      type: string
+                    detail:
+                      type: string
+          description: Project verification errors
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
     post:
-      operationId: create_signatures
+      operationId: request_signatures
       description: Ask for all promoters and members to sign the proposition.
       parameters:
       - in: path

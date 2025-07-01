@@ -2502,6 +2502,15 @@ msgstr "Demande d'une nouvelle échéance pour l'épreuve de confirmation"
 msgid "Require changes"
 msgstr "Demander des changements"
 
+msgid "Please input all required information from the \"Defense Method\" tab before requesting the signatures."
+msgstr "Veuillez compléter toutes les zones obligatoires de l'onglet \"Modalités de défense\" avant de demander les signatures."
+
+msgid "Your jury must have at least 5 members."
+msgstr "Votre jury doit être composé d'au moins 5 membres."
+
+msgid "The jury must have at least one member from another institute than the UCLouvain, chosen depending on their particular expertise about the subject of the thesis."
+msgstr "Le jury doit comporter au moins un membre faisant partie d'une autre institution que l'UCLouvain, choisi en fonction de ses compétences particulières dans le sujet de la thèse soutenue."
+
 #, python-format
 msgid "Require changes for \"%(object)s\""
 msgstr "Demander des changements pour \"%(object)s\""

@@ -103,6 +103,11 @@ class DemanderSignaturesCommand(interface.CommandRequest):
     matricule_auteur: str
 
 
+@attr.dataclass(frozen=True, slots=True)
+class VerifierJuryConditionSignatureQuery(interface.QueryRequest):
+    uuid_jury: str
+
+
 # @attr.dataclass(frozen=True, slots=True)
 # class RenvoyerInvitationSignatureExterneCommand(interface.CommandRequest):
 #     uuid_proposition: str

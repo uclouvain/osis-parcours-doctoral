@@ -30,6 +30,7 @@ from parcours_doctoral.ddd.builder.parcours_doctoral_identity import ParcoursDoc
 from parcours_doctoral.ddd.jury.builder.jury_identity_builder import JuryIdentityBuilder
 from parcours_doctoral.ddd.jury.commands import DemanderSignaturesCommand
 from parcours_doctoral.ddd.jury.domain.model.jury import JuryIdentity
+from parcours_doctoral.ddd.jury.domain.validator.validator_by_business_action import VerifierJuryConditionSignature
 from parcours_doctoral.ddd.jury.repository.i_jury import IJuryRepository
 from parcours_doctoral.ddd.repository.i_parcours_doctoral import IParcoursDoctoralRepository
 
@@ -46,12 +47,11 @@ def demander_signatures(
     parcours_doctoral = parcours_doctoral_repository.get(entity_id=entity_id)
     jury = jury_repository.get(JuryIdentityBuilder.build_from_uuid(cmd.uuid_jury))
 
-    VerifierJury.verifier(
-        parcours_doctoral=parcours_doctoral,
-        jury=jury,
-    )
-
     # WHEN
+    VerifierJuryConditionSignature(
+        jury=jury,
+    ).validate()
+
     parcours_doctoral.verrouiller_jury_pour_signature()
     jury.verrouiller_jury_pour_signature()
     jury.inviter_a_signer()

@@ -23,10 +23,11 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from drf_spectacular.utils import extend_schema
+from drf_spectacular.utils import extend_schema, OpenApiResponse
 from rest_framework import mixins, status
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
+from rest_framework.settings import api_settings
 from rest_framework.views import APIView
 
 from infrastructure.messages_bus import message_bus_instance
@@ -49,7 +50,7 @@ from parcours_doctoral.ddd.jury.commands import (
     ModifierRoleMembreCommand,
     RecupererJuryMembreQuery,
     RecupererJuryQuery,
-    RetirerMembreCommand, DemanderSignaturesCommand,
+    RetirerMembreCommand, DemanderSignaturesCommand, VerifierJuryConditionSignatureQuery,
 )
 
 __all__ = [
@@ -58,6 +59,8 @@ __all__ = [
     "JuryMemberDetailAPIView",
     "JuryRequestSignaturesAPIView",
 ]
+
+from parcours_doctoral.utils.ddd import gather_business_exceptions
 
 
 class JuryPreparationAPIView(
@@ -243,10 +246,36 @@ class JuryRequestSignaturesAPIView(DoctorateAPIPermissionRequiredMixin, APIView)
         'POST': 'parcours_doctoral.request_signatures',
     }
 
+    @extend_schema(
+        request=None,
+        responses=OpenApiResponse(
+            response={
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "status_code": {
+                            "type": "string",
+                        },
+                        "detail": {
+                            "type": "string",
+                        },
+                    },
+                },
+            },
+            description="Project verification errors",
+        ),
+        operation_id='signature_conditions',
+    )
+    def get(self, request, *args, **kwargs):
+        """Gather the exceptions from signature validation."""
+        data = gather_business_exceptions(VerifierJuryConditionSignatureQuery(uuid_jury=str(kwargs["uuid"])))
+        return Response(data.get(api_settings.NON_FIELD_ERRORS_KEY, []), status=status.HTTP_200_OK)
+
     # @extend_schema(
     #     request=serializers.RenvoyerInvitationSignatureExterneSerializer,
     #     responses=JuryIdentityDTOSerializer,
-    #     operation_id='update_signatures',
+    #     operation_id='resend_invite',
     # )
     # def put(self, request, *args, **kwargs):
     #     """Resend an invitation for and external member."""
@@ -261,7 +290,7 @@ class JuryRequestSignaturesAPIView(DoctorateAPIPermissionRequiredMixin, APIView)
     @extend_schema(
         request=None,
         responses=JuryIdentityDTOSerializer,
-        operation_id='create_signatures',
+        operation_id='request_signatures',
     )
     def post(self, request, *args, **kwargs):
         """Ask for all promoters and members to sign the proposition."""
