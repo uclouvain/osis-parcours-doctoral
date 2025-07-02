@@ -56,7 +56,6 @@ from parcours_doctoral.ddd.repository.i_groupe_de_supervision import (
 )
 from parcours_doctoral.models import (
     ActorType,
-    JuryMember,
     ParcoursDoctoral,
     ParcoursDoctoralSupervisionActor,
 )

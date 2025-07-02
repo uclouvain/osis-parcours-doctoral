@@ -40,7 +40,7 @@ from parcours_doctoral.ddd.jury.domain.model.enums import (
     TitreMembre,
 )
 from parcours_doctoral.forms.jury.membre import JuryMembreForm
-from parcours_doctoral.models.jury import JuryMember
+from parcours_doctoral.models.jury import JuryActor
 from parcours_doctoral.tests.factories.jury import ExternalJuryMemberFactory
 from parcours_doctoral.tests.factories.parcours_doctoral import ParcoursDoctoralFactory
 from parcours_doctoral.tests.factories.supervision import PromoterFactory
@@ -142,7 +142,7 @@ class DoctorateAdmissionJuryMemberUpdateFormViewTestCase(TestCase):
 
         self.assertRedirects(response, resolve_url(self.read_path, uuid=self.parcours_doctoral.uuid))
 
-        updated_member = JuryMember.objects.get(
+        updated_member = JuryActor.objects.get(
             uuid=self.membre.uuid,
         )
         self.assertEqual(updated_member.person, None)
@@ -205,8 +205,8 @@ class DoctorateAdmissionJuryMemberDeleteFormViewTestCase(TestCase):
 
         self.assertRedirects(response, resolve_url(self.read_path, uuid=self.parcours_doctoral.uuid))
 
-        with self.assertRaises(JuryMember.DoesNotExist):
-            JuryMember.objects.get(
+        with self.assertRaises(JuryActor.DoesNotExist):
+            JuryActor.objects.get(
                 uuid=self.membre.uuid,
             )
 
@@ -274,7 +274,7 @@ class DoctorateAdmissionJuryMemberChangeRoleFormViewTestCase(TestCase):
 
         self.assertRedirects(response, resolve_url(self.read_path, uuid=self.parcours_doctoral.uuid))
 
-        updated_member = JuryMember.objects.get(
+        updated_member = JuryActor.objects.get(
             uuid=self.membre.uuid,
         )
         self.assertEqual(updated_member.role, RoleJury.PRESIDENT.name)

@@ -27,13 +27,17 @@ from typing import List, Optional
 
 from django.conf import settings
 from django.db import transaction
-from django.db.models import Prefetch, Q
+from django.db.models import Prefetch, Q, F
+from django.db.models.functions import Coalesce
 from django.utils.translation import get_language
+from osis_signature.models import Process, Actor
 
 from base.models.person import Person
 from osis_common.ddd.interface import ApplicationService, EntityIdentity, RootEntity
-from parcours_doctoral.ddd.jury.domain.model.enums import RoleJury
-from parcours_doctoral.ddd.jury.domain.model.jury import Jury, JuryIdentity, MembreJury
+from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
+from parcours_doctoral.ddd.jury.domain.model.enums import RoleJury, ChoixStatutSignature, ChoixEtatSignature, \
+    TitreMembre, GenreMembre
+from parcours_doctoral.ddd.jury.domain.model.jury import Jury, JuryIdentity, MembreJury, SignatureMembre
 from parcours_doctoral.ddd.jury.dtos.jury import JuryDTO, MembreJuryDTO
 from parcours_doctoral.ddd.jury.repository.i_jury import IJuryRepository
 from parcours_doctoral.ddd.jury.validator.exceptions import (
@@ -41,7 +45,7 @@ from parcours_doctoral.ddd.jury.validator.exceptions import (
     MembreNonTrouveDansJuryException,
 )
 from parcours_doctoral.models import ActorType, ParcoursDoctoralSupervisionActor
-from parcours_doctoral.models.jury import JuryMember
+from parcours_doctoral.models.jury import JuryActor
 from parcours_doctoral.models.parcours_doctoral import ParcoursDoctoral
 from reference.models.country import Country
 from reference.models.language import Language
@@ -78,13 +82,11 @@ class JuryRepository(IJuryRepository):
             )
             .prefetch_related(
                 Prefetch(
-                    'jury_members',
-                    queryset=JuryMember.objects.select_related(
-                        'promoter__country',
-                        'promoter__person',
-                        'person',
-                        'country',
-                    ),
+                    'supervision_group__actors',
+                    Actor.objects.alias(dynamic_last_name=Coalesce(F('last_name'), F('person__last_name')))
+                        .select_related('juryactor')
+                        .order_by('dynamic_last_name'),
+                    to_attr='ordered_members',
                 )
             )
         )
@@ -95,20 +97,38 @@ class JuryRepository(IJuryRepository):
             parcours_doctoral = cls._get_queryset().get(uuid=entity_id.uuid)
         except ParcoursDoctoral.DoesNotExist:
             raise JuryNonTrouveException
-        # Initialize promoters members if needed
-        if not parcours_doctoral.jury_members.all():
-            JuryMember.objects.bulk_create(
+        # Initialize group if needed
+        if not parcours_doctoral.jury_group_id:
+            parcours_doctoral.jury_group = Process.objects.create()
+            parcours_doctoral.save(update_fields=['jury_group'])
+
+            JuryActor.objects.bulk_create(
                 [
-                    JuryMember(
+                    JuryActor(
+                        process=parcours_doctoral.jury_group,
                         role=RoleJury.MEMBRE.name,
-                        parcours_doctoral=parcours_doctoral,
-                        promoter_id=promoter,
+                        is_promoter=True,
+
+                        **(
+                            {'person_id': promoter.person_id}
+                            if promoter.person_id
+                            else {
+                                'first_name': promoter.first_name,
+                                'last_name': promoter.last_name,
+                                'email': promoter.email,
+                                'institute': promoter.institute,
+                                'city': promoter.city,
+                                'country_id': promoter.country_id,
+                                'language': promoter.language,
+                            }
+                        ),
                     )
                     for promoter in parcours_doctoral.supervision_group.actors.filter(
                         parcoursdoctoralsupervisionactor__type=ActorType.PROMOTER.name
-                    ).values_list('pk', flat=True)
+                    )
                 ]
             )
+
             # reload with members
             parcours_doctoral = cls._get_queryset().get(uuid=entity_id.uuid)
         return parcours_doctoral
@@ -152,64 +172,44 @@ class JuryRepository(IJuryRepository):
         if entity.membres is not None:
             parcours_doctoral = ParcoursDoctoral.objects.get(uuid=entity.entity_id.uuid)
             for membre in entity.membres:
-                if membre.est_promoteur:
-                    promoter = ParcoursDoctoralSupervisionActor.objects.get(id=membre.matricule)
-                    JuryMember.objects.update_or_create(
-                        uuid=membre.uuid,
-                        parcours_doctoral=parcours_doctoral,
-                        defaults={
-                            'role': membre.role,
-                            'promoter': promoter,
-                            'person': None,
-                            'institute': '',
-                            'other_institute': membre.autre_institution,
-                            'country': None,
-                            'last_name': '',
-                            'first_name': '',
-                            'title': '',
-                            'non_doctor_reason': '',
-                            'gender': '',
-                            'email': '',
-                        },
-                    )
-                elif membre.matricule:
+                if membre.matricule:
                     person = Person.objects.get(global_id=membre.matricule)
-                    JuryMember.objects.update_or_create(
+                    JuryActor.objects.update_or_create(
                         uuid=membre.uuid,
-                        parcours_doctoral=parcours_doctoral,
+                        process=parcours_doctoral.jury_group,
                         defaults={
-                            'role': membre.role,
-                            'promoter': None,
+                            'role': membre.role.name if membre.role else '',
+                            'is_promoter': membre.est_promoteur,
                             'person': person,
                             'institute': '',
-                            'other_institute': membre.autre_institution,
-                            'country': None,
-                            'last_name': '',
                             'first_name': '',
+                            'last_name': '',
+                            'email': '',
+                            'country_id': '',
+                            'language': '',
+                            'other_institute': membre.autre_institution,
                             'title': '',
                             'non_doctor_reason': '',
-                            'gender': '',
-                            'email': '',
                         },
                     )
                 else:
                     country = Country.objects.filter(Q(iso_code=membre.pays) | Q(name=membre.pays)).first()
-                    JuryMember.objects.update_or_create(
+                    JuryActor.objects.update_or_create(
                         uuid=membre.uuid,
                         parcours_doctoral=parcours_doctoral,
                         defaults={
-                            'role': membre.role,
-                            'promoter': None,
+                            'role': membre.role.name if membre.role else '',
+                            'is_promoter': membre.est_promoteur,
                             'person': None,
                             'institute': membre.institution,
-                            'other_institute': membre.autre_institution,
-                            'country': country,
-                            'last_name': membre.nom,
                             'first_name': membre.prenom,
-                            'title': membre.titre,
-                            'non_doctor_reason': membre.justification_non_docteur,
-                            'gender': membre.genre,
+                            'last_name': membre.nom,
                             'email': membre.email,
+                            'country': country,
+                            'other_institute': membre.autre_institution,
+                            'title': membre.titre.name if membre.titre else '',
+                            'non_doctor_reason': membre.justification_non_docteur,
+                            'gender': membre.genre.name if membre.genre else '',
                         },
                     )
             parcours_doctoral.jury_members.exclude(uuid__in=[membre.uuid for membre in entity.membres]).delete()
@@ -229,7 +229,7 @@ class JuryRepository(IJuryRepository):
             membres=[
                 MembreJuryDTO(
                     uuid=membre.uuid,
-                    role=membre.role,
+                    role=membre.role.name if membre.role else '',
                     est_promoteur=membre.est_promoteur,
                     matricule=membre.matricule,
                     institution=membre.institution,
@@ -237,9 +237,9 @@ class JuryRepository(IJuryRepository):
                     pays=membre.pays,
                     nom=membre.nom,
                     prenom=membre.prenom,
-                    titre=membre.titre,
+                    titre=membre.titre.name if membre.titre else '',
                     justification_non_docteur=membre.justification_non_docteur,
-                    genre=membre.genre,
+                    genre=membre.genre if membre.genre else '',
                     email=membre.email,
                 )
                 for membre in jury.membres
@@ -268,76 +268,62 @@ class JuryRepository(IJuryRepository):
         cls,
         parcours_doctoral: 'ParcoursDoctoral',
     ) -> Jury:
-        def _get_membrejury_from_model(membre: JuryMember) -> MembreJury:
-            if membre.promoter is not None:
-                if membre.promoter.person is not None:
-                    return MembreJury(
-                        uuid=str(membre.uuid),
-                        role=membre.role,
-                        est_promoteur=True,
-                        matricule=str(membre.promoter.id),
-                        institution=INSTITUTION_UCL,
-                        autre_institution=membre.other_institute,
-                        pays=(
-                            str(membre.promoter.person.country_of_citizenship)
-                            if membre.promoter.person.country_of_citizenship
-                            else ''
-                        ),
-                        nom=membre.promoter.person.last_name,
-                        prenom=membre.promoter.person.first_name,
-                        titre='',
-                        justification_non_docteur='',
-                        genre=membre.promoter.person.gender,
-                        email=membre.promoter.person.email,
-                    )
-                else:
-                    return MembreJury(
-                        uuid=str(membre.uuid),
-                        role=membre.role,
-                        est_promoteur=True,
-                        matricule=str(membre.promoter.id),
-                        institution=membre.promoter.institute,
-                        autre_institution=membre.other_institute,
-                        pays=str(membre.promoter.country),
-                        nom=membre.promoter.last_name,
-                        prenom=membre.promoter.first_name,
-                        titre='',
-                        justification_non_docteur='',
-                        genre='',
-                        email=membre.promoter.email,
-                    )
-            elif membre.person is not None:
+        def _get_membrejury_from_model(actor: JuryActor) -> MembreJury:
+            if actor.person is not None:
                 return MembreJury(
-                    uuid=str(membre.uuid),
-                    role=membre.role,
-                    est_promoteur=False,
-                    matricule=membre.person.global_id,
+                    uuid=str(actor.uuid),
+                    role=RoleJury[actor.role] if actor.role else None,
+                    est_promoteur=actor.is_promoter,
+                    matricule=actor.person.global_id,
                     institution=INSTITUTION_UCL,
-                    autre_institution=membre.other_institute,
-                    pays=str(membre.person.country_of_citizenship) if membre.person.country_of_citizenship else '',
-                    nom=membre.person.last_name,
-                    prenom=membre.person.first_name,
-                    titre='',
+                    autre_institution=actor.other_institute,
+                    pays=str(actor.person.country_of_citizenship) if actor.person.country_of_citizenship else '',
+                    nom=actor.person.last_name,
+                    prenom=actor.person.first_name,
+                    titre=None,
                     justification_non_docteur='',
-                    genre=membre.person.gender,
-                    email=membre.person.email,
+                    genre=actor.person.gender,
+                    email=actor.person.email,
+                    signature=SignatureMembre(
+                        etat=ChoixEtatSignature[actor.state],
+                        date=actor.last_state_date,
+                        commentaire_externe=actor.comment,
+                        commentaire_interne=actor.juryactor.internal_comment,
+                        motif_refus=actor.juryactor.rejection_reason,
+                        pdf=actor.juryactor.pdf_from_candidate,
+                    ),
                 )
             else:
                 return MembreJury(
-                    uuid=str(membre.uuid),
-                    role=membre.role,
-                    est_promoteur=False,
+                    uuid=str(actor.uuid),
+                    role=RoleJury[actor.role] if actor.role else None,
+                    est_promoteur=actor.is_promoter,
                     matricule='',
-                    institution=membre.institute,
-                    autre_institution=membre.other_institute,
-                    pays=str(membre.country),
-                    nom=membre.last_name,
-                    prenom=membre.first_name,
-                    titre=membre.title,
-                    justification_non_docteur=membre.non_doctor_reason,
-                    genre=membre.gender,
-                    email=membre.email,
+                    institution=actor.institute,
+                    autre_institution=actor.other_institute,
+                    pays=str(actor.country),
+                    nom=actor.last_name,
+                    prenom=actor.first_name,
+                    titre=TitreMembre[actor.title] if actor.title else None,
+                    justification_non_docteur=actor.non_doctor_reason,
+                    genre=GenreMembre[actor.gender] if actor.gender else None,
+                    email=actor.email,
+                    signature=SignatureMembre(
+                        etat=ChoixEtatSignature[actor.state],
+                        date=actor.last_state_date,
+                        commentaire_externe=actor.comment,
+                        commentaire_interne=actor.juryactor.internal_comment,
+                        motif_refus=actor.juryactor.rejection_reason,
+                        pdf=actor.juryactor.pdf_from_candidate,
+                    ),
                 )
+
+        if parcours_doctoral.status == ChoixStatutParcoursDoctoral.JURY_SOUMIS.name:
+            statut_signature = ChoixStatutSignature.SIGNING_IN_PROGRESS
+        elif parcours_doctoral.status == ChoixStatutParcoursDoctoral.JURY_SOUMIS.name:
+            statut_signature = ChoixStatutSignature.SIGNED
+        else:
+            statut_signature = ChoixStatutSignature.IN_PROGRESS
 
         return Jury(
             entity_id=JuryIdentity(uuid=str(parcours_doctoral.uuid)),
@@ -349,5 +335,6 @@ class JuryRepository(IJuryRepository):
             commentaire=parcours_doctoral.comment_about_jury,
             situation_comptable=parcours_doctoral.accounting_situation,
             approbation_pdf=parcours_doctoral.jury_approval,
-            membres=[_get_membrejury_from_model(membre) for membre in parcours_doctoral.jury_members.all()],
+            statut_signature=statut_signature,
+            membres=[_get_membrejury_from_model(membre) for membre in parcours_doctoral.jury_group.ordered_members],
         )

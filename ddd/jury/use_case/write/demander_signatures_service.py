@@ -45,7 +45,7 @@ def demander_signatures(
     # GIVEN
     entity_id = ParcoursDoctoralIdentityBuilder.build_from_uuid(cmd.uuid_parcours_doctoral)
     parcours_doctoral = parcours_doctoral_repository.get(entity_id=entity_id)
-    jury = jury_repository.get(JuryIdentityBuilder.build_from_uuid(cmd.uuid_jury))
+    jury = jury_repository.get(JuryIdentityBuilder.build_from_uuid(cmd.uuid_parcours_doctoral))
 
     # WHEN
     VerifierJuryConditionSignature(
@@ -53,7 +53,6 @@ def demander_signatures(
     ).validate()
 
     parcours_doctoral.verrouiller_jury_pour_signature()
-    jury.verrouiller_jury_pour_signature()
     jury.inviter_a_signer()
 
     # THEN

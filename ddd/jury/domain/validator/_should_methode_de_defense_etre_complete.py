@@ -28,7 +28,6 @@ from typing import Union
 import attr
 from base.ddd.utils.business_validator import BusinessValidator
 
-from parcours_doctoral.ddd.jury.domain.model.jury import Jury
 from parcours_doctoral.ddd.jury.domain.validator.exceptions import DefenseMethodNotCompletedException
 
 

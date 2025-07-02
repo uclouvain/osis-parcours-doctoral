@@ -52,3 +52,27 @@ class NoExternalMemberException(BusinessException):
     def __init__(self, **kwargs):
         message = _("The jury must have at least one member from another institute than the UCLouvain, chosen depending on their particular expertise about the subject of the thesis.")
         super().__init__(message, **kwargs)
+
+
+class SignataireNonTrouveException(BusinessException):
+    status_code = "JURY-4"
+
+    def __init__(self, **kwargs):
+        message = _("Member of jury not found.")
+        super().__init__(message, **kwargs)
+
+
+class SignataireDejaInviteException(BusinessException):
+    status_code = "JURY-5"
+
+    def __init__(self, **kwargs):  # pragma: no cover
+        message = _("Member of jury already invited.")
+        super().__init__(message, **kwargs)
+
+
+class SignatairePasInviteException(BusinessException):
+    status_code = "JURY-6"
+
+    def __init__(self, **kwargs):
+        message = _("Member of jury not invited.")
+        super().__init__(message, **kwargs)

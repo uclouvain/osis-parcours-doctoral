@@ -33,8 +33,9 @@ from osis_common.ddd import interface
 from parcours_doctoral.ddd.jury.domain.model.enums import (
     GenreMembre,
     RoleJury,
-    TitreMembre,
+    TitreMembre, ChoixStatutSignature, ChoixEtatSignature,
 )
+from parcours_doctoral.ddd.jury.domain.validator.validator_by_business_action import InviterASignerValidatorList
 from parcours_doctoral.ddd.jury.validator.exceptions import (
     PromoteurModifieException,
     PromoteurPresidentException,
@@ -50,8 +51,20 @@ from parcours_doctoral.ddd.jury.validator.validator_by_business_action import (
 )
 
 
+@attr.dataclass(frozen=True, slots=True)
+class SignatureMembre(interface.ValueObject):
+    etat: ChoixEtatSignature = ChoixEtatSignature.NOT_INVITED
+    date: Optional[datetime.datetime] = None
+    commentaire_externe: str = ''
+    commentaire_interne: str = ''
+    motif_refus: str = ''
+    pdf: List[str] = attr.Factory(list)
+
+
 @attr.dataclass(frozen=True, slots=True, eq=True, hash=True)
 class MembreJury(interface.ValueObject):
+    uuid: str
+    role: 'RoleJury'
     est_promoteur: bool
     matricule: Optional[str]
     institution: str
@@ -63,9 +76,7 @@ class MembreJury(interface.ValueObject):
     justification_non_docteur: Optional[str]
     genre: Optional['GenreMembre']
     email: str
-
-    uuid: str = attr.Factory(uuid.uuid4)
-    role: 'RoleJury' = RoleJury.MEMBRE.name
+    signature: SignatureMembre
 
 
 @attr.dataclass(frozen=True, slots=True)
@@ -84,9 +95,9 @@ class Jury(interface.RootEntity):
     commentaire: str
     situation_comptable: Optional[bool] = None
     approbation_pdf: List[str] = attr.Factory(list)
+    statut_signature: ChoixStatutSignature = ChoixStatutSignature.IN_PROGRESS
 
-    # Optionals because we don't need them to update the rest of the information
-    membres: Optional[List[MembreJury]] = None
+    membres: List[MembreJury] = attr.Factory(list)
 
     def validate(self):
         JuryValidatorList(self).validate()
@@ -130,3 +141,12 @@ class Jury(interface.RootEntity):
                     self.membres.append(attr.evolve(membre, role=RoleJury.MEMBRE.name))
         self.membres.remove(ancien_membre)
         self.membres.append(attr.evolve(ancien_membre, role=role, est_promoteur=ancien_membre.est_promoteur))
+
+    def inviter_a_signer(self):
+        etats_initiaux = [ChoixEtatSignature.NOT_INVITED, ChoixEtatSignature.DECLINED]
+        for membre in filter(lambda s: s.etat in etats_initiaux, self.membres):
+            InviterASignerValidatorList(jury=self, signataire_id=membre.uuid).validate()
+            self.signatures_membres = [s for s in self.signatures_membres if s != membre]
+            self.signatures_membres.append(
+                SignatureMembre(membre_id=membre.uuid, etat=ChoixEtatSignature.INVITED)
+            )

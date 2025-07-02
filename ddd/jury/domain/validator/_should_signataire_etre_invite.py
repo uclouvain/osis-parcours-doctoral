@@ -26,15 +26,21 @@
 from typing import Union
 
 import attr
-from base.ddd.utils.business_validator import BusinessValidator
 
-from parcours_doctoral.ddd.jury.domain.validator.exceptions import NotEnoughMembersException
+from base.ddd.utils.business_validator import BusinessValidator
+from parcours_doctoral.ddd.jury.domain.model.enums import ChoixEtatSignature
+from parcours_doctoral.ddd.jury.domain.validator.exceptions import SignatairePasInviteException
 
 
 @attr.dataclass(frozen=True, slots=True)
-class ShouldJuryAvoirAssezDeMembres(BusinessValidator):
+class ShouldSignataireEtreInvite(BusinessValidator):
     jury: 'Jury'
+    signataire_id: str
 
-    def validate(self, *args, **kwargs):  # pragma: no cover
-        if len(self.jury.membres) < 5:
-            raise NotEnoughMembersException
+    def validate(self, *args, **kwargs):
+        if any(
+            signature
+            for signature in self.jury.signatures_membres
+            if signature.membre_id == self.signataire_id and signature.etat == ChoixEtatSignature.INVITED
+        ):
+            raise SignatairePasInviteException

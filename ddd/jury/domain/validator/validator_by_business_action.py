@@ -31,13 +31,14 @@ from base.ddd.utils.business_validator import (
     BusinessValidator,
     TwoStepsMultipleBusinessExceptionListValidator,
 )
-from parcours_doctoral.ddd.jury.domain.model.jury import Jury
 from parcours_doctoral.ddd.jury.domain.validator._should_jury_avoir_assez_de_membres import \
     ShouldJuryAvoirAssezDeMembres
 from parcours_doctoral.ddd.jury.domain.validator._should_jury_avoir_un_membre_externe import \
     ShouldJuryAvoirUnMembreExterne
 from parcours_doctoral.ddd.jury.domain.validator._should_methode_de_defense_etre_complete import \
     ShouldSMethodeDeDefenseEtreComplete
+from parcours_doctoral.ddd.jury.domain.validator._should_signataire_etre_dans_jury import ShouldSignataireEtreDansJury
+from parcours_doctoral.ddd.jury.domain.validator._should_signataire_pas_invite import ShouldSignatairePasDejaInvite
 
 
 @attr.dataclass(frozen=True, slots=True)
@@ -52,4 +53,19 @@ class VerifierJuryConditionSignature(TwoStepsMultipleBusinessExceptionListValida
             ShouldJuryAvoirAssezDeMembres(self.jury),
             ShouldJuryAvoirUnMembreExterne(self.jury),
             ShouldSMethodeDeDefenseEtreComplete(self.jury),
+        ]
+
+
+@attr.dataclass(frozen=True, slots=True)
+class InviterASignerValidatorList(TwoStepsMultipleBusinessExceptionListValidator):
+    jury: 'Jury'
+    signataire_id: str
+
+    def get_data_contract_validators(self) -> List[BusinessValidator]:
+        return []
+
+    def get_invariants_validators(self) -> List[BusinessValidator]:
+        return [
+            ShouldSignataireEtreDansJury(self.jury, self.signataire_id),
+            ShouldSignatairePasDejaInvite(self.jury, self.signataire_id),
         ]
