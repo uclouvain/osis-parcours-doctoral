@@ -94,6 +94,12 @@ class JuryActor(Actor):
         verbose_name=_('Internal comment'),
         blank=True,
     )
+    rejection_reason = models.CharField(
+        default='',
+        max_length=50,
+        blank=True,
+        verbose_name=_('Grounds for denied'),
+    )
     pdf_from_candidate = FileField(
         min_files=1,
         max_files=1,

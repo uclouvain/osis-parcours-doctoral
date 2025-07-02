@@ -296,7 +296,7 @@ class JuryRequestSignaturesAPIView(DoctorateAPIPermissionRequiredMixin, APIView)
         """Ask for all promoters and members to sign the proposition."""
         result = message_bus_instance.invoke(
             DemanderSignaturesCommand(
-                matricule_auteur=self.get_permission_object().candidate.global_id,
+                matricule_auteur=self.get_permission_object().student.global_id,
                 uuid_parcours_doctoral=str(kwargs["uuid"]),
             )
         )

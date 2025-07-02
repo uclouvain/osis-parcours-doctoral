@@ -51,7 +51,7 @@ from parcours_doctoral.ddd.jury.validator.validator_by_business_action import (
 )
 
 
-@attr.dataclass(frozen=True, slots=True)
+@attr.dataclass(frozen=True, slots=True, eq=True, hash=True)
 class SignatureMembre(interface.ValueObject):
     etat: ChoixEtatSignature = ChoixEtatSignature.NOT_INVITED
     date: Optional[datetime.datetime] = None
@@ -63,8 +63,6 @@ class SignatureMembre(interface.ValueObject):
 
 @attr.dataclass(frozen=True, slots=True, eq=True, hash=True)
 class MembreJury(interface.ValueObject):
-    uuid: str
-    role: 'RoleJury'
     est_promoteur: bool
     matricule: Optional[str]
     institution: str
@@ -76,7 +74,9 @@ class MembreJury(interface.ValueObject):
     justification_non_docteur: Optional[str]
     genre: Optional['GenreMembre']
     email: str
-    signature: SignatureMembre
+    signature: SignatureMembre = attr.Factory(SignatureMembre)
+    uuid: str = attr.Factory(uuid.uuid4)
+    role: 'RoleJury' = RoleJury.MEMBRE
 
 
 @attr.dataclass(frozen=True, slots=True)
@@ -138,15 +138,13 @@ class Jury(interface.RootEntity):
             for membre in self.membres:
                 if membre.uuid != uuid_membre and membre.role == role:
                     self.membres.remove(membre)
-                    self.membres.append(attr.evolve(membre, role=RoleJury.MEMBRE.name))
+                    self.membres.append(attr.evolve(membre, role=RoleJury.MEMBRE))
         self.membres.remove(ancien_membre)
-        self.membres.append(attr.evolve(ancien_membre, role=role, est_promoteur=ancien_membre.est_promoteur))
+        self.membres.append(attr.evolve(ancien_membre, role=RoleJury[role], est_promoteur=ancien_membre.est_promoteur))
 
     def inviter_a_signer(self):
         etats_initiaux = [ChoixEtatSignature.NOT_INVITED, ChoixEtatSignature.DECLINED]
-        for membre in filter(lambda s: s.etat in etats_initiaux, self.membres):
+        for membre in filter(lambda m: m.signature.etat in etats_initiaux, self.membres):
             InviterASignerValidatorList(jury=self, signataire_id=membre.uuid).validate()
-            self.signatures_membres = [s for s in self.signatures_membres if s != membre]
-            self.signatures_membres.append(
-                SignatureMembre(membre_id=membre.uuid, etat=ChoixEtatSignature.INVITED)
-            )
+            self.membres = [m for m in self.membres if m.uuid != membre.uuid]
+            self.membres.append(attr.evolve(membre, signature=attr.evolve(membre.signature, etat=ChoixEtatSignature.INVITED)))

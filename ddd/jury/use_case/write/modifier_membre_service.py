@@ -26,6 +26,7 @@
 
 from parcours_doctoral.ddd.jury.builder.jury_identity_builder import JuryIdentityBuilder
 from parcours_doctoral.ddd.jury.commands import ModifierMembreCommand
+from parcours_doctoral.ddd.jury.domain.model.enums import TitreMembre, GenreMembre
 from parcours_doctoral.ddd.jury.domain.model.jury import JuryIdentity, MembreJury
 from parcours_doctoral.ddd.jury.repository.i_jury import IJuryRepository
 
@@ -36,7 +37,7 @@ def modifier_membre(
 ) -> 'JuryIdentity':
     # GIVEN
     membre = MembreJury(
-        est_promoteur=None,
+        est_promoteur=False,
         uuid=cmd.uuid_membre,
         matricule=cmd.matricule,
         institution=cmd.institution,
@@ -44,9 +45,9 @@ def modifier_membre(
         pays=cmd.pays,
         nom=cmd.nom,
         prenom=cmd.prenom,
-        titre=cmd.titre,
+        titre=TitreMembre[cmd.titre] if cmd.titre else None,
         justification_non_docteur=cmd.justification_non_docteur,
-        genre=cmd.genre,
+        genre=GenreMembre[cmd.genre] if cmd.genre else None,
         email=cmd.email,
     )
     jury = jury_repository.get(JuryIdentityBuilder.build_from_uuid(cmd.uuid_jury))
