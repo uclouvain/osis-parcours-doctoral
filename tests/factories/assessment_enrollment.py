@@ -44,4 +44,5 @@ class AssessmentEnrollmentFactory(factory.django.DjangoModelFactory):
     late_enrollment = False
     late_unenrollment = False
     course = factory.SubFactory(UclCourseFactory)
-    mark = factory.LazyAttribute(lambda x: str(random.randrange(10, 20)))
+    submitted_mark = factory.LazyAttribute(lambda x: str(random.randrange(10, 20)))
+    corrected_mark = factory.LazyAttribute(lambda x: str(random.randrange(10, 20)))

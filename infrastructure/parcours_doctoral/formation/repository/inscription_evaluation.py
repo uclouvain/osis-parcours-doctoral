@@ -55,11 +55,6 @@ from parcours_doctoral.models.activity import AssessmentEnrollment
 
 
 class InscriptionEvaluationRepository(IInscriptionEvaluationRepository):
-    SESSION_MAPPING = [
-        When(session=session_text, then=session_numero)
-        for session_text, session_numero in MAPPING_SESSION_EVALUATION_TEXTE_NUMERO.items()
-    ]
-
     @classmethod
     def _get_domain_object_from_db_object(cls, enrollment: AssessmentEnrollment) -> InscriptionEvaluation:
         return InscriptionEvaluation(
@@ -175,13 +170,11 @@ class InscriptionEvaluationRepository(IInscriptionEvaluationRepository):
         if parcours_doctoral_id is not None:
             qs = qs.filter(course__parcours_doctoral__uuid=parcours_doctoral_id)
 
-        qs = qs.annotate(
-            session_order=Case(*cls.SESSION_MAPPING),
-        )
+        qs = qs.with_session_numero()
 
         qs = qs.order_by(
             'course__learning_unit_year__academic_year__year',
-            'session_order',
+            'session_numero',
             'course__learning_unit_year__acronym',
         )
 

@@ -751,6 +751,9 @@ msgstr ""
 msgid "Context"
 msgstr ""
 
+msgid "Corrected mark"
+msgstr ""
+
 msgid "Cotutelle"
 msgstr ""
 
@@ -1753,9 +1756,6 @@ msgstr ""
 msgid "Mandatory fields are missing in the project details of the proposition."
 msgstr ""
 
-msgid "Mark"
-msgstr ""
-
 msgid "Mark or honours obtained"
 msgstr ""
 
@@ -2683,6 +2683,9 @@ msgstr ""
 
 msgctxt "dashboard-indicator confirmation"
 msgid "Submitted confirmation"
+msgstr ""
+
+msgid "Submitted mark"
 msgstr ""
 
 msgctxt "dashboard-indicator formula-1-private-defense"

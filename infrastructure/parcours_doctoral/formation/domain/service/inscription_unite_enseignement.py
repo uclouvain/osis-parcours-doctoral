@@ -55,6 +55,7 @@ class InscriptionUniteEnseignementTranslator(IInscriptionUniteEnseignementTransl
             status=StatutActivite.ACCEPTEE.name,
         ).annotate(
             student_person_id=F('parcours_doctoral__student_id'),
+            training_acronym=F('parcours_doctoral__training__acronym'),
         )
 
         if not activities:
@@ -71,7 +72,7 @@ class InscriptionUniteEnseignementTranslator(IInscriptionUniteEnseignementTransl
             InscriptionUniteEnseignementDTO(
                 noma=student_registration_ids.get(activity.student_person_id, ''),
                 annee=annee,
-                sigle_formation='',  # TODO ?
+                sigle_formation=activity.training_acronym,  # From annotation
                 code_unite_enseignement=code_unite_enseignement,
             )
             for activity in activities

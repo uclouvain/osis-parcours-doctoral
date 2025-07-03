@@ -336,7 +336,6 @@ class UclCourseSerializer(ActivitySerializerBase):
     academic_year = serializers.IntegerField(source="learning_unit_year.academic_year.year")
     authors = serializers.CharField(read_only=True)
     hour_volume = serializers.CharField(read_only=True)
-    mark = serializers.CharField(read_only=True)
     participating_proof = serializers.ListField(read_only=True, child=serializers.CharField())
 
     class Meta:

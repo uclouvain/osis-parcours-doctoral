@@ -41,8 +41,13 @@ class EvaluationDTO(interface.DTO):
     noma: str
     code_unite_enseignement: str
 
-    note: str
+    note_soumise: str
+    note_corrigee: str
 
     echeance_enseignant: datetime.date
     est_desinscrit_tardivement: bool
     est_inscrit_tardivement: bool
+
+    @property
+    def note(self):
+        return self.note_corrigee or self.note_soumise

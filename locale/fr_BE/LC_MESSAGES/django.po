@@ -815,6 +815,9 @@ msgstr "Langue de contact"
 msgid "Context"
 msgstr "Contexte"
 
+msgid "Corrected mark"
+msgstr "Note corrigée"
+
 msgid "Cotutelle"
 msgstr "Cotutelle"
 
@@ -1912,9 +1915,6 @@ msgid "Mandatory fields are missing in the project details of the proposition."
 msgstr ""
 "Les champs requis des details du projet de la proposition sont manquants."
 
-msgid "Mark"
-msgstr "Note"
-
 msgid "Mark or honours obtained"
 msgstr "Note ou mention obtenue"
 
@@ -2880,6 +2880,9 @@ msgstr "Recevabilité soumise"
 msgctxt "dashboard-indicator confirmation"
 msgid "Submitted confirmation"
 msgstr "Confirmation soumise"
+
+msgid "Submitted mark"
+msgstr "Note soumise"
 
 msgctxt "dashboard-indicator formula-1-private-defense"
 msgid "Submitted private defense"

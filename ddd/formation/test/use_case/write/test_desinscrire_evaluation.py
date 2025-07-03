@@ -43,7 +43,6 @@ from parcours_doctoral.ddd.formation.domain.model.enums import (
 )
 from parcours_doctoral.ddd.formation.domain.model.evaluation import (
     Evaluation,
-    EvaluationIdentity,
 )
 from parcours_doctoral.ddd.formation.domain.model.inscription_evaluation import (
     InscriptionEvaluation,
@@ -69,7 +68,8 @@ class DesinscrireEvaluationTestCase(TestCase):
                 code_unite_enseignement='UE1',
                 noma='123',
             ),
-            note='',
+            note_soumise='',
+            note_corrigee='',
             cours_id=ActiviteIdentity(uuid=str(uuid.uuid4())),
             uuid=str(uuid.uuid4()),
         )
@@ -113,7 +113,7 @@ class DesinscrireEvaluationTestCase(TestCase):
         inscription_supprimee = self.inscription_evaluation_repository.get_dto(identite_inscription_supprimee)
         self.assertFalse(inscription_supprimee.desinscription_tardive)
 
-        evaluation_dto = self.evaluation_repository.get_dto(inscription_supprimee.uuid)
+        evaluation_dto = self.evaluation_repository.get_dto(identite_inscription_supprimee)
         self.assertIsNone(evaluation_dto.echeance_enseignant)
 
     def test_desinscrire_evaluation_sans_periode_encodage_mais_avec_date_defense_privee(self):
@@ -125,7 +125,7 @@ class DesinscrireEvaluationTestCase(TestCase):
             inscription_supprimee = self.inscription_evaluation_repository.get_dto(identite_inscription_supprimee)
             self.assertFalse(inscription_supprimee.desinscription_tardive)
 
-            evaluation_dto = self.evaluation_repository.get_dto(inscription_supprimee.uuid)
+            evaluation_dto = self.evaluation_repository.get_dto(identite_inscription_supprimee)
             self.assertEqual(evaluation_dto.echeance_enseignant, datetime.date(2021, 1, 13))
 
         with freezegun.freeze_time('2021-01-14'):
@@ -133,7 +133,7 @@ class DesinscrireEvaluationTestCase(TestCase):
             inscription_supprimee = self.inscription_evaluation_repository.get_dto(identite_inscription_supprimee)
             self.assertTrue(inscription_supprimee.desinscription_tardive)
 
-            evaluation_dto = self.evaluation_repository.get_dto(inscription_supprimee.uuid)
+            evaluation_dto = self.evaluation_repository.get_dto(identite_inscription_supprimee)
             self.assertEqual(evaluation_dto.echeance_enseignant, datetime.date(2021, 1, 13))
 
     def test_desinscrire_evaluation_avec_date_defense_privee_dans_periode_encodage(self):
@@ -149,7 +149,7 @@ class DesinscrireEvaluationTestCase(TestCase):
             inscription_supprimee = self.inscription_evaluation_repository.get_dto(identite_inscription_supprimee)
             self.assertFalse(inscription_supprimee.desinscription_tardive)
 
-            evaluation_dto = self.evaluation_repository.get_dto(inscription_supprimee.uuid)
+            evaluation_dto = self.evaluation_repository.get_dto(identite_inscription_supprimee)
             self.assertEqual(evaluation_dto.echeance_enseignant, datetime.date(2021, 1, 13))
 
         with freezegun.freeze_time('2021-01-14'):
@@ -157,12 +157,12 @@ class DesinscrireEvaluationTestCase(TestCase):
             inscription_supprimee = self.inscription_evaluation_repository.get_dto(identite_inscription_supprimee)
             self.assertTrue(inscription_supprimee.desinscription_tardive)
 
-            evaluation_dto = self.evaluation_repository.get_dto(inscription_supprimee.uuid)
+            evaluation_dto = self.evaluation_repository.get_dto(identite_inscription_supprimee)
             self.assertEqual(evaluation_dto.echeance_enseignant, datetime.date(2021, 1, 13))
 
     def test_desinscrire_evaluation_avec_date_defense_privee_hors_periode_encodage(self):
         # -> date limite = fin période d'encodage
-        self.evaluation_repository.dates_defenses_privees[self.cle_date_defense_privee] = datetime.date(2020, 12, 31)
+        self.evaluation_repository.dates_defenses_privees[self.cle_date_defense_privee] = datetime.date(2021, 12, 31)
         self.evaluation_repository.periodes_encodage[self.cle_periode_encodage] = (
             datetime.date(2021, 1, 1),
             datetime.date(2021, 1, 30),
@@ -173,7 +173,7 @@ class DesinscrireEvaluationTestCase(TestCase):
             inscription_supprimee = self.inscription_evaluation_repository.get_dto(identite_inscription_supprimee)
             self.assertFalse(inscription_supprimee.desinscription_tardive)
 
-            evaluation_dto = self.evaluation_repository.get_dto(inscription_supprimee.uuid)
+            evaluation_dto = self.evaluation_repository.get_dto(identite_inscription_supprimee)
             self.assertEqual(evaluation_dto.echeance_enseignant, datetime.date(2021, 1, 30))
 
         with freezegun.freeze_time('2021-02-01'):
@@ -181,7 +181,7 @@ class DesinscrireEvaluationTestCase(TestCase):
             inscription_supprimee = self.inscription_evaluation_repository.get_dto(identite_inscription_supprimee)
             self.assertTrue(inscription_supprimee.desinscription_tardive)
 
-            evaluation_dto = self.evaluation_repository.get_dto(inscription_supprimee.uuid)
+            evaluation_dto = self.evaluation_repository.get_dto(identite_inscription_supprimee)
             self.assertEqual(evaluation_dto.echeance_enseignant, datetime.date(2021, 1, 30))
 
     def test_desinscrire_evaluation_avec_periode_encodage_sans_date_defense_privee(self):
@@ -196,7 +196,7 @@ class DesinscrireEvaluationTestCase(TestCase):
             inscription_supprimee = self.inscription_evaluation_repository.get_dto(identite_inscription_supprimee)
             self.assertFalse(inscription_supprimee.desinscription_tardive)
 
-            evaluation_dto = self.evaluation_repository.get_dto(inscription_supprimee.uuid)
+            evaluation_dto = self.evaluation_repository.get_dto(identite_inscription_supprimee)
             self.assertEqual(evaluation_dto.echeance_enseignant, datetime.date(2021, 1, 30))
 
         with freezegun.freeze_time('2021-02-01'):
@@ -204,5 +204,5 @@ class DesinscrireEvaluationTestCase(TestCase):
             inscription_supprimee = self.inscription_evaluation_repository.get_dto(identite_inscription_supprimee)
             self.assertTrue(inscription_supprimee.desinscription_tardive)
 
-            evaluation_dto = self.evaluation_repository.get_dto(inscription_supprimee.uuid)
+            evaluation_dto = self.evaluation_repository.get_dto(identite_inscription_supprimee)
             self.assertEqual(evaluation_dto.echeance_enseignant, datetime.date(2021, 1, 30))

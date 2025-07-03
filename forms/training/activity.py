@@ -46,6 +46,7 @@ from parcours_doctoral.ddd.formation.domain.model.enums import (
     ContexteFormation,
 )
 from parcours_doctoral.forms.fields import SelectOrOtherField
+from parcours_doctoral.models import AssessmentEnrollment
 from parcours_doctoral.models.activity import Activity
 from parcours_doctoral.models.cdd_config import CddConfiguration
 
@@ -936,7 +937,36 @@ class UclCompletedCourseForm(ActivityFormMixin, forms.ModelForm):
         fields = [
             'hour_volume',
             'authors',
-            'mark',
             'ects',
             'participating_proof',
         ]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Display a field to edit the corrected mark of the last assessment, if any
+        self.assessments = []
+        self.last_assessment = None
+
+        if self.instance:
+            self.assessments = self.instance.assessmentenrollment_set.all()
+
+            if self.assessments:
+                self.final_assessment = self.assessments[0]
+
+                self.fields['corrected_mark'] = forms.CharField(
+                    label=_('Corrected mark'),
+                    required=False,
+                    initial=self.final_assessment.corrected_mark,
+                    max_length=200,
+                )
+
+    def save(self, *args, **kwargs):
+        instance = super().save(*args, **kwargs)
+
+        # Save the final assessment corrected mark if any
+        if self.final_assessment and self.fields.get('corrected_mark'):
+            self.final_assessment.corrected_mark = self.cleaned_data['corrected_mark']
+            self.final_assessment.save(update_fields=['corrected_mark'])
+
+        return instance

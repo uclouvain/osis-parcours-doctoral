@@ -29,6 +29,7 @@ from typing import Dict, List, Tuple
 from base.ddd.utils.in_memory_repository import InMemoryGenericRepository
 from parcours_doctoral.ddd.formation.domain.model.enums import StatutActivite
 from parcours_doctoral.ddd.formation.domain.model.evaluation import Evaluation
+from parcours_doctoral.ddd.formation.domain.model.inscription_evaluation import InscriptionEvaluationIdentity
 from parcours_doctoral.ddd.formation.domain.validator.exceptions import (
     EvaluationNonTrouveeException,
 )
@@ -56,7 +57,8 @@ class EvaluationInMemoryRepository(InMemoryGenericRepository, IEvaluationReposit
         )
         return EvaluationDTO(
             uuid=str(enrollment.uuid),
-            note=enrollment.note,
+            note_soumise=enrollment.note_soumise,
+            note_corrigee=enrollment.note_corrigee,
             echeance_enseignant=date_limite_encodage,
             uuid_activite='',
             session=enrollment.entity_id.session,
@@ -69,8 +71,8 @@ class EvaluationInMemoryRepository(InMemoryGenericRepository, IEvaluationReposit
         )
 
     @classmethod
-    def get_dto(cls, entity_uuid: str) -> EvaluationDTO:
-        entity = next((entity for entity in cls.entities if entity.uuid == entity_uuid), None)
+    def get_dto(cls, inscription_id: 'InscriptionEvaluationIdentity') -> EvaluationDTO:
+        entity = next((entity for entity in cls.entities if entity.uuid == inscription_id.uuid), None)
 
         if not entity:
             raise EvaluationNonTrouveeException

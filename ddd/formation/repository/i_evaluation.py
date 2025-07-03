@@ -35,6 +35,7 @@ from parcours_doctoral.ddd.formation.domain.model.evaluation import (
     Evaluation,
     EvaluationIdentity,
 )
+from parcours_doctoral.ddd.formation.domain.model.inscription_evaluation import InscriptionEvaluationIdentity
 from parcours_doctoral.ddd.formation.dtos.evaluation import EvaluationDTO
 
 
@@ -48,7 +49,7 @@ class IEvaluationRepository(interface.AbstractRepository):
 
     @classmethod
     @abc.abstractmethod
-    def get_dto(cls, entity_uuid: str) -> EvaluationDTO:
+    def get_dto(cls, inscription_id: 'InscriptionEvaluationIdentity') -> EvaluationDTO:
         raise NotImplementedError
 
     @classmethod
@@ -80,15 +81,12 @@ class IEvaluationRepository(interface.AbstractRepository):
         date_defense_privee: Optional[datetime.date],
         periode_encodage: Optional[Tuple[datetime.date, datetime.date]],
     ) -> Optional[datetime.date]:
+        deadlines: List[datetime.date] = []
+
         if date_defense_privee:
-            deadline_before_private_defense_date = date_defense_privee - relativedelta(
-                days=cls.ECHEANCE_NOMBRE_JOURS_AVANT_DEFENSE_PRIVEE
-            )
+            deadlines.append(date_defense_privee - relativedelta(days=cls.ECHEANCE_NOMBRE_JOURS_AVANT_DEFENSE_PRIVEE))
 
-            if (
-                not periode_encodage
-                or periode_encodage[0] <= deadline_before_private_defense_date <= periode_encodage[1]
-            ):
-                return deadline_before_private_defense_date
+        if periode_encodage:
+            deadlines.append(periode_encodage[1])
 
-        return periode_encodage and periode_encodage[1]
+        return min(deadlines, default=None)

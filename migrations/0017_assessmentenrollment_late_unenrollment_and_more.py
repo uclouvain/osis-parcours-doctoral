@@ -17,7 +17,22 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name="assessmentenrollment",
-            name="mark",
-            field=models.CharField(default="", verbose_name="Mark", blank=True),
+            name="corrected_mark",
+            field=models.CharField(
+                blank=True,
+                default="",
+                max_length=20,
+                verbose_name="Corrected mark",
+            ),
+        ),
+        migrations.AddField(
+            model_name="assessmentenrollment",
+            name="submitted_mark",
+            field=models.CharField(
+                blank=True,
+                default="",
+                max_length=20,
+                verbose_name="Mark",
+            ),
         ),
     ]

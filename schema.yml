@@ -4199,9 +4199,6 @@ components:
         hour_volume:
           type: string
           readOnly: true
-        mark:
-          type: string
-          readOnly: true
         participating_proof:
           type: array
           items:

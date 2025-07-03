@@ -41,6 +41,7 @@ from parcours_doctoral.ddd.formation.domain.model.evaluation import (
     Evaluation,
     EvaluationIdentity,
 )
+from parcours_doctoral.ddd.formation.domain.model.inscription_evaluation import InscriptionEvaluationIdentity
 from parcours_doctoral.ddd.formation.domain.validator.exceptions import (
     EvaluationNonTrouveeException,
 )
@@ -78,7 +79,8 @@ class EvaluationRepository(IEvaluationRepository):
             return Evaluation(
                 entity_id=entity_id,
                 uuid=str(assessment.uuid),
-                note=assessment.mark,
+                note_soumise=assessment.submitted_mark,
+                note_corrigee=assessment.corrected_mark,
                 cours_id=ActiviteIdentity(uuid=str(assessment.course_uuid)),  # From annotation
             )
         except AssessmentEnrollment.DoesNotExist:
@@ -89,14 +91,14 @@ class EvaluationRepository(IEvaluationRepository):
         AssessmentEnrollment.objects.update_or_create(
             uuid=entity.uuid,
             defaults={
-                'mark': entity.note,
+                'submitted_mark': entity.note_soumise,
             },
         )
 
     @classmethod
     def get_dto_queryset(cls):
         return AssessmentEnrollment.objects.annotate(
-            private_defense_date=F('course__parcours_doctoral__defense_indicative_date'),
+            private_defense_date=F('course__parcours_doctoral__defense_indicative_date'),  # TODO to change when private defense is implemented
             lue_academic_year=F('course__learning_unit_year__academic_year__year'),
             lue_acronym=F('course__learning_unit_year__acronym'),
             course_uuid=F('course__uuid'),
@@ -152,7 +154,7 @@ class EvaluationRepository(IEvaluationRepository):
         return dtos
 
     @classmethod
-    def get_dto(cls, entity_uuid: str) -> EvaluationDTO:
+    def get_dto(cls, inscription_id: 'InscriptionEvaluationIdentity') -> EvaluationDTO:
         try:
             assessment = (
                 cls.get_dto_queryset()
@@ -163,7 +165,7 @@ class EvaluationRepository(IEvaluationRepository):
                         )[:1]
                     ),
                 )
-                .get(uuid=entity_uuid)
+                .get(uuid=inscription_id.uuid)
             )
 
         except AssessmentEnrollment.DoesNotExist:
@@ -197,7 +199,8 @@ class EvaluationRepository(IEvaluationRepository):
             session=MAPPING_SESSION_EVALUATION_TEXTE_NUMERO[assessment.session],
             noma=noma or '',
             code_unite_enseignement=assessment.lue_acronym,  # From annotation
-            note=assessment.mark,
+            note_soumise=assessment.submitted_mark,
+            note_corrigee=assessment.corrected_mark,
             echeance_enseignant=teacher_encoding_deadline,
             est_desinscrit_tardivement=assessment.late_unenrollment,
             est_inscrit_tardivement=assessment.late_enrollment,

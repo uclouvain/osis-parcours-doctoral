@@ -24,13 +24,15 @@
 #
 # ##############################################################################
 import itertools
+import random
 
 from django.conf import settings
-from django.contrib import admin
+from django.contrib import admin, messages
 from django.db import models
+from django.db.models import QuerySet
 from django.shortcuts import resolve_url
 from django.utils.safestring import mark_safe
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import gettext_lazy as _, ngettext, gettext
 from django.utils.translation import pgettext_lazy
 from django_json_widget.widgets import JSONEditorWidget
 from hijack.contrib.admin import HijackUserAdminMixin
@@ -38,12 +40,15 @@ from osis_document.contrib.fields import FileField
 from osis_mail_template.admin import MailTemplateAdmin
 
 from base.models.entity_version import EntityVersion
+from deliberation.models.enums.numero_session import Session
+from infrastructure.messages_bus import message_bus_instance
 from osis_role.contrib.admin import RoleModelAdmin
 from parcours_doctoral.auth.roles.adre import AdreSecretary
 from parcours_doctoral.auth.roles.cdd_configurator import CddConfigurator
 from parcours_doctoral.auth.roles.doctorate_reader import DoctorateReader
 from parcours_doctoral.auth.roles.jury_secretary import JurySecretary
 from parcours_doctoral.auth.roles.student import Student
+from parcours_doctoral.ddd.formation.commands import EncoderNoteCommand
 from parcours_doctoral.ddd.formation.domain.model.enums import (
     CategorieActivite,
     ContexteFormation,
@@ -169,10 +174,38 @@ class AssessmentEnrollmentAdmin(admin.ModelAdmin):
         'session',
         'course_acronym',
         'active',
+        'submitted_mark',
+        'corrected_mark',
     )
     autocomplete_fields = [
         'course',
     ]
+    actions = [
+        'submit_mark',
+    ]
+
+    @admin.action(description='Simulate the submission of a mark')
+    def submit_mark(self, request, queryset: QuerySet[AssessmentEnrollment]):
+        commands = [
+            EncoderNoteCommand(
+                annee=assessment_enrollment.course.learning_unit_year.academic_year.year,
+                session=Session.get_numero_session(assessment_enrollment.session),
+                noma=assessment_enrollment.course.parcours_doctoral.student.student_set.first().registration_id,
+                code_unite_enseignement=assessment_enrollment.course.learning_unit_year.acronym,
+                note=str(random.randint(10, 20)),
+            )
+            for assessment_enrollment in queryset
+        ]
+        message_bus_instance.invoke_multiple(commands)
+        self.message_user(
+            request,
+            ngettext(
+                'One mark has been specified for the assessment',
+                'Some marks have been specified for the assessments',
+                len(commands),
+            ),
+            messages.SUCCESS,
+        )
 
     @admin.display(description=_('Active'), boolean=True)
     def active(self, obj):

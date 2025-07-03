@@ -24,7 +24,7 @@
 #
 # ##############################################################################
 from parcours_doctoral.ddd.formation.builder.inscription_evaluation_builder import (
-    InscriptionEvaluationBuilder,
+    InscriptionEvaluationBuilder, InscriptionEvaluationIdentityBuilder,
 )
 from parcours_doctoral.ddd.formation.commands import DesinscrireEvaluationCommand
 from parcours_doctoral.ddd.formation.repository.i_evaluation import (
@@ -41,7 +41,8 @@ def desinscrire_evaluation(
     evaluation_repository: IEvaluationRepository,
 ):
     # GIVEN
-    evaluation_dto = evaluation_repository.get_dto(entity_uuid=cmd.inscription_uuid)
+    inscription_evaluation_identity = InscriptionEvaluationIdentityBuilder.build_from_uuid(uuid=cmd.inscription_uuid)
+    evaluation_dto = evaluation_repository.get_dto(inscription_id=inscription_evaluation_identity)
     inscription_evaluation = InscriptionEvaluationBuilder.build_from_evaluation_dto(evaluation_dto)
 
     # WHEN

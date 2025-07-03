@@ -58,7 +58,8 @@
 
 <div class="row">
   {% field_data _('Course unit with evaluation') _('Yes') css_class='col-md-4' %}
-  {% bootstrap_field form.mark wrapper_class="form-group col-md-4 mark-input required_field" placeholder="15/20" %}
+  {% field_data _('Mark or honours obtained') form.final_assessment.submitted_mark css_class='col-md-4' %}
+  {% bootstrap_field form.corrected_mark wrapper_class="form-group col-md-4" placeholder="15/20" %}
 </div>
 
 {% bootstrap_field form.participating_proof wrapper_class="form-group required_field" %}

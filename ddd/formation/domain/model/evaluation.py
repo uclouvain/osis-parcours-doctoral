@@ -42,8 +42,9 @@ class EvaluationIdentity(interface.EntityIdentity):
 class Evaluation(interface.RootEntity):
     entity_id: 'EvaluationIdentity'
     cours_id: 'ActiviteIdentity'
-    note: str
-    uuid: str
+    uuid: attr.ib('str', on_setattr=attr.setters.frozen)
+    note_soumise: str
+    note_corrigee: str = ''
 
     def encoder_note(self, note):
-        self.note = note
+        self.note_soumise = note

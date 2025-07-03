@@ -56,7 +56,6 @@ class Activite(interface.RootEntity):
     contexte: 'ContexteFormation'
     statut: 'StatutActivite' = StatutActivite.NON_SOUMISE
     ects: Optional[float] = None
-    note: str = ''
     cours_complete: bool = False
 
     parent_id: Optional['ActiviteIdentity'] = None
@@ -92,7 +91,6 @@ class Activite(interface.RootEntity):
     def encoder_note_cours_ucl(self, note: str):
         try:
             if decimal.Decimal(note) >= 10:
-                self.note = note
                 self.cours_complete = True
         except decimal.InvalidOperation:
             pass
