@@ -65,6 +65,7 @@ class AjouterMembreCommand(interface.CommandRequest):
     titre: Optional[str]
     justification_non_docteur: Optional[str]
     genre: Optional[str]
+    langue: Optional[str]
     email: Optional[str]
 
 
@@ -81,6 +82,7 @@ class ModifierMembreCommand(interface.CommandRequest):
     titre: Optional[str]
     justification_non_docteur: Optional[str]
     genre: Optional[str]
+    langue: Optional[str]
     email: Optional[str]
 
 

@@ -47,14 +47,19 @@ signataire_tokens = [
         example="Halpert",
     ),
     Token(
-        name='signataire_role',
-        description=_("Role of the signing actor"),
-        example="promoteur",
+        name='parcours_doctoral_link_front_jury',
+        description=_("Link to the doctorate jury panel (front-office)"),
+        example="http://dev.studies.uclouvain.be/somewhere/some-uuid/jury",
     ),
     Token(
-        name='parcours_doctoral_link_front_supervision',
-        description=_("Link to the doctorate supervisory panel (front-office)"),
-        example="http://dev.studies.uclouvain.be/somewhere/some-uuid/supervision",
+        name='cdd_manager_names',
+        description=_("Names of the CDD managers"),
+        example='John Doe, Jane Doe',
+    ),
+    Token(
+        name='doctoral_commission',
+        description=_("Name of the doctoral commission"),
+        example="Doctoral Commission",
     ),
 ]
 

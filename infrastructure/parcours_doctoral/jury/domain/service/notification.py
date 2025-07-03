@@ -24,46 +24,28 @@
 #
 # ##############################################################################
 
-from email.message import EmailMessage
-
 from django.conf import settings
-from django.utils import translation
+from django.db.models import Value
+from django.db.models.functions import Concat
 from django.utils.functional import lazy
 from django.utils.translation import get_language
-from django.utils.translation import gettext_lazy as _
-from osis_async.models import AsyncTask
-from osis_mail_template.utils import generate_email, transform_html_to_text
+from osis_mail_template.utils import generate_email
 from osis_notification.contrib.handlers import (
     EmailNotificationHandler,
-    WebNotificationHandler,
 )
-from osis_notification.contrib.notification import EmailNotification
-from osis_notification.models import WebNotification
 from osis_signature.enums import SignatureState
 from osis_signature.utils import get_signing_token
 
-from base.models.person import Person
-from parcours_doctoral.ddd.domain.model.groupe_de_supervision import (
-    GroupeDeSupervision,
-    SignataireIdentity,
-)
+from base.auth.roles.program_manager import ProgramManager
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoral
-from parcours_doctoral.ddd.domain.validator.exceptions import (
-    SignataireNonTrouveException,
-)
 from parcours_doctoral.ddd.jury.domain.model.jury import Jury
 from parcours_doctoral.ddd.jury.domain.service.i_notification import INotification
-from parcours_doctoral.mail_templates.signatures import (
-    PARCOURS_DOCTORAL_EMAIL_MEMBER_REMOVED,
-    PARCOURS_DOCTORAL_EMAIL_SIGNATURE_REQUESTS_ACTOR,
-    PARCOURS_DOCTORAL_EMAIL_SIGNATURE_REQUESTS_STUDENT,
-)
-from parcours_doctoral.models import ActorType, ParcoursDoctoralSupervisionActor
+from parcours_doctoral.mail_templates import PARCOURS_DOCTORAL_JURY_EMAIL_SIGNATURE_REQUESTS_PROMOTER, \
+    PARCOURS_DOCTORAL_JURY_EMAIL_SIGNATURE_REQUESTS_MEMBER
+from parcours_doctoral.models import JuryActor
 from parcours_doctoral.models.parcours_doctoral import (
     ParcoursDoctoral as ParcoursDoctoralModel,
 )
-from parcours_doctoral.models.task import ParcoursDoctoralTask
-from parcours_doctoral.utils.persons import get_parcours_doctoral_cdd_managers
 from parcours_doctoral.utils.url import (
     get_parcours_doctoral_link_back,
     get_parcours_doctoral_link_front,
@@ -71,6 +53,50 @@ from parcours_doctoral.utils.url import (
 
 
 class Notification(INotification):
+    @classmethod
+    def get_common_tokens(cls, parcours_doctoral: ParcoursDoctoralModel):
+        """Return common tokens about a submission"""
+        return {
+            "student_first_name": parcours_doctoral.student.first_name,
+            "student_last_name": parcours_doctoral.student.last_name,
+            "training_title": cls._get_parcours_doctoral_title_translation(parcours_doctoral),
+            "parcours_doctoral_link_front": get_parcours_doctoral_link_front(parcours_doctoral.uuid),
+            "parcours_doctoral_link_back": get_parcours_doctoral_link_back(parcours_doctoral.uuid),
+            "cdd_manager_names": cls._get_program_managers_names(parcours_doctoral.training.education_group_id),
+            "doctoral_commission": parcours_doctoral.training.management_entity.most_recent_entity_version.title,
+        }
+
+    @classmethod
+    def _get_program_managers_names(cls, education_group_id):
+        """
+        Return the concatenation of the names of the program managers of the specified education group.
+        :param education_group_id: The id of the education group
+        :return: a string containing the names of the managers
+        """
+        return ', '.join(
+            ProgramManager.objects.filter(education_group_id=education_group_id)
+            .annotate(person_name=Concat('person__first_name', Value(' '), 'person__last_name'))
+            .values_list('person_name', flat=True)
+        )
+
+    @classmethod
+    def _get_parcours_doctoral_title_translation(cls, parcours_doctoral: ParcoursDoctoralModel):
+        """Populate the translations of parcours_doctoral title and lazy return them"""
+        # Create a dict to cache the translations of the parcours_doctoral title
+        parcours_doctoral_title = {
+            settings.LANGUAGE_CODE_EN: parcours_doctoral.training.title_english,
+            settings.LANGUAGE_CODE_FR: parcours_doctoral.training.title,
+        }
+
+        # Return a lazy proxy which, when evaluated to string, return the correct translation given the current language
+        return lazy(lambda: parcours_doctoral_title[get_language()], str)()
+
+    @classmethod
+    def _lien_invitation_externe(cls, parcours_doctoral, actor):
+        return get_parcours_doctoral_link_front(
+            uuid=parcours_doctoral.entity_id.uuid,
+            tab='public/jury/',
+        ) + get_signing_token(actor)
 
     @classmethod
     def envoyer_signatures(
@@ -78,80 +104,42 @@ class Notification(INotification):
     ) -> None:
         parcours_doctoral_instance = ParcoursDoctoralModel.objects.get(uuid=parcours_doctoral.entity_id.uuid)
 
-        # Création de la tâche de génération du document
-        task = AsyncTask.objects.create(
-            name=_("Exporting %(reference)s to PDF") % {'reference': parcours_doctoral.reference},
-            description=_("Exporting the admission information to PDF"),
-            person=parcours_doctoral_instance.student,
-            time_to_live=5,
-        )
-        ParcoursDoctoralTask.objects.create(
-            task=task,
-            parcours_doctoral=parcours_doctoral_instance,
-            type=ParcoursDoctoralTask.TaskType.ARCHIVE.name,
-        )
-
         # Tokens communs
-        doctorant = Person.objects.get(global_id=parcours_doctoral.matricule_doctorant)
         common_tokens = cls.get_common_tokens(parcours_doctoral_instance)
         common_tokens["parcours_doctoral_link_back"] = get_parcours_doctoral_link_back(
-            uuid=parcours_doctoral_instance.entity_id.uuid,
-            tab='supervision',
+            uuid=parcours_doctoral_instance.uuid,
+            tab='jury',
         )
         common_tokens["parcours_doctoral_link_front"] = get_parcours_doctoral_link_front(
-            uuid=parcours_doctoral_instance.entity_id.uuid,
-            tab='supervision',
+            uuid=parcours_doctoral_instance.uuid,
+            tab='jury',
         )
-        actor_list = ParcoursDoctoralSupervisionActor.objects.filter(
-            process=parcours_doctoral_instance.supervision_group
-        ).select_related('person')
-
-        # Envoyer aux gestionnaires CDD
-        for manager in get_parcours_doctoral_cdd_managers(parcours_doctoral_instance.training.education_group_id):
-            with translation.override(manager.language):
-                content = (
-                    _(
-                        '<a href="%(parcours_doctoral_link_back)s">%(reference)s</a> - '
-                        '%(student_first_name)s %(student_last_name)s requested '
-                        'signatures for %(training_title)s'
-                    )
-                    % common_tokens
-                )
-                web_notification = WebNotification(recipient=manager, content=str(content))
-            WebNotificationHandler.create(web_notification)
-
-        # Envoyer au doctorant
-        with translation.override(doctorant.language):
-            actor_list_str = [
-                f"{actor.first_name} {actor.last_name} ({actor.get_type_display()})" for actor in actor_list
-            ]
-        email_message = generate_email(
-            PARCOURS_DOCTORAL_EMAIL_SIGNATURE_REQUESTS_STUDENT,
-            doctorant.language,
-            {
-                **common_tokens,
-                "actors_as_list_items": '<li></li>'.join(actor_list_str),
-                "actors_comma_separated": ', '.join(actor_list_str),
-            },
-            recipients=[doctorant.email],
-        )
-        EmailNotificationHandler.create(email_message, person=doctorant)
 
         # Envoyer aux acteurs n'ayant pas répondu
+        actor_list = JuryActor.objects.filter(
+            process=parcours_doctoral_instance.jury_group
+        ).select_related('person')
         actors_invited = [actor for actor in actor_list if actor.last_state == SignatureState.INVITED.name]
         for actor in actors_invited:
             tokens = {
                 **common_tokens,
                 "signataire_first_name": actor.first_name,
                 "signataire_last_name": actor.last_name,
-                "signataire_role": actor.get_type_display(),
             }
             if actor.is_external:
                 tokens["parcours_doctoral_link_front"] = cls._lien_invitation_externe(parcours_doctoral, actor)
-            email_message = generate_email(
-                PARCOURS_DOCTORAL_EMAIL_SIGNATURE_REQUESTS_ACTOR,
-                actor.language,
-                tokens,
-                recipients=[actor.email],
-            )
+            if actor.is_promoter:
+                email_message = generate_email(
+                    PARCOURS_DOCTORAL_JURY_EMAIL_SIGNATURE_REQUESTS_PROMOTER,
+                    actor.language,
+                    tokens,
+                    recipients=[actor.email],
+                )
+            else:
+                email_message = generate_email(
+                    PARCOURS_DOCTORAL_JURY_EMAIL_SIGNATURE_REQUESTS_MEMBER,
+                    actor.language,
+                    tokens,
+                    recipients=[actor.email],
+                )
             EmailNotificationHandler.create(email_message, person=actor.person_id and actor.person)

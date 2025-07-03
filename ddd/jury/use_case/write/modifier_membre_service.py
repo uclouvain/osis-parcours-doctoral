@@ -48,6 +48,7 @@ def modifier_membre(
         titre=TitreMembre[cmd.titre] if cmd.titre else None,
         justification_non_docteur=cmd.justification_non_docteur,
         genre=GenreMembre[cmd.genre] if cmd.genre else None,
+        langue=cmd.langue,
         email=cmd.email,
     )
     jury = jury_repository.get(JuryIdentityBuilder.build_from_uuid(cmd.uuid_jury))

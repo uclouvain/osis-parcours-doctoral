@@ -45,6 +45,7 @@ class MembreJuryDTO(interface.DTO):
     titre: str
     justification_non_docteur: str
     genre: str
+    langue: str
     email: str
 
 

@@ -73,6 +73,7 @@ class MembreJury(interface.ValueObject):
     titre: Optional['TitreMembre']
     justification_non_docteur: Optional[str]
     genre: Optional['GenreMembre']
+    langue: str
     email: str
     signature: SignatureMembre = attr.Factory(SignatureMembre)
     uuid: str = attr.Factory(uuid.uuid4)

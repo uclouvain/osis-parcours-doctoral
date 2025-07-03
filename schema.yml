@@ -1624,6 +1624,8 @@ components:
           type: string
         genre:
           type: string
+        langue:
+          type: string
         email:
           type: string
     BlankEnum:
@@ -3079,6 +3081,8 @@ components:
         justification_non_docteur:
           type: string
         genre:
+          type: string
+        langue:
           type: string
         email:
           type: string

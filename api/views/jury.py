@@ -300,7 +300,6 @@ class JuryRequestSignaturesAPIView(DoctorateAPIPermissionRequiredMixin, APIView)
                 uuid_parcours_doctoral=str(kwargs["uuid"]),
             )
         )
-        self.get_permission_object().update_detailed_status(request.user.person)
         serializer = JuryIdentityDTOSerializer(instance=result)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 

@@ -218,8 +218,8 @@ class JuryRepository(IJuryRepository):
                         'title': membre.titre.name if membre.titre else '',
                         'non_doctor_reason': membre.justification_non_docteur,
                         'gender': membre.genre.name if membre.genre else '',
+                        'language': membre.langue,
                         # Required to be not empty by Actor constraints
-                        'language': 'x',
                         'city': 'x',
                     }
 
@@ -253,6 +253,7 @@ class JuryRepository(IJuryRepository):
                     titre=membre.titre.name if membre.titre else '',
                     justification_non_docteur=membre.justification_non_docteur,
                     genre=membre.genre if membre.genre else '',
+                    langue=membre.langue,
                     email=membre.email,
                 )
                 for membre in jury.membres
@@ -296,6 +297,7 @@ class JuryRepository(IJuryRepository):
                     titre=None,
                     justification_non_docteur='',
                     genre=actor.person.gender,
+                    langue=actor.person.language,
                     email=actor.person.email,
                     signature=SignatureMembre(
                         etat=ChoixEtatSignature[actor.state],
@@ -320,6 +322,7 @@ class JuryRepository(IJuryRepository):
                     titre=TitreMembre[actor.juryactor.title] if actor.juryactor.title else None,
                     justification_non_docteur=actor.juryactor.non_doctor_reason,
                     genre=GenreMembre[actor.juryactor.gender] if actor.juryactor.gender else None,
+                    langue=actor.language,
                     email=actor.email,
                     signature=SignatureMembre(
                         etat=ChoixEtatSignature[actor.state],
