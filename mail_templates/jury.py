@@ -80,3 +80,18 @@ templates.register(
     tokens=common_tokens + signataire_tokens,
     tag=PARCOURS_DOCTORAL_TAG,
 )
+
+
+PARCOURS_DOCTORAL_JURY_EMAIL_MEMBER_REFUSAL = 'osis-parcours-doctoral-jury-member-refusal'
+templates.register(
+    PARCOURS_DOCTORAL_JURY_EMAIL_MEMBER_REFUSAL,
+    description=_("Mail sent to the student when one of the member refuse the jury"),
+    tokens=common_tokens + signataire_tokens + [
+        Token(
+            name='refusal_reason',
+            description=_("Refusal reason"),
+            example="I don't want this jury.",
+        ),
+    ],
+    tag=PARCOURS_DOCTORAL_TAG,
+)

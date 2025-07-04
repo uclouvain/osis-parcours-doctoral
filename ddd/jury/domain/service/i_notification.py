@@ -28,7 +28,8 @@ from abc import abstractmethod
 from osis_common.ddd import interface
 
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoral
-from parcours_doctoral.ddd.jury.domain.model.jury import Jury
+from parcours_doctoral.ddd.jury.domain.model.jury import Jury, MembreJury
+from parcours_doctoral.ddd.jury.dtos.jury import AvisDTO
 
 
 class INotification(interface.DomainService):
@@ -36,5 +37,19 @@ class INotification(interface.DomainService):
     @abstractmethod
     def envoyer_signatures(
         cls, parcours_doctoral: ParcoursDoctoral, jury: Jury
+    ) -> None:
+        raise NotImplementedError
+
+    @classmethod
+    @abstractmethod
+    def renvoyer_invitation(
+        cls, parcours_doctoral: ParcoursDoctoral, membre: MembreJury
+    ) -> None:
+        raise NotImplementedError
+
+    @classmethod
+    @abstractmethod
+    def notifier_refus(
+        cls, parcours_doctoral: ParcoursDoctoral, signataire: MembreJury, avis: AvisDTO
     ) -> None:
         raise NotImplementedError

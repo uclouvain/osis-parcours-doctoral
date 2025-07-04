@@ -23,47 +23,37 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from admission.ddd.admission.doctorat.preparation.builder.proposition_identity_builder import PropositionIdentityBuilder
-from admission.ddd.admission.doctorat.preparation.commands import ApprouverPropositionCommand
-from admission.ddd.admission.doctorat.preparation.domain.model.proposition import PropositionIdentity
-from admission.ddd.admission.doctorat.preparation.domain.service.avis import Avis
-from admission.ddd.admission.doctorat.preparation.domain.service.i_historique import IHistorique
-from admission.ddd.admission.doctorat.preparation.domain.service.i_notification import INotification
-from admission.ddd.admission.doctorat.preparation.repository.i_groupe_de_supervision import (
-    IGroupeDeSupervisionRepository,
-)
-from admission.ddd.admission.doctorat.preparation.repository.i_proposition import IPropositionRepository
+from parcours_doctoral.ddd.builder.parcours_doctoral_identity import ParcoursDoctoralIdentityBuilder
+from parcours_doctoral.ddd.jury.builder.jury_identity_builder import JuryIdentityBuilder
+from parcours_doctoral.ddd.jury.commands import ApprouverJuryCommand
+from parcours_doctoral.ddd.jury.domain.model.jury import JuryIdentity
+from parcours_doctoral.ddd.jury.domain.service.avis import Avis
+from parcours_doctoral.ddd.jury.domain.service.i_historique import IHistorique
+from parcours_doctoral.ddd.jury.repository.i_jury import IJuryRepository
+from parcours_doctoral.ddd.repository.i_parcours_doctoral import IParcoursDoctoralRepository
 
 
 def approuver_proposition(
-    cmd: 'ApprouverPropositionCommand',
-    proposition_repository: 'IPropositionRepository',
-    groupe_supervision_repository: 'IGroupeDeSupervisionRepository',
+    cmd: 'ApprouverJuryCommand',
+    parcours_doctoral_repository: 'IParcoursDoctoralRepository',
+    jury_repository: 'IJuryRepository',
     historique: 'IHistorique',
-    notification: 'INotification',
-) -> 'PropositionIdentity':
+) -> 'JuryIdentity':
     # GIVEN
-    entity_id = PropositionIdentityBuilder.build_from_uuid(cmd.uuid_proposition)
-    proposition = proposition_repository.get(entity_id=entity_id)
-    statut_original_proposition = proposition.statut
-    groupe_de_supervision = groupe_supervision_repository.get_by_proposition_id(entity_id)
-    signataire = groupe_de_supervision.get_signataire(cmd.uuid_membre)
-    groupe_de_supervision.verifier_promoteur_reference_renseigne_institut_these(
-        signataire,
-        groupe_de_supervision.promoteur_reference_id,
-        proposition.projet.institut_these,
-        cmd.institut_these,
-    )
+    entity_id = ParcoursDoctoralIdentityBuilder.build_from_uuid(cmd.uuid_jury)
+    parcours_doctoral = parcours_doctoral_repository.get(entity_id=entity_id)
+    jury = jury_repository.get(JuryIdentityBuilder.build_from_uuid(cmd.uuid_jury))
+    statut_original_parcours_doctoral = parcours_doctoral.statut
+
+    signataire = jury.recuperer_membre(cmd.uuid_membre)
     avis = Avis.construire_approbation(cmd.commentaire_interne, cmd.commentaire_externe)
 
     # WHEN
-    proposition.definir_institut_these(cmd.institut_these)
-    groupe_de_supervision.approuver(signataire, cmd.commentaire_interne, cmd.commentaire_externe)
+    jury.approuver(signataire, cmd.commentaire_interne, cmd.commentaire_externe)
 
     # THEN
-    proposition_repository.save(proposition)
-    groupe_supervision_repository.save(groupe_de_supervision)
-    historique.historiser_avis(proposition, signataire, avis, statut_original_proposition)
-    notification.notifier_avis(proposition, signataire, avis)
+    parcours_doctoral_repository.save(parcours_doctoral)
+    jury_repository.save(jury)
+    historique.historiser_avis(parcours_doctoral, jury.entity_id, signataire, avis, statut_original_parcours_doctoral)
 
-    return proposition.entity_id
+    return jury.entity_id

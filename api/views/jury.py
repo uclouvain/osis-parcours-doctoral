@@ -49,7 +49,7 @@ from parcours_doctoral.api.serializers import (
     ModifierRoleMembreCommandSerializer,
 )
 from parcours_doctoral.api.serializers.jury import ApprouverJuryCommandSerializer, RefuserJuryCommandSerializer, \
-    ApprouverJuryParPdfCommandSerializer, ExternalJuryDTOSerializer
+    ApprouverJuryParPdfCommandSerializer, ExternalJuryDTOSerializer, RenvoyerInvitationSignatureExterneSerializer
 from parcours_doctoral.ddd.commands import RecupererParcoursDoctoralQuery
 from parcours_doctoral.ddd.jury.commands import (
     AjouterMembreCommand,
@@ -59,7 +59,7 @@ from parcours_doctoral.ddd.jury.commands import (
     RecupererJuryMembreQuery,
     RecupererJuryQuery,
     RetirerMembreCommand, DemanderSignaturesCommand, VerifierJuryConditionSignatureQuery, ApprouverJuryCommand,
-    RefuserJuryCommand, ApprouverJuryParPdfCommand,
+    RefuserJuryCommand, ApprouverJuryParPdfCommand, RenvoyerInvitationSignatureExterneCommand,
 )
 from parcours_doctoral.utils.cache import get_cached_parcours_doctoral_perm_obj
 from parcours_doctoral.utils.ddd import gather_business_exceptions
@@ -69,6 +69,9 @@ __all__ = [
     "JuryMembersListAPIView",
     "JuryMemberDetailAPIView",
     "JuryRequestSignaturesAPIView",
+    "JuryApprovePropositionAPIView",
+    "JuryExternalApprovalPropositionAPIView",
+    "JuryApproveByPdfPropositionAPIView",
 ]
 
 EXTERNAL_ACTOR_TOKEN_EXPIRATION_DAYS = 7
@@ -283,20 +286,20 @@ class JuryRequestSignaturesAPIView(DoctorateAPIPermissionRequiredMixin, APIView)
         data = gather_business_exceptions(VerifierJuryConditionSignatureQuery(uuid_jury=str(kwargs["uuid"])))
         return Response(data.get(api_settings.NON_FIELD_ERRORS_KEY, []), status=status.HTTP_200_OK)
 
-    # @extend_schema(
-    #     request=RenvoyerInvitationSignatureExterneSerializer,
-    #     responses=JuryIdentityDTOSerializer,
-    #     operation_id='resend_invite',
-    # )
-    # def put(self, request, *args, **kwargs):
-    #     """Resend an invitation for and external member."""
-    #     serializer = RenvoyerInvitationSignatureExterneSerializer(data=request.data)
-    #     serializer.is_valid(raise_exception=True)
-    #     result = message_bus_instance.invoke(
-    #         RenvoyerInvitationSignatureExterneCommand(uuid_jury=str(kwargs["uuid"]), **serializer.data)
-    #     )
-    #     serializer = JuryIdentityDTOSerializer(instance=result)
-    #     return Response(serializer.data, status=status.HTTP_200_OK)
+    @extend_schema(
+        request=RenvoyerInvitationSignatureExterneSerializer,
+        responses=JuryIdentityDTOSerializer,
+        operation_id='resend_invite',
+    )
+    def put(self, request, *args, **kwargs):
+        """Resend an invitation for an external member."""
+        serializer = RenvoyerInvitationSignatureExterneSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        result = message_bus_instance.invoke(
+            RenvoyerInvitationSignatureExterneCommand(uuid_jury=str(kwargs["uuid"]), **serializer.data)
+        )
+        serializer = JuryIdentityDTOSerializer(instance=result)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     @extend_schema(
         request=None,
@@ -359,7 +362,7 @@ class ApprovePropositionMixin:
         operation_id='reject_jury',
     ),
 )
-class ApprovePropositionAPIView(ApprovePropositionMixin, DoctorateAPIPermissionRequiredMixin, APIView):
+class JuryApprovePropositionAPIView(ApprovePropositionMixin, DoctorateAPIPermissionRequiredMixin, APIView):
     name = "approvals"
     permission_mapping = {
         'POST': 'jury.approve_jury',
@@ -383,7 +386,7 @@ class ApprovePropositionAPIView(ApprovePropositionMixin, DoctorateAPIPermissionR
         operation_id='reject_external_jury',
     ),
 )
-class ExternalApprovalPropositionAPIView(ApprovePropositionMixin, APIView):
+class JuryExternalApprovalPropositionAPIView(ApprovePropositionMixin, APIView):
     name = "external-approvals"
     authentication_classes = []
     permission_classes = []
@@ -426,7 +429,7 @@ class ExternalApprovalPropositionAPIView(ApprovePropositionMixin, APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class ApproveByPdfPropositionAPIView(DoctorateAPIPermissionRequiredMixin, APIView):
+class JuryApproveByPdfPropositionAPIView(DoctorateAPIPermissionRequiredMixin, APIView):
     name = "approve-by-pdf"
     permission_mapping = {
         'POST': 'jury.approve_jury_by_pdf',

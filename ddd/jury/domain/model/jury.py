@@ -165,29 +165,18 @@ class Jury(interface.RootEntity):
         commentaire_externe: Optional[str],
     ) -> None:
         ApprouverValidatorList(
-            groupe_de_supervision=self,
-            signataire_id=signataire_id,
+            jury=self,
+            signataire_id=signataire.uuid,
         ).validate()
-        if isinstance(signataire_id, PromoteurIdentity):
-            self.signatures_promoteurs = [s for s in self.signatures_promoteurs if s.promoteur_id != signataire_id]
-            self.signatures_promoteurs.append(
-                SignaturePromoteur(
-                    promoteur_id=signataire_id,
-                    etat=ChoixEtatSignature.APPROVED,
-                    commentaire_interne=commentaire_interne or '',
-                    commentaire_externe=commentaire_externe or '',
-                )
-            )
-        elif isinstance(signataire_id, MembreCAIdentity):  # pragma: no branch
-            self.signatures_membres_CA = [s for s in self.signatures_membres_CA if s.membre_CA_id != signataire_id]
-            self.signatures_membres_CA.append(
-                SignatureMembreCA(
-                    membre_CA_id=signataire_id,
-                    etat=ChoixEtatSignature.APPROVED,
-                    commentaire_interne=commentaire_interne or '',
-                    commentaire_externe=commentaire_externe or '',
-                )
-            )
+        self.membres = [membre for membre in self.membres if membre.uuid != signataire.uuid]
+        self.membres.append(
+            attr.evolve(signataire, signature=attr.evolve(
+                signataire.signature,
+                etat=ChoixEtatSignature.APPROVED,
+                commentaire_interne=commentaire_interne or '',
+                commentaire_externe=commentaire_externe or '',
+            ))
+        )
 
     def approuver_par_pdf(self, signataire: MembreJury, pdf: List[str]) -> None:
         ApprouverValidatorList(
@@ -198,7 +187,7 @@ class Jury(interface.RootEntity):
         self.membres.append(
             attr.evolve(signataire, signature=attr.evolve(
                 signataire.signature,
-                etat=ChoixEtatSignature.INVITED,
+                etat=ChoixEtatSignature.APPROVED,
                 pdf=pdf,
             ))
         )
@@ -211,28 +200,16 @@ class Jury(interface.RootEntity):
         motif_refus: Optional[str],
     ) -> None:
         ApprouverValidatorList(
-            groupe_de_supervision=self,
-            signataire_id=signataire_id,
+            jury=self,
+            signataire_id=signataire.uuid,
         ).validate()
-        if isinstance(signataire_id, PromoteurIdentity):
-            # Add signature state for promoter refusing and reset all others signatures
-            new_states = []
-            for s in self.signatures_promoteurs:
-                if s.promoteur_id != signataire_id:
-                    # Reset all others signatures
-                    new_states.append(attr.evolve(s, etat=ChoixEtatSignature.NOT_INVITED))
-                else:
-                    # Add signature state for promoter refusing
-                    new_states.append(
-                        SignaturePromoteur(
-                            promoteur_id=signataire_id,
-                            etat=ChoixEtatSignature.DECLINED,
-                            commentaire_interne=commentaire_interne or '',
-                            commentaire_externe=commentaire_externe or '',
-                            motif_refus=motif_refus or '',
-                        )
-                    )
-            self.signatures_promoteurs = new_states
-        else:
-            # Simply remove the CA member
-            self.signatures_membres_CA = [s for s in self.signatures_membres_CA if s.membre_CA_id != signataire_id]
+        self.membres = [membre for membre in self.membres if membre.uuid != signataire.uuid]
+        self.membres.append(
+            attr.evolve(signataire, signature=attr.evolve(
+                signataire.signature,
+                etat=ChoixEtatSignature.DECLINED,
+                commentaire_interne=commentaire_interne or '',
+                commentaire_externe=commentaire_externe or '',
+                motif_refus=motif_refus or '',
+            ))
+        )

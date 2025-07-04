@@ -35,6 +35,7 @@ from parcours_doctoral.ddd.jury.commands import (
     ModifierMembreCommand,
     ModifierRoleMembreCommand,
     RetirerMembreCommand, ApprouverJuryCommand, RefuserJuryCommand, ApprouverJuryParPdfCommand,
+    RenvoyerInvitationSignatureExterneCommand,
 )
 from parcours_doctoral.ddd.jury.dtos.jury import JuryDTO, MembreJuryDTO
 
@@ -101,6 +102,13 @@ class ModifierRoleMembreCommandSerializer(DTOSerializer):
 class ExternalJuryDTOSerializer(serializers.Serializer):
     parcours_doctoral = ExternalParcoursDoctoralDTOSerializer()
     jury = JuryDTOSerializer()
+
+
+class RenvoyerInvitationSignatureExterneSerializer(DTOSerializer):
+    uuid_proposition = None
+
+    class Meta:
+        source = RenvoyerInvitationSignatureExterneCommand
 
 
 class ApprouverJuryCommandSerializer(DTOSerializer):

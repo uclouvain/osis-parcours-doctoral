@@ -304,3 +304,6 @@ class ParcoursDoctoral(interface.RootEntity):
 
     def verrouiller_jury_pour_signature(self):
         self.statut = ChoixStatutParcoursDoctoral.JURY_SOUMIS
+
+    def deverrouiller_jury_apres_refus(self):
+        self.statut = ChoixStatutParcoursDoctoral.CONFIRMATION_REUSSIE

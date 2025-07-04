@@ -38,10 +38,12 @@ from osis_signature.utils import get_signing_token
 
 from base.auth.roles.program_manager import ProgramManager
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoral
-from parcours_doctoral.ddd.jury.domain.model.jury import Jury
+from parcours_doctoral.ddd.jury.domain.model.jury import Jury, MembreJury
 from parcours_doctoral.ddd.jury.domain.service.i_notification import INotification
+from parcours_doctoral.ddd.jury.dtos.jury import AvisDTO
 from parcours_doctoral.mail_templates import PARCOURS_DOCTORAL_JURY_EMAIL_SIGNATURE_REQUESTS_PROMOTER, \
     PARCOURS_DOCTORAL_JURY_EMAIL_SIGNATURE_REQUESTS_MEMBER
+from parcours_doctoral.mail_templates.jury import PARCOURS_DOCTORAL_JURY_EMAIL_MEMBER_REFUSAL
 from parcours_doctoral.models import JuryActor
 from parcours_doctoral.models.parcours_doctoral import (
     ParcoursDoctoral as ParcoursDoctoralModel,
@@ -95,7 +97,7 @@ class Notification(INotification):
     def _lien_invitation_externe(cls, parcours_doctoral, actor):
         return get_parcours_doctoral_link_front(
             uuid=parcours_doctoral.entity_id.uuid,
-            tab='public/jury/',
+            tab='jury/external-approval/',
         ) + get_signing_token(actor)
 
     @classmethod
@@ -143,3 +145,64 @@ class Notification(INotification):
                     recipients=[actor.email],
                 )
             EmailNotificationHandler.create(email_message, person=actor.person_id and actor.person)
+
+    @classmethod
+    def renvoyer_invitation(
+            cls, parcours_doctoral: ParcoursDoctoral, membre: MembreJury
+    ) -> None:
+        parcours_doctoral_instance = ParcoursDoctoralModel.objects.get(uuid=parcours_doctoral.entity_id.uuid)
+        actor = JuryActor.objects.select_related('person').get(
+            process=parcours_doctoral_instance.jury_group,
+            uuid=membre.uuid,
+        )
+
+        tokens = {
+            **cls.get_common_tokens(parcours_doctoral_instance),
+            "signataire_first_name": signataire.first_name,
+            "signataire_last_name": signataire.last_name,
+            "parcours_doctoral_link_front": cls._lien_invitation_externe(parcours_doctoral, actor),
+        }
+
+        if actor.is_promoter:
+            email_message = generate_email(
+                PARCOURS_DOCTORAL_JURY_EMAIL_SIGNATURE_REQUESTS_PROMOTER,
+                actor.language,
+                tokens,
+                recipients=[actor.email],
+            )
+        else:
+            email_message = generate_email(
+                PARCOURS_DOCTORAL_JURY_EMAIL_SIGNATURE_REQUESTS_MEMBER,
+                actor.language,
+                tokens,
+                recipients=[actor.email],
+            )
+        EmailNotificationHandler.create(email_message, person=actor.person_id and actor.person)
+
+    @classmethod
+    def notifier_refus(
+        cls, parcours_doctoral: ParcoursDoctoral, signataire: MembreJury, avis: AvisDTO
+    ) -> None:
+        parcours_doctoral_instance = ParcoursDoctoralModel.objects.get(uuid=parcours_doctoral.entity_id.uuid)
+
+        # Tokens communs
+        tokens = {
+            **cls.get_common_tokens(parcours_doctoral_instance),
+            "signataire_first_name": signataire.prenom,
+            "signataire_last_name": signataire.nom,
+            "refusal_reason": avis.motif_refus,
+        }
+
+        # Envoyer aux doctorant et promoteurs
+        actor_list = JuryActor.objects.filter(
+            process=parcours_doctoral_instance.jury_group
+        ).select_related('person')
+        promoteurs = [actor for actor in actor_list if actor.is_promoter]
+        email_message = generate_email(
+            PARCOURS_DOCTORAL_JURY_EMAIL_MEMBER_REFUSAL,
+            parcours_doctoral_instance.student.language,
+            tokens,
+            recipients=[parcours_doctoral_instance.student.private_email],
+            cc_recipients=[actor.email for actor in promoteurs],
+        )
+        EmailNotificationHandler.create(email_message, person=parcours_doctoral_instance.student)

@@ -128,7 +128,6 @@ class ApprouverJuryParPdfCommand(interface.CommandRequest):
 class ApprouverJuryCommand(interface.CommandRequest):
     uuid_jury: str
     uuid_membre: str
-    institut_these: Optional[str] = ''
     commentaire_interne: Optional[str] = ''
     commentaire_externe: Optional[str] = ''
 
@@ -140,3 +139,9 @@ class RefuserJuryCommand(interface.CommandRequest):
     motif_refus: str
     commentaire_interne: Optional[str] = ''
     commentaire_externe: Optional[str] = ''
+
+
+@attr.dataclass(frozen=True, slots=True)
+class RenvoyerInvitationSignatureExterneCommand(interface.CommandRequest):
+    uuid_jury: str
+    uuid_membre: str

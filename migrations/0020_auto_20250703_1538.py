@@ -5,6 +5,7 @@ from osis_mail_template import MailTemplateMigration
 
 from parcours_doctoral.mail_templates import PARCOURS_DOCTORAL_JURY_EMAIL_SIGNATURE_REQUESTS_PROMOTER, \
     PARCOURS_DOCTORAL_JURY_EMAIL_SIGNATURE_REQUESTS_MEMBER
+from parcours_doctoral.mail_templates.jury import PARCOURS_DOCTORAL_JURY_EMAIL_MEMBER_REFUSAL
 
 
 class Migration(migrations.Migration):
@@ -75,6 +76,39 @@ class Migration(migrations.Migration):
 <p>---</p>
 
 <p>{cdd_manager_names} - {doctoral_commission}</p>
+                ''',
+            },
+        ),
+        MailTemplateMigration(
+            PARCOURS_DOCTORAL_JURY_EMAIL_MEMBER_REFUSAL,
+            {
+                'en': '[OSIS] Refusal of {student_first_name} {student_last_name}’s thesis board proposal for {training_title}',
+                'fr-be': '[OSIS] Refus de proposition de jury {student_first_name} {student_last_name}  pour un {training_title}',
+            },
+            {
+                'en': '''<p>Dear {student_first_name} {student_last_name},</p>
+
+<p>{signataire_first_name} {signataire_last_name} has refused the thesis board membership proposal for your {training_title} for the following reason: {refusal_reason}</p>
+
+<p>Please submit a new proposal via your virtual office.</p>
+
+<p>Please contact us should you require further information.</p>
+
+<p>Sincerely,</p>
+
+<p>{cdd_manager_names} - {doctoral_commission}</p>
+                ''',
+                'fr-be': '''Cher, Chère, Cher.ère, {student_first_name} {student_last_name},</p>
+
+{signataire_first_name} {signataire_last_name} a refusé la proposition de composition de jury de thèse pour votre {training_title}, pour le motif suivant : {refusal_reason}</p>
+
+Nous vous invitons à soumettre une nouvelle proposition via votre bureau virtuel.</p>
+
+Nous restons à votre disposition pour tout autre renseignement complémentaire.</p>
+
+Bien cordialement,</p>
+
+{cdd_manager_names} - {doctoral_commission}</p>
                 ''',
             },
         ),

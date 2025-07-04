@@ -62,12 +62,11 @@ urlpatterns = [
     path('doctorate/<uuid:uuid>/jury/members', views.JuryMembersListAPIView),
     path('doctorate/<uuid:uuid>/jury/members/<uuid:member_uuid>', views.JuryMemberDetailAPIView),
     path('doctorate/<uuid:uuid>/jury/request-signatures', views.JuryRequestSignaturesAPIView),
-    # path('doctorate/<uuid:uuid>/jury/approve', views.ApprovePropositionAPIView),
-    # path(
-    #     'doctorate/<uuid:uuid>/jury/external/<str:token>', views.ExternalApprovalPropositionAPIView
-    # ),
-    # path('doctorate/<uuid:uuid>/jury/approve-by-pdf', views.ApproveByPdfPropositionAPIView),
-    # Training
+    path('doctorate/<uuid:uuid>/jury/approve', views.JuryApprovePropositionAPIView),
+    path(
+        'doctorate/<uuid:uuid>/jury/external/<str:token>', views.JuryExternalApprovalPropositionAPIView
+    ),
+    path('doctorate/<uuid:uuid>/jury/approve-by-pdf', views.JuryApproveByPdfPropositionAPIView),
     path('doctorate/<uuid:uuid>/training/config', views.TrainingConfigView),
     path('doctorate/<uuid:uuid>/doctoral-training', views.DoctoralTrainingListView),
     path('doctorate/<uuid:uuid>/training/submit', views.TrainingSubmitView),

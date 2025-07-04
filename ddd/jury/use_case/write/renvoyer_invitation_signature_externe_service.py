@@ -23,30 +23,28 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-
-from admission.ddd.admission.doctorat.preparation.builder.proposition_identity_builder import PropositionIdentityBuilder
-from admission.ddd.admission.doctorat.preparation.commands import RenvoyerInvitationSignatureExterneCommand
-from admission.ddd.admission.doctorat.preparation.domain.model.proposition import PropositionIdentity
-from admission.ddd.admission.doctorat.preparation.domain.service.i_notification import INotification
-from admission.ddd.admission.doctorat.preparation.repository.i_groupe_de_supervision import (
-    IGroupeDeSupervisionRepository,
-)
-from admission.ddd.admission.doctorat.preparation.repository.i_proposition import IPropositionRepository
+from parcours_doctoral.ddd.builder.parcours_doctoral_identity import ParcoursDoctoralIdentityBuilder
+from parcours_doctoral.ddd.jury.builder.jury_identity_builder import JuryIdentityBuilder
+from parcours_doctoral.ddd.jury.commands import RenvoyerInvitationSignatureExterneCommand
+from parcours_doctoral.ddd.jury.domain.model.jury import JuryIdentity
+from parcours_doctoral.ddd.jury.domain.service.i_notification import INotification
+from parcours_doctoral.ddd.jury.repository.i_jury import IJuryRepository
+from parcours_doctoral.ddd.repository.i_parcours_doctoral import IParcoursDoctoralRepository
 
 
 def renvoyer_invitation_signature_externe(
     cmd: 'RenvoyerInvitationSignatureExterneCommand',
-    proposition_repository: 'IPropositionRepository',
-    groupe_supervision_repository: 'IGroupeDeSupervisionRepository',
+    parcours_doctoral_repository: 'IParcoursDoctoralRepository',
+    jury_repository: 'IJuryRepository',
     notification: 'INotification',
-) -> 'PropositionIdentity':
+) -> 'JuryIdentity':
     # GIVEN
-    proposition_id = PropositionIdentityBuilder.build_from_uuid(cmd.uuid_proposition)
-    proposition_candidat = proposition_repository.get(entity_id=proposition_id)
-    groupe_supervision = groupe_supervision_repository.get_by_proposition_id(proposition_id)
-    membre = groupe_supervision.get_signataire(cmd.uuid_membre)
+    entity_id = ParcoursDoctoralIdentityBuilder.build_from_uuid(cmd.uuid_jury)
+    parcours_doctoral = parcours_doctoral_repository.get(entity_id=entity_id)
+    jury = jury_repository.get(JuryIdentityBuilder.build_from_uuid(cmd.uuid_jury))
+    membre = jury.recuperer_membre(cmd.uuid_membre)
 
     # THEN
-    notification.renvoyer_invitation(proposition_candidat, membre)
+    notification.renvoyer_invitation(parcours_doctoral, membre)
 
-    return proposition_id
+    return jury.entity_id

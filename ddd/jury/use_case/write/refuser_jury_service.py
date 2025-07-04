@@ -23,61 +23,41 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from admission.ddd.admission.doctorat.preparation.builder.proposition_identity_builder import (
-    PropositionIdentityBuilder,
-)
-from admission.ddd.admission.doctorat.preparation.commands import (
-    RefuserPropositionCommand,
-)
-from admission.ddd.admission.doctorat.preparation.domain.model.proposition import (
-    PropositionIdentity,
-)
-from admission.ddd.admission.doctorat.preparation.domain.service.avis import Avis
-from admission.ddd.admission.doctorat.preparation.domain.service.deverrouiller_projet_doctoral import (
-    DeverrouillerPropositionProjetDoctoral,
-)
-from admission.ddd.admission.doctorat.preparation.domain.service.i_historique import (
-    IHistorique,
-)
-from admission.ddd.admission.doctorat.preparation.domain.service.i_notification import (
-    INotification,
-)
-from admission.ddd.admission.doctorat.preparation.repository.i_groupe_de_supervision import (
-    IGroupeDeSupervisionRepository,
-)
-from admission.ddd.admission.doctorat.preparation.repository.i_proposition import (
-    IPropositionRepository,
-)
-from admission.ddd.admission.domain.service.i_raccrocher_experiences_curriculum import (
-    IRaccrocherExperiencesCurriculum,
-)
+from parcours_doctoral.ddd.builder.parcours_doctoral_identity import ParcoursDoctoralIdentityBuilder
+from parcours_doctoral.ddd.jury.builder.jury_identity_builder import JuryIdentityBuilder
+from parcours_doctoral.ddd.jury.commands import RefuserJuryCommand
+from parcours_doctoral.ddd.jury.domain.model.jury import JuryIdentity
+from parcours_doctoral.ddd.jury.domain.service.avis import Avis
+from parcours_doctoral.ddd.jury.domain.service.i_historique import IHistorique
+from parcours_doctoral.ddd.jury.domain.service.i_notification import INotification
+from parcours_doctoral.ddd.jury.repository.i_jury import IJuryRepository
+from parcours_doctoral.ddd.repository.i_parcours_doctoral import IParcoursDoctoralRepository
 
 
 def refuser_proposition(
-    cmd: 'RefuserPropositionCommand',
-    proposition_repository: 'IPropositionRepository',
-    groupe_supervision_repository: 'IGroupeDeSupervisionRepository',
+    cmd: 'RefuserJuryCommand',
+    parcours_doctoral_repository: 'IParcoursDoctoralRepository',
+    jury_repository: 'IJuryRepository',
     historique: 'IHistorique',
     notification: 'INotification',
-    raccrocher_experiences_curriculum: 'IRaccrocherExperiencesCurriculum',
-) -> 'PropositionIdentity':
+) -> 'JuryIdentity':
     # GIVEN
-    entity_id = PropositionIdentityBuilder.build_from_uuid(cmd.uuid_proposition)
-    proposition_candidat = proposition_repository.get(entity_id=entity_id)
-    statut_original_proposition = proposition_candidat.statut
-    groupe_de_supervision = groupe_supervision_repository.get_by_proposition_id(entity_id)
-    signataire_id = groupe_de_supervision.get_signataire(cmd.uuid_membre)
+    entity_id = ParcoursDoctoralIdentityBuilder.build_from_uuid(cmd.uuid_jury)
+    parcours_doctoral = parcours_doctoral_repository.get(entity_id=entity_id)
+    jury = jury_repository.get(JuryIdentityBuilder.build_from_uuid(cmd.uuid_jury))
+    statut_original_parcours_doctoral = parcours_doctoral.statut
+
+    signataire = jury.recuperer_membre(cmd.uuid_membre)
     avis = Avis.construire_refus(cmd.commentaire_interne, cmd.commentaire_externe, cmd.motif_refus)
 
     # WHEN
-    groupe_de_supervision.refuser(signataire_id, cmd.commentaire_interne, cmd.commentaire_externe, cmd.motif_refus)
-    DeverrouillerPropositionProjetDoctoral().deverrouiller_apres_refus(proposition_candidat, signataire_id)
+    jury.refuser(signataire, cmd.commentaire_interne, cmd.commentaire_externe, cmd.motif_refus)
+    parcours_doctoral.deverrouiller_jury_apres_refus()
 
     # THEN
-    historique.historiser_avis(proposition_candidat, signataire_id, avis, statut_original_proposition)
-    notification.notifier_avis(proposition_candidat, signataire_id, avis)
-    groupe_supervision_repository.save(groupe_de_supervision)
-    proposition_repository.save(proposition_candidat)
-    raccrocher_experiences_curriculum.decrocher(proposition_candidat)
+    jury_repository.save(jury)
+    parcours_doctoral_repository.save(parcours_doctoral)
+    historique.historiser_avis(parcours_doctoral, signataire, avis, statut_original_parcours_doctoral)
+    notification.notifier_refus(parcours_doctoral, signataire, avis)
 
-    return proposition_candidat.entity_id
+    return jury.entity_id

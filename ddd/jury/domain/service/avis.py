@@ -23,7 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from typing import List
+from typing import List, Optional
 
 from osis_common.ddd import interface
 from parcours_doctoral.ddd.jury.domain.model.enums import ChoixEtatSignature
@@ -36,4 +36,26 @@ class Avis(interface.DomainService):
         return AvisDTO(
             etat=ChoixEtatSignature.APPROVED.name,
             pdf=pdf,
+        )
+
+    @classmethod
+    def construire_approbation(cls, commentaire_interne: Optional[str], commentaire_externe: Optional[str]) -> AvisDTO:
+        return AvisDTO(
+            etat=ChoixEtatSignature.APPROVED.name,
+            commentaire_externe=commentaire_externe,
+            commentaire_interne=commentaire_interne,
+        )
+
+    @classmethod
+    def construire_refus(
+        cls,
+        commentaire_interne: Optional[str],
+        commentaire_externe: Optional[str],
+        motif_refus: Optional[str],
+    ) -> AvisDTO:
+        return AvisDTO(
+            etat=ChoixEtatSignature.DECLINED.name,
+            commentaire_externe=commentaire_externe,
+            commentaire_interne=commentaire_interne,
+            motif_refus=motif_refus,
         )

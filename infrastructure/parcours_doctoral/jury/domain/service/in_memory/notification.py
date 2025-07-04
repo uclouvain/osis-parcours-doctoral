@@ -25,8 +25,9 @@
 # ##############################################################################
 
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoral
-from parcours_doctoral.ddd.jury.domain.model.jury import Jury
+from parcours_doctoral.ddd.jury.domain.model.jury import Jury, MembreJury
 from parcours_doctoral.ddd.jury.domain.service.i_notification import INotification
+from parcours_doctoral.ddd.jury.dtos.jury import AvisDTO
 
 
 class NotificationInMemory(INotification):
@@ -34,5 +35,17 @@ class NotificationInMemory(INotification):
     @classmethod
     def envoyer_signatures(
         cls, parcours_doctoral: ParcoursDoctoral, jury: Jury
+    ) -> None:
+        pass
+
+    @classmethod
+    def renvoyer_invitation(
+        cls, parcours_doctoral: ParcoursDoctoral, membre: MembreJury
+    ) -> None:
+        pass
+
+    @classmethod
+    def notifier_refus(
+        cls, parcours_doctoral: ParcoursDoctoral, signataire: MembreJury, avis: AvisDTO
     ) -> None:
         pass
