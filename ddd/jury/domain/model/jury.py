@@ -35,7 +35,9 @@ from parcours_doctoral.ddd.jury.domain.model.enums import (
     RoleJury,
     TitreMembre, ChoixStatutSignature, ChoixEtatSignature,
 )
-from parcours_doctoral.ddd.jury.domain.validator.validator_by_business_action import InviterASignerValidatorList
+from parcours_doctoral.ddd.jury.domain.validator.exceptions import SignataireNonTrouveException
+from parcours_doctoral.ddd.jury.domain.validator.validator_by_business_action import InviterASignerValidatorList, \
+    ApprouverValidatorList
 from parcours_doctoral.ddd.jury.validator.exceptions import (
     PromoteurModifieException,
     PromoteurPresidentException,
@@ -81,6 +83,11 @@ class MembreJury(interface.ValueObject):
 
 
 @attr.dataclass(frozen=True, slots=True)
+class MembreJuryIdentity(interface.EntityIdentity):
+    uuid: str
+
+
+@attr.dataclass(frozen=True, slots=True)
 class JuryIdentity(interface.EntityIdentity):
     uuid: str
 
@@ -112,6 +119,7 @@ class Jury(interface.RootEntity):
         for membre in self.membres:
             if membre.uuid == uuid_membre:
                 return membre
+        raise SignataireNonTrouveException
 
     def modifier_membre(self, membre: MembreJury):
         ModifierMembreValidatorList(jury=self, membre=membre).validate()
@@ -149,3 +157,82 @@ class Jury(interface.RootEntity):
             InviterASignerValidatorList(jury=self, signataire_id=membre.uuid).validate()
             self.membres = [m for m in self.membres if m.uuid != membre.uuid]
             self.membres.append(attr.evolve(membre, signature=attr.evolve(membre.signature, etat=ChoixEtatSignature.INVITED)))
+
+    def approuver(
+        self,
+        signataire: MembreJury,
+        commentaire_interne: Optional[str],
+        commentaire_externe: Optional[str],
+    ) -> None:
+        ApprouverValidatorList(
+            groupe_de_supervision=self,
+            signataire_id=signataire_id,
+        ).validate()
+        if isinstance(signataire_id, PromoteurIdentity):
+            self.signatures_promoteurs = [s for s in self.signatures_promoteurs if s.promoteur_id != signataire_id]
+            self.signatures_promoteurs.append(
+                SignaturePromoteur(
+                    promoteur_id=signataire_id,
+                    etat=ChoixEtatSignature.APPROVED,
+                    commentaire_interne=commentaire_interne or '',
+                    commentaire_externe=commentaire_externe or '',
+                )
+            )
+        elif isinstance(signataire_id, MembreCAIdentity):  # pragma: no branch
+            self.signatures_membres_CA = [s for s in self.signatures_membres_CA if s.membre_CA_id != signataire_id]
+            self.signatures_membres_CA.append(
+                SignatureMembreCA(
+                    membre_CA_id=signataire_id,
+                    etat=ChoixEtatSignature.APPROVED,
+                    commentaire_interne=commentaire_interne or '',
+                    commentaire_externe=commentaire_externe or '',
+                )
+            )
+
+    def approuver_par_pdf(self, signataire: MembreJury, pdf: List[str]) -> None:
+        ApprouverValidatorList(
+            jury=self,
+            signataire_id=signataire.uuid,
+        ).validate()
+        self.membres = [membre for membre in self.membres if membre.uuid != signataire.uuid]
+        self.membres.append(
+            attr.evolve(signataire, signature=attr.evolve(
+                signataire.signature,
+                etat=ChoixEtatSignature.INVITED,
+                pdf=pdf,
+            ))
+        )
+
+    def refuser(
+        self,
+        signataire: MembreJury,
+        commentaire_interne: Optional[str],
+        commentaire_externe: Optional[str],
+        motif_refus: Optional[str],
+    ) -> None:
+        ApprouverValidatorList(
+            groupe_de_supervision=self,
+            signataire_id=signataire_id,
+        ).validate()
+        if isinstance(signataire_id, PromoteurIdentity):
+            # Add signature state for promoter refusing and reset all others signatures
+            new_states = []
+            for s in self.signatures_promoteurs:
+                if s.promoteur_id != signataire_id:
+                    # Reset all others signatures
+                    new_states.append(attr.evolve(s, etat=ChoixEtatSignature.NOT_INVITED))
+                else:
+                    # Add signature state for promoter refusing
+                    new_states.append(
+                        SignaturePromoteur(
+                            promoteur_id=signataire_id,
+                            etat=ChoixEtatSignature.DECLINED,
+                            commentaire_interne=commentaire_interne or '',
+                            commentaire_externe=commentaire_externe or '',
+                            motif_refus=motif_refus or '',
+                        )
+                    )
+            self.signatures_promoteurs = new_states
+        else:
+            # Simply remove the CA member
+            self.signatures_membres_CA = [s for s in self.signatures_membres_CA if s.membre_CA_id != signataire_id]

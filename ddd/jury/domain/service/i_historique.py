@@ -24,10 +24,13 @@
 #
 # ##############################################################################
 from abc import abstractmethod
+from typing import Optional
 
 from osis_common.ddd import interface
+from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoral
-from parcours_doctoral.ddd.jury.domain.model.jury import Jury
+from parcours_doctoral.ddd.jury.domain.model.jury import Jury, JuryIdentity, MembreJury
+from parcours_doctoral.ddd.jury.dtos.jury import AvisDTO
 
 
 class IHistorique(interface.DomainService):
@@ -38,5 +41,18 @@ class IHistorique(interface.DomainService):
         parcours_doctoral: ParcoursDoctoral,
         jury: Jury,
         matricule_auteur: str,
+    ):
+        raise NotImplementedError
+
+    @classmethod
+    @abstractmethod
+    def historiser_avis(
+        cls,
+        parcours_doctoral: ParcoursDoctoral,
+        jury_id: 'JuryIdentity',
+        signataire: 'MembreJury',
+        avis: AvisDTO,
+        statut_original_proposition: 'ChoixStatutParcoursDoctoral',
+        matricule_auteur: Optional[str] = '',
     ):
         raise NotImplementedError

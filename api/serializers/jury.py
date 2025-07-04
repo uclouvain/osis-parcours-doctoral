@@ -27,12 +27,14 @@
 from rest_framework import serializers
 
 from base.utils.serializers import DTOSerializer
+from parcours_doctoral.api.serializers.external import ExternalParcoursDoctoralDTOSerializer
+from parcours_doctoral.api.serializers.fields import RelatedInstituteField
 from parcours_doctoral.ddd.jury.commands import (
     AjouterMembreCommand,
     ModifierJuryCommand,
     ModifierMembreCommand,
     ModifierRoleMembreCommand,
-    RetirerMembreCommand,
+    RetirerMembreCommand, ApprouverJuryCommand, RefuserJuryCommand, ApprouverJuryParPdfCommand,
 )
 from parcours_doctoral.ddd.jury.dtos.jury import JuryDTO, MembreJuryDTO
 
@@ -94,3 +96,31 @@ class ModifierRoleMembreCommandSerializer(DTOSerializer):
 
     class Meta:
         source = ModifierRoleMembreCommand
+
+
+class ExternalJuryDTOSerializer(serializers.Serializer):
+    parcours_doctoral = ExternalParcoursDoctoralDTOSerializer()
+    jury = JuryDTOSerializer()
+
+
+class ApprouverJuryCommandSerializer(DTOSerializer):
+    uuid_jury = None
+    institut_these = RelatedInstituteField(required=False)
+
+    class Meta:
+        source = ApprouverJuryCommand
+
+
+class RefuserJuryCommandSerializer(DTOSerializer):
+    uuid_jury = None
+
+    class Meta:
+        source = RefuserJuryCommand
+
+
+class ApprouverJuryParPdfCommandSerializer(DTOSerializer):
+    uuid_jury = None
+    matricule_auteur = None
+
+    class Meta:
+        source = ApprouverJuryParPdfCommand

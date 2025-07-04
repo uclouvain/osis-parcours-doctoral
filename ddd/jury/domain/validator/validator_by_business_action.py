@@ -38,6 +38,7 @@ from parcours_doctoral.ddd.jury.domain.validator._should_jury_avoir_un_membre_ex
 from parcours_doctoral.ddd.jury.domain.validator._should_methode_de_defense_etre_complete import \
     ShouldSMethodeDeDefenseEtreComplete
 from parcours_doctoral.ddd.jury.domain.validator._should_signataire_etre_dans_jury import ShouldSignataireEtreDansJury
+from parcours_doctoral.ddd.jury.domain.validator._should_signataire_etre_invite import ShouldSignataireEtreInvite
 from parcours_doctoral.ddd.jury.domain.validator._should_signataire_pas_invite import ShouldSignatairePasDejaInvite
 
 
@@ -68,4 +69,19 @@ class InviterASignerValidatorList(TwoStepsMultipleBusinessExceptionListValidator
         return [
             ShouldSignataireEtreDansJury(self.jury, self.signataire_id),
             ShouldSignatairePasDejaInvite(self.jury, self.signataire_id),
+        ]
+
+
+@attr.dataclass(frozen=True, slots=True)
+class ApprouverValidatorList(TwoStepsMultipleBusinessExceptionListValidator):
+    jury: 'Jury'
+    signataire_id: str
+
+    def get_data_contract_validators(self) -> List[BusinessValidator]:
+        return []
+
+    def get_invariants_validators(self) -> List[BusinessValidator]:
+        return [
+            ShouldSignataireEtreDansJury(self.jury, self.signataire_id),
+            ShouldSignataireEtreInvite(self.jury, self.signataire_id),
         ]

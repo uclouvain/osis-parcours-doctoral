@@ -23,36 +23,36 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from admission.ddd.admission.doctorat.preparation.builder.proposition_identity_builder import PropositionIdentityBuilder
-from admission.ddd.admission.doctorat.preparation.commands import ApprouverPropositionParPdfCommand
-from admission.ddd.admission.doctorat.preparation.domain.model.proposition import PropositionIdentity
-from admission.ddd.admission.doctorat.preparation.domain.service.avis import Avis
-from admission.ddd.admission.doctorat.preparation.domain.service.i_historique import IHistorique
-from admission.ddd.admission.doctorat.preparation.repository.i_groupe_de_supervision import (
-    IGroupeDeSupervisionRepository,
-)
-from admission.ddd.admission.doctorat.preparation.repository.i_proposition import IPropositionRepository
+from parcours_doctoral.ddd.builder.parcours_doctoral_identity import ParcoursDoctoralIdentityBuilder
+from parcours_doctoral.ddd.domain.service.avis import Avis
+from parcours_doctoral.ddd.jury.builder.jury_identity_builder import JuryIdentityBuilder
+from parcours_doctoral.ddd.jury.commands import ApprouverJuryParPdfCommand
+from parcours_doctoral.ddd.jury.domain.model.jury import JuryIdentity
+from parcours_doctoral.ddd.jury.domain.service.i_historique import IHistorique
+from parcours_doctoral.ddd.jury.repository.i_jury import IJuryRepository
+from parcours_doctoral.ddd.repository.i_parcours_doctoral import IParcoursDoctoralRepository
 
 
 def approuver_proposition_par_pdf(
-    cmd: 'ApprouverPropositionParPdfCommand',
-    proposition_repository: 'IPropositionRepository',
-    groupe_supervision_repository: 'IGroupeDeSupervisionRepository',
+    cmd: 'ApprouverJuryParPdfCommand',
+    parcours_doctoral_repository: 'IParcoursDoctoralRepository',
+    jury_repository: 'IJuryRepository',
     historique: 'IHistorique',
-) -> 'PropositionIdentity':
+) -> 'JuryIdentity':
     # GIVEN
-    entity_id = PropositionIdentityBuilder.build_from_uuid(cmd.uuid_proposition)
-    proposition = proposition_repository.get(entity_id=entity_id)
-    statut_original_proposition = proposition.statut
-    groupe_de_supervision = groupe_supervision_repository.get_by_proposition_id(entity_id)
-    signataire = groupe_de_supervision.get_signataire(cmd.uuid_membre)
+    entity_id = ParcoursDoctoralIdentityBuilder.build_from_uuid(cmd.uuid_jury)
+    parcours_doctoral = parcours_doctoral_repository.get(entity_id=entity_id)
+    jury = jury_repository.get(JuryIdentityBuilder.build_from_uuid(cmd.uuid_jury))
+    statut_original_parcours_doctoral = parcours_doctoral.statut
+
+    signataire = jury.recuperer_membre(cmd.uuid_membre)
     avis = Avis.construire_avis_pdf(cmd.pdf)
 
     # WHEN
-    groupe_de_supervision.approuver_par_pdf(signataire, cmd.pdf)
+    jury.approuver_par_pdf(signataire, cmd.pdf)
 
     # THEN
-    groupe_supervision_repository.save(groupe_de_supervision)
-    historique.historiser_avis(proposition, signataire, avis, statut_original_proposition, cmd.matricule_auteur)
+    jury_repository.save(jury)
+    historique.historiser_avis(parcours_doctoral, jury.entity_id, signataire, avis, statut_original_parcours_doctoral, cmd.matricule_auteur)
 
-    return proposition.entity_id
+    return jury.entity_id

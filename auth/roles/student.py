@@ -64,6 +64,8 @@ class Student(RoleModel):
             'parcours_doctoral.request_signatures': parcours_doctoral.is_parcours_doctoral_student
             & parcours_doctoral.is_jury_in_progress,
             'parcours_doctoral.resend_external_invitation': parcours_doctoral.is_parcours_doctoral_student,
+            'parcours_doctoral.approve_jury_by_pdf': parcours_doctoral.is_parcours_doctoral_student
+            & parcours_doctoral.is_jury_signing_in_progress,
 
             # Training
             'parcours_doctoral.view_complementary_training': parcours_doctoral.is_parcours_doctoral_student

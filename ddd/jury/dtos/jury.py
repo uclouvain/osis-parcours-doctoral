@@ -65,3 +65,12 @@ class JuryDTO(interface.DTO):
     commentaire: str
     situation_comptable: Optional[bool]
     approbation_pdf: List[str]
+
+
+@attr.dataclass(frozen=True, slots=True)
+class AvisDTO(interface.DTO):
+    etat: str
+    commentaire_externe: Optional[str] = ''
+    commentaire_interne: Optional[str] = ''
+    motif_refus: Optional[str] = ''
+    pdf: List[str] = attr.Factory(list)

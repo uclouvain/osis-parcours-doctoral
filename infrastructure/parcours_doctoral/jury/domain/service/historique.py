@@ -23,17 +23,23 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from typing import Optional
 
+from django.conf import settings
+from django.utils import translation
 from osis_history.utilities import add_history_entry
 
 from infrastructure.shared_kernel.personne_connue_ucl.personne_connue_ucl import (
     PersonneConnueUclTranslator,
 )
+from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import (
     ParcoursDoctoral,
 )
-from parcours_doctoral.ddd.jury.domain.model.jury import Jury
+from parcours_doctoral.ddd.jury.domain.model.jury import Jury, JuryIdentity, MembreJury
 from parcours_doctoral.ddd.jury.domain.service.i_historique import IHistorique
+from parcours_doctoral.ddd.jury.dtos.jury import AvisDTO
+from parcours_doctoral.infrastructure.parcours_doctoral.jury.repository.jury import JuryRepository
 
 
 class Historique(IHistorique):
@@ -52,4 +58,72 @@ class Historique(IHistorique):
             "Signing requests have been sent.",
             "{auteur.prenom} {auteur.nom}".format(auteur=auteur),
             tags=["parcours_doctoral", "jury", "status-changed"],
+        )
+
+    @classmethod
+    def historiser_avis(
+        cls,
+        parcours_doctoral: ParcoursDoctoral,
+        jury_id: 'JuryIdentity',
+        signataire: 'MembreJury',
+        avis: AvisDTO,
+        statut_original_proposition: 'ChoixStatutParcoursDoctoral',
+        matricule_auteur: Optional[str] = '',
+    ):
+        if matricule_auteur:
+            auteur = PersonneConnueUclTranslator().get(matricule_auteur)
+        else:
+            auteur = signataire
+
+        # Basculer en français pour la traduction de l'état
+        with translation.override(settings.LANGUAGE_CODE_FR):
+            message_fr = (
+                "{signataire.prenom} {signataire.nom} a {action} la proposition {via_pdf}en tant que {role}".format(
+                    signataire=signataire,
+                    action="refusé" if avis.motif_refus else "approuvé",
+                    via_pdf="via PDF " if avis.pdf else "",
+                    role=(
+                        "promoteur"
+                        if signataire.est_promoteur
+                        else "membre du jury"
+                    ),
+                )
+            )
+            details = []
+            if avis.motif_refus:
+                details.append("motif : {}".format(avis.motif_refus))
+            if avis.commentaire_externe:
+                details.append("commentaire : {}".format(avis.commentaire_externe))
+            if details:
+                details = " ({})".format(' ; '.join(details))
+                message_fr += details
+
+        # Anglais
+        with translation.override(settings.LANGUAGE_CODE_EN):
+            message_en = "{signataire.prenom} {signataire.nom} has {action} the proposition {via_pdf}as {role}".format(
+                signataire=signataire,
+                action="refused" if avis.motif_refus else "approved",
+                via_pdf="via PDF " if avis.pdf else "",
+                role="promoter" if signataire.est_promoteur else "jury member",
+            )
+            details = []
+            if avis.motif_refus:
+                details.append("reason : {}".format(avis.motif_refus))
+            if avis.commentaire_externe:
+                details.append("comment : {}".format(avis.commentaire_externe))
+            if details:
+                details = " ({})".format('; '.join(details))
+                message_en += details
+
+        tags = ["parcours_doctoral", "jury"]
+
+        if statut_original_proposition != parcours_doctoral.statut:
+            tags.append("status-changed")
+
+        add_history_entry(
+            parcours_doctoral.entity_id.uuid,
+            message_fr,
+            message_en,
+            "{auteur.prenom} {auteur.nom}".format(auteur=auteur),
+            tags=tags,
         )

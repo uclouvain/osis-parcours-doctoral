@@ -23,35 +23,17 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from typing import Optional
+from typing import List
 
-from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
-from parcours_doctoral.ddd.domain.model.parcours_doctoral import (
-    ParcoursDoctoral,
-)
-from parcours_doctoral.ddd.jury.domain.model.jury import Jury, JuryIdentity, MembreJury
-from parcours_doctoral.ddd.jury.domain.service.i_historique import IHistorique
+from osis_common.ddd import interface
+from parcours_doctoral.ddd.jury.domain.model.enums import ChoixEtatSignature
 from parcours_doctoral.ddd.jury.dtos.jury import AvisDTO
 
 
-class HistoriqueInMemory(IHistorique):
+class Avis(interface.DomainService):
     @classmethod
-    def historiser_demande_signatures(
-        cls,
-        parcours_doctoral: ParcoursDoctoral,
-        jury: Jury,
-        matricule_auteur: str,
-    ):
-        pass
-
-    @classmethod
-    def historiser_avis(
-        cls,
-        parcours_doctoral: ParcoursDoctoral,
-        jury_id: 'JuryIdentity',
-        signataire: 'MembreJury',
-        avis: AvisDTO,
-        statut_original_proposition: 'ChoixStatutParcoursDoctoral',
-        matricule_auteur: Optional[str] = '',
-    ):
-        pass
+    def construire_avis_pdf(cls, pdf: List[str]) -> AvisDTO:
+        return AvisDTO(
+            etat=ChoixEtatSignature.APPROVED.name,
+            pdf=pdf,
+        )

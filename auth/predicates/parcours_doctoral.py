@@ -79,6 +79,12 @@ def is_jury_in_progress(self, user: User, obj: ParcoursDoctoral):
 
 
 @predicate(bind=True)
+@predicate_failed_msg(message=_("The jury signing is not in progress"))
+def is_jury_signing_in_progress(self, user: User, obj: ParcoursDoctoral):
+    return obj.status == ChoixStatutParcoursDoctoral.JURY_SOUMIS.name
+
+
+@predicate(bind=True)
 @predicate_failed_msg(message=_("The confirmation paper is not in progress"))
 def submitted_confirmation_paper(self, user: User, obj: ParcoursDoctoral):
     return obj.status == ChoixStatutParcoursDoctoral.CONFIRMATION_SOUMISE.name
