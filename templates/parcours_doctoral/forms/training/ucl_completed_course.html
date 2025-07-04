@@ -1,0 +1,66 @@
+{% load i18n django_bootstrap5 parcours_doctoral %}
+
+{% comment "License" %}
+  * OSIS stands for Open Student Information System. It's an application
+  * designed to manage the core business of higher education institutions,
+  * such as universities, faculties, institutes and professional schools.
+  * The core business involves the administration of students, teachers,
+  * courses, programs and so on.
+  *
+  * Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
+  *
+  * This program is free software: you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License as published by
+  * the Free Software Foundation, either version 3 of the License, or
+  * (at your option) any later version.
+  *
+  * This program is distributed in the hope that it will be useful,
+  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  * GNU General Public License for more details.
+  *
+  * A copy of this license - GNU General Public License - is available
+  * at the root of the source code of this program.  If not,
+  * see http://www.gnu.org/licenses/.
+{% endcomment %}
+
+<h2>
+  {% blocktranslate with category=view.activity.get_category_display trimmed %}
+    Edit <em>{{ category }}</em> activity.
+  {% endblocktranslate %}
+</h2>
+
+<div class="row">
+  {% field_data _('Activity type') _('Second cycle course') css_class='col-md-4' %}
+</div>
+
+{% translate 'Title' context 'parcours_doctoral course' as activity_name_label %}
+{% field_data activity_name_label form.instance.learning_unit_year.complete_title_i18n %}
+
+<div class="row">
+  {% field_data _('Course unit code') form.instance.learning_unit_year.acronym css_class='col-md-4' %}
+</div>
+
+<div class="row">
+  {% field_data _('Institution') 'UCLouvain' css_class='col-md-4' %}
+</div>
+
+<div class="row">
+  {% field_data _('Academic year') form.instance.learning_unit_year.academic_year css_class='col-md-4' %}
+</div>
+
+{% bootstrap_field_with_tooltip form.authors %}
+
+<div class="row">
+  {% bootstrap_field form.hour_volume wrapper_class="form-group col-md-4 required_field" %}
+  {% bootstrap_field_with_tooltip form.ects classes="form-group col-md-4 required_field" %}
+</div>
+
+<div class="row">
+  {% field_data _('Course unit with evaluation') _('Yes') css_class='col-md-4' %}
+  {% field_data _('Mark or honours obtained') form.final_assessment.submitted_mark css_class='col-md-4' %}
+  {% bootstrap_field form.corrected_mark wrapper_class="form-group col-md-4" placeholder="15/20" %}
+  {{ form.assessment_to_correct_uuid }}
+</div>
+
+{% bootstrap_field form.participating_proof wrapper_class="form-group required_field" %}

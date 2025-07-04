@@ -66,13 +66,11 @@
       <ul class="dropdown-menu dropdown-menu-end">
 
         {# Activity is unsubmitted : display edit/delete/submit/add-children #}
-        {% if activity.category != "UCL_COURSE" or request.resolver_match.url_name == 'course-enrollment' %}
-          <li>
-            <a class="dropdown-item" href="{{ edit_url }}">
-              {% trans "Edit" %}
-            </a>
-          </li>
-        {% endif %}
+        <li>
+          <a class="dropdown-item" href="{{ edit_url }}">
+            {% trans "Edit" %}
+          </a>
+        </li>
         {% if not remove_batch_action %}
           {% if activity.status|safe == "SOUMISE" %}
             <li>

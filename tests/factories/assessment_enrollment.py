@@ -23,6 +23,8 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+import random
+
 import factory
 
 from deliberation.models.enums.numero_session import Session
@@ -40,4 +42,7 @@ class AssessmentEnrollmentFactory(factory.django.DjangoModelFactory):
     session = Session.JANUARY.name
     status = StatutInscriptionEvaluation.ACCEPTEE.name
     late_enrollment = False
+    late_unenrollment = False
     course = factory.SubFactory(UclCourseFactory)
+    submitted_mark = factory.LazyAttribute(lambda x: str(random.randrange(10, 20)))
+    corrected_mark = factory.LazyAttribute(lambda x: str(random.randrange(10, 20)))
