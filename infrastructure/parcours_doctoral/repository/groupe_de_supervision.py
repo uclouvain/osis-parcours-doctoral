@@ -33,7 +33,6 @@ from django.utils.translation import gettext_lazy as _
 from osis_signature.models import Actor, Process, StateHistory
 
 from base.models.person import Person
-from osis_role.contrib.permissions import _get_roles_assigned_to_user
 from parcours_doctoral.auth.roles.ca_member import CommitteeMember
 from parcours_doctoral.auth.roles.promoter import Promoter
 from parcours_doctoral.ddd.builder.parcours_doctoral_identity import (
@@ -265,8 +264,8 @@ class GroupeDeSupervisionRepository(IGroupeDeSupervisionRepository):
         else:
             group_name, model = 'committee_members', CommitteeMember
             signataire_id = MembreCAIdentity(str(new_actor.uuid))
-        # Make sure the person has relevant role and group
-        if person and group_name not in _get_roles_assigned_to_user(person.user):
+        # Make sure the person has relevant role
+        if person:
             model.objects.update_or_create(person=person)
         return signataire_id
 

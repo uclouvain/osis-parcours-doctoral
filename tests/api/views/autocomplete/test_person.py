@@ -26,7 +26,8 @@
 from django.shortcuts import resolve_url
 from rest_framework.test import APITestCase
 
-from base.tests.factories.person import PersonFactory
+from admission.tests.factories.person import InternalPersonFactory
+from base.tests.factories.person import ExternalPersonFactory, PersonFactory
 from base.tests.factories.student import StudentFactory
 from base.tests.factories.tutor import TutorFactory
 from base.tests.factories.user import UserFactory
@@ -40,7 +41,7 @@ class AutocompletePersonViewTestCase(APITestCase):
 
     def test_autocomplete_persons_with_search_on_global_id(self):
         self.client.force_authenticate(user=self.user)
-        PersonFactory(global_id='00005789')
+        InternalPersonFactory(global_id='00005789')
         response = self.client.get(
             self.base_url + '?search=57',
             format='json',
@@ -50,7 +51,7 @@ class AutocompletePersonViewTestCase(APITestCase):
 
     def test_autocomplete_persons_with_search_on_first_name(self):
         self.client.force_authenticate(user=self.user)
-        PersonFactory(first_name='Jean-Marc')
+        InternalPersonFactory(first_name='Jean-Marc')
         response = self.client.get(
             self.base_url + '?search=jean',
             format='json',
@@ -60,7 +61,7 @@ class AutocompletePersonViewTestCase(APITestCase):
 
     def test_autocomplete_persons_with_search_on_last_name(self):
         self.client.force_authenticate(user=self.user)
-        PersonFactory(last_name='Doe')
+        InternalPersonFactory(last_name='Doe')
         response = self.client.get(
             self.base_url + '?search=doe',
             format='json',
@@ -70,7 +71,7 @@ class AutocompletePersonViewTestCase(APITestCase):
 
     def test_autocomplete_persons_without_students_that_are_not_tutors(self):
         self.client.force_authenticate(user=self.user)
-        student = StudentFactory(person__global_id='00005789')
+        student = StudentFactory(person=InternalPersonFactory(global_id='00005789'))
         response = self.client.get(
             self.base_url + '?search=57',
             format='json',
@@ -87,7 +88,7 @@ class AutocompletePersonViewTestCase(APITestCase):
 
     def test_autocomplete_persons_without_persons_with_empty_global_id(self):
         self.client.force_authenticate(user=self.user)
-        PersonFactory(global_id=None, first_name='John', last_name='Doe')
+        InternalPersonFactory(global_id=None, first_name='John', last_name='Doe')
         response = self.client.get(
             self.base_url + '?search=doe',
             format='json',
@@ -95,9 +96,9 @@ class AutocompletePersonViewTestCase(APITestCase):
         self.assertEqual(response.status_code, 200, response.content)
         self.assertEqual(response.json()['count'], 0)
 
-    def test_autocomplete_persons_without_persons_without_user(self):
+    def test_autocomplete_persons_without_persons_with_external_account(self):
         self.client.force_authenticate(user=self.user)
-        PersonFactory(global_id='00005789', user=None)
+        ExternalPersonFactory()
         response = self.client.get(
             self.base_url + '?search=57',
             format='json',
