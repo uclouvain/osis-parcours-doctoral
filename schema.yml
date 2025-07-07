@@ -1906,9 +1906,6 @@ components:
           type: string
         commentaire_externe:
           type: string
-        institut_these:
-          type: string
-          nullable: true
       required:
       - uuid_membre
     ApprouverJuryParPdfCommand:
@@ -3192,6 +3189,8 @@ components:
           type: string
         email:
           type: string
+        signature:
+          $ref: '#/components/schemas/SignatureMembreJuryDTONested'
       required:
       - autre_institution
       - email
@@ -3205,6 +3204,7 @@ components:
       - pays
       - prenom
       - role
+      - signature
       - titre
       - uuid
     MembreJuryDTONested:
@@ -3243,6 +3243,8 @@ components:
           type: string
         email:
           type: string
+        signature:
+          $ref: '#/components/schemas/SignatureMembreJuryDTONested'
       required:
       - autre_institution
       - email
@@ -3256,6 +3258,7 @@ components:
       - pays
       - prenom
       - role
+      - signature
       - titre
       - uuid
     MembreJuryIdentityDTO:
@@ -3615,7 +3618,11 @@ components:
               $ref: '#/components/schemas/ActionLink'
             create_jury_members:
               $ref: '#/components/schemas/ActionLink'
-            request_signatures:
+            jury_request_signatures:
+              $ref: '#/components/schemas/ActionLink'
+            jury_add_approval:
+              $ref: '#/components/schemas/ActionLink'
+            jury_approve_by_pdf:
               $ref: '#/components/schemas/ActionLink'
           readOnly: true
           default: {}
@@ -4457,6 +4464,36 @@ components:
       - start_date
       - title
       - type
+    SignatureMembreJuryDTONested:
+      type: object
+      description: |-
+        A `DTOSerializer` is just a regular `Serializer`, except that:
+
+        * A set of default fields are automatically populated from the Meta.source dataclass.
+        * All fields are set to read-only if needed when Meta.read_only is True.
+      properties:
+        etat:
+          type: string
+        date:
+          type: string
+          format: date-time
+          nullable: true
+        commentaire_externe:
+          type: string
+        commentaire_interne:
+          type: string
+        motif_refus:
+          type: string
+        pdf:
+          type: array
+          items:
+            type: string
+      required:
+      - commentaire_externe
+      - commentaire_interne
+      - etat
+      - motif_refus
+      - pdf
     StatusEnum:
       enum:
       - NON_SOUMISE

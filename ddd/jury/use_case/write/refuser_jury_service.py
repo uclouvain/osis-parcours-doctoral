@@ -34,7 +34,7 @@ from parcours_doctoral.ddd.jury.repository.i_jury import IJuryRepository
 from parcours_doctoral.ddd.repository.i_parcours_doctoral import IParcoursDoctoralRepository
 
 
-def refuser_proposition(
+def refuser_jury(
     cmd: 'RefuserJuryCommand',
     parcours_doctoral_repository: 'IParcoursDoctoralRepository',
     jury_repository: 'IJuryRepository',

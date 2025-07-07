@@ -38,9 +38,9 @@ class ShouldSignataireEtreInvite(BusinessValidator):
     signataire_id: str
 
     def validate(self, *args, **kwargs):
-        if any(
-            signature
-            for signature in self.jury.signatures_membres
-            if signature.membre_id == self.signataire_id and signature.etat == ChoixEtatSignature.INVITED
-        ):
+        if not [
+            membre
+            for membre in self.jury.membres
+            if membre.uuid == self.signataire_id and membre.signature.etat == ChoixEtatSignature.INVITED
+        ]:
             raise SignatairePasInviteException

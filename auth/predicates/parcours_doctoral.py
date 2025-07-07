@@ -157,6 +157,14 @@ def is_part_of_committee(self, user: User, obj: ParcoursDoctoral):
 
 
 @predicate(bind=True)
+@predicate_failed_msg(message=_("You must be a member of the jury to access this doctoral training"))
+def is_part_of_jury(self, user: User, obj: ParcoursDoctoral):
+    return (
+        user.person.pk in [actor.person_id for actor in obj.jury_group.actors.all()]
+    )
+
+
+@predicate(bind=True)
 def is_part_of_education_group(self, user: User, obj: ParcoursDoctoral):
     cache_key = _build_queryset_cache_key_from_role_qs(self.context['role_qs'], 'education_groups_affected')
 

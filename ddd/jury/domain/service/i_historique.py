@@ -49,7 +49,6 @@ class IHistorique(interface.DomainService):
     def historiser_avis(
         cls,
         parcours_doctoral: ParcoursDoctoral,
-        jury_id: 'JuryIdentity',
         signataire: 'MembreJury',
         avis: AvisDTO,
         statut_original_proposition: 'ChoixStatutParcoursDoctoral',

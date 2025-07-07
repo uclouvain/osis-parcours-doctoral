@@ -26,7 +26,7 @@
 from typing import List, Optional
 
 from django.conf import settings
-from django.db import transaction
+from django.db import transaction, IntegrityError
 from django.db.models import Prefetch, Q, F
 from django.db.models.functions import Coalesce
 from django.utils.translation import get_language
@@ -34,11 +34,12 @@ from osis_signature.models import Process, Actor, StateHistory
 
 from base.models.person import Person
 from osis_common.ddd.interface import ApplicationService, EntityIdentity, RootEntity
+from parcours_doctoral.auth.roles.jury_member import JuryMember
 from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from parcours_doctoral.ddd.jury.domain.model.enums import RoleJury, ChoixStatutSignature, ChoixEtatSignature, \
     TitreMembre, GenreMembre
 from parcours_doctoral.ddd.jury.domain.model.jury import Jury, JuryIdentity, MembreJury, SignatureMembre
-from parcours_doctoral.ddd.jury.dtos.jury import JuryDTO, MembreJuryDTO
+from parcours_doctoral.ddd.jury.dtos.jury import JuryDTO, MembreJuryDTO, SignatureMembreJuryDTO
 from parcours_doctoral.ddd.jury.repository.i_jury import IJuryRepository
 from parcours_doctoral.ddd.jury.validator.exceptions import (
     JuryNonTrouveException,
@@ -203,6 +204,7 @@ class JuryRepository(IJuryRepository):
                         'non_doctor_reason': '',
                         'gender': '',
                     }
+                    JuryMember.objects.update_or_create(person=person)
                 else:
                     country = Country.objects.filter(Q(iso_code=membre.pays) | Q(name=membre.pays)).first()
                     values = {
@@ -255,6 +257,14 @@ class JuryRepository(IJuryRepository):
                     genre=membre.genre if membre.genre else '',
                     langue=membre.langue,
                     email=membre.email,
+                    signature=SignatureMembreJuryDTO(
+                        etat=membre.signature.etat.name if membre.signature.etat else '',
+                        date=membre.signature.date,
+                        commentaire_externe=membre.signature.commentaire_externe,
+                        commentaire_interne=membre.signature.commentaire_interne,
+                        motif_refus=membre.signature.motif_refus,
+                        pdf=membre.signature.pdf,
+                    ),
                 )
                 for membre in jury.membres
             ],

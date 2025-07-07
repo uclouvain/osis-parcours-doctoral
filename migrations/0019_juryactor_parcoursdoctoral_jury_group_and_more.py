@@ -140,4 +140,38 @@ class Migration(migrations.Migration):
         migrations.DeleteModel(
             name="JuryMember",
         ),
+        migrations.CreateModel(
+            name="JuryMember",
+            fields=[
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("visible", models.BooleanField(default=True)),
+                (
+                    "person",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="+",
+                        to="base.person",
+                    ),
+                ),
+            ],
+            options={
+                "verbose_name": "Role: Jury member",
+                "verbose_name_plural": "Role: Jury members",
+            },
+        ),
+        migrations.AddConstraint(
+            model_name="jurymember",
+            constraint=models.UniqueConstraint(
+                fields=("person",),
+                name="parcours_doctoral_unique_jury_member_by_person",
+            ),
+        ),
     ]

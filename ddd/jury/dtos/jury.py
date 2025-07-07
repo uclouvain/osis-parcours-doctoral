@@ -32,6 +32,16 @@ from osis_common.ddd import interface
 
 
 @attr.dataclass(frozen=True, slots=True)
+class SignatureMembreJuryDTO(interface.DTO):
+    etat: str
+    date: Optional[datetime.datetime]
+    commentaire_externe: str
+    commentaire_interne: str
+    motif_refus: str
+    pdf: List[str]
+
+
+@attr.dataclass(frozen=True, slots=True)
 class MembreJuryDTO(interface.DTO):
     uuid: str
     role: str
@@ -47,6 +57,7 @@ class MembreJuryDTO(interface.DTO):
     genre: str
     langue: str
     email: str
+    signature: SignatureMembreJuryDTO
 
 
 @attr.dataclass(frozen=True, slots=True)

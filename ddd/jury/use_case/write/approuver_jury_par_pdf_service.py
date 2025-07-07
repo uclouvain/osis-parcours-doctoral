@@ -33,7 +33,7 @@ from parcours_doctoral.ddd.jury.repository.i_jury import IJuryRepository
 from parcours_doctoral.ddd.repository.i_parcours_doctoral import IParcoursDoctoralRepository
 
 
-def approuver_proposition_par_pdf(
+def approuver_jury_par_pdf(
     cmd: 'ApprouverJuryParPdfCommand',
     parcours_doctoral_repository: 'IParcoursDoctoralRepository',
     jury_repository: 'IJuryRepository',

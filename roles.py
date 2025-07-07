@@ -39,6 +39,7 @@ from parcours_doctoral.auth.roles.auditor import Auditor
 from parcours_doctoral.auth.roles.ca_member import CommitteeMember
 from parcours_doctoral.auth.roles.cdd_configurator import CddConfigurator
 from parcours_doctoral.auth.roles.das import SectorAdministrativeDirector
+from parcours_doctoral.auth.roles.jury_member import JuryMember
 from parcours_doctoral.auth.roles.jury_secretary import JurySecretary
 from parcours_doctoral.auth.roles.promoter import Promoter
 from parcours_doctoral.auth.roles.student import Student
@@ -51,6 +52,7 @@ role.role_manager.register(Promoter)
 role.role_manager.register(CommitteeMember)
 role.role_manager.register(Auditor)
 role.role_manager.register(SectorAdministrativeDirector)
+role.role_manager.register(JuryMember)
 
 
 PROGRAM_MANAGER_RULES = {

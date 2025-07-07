@@ -363,10 +363,10 @@ class ApprovePropositionMixin:
     ),
 )
 class JuryApprovePropositionAPIView(ApprovePropositionMixin, DoctorateAPIPermissionRequiredMixin, APIView):
-    name = "approvals"
+    name = "jury-approvals"
     permission_mapping = {
-        'POST': 'jury.approve_jury',
-        'PUT': 'jury.approve_jury',
+        'POST': 'parcours_doctoral.approve_jury',
+        'PUT': 'parcours_doctoral.approve_jury',
     }
 
 
@@ -387,7 +387,7 @@ class JuryApprovePropositionAPIView(ApprovePropositionMixin, DoctorateAPIPermiss
     ),
 )
 class JuryExternalApprovalPropositionAPIView(ApprovePropositionMixin, APIView):
-    name = "external-approvals"
+    name = "jury-external-approvals"
     authentication_classes = []
     permission_classes = []
 
@@ -430,9 +430,9 @@ class JuryExternalApprovalPropositionAPIView(ApprovePropositionMixin, APIView):
 
 
 class JuryApproveByPdfPropositionAPIView(DoctorateAPIPermissionRequiredMixin, APIView):
-    name = "approve-by-pdf"
+    name = "jury-approve-by-pdf"
     permission_mapping = {
-        'POST': 'jury.approve_jury_by_pdf',
+        'POST': 'parcours_doctoral.approve_jury_by_pdf',
     }
 
     @extend_schema(

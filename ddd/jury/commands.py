@@ -110,12 +110,6 @@ class VerifierJuryConditionSignatureQuery(interface.QueryRequest):
     uuid_jury: str
 
 
-# @attr.dataclass(frozen=True, slots=True)
-# class RenvoyerInvitationSignatureExterneCommand(interface.CommandRequest):
-#     uuid_jury: str
-#     uuid_membre: str
-
-
 @attr.dataclass(frozen=True, slots=True)
 class ApprouverJuryParPdfCommand(interface.CommandRequest):
     uuid_jury: str

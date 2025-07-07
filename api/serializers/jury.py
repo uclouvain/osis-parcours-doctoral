@@ -113,7 +113,6 @@ class RenvoyerInvitationSignatureExterneSerializer(DTOSerializer):
 
 class ApprouverJuryCommandSerializer(DTOSerializer):
     uuid_jury = None
-    institut_these = RelatedInstituteField(required=False)
 
     class Meta:
         source = ApprouverJuryCommand

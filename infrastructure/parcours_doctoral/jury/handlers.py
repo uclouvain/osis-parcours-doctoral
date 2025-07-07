@@ -31,6 +31,7 @@ from parcours_doctoral.ddd.jury.commands import (
     RecupererJuryMembreQuery,
     RecupererJuryQuery,
     RetirerMembreCommand, DemanderSignaturesCommand, VerifierJuryConditionSignatureQuery,
+    RenvoyerInvitationSignatureExterneCommand, ApprouverJuryParPdfCommand, ApprouverJuryCommand, RefuserJuryCommand,
 )
 from parcours_doctoral.ddd.jury.use_case.read.recuperer_jury_membre_service import (
     recuperer_jury_membre,
@@ -43,6 +44,8 @@ from parcours_doctoral.ddd.jury.use_case.read.verifier_jury_condition_signature_
 from parcours_doctoral.ddd.jury.use_case.write.ajouter_membre_service import (
     ajouter_membre,
 )
+from parcours_doctoral.ddd.jury.use_case.write.approuver_jury_par_pdf_service import approuver_jury_par_pdf
+from parcours_doctoral.ddd.jury.use_case.write.approuver_jury_service import approuver_jury
 from parcours_doctoral.ddd.jury.use_case.write.demander_signatures_service import demander_signatures
 from parcours_doctoral.ddd.jury.use_case.write.modifier_jury_service import (
     modifier_jury,
@@ -53,6 +56,9 @@ from parcours_doctoral.ddd.jury.use_case.write.modifier_membre_service import (
 from parcours_doctoral.ddd.jury.use_case.write.modifier_role_membre import (
     modifier_role_membre,
 )
+from parcours_doctoral.ddd.jury.use_case.write.refuser_jury_service import refuser_jury
+from parcours_doctoral.ddd.jury.use_case.write.renvoyer_invitation_signature_externe_service import \
+    renvoyer_invitation_signature_externe
 from parcours_doctoral.ddd.jury.use_case.write.retirer_membre_service import (
     retirer_membre,
 )
@@ -112,5 +118,30 @@ COMMAND_HANDLERS = {
     VerifierJuryConditionSignatureQuery: lambda msg_bus, cmd: verifier_jury_condition_signature(
         cmd,
         jury_repository=_jury_repository,
+    ),
+    RenvoyerInvitationSignatureExterneCommand: lambda msg_bus, cmd: renvoyer_invitation_signature_externe(
+        cmd,
+        parcours_doctoral_repository=_parcours_doctoral_repository,
+        jury_repository=_jury_repository,
+        notification=_notification,
+    ),
+    ApprouverJuryParPdfCommand: lambda msg_bus, cmd: approuver_jury_par_pdf(
+        cmd,
+        parcours_doctoral_repository=_parcours_doctoral_repository,
+        jury_repository=_jury_repository,
+        historique=_historique,
+    ),
+    ApprouverJuryCommand: lambda msg_bus, cmd: approuver_jury(
+        cmd,
+        parcours_doctoral_repository=_parcours_doctoral_repository,
+        jury_repository=_jury_repository,
+        historique=_historique,
+    ),
+    RefuserJuryCommand: lambda msg_bus, cmd: refuser_jury(
+        cmd,
+        parcours_doctoral_repository=_parcours_doctoral_repository,
+        jury_repository=_jury_repository,
+        historique=_historique,
+        notification=_notification,
     ),
 }
