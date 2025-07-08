@@ -448,7 +448,7 @@ class JuryApproveByPdfPropositionAPIView(DoctorateAPIPermissionRequiredMixin, AP
         jury_id = message_bus_instance.invoke(
             ApprouverJuryParPdfCommand(
                 uuid_jury=str(kwargs["uuid"]),
-                matricule_auteur=self.get_permission_object().candidate.global_id,
+                matricule_auteur=self.get_permission_object().student.global_id,
                 **serializer.data,
             ),
         )

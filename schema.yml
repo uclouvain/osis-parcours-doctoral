@@ -4030,12 +4030,9 @@ components:
         * A set of default fields are automatically populated from the Meta.source dataclass.
         * All fields are set to read-only if needed when Meta.read_only is True.
       properties:
-        uuid_jury:
-          type: string
         uuid_membre:
           type: string
       required:
-      - uuid_jury
       - uuid_membre
     Residency:
       type: object

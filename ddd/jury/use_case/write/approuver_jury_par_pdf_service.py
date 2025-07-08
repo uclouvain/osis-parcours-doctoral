@@ -53,6 +53,6 @@ def approuver_jury_par_pdf(
 
     # THEN
     jury_repository.save(jury)
-    historique.historiser_avis(parcours_doctoral, jury.entity_id, signataire, avis, statut_original_parcours_doctoral, cmd.matricule_auteur)
+    historique.historiser_avis(parcours_doctoral, signataire, avis, statut_original_parcours_doctoral, cmd.matricule_auteur)
 
     return jury.entity_id

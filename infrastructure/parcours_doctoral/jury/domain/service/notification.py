@@ -158,8 +158,8 @@ class Notification(INotification):
 
         tokens = {
             **cls.get_common_tokens(parcours_doctoral_instance),
-            "signataire_first_name": signataire.first_name,
-            "signataire_last_name": signataire.last_name,
+            "signataire_first_name": actor.first_name,
+            "signataire_last_name": actor.last_name,
             "parcours_doctoral_link_front": cls._lien_invitation_externe(parcours_doctoral, actor),
         }
 

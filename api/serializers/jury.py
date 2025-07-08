@@ -105,7 +105,7 @@ class ExternalJuryDTOSerializer(serializers.Serializer):
 
 
 class RenvoyerInvitationSignatureExterneSerializer(DTOSerializer):
-    uuid_proposition = None
+    uuid_jury = None
 
     class Meta:
         source = RenvoyerInvitationSignatureExterneCommand

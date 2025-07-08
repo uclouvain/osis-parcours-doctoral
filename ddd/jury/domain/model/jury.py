@@ -156,7 +156,13 @@ class Jury(interface.RootEntity):
         for membre in filter(lambda m: m.signature.etat in etats_initiaux, self.membres):
             InviterASignerValidatorList(jury=self, signataire_id=membre.uuid).validate()
             self.membres = [m for m in self.membres if m.uuid != membre.uuid]
-            self.membres.append(attr.evolve(membre, signature=attr.evolve(membre.signature, etat=ChoixEtatSignature.INVITED)))
+            self.membres.append(attr.evolve(membre, signature=attr.evolve(
+                membre.signature,
+                etat=ChoixEtatSignature.INVITED,
+                commentaire_externe="",
+                commentaire_interne="",
+                motif_refus="",
+            )))
 
     def approuver(
         self,
