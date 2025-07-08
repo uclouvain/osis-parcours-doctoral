@@ -38,6 +38,7 @@ from parcours_doctoral.ddd.repository.i_parcours_doctoral import IParcoursDoctor
 def demander_signatures(
     cmd: 'DemanderSignaturesCommand',
     jury_repository: 'IJuryRepository',
+    jury_service: 'IJuryService',
     parcours_doctoral_repository: 'IParcoursDoctoralRepository',
     historique: 'IHistorique',
     notification: 'INotification',
@@ -46,6 +47,7 @@ def demander_signatures(
     entity_id = ParcoursDoctoralIdentityBuilder.build_from_uuid(cmd.uuid_parcours_doctoral)
     parcours_doctoral = parcours_doctoral_repository.get(entity_id=entity_id)
     jury = jury_repository.get(JuryIdentityBuilder.build_from_uuid(cmd.uuid_parcours_doctoral))
+    verificateur = jury_service.recuperer_verificateur(entity_id)
 
     # WHEN
     VerifierJuryConditionSignature(
@@ -53,7 +55,7 @@ def demander_signatures(
     ).validate()
 
     parcours_doctoral.verrouiller_jury_pour_signature()
-    jury.inviter_a_signer()
+    jury.inviter_a_signer(verificateur)
 
     # THEN
     jury_repository.save(jury)

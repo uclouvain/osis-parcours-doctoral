@@ -175,17 +175,19 @@ class JuryRepository(IJuryRepository):
                 # We cannot use update_or_create as JuryActor inherits from another models and we get an error
                 try:
                     actor = JuryActor.objects.get(uuid=membre.uuid, process=current_parcours_doctoral.jury_group)
+                    is_create = False
                 except JuryActor.DoesNotExist:
                     actor = JuryActor(uuid=membre.uuid, process=current_parcours_doctoral.jury_group)
+                    is_create = True
 
                 # Handle signature
                 if actor.pk is not None and actor.state != membre.signature.etat.name:
                     StateHistory.objects.create(state=membre.signature.etat.name, actor_id=actor.id)
-                    if membre.signature.etat.name in [ChoixEtatSignature.APPROVED.name, ChoixEtatSignature.DECLINED.name]:
-                        actor.comment = membre.signature.commentaire_externe
-                        actor.pdf_from_candidate = membre.signature.pdf
-                        actor.internal_comment = membre.signature.commentaire_interne
-                        actor.rejection_reason = membre.signature.motif_refus
+                if membre.signature.etat.name in [ChoixEtatSignature.APPROVED.name, ChoixEtatSignature.DECLINED.name]:
+                    actor.comment = membre.signature.commentaire_externe
+                    actor.pdf_from_candidate = membre.signature.pdf
+                    actor.internal_comment = membre.signature.commentaire_interne
+                    actor.rejection_reason = membre.signature.motif_refus
 
                 # Handle the rest
                 if membre.matricule:
@@ -228,6 +230,10 @@ class JuryRepository(IJuryRepository):
                 for key, value in values.items():
                     setattr(actor, key, value)
                 actor.save()
+
+                if is_create and membre.signature.etat.name != ChoixEtatSignature.NOT_INVITED.name:
+                    StateHistory.objects.create(state=membre.signature.etat.name, actor_id=actor.id)
+
         return entity.entity_id
 
     @classmethod

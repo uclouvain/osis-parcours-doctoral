@@ -151,7 +151,10 @@ class Jury(interface.RootEntity):
         self.membres.remove(ancien_membre)
         self.membres.append(attr.evolve(ancien_membre, role=RoleJury[role], est_promoteur=ancien_membre.est_promoteur))
 
-    def inviter_a_signer(self):
+    def inviter_a_signer(self, verificateur: MembreJury):
+        if not [m for m in self.membres if m.uuid == verificateur.uuid]:
+            self.membres.append(verificateur)
+
         etats_initiaux = [ChoixEtatSignature.NOT_INVITED, ChoixEtatSignature.DECLINED]
         for membre in filter(lambda m: m.signature.etat in etats_initiaux, self.membres):
             InviterASignerValidatorList(jury=self, signataire_id=membre.uuid).validate()

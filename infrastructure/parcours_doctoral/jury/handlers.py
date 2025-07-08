@@ -63,6 +63,7 @@ from parcours_doctoral.ddd.jury.use_case.write.retirer_membre_service import (
     retirer_membre,
 )
 from parcours_doctoral.infrastructure.parcours_doctoral.jury.domain.service.historique import Historique
+from parcours_doctoral.infrastructure.parcours_doctoral.jury.domain.service.jury import JuryService
 from parcours_doctoral.infrastructure.parcours_doctoral.jury.domain.service.notification import Notification
 from parcours_doctoral.infrastructure.parcours_doctoral.jury.repository.jury import (
     JuryRepository,
@@ -73,6 +74,7 @@ from parcours_doctoral.infrastructure.parcours_doctoral.repository.groupe_de_sup
 from parcours_doctoral.infrastructure.parcours_doctoral.repository.parcours_doctoral import ParcoursDoctoralRepository
 
 _jury_repository = JuryRepository()
+_jury_service = JuryService()
 _parcours_doctoral_repository = ParcoursDoctoralRepository()
 _groupe_de_supervisition_repository = GroupeDeSupervisionRepository()
 _historique = Historique()
@@ -111,6 +113,7 @@ COMMAND_HANDLERS = {
     DemanderSignaturesCommand: lambda msg_bus, cmd: demander_signatures(
         cmd,
         jury_repository=_jury_repository,
+        jury_service=_jury_service,
         parcours_doctoral_repository=_parcours_doctoral_repository,
         historique=_historique,
         notification=_notification,
