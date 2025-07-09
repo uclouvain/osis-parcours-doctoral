@@ -23,22 +23,27 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from typing import List
-
-from parcours_doctoral.ddd.formation.commands import (
-    RecupererInscriptionsEvaluationsQuery,
+from parcours_doctoral.ddd.formation.builder.inscription_evaluation_builder import (
+    InscriptionEvaluationIdentityBuilder,
 )
-from parcours_doctoral.ddd.formation.dtos.evaluation import InscriptionEvaluationDTO
+from parcours_doctoral.ddd.formation.commands import ReinscrireEvaluationCommand
 from parcours_doctoral.ddd.formation.repository.i_inscription_evaluation import (
     IInscriptionEvaluationRepository,
 )
 
 
-def recuperer_inscriptions_evaluations(
-    cmd: RecupererInscriptionsEvaluationsQuery,
+def reinscrire_evaluation(
+    cmd: ReinscrireEvaluationCommand,
     inscription_evaluation_repository: IInscriptionEvaluationRepository,
-) -> List[InscriptionEvaluationDTO]:
-    return inscription_evaluation_repository.search_dto(
-        parcours_doctoral_id=cmd.parcours_doctoral_uuid,
-        cours_uuid=cmd.cours_uuid,
-    )
+):
+    # GIVEN
+    entity_id = InscriptionEvaluationIdentityBuilder.build_from_uuid(uuid=cmd.inscription_uuid)
+    entity = inscription_evaluation_repository.get(entity_id=entity_id)
+
+    # WHEN
+    entity.reinscrire()
+
+    # THEN
+    inscription_evaluation_repository.save(entity)
+
+    return entity_id

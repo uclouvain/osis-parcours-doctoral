@@ -41,33 +41,24 @@
       registered at {{ formation }} realized the following third cycle training:
     {% endblocktranslate %}
 
-    {% for activity in activities %}
-      {% if not activity.parent_id and activity.category != 'PAPER' and activity.category != 'VAE' %}
-        <h3 class="mt-3"><strong>{{ activity.category|enum_display:'CategorieActivite' }}</strong></h3>
-
-        <table>
-          <tr>
-            <td class="pe-2">{{ activity.ects|format_ects }}</td>
-            <td>
-              {% with template_name=activity.category|lower|add:'.html' %}
-                {% include "parcours_doctoral/details/training/description/"|add:template_name %}
-              {% endwith %}
-            </td>
-          </tr>
-        </table>
-
-        {% for children_activity in activity.children.all %}
-          <h3 class="mt-2"><strong>{{ children_activity.category|enum_display:'CategorieActivite' }}</strong></h3>
-
+    {% for category, activities in categories.items %}
+      {% if activities %}
+        <h3 class="mt-3"><strong>{{ category }}</strong></h3>
+        {% for activity in activities %}
           <table>
             <tr>
-              <td class="pe-2">{{ children_activity.ects|format_ects }}</td>
+              <td class="pe-2">{{ activity.ects|format_ects }}</td>
               <td>
-                {% include "parcours_doctoral/details/training/description/"|add:activity.category|add:"_"|add:children_activity.category|lower|add:'.html' with activity=children_activity %}
+                {% with template_name=activity.category|lower|add:'.html' %}
+                  {% if activity.parent %}
+                    {% include "parcours_doctoral/details/training/description/"|add:activity.parent.category|lower|add:"_"|add:template_name %}
+                  {% else %}
+                    {% include "parcours_doctoral/details/training/description/"|add:template_name %}
+                  {% endif %}
+                {% endwith %}
               </td>
             </tr>
           </table>
-
         {% endfor %}
       {% endif %}
     {% endfor %}
