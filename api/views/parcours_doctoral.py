@@ -62,7 +62,7 @@ class DoctorateAPIView(
     pagination_class = None
     filter_backends = []
     permission_mapping = {
-        'GET': 'parcours_doctoral.view_parcours_doctoral',
+        'GET': 'parcours_doctoral.api_view_parcours_doctoral',
     }
 
     @extend_schema(
@@ -150,7 +150,7 @@ class BaseListView(APIPermissionRequiredMixin, ListAPIView):
 class DoctorateListView(BaseListView):
     name = "list"
     permission_mapping = {
-        'GET': 'parcours_doctoral.view_list',
+        'GET': 'parcours_doctoral.api_view_list',
     }
 
     def doctorate_list(self, request):
@@ -169,7 +169,7 @@ class DoctorateListView(BaseListView):
 class SupervisedDoctorateListView(BaseListView):
     name = "supervised_list"
     permission_mapping = {
-        'GET': 'parcours_doctoral.view_supervised_list',
+        'GET': 'parcours_doctoral.api_view_supervised_list',
     }
 
     def permission_object_qs(self, doctorate_list):
