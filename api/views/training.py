@@ -129,8 +129,8 @@ class DoctoralTrainingListView(DoctorateAPIPermissionRequiredMixin, GenericAPIVi
     lookup_field = 'uuid'
     lookup_url_kwarg = 'activity_id'
     permission_mapping = {
-        'GET': 'parcours_doctoral.view_doctoral_training',
-        'POST': 'parcours_doctoral.add_training',
+        'GET': 'parcours_doctoral.api_view_doctoral_training',
+        'POST': 'parcours_doctoral.api_add_training',
     }
 
     def get_queryset(self):
@@ -168,7 +168,7 @@ class TrainingConfigView(DoctorateAPIPermissionRequiredMixin, RetrieveModelMixin
     serializer_class = DoctoralTrainingConfigSerializer
     lookup_field = 'uuid'
     permission_mapping = {
-        'GET': 'parcours_doctoral.view_training',
+        'GET': 'parcours_doctoral.api_view_training',
     }
 
     def get_object(self):
@@ -194,9 +194,9 @@ class TrainingView(DoctorateAPIPermissionRequiredMixin, GenericAPIView):
     lookup_field = 'uuid'
     lookup_url_kwarg = 'activity_id'
     permission_mapping = {
-        'GET': 'parcours_doctoral.view_training',
-        'PUT': 'parcours_doctoral.update_training',
-        'DELETE': 'parcours_doctoral.delete_training',
+        'GET': 'parcours_doctoral.api_view_training',
+        'PUT': 'parcours_doctoral.api_update_training',
+        'DELETE': 'parcours_doctoral.api_delete_training',
     }
 
     def get_queryset(self):
@@ -246,7 +246,7 @@ class TrainingSubmitView(DoctorateAPIPermissionRequiredMixin, GenericAPIView):
     serializer_class = DoctoralTrainingBatchSerializer
     lookup_field = 'uuid'
     permission_mapping = {
-        'POST': 'parcours_doctoral.submit_training',
+        'POST': 'parcours_doctoral.api_submit_training',
     }
 
     @extend_schema(
@@ -285,7 +285,7 @@ class TrainingAssentView(DoctorateAPIPermissionRequiredMixin, GenericAPIView):
     serializer_class = DoctoralTrainingAssentSerializer
     lookup_field = 'uuid'
     permission_mapping = {
-        'POST': 'parcours_doctoral.assent_training',
+        'POST': 'parcours_doctoral.api_assent_training',
     }
 
     @extend_schema(
@@ -323,7 +323,7 @@ class ComplementaryTrainingListView(DoctoralTrainingListView):
     name = "complementary-training"
     http_method_names = ['get']
     permission_mapping = {
-        'GET': 'parcours_doctoral.view_complementary_training',
+        'GET': 'parcours_doctoral.api_view_complementary_training',
     }
 
     def get_queryset(self):
@@ -340,7 +340,7 @@ class CourseEnrollmentListView(DoctoralTrainingListView):
     name = "course-enrollment"
     http_method_names = ['get']
     permission_mapping = {
-        'GET': 'parcours_doctoral.view_course_enrollment',
+        'GET': 'parcours_doctoral.api_view_course_enrollment',
     }
 
     def get_queryset(self):
@@ -359,7 +359,7 @@ class AssessmentEnrollmentListView(DoctorateAPIPermissionRequiredMixin, ListAPIV
     pagination_class = None
     filter_backends = []
     permission_mapping = {
-        'GET': 'parcours_doctoral.view_assessment_enrollment',
+        'GET': 'parcours_doctoral.api_view_assessment_enrollment',
     }
     serializer_class = InscriptionEvaluationDTOSerializer
 
@@ -382,7 +382,7 @@ class AssessmentEnrollmentDetailView(DoctorateAPIPermissionRequiredMixin, Retrie
     pagination_class = None
     filter_backends = []
     permission_mapping = {
-        'GET': 'parcours_doctoral.view_assessment_enrollment',
+        'GET': 'parcours_doctoral.api_view_assessment_enrollment',
     }
     serializer_class = InscriptionEvaluationDTOSerializer
 
@@ -398,7 +398,7 @@ class TrainingRecapPdfApiView(DoctorateAPIPermissionRequiredMixin, RetrieveModel
     name = "training-pdf-recap"
     http_method_names = ['get']
     permission_mapping = {
-        'GET': 'parcours_doctoral.view_doctoral_training',
+        'GET': 'parcours_doctoral.api_view_doctoral_training',
     }
     pagination_class = None
     filter_backends = []

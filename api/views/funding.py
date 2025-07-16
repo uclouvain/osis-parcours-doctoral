@@ -48,8 +48,8 @@ class FundingApiView(
     pagination_class = None
     filter_backends = []
     permission_mapping = {
-        'GET': 'parcours_doctoral.view_funding',
-        'PUT': 'parcours_doctoral.change_funding',
+        'GET': 'parcours_doctoral.api_view_funding',
+        'PUT': 'parcours_doctoral.api_change_funding',
     }
 
     @extend_schema(
