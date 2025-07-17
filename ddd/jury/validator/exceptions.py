@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -25,6 +25,7 @@
 ##############################################################################
 
 from django.utils.translation import gettext_lazy as _
+
 from osis_common.ddd.interface import BusinessException
 
 
@@ -32,7 +33,7 @@ class PromoteurPresidentException(BusinessException):
     status_code = "JURY-1"
 
     def __init__(self, **kwargs):
-        message = _("A promoter can not be president.")
+        message = _("A supervisor can not be president.")
         super().__init__(message, **kwargs)
 
 
@@ -60,7 +61,7 @@ class PromoteurRetireException(BusinessException):
     def __init__(self, uuid_membre, jury, **kwargs):
         self.uuid_membre = uuid_membre
         self.jury = jury
-        message = _("A promoter can not be removed from the jury.")
+        message = _("A supervisor can not be removed from the jury.")
         super().__init__(message, **kwargs)
 
 
@@ -70,7 +71,7 @@ class PromoteurModifieException(BusinessException):
     def __init__(self, uuid_membre, jury, **kwargs):
         self.uuid_membre = uuid_membre
         self.jury = jury
-        message = _("A promoter can not be updated from the jury.")
+        message = _("A supervisor can not be updated from the jury.")
         super().__init__(message, **kwargs)
 
 

@@ -165,7 +165,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "work_start_date",
-                    models.DateField(blank=True, null=True, verbose_name="Work start date"),
+                    models.DateField(blank=True, null=True, verbose_name="Research start date"),
                 ),
                 (
                     "project_document",
@@ -1486,11 +1486,11 @@ class Migration(migrations.Migration):
                 ("course_completed", models.BooleanField(blank=True, default=False)),
                 (
                     "reference_promoter_assent",
-                    models.BooleanField(null=True, verbose_name="Lead supervisor assent"),
+                    models.BooleanField(null=True, verbose_name="Contact supervisor assent"),
                 ),
                 (
                     "reference_promoter_comment",
-                    models.TextField(default="", verbose_name="Lead supervisor comment"),
+                    models.TextField(default="", verbose_name="Contact supervisor comment"),
                 ),
                 (
                     "cdd_comment",

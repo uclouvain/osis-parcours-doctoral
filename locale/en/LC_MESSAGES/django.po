@@ -55,8 +55,8 @@ msgid ""
 "%(session)s - %(course_year)s-%(course_year_1)s)."
 msgstr ""
 "<a href=\"%(assessment_enrolment_list_url)s\">%(reference)s</a> - A mark has "
-"been specified for an assessment (%(course_acronym)s - session n°"
-"%(session)s - %(course_year)s-%(course_year_1)s)."
+"been specified for an assessment (%(course_acronym)s - session n°%(session)s "
+"- %(course_year)s-%(course_year_1)s)."
 
 #, python-format
 msgid ""
@@ -82,8 +82,8 @@ msgstr ""
 
 #, python-format
 msgid ""
-"<a href=\"%(confirmation_paper_link_back)s\">%(reference)s</a> - A promoter "
-"submitted documents related to the confirmation paper of "
+"<a href=\"%(confirmation_paper_link_back)s\">%(reference)s</a> - A "
+"supervisor submitted documents related to the confirmation paper of "
 "%(student_first_name)s %(student_last_name)s for %(training_title)s"
 msgstr ""
 
@@ -137,7 +137,7 @@ msgid ""
 "<span class=\"bold-text\">Name, signature</span> <span class=\"bold-text "
 "font-italic\">and date</span> of <span class=\"bold-text underline-"
 "text\">all outgoing members</span> of the supervisory panel - including the "
-"promoter(s) if applicable (<span class=\"font-italic\">or attach a "
+"supervisor(s) if applicable (<span class=\"font-italic\">or attach a "
 "confirmation email</span>)"
 msgstr ""
 
@@ -166,13 +166,13 @@ msgstr ""
 msgid "A paper of each type has already been created."
 msgstr ""
 
-msgid "A promoter can not be president."
+msgid "A supervisor can not be president."
 msgstr ""
 
-msgid "A promoter can not be removed from the jury."
+msgid "A supervisor can not be removed from the jury."
 msgstr ""
 
-msgid "A promoter can not be updated from the jury."
+msgid "A supervisor can not be updated from the jury."
 msgstr ""
 
 msgid "ABANDON"
@@ -285,9 +285,6 @@ msgstr ""
 msgid "Add a paper/presentation for this research residency"
 msgstr ""
 
-msgid "Add a promoter or a CA member"
-msgstr ""
-
 msgid "Add a publication"
 msgstr ""
 
@@ -307,6 +304,9 @@ msgid "Add a session"
 msgstr ""
 
 msgid "Add a session for this seminar"
+msgstr ""
+
+msgid "Add a supervisor or a supervision committee member"
 msgstr ""
 
 msgid "Add an activity"
@@ -498,10 +498,10 @@ msgid "Brief justification"
 msgstr ""
 
 msgid "CA Member"
-msgstr "Supervisory panel member"
+msgstr "Supervision committee member"
 
 msgid "CA members"
-msgstr ""
+msgstr "Supervision committee members"
 
 msgid "CDD"
 msgstr ""
@@ -607,9 +607,9 @@ msgid "Canvas of the supervisory panel report to download"
 msgstr ""
 
 msgid "Carbon-copy the CA members"
-msgstr ""
+msgstr "Carbon-copy the supervision committee members"
 
-msgid "Carbon-copy the promoters"
+msgid "Carbon-copy the supervisors"
 msgstr ""
 
 msgid "Category"
@@ -756,6 +756,18 @@ msgid ""
 msgstr ""
 
 msgid "Contact language"
+msgstr ""
+
+msgid "Contact supervisor"
+msgstr ""
+
+msgid "Contact supervisor approval"
+msgstr ""
+
+msgid "Contact supervisor assent"
+msgstr ""
+
+msgid "Contact supervisor comment"
 msgstr ""
 
 msgid "Context"
@@ -985,7 +997,7 @@ msgstr ""
 msgid "Description of your paper/presentation"
 msgstr ""
 
-msgid "Designate as lead supervisor"
+msgid "Designate as contact supervisor"
 msgstr ""
 
 msgid "Detailed curriculum vitae"
@@ -1369,8 +1381,9 @@ msgid ""
 msgstr ""
 
 msgid ""
-"If known, indicate the name of the laboratory, clinical department or "
-"research centre where the thesis will be carried out at UCLouvain"
+"If known, indicate, for example, the name of the laboratory, clinical "
+"department, research centre, ... where the thesis will be carried out at "
+"UCLouvain"
 msgstr ""
 
 msgid ""
@@ -1551,6 +1564,9 @@ msgstr ""
 msgid "Language"
 msgstr ""
 
+msgid "Language in which the domain doctoral committee can contact this person"
+msgstr ""
+
 msgid "Last name / First name"
 msgstr ""
 
@@ -1567,18 +1583,6 @@ msgid "Late enrollment"
 msgstr ""
 
 msgid "Late unenrollment"
-msgstr ""
-
-msgid "Lead supervisor"
-msgstr ""
-
-msgid "Lead supervisor approval"
-msgstr ""
-
-msgid "Lead supervisor assent"
-msgstr ""
-
-msgid "Lead supervisor comment"
 msgstr ""
 
 msgid "Learning unit"
@@ -1672,25 +1676,25 @@ msgid ""
 "paper"
 msgstr ""
 
-msgid "Mail sent to each actor of the supervision group to request a signature"
-msgstr ""
-
-msgid "Mail sent to promoters when a member of the supervision panel refuses"
-msgstr ""
-
 msgid ""
-"Mail sent to reference promoter to inform of the submission of complementary "
+"Mail sent to contact supervisor to inform of the submission of complementary "
 "training activities"
 msgstr ""
 
 msgid ""
-"Mail sent to reference promoter to inform of the submission of course "
+"Mail sent to contact supervisor to inform of the submission of course "
 "enrollment"
 msgstr ""
 
 msgid ""
-"Mail sent to reference promoter to inform of the submission of doctoral "
+"Mail sent to contact supervisor to inform of the submission of doctoral "
 "training activities"
+msgstr ""
+
+msgid "Mail sent to each actor of the supervision group to request a signature"
+msgstr ""
+
+msgid "Mail sent to supervisors when a member of the supervision panel refuses"
 msgstr ""
 
 msgid ""
@@ -1862,7 +1866,7 @@ msgstr ""
 msgid "National publication"
 msgstr ""
 
-msgid "Negative assessment by lead supervisor"
+msgid "Negative assessment by contact supervisor"
 msgstr ""
 
 msgid "New deadline"
@@ -2169,24 +2173,16 @@ msgstr ""
 msgid "Project"
 msgstr ""
 
-msgid "Project resume"
+msgid "Project abstract"
 msgstr ""
 
-msgid "Project resume (max. 2000 characters)"
+msgid "Project abstract (max. 2000 characters)"
 msgstr ""
 
 msgid "Project title"
 msgstr ""
 
 msgid "Project title (max. 100 characters)"
-msgstr ""
-
-msgctxt "gender"
-msgid "Promoter"
-msgstr ""
-
-msgctxt "gender"
-msgid "Promoters"
 msgstr ""
 
 msgid "Promotion"
@@ -2371,6 +2367,9 @@ msgid "Research scholarship"
 msgstr ""
 
 msgid "Research seminar"
+msgstr ""
+
+msgid "Research start date"
 msgstr ""
 
 msgid "Resend invitation"
@@ -2745,6 +2744,10 @@ msgstr ""
 msgid "Supervisor not found."
 msgstr ""
 
+msgctxt "gender"
+msgid "Supervisors"
+msgstr ""
+
 msgid "Supervisory panel"
 msgstr ""
 
@@ -2827,6 +2830,9 @@ msgid ""
 msgstr ""
 
 msgid "The confirmation paper is not in progress"
+msgstr ""
+
+msgid "The contact supervisor must be internal UCLouvain"
 msgstr ""
 
 msgid "The current training is attached to this document."
@@ -2962,9 +2968,9 @@ msgstr ""
 
 msgid "There can be no more CA members in the supervision group."
 msgstr ""
-"There can be no more supervisory panel members in the supervision group."
+"There can be no more supervision committee members in the supervision group."
 
-msgid "There can be no more promoters in the supervision group."
+msgid "There can be no more supervisors in the supervision group."
 msgstr ""
 
 msgid "There is no request for a new deadline."
@@ -3239,7 +3245,7 @@ msgid "Validated by CA"
 msgstr ""
 
 msgctxt "dashboard-indicator training"
-msgid "Validated by promoter"
+msgid "Validated by supervisor"
 msgstr ""
 
 msgid "Validated credits total"
@@ -3278,9 +3284,6 @@ msgstr ""
 msgid "Work contract type"
 msgstr ""
 
-msgid "Work start date"
-msgstr ""
-
 msgid "Working contract type"
 msgstr ""
 
@@ -3290,7 +3293,7 @@ msgid ""
 msgstr ""
 
 msgid ""
-"Write your resume in the language decided with your accompanying committee."
+"Write your abstract in the language decided with your accompanying committee."
 msgstr ""
 
 msgid "YES"
@@ -3319,7 +3322,7 @@ msgstr ""
 
 msgid "You must add at least two CA members in order to request signatures."
 msgstr ""
-"You must add at least two supervisory panel members in order to request "
+"You must add at least two supervision committee members in order to request "
 "signatures."
 
 msgid "You must be a member of the committee to access this doctoral training"
@@ -3330,19 +3333,19 @@ msgid ""
 "training"
 msgstr ""
 
-msgid "You must be the reference promoter to access this doctoral training"
+msgid "You must be the contact supervisor to access this doctoral training"
 msgstr ""
 
 msgid "You must be the request author to access this doctoral training"
 msgstr ""
 
-msgid "You must be the request promoter to access this doctoral training"
+msgid "You must be the request supervisor to access this doctoral training"
 msgstr ""
 
 msgid "You must reference a person in UCLouvain."
 msgstr ""
 
-msgid "You must set a lead supervisor."
+msgid "You must set a contact supervisor."
 msgstr ""
 
 msgid "You need to set a member as president."

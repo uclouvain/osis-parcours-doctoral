@@ -81,7 +81,7 @@ class ITableauBordRepository(ITableauBordRepositoryAdmissionMixin, interface.Rea
             indicateurs=[
                 IndicateurTableauBord(
                     id=IndicateurTableauBordEnum.FORMATION_DOCTORALE_VALIDE_PROMOTEUR,
-                    libelle=pgettext_lazy('dashboard-indicator training', 'Validated by promoter'),
+                    libelle=pgettext_lazy('dashboard-indicator training', 'Validated by supervisor'),
                 ),
             ],
         ),

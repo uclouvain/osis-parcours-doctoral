@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -63,7 +63,7 @@ PARCOURS_DOCTORAL_EMAIL_REFERENCE_PROMOTER_DOCTORAL_TRAININGS_SUBMITTED = (
 )
 templates.register(
     PARCOURS_DOCTORAL_EMAIL_REFERENCE_PROMOTER_DOCTORAL_TRAININGS_SUBMITTED,
-    description=_("Mail sent to reference promoter to inform of the submission of doctoral training activities"),
+    description=_("Mail sent to contact supervisor to inform of the submission of doctoral training activities"),
     tokens=training_common_tokens + doctoral_training_token,
     tag=PARCOURS_DOCTORAL_TAG,
 )
@@ -128,7 +128,7 @@ PARCOURS_DOCTORAL_EMAIL_REFERENCE_PROMOTER_COMPLEMENTARY_TRAININGS_SUBMITTED = (
 )
 templates.register(
     PARCOURS_DOCTORAL_EMAIL_REFERENCE_PROMOTER_COMPLEMENTARY_TRAININGS_SUBMITTED,
-    description=_("Mail sent to reference promoter to inform of the submission of complementary training activities"),
+    description=_("Mail sent to contact supervisor to inform of the submission of complementary training activities"),
     tokens=training_common_tokens + complementary_training_token,
     tag=PARCOURS_DOCTORAL_TAG,
 )
@@ -193,7 +193,7 @@ PARCOURS_DOCTORAL_EMAIL_REFERENCE_PROMOTER_COURSE_ENROLLMENTS_SUBMITTED = (
 )
 templates.register(
     PARCOURS_DOCTORAL_EMAIL_REFERENCE_PROMOTER_COURSE_ENROLLMENTS_SUBMITTED,
-    description=_("Mail sent to reference promoter to inform of the submission of course enrollment"),
+    description=_("Mail sent to contact supervisor to inform of the submission of course enrollment"),
     tokens=training_common_tokens + course_enrollment_token,
     tag=PARCOURS_DOCTORAL_TAG,
 )
