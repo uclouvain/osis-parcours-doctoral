@@ -26,7 +26,7 @@
 from admission.ddd.admission.doctorat.preparation.repository.i_proposition import (
     IPropositionRepository,
 )
-from admission.ddd.admission.domain.model.proposition import PropositionIdentity
+from admission.ddd.admission.shared_kernel.domain.model.proposition import PropositionIdentity
 from parcours_doctoral.ddd.commands import InitialiserParcoursDoctoralCommand
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import (
     ParcoursDoctoralIdentity,

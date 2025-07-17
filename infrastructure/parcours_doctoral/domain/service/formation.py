@@ -34,8 +34,8 @@ from admission.ddd.admission.doctorat.preparation.domain.validator.exceptions im
     DoctoratNonTrouveException,
 )
 from admission.ddd.admission.doctorat.preparation.dtos import DoctoratDTO
-from admission.ddd.admission.domain.model.formation import FormationIdentity
-from admission.ddd.admission.dtos.campus import CampusDTO
+from admission.ddd.admission.shared_kernel.domain.model.formation import FormationIdentity
+from admission.ddd.admission.shared_kernel.dtos.campus import CampusDTO
 from base.models.enums.active_status import ActiveStatusEnum
 from base.models.enums.education_group_types import TrainingType
 from django.conf import settings

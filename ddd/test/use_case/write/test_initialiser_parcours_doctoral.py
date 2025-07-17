@@ -27,14 +27,13 @@ import datetime
 
 import factory
 import freezegun
-from dateutil.relativedelta import relativedelta
 from django.test import TestCase
 
 from admission.ddd.admission.doctorat.preparation.test.factory.proposition import (
     PropositionAdmissionSC3DPAvecPromoteursEtMembresCADejaApprouvesFactory,
     _PropositionIdentityFactory,
 )
-from admission.ddd.admission.test.factory.formation import FormationIdentityFactory
+from admission.ddd.admission.shared_kernel.tests.factory.formation import FormationIdentityFactory
 from admission.infrastructure.admission.doctorat.preparation.repository.in_memory.proposition import (
     PropositionInMemoryRepository,
 )
