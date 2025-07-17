@@ -53,7 +53,7 @@ class SupervisionAPIView(
     pagination_class = None
     filter_backends = []
     permission_mapping = {
-        'GET': 'parcours_doctoral.view_supervision',
+        'GET': 'parcours_doctoral.api_view_supervision',
     }
 
     @extend_schema(
@@ -72,7 +72,7 @@ class SupervisionAPIView(
 class SupervisionCanvasApiView(SupervisionAPIView):
     name = "supervision_canvas"
     permission_mapping = {
-        'GET': 'parcours_doctoral.view_supervision_canvas',
+        'GET': 'parcours_doctoral.api_view_supervision_canvas',
     }
     renderer_classes = [JSONRenderer]
 
