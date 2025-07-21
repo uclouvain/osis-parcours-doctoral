@@ -66,6 +66,7 @@ from ...ddd.use_case.write.renvoyer_invitation_signature_externe_service import 
 )
 from ...ddd.use_case.write.supprimer_membre_CA_service import supprimer_membre_CA
 from ...ddd.use_case.write.supprimer_promoteur_service import supprimer_promoteur
+from .defense_privee.repository.defense_privee import DefensePriveeRepository
 from .domain.service.historique import Historique
 from .domain.service.membre_CA import MembreCATranslator
 from .domain.service.notification import Notification
@@ -106,6 +107,7 @@ COMMAND_HANDLERS = {
         epreuve_confirmation_repository=EpreuveConfirmationRepository(),
         parcours_doctoral_service=ParcoursDoctoralService(),
         historique=Historique(),
+        defense_privee_repository=DefensePriveeRepository(),
     ),
     ListerParcoursDoctorauxDoctorantQuery: lambda msg_bus, cmd: lister_parcours_doctoraux_doctorant(
         cmd,

@@ -70,6 +70,9 @@ from parcours_doctoral.ddd.use_case.write.supprimer_membre_CA_service import (
 from parcours_doctoral.ddd.use_case.write.supprimer_promoteur_service import (
     supprimer_promoteur,
 )
+from parcours_doctoral.infrastructure.parcours_doctoral.defense_privee.repository.in_memory.defense_privee import (
+    DefensePriveeInMemoryRepository,
+)
 from parcours_doctoral.infrastructure.parcours_doctoral.domain.service.in_memory.historique import (
     HistoriqueInMemory,
 )
@@ -113,6 +116,7 @@ from parcours_doctoral.infrastructure.parcours_doctoral.repository.in_memory.par
 _parcours_doctoral_repository = ParcoursDoctoralInMemoryRepository()
 _parcours_doctoral_service = ParcoursDoctoralInMemoryService()
 _epreuve_confirmation_repository = EpreuveConfirmationInMemoryRepository()
+_defense_privee_repository = DefensePriveeInMemoryRepository()
 _proposition_repository = PropositionInMemoryRepository()
 _groupe_de_supervision_repository = GroupeDeSupervisionInMemoryRepository()
 _notification = NotificationInMemory()
@@ -149,6 +153,7 @@ COMMAND_HANDLERS = {
         cmd,
         proposition_repository=_proposition_repository,
         epreuve_confirmation_repository=_epreuve_confirmation_repository,
+        defense_privee_repository=_defense_privee_repository,
         parcours_doctoral_service=_parcours_doctoral_service,
         historique=_historique,
     ),
