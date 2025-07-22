@@ -47,15 +47,15 @@ class CommitteeMember(AdmissionCommitteeMember):
     @classmethod
     def rule_set(cls):
         ruleset = {
-            'parcours_doctoral.view_supervised_list': always_allow,
+            'parcours_doctoral.api_view_supervised_list': always_allow,
             # A ca member can view as long as he belongs to the committee
-            'parcours_doctoral.view_parcours_doctoral': is_part_of_committee,
-            'parcours_doctoral.view_project': is_part_of_committee,
-            'parcours_doctoral.view_cotutelle': is_part_of_committee & is_related_to_an_admission,
-            'parcours_doctoral.view_funding': is_part_of_committee,
-            'parcours_doctoral.view_supervision': is_part_of_committee,
-            'parcours_doctoral.view_confirmation': is_part_of_committee & is_related_to_an_admission,
-            'parcours_doctoral.view_jury': is_part_of_committee,
-            'parcours_doctoral.approve_jury': is_part_of_committee,
+            'parcours_doctoral.api_view_parcours_doctoral': is_part_of_committee,
+            'parcours_doctoral.api_view_project': is_part_of_committee,
+            'parcours_doctoral.api_view_cotutelle': is_part_of_committee & is_related_to_an_admission,
+            'parcours_doctoral.api_view_funding': is_part_of_committee,
+            'parcours_doctoral.api_view_supervision': is_part_of_committee,
+            'parcours_doctoral.api_view_confirmation': is_part_of_committee & is_related_to_an_admission,
+            'parcours_doctoral.api_view_jury': is_part_of_committee,
+            'parcours_doctoral.api_approve_jury': is_part_of_committee,
         }
         return RuleSet(ruleset)
