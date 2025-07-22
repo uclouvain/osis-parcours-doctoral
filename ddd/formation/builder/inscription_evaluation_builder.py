@@ -32,7 +32,6 @@ from parcours_doctoral.ddd.formation.builder.activite_identity_builder import (
 )
 from parcours_doctoral.ddd.formation.commands import InscrireEvaluationCommand
 from parcours_doctoral.ddd.formation.domain.model.enums import (
-    MAPPING_SESSION_EVALUATION_NUMERO_TEXTE,
     StatutInscriptionEvaluation,
 )
 from parcours_doctoral.ddd.formation.domain.model.inscription_evaluation import (
@@ -79,7 +78,7 @@ class InscriptionEvaluationBuilder(RootEntityBuilder):
         return InscriptionEvaluation(
             entity_id=InscriptionEvaluationIdentityBuilder.build_from_uuid(uuid=dto_object.uuid),
             cours_id=ActiviteIdentityBuilder.build_from_uuid(uuid=dto_object.uuid_activite),
-            session=Session[MAPPING_SESSION_EVALUATION_NUMERO_TEXTE[dto_object.session]],
+            session=Session[Session.get_key_session(dto_object.session)],
             inscription_tardive=dto_object.est_inscrit_tardivement,
             statut=StatutInscriptionEvaluation[dto_object.statut],
             desinscription_tardive=dto_object.est_desinscrit_tardivement,

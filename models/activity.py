@@ -38,7 +38,6 @@ from osis_document.contrib import FileField
 from base.ddd.utils.business_validator import MultipleBusinessExceptions
 from deliberation.models.enums.numero_session import Session
 from parcours_doctoral.ddd.formation.domain.model.enums import (
-    MAPPING_SESSION_EVALUATION_TEXTE_NUMERO,
     CategorieActivite,
     ChoixComiteSelection,
     ChoixRolePublication,

@@ -35,6 +35,9 @@ from parcours_doctoral.ddd.formation.domain.validator.exceptions import (
     ActiviteNonTrouvee,
 )
 from parcours_doctoral.ddd.formation.dtos import ActiviteDTO
+from parcours_doctoral.ddd.formation.dtos.inscription_unite_enseignement import (
+    InscriptionUniteEnseignementDTO,
+)
 from parcours_doctoral.ddd.formation.repository.i_activite import IActiviteRepository
 from parcours_doctoral.ddd.formation.test.factory.activite import ActiviteFactory
 
@@ -84,3 +87,11 @@ class ActiviteInMemoryRepository(InMemoryGenericRepository, IActiviteRepository)
         if parent_id is not None:
             return [entity for entity in cls.entities if entity.parent_id == parent_id]
         return super().search(**kwargs)  # pragma: no cover
+
+    @classmethod
+    def lister_inscriptions_unites_enseignement(
+        cls,
+        annee: int,
+        code_unite_enseignement: str,
+    ) -> List[InscriptionUniteEnseignementDTO]:
+        return []
