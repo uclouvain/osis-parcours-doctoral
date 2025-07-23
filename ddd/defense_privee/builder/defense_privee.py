@@ -23,33 +23,34 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-import datetime
 import uuid
-from typing import Optional
 
-from dateutil.relativedelta import relativedelta
-
-from osis_common.ddd import interface
+from osis_common.ddd.interface import CommandRequest, RootEntityBuilder
 from parcours_doctoral.ddd.defense_privee.builder.defense_privee_identity import (
     DefensePriveeIdentityBuilder,
 )
 from parcours_doctoral.ddd.defense_privee.domain.model.defense_privee import (
     DefensePrivee,
 )
+from parcours_doctoral.ddd.defense_privee.dtos import DefensePriveeDTO
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import (
     ParcoursDoctoralIdentity,
 )
 
 
-class DefensePriveeService(interface.DomainService):
+class DefensePriveeBuilder(RootEntityBuilder):
     @classmethod
-    def initier(
-        cls,
-        parcours_doctoral_id: 'ParcoursDoctoralIdentity',
-    ) -> DefensePrivee:
+    def build_from_command(cls, cmd: 'CommandRequest') -> 'DefensePrivee':
+        raise NotImplementedError
+
+    @classmethod
+    def build_from_repository_dto(cls, dto_object: 'DefensePriveeDTO') -> 'DefensePrivee':
+        raise NotImplementedError
+
+    @classmethod
+    def build_from_parcours_doctoral_id(cls, parcours_doctoral_id: 'ParcoursDoctoralIdentity') -> 'DefensePrivee':
+        entity_id = DefensePriveeIdentityBuilder.build_from_uuid(uuid=str(uuid.uuid4()))
         return DefensePrivee(
-            entity_id=DefensePriveeIdentityBuilder.build_from_uuid(
-                str(uuid.uuid4()),
-            ),
+            entity_id=entity_id,
             parcours_doctoral_id=parcours_doctoral_id,
         )

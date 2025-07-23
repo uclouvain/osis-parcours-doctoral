@@ -35,6 +35,8 @@ from osis_common.ddd import interface
 class DefensePriveeDTO(interface.DTO):
     uuid: str
 
+    parcours_doctoral_uuid: str
+
     est_active: bool
 
     titre_these: str

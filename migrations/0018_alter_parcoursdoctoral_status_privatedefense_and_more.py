@@ -19,7 +19,7 @@ def initialise_private_defenses(apps, _):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("parcours_doctoral", "0016_proxy_promoter_committeemember_models"),
+        ("parcours_doctoral", "0017_assessmentenrollment_late_unenrollment_and_more"),
     ]
 
     operations = [

@@ -26,17 +26,11 @@
 import datetime
 from typing import Optional
 
-from admission.ddd.admission.doctorat.preparation.domain.model.enums import (
-    ChoixTypeAdmission,
-)
 from admission.ddd.admission.doctorat.preparation.domain.model.proposition import (
     Proposition,
 )
 from parcours_doctoral.ddd.builder.parcours_doctoral_identity import (
     ParcoursDoctoralIdentityBuilder,
-)
-from parcours_doctoral.ddd.defense_privee.domain.service.defense_privee import (
-    DefensePriveeService,
 )
 from parcours_doctoral.ddd.defense_privee.repository.i_defense_privee import (
     IDefensePriveeRepository,
@@ -46,9 +40,6 @@ from parcours_doctoral.ddd.domain.model.parcours_doctoral import (
 )
 from parcours_doctoral.ddd.domain.service.i_parcours_doctoral import (
     IParcoursDoctoralService,
-)
-from parcours_doctoral.ddd.epreuve_confirmation.domain.service.epreuve_confirmation import (
-    EpreuveConfirmationService,
 )
 from parcours_doctoral.ddd.epreuve_confirmation.repository.i_epreuve_confirmation import (
     IEpreuveConfirmationRepository,

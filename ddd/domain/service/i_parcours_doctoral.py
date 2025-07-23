@@ -33,8 +33,8 @@ from admission.ddd.admission.doctorat.preparation.domain.model.proposition impor
     Proposition,
 )
 from osis_common.ddd import interface
-from parcours_doctoral.ddd.defense_privee.domain.service.defense_privee import (
-    DefensePriveeService,
+from parcours_doctoral.ddd.defense_privee.builder.defense_privee import (
+    DefensePriveeBuilder,
 )
 from parcours_doctoral.ddd.defense_privee.repository.i_defense_privee import (
     IDefensePriveeRepository,
@@ -76,5 +76,7 @@ class IParcoursDoctoralService(interface.DomainService):
                 date_reference_pour_date_limite=date_reference_pour_date_limite_confirmation,
             )
             epreuve_confirmation_repository.save(entity=epreuve_confirmation)
-            defense_privee = DefensePriveeService.initier(parcours_doctoral_id=parcours_doctoral_identity)
+            defense_privee = DefensePriveeBuilder.build_from_parcours_doctoral_id(
+                parcours_doctoral_id=parcours_doctoral_identity,
+            )
             defense_privee_repository.save(defense_privee)
