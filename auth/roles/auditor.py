@@ -25,28 +25,18 @@
 # ##############################################################################
 
 import rules
-from django.db import models
 from django.utils.translation import gettext_lazy as _
 from rules import RuleSet
 
-from base.models.entity import Entity
-from base.models.enums.organization_type import MAIN
-from osis_role.contrib.models import RoleModel
+from osis_role.contrib.models import EntityRoleModel
 
 
-class Auditor(RoleModel):
+class Auditor(EntityRoleModel):
     """
     Vérificateur.trice
 
     Valide les jurys de son institut.
     """
-
-    entity = models.OneToOneField(
-        Entity,
-        on_delete=models.CASCADE,
-        related_name='+',
-        limit_choices_to={'organization__type': MAIN},
-    )
 
     class Meta:
         verbose_name = _("Role: Auditor")

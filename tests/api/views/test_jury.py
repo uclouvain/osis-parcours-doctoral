@@ -30,7 +30,7 @@ from rest_framework.test import APITestCase
 from base.tests.factories.entity import EntityFactory
 from base.tests.factories.person import PersonFactory
 from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
-from parcours_doctoral.models import JuryMember, ParcoursDoctoral
+from parcours_doctoral.models import ParcoursDoctoral, JuryActor
 from parcours_doctoral.tests.factories.jury import ExternalJuryMemberFactory
 from parcours_doctoral.tests.factories.parcours_doctoral import ParcoursDoctoralFactory
 from parcours_doctoral.tests.factories.roles import StudentRoleFactory
@@ -212,6 +212,7 @@ class JuryMembersListApiTestCase(APITestCase):
             'justification_non_docteur': '',
             'genre': 'AUTRE',
             'email': 'email@example.org',
+            'langue': 'FR',
         }
         # Targeted url
         cls.url = resolve_url("parcours_doctoral_api_v1:jury-members-list", uuid=cls.parcours_doctoral.uuid)
@@ -273,7 +274,7 @@ class JuryMembersListApiTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
 
         parcours_doctoral = ParcoursDoctoral.objects.get()
-        membre = parcours_doctoral.jury_members.filter(promoter__isnull=True).first()
+        membre = JuryActor.objects.filter(process=parcours_doctoral.jury_group, is_promoter=False).last()
         self.assertEqual(membre.first_name, "nouveau prenom")
 
         response = self.client.get(self.url, format="json")
@@ -337,7 +338,7 @@ class JuryMembersDetailApiTestCase(APITestCase):
             training__management_entity=doctoral_commission,
             thesis_proposed_title='Thesis title',
         )
-        cls.member = ExternalJuryMemberFactory(parcours_doctoral=cls.parcours_doctoral)
+        cls.member = ExternalJuryMemberFactory(process=cls.parcours_doctoral.jury_group)
         cls.udpated_data = {
             'matricule': '',
             'institution': 'institution',
@@ -349,6 +350,7 @@ class JuryMembersDetailApiTestCase(APITestCase):
             'justification_non_docteur': '',
             'genre': 'AUTRE',
             'email': 'email@example.org',
+            'langue': 'fr-be',
         }
         cls.updated_role_data = {'role': 'PRESIDENT'}
         # Targeted url
@@ -403,9 +405,6 @@ class JuryMembersDetailApiTestCase(APITestCase):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
-        membre = JuryMember.objects.get(uuid=self.member.uuid)
-        self.assertEqual(membre.first_name, "first_name")
-
     def test_get_other_student(self):
         self.client.force_authenticate(user=self.other_student_user)
         response = self.client.get(self.url)
@@ -440,7 +439,7 @@ class JuryMembersDetailApiTestCase(APITestCase):
         response = self.client.put(self.url, data=self.udpated_data, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
-        membre = JuryMember.objects.get(uuid=self.member.uuid)
+        membre = JuryActor.objects.get(uuid=self.member.uuid)
         self.assertEqual(membre.first_name, "nouveau prenom")
 
     def test_put_other_student(self):
@@ -482,7 +481,7 @@ class JuryMembersDetailApiTestCase(APITestCase):
         response = self.client.patch(self.url, data=self.updated_role_data, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
-        membre = JuryMember.objects.get(uuid=self.member.uuid)
+        membre = JuryActor.objects.get(uuid=self.member.uuid)
         self.assertEqual(membre.role, "PRESIDENT")
 
     def test_patch_other_student(self):
@@ -521,8 +520,8 @@ class JuryMembersDetailApiTestCase(APITestCase):
         response = self.client.delete(self.url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
 
-        with self.assertRaises(JuryMember.DoesNotExist):
-            JuryMember.objects.get(uuid=self.member.uuid)
+        with self.assertRaises(JuryActor.DoesNotExist):
+            JuryActor.objects.get(uuid=self.member.uuid)
 
     def test_delete_other_student(self):
         self.client.force_authenticate(user=self.other_student_user)

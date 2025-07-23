@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -23,10 +23,11 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from base.ddd.utils.business_validator import MultipleBusinessExceptions
-from django.test import TestCase
+from django.test import SimpleTestCase
 
+from base.ddd.utils.business_validator import MultipleBusinessExceptions
 from parcours_doctoral.ddd.jury.commands import ModifierMembreCommand
+from parcours_doctoral.ddd.jury.domain.model.jury import JuryIdentity
 from parcours_doctoral.ddd.jury.validator.exceptions import (
     JuryNonTrouveException,
     MembreNonTrouveDansJuryException,
@@ -40,7 +41,7 @@ from parcours_doctoral.infrastructure.parcours_doctoral.jury.repository.in_memor
 )
 
 
-class TestModifierMembre(TestCase):
+class TestModifierMembre(SimpleTestCase):
     def setUp(self) -> None:
         self.message_bus = message_bus_in_memory_instance
 
@@ -62,10 +63,11 @@ class TestModifierMembre(TestCase):
                 justification_non_docteur=None,
                 genre='FEMININ',
                 email='autre_email',
+                langue='FR',
             )
         )
 
-        jury = JuryInMemoryRepository.entities[0]
+        jury = JuryInMemoryRepository.get(JuryIdentity(uuid='uuid-jury'))
         self.assertEqual(len(jury.membres), 2)
         membre = jury.membres[-1]
         self.assertIsNone(membre.matricule)
@@ -73,8 +75,8 @@ class TestModifierMembre(TestCase):
         self.assertEqual(membre.pays, 'autre_pays')
         self.assertEqual(membre.nom, 'autre_nom')
         self.assertEqual(membre.prenom, 'autre_prenom')
-        self.assertEqual(membre.titre, 'PROFESSEUR')
-        self.assertEqual(membre.genre, 'FEMININ')
+        self.assertEqual(membre.titre.name, 'PROFESSEUR')
+        self.assertEqual(membre.genre.name, 'FEMININ')
         self.assertEqual(membre.email, 'autre_email')
 
     def test_should_pas_trouve_si_modifier_membre_inexistant(self):
@@ -93,6 +95,7 @@ class TestModifierMembre(TestCase):
                     justification_non_docteur=None,
                     genre='FEMININ',
                     email='autre_email',
+                    langue='FR',
                 )
             )
             self.assertIsInstance(context.exception.exceptions.pop(), MembreNonTrouveDansJuryException)
@@ -113,6 +116,7 @@ class TestModifierMembre(TestCase):
                     justification_non_docteur=None,
                     genre='FEMININ',
                     email='autre_email',
+                    langue='FR',
                 )
             )
 
@@ -132,5 +136,6 @@ class TestModifierMembre(TestCase):
                     justification_non_docteur=None,
                     genre='FEMININ',
                     email='autre_email',
+                    langue='FR',
                 )
             )

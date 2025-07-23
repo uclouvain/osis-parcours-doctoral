@@ -34,6 +34,7 @@ class RoleJury(ChoiceEnum):
     PRESIDENT = _('PRESIDENT')
     SECRETAIRE = _('SECRETAIRE')
     MEMBRE = _('MEMBRE')
+    VERIFICATEUR = _('VERIFICATEUR')
 
 
 class TitreMembre(ChoiceEnum):
@@ -61,3 +62,16 @@ class ChoixLangueRedactionThese(ChoiceEnum):
     ENGLISH = _('English')
     OTHER = _('Other')
     UNDECIDED = _('Undecided')
+
+
+class ChoixStatutSignature(ChoiceEnum):
+    IN_PROGRESS = _('IN_PROGRESS')
+    SIGNING_IN_PROGRESS = _('SIGNING_IN_PROGRESS')
+    SIGNED = _('SIGNED')
+
+
+class ChoixEtatSignature(ChoiceEnum):
+    NOT_INVITED = _('NOT_INVITED')  # Pas encore envoyée au signataire
+    INVITED = _('INVITED')  # Envoyée au signataire
+    APPROVED = pgettext_lazy("admission decision", "Approved")  # Approuvée par le signataire
+    DECLINED = pgettext_lazy("admission decision", "Denied")  # Refusée par le signataire
