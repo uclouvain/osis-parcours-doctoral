@@ -27,7 +27,6 @@ from django.utils.translation import gettext_lazy as _
 from django.utils.translation import pgettext_lazy
 
 from base.models.utils.utils import ChoiceEnum
-from deliberation.models.enums.numero_session import Session
 
 
 class StatutActivite(ChoiceEnum):
@@ -93,12 +92,3 @@ class ContexteFormation(ChoiceEnum):
 class StatutInscriptionEvaluation(ChoiceEnum):
     ACCEPTEE = _("ACCEPTEE")
     DESINSCRITE = _("DESINSCRITE")
-
-
-MAPPING_SESSION_EVALUATION_NUMERO_TEXTE = {}
-MAPPING_SESSION_EVALUATION_TEXTE_NUMERO = {}
-
-for current_session in Session:
-    numero = Session.get_numero_session(current_session.name)
-    MAPPING_SESSION_EVALUATION_NUMERO_TEXTE[numero] = current_session.name
-    MAPPING_SESSION_EVALUATION_TEXTE_NUMERO[current_session.name] = numero

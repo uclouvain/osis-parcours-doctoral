@@ -32,11 +32,8 @@ from assessments.calendar.scores_exam_submission_calendar import (
     ScoresExamSubmissionCalendar,
 )
 from base.models.student import Student
+from deliberation.models.enums.numero_session import Session
 from parcours_doctoral.ddd.formation.domain.model.activite import ActiviteIdentity
-from parcours_doctoral.ddd.formation.domain.model.enums import (
-    MAPPING_SESSION_EVALUATION_NUMERO_TEXTE,
-    MAPPING_SESSION_EVALUATION_TEXTE_NUMERO,
-)
 from parcours_doctoral.ddd.formation.domain.model.evaluation import (
     Evaluation,
     EvaluationIdentity,
@@ -70,7 +67,7 @@ class EvaluationRepository(IEvaluationRepository):
 
     @classmethod
     def get(cls, entity_id: 'EvaluationIdentity') -> 'Evaluation':
-        session_as_text = MAPPING_SESSION_EVALUATION_NUMERO_TEXTE[entity_id.session]
+        session_as_text = Session.get_key_session(entity_id.session)
         try:
             assessment = AssessmentEnrollment.objects.annotate(course_uuid=F('course__uuid')).get(
                 session=session_as_text,
@@ -115,7 +112,7 @@ class EvaluationRepository(IEvaluationRepository):
         session: int,
         code_unite_enseignement: str,
     ) -> List[EvaluationDTO]:
-        session_as_text = MAPPING_SESSION_EVALUATION_NUMERO_TEXTE[session]
+        session_as_text = Session.get_key_session(session)
 
         qs = (
             cls.get_dto_queryset()
@@ -177,7 +174,7 @@ class EvaluationRepository(IEvaluationRepository):
 
         encoding_period = cls.get_periode_encodage_notes(
             annee=assessment.lue_academic_year,
-            session=MAPPING_SESSION_EVALUATION_TEXTE_NUMERO[assessment.session],
+            session=Session.get_numero_session(assessment.session),
         )
 
         return cls.build_dto_from_db_model(
@@ -200,7 +197,7 @@ class EvaluationRepository(IEvaluationRepository):
 
         return EvaluationDTO(
             annee=assessment.lue_academic_year,  # From annotation
-            session=MAPPING_SESSION_EVALUATION_TEXTE_NUMERO[assessment.session],
+            session=Session.get_numero_session(assessment.session),
             noma=noma or '',
             code_unite_enseignement=assessment.lue_acronym,  # From annotation
             note_soumise=assessment.submitted_mark,

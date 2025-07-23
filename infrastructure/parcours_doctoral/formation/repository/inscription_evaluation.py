@@ -33,7 +33,6 @@ from parcours_doctoral.ddd.domain.model.parcours_doctoral import (
 )
 from parcours_doctoral.ddd.formation.domain.model.activite import ActiviteIdentity
 from parcours_doctoral.ddd.formation.domain.model.enums import (
-    MAPPING_SESSION_EVALUATION_TEXTE_NUMERO,
     StatutInscriptionEvaluation,
 )
 from parcours_doctoral.ddd.formation.domain.model.inscription_evaluation import (

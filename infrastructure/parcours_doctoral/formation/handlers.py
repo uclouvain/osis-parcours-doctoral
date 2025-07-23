@@ -23,17 +23,11 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from infrastructure.encodage_de_notes.shared_kernel.service.periode_encodage_notes import (
-    PeriodeEncodageNotesTranslator,
-)
 from parcours_doctoral.ddd.formation.commands import *
 from parcours_doctoral.ddd.formation.use_case.read import *
 from parcours_doctoral.ddd.formation.use_case.write import *
 from parcours_doctoral.ddd.formation.use_case.write.inscrire_evaluation_service import (
     inscrire_evaluation,
-)
-from parcours_doctoral.infrastructure.parcours_doctoral.formation.domain.service.inscription_unite_enseignement import (
-    InscriptionUniteEnseignementTranslator,
 )
 from parcours_doctoral.infrastructure.parcours_doctoral.formation.domain.service.notification import (
     Notification,
@@ -118,6 +112,6 @@ COMMAND_HANDLERS = {
     ),
     ListerInscriptionsUnitesEnseignementQuery: lambda msg_bus, cmd: lister_inscriptions_unites_enseignement(
         cmd,
-        inscriptions_unites_enseignement_translator=InscriptionUniteEnseignementTranslator(),
+        activite_repository=ActiviteRepository(),
     ),
 }

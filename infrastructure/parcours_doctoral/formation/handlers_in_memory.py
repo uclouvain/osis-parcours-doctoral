@@ -37,9 +37,6 @@ from parcours_doctoral.infrastructure.parcours_doctoral.repository.in_memory.par
 )
 
 from .domain.service.in_memory.notification import NotificationInMemory
-from .domain.service.inscription_unite_enseignement import (
-    InscriptionUniteEnseignementTranslator,
-)
 from .repository.in_memory.activite import ActiviteInMemoryRepository
 from .repository.in_memory.evaluation import EvaluationInMemoryRepository
 from .repository.in_memory.inscription_evaluation import (
@@ -52,7 +49,6 @@ _groupe_de_supervision_repository = GroupeDeSupervisionInMemoryRepository()
 _notification = NotificationInMemory()
 _inscription_evaluation_repository = InscriptionEvaluationInMemoryRepository()
 _evaluation_repository = EvaluationInMemoryRepository()
-_inscription_unite_enseignement_translator = InscriptionUniteEnseignementTranslator()
 
 
 COMMAND_HANDLERS = {
@@ -119,6 +115,6 @@ COMMAND_HANDLERS = {
     ),
     ListerInscriptionsUnitesEnseignementQuery: lambda msg_bus, cmd: lister_inscriptions_unites_enseignement(
         cmd,
-        inscriptions_unites_enseignement_translator=_inscription_unite_enseignement_translator,
+        activite_repository=_activite_repository,
     ),
 }
