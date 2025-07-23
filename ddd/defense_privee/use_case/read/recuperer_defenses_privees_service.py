@@ -43,4 +43,4 @@ def recuperer_defenses_privees(
     parcours_doctoral_id = ParcoursDoctoralIdentityBuilder.build_from_uuid(cmd.parcours_doctoral_uuid)
 
     # THEN
-    return defense_privee_repository.search_dto_by_parcours_doctoral_identity(parcours_doctoral_id)
+    return defense_privee_repository.search_dto(parcours_doctoral_id=parcours_doctoral_id)

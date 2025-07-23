@@ -3535,6 +3535,8 @@ components:
       properties:
         uuid:
           type: string
+        parcours_doctoral_uuid:
+          type: string
         est_active:
           type: boolean
         titre_these:
@@ -3561,6 +3563,7 @@ components:
       - canevas_proces_verbal
       - est_active
       - lieu
+      - parcours_doctoral_uuid
       - proces_verbal
       - titre_these
       - uuid
