@@ -28,7 +28,12 @@ import uuid
 
 import factory
 
-from parcours_doctoral.ddd.jury.domain.model.jury import Jury, JuryIdentity, MembreJury
+from parcours_doctoral.ddd.jury.domain.model.jury import (
+    Jury,
+    JuryIdentity,
+    MembreJury,
+    SignatureMembre,
+)
 
 
 class JuryIdentityFactory(factory.Factory):
@@ -37,6 +42,12 @@ class JuryIdentityFactory(factory.Factory):
         abstract = False
 
     uuid = factory.LazyFunction(lambda: str(uuid.uuid4()))
+
+
+class SignatureMembreFactory(factory.Factory):
+    class Meta:
+        model = SignatureMembre
+        abstract = False
 
 
 class MembreJuryFactory(factory.Factory):
@@ -57,6 +68,8 @@ class MembreJuryFactory(factory.Factory):
     titre = 'DOCTEUR'
     justification_non_docteur = None
     genre = 'AUTRE'
+    langue = 'FR'
+    signature = factory.SubFactory(SignatureMembreFactory)
 
 
 class JuryFactory(factory.Factory):
@@ -76,4 +89,4 @@ class JuryFactory(factory.Factory):
     langue_soutenance = 'english'
     commentaire = ''
     situation_comptable = None
-    approbation_pdf = None
+    approbation_pdf = []

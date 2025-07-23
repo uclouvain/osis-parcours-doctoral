@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -28,6 +28,7 @@ import datetime
 from django.test import TestCase
 
 from parcours_doctoral.ddd.jury.commands import ModifierJuryCommand
+from parcours_doctoral.ddd.jury.domain.model.jury import JuryIdentity
 from parcours_doctoral.ddd.test.factory.groupe_de_supervision import (
     GroupeDeSupervisionSC3DPAvecPromoteurEtMembreEtCotutelleFactory,
 )
@@ -54,6 +55,8 @@ class TestModifierJury(TestCase):
         JuryInMemoryRepository.reset()
 
     def test_should_modifier_jury(self):
+        initial_length = len(JuryInMemoryRepository.entities)
+
         self.message_bus.invoke(
             ModifierJuryCommand(
                 uuid_parcours_doctoral='uuid-jury',
@@ -66,8 +69,8 @@ class TestModifierJury(TestCase):
             )
         )
 
-        self.assertEqual(len(JuryInMemoryRepository.entities), 1)
-        jury = JuryInMemoryRepository.entities[0]
+        self.assertEqual(len(JuryInMemoryRepository.entities), initial_length)
+        jury = JuryInMemoryRepository.get(JuryIdentity(uuid='uuid-jury'))
         self.assertEqual(jury.entity_id.uuid, 'uuid-jury')
         self.assertEqual(jury.titre_propose, 'autre_titre')
         self.assertEqual(len(jury.membres), 2)

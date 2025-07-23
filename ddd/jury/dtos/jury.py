@@ -32,6 +32,16 @@ from osis_common.ddd import interface
 
 
 @attr.dataclass(frozen=True, slots=True)
+class SignatureMembreJuryDTO(interface.DTO):
+    etat: str
+    date: Optional[datetime.datetime]
+    commentaire_externe: str
+    commentaire_interne: str
+    motif_refus: str
+    pdf: List[str]
+
+
+@attr.dataclass(frozen=True, slots=True)
 class MembreJuryDTO(interface.DTO):
     uuid: str
     role: str
@@ -45,7 +55,9 @@ class MembreJuryDTO(interface.DTO):
     titre: str
     justification_non_docteur: str
     genre: str
+    langue: str
     email: str
+    signature: SignatureMembreJuryDTO
 
 
 @attr.dataclass(frozen=True, slots=True)
@@ -64,3 +76,12 @@ class JuryDTO(interface.DTO):
     commentaire: str
     situation_comptable: Optional[bool]
     approbation_pdf: List[str]
+
+
+@attr.dataclass(frozen=True, slots=True)
+class AvisDTO(interface.DTO):
+    etat: str
+    commentaire_externe: Optional[str] = ''
+    commentaire_interne: Optional[str] = ''
+    motif_refus: Optional[str] = ''
+    pdf: List[str] = attr.Factory(list)

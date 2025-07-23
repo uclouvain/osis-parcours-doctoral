@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Parcours Doctoral API
-  version: 1.1.1
+  version: 1.1.2
   description: This API delivers data for the Parcours Doctoral project.
   contact:
     name: UCLouvain - OSIS
@@ -676,6 +676,231 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '404':
           $ref: '#/components/responses/NotFound'
+  /doctorate/{uuid}/jury/approve:
+    post:
+      operationId: approve_jury
+      description: Approve the jury.
+      parameters:
+      - in: path
+        name: uuid
+        schema:
+          type: string
+          format: uuid
+        required: true
+      - $ref: '#/components/parameters/Accept-Language'
+      - $ref: '#/components/parameters/X-User-FirstName'
+      - $ref: '#/components/parameters/X-User-LastName'
+      - $ref: '#/components/parameters/X-User-Email'
+      - $ref: '#/components/parameters/X-User-GlobalID'
+      tags:
+      - doctorate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApprouverJuryCommand'
+        required: true
+      security:
+      - tokenAuth: []
+      - Token: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JuryIdentityDTO'
+          description: ''
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    put:
+      operationId: reject_jury
+      description: Reject the jury.
+      parameters:
+      - in: path
+        name: uuid
+        schema:
+          type: string
+          format: uuid
+        required: true
+      - $ref: '#/components/parameters/Accept-Language'
+      - $ref: '#/components/parameters/X-User-FirstName'
+      - $ref: '#/components/parameters/X-User-LastName'
+      - $ref: '#/components/parameters/X-User-Email'
+      - $ref: '#/components/parameters/X-User-GlobalID'
+      tags:
+      - doctorate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefuserJuryCommand'
+        required: true
+      security:
+      - tokenAuth: []
+      - Token: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JuryIdentityDTO'
+          description: ''
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /doctorate/{uuid}/jury/approve-by-pdf:
+    post:
+      operationId: approve_by_pdf
+      description: Approve the jury with a pdf file.
+      parameters:
+      - in: path
+        name: uuid
+        schema:
+          type: string
+          format: uuid
+        required: true
+      - $ref: '#/components/parameters/Accept-Language'
+      - $ref: '#/components/parameters/X-User-FirstName'
+      - $ref: '#/components/parameters/X-User-LastName'
+      - $ref: '#/components/parameters/X-User-Email'
+      - $ref: '#/components/parameters/X-User-GlobalID'
+      tags:
+      - doctorate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApprouverJuryParPdfCommand'
+        required: true
+      security:
+      - tokenAuth: []
+      - Token: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JuryIdentityDTO'
+          description: ''
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /doctorate/{uuid}/jury/external/{token}:
+    get:
+      operationId: get_external_jury
+      description: Returns necessary info about jury while checking token.
+      parameters:
+      - in: path
+        name: token
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: uuid
+        schema:
+          type: string
+          format: uuid
+        required: true
+      - $ref: '#/components/parameters/Accept-Language'
+      tags:
+      - doctorate
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalJuryDTO'
+          description: ''
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    post:
+      operationId: approve_external_jury
+      description: Approve the jury.
+      parameters:
+      - in: path
+        name: token
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: uuid
+        schema:
+          type: string
+          format: uuid
+        required: true
+      - $ref: '#/components/parameters/Accept-Language'
+      tags:
+      - doctorate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApprouverJuryCommand'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JuryIdentityDTO'
+          description: ''
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    put:
+      operationId: reject_external_jury
+      description: Reject the jury.
+      parameters:
+      - in: path
+        name: token
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: uuid
+        schema:
+          type: string
+          format: uuid
+        required: true
+      - $ref: '#/components/parameters/Accept-Language'
+      tags:
+      - doctorate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefuserJuryCommand'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JuryIdentityDTO'
+          description: ''
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
   /doctorate/{uuid}/jury/members:
     get:
       operationId: list_jury_members
@@ -969,6 +1194,119 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/ModifierJuryCommand'
+        required: true
+      security:
+      - tokenAuth: []
+      - Token: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JuryIdentityDTO'
+          description: ''
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /doctorate/{uuid}/jury/request-signatures:
+    get:
+      operationId: signature_conditions
+      description: Gather the exceptions from signature validation.
+      parameters:
+      - in: path
+        name: uuid
+        schema:
+          type: string
+          format: uuid
+        required: true
+      - $ref: '#/components/parameters/Accept-Language'
+      - $ref: '#/components/parameters/X-User-FirstName'
+      - $ref: '#/components/parameters/X-User-LastName'
+      - $ref: '#/components/parameters/X-User-Email'
+      - $ref: '#/components/parameters/X-User-GlobalID'
+      tags:
+      - doctorate
+      security:
+      - tokenAuth: []
+      - Token: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    status_code:
+                      type: string
+                    detail:
+                      type: string
+          description: Project verification errors
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    post:
+      operationId: request_signatures
+      description: Ask for all promoters and members to sign the jury.
+      parameters:
+      - in: path
+        name: uuid
+        schema:
+          type: string
+          format: uuid
+        required: true
+      - $ref: '#/components/parameters/Accept-Language'
+      - $ref: '#/components/parameters/X-User-FirstName'
+      - $ref: '#/components/parameters/X-User-LastName'
+      - $ref: '#/components/parameters/X-User-Email'
+      - $ref: '#/components/parameters/X-User-GlobalID'
+      tags:
+      - doctorate
+      security:
+      - tokenAuth: []
+      - Token: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JuryIdentityDTO'
+          description: ''
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    put:
+      operationId: resend_invite
+      description: Resend an invitation for an external member.
+      parameters:
+      - in: path
+        name: uuid
+        schema:
+          type: string
+          format: uuid
+        required: true
+      - $ref: '#/components/parameters/Accept-Language'
+      - $ref: '#/components/parameters/X-User-FirstName'
+      - $ref: '#/components/parameters/X-User-LastName'
+      - $ref: '#/components/parameters/X-User-Email'
+      - $ref: '#/components/parameters/X-User-GlobalID'
+      tags:
+      - doctorate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RenvoyerInvitationSignatureExterne'
         required: true
       security:
       - tokenAuth: []
@@ -1550,8 +1888,43 @@ components:
           type: string
         genre:
           type: string
+        langue:
+          type: string
         email:
           type: string
+    ApprouverJuryCommand:
+      type: object
+      description: |-
+        A `DTOSerializer` is just a regular `Serializer`, except that:
+
+        * A set of default fields are automatically populated from the Meta.source dataclass.
+        * All fields are set to read-only if needed when Meta.read_only is True.
+      properties:
+        uuid_membre:
+          type: string
+        commentaire_interne:
+          type: string
+        commentaire_externe:
+          type: string
+      required:
+      - uuid_membre
+    ApprouverJuryParPdfCommand:
+      type: object
+      description: |-
+        A `DTOSerializer` is just a regular `Serializer`, except that:
+
+        * A set of default fields are automatically populated from the Meta.source dataclass.
+        * All fields are set to read-only if needed when Meta.read_only is True.
+      properties:
+        uuid_membre:
+          type: string
+        pdf:
+          type: array
+          items:
+            type: string
+      required:
+      - pdf
+      - uuid_membre
     BlankEnum:
       enum:
       - ''
@@ -2491,6 +2864,16 @@ components:
       - intitule
       - intitule_secteur
       - sigle
+    ExternalJuryDTO:
+      type: object
+      properties:
+        parcours_doctoral:
+          $ref: '#/components/schemas/ExternalParcoursDoctoralDTO'
+        jury:
+          $ref: '#/components/schemas/JuryDTO'
+      required:
+      - jury
+      - parcours_doctoral
     ExternalParcoursDoctoralDTO:
       type: object
       description: |-
@@ -2501,6 +2884,10 @@ components:
       properties:
         uuid:
           type: string
+        archive:
+          type: array
+          items:
+            type: string
         reference:
           type: string
         formation:
@@ -2512,6 +2899,7 @@ components:
         statut:
           type: string
       required:
+      - archive
       - formation
       - matricule_doctorant
       - projet
@@ -2802,8 +3190,12 @@ components:
           type: string
         genre:
           type: string
+        langue:
+          type: string
         email:
           type: string
+        signature:
+          $ref: '#/components/schemas/SignatureMembreJuryDTONested'
       required:
       - autre_institution
       - email
@@ -2811,11 +3203,13 @@ components:
       - genre
       - institution
       - justification_non_docteur
+      - langue
       - matricule
       - nom
       - pays
       - prenom
       - role
+      - signature
       - titre
       - uuid
     MembreJuryDTONested:
@@ -2850,8 +3244,12 @@ components:
           type: string
         genre:
           type: string
+        langue:
+          type: string
         email:
           type: string
+        signature:
+          $ref: '#/components/schemas/SignatureMembreJuryDTONested'
       required:
       - autre_institution
       - email
@@ -2859,11 +3257,13 @@ components:
       - genre
       - institution
       - justification_non_docteur
+      - langue
       - matricule
       - nom
       - pays
       - prenom
       - role
+      - signature
       - titre
       - uuid
     MembreJuryIdentityDTO:
@@ -3006,6 +3406,8 @@ components:
           type: string
         genre:
           type: string
+        langue:
+          type: string
         email:
           type: string
     NullEnum:
@@ -3141,6 +3543,10 @@ components:
         cree_le:
           type: string
           format: date-time
+        archive:
+          type: array
+          items:
+            type: string
         formation:
           $ref: '#/components/schemas/FormationDTONested'
         projet:
@@ -3221,9 +3627,16 @@ components:
               $ref: '#/components/schemas/ActionLink'
             create_jury_members:
               $ref: '#/components/schemas/ActionLink'
+            jury_request_signatures:
+              $ref: '#/components/schemas/ActionLink'
+            jury_add_approval:
+              $ref: '#/components/schemas/ActionLink'
+            jury_approve_by_pdf:
+              $ref: '#/components/schemas/ActionLink'
           readOnly: true
           default: {}
       required:
+      - archive
       - commission_proximite
       - cotutelle
       - cree_le
@@ -3600,6 +4013,37 @@ components:
       description: "* `` - \n* `UNSUBMITTED` - UNSUBMITTED\n* `SUBMITTED` - SUBMITTED\n\
         * `IN_REVIEW` - IN_REVIEW\n* `DEPOSITED` - DEPOSITED\n* `ACCEPTED` - ACCEPTED\n\
         * `PUBLISHED` - PUBLISHED"
+    RefuserJuryCommand:
+      type: object
+      description: |-
+        A `DTOSerializer` is just a regular `Serializer`, except that:
+
+        * A set of default fields are automatically populated from the Meta.source dataclass.
+        * All fields are set to read-only if needed when Meta.read_only is True.
+      properties:
+        uuid_membre:
+          type: string
+        motif_refus:
+          type: string
+        commentaire_interne:
+          type: string
+        commentaire_externe:
+          type: string
+      required:
+      - motif_refus
+      - uuid_membre
+    RenvoyerInvitationSignatureExterne:
+      type: object
+      description: |-
+        A `DTOSerializer` is just a regular `Serializer`, except that:
+
+        * A set of default fields are automatically populated from the Meta.source dataclass.
+        * All fields are set to read-only if needed when Meta.read_only is True.
+      properties:
+        uuid_membre:
+          type: string
+      required:
+      - uuid_membre
     Residency:
       type: object
       description: |-
@@ -4027,6 +4471,36 @@ components:
       - start_date
       - title
       - type
+    SignatureMembreJuryDTONested:
+      type: object
+      description: |-
+        A `DTOSerializer` is just a regular `Serializer`, except that:
+
+        * A set of default fields are automatically populated from the Meta.source dataclass.
+        * All fields are set to read-only if needed when Meta.read_only is True.
+      properties:
+        etat:
+          type: string
+        date:
+          type: string
+          format: date-time
+          nullable: true
+        commentaire_externe:
+          type: string
+        commentaire_interne:
+          type: string
+        motif_refus:
+          type: string
+        pdf:
+          type: array
+          items:
+            type: string
+      required:
+      - commentaire_externe
+      - commentaire_interne
+      - etat
+      - motif_refus
+      - pdf
     StatusEnum:
       enum:
       - NON_SOUMISE

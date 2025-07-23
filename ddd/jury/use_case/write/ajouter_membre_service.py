@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -27,6 +27,7 @@ import uuid
 
 from parcours_doctoral.ddd.jury.builder.jury_identity_builder import JuryIdentityBuilder
 from parcours_doctoral.ddd.jury.commands import AjouterMembreCommand
+from parcours_doctoral.ddd.jury.domain.model.enums import GenreMembre, TitreMembre
 from parcours_doctoral.ddd.jury.domain.model.jury import JuryIdentity, MembreJury
 from parcours_doctoral.ddd.jury.repository.i_jury import IJuryRepository
 
@@ -44,9 +45,10 @@ def ajouter_membre(
         pays=cmd.pays,
         nom=cmd.nom,
         prenom=cmd.prenom,
-        titre=cmd.titre,
+        titre=TitreMembre[cmd.titre] if cmd.titre else None,
         justification_non_docteur=cmd.justification_non_docteur,
-        genre=cmd.genre,
+        genre=GenreMembre[cmd.genre] if cmd.genre else None,
+        langue=cmd.langue,
         email=cmd.email,
     )
     jury = jury_repository.get(JuryIdentityBuilder.build_from_uuid(cmd.uuid_jury))

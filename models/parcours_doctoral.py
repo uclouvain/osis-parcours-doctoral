@@ -525,7 +525,8 @@ class ParcoursDoctoral(models.Model):
     )
 
     # Supervision
-    supervision_group = SignatureProcessField()
+    supervision_group = SignatureProcessField(related_name='+')
+    jury_group = SignatureProcessField(related_name='+')
 
     objects = models.Manager.from_queryset(ParcoursDoctoralQuerySet)()
 

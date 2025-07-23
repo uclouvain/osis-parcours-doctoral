@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -40,7 +40,7 @@ from parcours_doctoral.ddd.jury.domain.model.enums import (
     TitreMembre,
 )
 from parcours_doctoral.forms.jury.membre import JuryMembreForm
-from parcours_doctoral.models.jury import JuryMember
+from parcours_doctoral.models.jury import JuryActor
 from parcours_doctoral.tests.factories.jury import ExternalJuryMemberFactory
 from parcours_doctoral.tests.factories.parcours_doctoral import ParcoursDoctoralFactory
 from parcours_doctoral.tests.factories.supervision import PromoterFactory
@@ -63,7 +63,7 @@ class DoctorateAdmissionJuryMemberUpdateFormViewTestCase(TestCase):
         )
 
         # Create member
-        cls.membre = ExternalJuryMemberFactory(parcours_doctoral=cls.parcours_doctoral)
+        cls.membre = ExternalJuryMemberFactory(process=cls.parcours_doctoral.jury_group)
         cls.country = CountryFactory()
 
         # User with one cdd
@@ -117,6 +117,7 @@ class DoctorateAdmissionJuryMemberUpdateFormViewTestCase(TestCase):
                 'justification_non_docteur': self.membre.non_doctor_reason,
                 'genre': self.membre.gender,
                 'email': self.membre.email,
+                'langue': self.membre.language,
             },
         )
 
@@ -137,12 +138,13 @@ class DoctorateAdmissionJuryMemberUpdateFormViewTestCase(TestCase):
                 'justification_non_docteur': '',
                 'genre': GenreMembre.AUTRE.name,
                 'email': 'nouvel_email@example.org',
+                'langue': 'fr-be',
             },
         )
 
         self.assertRedirects(response, resolve_url(self.read_path, uuid=self.parcours_doctoral.uuid))
 
-        updated_member = JuryMember.objects.get(
+        updated_member = JuryActor.objects.get(
             uuid=self.membre.uuid,
         )
         self.assertEqual(updated_member.person, None)
@@ -173,7 +175,7 @@ class DoctorateAdmissionJuryMemberDeleteFormViewTestCase(TestCase):
         )
 
         # Create member
-        cls.membre = ExternalJuryMemberFactory(parcours_doctoral=cls.parcours_doctoral)
+        cls.membre = ExternalJuryMemberFactory(process=cls.parcours_doctoral.jury_group)
         cls.country = CountryFactory()
 
         # User with one cdd
@@ -205,8 +207,8 @@ class DoctorateAdmissionJuryMemberDeleteFormViewTestCase(TestCase):
 
         self.assertRedirects(response, resolve_url(self.read_path, uuid=self.parcours_doctoral.uuid))
 
-        with self.assertRaises(JuryMember.DoesNotExist):
-            JuryMember.objects.get(
+        with self.assertRaises(JuryActor.DoesNotExist):
+            JuryActor.objects.get(
                 uuid=self.membre.uuid,
             )
 
@@ -227,7 +229,7 @@ class DoctorateAdmissionJuryMemberChangeRoleFormViewTestCase(TestCase):
         )
 
         # Create member
-        cls.membre = ExternalJuryMemberFactory(parcours_doctoral=cls.parcours_doctoral)
+        cls.membre = ExternalJuryMemberFactory(process=cls.parcours_doctoral.jury_group)
         cls.country = CountryFactory()
 
         # User with one cdd
@@ -274,7 +276,7 @@ class DoctorateAdmissionJuryMemberChangeRoleFormViewTestCase(TestCase):
 
         self.assertRedirects(response, resolve_url(self.read_path, uuid=self.parcours_doctoral.uuid))
 
-        updated_member = JuryMember.objects.get(
+        updated_member = JuryActor.objects.get(
             uuid=self.membre.uuid,
         )
         self.assertEqual(updated_member.role, RoleJury.PRESIDENT.name)
