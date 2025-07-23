@@ -44,6 +44,7 @@ from parcours_doctoral.ddd.domain.model._financement import Financement
 from parcours_doctoral.ddd.domain.model._formation import FormationIdentity
 from parcours_doctoral.ddd.domain.model._institut import InstitutIdentity
 from parcours_doctoral.ddd.domain.model._projet import Projet
+from parcours_doctoral.ddd.domain.model.document import TypeDocument
 from parcours_doctoral.ddd.domain.model.enums import (
     ChoixCommissionProximiteCDEouCLSM,
     ChoixCommissionProximiteCDSS,
@@ -74,11 +75,14 @@ from parcours_doctoral.ddd.repository.i_parcours_doctoral import (
     IParcoursDoctoralRepository,
     formater_reference,
 )
+from parcours_doctoral.models import Document
 from parcours_doctoral.models.parcours_doctoral import (
     ParcoursDoctoral as ParcoursDoctoralModel,
 )
 from program_management.models.education_group_version import EducationGroupVersion
 from reference.models.language import Language
+
+DOCUMENT_ARCHIVE_NAME = 'Archive'
 
 
 class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
@@ -306,6 +310,16 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
         management_entities = cls.get_management_entities_dtos([parcours_doctoral.training.management_entity_id])
         management_entity = management_entities.get(parcours_doctoral.training.management_entity_id)
 
+        last_archive = (
+            Document.objects.filter(
+                related_doctorate=parcours_doctoral,
+                document_type=TypeDocument.SYSTEME.name,
+                name=DOCUMENT_ARCHIVE_NAME,
+            )
+            .order_by('updated_at')
+            .last()
+        )
+
         return ParcoursDoctoralDTO(
             uuid=str(parcours_doctoral.uuid),
             uuid_admission=str(parcours_doctoral.admission_uuid),  # from annotation
@@ -314,6 +328,7 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
             statut=parcours_doctoral.status,
             date_changement_statut=parcours_doctoral.status_updated_at,  # from annotation
             cree_le=parcours_doctoral.created_at,
+            archive=last_archive.file if last_archive else [],
             reference=parcours_doctoral.formatted_reference,
             noma_doctorant=parcours_doctoral.student_registration_id or '',  # from annotation
             photo_identite_doctorant=parcours_doctoral.student.id_photo,

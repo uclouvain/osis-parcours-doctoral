@@ -85,22 +85,16 @@ class JuryPreparationForm(forms.Form):
         super().__init__(*args, **kwargs)
 
         # Initialize the fields with dynamic choices
-        lang_code = self.data.get(self.add_prefix('langue_redaction'), self.initial.get('langue_redaction'))
+        def initialize_lang_field(field_name):
+            lang_code = self.data.get(self.add_prefix(field_name), self.initial.get(field_name))
 
-        if lang_code == LANGUAGE_UNDECIDED:
-            choices = ((LANGUAGE_UNDECIDED, _('Undecided')),)
-        else:
-            choices = get_language_initial_choices(lang_code)
+            if lang_code == LANGUAGE_UNDECIDED:
+                choices = ((LANGUAGE_UNDECIDED, _('Undecided')),)
+            else:
+                choices = get_language_initial_choices(lang_code)
 
-        self.fields['langue_redaction'].widget.choices = choices
-        self.fields['langue_redaction'].choices = choices
+            self.fields[field_name].widget.choices = choices
+            self.fields[field_name].choices = choices
 
-        lang_code = self.data.get(self.add_prefix('langue_soutenance'), self.initial.get('langue_soutenance'))
-
-        if lang_code == LANGUAGE_UNDECIDED:
-            choices = ((LANGUAGE_UNDECIDED, _('Undecided')),)
-        else:
-            choices = get_language_initial_choices(lang_code)
-
-        self.fields['langue_soutenance'].widget.choices = choices
-        self.fields['langue_soutenance'].choices = choices
+        initialize_lang_field('langue_redaction')
+        initialize_lang_field('langue_redaction')

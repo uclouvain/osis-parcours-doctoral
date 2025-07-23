@@ -234,6 +234,7 @@ class ParcoursDoctoralInMemoryRepository(InMemoryGenericRepository, IParcoursDoc
                 autres_documents=[],
             ),
             cree_le=timezone.now(),
+            archive=[],
             commission_proximite='',
         )
 

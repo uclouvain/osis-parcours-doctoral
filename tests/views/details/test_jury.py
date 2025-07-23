@@ -40,7 +40,7 @@ from parcours_doctoral.ddd.jury.domain.model.enums import (
     TitreMembre,
 )
 from parcours_doctoral.forms.jury.membre import JuryMembreForm
-from parcours_doctoral.models.jury import JuryMember
+from parcours_doctoral.models.jury import JuryActor
 from parcours_doctoral.tests.factories.jury import ExternalJuryMemberFactory
 from parcours_doctoral.tests.factories.parcours_doctoral import ParcoursDoctoralFactory
 from parcours_doctoral.tests.factories.supervision import PromoterFactory
@@ -105,7 +105,7 @@ class JuryViewTestCase(TestCase):
         )
 
         # Create member
-        cls.membre = ExternalJuryMemberFactory(parcours_doctoral=cls.parcours_doctoral)
+        cls.membre = ExternalJuryMemberFactory(process=cls.parcours_doctoral.jury_group)
         cls.country = CountryFactory()
 
         # User with one cdd
@@ -134,7 +134,7 @@ class JuryViewTestCase(TestCase):
             str(self.parcours_doctoral.uuid),
         )
         self.assertEqual(
-            response.context.get('membres')[0].uuid,
+            response.context.get('membres')[-1].uuid,
             str(self.membre.uuid),
         )
 
@@ -155,19 +155,19 @@ class JuryViewTestCase(TestCase):
                 'justification_non_docteur': '',
                 'genre': GenreMembre.AUTRE.name,
                 'email': 'email@example.org',
+                'langue': 'fr-be',
             },
         )
 
         self.assertRedirects(response, resolve_url(self.path, uuid=self.parcours_doctoral.uuid))
 
-        new_member = JuryMember.objects.get(
+        new_member = JuryActor.objects.get(
             institute='Nouveau membre',
         )
         self.assertEqual(new_member.institute, 'Nouveau membre')
         self.assertEqual(new_member.role, RoleJury.MEMBRE.name)
-        self.assertEqual(new_member.parcours_doctoral, self.parcours_doctoral)
+        self.assertEqual(new_member.process, self.parcours_doctoral.jury_group)
         self.assertEqual(new_member.other_institute, 'autre institution')
-        self.assertEqual(new_member.promoter, None)
         self.assertEqual(new_member.person, None)
         self.assertEqual(new_member.country, self.country)
         self.assertEqual(new_member.last_name, 'nom')
