@@ -147,3 +147,11 @@ class MembreDejaDansJuryException(BusinessException):
         self.jury = jury
         message = _("The member is already in the jury.")
         super().__init__(message, **kwargs)
+
+
+class PasDeVerificateurException(BusinessException):
+    status_code = "JURY-16"
+
+    def __init__(self, **kwargs):
+        message = _("No auditor are set for this training.")
+        super().__init__(message, **kwargs)

@@ -1453,10 +1453,6 @@ msgid ""
 "\"Research\" part."
 msgstr ""
 
-msgctxt "jury"
-msgid "Institute"
-msgstr ""
-
 msgctxt "parcours_doctoral"
 msgid "Institute"
 msgstr ""
@@ -1501,6 +1497,9 @@ msgid "International publication"
 msgstr ""
 
 msgid "International scholarship"
+msgstr ""
+
+msgid "Is a promoter"
 msgstr ""
 
 msgid "Is active"
@@ -1634,6 +1633,9 @@ msgstr ""
 msgid "Link to the doctoral training panel (front-office)"
 msgstr ""
 
+msgid "Link to the doctorate jury panel (front-office)"
+msgstr ""
+
 msgid "Link to the doctorate supervisory panel (front-office)"
 msgstr ""
 
@@ -1685,6 +1687,20 @@ msgstr ""
 msgid ""
 "Mail sent to ADRI to inform him of the necessity to retake one confirmation "
 "paper"
+msgstr ""
+
+msgid "Mail sent to each actor of the supervision group to request a signature"
+msgstr ""
+
+msgid ""
+"Mail sent to each member of the jury and to the auditor to request a "
+"signature"
+msgstr ""
+
+msgid "Mail sent to each promoter of the jury to request a signature"
+msgstr ""
+
+msgid "Mail sent to promoters when a member of the supervision panel refuses"
 msgstr ""
 
 msgid ""
@@ -1764,6 +1780,9 @@ msgstr ""
 msgid "Mail sent to the student to update a doctoral training activity"
 msgstr ""
 
+msgid "Mail sent to the student when one of the member refuse the jury"
+msgstr ""
+
 msgid "Main institute"
 msgstr ""
 
@@ -1789,6 +1808,15 @@ msgid "Member %(ca_member_index)s"
 msgstr ""
 
 msgid "Member not found"
+msgstr ""
+
+msgid "Member of jury already invited."
+msgstr ""
+
+msgid "Member of jury not found."
+msgstr ""
+
+msgid "Member of jury not invited."
 msgstr ""
 
 msgid "Member of supervision group already invited."
@@ -1871,7 +1899,13 @@ msgstr ""
 msgid "Name in the language of the manifestation"
 msgstr ""
 
+msgid "Name of the doctoral commission"
+msgstr ""
+
 msgid "Name or brief description"
+msgstr ""
+
+msgid "Names of the CDD managers"
 msgstr ""
 
 msgid "National publication"
@@ -1890,6 +1924,9 @@ msgid "Next doctorate"
 msgstr ""
 
 msgid "No"
+msgstr ""
+
+msgid "No auditor are set for this training."
 msgstr ""
 
 msgid "No confirmation paper yet"
@@ -2064,9 +2101,6 @@ msgstr ""
 msgid "Partner institution"
 msgstr ""
 
-msgid "Person"
-msgstr ""
-
 msgid "PhD"
 msgstr ""
 
@@ -2110,6 +2144,11 @@ msgid "Please choose a correct learning unit."
 msgstr ""
 
 msgid "Please correct the errors below"
+msgstr ""
+
+msgid ""
+"Please input all required information from the \"Defense Method\" tab before "
+"requesting the signatures."
 msgstr ""
 
 msgid ""
@@ -2309,6 +2348,9 @@ msgstr ""
 msgid "Reference DIAL.Pr"
 msgstr "Référence DIAL.Pr"
 
+msgid "Refusal reason"
+msgstr ""
+
 msgid "Refuse activity"
 msgstr ""
 
@@ -2427,6 +2469,12 @@ msgstr ""
 msgid "Role: Doctorate readers"
 msgstr ""
 
+msgid "Role: Jury member"
+msgstr ""
+
+msgid "Role: Jury members"
+msgstr ""
+
 msgid "Role: Jury secretaries"
 msgstr ""
 
@@ -2464,6 +2512,9 @@ msgstr "Services"
 
 msgid "SERVICE types"
 msgstr "Activity types for the service category"
+
+msgid "SIGNED"
+msgstr ""
 
 msgid "SIGNING_IN_PROGRESS"
 msgstr "Signing in progress"
@@ -2915,6 +2966,15 @@ msgstr ""
 msgid "The jury is not in progress"
 msgstr ""
 
+msgid ""
+"The jury must have at least one member from another institute than the "
+"UCLouvain, chosen depending on their particular expertise about the subject "
+"of the thesis."
+msgstr ""
+
+msgid "The jury signing is not in progress"
+msgstr ""
+
 msgid "The last name of the recipient"
 msgstr ""
 
@@ -3247,6 +3307,9 @@ msgctxt "CategorieActivite"
 msgid "VAE"
 msgstr "Validation of prior experience (VAE)"
 
+msgid "VERIFICATEUR"
+msgstr ""
+
 msgid "Validate selected courses"
 msgstr ""
 
@@ -3356,6 +3419,12 @@ msgstr ""
 msgid "You must be the contact supervisor to access this doctoral training"
 msgstr ""
 
+msgid "You must be a member of the jury to access this doctoral training"
+msgstr ""
+
+msgid "You must be the reference promoter to access this doctoral training"
+msgstr ""
+
 msgid "You must be the request author to access this doctoral training"
 msgstr ""
 
@@ -3388,6 +3457,9 @@ msgstr ""
 msgid ""
 "Your joint supervision information can be completed later. Please input "
 "\"No\" if you don't have information yet."
+msgstr ""
+
+msgid "Your jury must have at least 5 members."
 msgstr ""
 
 msgid "Your participation"
