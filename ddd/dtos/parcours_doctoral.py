@@ -102,6 +102,7 @@ class ParcoursDoctoralDTO(interface.DTO):
     intitule_secteur_formation: str
 
     cree_le: datetime.datetime
+    archive: List[str]
 
     formation: FormationDTO
 
