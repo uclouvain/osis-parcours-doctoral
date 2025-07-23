@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -57,9 +57,9 @@ class TestRecupererJury(TestCase):
         self.assertEqual(jury_dto.titre_propose, 'titre_propose')
         self.assertEqual(len(jury_dto.membres), 2)
         self.assertEqual(jury_dto.formule_defense, 'DEUX_TEMPS')
-        self.assertEqual(jury_dto.date_indicative, datetime.date(2022, 1, 1))
+        self.assertEqual(jury_dto.date_indicative, '01/01/2022')
         self.assertEqual(jury_dto.langue_redaction, 'english')
         self.assertEqual(jury_dto.langue_soutenance, 'english')
         self.assertEqual(jury_dto.commentaire, '')
         self.assertIsNone(jury_dto.situation_comptable)
-        self.assertIsNone(jury_dto.approbation_pdf)
+        self.assertEqual(jury_dto.approbation_pdf, [])

@@ -153,6 +153,7 @@ class JuryMembreUpdateFormView(
             'justification_non_docteur': self.membre.justification_non_docteur,
             'genre': self.membre.genre,
             'email': self.membre.email,
+            'langue': self.membre.langue,
         }
 
     def call_command(self, form):

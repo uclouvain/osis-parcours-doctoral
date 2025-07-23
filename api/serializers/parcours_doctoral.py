@@ -71,6 +71,9 @@ class ParcoursDoctoralDTOSerializer(DTOSerializer):
                 'update_jury_preparation',
                 'list_jury_members',
                 'create_jury_members',
+                'jury_request_signatures',
+                'jury_add_approval',
+                'jury_approve_by_pdf',
             ]
         }
     )
