@@ -110,7 +110,7 @@ def is_part_of_doctoral_commission(self, user: User, obj: ParcoursDoctoral):
 
 
 @predicate(bind=True)
-@predicate_failed_msg(message=_("You must be the request promoter to access this doctoral training"))
+@predicate_failed_msg(message=_("You must be the request supervisor to access this doctoral training"))
 def is_parcours_doctoral_promoter(self, user: User, obj: ParcoursDoctoral):
     return (
         has_valid_enrollment(user, obj)
@@ -125,7 +125,7 @@ def is_parcours_doctoral_promoter(self, user: User, obj: ParcoursDoctoral):
 
 
 @predicate(bind=True)
-@predicate_failed_msg(message=_("You must be the reference promoter to access this doctoral training"))
+@predicate_failed_msg(message=_("You must be the contact supervisor to access this doctoral training"))
 def is_parcours_doctoral_reference_promoter(self, user: User, obj: ParcoursDoctoral):
     return (
         has_valid_enrollment(user, obj)

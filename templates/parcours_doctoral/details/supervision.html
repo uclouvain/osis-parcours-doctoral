@@ -32,7 +32,7 @@
 
   <div class="card">
     <div class="card-header">
-      <h4 class="card-title">{% translate "Promoters" context "gender" %}</h4>
+      <h4 class="card-title">{% translate "Supervisors" context "gender" %}</h4>
     </div>
     <div class="card-body">
       {% for signature in groupe_supervision.signatures_promoteurs %}
@@ -65,7 +65,7 @@
 
       <div class="card">
         <div class="card-header">
-          <h4 class="card-title">{% translate "Add a promoter or a CA member" %}</h4>
+          <h4 class="card-title">{% translate "Add a supervisor or a supervision committee member" %}</h4>
         </div>
         <div class="card-body">
           <div class="row">
@@ -88,7 +88,7 @@
                   {% bootstrap_field add_form.institution wrapper_class="mb-3 required_field" %}
                   {% bootstrap_field add_form.ville wrapper_class="mb-3 required_field" %}
                   {% bootstrap_field add_form.pays wrapper_class="mb-3 required_field" %}
-                  {% bootstrap_field add_form.langue wrapper_class="mb-3 required_field" %}
+                  {% bootstrap_field_with_tooltip add_form.langue classes="required_field" %}
                 </div>
               </div>
             </div>
@@ -104,6 +104,7 @@
 {% endblock %}
 
 {% block script %}
+  {{ block.super }}
   {{ add_form.media }}
   {{ approve_by_pdf_form.media }}
   <script type="application/javascript">

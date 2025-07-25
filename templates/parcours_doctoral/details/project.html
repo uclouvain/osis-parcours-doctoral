@@ -48,7 +48,7 @@
     </div>
     <div class="card-body">
       {% field_data _("Project title") parcours_doctoral.projet.titre %}
-      {% field_data _("Project resume") parcours_doctoral.projet.resume|linebreaks %}
+      {% field_data _("Project abstract") parcours_doctoral.projet.resume|linebreaks %}
       {% field_data _("Thesis language") parcours_doctoral.projet.langue_redaction_these|osis_language_name %}
       <dl>
         <dt>{% translate "Research institute" %}</dt>
@@ -78,7 +78,7 @@
       {% field_data _("Has your PhD project already started?") parcours_doctoral.projet.projet_doctoral_deja_commence %}
       {% if parcours_doctoral.projet.projet_doctoral_deja_commence %}
         {% field_data _("Institution") parcours_doctoral.projet.projet_doctoral_institution %}
-        {% field_data _("Work start date") parcours_doctoral.projet.projet_doctoral_date_debut %}
+        {% field_data _("Research start date") parcours_doctoral.projet.projet_doctoral_date_debut %}
       {% endif %}
       {% field_data _("Have you previously enrolled for a PhD?") parcours_doctoral.projet.doctorat_deja_realise|enum_display:'ChoixDoctoratDejaRealise' %}
       {% if parcours_doctoral.projet.doctorat_deja_realise != "NO" %}
