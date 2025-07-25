@@ -54,6 +54,16 @@ msgstr " :"
 
 #, python-format
 msgid ""
+"<a href=\"%(assessment_enrolment_list_url)s\">%(reference)s</a> - A mark has "
+"been specified for an assessment (%(course_acronym)s - session numero "
+"%(session)s - %(course_year)s-%(course_year_1)s)."
+msgstr ""
+"<a href=\"%(assessment_enrolment_list_url)s\">%(reference)s</a> - Une note a été "
+"spécifiée pour une évaluation (%(course_acronym)s - session n°"
+"%(session)s - %(course_year)s-%(course_year_1)s)."
+
+#, python-format
+msgid ""
 "<a href=\"%(confirmation_paper_link_back)s\">%(reference)s</a> - "
 "%(student_first_name)s %(student_last_name)s proposed a new deadline "
 "(%(extension_request_proposed_date)s) for the confirmation paper for "

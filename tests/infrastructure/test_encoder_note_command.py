@@ -24,7 +24,9 @@
 #
 # ##############################################################################
 from django.test import TestCase
+from osis_notification.models import WebNotification
 
+from base.tests.factories.program_manager import ProgramManagerFactory
 from base.tests.factories.student import StudentFactory
 from deliberation.models.enums.numero_session import Session
 from infrastructure.messages_bus import message_bus_instance
@@ -32,12 +34,29 @@ from parcours_doctoral.ddd.formation.commands import EncoderNoteCommand
 from parcours_doctoral.ddd.formation.domain.validator.exceptions import (
     EvaluationNonTrouveeException,
 )
+from parcours_doctoral.infrastructure.parcours_doctoral.domain.service.notification import (
+    Notification,
+)
 from parcours_doctoral.tests.factories.assessment_enrollment import (
     AssessmentEnrollmentFactory,
 )
+from parcours_doctoral.tests.factories.parcours_doctoral import ParcoursDoctoralFactory
 
 
 class EncoderNoteCommandTestCase(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        super().setUpTestData()
+
+        cls.parcours_doctoral = ParcoursDoctoralFactory()
+
+        cls.first_program_manager = ProgramManagerFactory(
+            education_group=cls.parcours_doctoral.training.education_group
+        )
+        cls.second_program_manager = ProgramManagerFactory(
+            education_group=cls.parcours_doctoral.training.education_group
+        )
+
     def test_with_unknown_evaluation(self):
         with self.assertRaises(EvaluationNonTrouveeException):
             message_bus_instance.invoke(
@@ -54,15 +73,18 @@ class EncoderNoteCommandTestCase(TestCase):
         # First assessment
         first_assessment_enrollment = AssessmentEnrollmentFactory(
             session=Session.JANUARY.name,
+            course__parcours_doctoral=self.parcours_doctoral,
         )
         course = first_assessment_enrollment.course
 
+        year = course.learning_unit_year.academic_year.year
+        acronym = course.learning_unit_year.acronym
         message_bus_instance.invoke(
             EncoderNoteCommand(
-                annee=course.learning_unit_year.academic_year.year,
+                annee=year,
                 session=1,
                 noma=course.parcours_doctoral.student.student_set.first().registration_id,
-                code_unite_enseignement=course.learning_unit_year.acronym,
+                code_unite_enseignement=acronym,
                 note='10',
             )
         )
@@ -72,6 +94,21 @@ class EncoderNoteCommandTestCase(TestCase):
 
         self.assertEqual(first_assessment_enrollment.submitted_mark, '10')
         self.assertTrue(course.course_completed)
+
+        # Check that notifications have been submitted
+        notifications = WebNotification.objects.all()
+
+        self.assertEqual(len(notifications), 2)
+
+        self.assertCountEqual(
+            [notifications[0].person, notifications[1].person],
+            [self.first_program_manager.person, self.second_program_manager.person],
+        )
+
+        self.assertIn(
+            f'Une note a été spécifiée pour une évaluation ({acronym} - session n°1 - {year}-{year+1}).',
+            notifications[1].payload,
+        )
 
         # Second assessment
         second_assessment_enrollment = AssessmentEnrollmentFactory(

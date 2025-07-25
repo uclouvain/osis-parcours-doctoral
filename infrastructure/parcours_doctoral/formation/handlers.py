@@ -109,6 +109,7 @@ COMMAND_HANDLERS = {
         cmd,
         evaluation_repository=EvaluationRepository(),
         activite_repository=ActiviteRepository(),
+        notification=Notification(),
     ),
     ListerInscriptionsUnitesEnseignementQuery: lambda msg_bus, cmd: lister_inscriptions_unites_enseignement(
         cmd,
