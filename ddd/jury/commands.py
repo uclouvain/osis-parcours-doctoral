@@ -97,6 +97,7 @@ class ModifierRoleMembreCommand(interface.CommandRequest):
     uuid_jury: str
     uuid_membre: str
     role: str
+    matricule_auteur: str
 
 
 @attr.dataclass(frozen=True, slots=True)

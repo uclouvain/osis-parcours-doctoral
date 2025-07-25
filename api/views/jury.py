@@ -242,6 +242,7 @@ class JuryMemberDetailAPIView(
             ModifierRoleMembreCommand(
                 uuid_jury=str(self.doctorate_uuid),
                 uuid_membre=str(self.kwargs['member_uuid']),
+                matricule_auteur=self.request.user.person.global_id,
                 **serializer.data,
             )
         )

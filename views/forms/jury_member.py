@@ -187,6 +187,7 @@ class JuryMemberChangeRoleView(
                         uuid_jury=str(self.kwargs['uuid']),
                         uuid_membre=str(self.kwargs['member_uuid']),
                         role=form.cleaned_data['role'],
+                        matricule_auteur=self.request.user.matricule,
                     )
                 )
             except MultipleBusinessExceptions as multiple_exceptions:

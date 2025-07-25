@@ -23,7 +23,8 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-
+from parcours_doctoral.ddd.builder.parcours_doctoral_identity import ParcoursDoctoralIdentityBuilder
+from parcours_doctoral.ddd.jury.domain.service.i_verifier_modification_role import IVerifierModificationRoleService
 from parcours_doctoral.ddd.jury.builder.jury_identity_builder import JuryIdentityBuilder
 from parcours_doctoral.ddd.jury.commands import ModifierRoleMembreCommand
 from parcours_doctoral.ddd.jury.domain.model.jury import JuryIdentity
@@ -33,11 +34,16 @@ from parcours_doctoral.ddd.jury.repository.i_jury import IJuryRepository
 def modifier_role_membre(
     cmd: 'ModifierRoleMembreCommand',
     jury_repository: 'IJuryRepository',
+    verifier_modification_role_service: 'IVerifierModificationRoleService',
 ) -> 'JuryIdentity':
     # GIVEN
     jury = jury_repository.get(JuryIdentityBuilder.build_from_uuid(cmd.uuid_jury))
 
     # WHEN
+    verifier_modification_role_service.verifier(
+        parcours_doctoral_identity=ParcoursDoctoralIdentityBuilder.build_from_uuid(cmd.uuid_jury),
+        matricule_auteur=cmd.matricule_auteur,
+    )
 
     # THEN
     jury.modifier_role_membre(cmd.uuid_membre, cmd.role)

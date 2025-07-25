@@ -155,3 +155,27 @@ class PasDeVerificateurException(BusinessException):
     def __init__(self, **kwargs):
         message = _("No auditor are set for this training.")
         super().__init__(message, **kwargs)
+
+
+class LEtudiantPeutModifierLesRolesUniquementException(BusinessException):
+    status_code = "JURY-17"
+
+    def __init__(self, **kwargs):
+        message = _("Only the student can change the jury roles for SSS doctorate.")
+        super().__init__(message, **kwargs)
+
+
+class LEtudiantPeutModifierLesRolesUniquementException(BusinessException):
+    status_code = "JURY-18"
+
+    def __init__(self, **kwargs):
+        message = _("Only the lead supervisor can change the jury roles for SSH doctorate.")
+        super().__init__(message, **kwargs)
+
+
+class LEtudiantPeutModifierLesRolesUniquementException(BusinessException):
+    status_code = "JURY-19"
+
+    def __init__(self, **kwargs):
+        message = _("Only the auditor can change the jury roles for SST doctorate.")
+        super().__init__(message, **kwargs)
