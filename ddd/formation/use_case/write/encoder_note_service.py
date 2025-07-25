@@ -27,6 +27,7 @@ from parcours_doctoral.ddd.formation.builder.evaluation_builder import (
     EvaluationIdentityBuilder,
 )
 from parcours_doctoral.ddd.formation.commands import EncoderNoteCommand
+from parcours_doctoral.ddd.formation.domain.service.i_notification import INotification
 from parcours_doctoral.ddd.formation.repository.i_activite import IActiviteRepository
 from parcours_doctoral.ddd.formation.repository.i_evaluation import (
     IEvaluationRepository,
@@ -37,6 +38,7 @@ def encoder_note(
     cmd: EncoderNoteCommand,
     evaluation_repository: IEvaluationRepository,
     activite_repository: IActiviteRepository,
+    notification: INotification,
 ):
     # GIVEN
     identite_evaluation = EvaluationIdentityBuilder.build(
@@ -55,5 +57,6 @@ def encoder_note(
     # THEN
     evaluation_repository.save(evaluation)
     activite_repository.save(cours)
+    notification.notifier_encodage_note_aux_gestionnaires(evaluation=evaluation, cours=cours)
 
     return evaluation.entity_id
