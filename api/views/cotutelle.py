@@ -48,8 +48,8 @@ class CotutelleAPIView(
     pagination_class = None
     filter_backends = []
     permission_mapping = {
-        'GET': 'parcours_doctoral.view_cotutelle',
-        'PUT': 'parcours_doctoral.change_cotutelle',
+        'GET': 'parcours_doctoral.api_view_cotutelle',
+        'PUT': 'parcours_doctoral.api_change_cotutelle',
     }
 
     @extend_schema(
