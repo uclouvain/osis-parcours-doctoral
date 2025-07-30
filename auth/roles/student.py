@@ -43,38 +43,38 @@ class Student(RoleModel):
     @classmethod
     def rule_set(cls):
         rules = {
-            'parcours_doctoral.view_list': always_allow,
-            'parcours_doctoral.view_parcours_doctoral': parcours_doctoral.is_parcours_doctoral_student,
-            'parcours_doctoral.view_project': parcours_doctoral.is_parcours_doctoral_student,
-            'parcours_doctoral.view_funding': parcours_doctoral.is_parcours_doctoral_student,
-            'parcours_doctoral.change_funding': parcours_doctoral.is_parcours_doctoral_student,
-            'parcours_doctoral.view_cotutelle': parcours_doctoral.is_parcours_doctoral_student
+            'parcours_doctoral.api_view_list': always_allow,
+            'parcours_doctoral.api_view_parcours_doctoral': parcours_doctoral.is_parcours_doctoral_student,
+            'parcours_doctoral.api_view_project': parcours_doctoral.is_parcours_doctoral_student,
+            'parcours_doctoral.api_view_funding': parcours_doctoral.is_parcours_doctoral_student,
+            'parcours_doctoral.api_change_funding': parcours_doctoral.is_parcours_doctoral_student,
+            'parcours_doctoral.api_view_cotutelle': parcours_doctoral.is_parcours_doctoral_student
             & parcours_doctoral.is_related_to_an_admission,
-            'parcours_doctoral.change_cotutelle': parcours_doctoral.is_parcours_doctoral_student
+            'parcours_doctoral.api_change_cotutelle': parcours_doctoral.is_parcours_doctoral_student
             & parcours_doctoral.is_related_to_an_admission,
-            'parcours_doctoral.view_supervision': parcours_doctoral.is_parcours_doctoral_student,
-            'parcours_doctoral.view_supervision_canvas': parcours_doctoral.is_parcours_doctoral_student,
-            'parcours_doctoral.view_confirmation': parcours_doctoral.is_parcours_doctoral_student
+            'parcours_doctoral.api_view_supervision': parcours_doctoral.is_parcours_doctoral_student,
+            'parcours_doctoral.api_view_supervision_canvas': parcours_doctoral.is_parcours_doctoral_student,
+            'parcours_doctoral.api_view_confirmation': parcours_doctoral.is_parcours_doctoral_student
             & parcours_doctoral.is_related_to_an_admission,
             # Can edit while the jury is not submitted
-            'parcours_doctoral.view_jury': parcours_doctoral.is_parcours_doctoral_student,
-            'parcours_doctoral.change_jury': parcours_doctoral.is_parcours_doctoral_student
+            'parcours_doctoral.api_view_jury': parcours_doctoral.is_parcours_doctoral_student,
+            'parcours_doctoral.api_change_jury': parcours_doctoral.is_parcours_doctoral_student
             & parcours_doctoral.is_jury_in_progress,
-            'parcours_doctoral.view_complementary_training': parcours_doctoral.is_parcours_doctoral_student
+            'parcours_doctoral.api_view_complementary_training': parcours_doctoral.is_parcours_doctoral_student
             & parcours_doctoral.complementary_training_enabled,
-            'parcours_doctoral.view_course_enrollment': parcours_doctoral.is_parcours_doctoral_student,
-            'parcours_doctoral.view_doctoral_training': parcours_doctoral.is_parcours_doctoral_student,
-            'parcours_doctoral.view_assessment_enrollment': parcours_doctoral.is_parcours_doctoral_student,
-            'parcours_doctoral.add_training': parcours_doctoral.is_parcours_doctoral_student,
-            'parcours_doctoral.update_training': parcours_doctoral.is_parcours_doctoral_student,
-            'parcours_doctoral.submit_training': parcours_doctoral.is_parcours_doctoral_student,
-            'parcours_doctoral.view_training': parcours_doctoral.is_parcours_doctoral_student,
-            'parcours_doctoral.delete_training': parcours_doctoral.is_parcours_doctoral_student,
+            'parcours_doctoral.api_view_course_enrollment': parcours_doctoral.is_parcours_doctoral_student,
+            'parcours_doctoral.api_view_doctoral_training': parcours_doctoral.is_parcours_doctoral_student,
+            'parcours_doctoral.api_view_assessment_enrollment': parcours_doctoral.is_parcours_doctoral_student,
+            'parcours_doctoral.api_add_training': parcours_doctoral.is_parcours_doctoral_student,
+            'parcours_doctoral.api_update_training': parcours_doctoral.is_parcours_doctoral_student,
+            'parcours_doctoral.api_submit_training': parcours_doctoral.is_parcours_doctoral_student,
+            'parcours_doctoral.api_view_training': parcours_doctoral.is_parcours_doctoral_student,
+            'parcours_doctoral.api_delete_training': parcours_doctoral.is_parcours_doctoral_student,
             # Once the confirmation paper is in progress, he can
-            'parcours_doctoral.change_confirmation': parcours_doctoral.is_parcours_doctoral_student
+            'parcours_doctoral.api_change_confirmation': parcours_doctoral.is_parcours_doctoral_student
             & parcours_doctoral.confirmation_paper_in_progress
             & parcours_doctoral.is_related_to_an_admission,
-            'parcours_doctoral.change_confirmation_extension': parcours_doctoral.is_parcours_doctoral_student
+            'parcours_doctoral.api_change_confirmation_extension': parcours_doctoral.is_parcours_doctoral_student
             & parcours_doctoral.confirmation_paper_in_progress
             & parcours_doctoral.is_related_to_an_admission,
         }

@@ -32,10 +32,11 @@ from django.utils.translation import gettext_lazy as _
 from osis_signature.enums import SignatureState
 from osis_signature.models import StateHistory
 
+from admission.tests.factories.person import InternalPersonFactory
 from base.tests.factories.academic_year import AcademicYearFactory
 from base.tests.factories.entity import EntityFactory
 from base.tests.factories.entity_version import EntityVersionFactory
-from base.tests.factories.person import PersonFactory
+from base.tests.factories.person import ExternalPersonFactory, PersonFactory
 from base.tests.factories.tutor import TutorFactory
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import ENTITY_CDE
 from parcours_doctoral.forms.supervision import ACTOR_EXTERNAL, EXTERNAL_FIELDS
@@ -76,8 +77,10 @@ class SupervisionTestCase(TestCase):
 
         cls.country = CountryFactory()
 
-        cls.person = PersonFactory()
+        cls.person = InternalPersonFactory(global_id='00005789')
         TutorFactory(person=cls.person)
+
+        cls.external_person = ExternalPersonFactory()
 
         # Urls
         cls.update_url = reverse('parcours_doctoral:update:supervision', args=[cls.parcours_doctoral.uuid])
@@ -294,3 +297,29 @@ class SupervisionTestCase(TestCase):
         self.assertRedirects(response, self.detail_url, target_status_code=302)
         self.promoter.refresh_from_db()
         self.assertTrue(self.promoter.is_reference_promoter)
+
+    def test_should_not_add_promoter_with_an_external_account(self):
+        self.client.force_login(user=self.program_manager_user)
+
+        data = {
+            'type': ActorType.PROMOTER.name,
+            'internal_external': "INTERNAL",
+            'person': self.external_person.global_id,
+            'email': "test@test.fr",
+        }
+        response = self.client.post(self.update_url, data)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('__all__', response.context['add_form'].errors)
+
+    def test_should_not_add_ca_member_with_an_external_account(self):
+        self.client.force_login(user=self.program_manager_user)
+
+        data = {
+            'type': ActorType.CA_MEMBER.name,
+            'internal_external': "INTERNAL",
+            'person': self.external_person.global_id,
+            'email': "test@test.fr",
+        }
+        response = self.client.post(self.update_url, data)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('__all__', response.context['add_form'].errors)

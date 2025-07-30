@@ -31,17 +31,18 @@ from parcours_doctoral.ddd.epreuve_confirmation.commands import (
     RecupererEpreuvesConfirmationQuery,
 )
 from parcours_doctoral.ddd.epreuve_confirmation.dtos import EpreuveConfirmationDTO
-from parcours_doctoral.ddd.epreuve_confirmation.validators.exceptions import (
-    EpreuveConfirmationNonTrouveeException,
-)
 from parcours_doctoral.infrastructure.message_bus_in_memory import (
     message_bus_in_memory_instance,
+)
+from parcours_doctoral.infrastructure.parcours_doctoral.epreuve_confirmation.repository.in_memory import (
+    epreuve_confirmation,
 )
 
 
 class TestRecupererEpreuvesConfirmation(TestCase):
     def setUp(self) -> None:
         self.message_bus = message_bus_in_memory_instance
+        self.addCleanup(epreuve_confirmation.EpreuveConfirmationInMemoryRepository.reset)
 
     def test_should_pas_trouver_si_parcours_doctoral_inconnu(self):
         epreuves_confirmation = self.message_bus.invoke(

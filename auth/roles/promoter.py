@@ -51,27 +51,29 @@ class Promoter(AdmissionPromoter):
     @classmethod
     def rule_set(cls):
         rules = {
-            'parcours_doctoral.view_supervised_list': always_allow,
-            'parcours_doctoral.view_parcours_doctoral': is_parcours_doctoral_promoter,
-            'parcours_doctoral.download_pdf_confirmation': is_parcours_doctoral_promoter & is_related_to_an_admission,
-            'parcours_doctoral.approve_confirmation_paper': is_parcours_doctoral_promoter & is_related_to_an_admission,
-            'parcours_doctoral.validate_doctoral_training': is_parcours_doctoral_promoter,
-            'parcours_doctoral.fill_thesis': is_parcours_doctoral_promoter,
+            'parcours_doctoral.api_view_supervised_list': always_allow,
+            'parcours_doctoral.api_view_parcours_doctoral': is_parcours_doctoral_promoter,
+            'parcours_doctoral.api_download_pdf_confirmation': is_parcours_doctoral_promoter
+            & is_related_to_an_admission,
+            'parcours_doctoral.api_approve_confirmation_paper': is_parcours_doctoral_promoter
+            & is_related_to_an_admission,
+            'parcours_doctoral.api_validate_doctoral_training': is_parcours_doctoral_promoter,
+            'parcours_doctoral.api_fill_thesis': is_parcours_doctoral_promoter,
             # A promoter can view as long as he is one of the PhD promoters
-            'parcours_doctoral.view_project': is_parcours_doctoral_promoter,
-            'parcours_doctoral.view_cotutelle': is_parcours_doctoral_promoter & is_related_to_an_admission,
-            'parcours_doctoral.view_funding': is_parcours_doctoral_promoter,
-            'parcours_doctoral.view_supervision': is_parcours_doctoral_promoter,
-            'parcours_doctoral.view_supervision_canvas': is_parcours_doctoral_reference_promoter,
-            'parcours_doctoral.view_jury': is_parcours_doctoral_promoter,
-            'parcours_doctoral.view_confirmation': is_parcours_doctoral_promoter & is_related_to_an_admission,
-            'parcours_doctoral.upload_pdf_confirmation': is_parcours_doctoral_promoter & is_related_to_an_admission,
-            'parcours_doctoral.change_jury': is_parcours_doctoral_promoter & is_jury_in_progress,
+            'parcours_doctoral.api_view_project': is_parcours_doctoral_promoter,
+            'parcours_doctoral.api_view_cotutelle': is_parcours_doctoral_promoter & is_related_to_an_admission,
+            'parcours_doctoral.api_view_funding': is_parcours_doctoral_promoter,
+            'parcours_doctoral.api_view_supervision': is_parcours_doctoral_promoter,
+            'parcours_doctoral.api_view_supervision_canvas': is_parcours_doctoral_reference_promoter,
+            'parcours_doctoral.api_view_jury': is_parcours_doctoral_promoter,
+            'parcours_doctoral.api_view_confirmation': is_parcours_doctoral_promoter & is_related_to_an_admission,
+            'parcours_doctoral.api_upload_pdf_confirmation': is_parcours_doctoral_promoter & is_related_to_an_admission,
+            'parcours_doctoral.api_change_jury': is_parcours_doctoral_promoter & is_jury_in_progress,
             # PhD training
-            'parcours_doctoral.view_complementary_training': is_parcours_doctoral_promoter
+            'parcours_doctoral.api_view_complementary_training': is_parcours_doctoral_promoter
             & complementary_training_enabled,
-            'parcours_doctoral.view_course_enrollment': is_parcours_doctoral_promoter,
-            'parcours_doctoral.view_training': is_parcours_doctoral_promoter,
-            'parcours_doctoral.assent_training': is_parcours_doctoral_reference_promoter,
+            'parcours_doctoral.api_view_course_enrollment': is_parcours_doctoral_promoter,
+            'parcours_doctoral.api_view_training': is_parcours_doctoral_promoter,
+            'parcours_doctoral.api_assent_training': is_parcours_doctoral_reference_promoter,
         }
         return RuleSet(rules)
