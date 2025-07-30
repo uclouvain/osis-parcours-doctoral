@@ -253,11 +253,11 @@
           });
 
           {# Display / hide the form errors #}
-          $('#parcours_doctoral-search').on('htmx:beforeSend', function (evt) {
+          $('#parcours_doctoral-search').on('htmx:before-send', function (evt) {
               $('#form_errors').html('');
           });
 
-          $('#parcours_doctoral-search').on('htmx:afterSwap', function(evt) {
+          $('#parcours_doctoral-search').on('htmx:after-swap', function(evt) {
               if(evt.target.classList.contains('scroll-to-top')) {
                   main_container.scrollIntoView(true);
               };
