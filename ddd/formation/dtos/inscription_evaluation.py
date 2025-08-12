@@ -23,41 +23,38 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-import datetime
-from typing import Optional
 
 import attr
 
-from deliberation.models.enums.numero_session import Session
 from osis_common.ddd import interface
-from parcours_doctoral.ddd.formation.domain.model.activite import ActiviteIdentity
 from parcours_doctoral.ddd.formation.domain.model.enums import (
     StatutInscriptionEvaluation,
 )
 
 
-@attr.dataclass(frozen=True, slots=True)
-class InscriptionEvaluationIdentity(interface.EntityIdentity):
+@attr.dataclass(slots=True, frozen=True)
+class InscriptionEvaluationDTO(interface.DTO):
     uuid: str
 
+    uuid_activite: str
 
-@attr.dataclass(slots=True, hash=False, eq=False)
-class InscriptionEvaluation(interface.RootEntity):
-    entity_id: 'InscriptionEvaluationIdentity'
-    cours_id: 'ActiviteIdentity'
-    statut: StatutInscriptionEvaluation
-    session: Session
+    session: str
+    statut: str
     inscription_tardive: bool
     desinscription_tardive: bool
 
-    def modifier(
-        self,
-        session: Session,
-        inscription_tardive: bool,
-    ):
-        self.session = session
-        self.inscription_tardive = inscription_tardive
+    code_unite_enseignement: str
+    intitule_unite_enseignement: str
+    annee_unite_enseignement: int
 
-    def desinscrire(self, echeance_encodage_note: Optional[datetime.date]):
-        self.statut = StatutInscriptionEvaluation.DESINSCRITE
-        self.desinscription_tardive = bool(echeance_encodage_note and datetime.date.today() > echeance_encodage_note)
+    @property
+    def unite_enseignement(self):
+        return f'{self.code_unite_enseignement} - {self.intitule_unite_enseignement}'
+
+    @property
+    def est_annulee(self):
+        return self.statut == StatutInscriptionEvaluation.DESINSCRITE.name
+
+    @property
+    def est_acceptee(self):
+        return self.statut == StatutInscriptionEvaluation.ACCEPTEE.name

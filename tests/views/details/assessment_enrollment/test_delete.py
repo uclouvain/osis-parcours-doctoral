@@ -23,6 +23,7 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+import datetime
 
 import freezegun
 from django.shortcuts import resolve_url
@@ -33,6 +34,11 @@ from base.tests.factories.academic_year import AcademicYearFactory
 from base.tests.factories.entity import EntityFactory
 from base.tests.factories.entity_version import EntityVersionFactory
 from base.tests.factories.program_manager import ProgramManagerFactory
+from base.tests.factories.session_exam_calendar import (
+    BasculementDeliberationCalendarSession1Factory,
+    SessionExamCalendarFactory,
+)
+from deliberation.models.enums.numero_session import Session
 from parcours_doctoral.ddd.formation.domain.model.enums import (
     StatutActivite,
     StatutInscriptionEvaluation,
@@ -50,8 +56,15 @@ class AssessmentEnrollmentDeleteViewTestCase(TestCase):
     def setUpTestData(cls):
         cls.academic_years = AcademicYearFactory.produce(2023, 1, 1)
 
-        cls.academic_calendars = [AcademicCalendarExamSubmissionFactory(data_year=year) for year in cls.academic_years]
-
+        cls.academic_calendars = [
+            SessionExamCalendarFactory(
+                academic_calendar__data_year=year,
+                academic_calendar__start_date=datetime.date(year.year + 1, 1, 1),
+                academic_calendar__end_date=datetime.date(year.year + 1, 1, 31),
+                number_session=1,
+            )
+            for year in cls.academic_years
+        ]
         first_doctoral_commission = EntityFactory()
         EntityVersionFactory(entity=first_doctoral_commission)
 
@@ -67,7 +80,11 @@ class AssessmentEnrollmentDeleteViewTestCase(TestCase):
             status=StatutActivite.ACCEPTEE.name,
         )
 
-        cls.assessment_enrollment = AssessmentEnrollmentFactory(course=cls.course)
+        cls.assessment_enrollment = AssessmentEnrollmentFactory(
+            course=cls.course,
+            session=Session.JANUARY.name,
+            late_enrollment=True,
+        )
         cls.other_year_assessment_enrollment = AssessmentEnrollmentFactory(course=cls.other_year_course)
 
         cls.manager = ProgramManagerFactory(education_group=cls.doctorate.training.education_group).person
@@ -105,3 +122,83 @@ class AssessmentEnrollmentDeleteViewTestCase(TestCase):
         self.assessment_enrollment.refresh_from_db()
 
         self.assertEqual(self.assessment_enrollment.status, StatutInscriptionEvaluation.DESINSCRITE.name)
+        self.assertEqual(self.assessment_enrollment.course, self.course)
+        self.assertEqual(self.assessment_enrollment.session, Session.JANUARY.name)
+        self.assertEqual(self.assessment_enrollment.late_enrollment, True)
+
+        # Check late unenrollment
+
+        # With private defense date before the end of the encoding period
+        self.doctorate.defense_indicative_date = datetime.date(2024, 1, 15)
+        self.doctorate.save(update_fields=['defense_indicative_date'])
+
+        self.assessment_enrollment.status = StatutInscriptionEvaluation.ACCEPTEE.name
+        self.assessment_enrollment.save(update_fields=['status'])
+
+        with freezegun.freeze_time('2024-01-13'):
+            response = self.client.delete(self.url)
+
+            self.assessment_enrollment.refresh_from_db()
+            self.assertFalse(self.assessment_enrollment.late_unenrollment)
+
+            self.assessment_enrollment.status = StatutInscriptionEvaluation.ACCEPTEE.name
+            self.assessment_enrollment.save(update_fields=['status'])
+
+        with freezegun.freeze_time('2024-01-14'):
+            response = self.client.delete(self.url)
+
+            self.assessment_enrollment.refresh_from_db()
+            self.assertTrue(self.assessment_enrollment.late_unenrollment)
+
+            # With private defense date not in the encoding period
+            self.doctorate.defense_indicative_date = datetime.date(2023, 12, 31)
+            self.doctorate.save(update_fields=['defense_indicative_date'])
+
+            self.assessment_enrollment.status = StatutInscriptionEvaluation.ACCEPTEE.name
+            self.assessment_enrollment.save(update_fields=['status'])
+
+        # With private defense date after the end of the encoding period
+        self.doctorate.defense_indicative_date = datetime.date(2024, 2, 15)
+        self.doctorate.save()
+
+        with freezegun.freeze_time('2024-01-31'):
+            self.client.force_login(self.manager.user)
+            response = self.client.delete(self.url)
+
+            self.assessment_enrollment.refresh_from_db()
+            self.assertFalse(self.assessment_enrollment.late_unenrollment)
+
+            self.assessment_enrollment.status = StatutInscriptionEvaluation.ACCEPTEE.name
+            self.assessment_enrollment.save(update_fields=['status'])
+
+        with freezegun.freeze_time('2024-02-01'):
+            response = self.client.delete(self.url)
+
+            self.assessment_enrollment.refresh_from_db()
+            self.assertTrue(self.assessment_enrollment.late_unenrollment)
+
+            self.assessment_enrollment.status = StatutInscriptionEvaluation.ACCEPTEE.name
+            self.assessment_enrollment.save(update_fields=['status'])
+
+        # Without private defense date
+        self.doctorate.defense_indicative_date = None
+        self.doctorate.save()
+
+        with freezegun.freeze_time('2024-01-31'):
+            self.client.force_login(self.manager.user)
+            response = self.client.delete(self.url)
+
+            self.assessment_enrollment.refresh_from_db()
+            self.assertFalse(self.assessment_enrollment.late_unenrollment)
+
+            self.assessment_enrollment.status = StatutInscriptionEvaluation.ACCEPTEE.name
+            self.assessment_enrollment.save(update_fields=['status'])
+
+        with freezegun.freeze_time('2024-02-01'):
+            response = self.client.delete(self.url)
+
+            self.assessment_enrollment.refresh_from_db()
+            self.assertTrue(self.assessment_enrollment.late_unenrollment)
+
+            self.assessment_enrollment.status = StatutInscriptionEvaluation.ACCEPTEE.name
+            self.assessment_enrollment.save(update_fields=['status'])

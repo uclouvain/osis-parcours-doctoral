@@ -23,34 +23,40 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from deliberation.models.enums.numero_session import Session
-from parcours_doctoral.ddd.formation.builder.inscription_evaluation_builder import (
-    InscriptionEvaluationIdentityBuilder,
+from parcours_doctoral.ddd.formation.builder.evaluation_builder import (
+    EvaluationIdentityBuilder,
 )
-from parcours_doctoral.ddd.formation.commands import (
-    ModifierInscriptionEvaluationCommand,
-)
-from parcours_doctoral.ddd.formation.repository.i_inscription_evaluation import (
-    IInscriptionEvaluationRepository,
+from parcours_doctoral.ddd.formation.commands import EncoderNoteCommand
+from parcours_doctoral.ddd.formation.domain.service.i_notification import INotification
+from parcours_doctoral.ddd.formation.repository.i_activite import IActiviteRepository
+from parcours_doctoral.ddd.formation.repository.i_evaluation import (
+    IEvaluationRepository,
 )
 
 
-def modifier_inscription_evaluation(
-    cmd: ModifierInscriptionEvaluationCommand,
-    inscription_evaluation_repository: IInscriptionEvaluationRepository,
+def encoder_note(
+    cmd: EncoderNoteCommand,
+    evaluation_repository: IEvaluationRepository,
+    activite_repository: IActiviteRepository,
+    notification: INotification,
 ):
     # GIVEN
-    entity_id = InscriptionEvaluationIdentityBuilder.build_from_uuid(uuid=cmd.inscription_uuid)
-
-    evaluation = inscription_evaluation_repository.get(entity_id=entity_id)
+    identite_evaluation = EvaluationIdentityBuilder.build(
+        annee=cmd.annee,
+        session=cmd.session,
+        code_unite_enseignement=cmd.code_unite_enseignement,
+        noma=cmd.noma,
+    )
+    evaluation = evaluation_repository.get(entity_id=identite_evaluation)
+    cours = activite_repository.get(entity_id=evaluation.cours_id)
 
     # WHEN
-    evaluation.modifier(
-        session=Session[cmd.session],
-        inscription_tardive=cmd.inscription_tardive,
-    )
+    evaluation.encoder_note(note=cmd.note)
+    cours.encoder_note_cours_ucl(note=cmd.note)
 
     # THEN
-    inscription_evaluation_repository.save(evaluation)
+    evaluation_repository.save(evaluation)
+    activite_repository.save(cours)
+    notification.notifier_encodage_note_aux_gestionnaires(evaluation=evaluation, cours=cours)
 
     return evaluation.entity_id

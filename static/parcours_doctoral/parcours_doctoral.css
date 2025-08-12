@@ -621,3 +621,11 @@ a.no-link {
   -webkit-animation: spin-loader 2s linear infinite;
   animation: spin-loader 2s linear infinite;
 }
+
+.upper-icon {
+  font-size: 0.7em;
+  vertical-align: super;
+  margin-left: -0.9em;
+  border-radius: 50%;
+  background: white;
+}

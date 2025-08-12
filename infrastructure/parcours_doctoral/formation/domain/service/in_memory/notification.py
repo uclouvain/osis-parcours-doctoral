@@ -25,6 +25,7 @@
 # ##############################################################################
 from typing import List
 
+from assessments.models.evaluation import Evaluation
 from parcours_doctoral.ddd.domain.model._promoteur import PromoteurIdentity
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoral
 from parcours_doctoral.ddd.formation.domain.model.activite import Activite
@@ -47,4 +48,8 @@ class NotificationInMemory(INotification):
 
     @classmethod
     def notifier_refus_au_candidat(cls, parcours_doctoral, activite):
+        pass
+
+    @classmethod
+    def notifier_encodage_note_aux_gestionnaires(cls, evaluation: Evaluation, cours: Activite) -> None:
         pass

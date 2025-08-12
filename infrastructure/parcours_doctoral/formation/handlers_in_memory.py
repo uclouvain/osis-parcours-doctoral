@@ -29,13 +29,16 @@ from parcours_doctoral.ddd.formation.use_case.write import *
 from parcours_doctoral.ddd.formation.use_case.write.inscrire_evaluation_service import (
     inscrire_evaluation,
 )
-
-from ..repository.in_memory.groupe_de_supervision import (
+from parcours_doctoral.infrastructure.parcours_doctoral.repository.in_memory.groupe_de_supervision import (
     GroupeDeSupervisionInMemoryRepository,
 )
-from ..repository.in_memory.parcours_doctoral import ParcoursDoctoralInMemoryRepository
+from parcours_doctoral.infrastructure.parcours_doctoral.repository.in_memory.parcours_doctoral import (
+    ParcoursDoctoralInMemoryRepository,
+)
+
 from .domain.service.in_memory.notification import NotificationInMemory
 from .repository.in_memory.activite import ActiviteInMemoryRepository
+from .repository.in_memory.evaluation import EvaluationInMemoryRepository
 from .repository.in_memory.inscription_evaluation import (
     InscriptionEvaluationInMemoryRepository,
 )
@@ -45,6 +48,7 @@ _parcours_doctoral_repository = ParcoursDoctoralInMemoryRepository()
 _groupe_de_supervision_repository = GroupeDeSupervisionInMemoryRepository()
 _notification = NotificationInMemory()
 _inscription_evaluation_repository = InscriptionEvaluationInMemoryRepository()
+_evaluation_repository = EvaluationInMemoryRepository()
 
 
 COMMAND_HANDLERS = {
@@ -98,5 +102,20 @@ COMMAND_HANDLERS = {
     DesinscrireEvaluationCommand: lambda msg_bus, cmd: desinscrire_evaluation(
         cmd,
         inscription_evaluation_repository=_inscription_evaluation_repository,
+        evaluation_repository=_evaluation_repository,
+    ),
+    ListerEvaluationsQuery: lambda msg_bus, cmd: lister_evaluations(
+        cmd,
+        evaluation_repository=_evaluation_repository,
+    ),
+    EncoderNoteCommand: lambda msg_bus, cmd: encoder_note(
+        cmd,
+        evaluation_repository=_evaluation_repository,
+        activite_repository=_activite_repository,
+        notification=_notification,
+    ),
+    ListerInscriptionsUnitesEnseignementQuery: lambda msg_bus, cmd: lister_inscriptions_unites_enseignement(
+        cmd,
+        activite_repository=_activite_repository,
     ),
 }

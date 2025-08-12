@@ -25,6 +25,9 @@
 # ##############################################################################
 from typing import List, Mapping, Optional
 
+from django.db.models import F
+
+from base.models.student import Student
 from parcours_doctoral.ddd.builder.parcours_doctoral_identity import (
     ParcoursDoctoralIdentityBuilder,
 )
@@ -46,6 +49,9 @@ from parcours_doctoral.ddd.formation.domain.validator.exceptions import (
     ActiviteNonTrouvee,
 )
 from parcours_doctoral.ddd.formation.dtos import *
+from parcours_doctoral.ddd.formation.dtos.inscription_unite_enseignement import (
+    InscriptionUniteEnseignementDTO,
+)
 from parcours_doctoral.ddd.formation.repository.i_activite import IActiviteRepository
 from parcours_doctoral.models.activity import Activity
 
@@ -108,6 +114,7 @@ class ActiviteRepository(IActiviteRepository):
             avis_promoteur_reference=activity.reference_promoter_assent,
             commentaire_promoteur_reference=activity.reference_promoter_comment,
             commentaire_gestionnaire=activity.cdd_comment,
+            cours_complete=activity.course_completed,
         )
 
     @classmethod
@@ -300,9 +307,47 @@ class ActiviteRepository(IActiviteRepository):
             reference_promoter_assent=activite.avis_promoteur_reference,
             reference_promoter_comment=activite.commentaire_promoteur_reference,
             cdd_comment=activite.commentaire_gestionnaire,
+            # UCL course fields
+            course_completed=activite.cours_complete,
         )
 
     @classmethod
     def search(cls, parent_id: Optional[ActiviteIdentity] = None, **kwargs) -> List[Activite]:
         qs = Activity.objects.select_related('parcours_doctoral').filter(parent__uuid=parent_id.uuid)
         return [cls._get(activity) for activity in qs]
+
+    @classmethod
+    def lister_inscriptions_unites_enseignement(
+        cls,
+        annee: int,
+        code_unite_enseignement: str,
+    ) -> List[InscriptionUniteEnseignementDTO]:
+        activities = Activity.objects.filter(
+            learning_unit_year__academic_year__year=annee,
+            learning_unit_year__acronym=code_unite_enseignement,
+            category=CategorieActivite.UCL_COURSE.name,
+            status=StatutActivite.ACCEPTEE.name,
+        ).annotate(
+            student_person_id=F('parcours_doctoral__student_id'),
+            training_acronym=F('parcours_doctoral__training__acronym'),
+        )
+
+        if not activities:
+            return []
+
+        student_registration_ids = {
+            student['person_id']: student['registration_id']
+            for student in Student.objects.filter(
+                person_id__in=[enrollment.student_person_id for enrollment in activities]
+            ).values('registration_id', 'person_id')
+        }
+
+        return [
+            InscriptionUniteEnseignementDTO(
+                noma=student_registration_ids.get(activity.student_person_id, ''),
+                annee=annee,
+                sigle_formation=activity.training_acronym,  # From annotation
+                code_unite_enseignement=code_unite_enseignement,
+            )
+            for activity in activities
+        ]
