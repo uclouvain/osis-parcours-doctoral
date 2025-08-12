@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -121,7 +121,7 @@ templates.register(
 PARCOURS_DOCTORAL_EMAIL_SIGNATURE_REFUSAL = 'osis-parcours-doctoral-signature-refusal'
 templates.register(
     PARCOURS_DOCTORAL_EMAIL_SIGNATURE_REFUSAL,
-    description=_("Mail sent to promoters when a member of the supervision panel refuses"),
+    description=_("Mail sent to supervisors when a member of the supervision panel refuses"),
     tokens=(
         common_tokens
         + signataire_tokens
