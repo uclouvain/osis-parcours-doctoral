@@ -60,7 +60,11 @@
   {% has_perm 'parcours_doctoral.change_assessment_enrollment' as can_change_assessment_enrollment %}
   {% if assessment_enrollment.est_annulee %}
     <p class="alert alert-warning">
-      {% translate 'The student has been withdrawn from this assessment.' %}
+      {% if assessment_enrollment.desinscription_tardive %}
+        {% translate 'The student has been withdrawn lately from this assessment.' %}
+      {% else %}
+        {% translate 'The student has been withdrawn from this assessment.' %}
+      {% endif %}
     </p>
   {% elif can_change_assessment_enrollment and assessment_enrollment_is_editable %}
     {% url 'parcours_doctoral:assessment-enrollment:delete' uuid=view.kwargs.uuid enrollment_uuid=view.kwargs.enrollment_uuid as delete_url %}

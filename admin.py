@@ -169,6 +169,8 @@ class AssessmentEnrollmentAdmin(admin.ModelAdmin):
         'session',
         'course_acronym',
         'active',
+        'submitted_mark',
+        'corrected_mark',
     )
     autocomplete_fields = [
         'course',

@@ -38,6 +38,10 @@ from parcours_doctoral.ddd.formation.domain.model.inscription_evaluation import 
     InscriptionEvaluation,
     InscriptionEvaluationIdentity,
 )
+from parcours_doctoral.ddd.formation.dtos.evaluation import EvaluationDTO
+from parcours_doctoral.ddd.formation.dtos.inscription_evaluation import (
+    InscriptionEvaluationDTO,
+)
 
 
 class InscriptionEvaluationIdentityBuilder(EntityIdentityBuilder):
@@ -55,4 +59,27 @@ class InscriptionEvaluationBuilder(RootEntityBuilder):
             session=Session[cmd.session],
             inscription_tardive=cmd.inscription_tardive,
             statut=StatutInscriptionEvaluation.ACCEPTEE,
+            desinscription_tardive=False,
+        )
+
+    @classmethod
+    def build_from_repository_dto(cls, dto_object: 'InscriptionEvaluationDTO') -> 'InscriptionEvaluation':
+        return InscriptionEvaluation(
+            entity_id=InscriptionEvaluationIdentityBuilder.build_from_uuid(uuid=dto_object.uuid),
+            cours_id=ActiviteIdentityBuilder.build_from_uuid(uuid=dto_object.uuid_activite),
+            session=Session[dto_object.session],
+            inscription_tardive=dto_object.inscription_tardive,
+            statut=StatutInscriptionEvaluation[dto_object.statut],
+            desinscription_tardive=dto_object.desinscription_tardive,
+        )
+
+    @classmethod
+    def build_from_evaluation_dto(cls, dto_object: 'EvaluationDTO') -> 'InscriptionEvaluation':
+        return InscriptionEvaluation(
+            entity_id=InscriptionEvaluationIdentityBuilder.build_from_uuid(uuid=dto_object.uuid),
+            cours_id=ActiviteIdentityBuilder.build_from_uuid(uuid=dto_object.uuid_activite),
+            session=Session[Session.get_key_session(dto_object.session)],
+            inscription_tardive=dto_object.est_inscrit_tardivement,
+            statut=StatutInscriptionEvaluation[dto_object.statut],
+            desinscription_tardive=dto_object.est_desinscrit_tardivement,
         )

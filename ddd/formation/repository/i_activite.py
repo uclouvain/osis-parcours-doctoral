@@ -33,6 +33,9 @@ from parcours_doctoral.ddd.formation.domain.model.activite import (
     ActiviteIdentity,
 )
 from parcours_doctoral.ddd.formation.dtos import ActiviteDTO
+from parcours_doctoral.ddd.formation.dtos.inscription_unite_enseignement import (
+    InscriptionUniteEnseignementDTO,
+)
 
 
 class IActiviteRepository(interface.AbstractRepository):
@@ -76,4 +79,13 @@ class IActiviteRepository(interface.AbstractRepository):
     @classmethod
     @abc.abstractmethod
     def search(cls, parent_id: Optional[ActiviteIdentity] = None, **kwargs) -> List[Activite]:  # type: ignore[override]
+        raise NotImplementedError
+
+    @classmethod
+    @abc.abstractmethod
+    def lister_inscriptions_unites_enseignement(
+        cls,
+        annee: int,
+        code_unite_enseignement: str,
+    ) -> List[InscriptionUniteEnseignementDTO]:
         raise NotImplementedError

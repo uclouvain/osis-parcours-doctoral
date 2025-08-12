@@ -45,7 +45,9 @@ from parcours_doctoral.ddd.formation.commands import (
     RecupererInscriptionEvaluationQuery,
 )
 from parcours_doctoral.ddd.formation.domain.model.enums import StatutActivite
-from parcours_doctoral.ddd.formation.dtos.evaluation import InscriptionEvaluationDTO
+from parcours_doctoral.ddd.formation.dtos.inscription_evaluation import (
+    InscriptionEvaluationDTO,
+)
 from parcours_doctoral.forms.training.assessment_enrollment import (
     AssessmentEnrollmentForm,
 )

@@ -24,9 +24,13 @@
 #
 # ##############################################################################
 from parcours_doctoral.ddd.formation.builder.inscription_evaluation_builder import (
+    InscriptionEvaluationBuilder,
     InscriptionEvaluationIdentityBuilder,
 )
 from parcours_doctoral.ddd.formation.commands import DesinscrireEvaluationCommand
+from parcours_doctoral.ddd.formation.repository.i_evaluation import (
+    IEvaluationRepository,
+)
 from parcours_doctoral.ddd.formation.repository.i_inscription_evaluation import (
     IInscriptionEvaluationRepository,
 )
@@ -35,15 +39,17 @@ from parcours_doctoral.ddd.formation.repository.i_inscription_evaluation import 
 def desinscrire_evaluation(
     cmd: DesinscrireEvaluationCommand,
     inscription_evaluation_repository: IInscriptionEvaluationRepository,
+    evaluation_repository: IEvaluationRepository,
 ):
     # GIVEN
-    entity_id = InscriptionEvaluationIdentityBuilder.build_from_uuid(uuid=cmd.inscription_uuid)
-    entity = inscription_evaluation_repository.get(entity_id=entity_id)
+    inscription_evaluation_identity = InscriptionEvaluationIdentityBuilder.build_from_uuid(uuid=cmd.inscription_uuid)
+    evaluation_dto = evaluation_repository.get_dto(inscription_id=inscription_evaluation_identity)
+    inscription_evaluation = InscriptionEvaluationBuilder.build_from_evaluation_dto(evaluation_dto)
 
     # WHEN
-    entity.desinscrire()
+    inscription_evaluation.desinscrire(evaluation_dto.echeance_enseignant)
 
     # THEN
-    inscription_evaluation_repository.save(entity)
+    inscription_evaluation_repository.save(inscription_evaluation)
 
-    return entity_id
+    return inscription_evaluation.entity_id

@@ -23,16 +23,17 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from parcours_doctoral.ddd.formation.dtos.inscription_evaluation import (
-    InscriptionEvaluationDTO,
+from parcours_doctoral.ddd.formation.commands import (
+    ListerInscriptionsUnitesEnseignementQuery,
 )
+from parcours_doctoral.ddd.formation.repository.i_activite import IActiviteRepository
 
 
-def assessment_enrollment_is_editable(assessment_enrollment: InscriptionEvaluationDTO, academic_year: int):
-    """
-    Check if an assessment enrollment is editable.
-    :param assessment_enrollment: The assessment enrollment dto.
-    :param academic_year: The current academic year
-    :return: True if the assessment enrollment is editable, False otherwise.
-    """
-    return assessment_enrollment.est_acceptee and assessment_enrollment.annee_unite_enseignement == academic_year
+def lister_inscriptions_unites_enseignement(
+    cmd: ListerInscriptionsUnitesEnseignementQuery,
+    activite_repository: IActiviteRepository,
+):
+    return activite_repository.lister_inscriptions_unites_enseignement(
+        annee=cmd.annee,
+        code_unite_enseignement=cmd.code_unite_enseignement,
+    )
