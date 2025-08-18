@@ -23,13 +23,15 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from typing import List, Union
+from typing import List
 
 from django.conf import settings
+from django.db.models import QuerySet
 from django.utils import translation
 from django.utils.functional import Promise, lazy
 from django.utils.translation import get_language
 from django.utils.translation import gettext_lazy as _
+from django.utils.translation import override
 from osis_mail_template import generate_email
 from osis_notification.contrib.handlers import (
     EmailNotificationHandler,
@@ -38,6 +40,7 @@ from osis_notification.contrib.handlers import (
 from osis_notification.contrib.notification import WebNotification
 from osis_signature.models import Actor
 
+from base.auth.roles.program_manager import ProgramManager
 from parcours_doctoral.ddd.domain.model._promoteur import PromoteurIdentity
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoral
 from parcours_doctoral.ddd.formation.domain.model.activite import Activite
@@ -46,6 +49,7 @@ from parcours_doctoral.ddd.formation.domain.model.enums import (
     ContexteFormation,
     StatutActivite,
 )
+from parcours_doctoral.ddd.formation.domain.model.evaluation import Evaluation
 from parcours_doctoral.ddd.formation.domain.service.i_notification import INotification
 from parcours_doctoral.mail_templates import (
     PARCOURS_DOCTORAL_EMAIL_REFERENCE_PROMOTER_COMPLEMENTARY_TRAININGS_SUBMITTED,
@@ -209,3 +213,39 @@ class Notification(INotification):
             recipients=[parcours_doctoral_instance.student.email],
         )
         EmailNotificationHandler.create(email_message, person=parcours_doctoral_instance.student)
+
+    @classmethod
+    def notifier_encodage_note_aux_gestionnaires(cls, evaluation: Evaluation, cours: Activite) -> None:
+        doctorate = (
+            ParcoursDoctoralModel.objects.filter(uuid=cours.parcours_doctoral_id.uuid)
+            .values('uuid', 'reference', 'training__education_group_id')
+            .first()
+        )
+
+        if not doctorate:
+            return
+
+        program_managers: QuerySet[ProgramManager] = ProgramManager.objects.filter(
+            education_group_id=doctorate['training__education_group_id']
+        ).select_related('person')
+
+        assessment_enrolment_list_url = get_parcours_doctoral_link_back(doctorate['uuid'], 'assessment-enrollment')
+
+        content = _(
+            '<a href="%(assessment_enrolment_list_url)s">%(reference)s</a> - '
+            'A mark has been specified for an assessment '
+            '(%(course_acronym)s - session numero %(session)s - %(course_year)s-%(course_year_1)s).'
+        )
+        tokens = {
+            'assessment_enrolment_list_url': assessment_enrolment_list_url,
+            'reference': doctorate['reference'],
+            'course_acronym': evaluation.entity_id.code_unite_enseignement,
+            'session': evaluation.entity_id.session,
+            'course_year': evaluation.entity_id.annee,
+            'course_year_1': evaluation.entity_id.annee + 1,
+        }
+
+        for manager in program_managers:
+            with override(manager.person.language):
+                web_notification = WebNotification(recipient=manager.person, content=str(content % tokens))
+            WebNotificationHandler.create(web_notification)

@@ -26,8 +26,8 @@
 from functools import partial
 from typing import List
 
-from admission.ddd.admission.domain.model.question_specifique import QuestionSpecifique
-from admission.ddd.admission.domain.service.verifier_questions_specifiques import (
+from admission.ddd.admission.shared_kernel.domain.model.question_specifique import QuestionSpecifique
+from admission.ddd.admission.shared_kernel.domain.service.verifier_questions_specifiques import (
     VerifierQuestionsSpecifiques,
 )
 from base.ddd.utils.business_validator import execute_functions_and_aggregate_exceptions

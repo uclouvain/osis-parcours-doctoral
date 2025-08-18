@@ -41,7 +41,9 @@ from parcours_doctoral.ddd.formation.domain.model.enums import (
     ContexteFormation,
     StatutActivite,
 )
-from parcours_doctoral.ddd.formation.dtos.evaluation import InscriptionEvaluationDTO
+from parcours_doctoral.ddd.formation.dtos.inscription_evaluation import (
+    InscriptionEvaluationDTO,
+)
 from parcours_doctoral.forms.fields import SelectOrOtherField
 from parcours_doctoral.forms.training import activity as activity_forms
 from parcours_doctoral.forms.training.activity import ConfigurableActivityTypeField
@@ -332,6 +334,9 @@ class UclCourseSerializer(ActivitySerializerBase):
     learning_unit_title = serializers.CharField(source="learning_unit_year.complete_title_i18n", read_only=True)
     ects = serializers.FloatField(read_only=True)
     academic_year = serializers.IntegerField(source="learning_unit_year.academic_year.year")
+    authors = serializers.CharField(read_only=True)
+    hour_volume = serializers.CharField(read_only=True)
+    participating_proof = serializers.ListField(read_only=True, child=serializers.CharField())
 
     class Meta:
         form = activity_forms.UclCourseForm

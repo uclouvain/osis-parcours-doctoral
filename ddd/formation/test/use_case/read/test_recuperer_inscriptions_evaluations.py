@@ -39,7 +39,9 @@ from parcours_doctoral.ddd.formation.domain.model.inscription_evaluation import 
     InscriptionEvaluation,
     InscriptionEvaluationIdentity,
 )
-from parcours_doctoral.ddd.formation.dtos.evaluation import InscriptionEvaluationDTO
+from parcours_doctoral.ddd.formation.dtos.inscription_evaluation import (
+    InscriptionEvaluationDTO,
+)
 from parcours_doctoral.infrastructure.message_bus_in_memory import (
     message_bus_in_memory_instance,
 )
@@ -57,6 +59,7 @@ class RecupererInscriptionsEvaluationsTestCase(TestCase):
             statut=StatutInscriptionEvaluation.ACCEPTEE,
             session=Session.SEPTEMBER,
             inscription_tardive=True,
+            desinscription_tardive=False,
         )
 
         cls.inscription_evaluation_repository = InscriptionEvaluationInMemoryRepository()

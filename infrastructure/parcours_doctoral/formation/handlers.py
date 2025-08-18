@@ -23,7 +23,6 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-
 from parcours_doctoral.ddd.formation.commands import *
 from parcours_doctoral.ddd.formation.use_case.read import *
 from parcours_doctoral.ddd.formation.use_case.write import *
@@ -35,6 +34,9 @@ from parcours_doctoral.infrastructure.parcours_doctoral.formation.domain.service
 )
 from parcours_doctoral.infrastructure.parcours_doctoral.formation.repository.activite import (
     ActiviteRepository,
+)
+from parcours_doctoral.infrastructure.parcours_doctoral.formation.repository.evaluation import (
+    EvaluationRepository,
 )
 from parcours_doctoral.infrastructure.parcours_doctoral.formation.repository.inscription_evaluation import (
     InscriptionEvaluationRepository,
@@ -96,6 +98,21 @@ COMMAND_HANDLERS = {
     ),
     DesinscrireEvaluationCommand: lambda msg_bus, cmd: desinscrire_evaluation(
         cmd,
+        evaluation_repository=EvaluationRepository(),
         inscription_evaluation_repository=InscriptionEvaluationRepository(),
+    ),
+    ListerEvaluationsQuery: lambda msg_bus, cmd: lister_evaluations(
+        cmd,
+        evaluation_repository=EvaluationRepository(),
+    ),
+    EncoderNoteCommand: lambda msg_bus, cmd: encoder_note(
+        cmd,
+        evaluation_repository=EvaluationRepository(),
+        activite_repository=ActiviteRepository(),
+        notification=Notification(),
+    ),
+    ListerInscriptionsUnitesEnseignementQuery: lambda msg_bus, cmd: lister_inscriptions_unites_enseignement(
+        cmd,
+        activite_repository=ActiviteRepository(),
     ),
 }
