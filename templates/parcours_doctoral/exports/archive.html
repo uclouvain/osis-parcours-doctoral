@@ -93,7 +93,7 @@
       {% if member.promoteur.ville %} - {{ member.promoteur.ville }}{% endif %}
       {% if member.promoteur.pays %} - {{ member.promoteur.pays }}{% endif %}
       {% if member.promoteur.uuid == groupe_supervision.promoteur_reference %}
-        - {% translate "Lead supervisor" %}
+        - {% translate "Contact supervisor" %}
       {% endif %}
       {% if not forloop.last %}<br>{% endif %}
     {% empty %}
