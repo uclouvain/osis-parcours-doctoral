@@ -1,4 +1,4 @@
-{% extends "bootstrap5/layout.html" %}
+{% extends "parcours_doctoral/default_layout.html" %}
 {% load django_bootstrap5 i18n osis_role pagination static enums parcours_doctoral %}
 
 {% comment "License" %}
@@ -8,7 +8,7 @@
   * The core business involves the administration of students, teachers,
   * courses, programs and so on.
   *
-  * Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+  * Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
   *
   * This program is free software: you can redistribute it and/or modify
   * it under the terms of the GNU General Public License as published by
@@ -26,17 +26,8 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-  <li class="breadcrumb-item">
-    <a href="{% url 'studies' %}" id="lnk_studies">{% translate 'Student path' %}</a>
-  </li>
-  <li class="breadcrumb-item" id="lnk_cohorts_management">
-    <a href="{% url 'cohorts_management' %}">{% translate "Cohorts management" %}</a>
-  </li>
-  <li class="breadcrumb-item">
-    <a href="{% url 'parcours_doctoral:list' %}" id="lnk_parcours_doctorals" class="active">
-      {% trans 'Doctoral trainings' %}
-    </a>
-  </li>
+  {{ block.super }}
+  <li class="breadcrumb-item active">{% trans 'Doctoral trainings' %}</li>
 {% endblock %}
 
 {% block content %}

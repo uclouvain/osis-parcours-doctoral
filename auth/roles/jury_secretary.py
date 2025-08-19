@@ -51,6 +51,7 @@ class JurySecretary(RoleModel):
     @classmethod
     def rule_set(cls):
         ruleset = {
+            'parcours_doctoral.view_parcours_doctoral_home': rules.always_allow,
             'parcours_doctoral.upload_defense_report': has_valid_enrollment,
             'parcours_doctoral.view_doctorateadmission': rules.always_allow,
             'parcours_doctoral.view_person': rules.always_allow,

@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -25,12 +25,13 @@
 # ##############################################################################
 
 import rules
-from base.models.entity import Entity
-from base.models.enums.organization_type import MAIN
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from osis_role.contrib.models import EntityRoleModel
 from rules import RuleSet
+
+from base.models.entity import Entity
+from base.models.enums.organization_type import MAIN
+from osis_role.contrib.models import EntityRoleModel
 
 
 class CddConfigurator(EntityRoleModel):
@@ -57,7 +58,7 @@ class CddConfigurator(EntityRoleModel):
     def rule_set(cls):
         ruleset = {
             'base.can_access_student_path': rules.always_allow,
-            'parcours_doctoral.view_cdd_config_home': rules.always_allow,
+            'parcours_doctoral.view_parcours_doctoral_home': rules.always_allow,
             'parcours_doctoral.change_cddconfiguration': rules.always_allow,
             'parcours_doctoral.change_cddmailtemplate': rules.always_allow,
         }

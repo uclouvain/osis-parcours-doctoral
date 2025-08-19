@@ -95,13 +95,6 @@ msgstr ""
 
 #, python-format
 msgid ""
-"<a href=\"%(parcours_doctoral_link_back)s\">%(reference)s</a> - "
-"%(student_first_name)s %(student_last_name)s requested signatures for "
-"%(training_title)s"
-msgstr ""
-
-#, python-format
-msgid ""
 "<a "
 "href=\"%(parcours_doctoral_link_front_complementary_training)s\">%(reference)s</"
 "a> - Some complementary training activities have been approved."
@@ -125,12 +118,6 @@ msgid ""
 "<a href='https://uclouvain.be/en/research/valodoc/confirmation-eligibility-"
 "doctoral-programme.html' target='_blank'>https://uclouvain.be/en/research/"
 "valodoc/confirmation-eligibility-doctoral-programme.html</a>"
-msgstr ""
-
-#, python-format
-msgid ""
-"<h2>Delete \"%(name)s\" custom mail template?</h2> <p>Are you sure you want "
-"to delete the custom mail template? This cannot be undone.</p>"
 msgstr ""
 
 msgid ""
@@ -433,6 +420,11 @@ msgid ""
 "Are you sure you want to delete %(first_name)s %(last_name)s as %(role)s?"
 msgstr ""
 
+msgid ""
+"Are you sure you want to delete the custom mail template? This cannot be "
+"undone."
+msgstr ""
+
 #, python-format
 msgid "Are you sure you want to refuse \"%(object)s\"?"
 msgstr ""
@@ -659,9 +651,6 @@ msgstr ""
 msgid "Co-editor"
 msgstr ""
 
-msgid "Cohorts management"
-msgstr ""
-
 msgid "Comment"
 msgstr ""
 
@@ -859,9 +848,6 @@ msgstr ""
 msgid "Current status of the confirmation"
 msgstr ""
 
-msgid "Custom mail template"
-msgstr ""
-
 msgid "Custom mail template deleted successfully"
 msgstr ""
 
@@ -964,6 +950,10 @@ msgctxt "parcours_doctoral"
 msgid "Delete"
 msgstr ""
 
+#, python-format
+msgid "Delete \"%(name)s\" custom mail template?"
+msgstr ""
+
 msgid "Delete the document"
 msgstr ""
 
@@ -1020,6 +1010,9 @@ msgid "Doctor"
 msgstr ""
 
 msgid "Doctoral commissions"
+msgstr ""
+
+msgid "Doctoral paths"
 msgstr ""
 
 msgid "Doctoral research project"
@@ -1218,7 +1211,7 @@ msgstr ""
 msgid "External"
 msgstr ""
 
-msgid "FNRS, FRIA, FRESH"
+msgid "FNRS, FRIA, FRESH, CSC"
 msgstr ""
 
 msgid "Failure of the confirmation paper"
@@ -1764,6 +1757,11 @@ msgctxt "tab"
 msgid "Management"
 msgstr ""
 
+msgid ""
+"Management of the path of the doctoral students from their enrolment to "
+"their public defence"
+msgstr ""
+
 msgid "Mandatory fields are missing in the cotutelle."
 msgstr ""
 
@@ -2065,6 +2063,9 @@ msgstr ""
 msgid "PhD first inscription date"
 msgstr ""
 
+msgid "PhD management"
+msgstr ""
+
 msgid "PhD research experience"
 msgstr ""
 
@@ -2176,13 +2177,10 @@ msgstr ""
 msgid "Project abstract"
 msgstr ""
 
-msgid "Project abstract (max. 2000 characters)"
+msgid "Project abstract (max. 4000 characters)"
 msgstr ""
 
 msgid "Project title"
-msgstr ""
-
-msgid "Project title (max. 100 characters)"
 msgstr ""
 
 msgid "Promotion"
