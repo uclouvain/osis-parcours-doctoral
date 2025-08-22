@@ -203,7 +203,7 @@ class TrainingView(DoctorateAPIPermissionRequiredMixin, GenericAPIView):
         return (
             Activity.objects.filter(parcours_doctoral__uuid=self.doctorate_uuid)
             .prefetch_related('children')
-            .select_related('learning_unit_year')
+            .annotate_with_learning_year_info(with_title=True)
         )
 
     @extend_schema(

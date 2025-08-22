@@ -54,11 +54,13 @@ class ListerInscriptionsUnitesEnseignementTestCase(QueriesAssertionsMixin, TestC
             learning_unit_year__academic_year__year=2020,
             learning_unit_year__acronym='UE1',
             status=StatutActivite.ACCEPTEE.name,
+            parcours_doctoral__training__acronym='ABCDP',
         )
         second_course = UclCourseFactory(
             learning_unit_year__academic_year__year=2020,
             learning_unit_year__acronym='UE1',
             status=StatutActivite.ACCEPTEE.name,
+            parcours_doctoral__training__acronym='XFEDP',
         )
         other_status_course = UclCourseFactory(
             learning_unit_year__academic_year__year=2020,
@@ -90,13 +92,13 @@ class ListerInscriptionsUnitesEnseignementTestCase(QueriesAssertionsMixin, TestC
                 InscriptionUniteEnseignementDTO(
                     noma=first_course.parcours_doctoral.student.student_set.first().registration_id,
                     annee=2020,
-                    sigle_formation=first_course.parcours_doctoral.training.acronym,
+                    sigle_formation='ABCFP',
                     code_unite_enseignement='UE1',
                 ),
                 InscriptionUniteEnseignementDTO(
                     noma=second_course.parcours_doctoral.student.student_set.first().registration_id,
                     annee=2020,
-                    sigle_formation=second_course.parcours_doctoral.training.acronym,
+                    sigle_formation='XFEFP',
                     code_unite_enseignement='UE1',
                 ),
             ],

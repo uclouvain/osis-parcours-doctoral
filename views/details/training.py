@@ -161,6 +161,11 @@ class TrainingActivityEditView(TrainingActivityFormMixin, generic.UpdateView):
     pk_url_kwarg = None
     slug_url_kwarg = 'activity_id'
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        queryset = queryset.annotate_with_learning_year_info(with_title=True)
+        return queryset
+
     @property
     def activity(self):
         # Don't remove, this is to share same template code in front-office

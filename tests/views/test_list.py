@@ -96,7 +96,7 @@ from reference.tests.factories.scholarship import DoctorateScholarshipFactory
 @freezegun.freeze_time('2023-01-01')
 @override_settings(WAFFLE_CREATE_MISSING_SWITCHES=False)
 class ParcoursDoctoralListTestView(QueriesAssertionsMixin, TestCase):
-    NB_MAX_QUERIES = 26
+    NB_MAX_QUERIES = 27
 
     @classmethod
     def setUpTestData(cls):

@@ -39,7 +39,9 @@ from base.forms.utils.academic_year_field import AcademicYearModelChoiceField
 from base.forms.utils.datefield import DatePickerInput
 from base.models.academic_year import AcademicYear, current_academic_year
 from base.models.learning_unit_year import LearningUnitYear
+from base.utils.utils import format_academic_year
 from deliberation.models.enums.numero_session import Session
+from learning_unit.models.learning_class_year import LearningClassYear
 from parcours_doctoral.ddd.formation.domain.model.enums import (
     CategorieActivite,
     ChoixComiteSelection,
@@ -47,6 +49,7 @@ from parcours_doctoral.ddd.formation.domain.model.enums import (
     ContexteFormation,
 )
 from parcours_doctoral.forms.fields import SelectOrOtherField
+from parcours_doctoral.infrastructure.utils import get_learning_unit_and_learning_class_acronyms
 from parcours_doctoral.models import AssessmentEnrollment
 from parcours_doctoral.models.activity import Activity
 from parcours_doctoral.models.cdd_config import CddConfiguration
@@ -862,7 +865,7 @@ class UclCourseForm(ActivityFormMixin, forms.ModelForm):
         to_field_name='year',
         widget=autocomplete.ListSelect2(),
     )
-    learning_unit_year = forms.CharField(
+    learning_unit_or_class_year = forms.CharField(
         label=pgettext_lazy("admission", "Learning unit"),
         widget=autocomplete.ListSelect2(
             url='admission:autocomplete:learning-unit-years-and-classes',
@@ -877,7 +880,11 @@ class UclCourseForm(ActivityFormMixin, forms.ModelForm):
 
     def __init__(self, parcours_doctoral: ParcoursDoctoral, *args, **kwargs):
         super().__init__(parcours_doctoral, *args, **kwargs)
-        self.fields['learning_unit_year'].required = True
+
+        self.fields['learning_unit_or_class_year'].required = True
+
+        language = get_language()
+
         # Filter out disabled contexts
         choices = dict(self.fields['context'].widget.choices)
         if not parcours_doctoral.training.management_entity.doctorate_config.is_complementary_training_enabled:
@@ -885,16 +892,15 @@ class UclCourseForm(ActivityFormMixin, forms.ModelForm):
         self.fields['context'].widget.choices = list(choices.items())
 
         # Initialize values
-        if self.initial.get('learning_unit_year'):
-            learning_unit_year = LearningUnitYear.objects.get(pk=self.initial['learning_unit_year'])
-            self.initial['academic_year'] = learning_unit_year.academic_year.year
-            self.initial['learning_unit_year'] = learning_unit_year.acronym
-            self.fields['learning_unit_year'].widget.choices = [
-                (
-                    learning_unit_year.acronym,
-                    f"{learning_unit_year.acronym} - {learning_unit_year.complete_title_i18n}",
-                ),
-            ]
+        selected_acronym = ''
+        if self.instance and getattr(self.instance, 'learning_year_acronym', None):
+            self.initial['academic_year'] = self.instance.learning_year_academic_year
+            self.initial['learning_unit_or_class_year'] = self.instance.learning_year_acronym
+            selected_acronym = self.instance.learning_year_acronym
+
+        selected_acronym = self.data.get(self.add_prefix('learning_unit_or_class_year'), selected_acronym)
+        if selected_acronym:
+            self.fields['learning_unit_or_class_year'].widget.choices = [(selected_acronym, selected_acronym)]
 
         current_year = current_academic_year().year
         selectable_years = [current_year, current_year + 1]
@@ -906,19 +912,49 @@ class UclCourseForm(ActivityFormMixin, forms.ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
-        if cleaned_data.get('academic_year') and cleaned_data.get('learning_unit_year'):
-            cleaned_data['learning_unit_year'] = LearningUnitYear.objects.get(
-                academic_year=cleaned_data['academic_year'],
-                acronym=cleaned_data['learning_unit_year'],
-            )
+
+        cleaned_data['learning_unit_year'] = None
+        cleaned_data['learning_class_year'] = None
+
+        acronym = cleaned_data.get('learning_unit_or_class_year')
+        academic_year = cleaned_data.get('academic_year')
+        if academic_year and acronym:
+
+            lu_acronym, lc_acronym = get_learning_unit_and_learning_class_acronyms(acronym=acronym)
+
+            try:
+                learning_class_year_qs = LearningClassYear.objects.filter(
+                    learning_component_year__learning_unit_year__academic_year=academic_year,
+                    learning_component_year__learning_unit_year__acronym=lu_acronym,
+                )
+
+                if lc_acronym:
+                    cleaned_data['learning_class_year'] = learning_class_year_qs.get(acronym=lc_acronym)
+
+                else:
+                    cleaned_data['learning_unit_year'] = LearningUnitYear.objects.get(
+                        academic_year=academic_year,
+                        acronym=lu_acronym,
+                    )
+
+                    if learning_class_year_qs.exists():
+                        self.add_error(
+                            'learning_unit_or_class_year',
+                            _('At least one class exists for this learning unit. Please select it instead of the learning unit.'),
+                        )
+
+            except (LearningClassYear.DoesNotExist, LearningUnitYear.DoesNotExist):
+                self.add_error(
+                    'learning_unit_or_class_year',
+                    _('No element has been found for the academic year %(academic_year)s.') % {
+                        'academic_year': format_academic_year(academic_year),
+                    },
+                )
         else:
             if not cleaned_data.get('academic_year'):
                 self.add_error('academic_year', forms.ValidationError(_("Please choose a correct academic year.")))
-            if not cleaned_data.get('learning_unit_year'):
-                self.add_error('learning_unit_year', forms.ValidationError(_("Please choose a correct learning unit.")))
-            else:
-                # Remove the value as it is not a LearningUnitYear instance and it would cause an error later.
-                del cleaned_data['learning_unit_year']
+            if not cleaned_data.get('learning_unit_or_class_year'):
+                self.add_error('learning_unit_or_class_year', forms.ValidationError(_("Please choose a correct learning unit.")))
         return cleaned_data
 
     class Meta:
@@ -927,6 +963,8 @@ class UclCourseForm(ActivityFormMixin, forms.ModelForm):
             'context',
             'academic_year',
             'learning_unit_year',
+            'learning_class_year',
+            'learning_unit_or_class_year',
         ]
 
 

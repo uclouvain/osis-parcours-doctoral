@@ -276,7 +276,7 @@ class DoctorateTrainingActivityViewTestCase(TestCase):
         data = {
             'context': ContexteFormation.COMPLEMENTARY_TRAINING.name,
             'academic_year': self.other_ucl_course.learning_unit_year.academic_year.year,
-            'learning_unit_year': self.other_ucl_course.learning_unit_year.acronym,
+            'learning_unit_or_class_year': self.other_ucl_course.learning_unit_year.acronym,
         }
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)

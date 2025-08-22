@@ -32,7 +32,6 @@ from base.models.enums.entity_type import EntityType
 from base.tests import QueriesAssertionsMixin
 from base.tests.factories.entity_version import EntityVersionFactory
 from base.tests.factories.person import PersonFactory
-from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from parcours_doctoral.ddd.formation.domain.model.enums import (
     CategorieActivite,
     ChoixTypeEpreuve,

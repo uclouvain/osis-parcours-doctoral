@@ -35,10 +35,10 @@
 </div>
 
 {% translate 'Title' context 'parcours_doctoral course' as activity_name_label %}
-{% field_data activity_name_label form.instance.learning_unit_year.complete_title_i18n %}
+{% field_data activity_name_label form.instance.learning_year_title %}
 
 <div class="row">
-  {% field_data _('Course unit code') form.instance.learning_unit_year.acronym css_class='col-md-4' %}
+  {% field_data _('Course unit code') form.instance.learning_year_acronym css_class='col-md-4' %}
 </div>
 
 <div class="row">
@@ -46,7 +46,7 @@
 </div>
 
 <div class="row">
-  {% field_data _('Academic year') form.instance.learning_unit_year.academic_year css_class='col-md-4' %}
+  {% field_data _('Academic year') form.instance.learning_year_academic_year css_class='col-md-4' %}
 </div>
 
 {% bootstrap_field_with_tooltip form.authors %}

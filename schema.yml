@@ -4185,9 +4185,9 @@ components:
         can_be_submitted:
           type: boolean
           readOnly: true
-        learning_unit_year:
+        learning_unit_or_class_year:
           type: string
-        learning_unit_title:
+        learning_unit_or_class_year_title:
           type: string
           readOnly: true
         ects:
@@ -4211,7 +4211,7 @@ components:
       - academic_year
       - category
       - context
-      - learning_unit_year
+      - learning_unit_or_class_year
       - object_type
     Valorisation:
       type: object

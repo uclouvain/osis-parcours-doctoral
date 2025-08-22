@@ -39,5 +39,5 @@ def lister_evaluations(
     return evaluation_repository.search_dto(
         session=cmd.session,
         annee=cmd.annee,
-        code_unite_enseignement=cmd.code_unite_enseignement,
+        codes_unite_enseignement=cmd.codes_unite_enseignement,
     )

@@ -65,7 +65,7 @@ class ListerEvaluationsTestCase(QueriesAssertionsMixin, TestCase):
                 ListerEvaluationsQuery(
                     annee=2020,
                     session=1,
-                    code_unite_enseignement='UE1',
+                    codes_unite_enseignement=['UE1'],
                 )
             )
 
@@ -118,7 +118,7 @@ class ListerEvaluationsTestCase(QueriesAssertionsMixin, TestCase):
                 ListerEvaluationsQuery(
                     annee=2023,
                     session=1,
-                    code_unite_enseignement='UE1',
+                    codes_unite_enseignement=['UE1'],
                 )
             )
 
@@ -164,7 +164,7 @@ class ListerEvaluationsTestCase(QueriesAssertionsMixin, TestCase):
         cmd = ListerEvaluationsQuery(
             annee=2023,
             session=1,
-            code_unite_enseignement='UE1',
+            codes_unite_enseignement=['UE1'],
         )
 
         assessment = AssessmentEnrollmentFactory(

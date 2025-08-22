@@ -75,6 +75,7 @@ FORM_SERIALIZER_FIELD_MAPPING = {
 EXCLUDED_FIELDS = {
     'start_date_month',
     'start_date_year',
+    'learning_unit_or_class_year',
 }
 
 BOOLEAN_FIELDS = {
@@ -330,21 +331,40 @@ class PaperSerializer(ActivitySerializerBase):
 
 
 class UclCourseSerializer(ActivitySerializerBase):
-    learning_unit_year = serializers.CharField(source="learning_unit_year.acronym")
-    learning_unit_title = serializers.CharField(source="learning_unit_year.complete_title_i18n", read_only=True)
+    FIELDS_FROM_ANNOTATIONS = [
+        'learning_year_acronym',
+        'learning_year_title',
+        'learning_year_academic_year',
+    ]
+
+    learning_unit_or_class_year = serializers.CharField(source=FIELDS_FROM_ANNOTATIONS[0])
+    learning_unit_or_class_year_title = serializers.CharField(source=FIELDS_FROM_ANNOTATIONS[1], read_only=True)
     ects = serializers.FloatField(read_only=True)
-    academic_year = serializers.IntegerField(source="learning_unit_year.academic_year.year")
+    academic_year = serializers.IntegerField(source=FIELDS_FROM_ANNOTATIONS[2])
     authors = serializers.CharField(read_only=True)
     hour_volume = serializers.CharField(read_only=True)
     participating_proof = serializers.ListField(read_only=True, child=serializers.CharField())
 
     class Meta:
         form = activity_forms.UclCourseForm
-        exclude = ['academic_year']
+        exclude = ['academic_year', 'learning_class_year', 'learning_unit_year']
 
     def to_internal_value(self, data):
         # Don't let DRF rework the data structure before calling UclCourseForm
         return data
+
+    def to_representation(self, instance):
+        # Get the annotations in case they are not computed yet (useful after creation)
+        if not hasattr(instance, self.FIELDS_FROM_ANNOTATIONS[0]):
+            annotated_fields = (
+                Activity.objects.annotate_with_learning_year_info(with_title=True)
+                .values(self.FIELDS_FROM_ANNOTATIONS)
+                .get(pk=instance.pk)
+            )
+            for field, field_value in annotated_fields:
+                setattr(instance, field, field_value)
+
+        return super().to_representation(instance)
 
 
 class DoctoralTrainingActivitySerializer(serializers.Serializer):

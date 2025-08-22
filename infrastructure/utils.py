@@ -121,3 +121,22 @@ def filter_doctorate_queryset_according_to_roles(queryset, person_uuid):
         )
 
     return queryset.filter(entities_conditions, education_group_conditions)
+
+
+def get_doctorate_training_acronym(doctorate_acronym: str):
+    """Retrieve the doctorate training acronym from a doctorate acronym"""
+    if doctorate_acronym.endswith('DP'):
+        return doctorate_acronym.removesuffix('DP') + 'FP'
+    return doctorate_acronym
+
+
+def get_learning_unit_and_learning_class_acronyms(acronym: str) -> list[str]:
+    """
+    From an acronym, return a list of two elements containing the learning unit acronym as first element and the
+    learning class acronyms, if any, as second element.
+    """
+    if '-' in acronym:
+        return acronym.rsplit('-', maxsplit=1)
+    elif '_' in acronym:
+        return acronym.rsplit('_', maxsplit=1)
+    return [acronym, '']

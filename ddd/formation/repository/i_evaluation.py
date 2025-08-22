@@ -73,7 +73,7 @@ class IEvaluationRepository(interface.AbstractRepository):
         cls,
         annee: int,
         session: int,
-        code_unite_enseignement: str,
+        codes_unite_enseignement: List[str],
     ) -> List[EvaluationDTO]:  # type: ignore[override]
         raise NotImplementedError
 
@@ -92,3 +92,11 @@ class IEvaluationRepository(interface.AbstractRepository):
             deadlines.append(periode_encodage[1])
 
         return min(deadlines, default=None)
+
+    @classmethod
+    def get_periode_encodage_notes(
+        cls,
+        annee: int,
+        session: int,
+    ) -> Optional[tuple[datetime.date]]:
+        raise NotImplementedError
