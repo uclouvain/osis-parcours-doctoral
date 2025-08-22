@@ -34,7 +34,11 @@ from base.tests.factories.entity import EntityFactory
 from base.tests.factories.entity_version import EntityVersionFactory
 from base.tests.factories.program_manager import ProgramManagerFactory
 from parcours_doctoral.ddd.formation.domain.model.enums import StatutActivite
-from parcours_doctoral.tests.factories.activity import UclCourseFactory
+from parcours_doctoral.forms.training.activity import UclCourseForm
+from parcours_doctoral.tests.factories.activity import (
+    UclCourseFactory,
+    UclCourseWithClassFactory,
+)
 from parcours_doctoral.tests.factories.assessment_enrollment import (
     AssessmentEnrollmentFactory,
 )
@@ -58,8 +62,8 @@ class AssessmentEnrollmentDetailsViewTestCase(TestCase):
             parcours_doctoral=cls.doctorate,
             status=StatutActivite.ACCEPTEE.name,
         )
-        cls.other_year_course = UclCourseFactory(
-            learning_unit_year__academic_year=cls.academic_years[0],
+        cls.other_year_course = UclCourseWithClassFactory(
+            learning_class_year__learning_component_year__learning_unit_year__academic_year=cls.academic_years[0],
             parcours_doctoral=cls.doctorate,
             status=StatutActivite.ACCEPTEE.name,
         )
@@ -94,7 +98,12 @@ class AssessmentEnrollmentDetailsViewTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
 
         # Check context data
-        self.assertEqual(response.context['assessment_enrollment'].uuid, str(self.assessment_enrollment.uuid))
+        assessment_enrollment = response.context['assessment_enrollment']
+        learning_unit_year = self.assessment_enrollment.course.learning_unit_year
+        self.assertEqual(assessment_enrollment.uuid, str(self.assessment_enrollment.uuid))
+        self.assertEqual(assessment_enrollment.code_unite_enseignement, learning_unit_year.acronym)
+        self.assertEqual(assessment_enrollment.intitule_unite_enseignement, learning_unit_year.complete_title_i18n)
+        self.assertEqual(assessment_enrollment.annee_unite_enseignement, learning_unit_year.academic_year.year)
         self.assertEqual(response.context['current_year'], self.academic_years[1].year)
         self.assertCountEqual(response.context['score_exam_submission_sessions'], [self.academic_calendars[1]])
 
@@ -103,9 +112,20 @@ class AssessmentEnrollmentDetailsViewTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
 
         # Check context data
+        other_learning_class_year = self.other_year_assessment_enrollment.course.learning_class_year
+        other_learning_unit_year = other_learning_class_year.learning_component_year.learning_unit_year
+        other_assessment_enrollment = response.context['assessment_enrollment']
+        self.assertEqual(other_assessment_enrollment.uuid, str(self.other_year_assessment_enrollment.uuid))
         self.assertEqual(
-            response.context['assessment_enrollment'].uuid,
-            str(self.other_year_assessment_enrollment.uuid),
+            other_assessment_enrollment.code_unite_enseignement,
+            f'{other_learning_unit_year.acronym}-{other_learning_class_year.acronym}',
+        )
+        self.assertEqual(
+            other_assessment_enrollment.intitule_unite_enseignement,
+            f'{other_learning_unit_year.learning_container_year.common_title} - {other_learning_class_year.title_fr}',
+        )
+        self.assertEqual(
+            other_assessment_enrollment.annee_unite_enseignement, other_learning_unit_year.academic_year.year
         )
         self.assertEqual(response.context['current_year'], self.academic_years[0].year)
         self.assertCountEqual(response.context['score_exam_submission_sessions'], [self.academic_calendars[0]])

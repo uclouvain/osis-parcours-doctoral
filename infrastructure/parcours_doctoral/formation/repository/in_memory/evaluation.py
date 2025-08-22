@@ -24,7 +24,7 @@
 #
 # ##############################################################################
 import datetime
-from typing import Dict, List, Tuple
+from typing import Dict, List, Optional, Tuple
 
 from base.ddd.utils.in_memory_repository import InMemoryGenericRepository
 from parcours_doctoral.ddd.formation.domain.model.enums import StatutActivite
@@ -43,15 +43,18 @@ from parcours_doctoral.ddd.formation.repository.i_evaluation import (
 
 class EvaluationInMemoryRepository(InMemoryGenericRepository, IEvaluationRepository):
     entities: List['Evaluation']
-    periodes_encodage: Dict[str, Tuple[datetime.date, datetime.date]] = {}
     dates_defenses_privees: Dict[str, datetime.date] = {}
+    periodes_encodage: Dict[int, Dict[int, Tuple[datetime.date, datetime.date]]] = {}
 
     @classmethod
     def _get_dto_from_domain_object(
         cls,
         enrollment: Evaluation,
     ) -> EvaluationDTO:
-        periode_encodage = cls.periodes_encodage.get(enrollment.uuid)
+        periode_encodage = cls.get_periode_encodage_notes(
+            annee=enrollment.entity_id.annee,
+            session=enrollment.entity_id.session,
+        )
         date_defense_privee = cls.dates_defenses_privees.get(enrollment.uuid)
         date_limite_encodage = cls.get_echeance_encodage_enseignant(
             date_defense_privee=date_defense_privee,
@@ -70,6 +73,8 @@ class EvaluationInMemoryRepository(InMemoryGenericRepository, IEvaluationReposit
             statut=StatutActivite.ACCEPTEE.name,
             noma=enrollment.entity_id.noma,
             est_desinscrit_tardivement=False,
+            sigle_formation='',
+            periode_encodage_session=periode_encodage,
         )
 
     @classmethod
@@ -90,13 +95,21 @@ class EvaluationInMemoryRepository(InMemoryGenericRepository, IEvaluationReposit
         cls,
         annee: int,
         session: int,
-        code_unite_enseignement: str,
+        codes_unite_enseignement: List[str],
     ) -> List[EvaluationDTO]:
         return [
             cls._get_dto_from_domain_object(entity)
             for entity in cls.search(
                 annee=annee,
                 session=session,
-                code_unite_enseignement=code_unite_enseignement,
+                codes_unite_enseignement=codes_unite_enseignement,
             )
         ]
+
+    @classmethod
+    def get_periode_encodage_notes(
+        cls,
+        annee: int,
+        session: int,
+    ) -> Optional[tuple[datetime.date]]:
+        return cls.periodes_encodage.get(annee, {}).get(session)

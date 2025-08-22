@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -121,3 +121,10 @@ def filter_doctorate_queryset_according_to_roles(queryset, person_uuid):
         )
 
     return queryset.filter(entities_conditions, education_group_conditions)
+
+
+def get_doctorate_training_acronym(doctorate_acronym: str):
+    """Retrieve the doctorate training acronym from a doctorate acronym"""
+    if doctorate_acronym.endswith('DP'):
+        return doctorate_acronym.removesuffix('DP') + 'FP'
+    return doctorate_acronym

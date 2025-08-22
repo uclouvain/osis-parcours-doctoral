@@ -48,6 +48,7 @@ from parcours_doctoral.ddd.formation.dtos.evaluation import EvaluationDTO
 from parcours_doctoral.ddd.formation.repository.i_evaluation import (
     IEvaluationRepository,
 )
+from parcours_doctoral.infrastructure.utils import get_doctorate_training_acronym
 from parcours_doctoral.models.activity import AssessmentEnrollment
 
 
@@ -69,11 +70,16 @@ class EvaluationRepository(IEvaluationRepository):
     def get(cls, entity_id: 'EvaluationIdentity') -> 'Evaluation':
         session_as_text = Session.get_key_session(entity_id.session)
         try:
-            assessment = AssessmentEnrollment.objects.annotate(course_uuid=F('course__uuid')).get(
-                session=session_as_text,
-                course__learning_unit_year__academic_year__year=entity_id.annee,
-                course__learning_unit_year__acronym=entity_id.code_unite_enseignement,
-                course__parcours_doctoral__student__student__registration_id=entity_id.noma,
+            assessment = (
+                AssessmentEnrollment.objects.annotate(course_uuid=F('course__uuid'))
+                .filter_by_learning_year(
+                    year=entity_id.annee,
+                    acronyms=[entity_id.code_unite_enseignement],
+                )
+                .get(
+                    session=session_as_text,
+                    course__parcours_doctoral__student__student__registration_id=entity_id.noma,
+                )
             )
             return Evaluation(
                 entity_id=entity_id,
@@ -96,13 +102,12 @@ class EvaluationRepository(IEvaluationRepository):
 
     @classmethod
     def get_dto_queryset(cls):
-        return AssessmentEnrollment.objects.annotate(
+        return AssessmentEnrollment.objects.annotate_with_learning_year_info().annotate(
             private_defense_date=F(
                 'course__parcours_doctoral__defense_indicative_date'
             ),  # TODO to change when private defense is implemented
-            lue_academic_year=F('course__learning_unit_year__academic_year__year'),
-            lue_acronym=F('course__learning_unit_year__acronym'),
             course_uuid=F('course__uuid'),
+            training_acronym=F('course__parcours_doctoral__training__acronym'),
         )
 
     @classmethod
@@ -110,7 +115,7 @@ class EvaluationRepository(IEvaluationRepository):
         cls,
         annee: int,
         session: int,
-        code_unite_enseignement: str,
+        codes_unite_enseignement: List[str],
     ) -> List[EvaluationDTO]:
         session_as_text = Session.get_key_session(session)
 
@@ -121,8 +126,10 @@ class EvaluationRepository(IEvaluationRepository):
             )
             .filter(
                 session=session_as_text,
-                course__learning_unit_year__academic_year__year=annee,
-                course__learning_unit_year__acronym=code_unite_enseignement,
+            )
+            .filter_by_learning_year(
+                acronyms=codes_unite_enseignement,
+                year=annee,
             )
         )
 
@@ -173,7 +180,7 @@ class EvaluationRepository(IEvaluationRepository):
             raise EvaluationNonTrouveeException
 
         encoding_period = cls.get_periode_encodage_notes(
-            annee=assessment.lue_academic_year,
+            annee=assessment.learning_year_academic_year,
             session=Session.get_numero_session(assessment.session),
         )
 
@@ -196,10 +203,10 @@ class EvaluationRepository(IEvaluationRepository):
         )
 
         return EvaluationDTO(
-            annee=assessment.lue_academic_year,  # From annotation
+            annee=assessment.learning_year_academic_year,  # From annotation
             session=Session.get_numero_session(assessment.session),
             noma=noma or '',
-            code_unite_enseignement=assessment.lue_acronym,  # From annotation
+            code_unite_enseignement=assessment.learning_year_acronym,  # From annotation
             note_soumise=assessment.submitted_mark,
             note_corrigee=assessment.corrected_mark,
             echeance_enseignant=teacher_encoding_deadline,
@@ -208,4 +215,6 @@ class EvaluationRepository(IEvaluationRepository):
             statut=assessment.status,
             uuid=str(assessment.uuid),
             uuid_activite=str(assessment.course_uuid),  # From annotation
+            sigle_formation=get_doctorate_training_acronym(assessment.training_acronym),  # From annotation
+            periode_encodage_session=encoding_period,
         )
