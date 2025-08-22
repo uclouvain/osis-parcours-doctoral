@@ -36,6 +36,7 @@ class EvaluationDTO(interface.DTO):
     uuid_activite: str
 
     statut: str
+    sigle_formation: str
     annee: int
     session: int
     noma: str

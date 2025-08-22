@@ -28,6 +28,8 @@ from collections import OrderedDict
 from inspect import getfullargspec
 
 from django import forms
+from django.conf import settings
+from django.utils.translation import get_language
 from osis_document.contrib import FileUploadField
 from rest_framework import serializers
 from rest_framework.generics import get_object_or_404
@@ -329,10 +331,32 @@ class PaperSerializer(ActivitySerializerBase):
         form = activity_forms.PaperForm
 
 
+class AcademicYearField(serializers.IntegerField):
+    def to_representation(self, value: Activity):
+        if value.learning_unit_year:
+            return value.learning_unit_year.academic_year.year
+        elif value.learning_class_year:
+            return value.learning_class_year.learning_component_year.learning_unit_year.academic_year.year
+        return None
+
+
+class LearningUnitClassYearTitleField(serializers.CharField):
+    def to_representation(self, value: Activity):
+        language = get_language()
+        if value.learning_class_year:
+            if language == settings.LANGUAGE_CODE_EN:
+                return value.learning_class_year.title_en or value.learning_class_year.title_fr
+            return value.learning_class_year.title_fr
+        return None
+
+
 class UclCourseSerializer(ActivitySerializerBase):
     learning_unit_year = serializers.CharField(source="learning_unit_year.acronym")
     learning_unit_title = serializers.CharField(source="learning_unit_year.complete_title_i18n", read_only=True)
+    # learning_class_year = serializers.CharField(source="learning_class_year.acronym")
+    # learning_class_title = LearningUnitClassYearTitleField(source="*", read_only=True)
     ects = serializers.FloatField(read_only=True)
+    # academic_year = AcademicYearField(source="*")
     academic_year = serializers.IntegerField(source="learning_unit_year.academic_year.year")
     authors = serializers.CharField(read_only=True)
     hour_volume = serializers.CharField(read_only=True)

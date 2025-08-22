@@ -53,6 +53,7 @@ from parcours_doctoral.ddd.formation.dtos.inscription_unite_enseignement import 
     InscriptionUniteEnseignementDTO,
 )
 from parcours_doctoral.ddd.formation.repository.i_activite import IActiviteRepository
+from parcours_doctoral.infrastructure.utils import get_doctorate_training_acronym
 from parcours_doctoral.models.activity import Activity
 
 
@@ -346,7 +347,7 @@ class ActiviteRepository(IActiviteRepository):
             InscriptionUniteEnseignementDTO(
                 noma=student_registration_ids.get(activity.student_person_id, ''),
                 annee=annee,
-                sigle_formation=activity.training_acronym,  # From annotation
+                sigle_formation=get_doctorate_training_acronym(activity.training_acronym),  # From annotation
                 code_unite_enseignement=code_unite_enseignement,
             )
             for activity in activities

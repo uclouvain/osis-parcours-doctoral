@@ -70,6 +70,7 @@ class EvaluationInMemoryRepository(InMemoryGenericRepository, IEvaluationReposit
             statut=StatutActivite.ACCEPTEE.name,
             noma=enrollment.entity_id.noma,
             est_desinscrit_tardivement=False,
+            sigle_formation='',
         )
 
     @classmethod

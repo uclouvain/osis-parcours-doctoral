@@ -48,6 +48,7 @@ from parcours_doctoral.ddd.formation.dtos.evaluation import EvaluationDTO
 from parcours_doctoral.ddd.formation.repository.i_evaluation import (
     IEvaluationRepository,
 )
+from parcours_doctoral.infrastructure.utils import get_doctorate_training_acronym
 from parcours_doctoral.models.activity import AssessmentEnrollment
 
 
@@ -103,6 +104,7 @@ class EvaluationRepository(IEvaluationRepository):
             lue_academic_year=F('course__learning_unit_year__academic_year__year'),
             lue_acronym=F('course__learning_unit_year__acronym'),
             course_uuid=F('course__uuid'),
+            training_acronym=F('course__parcours_doctoral__training__acronym'),
         )
 
     @classmethod
@@ -208,4 +210,5 @@ class EvaluationRepository(IEvaluationRepository):
             statut=assessment.status,
             uuid=str(assessment.uuid),
             uuid_activite=str(assessment.course_uuid),  # From annotation
+            sigle_formation=get_doctorate_training_acronym(assessment.training_acronym),  # From annotation
         )

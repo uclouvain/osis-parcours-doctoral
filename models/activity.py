@@ -390,6 +390,12 @@ class Activity(models.Model):
         blank=True,
         on_delete=models.PROTECT,
     )
+    learning_class_year = models.ForeignKey(
+        'learning_unit.LearningClassYear',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+    )
     course_completed = models.BooleanField(
         blank=True,
         default=False,
