@@ -96,7 +96,7 @@ class ProjectForm(forms.Form):
     langue_redaction_these = forms.CharField(
         label=_('Thesis language'),
         widget=ListSelect2(
-            url='admission:autocomplete:language',
+            url='language-autocomplete',
         ),
         required=False,
     )

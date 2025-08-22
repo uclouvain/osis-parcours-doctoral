@@ -32,14 +32,13 @@ from django.utils import timezone
 from admission.ddd.admission.doctorat.preparation.domain.model.enums import (
     ChoixTypeAdmission,
 )
-from admission.ddd.admission.doctorat.validation.domain.model.enums import ChoixGenre
 from base.ddd.utils.in_memory_repository import InMemoryGenericRepository
 from infrastructure.reference.domain.service.in_memory.bourse import (
     BourseInMemoryTranslator,
 )
+from osis_profile.models.enums.person import ChoixGenre
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import (
     ParcoursDoctoral,
-    ParcoursDoctoralIdentity,
 )
 from parcours_doctoral.ddd.domain.validator.exceptions import (
     ParcoursDoctoralNonTrouveException,

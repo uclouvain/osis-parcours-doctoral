@@ -23,19 +23,16 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from admission.forms import (
-    DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS,
-    AdmissionModelCountryChoiceField,
-)
-from base.forms.utils import EMPTY_CHOICE, autocomplete
-from base.models.person import Person
-from base.models.utils.utils import ChoiceEnum
 from django import forms
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import pgettext_lazy
-from reference.models.country import Country
 
+from base.forms.utils import EMPTY_CHOICE, autocomplete
+from base.models.person import Person
+from base.models.utils.utils import ChoiceEnum
+from osis_profile.forms import ModelCountryChoiceField, DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS
 from parcours_doctoral.ddd.jury.domain.model.enums import GenreMembre, TitreMembre
+from reference.models.country import Country
 
 
 class JuryMembreForm(forms.Form):
@@ -73,7 +70,7 @@ class JuryMembreForm(forms.Form):
         required=False,
     )
 
-    pays = AdmissionModelCountryChoiceField(
+    pays = ModelCountryChoiceField(
         label=_('Country'),
         queryset=Country.objects.all(),
         required=False,
