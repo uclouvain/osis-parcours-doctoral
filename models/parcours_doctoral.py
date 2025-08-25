@@ -307,7 +307,7 @@ class ParcoursDoctoral(models.Model):
         blank=True,
     )
     work_start_date = models.DateField(
-        verbose_name=_("Work start date"),
+        verbose_name=_("Research start date"),
         null=True,
         blank=True,
     )

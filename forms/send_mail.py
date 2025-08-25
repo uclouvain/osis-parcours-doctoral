@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -38,7 +38,7 @@ class SendMailForm(forms.Form):
         disabled=True,
     )
     cc_promoteurs = forms.BooleanField(
-        label=_("Carbon-copy the promoters"),
+        label=_("Carbon-copy the supervisors"),
         required=False,
     )
     cc_membres_ca = forms.BooleanField(
