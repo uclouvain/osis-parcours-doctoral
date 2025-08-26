@@ -78,7 +78,7 @@ class DocumentRepository(IDocumentRepository):
 
     @classmethod
     def recuperer_metadonnees_par_uuid_document(cls, uuids_documents: List[str]) -> Dict[str, Dict]:
-        from osis_document.api.utils import (
+        from osis_document_components.services import (
             get_remote_tokens,
             get_several_remote_metadata,
         )

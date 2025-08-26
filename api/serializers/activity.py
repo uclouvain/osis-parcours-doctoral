@@ -28,7 +28,7 @@ from collections import OrderedDict
 from inspect import getfullargspec
 
 from django import forms
-from osis_document.contrib import FileUploadField
+from osis_document_components.fields import FileUploadField
 from rest_framework import serializers
 from rest_framework.generics import get_object_or_404
 

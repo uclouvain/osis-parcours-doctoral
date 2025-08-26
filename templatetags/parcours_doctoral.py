@@ -37,7 +37,7 @@ from django.utils.translation import get_language
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import pgettext_lazy
 from django_bootstrap5.renderers import FieldRenderer
-from osis_document.api.utils import get_remote_metadata, get_remote_token
+from osis_document_components.services import get_remote_metadata, get_remote_token
 
 from admission.utils import format_school_title, get_superior_institute_queryset
 from base.forms.utils.file_field import PDF_MIME_TYPE

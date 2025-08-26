@@ -70,27 +70,27 @@ class DoctorateConfirmationDecisionViewTestCase(TestCase):
 
     @classmethod
     def setUpTestData(cls):
-        cls.confirm_remote_upload_patcher = patch('osis_document.api.utils.confirm_remote_upload')
+        cls.confirm_remote_upload_patcher = patch('osis_document_components.services.confirm_remote_upload')
         patched = cls.confirm_remote_upload_patcher.start()
         patched.return_value = '4bdffb42-552d-415d-9e4c-725f10dce228'
 
-        cls.confirm_multiple_upload_patcher = patch('osis_document.contrib.fields.FileField._confirm_multiple_upload')
+        cls.confirm_multiple_upload_patcher = patch('osis_document_components.fields.FileField._confirm_multiple_upload')
         patched = cls.confirm_multiple_upload_patcher.start()
         patched.side_effect = lambda _, value, __: ['4bdffb42-552d-415d-9e4c-725f10dce228'] if value else []
 
-        cls.get_remote_metadata_patcher = patch('osis_document.api.utils.get_remote_metadata')
+        cls.get_remote_metadata_patcher = patch('osis_document_components.services.get_remote_metadata')
         patched = cls.get_remote_metadata_patcher.start()
         patched.return_value = {"name": "test.pdf", "size": 1}
 
-        cls.get_remote_token_patcher = patch('osis_document.api.utils.get_remote_token')
+        cls.get_remote_token_patcher = patch('osis_document_components.services.get_remote_token')
         patched = cls.get_remote_token_patcher.start()
         patched.return_value = 'foobar'
 
-        cls.save_raw_content_remotely_patcher = patch('osis_document.utils.save_raw_content_remotely')
+        cls.save_raw_content_remotely_patcher = patch('osis_document_components.services.save_raw_content_remotely')
         patched = cls.save_raw_content_remotely_patcher.start()
         patched.return_value = 'a-token'
 
-        cls.file_confirm_upload_patcher = patch('osis_document.contrib.fields.FileField._confirm_multiple_upload')
+        cls.file_confirm_upload_patcher = patch('osis_document_components.fields.FileField._confirm_multiple_upload')
         patched = cls.file_confirm_upload_patcher.start()
         patched.side_effect = lambda _, value, __: ['4bdffb42-552d-415d-9e4c-725f10dce228'] if value else []
 

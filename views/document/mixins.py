@@ -27,7 +27,7 @@ from typing import Optional
 
 from django.urls import reverse
 from django.views.generic import FormView
-from osis_document.api.utils import get_remote_metadata, get_remote_token
+from osis_document_components.services import get_remote_metadata, get_remote_token
 
 from base.utils.htmx import HtmxPermissionRequiredMixin
 from infrastructure.messages_bus import message_bus_instance

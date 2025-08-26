@@ -27,7 +27,7 @@ import datetime
 from unittest.mock import patch
 
 from django.test import TestCase, override_settings
-from osis_document.contrib import FileUploadField
+from osis_document_components.fields import FileUploadField
 
 from base.tests.factories.academic_year import AcademicYearFactory
 from base.tests.factories.entity import EntityFactory
@@ -76,21 +76,21 @@ class DocumentBaseTestCase(TestCase):
 
     def setUp(self):
         # Mock documents
-        patcher = patch('osis_document.api.utils.get_remote_tokens')
+        patcher = patch('osis_document_components.services.get_remote_tokens')
         patched = patcher.start()
         patched.side_effect = lambda uuids, **kwargs: {value: 'token' for value in uuids}
         self.addCleanup(patcher.stop)
 
-        patcher = patch('osis_document.api.utils.get_several_remote_metadata')
+        patcher = patch('osis_document_components.services.get_several_remote_metadata')
         patched = patcher.start()
         patched.side_effect = lambda tokens: {token: self.default_metadata for token in tokens}
         self.addCleanup(patcher.stop)
 
-        patcher = patch("osis_document.api.utils.get_remote_token", return_value='token')
+        patcher = patch("osis_document_components.services.get_remote_token", return_value='token')
         patcher.start()
         self.addCleanup(patcher.stop)
 
-        patcher = patch("osis_document.api.utils.get_remote_metadata", return_value=self.default_metadata)
+        patcher = patch("osis_document_components.services.get_remote_metadata", return_value=self.default_metadata)
         patcher.start()
         self.addCleanup(patcher.stop)
 
@@ -105,14 +105,14 @@ class DocumentBaseTestCase(TestCase):
         self.addCleanup(patcher.stop)
 
         patcher = patch(
-            "osis_document.api.utils.confirm_remote_upload",
+            "osis_document_components.services.confirm_remote_upload",
             side_effect=lambda token, *args, **kwargs: token,
         )
         patcher.start()
         self.addCleanup(patcher.stop)
 
         patcher = patch(
-            "osis_document.contrib.fields.FileField._confirm_multiple_upload",
+            "osis_document_components.fields.FileField._confirm_multiple_upload",
             side_effect=lambda _, value, __: value,
         )
         patcher.start()
