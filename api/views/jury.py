@@ -189,7 +189,7 @@ class JuryMemberDetailAPIView(
     permission_mapping = {
         'GET': 'parcours_doctoral.api_view_jury',
         'PUT': 'parcours_doctoral.api_change_jury',
-        'PATCH': 'parcours_doctoral.api_change_jury',
+        'PATCH': 'parcours_doctoral.api_change_jury_role',
         'DELETE': 'parcours_doctoral.api_change_jury',
     }
 

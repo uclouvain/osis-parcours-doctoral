@@ -35,3 +35,11 @@ class VerifierModificationRoleServiceInMemoryService(IVerifierModificationRoleSe
         matricule_auteur: str,
     ) -> None:
         pass
+
+    @classmethod
+    def verifier_tous_les_roles_attribués(
+        cls,
+        parcours_doctoral_identity: 'ParcoursDoctoralIdentity',
+        matricule_auteur: str,
+    ) -> None:
+        pass

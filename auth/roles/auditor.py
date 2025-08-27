@@ -32,6 +32,7 @@ from rules import RuleSet
 from base.models.entity import Entity
 from base.models.enums.organization_type import MAIN
 from osis_role.contrib.models import RoleModel
+from parcours_doctoral.auth.predicates.parcours_doctoral import is_jury_signing_in_progress
 
 
 class Auditor(RoleModel):
@@ -56,5 +57,6 @@ class Auditor(RoleModel):
     def rule_set(cls):
         ruleset = {
             'parcours_doctoral.view_jury': rules.always_allow,
+            'parcours_doctoral.api_change_jury_role': is_jury_signing_in_progress,
         }
         return RuleSet(ruleset)

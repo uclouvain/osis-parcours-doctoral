@@ -294,3 +294,11 @@ class ModificationRoleImpossibleSSTException(BusinessException):
     def __init__(self, **kwargs):
         message = _("Only the auditor can change jury roles for SST doctorate.")
         super().__init__(message, **kwargs)
+
+
+class RolesNonAttribueException(BusinessException):
+    status_code = "PARCOURS-DOCTORAL-34"
+
+    def __init__(self, **kwargs):
+        message = _("All roles are not defined.")
+        super().__init__(message, **kwargs)

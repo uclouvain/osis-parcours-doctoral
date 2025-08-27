@@ -82,6 +82,8 @@ class ParcoursDoctoral(interface.RootEntity):
     formation_id: FormationIdentity
     matricule_doctorant: str
     reference: int
+    TODO
+    cdd_sigle: str
     bourse_recherche: Optional[BourseIdentity] = None
     autre_bourse_recherche: Optional[str] = ''
     commission_proximite: Optional[

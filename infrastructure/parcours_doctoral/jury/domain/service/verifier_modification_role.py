@@ -29,7 +29,8 @@ from parcours_doctoral.auth.roles.auditor import Auditor
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoralIdentity
 from parcours_doctoral.ddd.domain.validator.exceptions import ParcoursDoctoralNonTrouveException, \
     ParcoursDoctoralSansCDDException, ModificationRoleImpossibleSSSException, ModificationRoleImpossibleSSTException, \
-    ModificationRoleImpossibleSSHException
+    ModificationRoleImpossibleSSHException, RolesNonAttribueException
+from parcours_doctoral.ddd.jury.domain.model.enums import RoleJury
 from parcours_doctoral.ddd.jury.domain.service.i_verifier_modification_role import IVerifierModificationRoleService
 from parcours_doctoral.models import ParcoursDoctoral
 
@@ -40,17 +41,23 @@ SST_ACRONYM = 'SST'
 
 class VerifierModificationRoleServiceService(IVerifierModificationRoleService):
     @classmethod
+    def _get_parcours_doctoral(cls, parcours_doctoral_identity: 'ParcoursDoctoralIdentity'):
+        parcours_doctoral = ParcoursDoctoral.objects.select_related(
+            'training__management_entity',
+        ).prefetch_related(
+            'jury_group__actors__juryactor'
+        ).filter(uuid=parcours_doctoral_identity.uuid).first()
+        if parcours_doctoral is None:
+            raise ParcoursDoctoralNonTrouveException
+        return parcours_doctoral
+
+    @classmethod
     def verifier(
         cls,
         parcours_doctoral_identity: 'ParcoursDoctoralIdentity',
         matricule_auteur: str,
     ) -> None:
-        parcours_doctoral = ParcoursDoctoral.objects.select_related(
-            'training__management_entity',
-        ).filter(uuid=parcours_doctoral_identity.uuid).first()
-        if parcours_doctoral is None:
-            raise ParcoursDoctoralNonTrouveException
-
+        parcours_doctoral = cls._get_parcours_doctoral(parcours_doctoral_identity)
         auteur = PersonneConnueUclTranslator().get(matricule_auteur)
 
         if ProgramManager.objects.filter(
@@ -79,3 +86,39 @@ class VerifierModificationRoleServiceService(IVerifierModificationRoleService):
             # The auditor can change the roles
             if not Auditor.objects.filter(person=auteur).exists():
                 raise ModificationRoleImpossibleSSTException
+
+    @classmethod
+    def verifier_tous_les_roles_attribués(
+        cls,
+        parcours_doctoral_identity: 'ParcoursDoctoralIdentity',
+        matricule_auteur: str,
+    ) -> None:
+        parcours_doctoral = cls._get_parcours_doctoral(parcours_doctoral_identity)
+        auteur = PersonneConnueUclTranslator().get(matricule_auteur)
+
+        cdd = parcours_doctoral.training.management_entity
+        if cdd is None:
+            raise ParcoursDoctoralSansCDDException
+
+        has_president = any(actor.juryactor.role == RoleJury.PRESIDENT.name
+                            for actor in parcours_doctoral.jury_group.actors.all())
+        has_secretary = any(actor.juryactor.role == RoleJury.SECRETAIRE.name
+                            for actor in parcours_doctoral.jury_group.actors.all())
+
+        if has_president and has_secretary:
+            return
+
+        if cdd.acronym == SSS_ACRONYM:
+            # The student can change the roles
+            return
+        elif cdd.acronym == SSH_ACRONYM:
+            # The lead supervisor can change the roles
+            if parcours_doctoral.supervision_group.actors.filter(
+                    person=auteur,
+                    parcoursdoctoralsupervisionactor__is_reference_promoter=True,
+            ).exists():
+                raise RolesNonAttribueException
+        elif cdd.acronym == SST_ACRONYM:
+            # The auditor can change the roles
+            if Auditor.objects.filter(person=auteur).exists():
+                raise RolesNonAttribueException
