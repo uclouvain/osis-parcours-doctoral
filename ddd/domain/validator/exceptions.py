@@ -268,5 +268,29 @@ class ParcoursDoctoralSansCDDException(BusinessException):
     status_code = "PARCOURS-DOCTORAL-30"
 
     def __init__(self, **kwargs):
-        message = pgettext_lazy("No CDD found for this doctorate.")
+        message = _("No CDD found for this doctorate.")
+        super().__init__(message, **kwargs)
+
+
+class ModificationRoleImpossibleSSSException(BusinessException):
+    status_code = "PARCOURS-DOCTORAL-31"
+
+    def __init__(self, **kwargs):
+        message = _("Only the student can change jury roles for SSS doctorate.")
+        super().__init__(message, **kwargs)
+
+
+class ModificationRoleImpossibleSSHException(BusinessException):
+    status_code = "PARCOURS-DOCTORAL-32"
+
+    def __init__(self, **kwargs):
+        message = _("Only the lead supervisor can change jury roles for SSH doctorate.")
+        super().__init__(message, **kwargs)
+
+
+class ModificationRoleImpossibleSSTException(BusinessException):
+    status_code = "PARCOURS-DOCTORAL-33"
+
+    def __init__(self, **kwargs):
+        message = _("Only the auditor can change jury roles for SST doctorate.")
         super().__init__(message, **kwargs)

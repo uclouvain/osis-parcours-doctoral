@@ -24,11 +24,12 @@
 #
 # ##############################################################################
 from base.auth.roles.program_manager import ProgramManager
-from base.models.enums.entity_type import EntityType
 from infrastructure.shared_kernel.personne_connue_ucl.personne_connue_ucl import PersonneConnueUclTranslator
+from parcours_doctoral.auth.roles.auditor import Auditor
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoralIdentity
 from parcours_doctoral.ddd.domain.validator.exceptions import ParcoursDoctoralNonTrouveException, \
-    ParcoursDoctoralSansCDDException
+    ParcoursDoctoralSansCDDException, ModificationRoleImpossibleSSSException, ModificationRoleImpossibleSSTException, \
+    ModificationRoleImpossibleSSHException
 from parcours_doctoral.ddd.jury.domain.service.i_verifier_modification_role import IVerifierModificationRoleService
 from parcours_doctoral.models import ParcoursDoctoral
 
@@ -66,10 +67,15 @@ class VerifierModificationRoleServiceService(IVerifierModificationRoleService):
         if cdd.acronym == SSS_ACRONYM:
             # The student can change the roles
             if auteur != parcours_doctoral.student:
-                raise
+                raise ModificationRoleImpossibleSSSException
         elif cdd.acronym == SSH_ACRONYM:
             # The lead supervisor can change the roles
-            pass
+            if not parcours_doctoral.supervision_group.actors.filter(
+                    person=auteur,
+                    parcoursdoctoralsupervisionactor__is_reference_promoter=True,
+            ).exists():
+                raise ModificationRoleImpossibleSSHException
         elif cdd.acronym == SST_ACRONYM:
             # The auditor can change the roles
-            pass
+            if not Auditor.objects.filter(person=auteur).exists():
+                raise ModificationRoleImpossibleSSTException
