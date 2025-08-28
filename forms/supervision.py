@@ -95,6 +95,7 @@ class MemberSupervisionForm(forms.Form):
         required=False,
         choices=EMPTY_CHOICE + tuple(settings.LANGUAGES),
         initial=settings.LANGUAGE_CODE,
+        help_text=_('Language in which the domain doctoral committee can contact this person'),
     )
 
     def __init__(self, *args, **kwargs):

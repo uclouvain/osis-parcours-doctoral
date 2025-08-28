@@ -52,8 +52,8 @@ class ProjectForm(forms.Form):
         label=_('Thesis location'),
         required=False,
         help_text=_(
-            'If known, indicate the name of the laboratory, clinical department or research centre where the thesis '
-            'will be carried out at UCLouvain'
+            'If known, indicate, for example, the name of the laboratory, clinical department, research centre, '
+            '... where the thesis will be carried out at UCLouvain'
         ),
         max_length=255,
     )
@@ -63,8 +63,8 @@ class ProjectForm(forms.Form):
         max_length=1023,
     )
     resume = forms.CharField(
-        label=_('Project resume (max. 2000 characters)'),
-        help_text=_('Write your resume in the language decided with your accompanying committee.'),
+        label=_('Project abstract (max. 2000 characters)'),
+        help_text=_('Write your abstract in the language decided with your accompanying committee.'),
         required=False,
         widget=forms.Textarea,
     )
@@ -123,7 +123,7 @@ class ProjectForm(forms.Form):
         max_length=255,
     )
     projet_doctoral_date_debut = forms.DateField(
-        label=_('Work start date'),
+        label=_('Research start date'),
         widget=CustomDateInput(),
         required=False,
     )

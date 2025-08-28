@@ -156,7 +156,7 @@ class PromoteurDeReferenceManquantException(BusinessException):
     status_code = "PARCOURS-DOCTORAL-16"
 
     def __init__(self, **kwargs):
-        message = _("You must set a lead supervisor.")
+        message = _("You must set a contact supervisor.")
         super().__init__(message, **kwargs)
 
 
@@ -164,7 +164,7 @@ class GroupeSupervisionCompletPourPromoteursException(BusinessException):
     status_code = "PARCOURS-DOCTORAL-17"
 
     def __init__(self, **kwargs):
-        message = _("There can be no more promoters in the supervision group.")
+        message = _("There can be no more supervisors in the supervision group.")
         super().__init__(message, **kwargs)
 
 
