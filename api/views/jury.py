@@ -111,7 +111,7 @@ class JuryPreparationAPIView(
     def get(self, request, *args, **kwargs):
         """Get the Jury of a doctorate"""
         jury = message_bus_instance.invoke(RecupererJuryQuery(uuid_jury=self.doctorate_uuid))
-        serializer = JuryDTOSerializer(instance=jury)
+        serializer = JuryDTOSerializer(instance=jury, context={'request': request, 'parcours_doctoral': self.get_permission_object()})
         return Response(serializer.data)
 
     @extend_schema(

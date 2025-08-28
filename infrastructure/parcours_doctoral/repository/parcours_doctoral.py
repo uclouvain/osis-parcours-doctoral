@@ -330,6 +330,7 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
             cree_le=parcours_doctoral.created_at,
             archive=last_archive.file if last_archive else [],
             reference=parcours_doctoral.formatted_reference,
+            sigle_entite_gestion=parcours_doctoral.sigle_entite_gestion,
             noma_doctorant=parcours_doctoral.student_registration_id or '',  # from annotation
             photo_identite_doctorant=parcours_doctoral.student.id_photo,
             matricule_doctorant=parcours_doctoral.student.global_id,

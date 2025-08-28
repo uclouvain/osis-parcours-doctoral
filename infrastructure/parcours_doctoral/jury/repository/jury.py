@@ -125,6 +125,7 @@ class JuryRepository(IJuryRepository):
                         process=parcours_doctoral.jury_group,
                         role=RoleJury.MEMBRE.name,
                         is_promoter=True,
+                        is_lead_promoter=promoter.parcoursdoctoralsupervisionactor.is_reference_promoter,
                         **(
                             {'person_id': promoter.person_id}
                             if promoter.person_id
@@ -211,6 +212,7 @@ class JuryRepository(IJuryRepository):
                     values = {
                         'role': membre.role.name if membre.role else '',
                         'is_promoter': membre.est_promoteur,
+                        'is_lead_promoter': membre.est_promoteur_de_reference,
                         'person': person,
                         'institute': '',
                         'first_name': '',
@@ -228,6 +230,7 @@ class JuryRepository(IJuryRepository):
                     values = {
                         'role': membre.role.name if membre.role else '',
                         'is_promoter': membre.est_promoteur,
+                        'is_lead_promoter': membre.est_promoteur_de_reference,
                         'person': None,
                         'institute': membre.institution,
                         'first_name': membre.prenom,
@@ -268,6 +271,7 @@ class JuryRepository(IJuryRepository):
                     uuid=membre.uuid,
                     role=membre.role.name if membre.role else '',
                     est_promoteur=membre.est_promoteur,
+                    est_promoteur_de_reference=membre.est_promoteur_de_reference,
                     matricule=membre.matricule,
                     institution=membre.institution,
                     autre_institution=membre.autre_institution,
@@ -326,6 +330,7 @@ class JuryRepository(IJuryRepository):
                     uuid=str(actor.uuid),
                     role=RoleJury[actor.juryactor.role] if actor.juryactor.role else None,
                     est_promoteur=actor.juryactor.is_promoter,
+                    est_promoteur_de_reference=actor.juryactor.is_lead_promoter,
                     matricule=actor.person.global_id,
                     institution=INSTITUTION_UCL,
                     autre_institution=actor.juryactor.other_institute,
@@ -351,6 +356,7 @@ class JuryRepository(IJuryRepository):
                     uuid=str(actor.uuid),
                     role=RoleJury[actor.juryactor.role] if actor.juryactor.role else None,
                     est_promoteur=actor.juryactor.is_promoter,
+                    est_promoteur_de_reference=actor.juryactor.is_lead_promoter,
                     matricule='',
                     institution=actor.institute,
                     autre_institution=actor.juryactor.other_institute,
