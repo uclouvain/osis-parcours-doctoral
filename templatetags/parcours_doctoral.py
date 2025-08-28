@@ -38,6 +38,7 @@ from django.utils.translation import gettext_lazy as _
 from django.utils.translation import pgettext_lazy
 from django_bootstrap5.renderers import FieldRenderer
 from osis_document.api.utils import get_remote_metadata, get_remote_token
+from osis_document.enums import PostProcessingWanted
 
 from admission.utils import format_school_title, get_superior_institute_queryset
 from base.forms.utils.file_field import PDF_MIME_TYPE
@@ -434,7 +435,7 @@ def field_data(
         elif context.get('load_files') is False:
             data = _('Specified') if data else _('Incomplete field')
         elif data:
-            template_string = "{% load osis_document %}{% document_visualizer files %}"
+            template_string = "{% load osis_document %}{% document_visualizer files wanted_post_process='ORIGINAL' %}"
             template_context = {'files': data}
             data = template.Template(template_string).render(template.Context(template_context))
         else:
@@ -514,7 +515,11 @@ def formatted_language(language: str):
 def get_image_file_url(file_uuids):
     """Returns the url of the file whose uuid is the first of the specified ones, if it is an image."""
     if file_uuids:
-        token = get_remote_token(file_uuids[0], for_modified_upload=True)
+        token = get_remote_token(
+            file_uuids[0],
+            wanted_post_process=PostProcessingWanted.ORIGINAL.name,
+            for_modified_upload=True,
+        )
         if token:
             metadata = get_remote_metadata(token)
             if metadata and metadata.get('mimetype') in IMAGE_MIME_TYPES:
