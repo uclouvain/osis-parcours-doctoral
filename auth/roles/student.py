@@ -60,6 +60,12 @@ class Student(RoleModel):
             'parcours_doctoral.api_view_jury': parcours_doctoral.is_parcours_doctoral_student,
             'parcours_doctoral.api_change_jury': parcours_doctoral.is_parcours_doctoral_student
             & parcours_doctoral.is_jury_in_progress,
+            'parcours_doctoral.api_request_signatures': parcours_doctoral.is_parcours_doctoral_student
+            & parcours_doctoral.is_jury_in_progress,
+            'parcours_doctoral.api_resend_external_invitation': parcours_doctoral.is_parcours_doctoral_student,
+            'parcours_doctoral.api_approve_jury_by_pdf': parcours_doctoral.is_parcours_doctoral_student
+            & parcours_doctoral.is_jury_signing_in_progress,
+            # Training
             'parcours_doctoral.api_view_complementary_training': parcours_doctoral.is_parcours_doctoral_student
             & parcours_doctoral.complementary_training_enabled,
             'parcours_doctoral.api_view_course_enrollment': parcours_doctoral.is_parcours_doctoral_student,

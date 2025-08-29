@@ -23,66 +23,58 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from base.ddd.utils.business_validator import MultipleBusinessExceptions
-from django.test import TestCase
+from django.test import SimpleTestCase
 
-from parcours_doctoral.ddd.jury.commands import RetirerMembreCommand
+from parcours_doctoral.ddd.jury.commands import RecupererJuryMembreQuery
+from parcours_doctoral.ddd.jury.dtos.jury import MembreJuryDTO
 from parcours_doctoral.ddd.jury.validator.exceptions import (
     JuryNonTrouveException,
     MembreNonTrouveDansJuryException,
-    PromoteurRetireException,
 )
 from parcours_doctoral.infrastructure.message_bus_in_memory import (
     message_bus_in_memory_instance,
 )
-from parcours_doctoral.infrastructure.parcours_doctoral.jury.repository.in_memory.jury import (
-    JuryInMemoryRepository,
-)
 
 
-class TestRetirerMembre(TestCase):
+class TestRecupererJuryMembre(SimpleTestCase):
     def setUp(self) -> None:
         self.message_bus = message_bus_in_memory_instance
 
-    def tearDown(self) -> None:
-        JuryInMemoryRepository.reset()
-
-    def test_should_retirer_membre(self):
-        jury = JuryInMemoryRepository.entities[0]
-        self.assertEqual(len(jury.membres), 2)
-
-        self.message_bus.invoke(
-            RetirerMembreCommand(
-                uuid_jury='uuid-jury',
-                uuid_membre='uuid-membre',
-            )
-        )
-        self.assertEqual(len(jury.membres), 1)
-
-    def test_should_pas_trouve_si_retirer_membre_inexistant(self):
-        with self.assertRaises(MultipleBusinessExceptions) as context:
-            self.message_bus.invoke(
-                RetirerMembreCommand(
-                    uuid_jury='uuid-jury',
-                    uuid_membre='uuid-membre-inexistant',
-                )
-            )
-            self.assertIsInstance(context.exception.exceptions.pop(), MembreNonTrouveDansJuryException)
-
-    def test_should_pas_trouve_si_retirer_membre_jury_inexistant(self):
+    def test_should_pas_trouver_si_jury_inconnu(self):
         with self.assertRaises(JuryNonTrouveException):
             self.message_bus.invoke(
-                RetirerMembreCommand(
-                    uuid_jury='uuid-jury-inexistant',
+                RecupererJuryMembreQuery(
+                    uuid_jury='inconnu',
                     uuid_membre='uuid-membre',
                 )
             )
 
-    def test_should_exception_si_retirer_promoteur(self):
-        with self.assertRaises(PromoteurRetireException):
+    def test_should_pas_trouver_si_jury_membre_inconnu(self):
+        with self.assertRaises(MembreNonTrouveDansJuryException):
             self.message_bus.invoke(
-                RetirerMembreCommand(
+                RecupererJuryMembreQuery(
                     uuid_jury='uuid-jury',
-                    uuid_membre='uuid-promoteur',
+                    uuid_membre='inconnu',
                 )
             )
+
+    def test_should_recuperer_jury_membre_connu(self):
+        membre_dto: MembreJuryDTO = self.message_bus.invoke(
+            RecupererJuryMembreQuery(
+                uuid_jury='uuid-jury',
+                uuid_membre='uuid-membre',
+            )
+        )
+        self.assertEqual(membre_dto.uuid, 'uuid-membre')
+        self.assertEqual(membre_dto.role, 'MEMBRE')
+        self.assertEqual(membre_dto.est_promoteur, False)
+        self.assertEqual(membre_dto.matricule, None)
+        self.assertEqual(membre_dto.institution, 'AUTRE')
+        self.assertEqual(membre_dto.autre_institution, '')
+        self.assertEqual(membre_dto.pays, 'pays')
+        self.assertEqual(membre_dto.nom, 'nom')
+        self.assertEqual(membre_dto.prenom, 'prenom')
+        self.assertEqual(membre_dto.titre, 'DOCTEUR')
+        self.assertEqual(membre_dto.justification_non_docteur, None)
+        self.assertEqual(membre_dto.genre, 'AUTRE')
+        self.assertEqual(membre_dto.email, 'email')

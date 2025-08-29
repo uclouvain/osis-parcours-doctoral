@@ -8,7 +8,7 @@
 * The core business involves the administration of students, teachers,
 * courses, programs and so on.
 *
-* Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+* Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 *
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -66,6 +66,23 @@
                   </a>
                 </h4>
                 <p>{% translate 'Allow you to manage the doctoral training activities' %}</p>
+              </div>
+            </div>
+          </div>
+        {% endif %}
+        {% if perms.parcours_doctoral.change_auditors_configuration %}
+          <div class="col-md-6" style="margin-bottom: 2em">
+            <div class="row">
+              <div class="col-md-2"><i class="fa fa-tools" style="font-size: 400%; color: #6699FF;"></i></div>
+              <div class="col-md-10">
+                <h4 class="media-heading">
+                  <a
+                      href="{% url 'parcours_doctoral:config:auditors' %}"
+                  >
+                    {% translate 'Institutes auditors configuration' %}
+                  </a>
+                </h4>
+                <p>{% translate 'Allow you to manage who are auditors for institutes.' %}</p>
               </div>
             </div>
           </div>

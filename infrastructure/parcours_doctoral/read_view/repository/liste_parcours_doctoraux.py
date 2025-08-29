@@ -146,7 +146,7 @@ class ListeParcoursDoctorauxRepository(IListeParcoursDoctorauxRepository):
             qs = qs.filter(supervision_group__actors__uuid=uuid_promoteur)
 
         if uuid_president_jury:
-            qs = qs.filter(jury_members__uuid=uuid_president_jury)
+            qs = qs.filter(jury_group__actors__uuid=uuid_president_jury)
 
         if demandeur:
             qs = filter_doctorate_queryset_according_to_roles(qs, demandeur)

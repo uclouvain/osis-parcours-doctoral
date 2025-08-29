@@ -96,7 +96,7 @@ from reference.tests.factories.scholarship import DoctorateScholarshipFactory
 @freezegun.freeze_time('2023-01-01')
 @override_settings(WAFFLE_CREATE_MISSING_SWITCHES=False)
 class ParcoursDoctoralListTestView(QueriesAssertionsMixin, TestCase):
-    NB_MAX_QUERIES = 26
+    NB_MAX_QUERIES = 27
 
     @classmethod
     def setUpTestData(cls):
@@ -693,7 +693,7 @@ class ParcoursDoctoralListTestView(QueriesAssertionsMixin, TestCase):
             [
                 [
                     str(external_promoter_jury_member.uuid),
-                    f'{external_promoter_jury_member.promoter.last_name}, {external_promoter_jury_member.promoter.first_name}',
+                    f'{external_promoter_jury_member.last_name}, {external_promoter_jury_member.first_name}',
                 ],
             ],
         )
@@ -711,12 +711,12 @@ class ParcoursDoctoralListTestView(QueriesAssertionsMixin, TestCase):
             [
                 [
                     str(internal_promoter_jury_member.uuid),
-                    f'{internal_promoter_jury_member.promoter.person.last_name}, {internal_promoter_jury_member.promoter.person.first_name}',
+                    f'{internal_promoter_jury_member.person.last_name}, {internal_promoter_jury_member.person.first_name}',
                 ],
             ],
         )
 
-        internal_jury_member = JuryMemberFactory(parcours_doctoral=self.doctorate)
+        internal_jury_member = JuryMemberFactory(process=self.doctorate.jury_group)
 
         response = self._do_request(allowed_sql_surplus=1, uuid_president_jury=internal_jury_member.uuid)
 
