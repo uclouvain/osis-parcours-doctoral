@@ -142,7 +142,7 @@ class JuryMember(models.Model):
     class Meta:
         constraints = [
             CheckConstraint(
-                check=(
+                condition=(
                     Q(promoter__isnull=False)
                     & Q(person__isnull=True)
                     & Q(institute='')

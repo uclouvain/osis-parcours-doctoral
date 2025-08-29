@@ -24,9 +24,8 @@
 #
 # ##############################################################################
 from dal import autocomplete
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.postgres.search import SearchVector
-from django.db.models import Case, F, Q, When
+from django.db.models import F, Q
 from django.db.models.functions import Coalesce
 
 from base.models.person import Person
@@ -43,7 +42,7 @@ __all__ = [
 __namespace__ = False
 
 
-class PersonsAutocomplete(LoginRequiredMixin, autocomplete.Select2QuerySetView):
+class PersonsAutocomplete(autocomplete.Select2QuerySetView):
     url_patterns = 'persons'
 
     def get_results(self, context):
@@ -104,7 +103,7 @@ class StudentsAutocomplete(PersonsAutocomplete):
         )
 
 
-class SupervisionActorsAutocomplete(LoginRequiredMixin, autocomplete.Select2QuerySetView):
+class SupervisionActorsAutocomplete(autocomplete.Select2QuerySetView):
     urlpatterns = 'supervision-actors'
 
     def get_results(self, context):
@@ -151,7 +150,7 @@ class SupervisionActorsAutocomplete(LoginRequiredMixin, autocomplete.Select2Quer
         )
 
 
-class JuryMembersAutocomplete(LoginRequiredMixin, autocomplete.Select2QuerySetView):
+class JuryMembersAutocomplete(autocomplete.Select2QuerySetView):
     urlpatterns = 'jury-members'
 
     def get_results(self, context):
