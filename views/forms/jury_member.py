@@ -23,9 +23,7 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from base.ddd.utils.business_validator import MultipleBusinessExceptions
 from django.contrib import messages
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import Http404
 from django.shortcuts import redirect
 from django.urls import reverse
@@ -34,6 +32,7 @@ from django.utils.translation import gettext_lazy as _
 from django.views import View
 from django.views.generic import FormView
 
+from base.ddd.utils.business_validator import MultipleBusinessExceptions
 from infrastructure.messages_bus import message_bus_instance
 from parcours_doctoral.ddd.jury.commands import (
     ModifierMembreCommand,
@@ -75,7 +74,6 @@ from parcours_doctoral.forms.jury.membre_role import JuryMembreRoleForm
 
 class JuryMemberRemoveView(
     ParcoursDoctoralViewMixin,
-    LoginRequiredMixin,
     PermissionRequiredMixin,
     View,
 ):
@@ -170,7 +168,6 @@ class JuryMembreUpdateFormView(
 
 class JuryMemberChangeRoleView(
     ParcoursDoctoralViewMixin,
-    LoginRequiredMixin,
     PermissionRequiredMixin,
     View,
 ):

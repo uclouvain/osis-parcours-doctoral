@@ -1555,7 +1555,7 @@ class Migration(migrations.Migration):
         migrations.AddConstraint(
             model_name="jurymember",
             constraint=models.CheckConstraint(
-                check=models.Q(
+                condition=models.Q(
                     models.Q(
                         ("promoter__isnull", False),
                         ("person__isnull", True),
