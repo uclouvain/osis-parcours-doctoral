@@ -29,7 +29,7 @@ from typing import Dict
 
 from django.conf import settings
 from django.contrib import messages
-from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template.defaultfilters import yesno
 from django.urls import reverse
@@ -69,7 +69,6 @@ SHORT_DATE_FORMAT = '%Y/%m/%d'
 
 
 class ParcoursDoctoralListExcelExportView(
-    LoginRequiredMixin,
     PermissionRequiredMixin,
     ExportMixin,
     ExcelFileExportMixin,
