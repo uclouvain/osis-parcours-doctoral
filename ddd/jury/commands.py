@@ -97,6 +97,7 @@ class ModifierRoleMembreCommand(interface.CommandRequest):
     uuid_jury: str
     uuid_membre: str
     role: str
+    matricule_auteur: str
 
 
 @attr.dataclass(frozen=True, slots=True)
@@ -122,6 +123,7 @@ class ApprouverJuryParPdfCommand(interface.CommandRequest):
 class ApprouverJuryCommand(interface.CommandRequest):
     uuid_jury: str
     uuid_membre: str
+    matricule_auteur: Optional[str] = ''
     commentaire_interne: Optional[str] = ''
     commentaire_externe: Optional[str] = ''
 

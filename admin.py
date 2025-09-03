@@ -38,9 +38,12 @@ from osis_document.contrib.fields import FileField
 from osis_mail_template.admin import MailTemplateAdmin
 
 from base.models.entity_version import EntityVersion
+from education_group.contrib.admin import EducationGroupRoleModelAdmin
 from osis_role.contrib.admin import RoleModelAdmin
 from parcours_doctoral.auth.roles.adre import AdreSecretary
+from parcours_doctoral.auth.roles.auditor import Auditor
 from parcours_doctoral.auth.roles.cdd_configurator import CddConfigurator
+from parcours_doctoral.auth.roles.das import SectorAdministrativeDirector
 from parcours_doctoral.auth.roles.doctorate_reader import DoctorateReader
 from parcours_doctoral.auth.roles.jury_member import JuryMember
 from parcours_doctoral.auth.roles.jury_secretary import JurySecretary
@@ -230,8 +233,17 @@ class CddMailTemplateAdmin(MailTemplateAdmin):
         return resolve_url(f'parcours_doctoral:config:cdd-mail-template:preview', identifier=obj.identifier, pk=obj.pk)
 
 
-@admin.register(AdreSecretary, JurySecretary, DoctorateReader, Student, JuryMember)
+@admin.register(AdreSecretary, JurySecretary, DoctorateReader, Student, JuryMember, SectorAdministrativeDirector)
 class HijackRoleModelAdmin(HijackUserAdminMixin, RoleModelAdmin):
+    list_select_related = ['person__user']
+
+    def get_hijack_user(self, obj):
+        return obj.person.user
+
+
+@admin.register(Auditor)
+class HijackRoleModelAdmin(HijackUserAdminMixin, RoleModelAdmin):
+    list_display = ('person', 'entity', 'with_child')
     list_select_related = ['person__user']
 
     def get_hijack_user(self, obj):

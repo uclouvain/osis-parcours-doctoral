@@ -364,6 +364,9 @@ msgstr "All supervisory panel members must have approved the proposition."
 msgid "All history"
 msgstr ""
 
+msgid "All roles are not defined."
+msgstr ""
+
 msgid "All supervisors must have approved the proposition."
 msgstr ""
 
@@ -1511,6 +1514,9 @@ msgstr ""
 msgid "Is publication national"
 msgstr ""
 
+msgid "Is the lead promoter"
+msgstr ""
+
 msgid ""
 "Is your admission request linked with a FNRS, FRIA, FRESH or CSC application?"
 msgstr ""
@@ -1926,6 +1932,9 @@ msgstr ""
 msgid "No"
 msgstr ""
 
+msgid "No CDD found for this doctorate."
+msgstr ""
+
 msgid "No auditor are set for this training."
 msgstr ""
 
@@ -2007,6 +2016,15 @@ msgid "Online or in person"
 msgstr ""
 
 msgid "Only author"
+msgstr ""
+
+msgid "Only the auditor can change jury roles for SST doctorate."
+msgstr ""
+
+msgid "Only the lead supervisor can change jury roles for SSH doctorate."
+msgstr ""
+
+msgid "Only the student can change jury roles for SSS doctorate."
 msgstr ""
 
 msgid "Open the related list"
@@ -3459,7 +3477,8 @@ msgid ""
 "\"No\" if you don't have information yet."
 msgstr ""
 
-msgid "Your jury must have at least 5 members."
+#, python-format
+msgid "Your jury must have at least %s members."
 msgstr ""
 
 msgid "Your participation"
