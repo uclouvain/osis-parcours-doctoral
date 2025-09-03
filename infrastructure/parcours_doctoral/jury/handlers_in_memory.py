@@ -85,6 +85,9 @@ from parcours_doctoral.infrastructure.parcours_doctoral.jury.domain.service.in_m
 from parcours_doctoral.infrastructure.parcours_doctoral.jury.domain.service.in_memory.notification import (
     NotificationInMemory,
 )
+from parcours_doctoral.infrastructure.parcours_doctoral.jury.domain.service.in_memory.verifier_modification_role import (
+    VerifierModificationRoleServiceInMemoryService,
+)
 from parcours_doctoral.infrastructure.parcours_doctoral.jury.repository.in_memory.jury import (
     JuryInMemoryRepository,
 )
@@ -101,6 +104,7 @@ _groupe_de_supervisition_repository = GroupeDeSupervisionInMemoryRepository()
 _parcours_doctoral_repository = ParcoursDoctoralInMemoryRepository()
 _historique = HistoriqueInMemory()
 _notification = NotificationInMemory()
+_verifier_modification_role_service = VerifierModificationRoleServiceInMemoryService()
 
 
 COMMAND_HANDLERS = {
@@ -131,6 +135,7 @@ COMMAND_HANDLERS = {
     ModifierRoleMembreCommand: lambda msg_bus, cmd: modifier_role_membre(
         cmd,
         jury_repository=_jury_repository,
+        verifier_modification_role_service=_verifier_modification_role_service,
     ),
     DemanderSignaturesCommand: lambda msg_bus, cmd: demander_signatures(
         cmd,
@@ -161,6 +166,7 @@ COMMAND_HANDLERS = {
         parcours_doctoral_repository=_parcours_doctoral_repository,
         jury_repository=_jury_repository,
         historique=_historique,
+        verifier_modification_role_service=_verifier_modification_role_service,
     ),
     RefuserJuryCommand: lambda msg_bus, cmd: refuser_jury(
         cmd,

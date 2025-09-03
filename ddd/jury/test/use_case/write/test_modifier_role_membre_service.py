@@ -56,6 +56,7 @@ class TestModifierRoleMembre(SimpleTestCase):
                 uuid_jury='uuid-jury',
                 uuid_membre='uuid-membre',
                 role='PRESIDENT',
+                matricule_auteur='0123456789',
             )
         )
 
@@ -71,6 +72,7 @@ class TestModifierRoleMembre(SimpleTestCase):
                     uuid_jury='uuid-jury',
                     uuid_membre='uuid-membre-inexistant',
                     role='PRESIDENT',
+                    matricule_auteur='0123456789',
                 )
             )
             self.assertIsInstance(context.exception.exceptions.pop(), MembreNonTrouveDansJuryException)
@@ -82,6 +84,7 @@ class TestModifierRoleMembre(SimpleTestCase):
                     uuid_jury='uuid-jury-inexistant',
                     uuid_membre='uuid-membre',
                     role='PRESIDENT',
+                    matricule_auteur='0123456789',
                 )
             )
 
@@ -91,6 +94,7 @@ class TestModifierRoleMembre(SimpleTestCase):
                 uuid_jury='uuid-jury',
                 uuid_membre='uuid-promoteur',
                 role='SECRETAIRE',
+                matricule_auteur='0123456789',
             )
         )
 
@@ -106,6 +110,7 @@ class TestModifierRoleMembre(SimpleTestCase):
                     uuid_jury='uuid-jury',
                     uuid_membre='uuid-promoteur',
                     role='PRESIDENT',
+                    matricule_auteur='0123456789',
                 )
             )
 
@@ -119,6 +124,7 @@ class TestModifierRoleMembre(SimpleTestCase):
                 uuid_jury='uuid-jury',
                 uuid_membre='uuid-membre',
                 role='PRESIDENT',
+                matricule_auteur='0123456789',
             )
         )
 

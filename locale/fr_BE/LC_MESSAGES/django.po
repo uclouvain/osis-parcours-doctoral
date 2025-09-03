@@ -408,6 +408,9 @@ msgstr ""
 msgid "All history"
 msgstr "Historique complet"
 
+msgid "All roles are not defined."
+msgstr "Tous les roles ne sont pas définis."
+
 msgid "All supervisors must have approved the proposition."
 msgstr "Tous les promoteurs doivent approuver la proposition."
 
@@ -1592,6 +1595,9 @@ msgstr "S'agit-il d'une institution de la Fédération Wallonie-Bruxelles ?"
 msgid "Is publication national"
 msgstr "Est une publication nationale"
 
+msgid "Is the lead promoter"
+msgstr "Est Promoteur·trice de référence"
+
 msgid ""
 "Is your admission request linked with a FNRS, FRIA, FRESH or CSC application?"
 msgstr ""
@@ -1656,6 +1662,11 @@ msgstr "Mots-clés"
 
 msgid "Language"
 msgstr "Langue"
+
+msgid "Language in which the domain doctoral committee can contact this person"
+msgstr ""
+"Langue dans laquelle la Commission doctorale de domaine peut contacter cette "
+"person"
 
 msgid "Last name / First name"
 msgstr "Nom / Prénom"
@@ -1806,8 +1817,7 @@ msgstr ""
 
 msgid "Mail sent to each promoter of the jury to request a signature"
 msgstr ""
-"E-mail envoyé aux membres du groupe du jury pour demander une "
-"signature"
+"E-mail envoyé aux membres du groupe du jury pour demander une signature"
 
 msgid "Mail sent to promoters when a member of the supervision panel refuses"
 msgstr ""
@@ -2067,6 +2077,9 @@ msgstr "Doctorat suivant"
 msgid "No"
 msgstr "Non"
 
+msgid "No CDD found for this doctorate."
+msgstr "Pas de CDD trouvé pour ce doctorat."
+
 msgid "No auditor are set for this training."
 msgstr "Aucun vérificateur.trice configuré.e pour cette formation."
 
@@ -2147,6 +2160,20 @@ msgstr "En ligne ou en présentiel"
 
 msgid "Only author"
 msgstr "Auteur.trice unique"
+
+msgid "Only the auditor can change jury roles for SST doctorate."
+msgstr ""
+"Uniquement le vérificateur peut changer les rôles du jury pour les doctorats "
+"SST."
+
+msgid "Only the lead supervisor can change jury roles for SSH doctorate."
+msgstr ""
+"Uniquement le.a promoteur.trice de référence peut changer les rôles du jury "
+"pour les doctorats SSH."
+
+msgid "Only the student can change jury roles for SSS doctorate."
+msgstr ""
+"Uniquement l'étudiant peut changer les rôles du jury pour les doctorats SSS."
 
 msgid "Open the related list"
 msgstr "Ouvrir la liste associée"
@@ -3722,8 +3749,9 @@ msgstr ""
 "Vos informations de cotutelle pourront être complétées ultérieurement; "
 "veuillez indiquer \"non\" si vous ne disposez pas encore des informations"
 
-msgid "Your jury must have at least 5 members."
-msgstr "Votre jury doit être composé d'au moins 5 membres."
+#, python-format
+msgid "Your jury must have at least %s members."
+msgstr "Votre jury doit être composé d'au moins %s membres."
 
 msgid "Your participation"
 msgstr "Votre participation"

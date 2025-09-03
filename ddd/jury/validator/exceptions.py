@@ -155,3 +155,35 @@ class PasDeVerificateurException(BusinessException):
     def __init__(self, **kwargs):
         message = _("No auditor are set for this training.")
         super().__init__(message, **kwargs)
+
+
+class ModificationRoleImpossibleSSSException(BusinessException):
+    status_code = "JURY-17"
+
+    def __init__(self, **kwargs):
+        message = _("Only the student can change jury roles for SSS doctorate.")
+        super().__init__(message, **kwargs)
+
+
+class ModificationRoleImpossibleSSHException(BusinessException):
+    status_code = "JURY-18"
+
+    def __init__(self, **kwargs):
+        message = _("Only the lead supervisor can change jury roles for SSH doctorate.")
+        super().__init__(message, **kwargs)
+
+
+class ModificationRoleImpossibleSSTException(BusinessException):
+    status_code = "JURY-19"
+
+    def __init__(self, **kwargs):
+        message = _("Only the auditor can change jury roles for SST doctorate.")
+        super().__init__(message, **kwargs)
+
+
+class RolesNonAttribueException(BusinessException):
+    status_code = "JURY-20"
+
+    def __init__(self, **kwargs):
+        message = _("All roles are not defined.")
+        super().__init__(message, **kwargs)

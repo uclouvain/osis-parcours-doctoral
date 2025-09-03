@@ -188,7 +188,7 @@ class ParcoursDoctoralQuerySet(models.QuerySet):
             },
         )
 
-    def annotate_intitule_secteur_formation(self):
+    def annotate_secteur_formation(self):
         cte = EntityVersion.objects.with_children(entity_id=OuterRef("training__management_entity_id"))
         sector_subqs = (
             cte.join(EntityVersion, id=cte.col.id)
@@ -199,6 +199,7 @@ class ParcoursDoctoralQuerySet(models.QuerySet):
 
         return self.annotate(
             intitule_secteur_formation=CTESubquery(sector_subqs.values("title")[:1]),
+            sigle_secteur_formation=CTESubquery(sector_subqs.values("acronym")[:1]),
         )
 
 

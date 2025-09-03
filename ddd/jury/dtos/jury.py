@@ -46,6 +46,7 @@ class MembreJuryDTO(interface.DTO):
     uuid: str
     role: str
     est_promoteur: bool
+    est_promoteur_de_reference: bool
     matricule: str
     institution: str
     autre_institution: str

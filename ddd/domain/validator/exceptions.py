@@ -262,3 +262,11 @@ class DocumentNonTrouveException(BusinessException):
     def __init__(self, **kwargs):
         message = _("Document not found.")
         super().__init__(message, **kwargs)
+
+
+class ParcoursDoctoralSansCDDException(BusinessException):
+    status_code = "PARCOURS-DOCTORAL-30"
+
+    def __init__(self, **kwargs):
+        message = _("No CDD found for this doctorate.")
+        super().__init__(message, **kwargs)

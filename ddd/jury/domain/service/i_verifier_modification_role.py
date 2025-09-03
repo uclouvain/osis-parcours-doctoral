@@ -23,35 +23,29 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from abc import abstractmethod
 
-import rules
-from django.utils.translation import gettext_lazy as _
-from rules import RuleSet
-
-from osis_role.contrib.models import EntityRoleModel
-from parcours_doctoral.auth.predicates.parcours_doctoral import (
-    is_jury_signing_in_progress,
-    is_part_of_jury,
+from osis_common.ddd import interface
+from parcours_doctoral.ddd.domain.model.parcours_doctoral import (
+    ParcoursDoctoralIdentity,
 )
 
 
-class Auditor(EntityRoleModel):
-    """
-    Vérificateur.trice
-
-    Valide les jurys de son institut.
-    """
-
-    class Meta:
-        verbose_name = _("Role: Auditor")
-        group_name = "auditor"
+class IVerifierModificationRoleService(interface.DomainService):
+    @classmethod
+    @abstractmethod
+    def verifier(
+        cls,
+        parcours_doctoral_identity: 'ParcoursDoctoralIdentity',
+        matricule_auteur: str,
+    ) -> None:
+        raise NotImplementedError
 
     @classmethod
-    def rule_set(cls):
-        ruleset = {
-            'parcours_doctoral.api_view_parcours_doctoral': is_part_of_jury,
-            'parcours_doctoral.api_view_jury': is_part_of_jury,
-            'parcours_doctoral.api_approve_jury': is_part_of_jury & is_jury_signing_in_progress,
-            'parcours_doctoral.api_change_jury_role': is_part_of_jury & is_jury_signing_in_progress,
-        }
-        return RuleSet(ruleset)
+    @abstractmethod
+    def verifier_tous_les_roles_attribués(
+        cls,
+        parcours_doctoral_identity: 'ParcoursDoctoralIdentity',
+        matricule_auteur: str,
+    ) -> None:
+        raise NotImplementedError
