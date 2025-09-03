@@ -31,6 +31,9 @@ from parcours_doctoral.ddd.jury.commands import ApprouverJuryCommand
 from parcours_doctoral.ddd.jury.domain.model.jury import JuryIdentity
 from parcours_doctoral.ddd.jury.domain.service.avis import Avis
 from parcours_doctoral.ddd.jury.domain.service.i_historique import IHistorique
+from parcours_doctoral.ddd.jury.domain.service.i_verifier_modification_role import (
+    IVerifierModificationRoleService,
+)
 from parcours_doctoral.ddd.jury.repository.i_jury import IJuryRepository
 from parcours_doctoral.ddd.repository.i_parcours_doctoral import (
     IParcoursDoctoralRepository,
@@ -40,6 +43,7 @@ from parcours_doctoral.ddd.repository.i_parcours_doctoral import (
 def approuver_jury(
     cmd: 'ApprouverJuryCommand',
     parcours_doctoral_repository: 'IParcoursDoctoralRepository',
+    verifier_modification_role_service: 'IVerifierModificationRoleService',
     jury_repository: 'IJuryRepository',
     historique: 'IHistorique',
 ) -> 'JuryIdentity':
@@ -53,11 +57,17 @@ def approuver_jury(
     avis = Avis.construire_approbation(cmd.commentaire_interne, cmd.commentaire_externe)
 
     # WHEN
+    verifier_modification_role_service.verifier_tous_les_roles_attribués(
+        parcours_doctoral_identity=ParcoursDoctoralIdentityBuilder.build_from_uuid(cmd.uuid_jury),
+        matricule_auteur=cmd.matricule_auteur,
+    )
     jury.approuver(signataire, cmd.commentaire_interne, cmd.commentaire_externe)
 
     # THEN
     parcours_doctoral_repository.save(parcours_doctoral)
     jury_repository.save(jury)
-    historique.historiser_avis(parcours_doctoral, jury.entity_id, signataire, avis, statut_original_parcours_doctoral)
+    historique.historiser_avis(
+        parcours_doctoral, signataire, avis, statut_original_parcours_doctoral, cmd.matricule_auteur
+    )
 
     return jury.entity_id

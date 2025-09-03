@@ -3101,6 +3101,9 @@ components:
           type: array
           items:
             type: string
+        has_change_roles_permission:
+          type: boolean
+          readOnly: true
       required:
       - approbation_pdf
       - commentaire
@@ -3175,59 +3178,7 @@ components:
           type: string
         est_promoteur:
           type: boolean
-        matricule:
-          type: string
-        institution:
-          type: string
-        autre_institution:
-          type: string
-        pays:
-          type: string
-        nom:
-          type: string
-        prenom:
-          type: string
-        titre:
-          type: string
-        justification_non_docteur:
-          type: string
-        genre:
-          type: string
-        langue:
-          type: string
-        email:
-          type: string
-        signature:
-          $ref: '#/components/schemas/SignatureMembreJuryDTONested'
-      required:
-      - autre_institution
-      - email
-      - est_promoteur
-      - genre
-      - institution
-      - justification_non_docteur
-      - langue
-      - matricule
-      - nom
-      - pays
-      - prenom
-      - role
-      - signature
-      - titre
-      - uuid
-    MembreJuryDTONested:
-      type: object
-      description: |-
-        A `DTOSerializer` is just a regular `Serializer`, except that:
-
-        * A set of default fields are automatically populated from the Meta.source dataclass.
-        * All fields are set to read-only if needed when Meta.read_only is True.
-      properties:
-        uuid:
-          type: string
-        role:
-          type: string
-        est_promoteur:
+        est_promoteur_de_reference:
           type: boolean
         matricule:
           type: string
@@ -3257,6 +3208,64 @@ components:
       - autre_institution
       - email
       - est_promoteur
+      - est_promoteur_de_reference
+      - genre
+      - institution
+      - justification_non_docteur
+      - langue
+      - matricule
+      - nom
+      - pays
+      - prenom
+      - role
+      - signature
+      - titre
+      - uuid
+    MembreJuryDTONested:
+      type: object
+      description: |-
+        A `DTOSerializer` is just a regular `Serializer`, except that:
+
+        * A set of default fields are automatically populated from the Meta.source dataclass.
+        * All fields are set to read-only if needed when Meta.read_only is True.
+      properties:
+        uuid:
+          type: string
+        role:
+          type: string
+        est_promoteur:
+          type: boolean
+        est_promoteur_de_reference:
+          type: boolean
+        matricule:
+          type: string
+        institution:
+          type: string
+        autre_institution:
+          type: string
+        pays:
+          type: string
+        nom:
+          type: string
+        prenom:
+          type: string
+        titre:
+          type: string
+        justification_non_docteur:
+          type: string
+        genre:
+          type: string
+        langue:
+          type: string
+        email:
+          type: string
+        signature:
+          $ref: '#/components/schemas/SignatureMembreJuryDTONested'
+      required:
+      - autre_institution
+      - email
+      - est_promoteur
+      - est_promoteur_de_reference
       - genre
       - institution
       - justification_non_docteur
@@ -3533,6 +3542,8 @@ components:
           type: string
         reference:
           type: string
+        sigle_entite_gestion:
+          type: string
         statut:
           type: string
         date_changement_statut:
@@ -3657,6 +3668,7 @@ components:
       - prenom_doctorant
       - projet
       - reference
+      - sigle_entite_gestion
       - statut
       - type_admission
       - uuid
@@ -3759,6 +3771,8 @@ components:
         * All fields are set to read-only if needed when Meta.read_only is True.
       properties:
         role:
+          type: string
+        matricule_auteur:
           type: string
     Person:
       type: object

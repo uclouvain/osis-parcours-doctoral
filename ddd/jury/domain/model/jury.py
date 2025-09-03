@@ -72,6 +72,7 @@ class SignatureMembre(interface.ValueObject):
 @attr.dataclass(frozen=True, slots=True, eq=True, hash=True)
 class MembreJury(interface.ValueObject):
     est_promoteur: bool
+    est_promoteur_de_reference: bool
     matricule: Optional[str]
     institution: str
     autre_institution: Optional[str]

@@ -23,7 +23,8 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-
+from drf_spectacular.types import OpenApiTypes
+from drf_spectacular.utils import extend_schema_field
 from rest_framework import serializers
 
 from base.utils.serializers import DTOSerializer
@@ -57,8 +58,16 @@ __all__ = [
 
 
 class JuryDTOSerializer(DTOSerializer):
+    has_change_roles_permission = serializers.SerializerMethodField()
+
     class Meta:
         source = JuryDTO
+
+    @extend_schema_field(OpenApiTypes.BOOL)
+    def get_has_change_roles_permission(self, obj):
+        return self.context['request'].user.has_perm(
+            'parcours_doctoral.api_change_jury_role', self.context['parcours_doctoral']
+        )
 
 
 class JuryIdentityDTOSerializer(serializers.Serializer):
@@ -99,6 +108,7 @@ class ModifierMembreCommandSerializer(DTOSerializer):
 class ModifierRoleMembreCommandSerializer(DTOSerializer):
     uuid_jury = None
     uuid_membre = None
+    matricule_auteur = None
 
     class Meta:
         source = ModifierRoleMembreCommand
