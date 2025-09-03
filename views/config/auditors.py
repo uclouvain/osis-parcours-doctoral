@@ -53,12 +53,9 @@ class AuditorsConfigView(PermissionRequiredMixin, SuccessMessageMixin, FormView)
             for form in formset
             if form.cleaned_data['auditor']
         ]
-        Auditor.objects.bulk_create(
-            auditors,
-            update_conflicts=True,
-            update_fields=['person'],
-            unique_fields=['entity'],
-        )
+        for auditor in auditors:
+            # We cannot use bulk_create as RoleModel.save() needs to be called.
+            auditor.save()
         auditors_entities_to_be_deleted = [
             form.cleaned_data['entity_version'].entity_id for form in formset if not form.cleaned_data['auditor']
         ]

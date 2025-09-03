@@ -52,6 +52,7 @@ class JuryService(IJuryService):
         return MembreJury(
             role=RoleJury.VERIFICATEUR,
             est_promoteur=False,
+            est_promoteur_de_reference=False,
             matricule=verificateur.person.global_id,
             institution=INSTITUTION_UCL,
             autre_institution='',

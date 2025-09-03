@@ -52,6 +52,7 @@ class TestApprouverJury(SimpleTestCase):
             ApprouverJuryCommand(
                 uuid_jury='uuid-SC3DP-promoteur-deja-approuve',
                 uuid_membre='uuid-membre',
+                matricule_auteur='012346789',
                 commentaire_interne='Commentaire interne',
                 commentaire_externe='Commentaire externe',
             )

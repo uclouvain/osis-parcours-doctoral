@@ -24,9 +24,12 @@
 #
 ##############################################################################
 from osis_common.ddd import interface
-
-from parcours_doctoral.ddd.jury.commands import ModifierJuryCommand, AjouterMembreCommand, ModifierMembreCommand
-from parcours_doctoral.ddd.jury.domain.model.enums import TitreMembre, GenreMembre
+from parcours_doctoral.ddd.jury.commands import (
+    AjouterMembreCommand,
+    ModifierJuryCommand,
+    ModifierMembreCommand,
+)
+from parcours_doctoral.ddd.jury.domain.model.enums import GenreMembre, TitreMembre
 from parcours_doctoral.ddd.jury.domain.model.jury import MembreJury
 
 
@@ -46,6 +49,7 @@ class MembreJuryBuilder(interface.RootEntityBuilder):
     ) -> 'MembreJury':
         return MembreJury(
             est_promoteur=False,
+            est_promoteur_de_reference=False,
             matricule=cmd.matricule,
             institution=cmd.institution,
             autre_institution=cmd.autre_institution,
@@ -66,6 +70,7 @@ class MembreJuryBuilder(interface.RootEntityBuilder):
     ) -> 'MembreJury':
         return MembreJury(
             est_promoteur=False,
+            est_promoteur_de_reference=False,
             uuid=cmd.uuid_membre,
             matricule=cmd.matricule,
             institution=cmd.institution,

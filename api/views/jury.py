@@ -111,7 +111,9 @@ class JuryPreparationAPIView(
     def get(self, request, *args, **kwargs):
         """Get the Jury of a doctorate"""
         jury = message_bus_instance.invoke(RecupererJuryQuery(uuid_jury=self.doctorate_uuid))
-        serializer = JuryDTOSerializer(instance=jury)
+        serializer = JuryDTOSerializer(
+            instance=jury, context={'request': request, 'parcours_doctoral': self.get_permission_object()}
+        )
         return Response(serializer.data)
 
     @extend_schema(
@@ -189,7 +191,7 @@ class JuryMemberDetailAPIView(
     permission_mapping = {
         'GET': 'parcours_doctoral.api_view_jury',
         'PUT': 'parcours_doctoral.api_change_jury',
-        'PATCH': 'parcours_doctoral.api_change_jury',
+        'PATCH': 'parcours_doctoral.api_change_jury_role',
         'DELETE': 'parcours_doctoral.api_change_jury',
     }
 
@@ -242,6 +244,7 @@ class JuryMemberDetailAPIView(
             ModifierRoleMembreCommand(
                 uuid_jury=str(self.doctorate_uuid),
                 uuid_membre=str(self.kwargs['member_uuid']),
+                matricule_auteur=self.request.user.person.global_id,
                 **serializer.data,
             )
         )
@@ -346,6 +349,7 @@ class ApprovePropositionMixin:
         jury_id = message_bus_instance.invoke(
             ApprouverJuryCommand(
                 uuid_jury=str(kwargs["uuid"]),
+                matricule_auteur=self.request.user.person.global_id if self.request.user.is_authenticated else '',
                 **serializer.data,
             ),
         )
