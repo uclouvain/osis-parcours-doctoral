@@ -60,6 +60,11 @@ class JuryActor(Actor):
         default=False,
         blank=True,
     )
+    is_lead_promoter = models.BooleanField(
+        verbose_name=_('Is the lead promoter'),
+        default=False,
+        blank=True,
+    )
     role = models.CharField(
         verbose_name=pgettext_lazy('jury', 'Role'),
         choices=RoleJury.choices(),
