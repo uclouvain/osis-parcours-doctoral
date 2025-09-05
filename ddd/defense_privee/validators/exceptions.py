@@ -27,6 +27,7 @@
 from django.utils.translation import gettext_lazy as _
 
 from osis_common.ddd.interface import BusinessException
+from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 
 
 class DefensePriveeNonTrouveeException(BusinessException):
@@ -50,4 +51,14 @@ class DefensePriveeNonActiveeException(BusinessException):
 
     def __init__(self, **kwargs):
         message = _('Private defense not activated.')
+        super().__init__(message, **kwargs)
+
+
+class StatutDoctoratDifferentDefensePriveeSoumiseException(BusinessException):
+    status_code = 'DEFENSE-PRIVEE-4'
+
+    def __init__(self, **kwargs):
+        message = _("The doctorate must be in the status '%(status)s' to realize this action.") % {
+            'status': ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_SOUMISE.value,
+        }
         super().__init__(message, **kwargs)

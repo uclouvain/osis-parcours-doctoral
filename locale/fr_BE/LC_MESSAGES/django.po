@@ -475,6 +475,9 @@ msgstr "Approuvée"
 msgid "Approximate date for completing the thesis:"
 msgstr "Date approximative d'achèvement de la thèse :"
 
+msgid "Are you sure you want to authorise the private defense?"
+msgstr "Êtes-vous sûr de vouloir autoriser la défense privée ?"
+
 #, python-format
 msgctxt "parcours_doctoral"
 msgid "Are you sure you want to delete \"%(object)s\"?"
@@ -546,6 +549,9 @@ msgstr "L'auteur de cette commande n'est pas le recteur."
 
 msgid "Author of this command is not from the doctorate CDD."
 msgstr "L'auteur de cette commande n'est pas de la CDD du doctorat."
+
+msgid "Authorise the private defense"
+msgstr "Autoriser la défense privée"
 
 msgid "Authors"
 msgstr "Auteurs et autrices"
@@ -2489,6 +2495,9 @@ msgstr "Epreuves de confirmation passées"
 msgid "Previous doctorate"
 msgstr "Doctorat précédent"
 
+msgid "Previous private defenses"
+msgstr "Défenses privées passées"
+
 msgid "Private defence date and time"
 msgstr "Date et heure de la défense privée"
 
@@ -2500,6 +2509,9 @@ msgstr "Procès verbal de la défense privée"
 
 msgid "Private defence minutes canvas"
 msgstr "Canevas du procès verbal de la défense privée"
+
+msgid "Private defense"
+msgstr "Défense privée"
 
 msgctxt "dashboard-category"
 msgid "Private defense (formula 1)"
@@ -3155,6 +3167,9 @@ msgstr "Promoteur·trice"
 msgid "Supervisor not found."
 msgstr "Promoteur non trouvé."
 
+msgid "Supervisors"
+msgstr "Promoteurs·trices"
+
 msgctxt "gender"
 msgid "Supervisors"
 msgstr "Promoteurs·trices"
@@ -3315,6 +3330,11 @@ msgstr "Le doctorat n'a pas d'inscription valide"
 msgid "The doctorate is not initialized"
 msgstr "Le doctorat n'est pas initialisé"
 
+#, python-format
+msgid ""
+"The doctorate must be in the status '%(status)s' to realize this action."
+msgstr "Le doctorat doit être dans le statut '%(status)s' pour réaliser cette action."
+
 msgid "The enrollment has not been found"
 msgstr "L'évaluation n'a pas été trouvée"
 
@@ -3401,6 +3421,9 @@ msgstr "La personne n'a pas été trouvée."
 
 msgid "The person is not a president, a secretary or a member."
 msgstr "La personne n'est pas président, secrétaire ou membre."
+
+msgid "The private defense has been authorised."
+msgstr "La défense privée a été autorisée."
 
 msgid "The private defense is not in progress"
 msgstr "La défense privée n'est pas en cours"

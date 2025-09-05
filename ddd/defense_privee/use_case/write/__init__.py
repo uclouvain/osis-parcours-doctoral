@@ -23,4 +23,5 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from .soumettre_defense_prive_service import soumettre_defense_privee
+from .autoriser_defense_privee_service import autoriser_defense_privee
+from .soumettre_defense_privee_service import soumettre_defense_privee

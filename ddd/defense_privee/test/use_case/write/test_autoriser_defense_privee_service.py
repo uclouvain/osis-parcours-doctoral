@@ -23,24 +23,23 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-import datetime
 
 from django.test import SimpleTestCase
 
 from base.ddd.utils.business_validator import MultipleBusinessExceptions
-from parcours_doctoral.ddd.defense_privee.commands import SoumettreDefensePriveeCommand
+from parcours_doctoral.ddd.defense_privee.commands import AutoriserDefensePriveeCommand
 from parcours_doctoral.ddd.defense_privee.test.factory.defense_privee import (
     DefensePriveeFactory,
 )
 from parcours_doctoral.ddd.defense_privee.validators.exceptions import (
-    DefensePriveeNonCompleteeException,
+    StatutDoctoratDifferentDefensePriveeSoumiseException,
 )
 from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
+from parcours_doctoral.ddd.domain.validator.exceptions import (
+    ParcoursDoctoralNonTrouveException,
+)
 from parcours_doctoral.infrastructure.message_bus_in_memory import (
     message_bus_in_memory_instance,
-)
-from parcours_doctoral.infrastructure.parcours_doctoral.defense_privee.repository.in_memory import (
-    defense_privee,
 )
 from parcours_doctoral.infrastructure.parcours_doctoral.defense_privee.repository.in_memory.defense_privee import (
     DefensePriveeInMemoryRepository,
@@ -50,11 +49,11 @@ from parcours_doctoral.infrastructure.parcours_doctoral.repository.in_memory.par
 )
 
 
-class TestSoumettreDefensePrivee(SimpleTestCase):
+class TestAutoriserDefensePrivee(SimpleTestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.cmd = SoumettreDefensePriveeCommand
+        cls.cmd = AutoriserDefensePriveeCommand
         cls.message_bus = message_bus_in_memory_instance
         cls.defense_privee_repository = DefensePriveeInMemoryRepository()
         cls.parcours_doctoral_repository = ParcoursDoctoralInMemoryRepository()
@@ -67,41 +66,26 @@ class TestSoumettreDefensePrivee(SimpleTestCase):
         )
         self.defense_privee_repository.save(self.defense_privee)
         self.parametres_cmd = {
-            'uuid': self.defense_privee.entity_id.uuid,
+            'parcours_doctoral_uuid': self.defense_privee.parcours_doctoral_id.uuid,
             'matricule_auteur': '1234',
-            'titre_these': 'Titre',
-            'date_heure': datetime.datetime(2022, 1, 1),
-            'lieu': 'Lieu',
-            'date_envoi_manuscrit': datetime.date(2023, 1, 1),
         }
 
-    def test_should_generer_exception_si_donnees_manquantes(self):
-        self.parametres_cmd['date_heure'] = None
+    def test_should_generer_exception_si_parcours_doctoral_inconnu(self):
+        with self.assertRaises(ParcoursDoctoralNonTrouveException) as e:
+            self.message_bus.invoke(self.cmd(parcours_doctoral_uuid='INCONNU', matricule_auteur='1234'))
 
+    def test_should_generer_exception_si_statut_parcours_doctoral_invalide(self):
+        proposition = self.parcours_doctoral_repository.get(entity_id=self.defense_privee.parcours_doctoral_id)
+        proposition.statut = ChoixStatutParcoursDoctoral.ADMIS
         with self.assertRaises(MultipleBusinessExceptions) as e:
             self.message_bus.invoke(self.cmd(**self.parametres_cmd))
-        self.assertIsInstance(e.exception.exceptions.pop(), DefensePriveeNonCompleteeException)
+        self.assertIsInstance(e.exception.exceptions.pop(), StatutDoctoratDifferentDefensePriveeSoumiseException)
 
-        self.parametres_cmd['date_heure'] = datetime.datetime(2022, 1, 1)
-        self.parametres_cmd['titre_these'] = ''
+    def test_should_changer_statut_parcours_doctoral(self):
+        proposition = self.parcours_doctoral_repository.get(entity_id=self.defense_privee.parcours_doctoral_id)
+        proposition.statut = ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_SOUMISE
 
-        with self.assertRaises(MultipleBusinessExceptions) as e:
-            self.message_bus.invoke(self.cmd(**self.parametres_cmd))
-        self.assertIsInstance(e.exception.exceptions.pop(), DefensePriveeNonCompleteeException)
+        resultat = self.message_bus.invoke(self.cmd(**self.parametres_cmd))
 
-    def test_should_soumettre_defense_privee_si_valide(self):
-        parcours_doctoral_id_resultat = self.message_bus.invoke(self.cmd(**self.parametres_cmd))
-
-        defense_privee_mise_a_jour = defense_privee.DefensePriveeInMemoryRepository.get(
-            entity_id=self.defense_privee.entity_id,
-        )
-
-        parcours_doctoral = ParcoursDoctoralInMemoryRepository.get(defense_privee_mise_a_jour.parcours_doctoral_id)
-
-        self.assertEqual(defense_privee_mise_a_jour.parcours_doctoral_id, parcours_doctoral_id_resultat)
-        self.assertEqual(defense_privee_mise_a_jour.date_heure, self.parametres_cmd['date_heure'])
-        self.assertEqual(defense_privee_mise_a_jour.lieu, self.parametres_cmd['lieu'])
-        self.assertEqual(defense_privee_mise_a_jour.date_envoi_manuscrit, self.parametres_cmd['date_envoi_manuscrit'])
-
-        self.assertEqual(parcours_doctoral.statut, ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_SOUMISE)
-        self.assertEqual(parcours_doctoral.titre_these_propose, self.parametres_cmd['titre_these'])
+        self.assertEqual(resultat, proposition.entity_id)
+        self.assertEqual(proposition.statut, ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_AUTORISEE)

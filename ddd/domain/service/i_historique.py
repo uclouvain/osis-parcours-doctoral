@@ -166,3 +166,12 @@ class IHistorique(interface.DomainService):
         statut_original_parcours_doctoral: ChoixStatutParcoursDoctoral,
     ):
         raise NotImplementedError
+
+    @classmethod
+    @abstractmethod
+    def historiser_autorisation_defense_privee(
+        cls,
+        parcours_doctoral: ParcoursDoctoral,
+        matricule_auteur: str,
+    ):
+        raise NotImplementedError
