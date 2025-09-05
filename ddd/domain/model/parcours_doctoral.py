@@ -31,6 +31,9 @@ import attr
 
 from ddd.logic.reference.domain.model.bourse import BourseIdentity
 from osis_common.ddd import interface
+from parcours_doctoral.ddd.defense_privee.validators.validator_by_business_action import (
+    AutoriserDefensePriveeValidatorList,
+)
 from parcours_doctoral.ddd.domain.model._cotutelle import Cotutelle
 from parcours_doctoral.ddd.domain.model._experience_precedente_recherche import (
     ExperiencePrecedenteRecherche,
@@ -306,3 +309,10 @@ class ParcoursDoctoral(interface.RootEntity):
     def soumettre_defense_privee(self, titre_these: str):
         self.statut = ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_SOUMISE
         self.titre_these_propose = titre_these
+
+    def autoriser_defense_privee(self):
+        AutoriserDefensePriveeValidatorList(
+            statut_parcours_doctoral=self.statut,
+        ).validate()
+
+        self.statut = ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_AUTORISEE

@@ -86,6 +86,17 @@ def submitted_confirmation_paper(self, user: User, obj: ParcoursDoctoral):
 
 
 @predicate(bind=True)
+@predicate_failed_msg(
+    message=_("The doctorate must be in the status '%(status)s' to realize this action.")
+    % {
+        'status': ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_SOUMISE.value,
+    }
+)
+def private_defense_is_submitted(self, user: User, obj: ParcoursDoctoral):
+    return obj.status == ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_SOUMISE.name
+
+
+@predicate(bind=True)
 @predicate_failed_msg(message=_("The confirmation paper is not in progress"))
 def confirmation_paper_in_progress(self, user: User, obj: ParcoursDoctoral):
     return obj.status in STATUTS_DOCTORAT_EPREUVE_CONFIRMATION_EN_COURS

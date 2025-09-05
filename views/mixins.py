@@ -68,19 +68,21 @@ from parcours_doctoral.utils.cache import get_cached_parcours_doctoral_perm_obj
 from parcours_doctoral.views.list import ParcoursDoctoralList
 
 
-class ParcoursDoctoralViewMixin(LoginRequiredMixin, PermissionRequiredMixin, ContextMixin):
-    load_doctorate_dto = True
-
+class ParcoursDoctoralBaseViewMixin(LoginRequiredMixin, PermissionRequiredMixin):
     @property
     def parcours_doctoral_uuid(self) -> str:
         return self.kwargs.get('uuid', '')
+
+    def get_permission_object(self):
+        return self.parcours_doctoral
 
     @property
     def parcours_doctoral(self) -> ParcoursDoctoral:
         return get_cached_parcours_doctoral_perm_obj(self.parcours_doctoral_uuid)
 
-    def get_permission_object(self):
-        return self.parcours_doctoral
+
+class ParcoursDoctoralViewMixin(ParcoursDoctoralBaseViewMixin, ContextMixin):
+    load_doctorate_dto = True
 
     @cached_property
     def parcours_doctoral_dto(self) -> ParcoursDoctoralDTO:
