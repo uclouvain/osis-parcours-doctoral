@@ -11,7 +11,13 @@ def initialise_private_defenses(apps, _):
     PrivateDefense = apps.get_model('parcours_doctoral', 'PrivateDefense')
     ParcoursDoctoral = apps.get_model('parcours_doctoral', 'ParcoursDoctoral')
 
-    private_defenses = [PrivateDefense(parcours_doctoral=doctorate) for doctorate in ParcoursDoctoral.objects.all()]
+    private_defenses = [
+        PrivateDefense(
+            parcours_doctoral=doctorate,
+            current_parcours_doctoral=doctorate,
+        )
+        for doctorate in ParcoursDoctoral.objects.all()
+    ]
 
     PrivateDefense.objects.bulk_create(private_defenses)
 
