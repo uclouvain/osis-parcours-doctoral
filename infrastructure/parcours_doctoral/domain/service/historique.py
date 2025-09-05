@@ -353,3 +353,19 @@ class Historique(IHistorique):
             "{auteur.prenom} {auteur.nom}".format(auteur=auteur),
             tags=tags,
         )
+
+    @classmethod
+    def historiser_autorisation_defense_privee(
+        cls,
+        parcours_doctoral: ParcoursDoctoral,
+        matricule_auteur: str,
+    ):
+        auteur = PersonneConnueUclTranslator().get(matricule_auteur)
+
+        add_history_entry(
+            parcours_doctoral.entity_id.uuid,
+            'La défense privée a été autorisée.',
+            'The private defense has been authorised.',
+            '{auteur.prenom} {auteur.nom}'.format(auteur=auteur),
+            tags=['parcours_doctoral', 'private-defense', 'status-changed'],
+        )

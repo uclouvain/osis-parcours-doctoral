@@ -64,4 +64,9 @@ COMMAND_HANDLERS = {
         defense_privee_repository=_defense_privee_repository,
         historique=_historique,
     ),
+    AutoriserDefensePriveeCommand: lambda msg_bus, cmd: autoriser_defense_privee(
+        cmd,
+        parcours_doctoral_repository=_parcours_doctoral_repository,
+        historique=_historique,
+    ),
 }

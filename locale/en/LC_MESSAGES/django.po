@@ -423,6 +423,9 @@ msgstr ""
 msgid "Approximate date for completing the thesis:"
 msgstr ""
 
+msgid "Are you sure you want to authorise the private defense?"
+msgstr ""
+
 #, python-format
 msgctxt "parcours_doctoral"
 msgid "Are you sure you want to delete \"%(object)s\"?"
@@ -467,6 +470,9 @@ msgid "Attestation"
 msgstr ""
 
 msgid "Attestation of the communication"
+msgstr ""
+
+msgid "Authorise the private defense"
 msgstr ""
 
 msgid "Authors"
@@ -2178,6 +2184,9 @@ msgstr ""
 msgid "Previous doctorate"
 msgstr ""
 
+msgid "Previous private defenses"
+msgstr ""
+
 msgid "Private defence date and time"
 msgstr ""
 
@@ -2188,6 +2197,9 @@ msgid "Private defence minutes"
 msgstr ""
 
 msgid "Private defence minutes canvas"
+msgstr ""
+
+msgid "Private defense"
 msgstr ""
 
 msgctxt "dashboard-category"
@@ -2787,6 +2799,9 @@ msgstr ""
 msgid "Supervisor not found."
 msgstr ""
 
+msgid "Supervisors"
+msgstr ""
+
 msgctxt "gender"
 msgid "Supervisors"
 msgstr ""
@@ -2918,6 +2933,11 @@ msgstr ""
 msgid "The doctorate is not initialized"
 msgstr ""
 
+#, python-format
+msgid ""
+"The doctorate must be in the status '%(status)s' to realize this action."
+msgstr ""
+
 msgid "The enrollment has not been found"
 msgstr ""
 
@@ -2979,6 +2999,9 @@ msgid ""
 msgstr ""
 
 msgid "The person has not been found."
+msgstr ""
+
+msgid "The private defense has been authorised."
 msgstr ""
 
 msgid "The private defense is not in progress"

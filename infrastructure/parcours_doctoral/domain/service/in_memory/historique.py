@@ -150,3 +150,11 @@ class HistoriqueInMemory(IHistorique):
         statut_original_parcours_doctoral: ChoixStatutParcoursDoctoral,
     ):
         pass
+
+    @classmethod
+    def historiser_autorisation_defense_privee(
+        cls,
+        parcours_doctoral: ParcoursDoctoral,
+        matricule_auteur: str,
+    ):
+        pass
