@@ -62,6 +62,8 @@ READ_ACTIONS_BY_TAB = {
     # Jury
     'jury-preparation': 'parcours_doctoral.view_jury',
     'jury': 'parcours_doctoral.view_jury',
+    # Private defense
+    'private-defense': 'parcours_doctoral.view_private_defense',
     # Management
     'internal-note': 'parcours_doctoral.view_internalnote',
     'debug': 'parcours_doctoral.view_debug_info',
@@ -110,4 +112,6 @@ UPDATE_ACTIONS_BY_TAB = {
     # Jury
     'jury-preparation': 'parcours_doctoral.change_jury',
     'jury': 'parcours_doctoral.change_jury',
+    # Private defense
+    'private-defense': 'parcours_doctoral.change_private_defense',
 }

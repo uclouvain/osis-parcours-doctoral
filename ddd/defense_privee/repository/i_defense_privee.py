@@ -95,7 +95,7 @@ class IDefensePriveeRepository(interface.AbstractRepository):
 
         return DefensePrivee(
             entity_id=entity_id,
-            parcours_doctoral_id=ParcoursDoctoralIdentity(uuid=defense_privee.uuid),
+            parcours_doctoral_id=ParcoursDoctoralIdentity(uuid=defense_privee.parcours_doctoral_uuid),
             est_active=defense_privee.est_active,
             date_heure=defense_privee.date_heure,
             lieu=defense_privee.lieu,

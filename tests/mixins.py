@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -23,6 +23,7 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from unittest.mock import patch
 
 
 class CheckActionLinksMixin:
@@ -34,3 +35,29 @@ class CheckActionLinksMixin:
 
         for action in forbidden_actions:
             self.assertTrue('error' in links[action], '{} is allowed'.format(action))
+
+
+class MockOsisDocumentMixin:
+    def setUp(self):
+        super().setUp()
+
+        # Mock osis-document
+        self.confirm_remote_upload_patcher = patch('osis_document.api.utils.confirm_remote_upload')
+        patched = self.confirm_remote_upload_patcher.start()
+        patched.return_value = '4bdffb42-552d-415d-9e4c-725f10dce228'
+
+        self.file_confirm_upload_patcher = patch('osis_document.contrib.fields.FileField._confirm_multiple_upload')
+        patched = self.file_confirm_upload_patcher.start()
+        patched.side_effect = lambda _, value, __: ['4bdffb42-552d-415d-9e4c-725f10dce228'] if value else []
+
+        self.get_remote_metadata_patcher = patch('osis_document.api.utils.get_remote_metadata')
+        patched = self.get_remote_metadata_patcher.start()
+        patched.return_value = {"name": "test.pdf", "size": 1}
+
+        self.get_remote_token_patcher = patch('osis_document.api.utils.get_remote_token')
+        patched = self.get_remote_token_patcher.start()
+        patched.return_value = 'b-token'
+
+        self.save_raw_content_remotely_patcher = patch('osis_document.utils.save_raw_content_remotely')
+        patched = self.save_raw_content_remotely_patcher.start()
+        patched.return_value = 'a-token'

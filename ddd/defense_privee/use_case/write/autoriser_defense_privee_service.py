@@ -23,41 +23,33 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-import datetime
-from typing import List, Optional
-
-import attr
-
-from osis_common.ddd import interface
-
-
-@attr.dataclass(frozen=True, slots=True)
-class RecupererDefensesPriveesQuery(interface.QueryRequest):
-    parcours_doctoral_uuid: str
+from parcours_doctoral.ddd.defense_privee.commands import AutoriserDefensePriveeCommand
+from parcours_doctoral.ddd.domain.model.parcours_doctoral import (
+    ParcoursDoctoralIdentity,
+)
+from parcours_doctoral.ddd.domain.service.i_historique import IHistorique
+from parcours_doctoral.ddd.repository.i_parcours_doctoral import (
+    IParcoursDoctoralRepository,
+)
 
 
-@attr.dataclass(frozen=True, slots=True)
-class RecupererDerniereDefensePriveeQuery(interface.QueryRequest):
-    parcours_doctoral_uuid: str
+def autoriser_defense_privee(
+    cmd: 'AutoriserDefensePriveeCommand',
+    parcours_doctoral_repository: 'IParcoursDoctoralRepository',
+    historique: 'IHistorique',
+) -> ParcoursDoctoralIdentity:
+    # GIVEN
+    parcours_doctoral_identity = ParcoursDoctoralIdentity(uuid=cmd.parcours_doctoral_uuid)
+    parcours_doctoral = parcours_doctoral_repository.get(parcours_doctoral_identity)
 
+    # WHEN
+    parcours_doctoral.autoriser_defense_privee()
 
-@attr.dataclass(frozen=True, slots=True)
-class RecupererDefensePriveeQuery(interface.QueryRequest):
-    uuid: str
+    # THEN
+    parcours_doctoral_repository.save(parcours_doctoral)
+    historique.historiser_autorisation_defense_privee(
+        parcours_doctoral=parcours_doctoral,
+        matricule_auteur=cmd.matricule_auteur,
+    )
 
-
-@attr.dataclass(frozen=True, slots=True)
-class SoumettreDefensePriveeCommand(interface.CommandRequest):
-    uuid: str
-    matricule_auteur: str
-
-    titre_these: str
-    date_heure: datetime.datetime
-    lieu: Optional[str]
-    date_envoi_manuscrit: Optional[datetime.date]
-
-
-@attr.dataclass(frozen=True, slots=True)
-class AutoriserDefensePriveeCommand(interface.CommandRequest):
-    parcours_doctoral_uuid: str
-    matricule_auteur: str
+    return parcours_doctoral_identity
