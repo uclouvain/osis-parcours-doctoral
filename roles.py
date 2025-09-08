@@ -30,6 +30,7 @@ from parcours_doctoral.auth.predicates.parcours_doctoral import (
     complementary_training_enabled,
     has_valid_enrollment,
     is_jury_in_progress,
+    is_jury_signing_in_progress,
     is_part_of_education_group,
     is_related_to_an_admission,
     submitted_confirmation_paper,
@@ -110,8 +111,14 @@ PROGRAM_MANAGER_RULES = {
     'parcours_doctoral.refuse_activity': is_part_of_education_group & has_valid_enrollment,
     'parcours_doctoral.restore_activity': is_part_of_education_group & has_valid_enrollment,
     # -- Jury
-    'parcours_doctoral.view_jury': is_part_of_education_group & is_jury_in_progress,
-    'parcours_doctoral.change_jury': is_part_of_education_group & is_jury_in_progress & has_valid_enrollment,
+    'parcours_doctoral.view_jury': is_part_of_education_group,
+    'parcours_doctoral.change_jury': is_part_of_education_group & has_valid_enrollment,
+    'parcours_doctoral.jury_request_signatures': is_part_of_education_group
+    & is_jury_in_progress
+    & has_valid_enrollment,
+    'parcours_doctoral.jury_reset_signatures': is_part_of_education_group
+    & is_jury_signing_in_progress
+    & has_valid_enrollment,
     # -- Défense
     # -- Soutenance
     # -- Commentaire

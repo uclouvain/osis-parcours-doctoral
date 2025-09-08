@@ -144,7 +144,6 @@ class Jury(interface.RootEntity):
         if ancien_membre.est_promoteur:
             raise PromoteurModifieException(uuid_membre=membre.uuid, jury=self)
         self.membres.remove(ancien_membre)
-        membre = attr.evolve(membre, role=ancien_membre.role, est_promoteur=ancien_membre.est_promoteur)
         self.membres.append(membre)
 
     def retirer_membre(self, uuid_membre: str):
@@ -154,19 +153,19 @@ class Jury(interface.RootEntity):
             raise PromoteurRetireException(uuid_membre=uuid_membre, jury=self)
         self.membres.remove(membre)
 
-    def modifier_role_membre(self, uuid_membre: str, role: str):
+    def modifier_role_membre(self, uuid_membre: str, role: RoleJury):
         ModifierRoleMembreValidatorList(uuid_membre=uuid_membre, jury=self).validate()
         ancien_membre = self.recuperer_membre(uuid_membre)
-        if ancien_membre.est_promoteur and role == RoleJury.PRESIDENT.name:
+        if ancien_membre.est_promoteur and role == RoleJury.PRESIDENT:
             raise PromoteurPresidentException()
         # Set the current president / secretary as a member
-        if role != RoleJury.MEMBRE.name:
+        if role != RoleJury.MEMBRE:
             for membre in self.membres:
                 if membre.uuid != uuid_membre and membre.role == role:
                     self.membres.remove(membre)
                     self.membres.append(attr.evolve(membre, role=RoleJury.MEMBRE))
         self.membres.remove(ancien_membre)
-        self.membres.append(attr.evolve(ancien_membre, role=RoleJury[role], est_promoteur=ancien_membre.est_promoteur))
+        self.membres.append(attr.evolve(ancien_membre, role=role))
 
     def inviter_a_signer(self, verificateur: MembreJury):
         if not [m for m in self.membres if m.uuid == verificateur.uuid]:
@@ -253,3 +252,13 @@ class Jury(interface.RootEntity):
                 ),
             )
         )
+
+    def reinitialiser_signatures(self) -> None:
+        pass
+        self.membres = [
+            attr.evolve(
+                membre,
+                signature=SignatureMembre(),
+            )
+            for membre in self.membres
+        ]

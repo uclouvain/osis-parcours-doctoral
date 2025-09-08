@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -23,12 +23,16 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-
+from django.forms import Form
 from django.urls import reverse
 from django.views.generic import FormView
 
 from infrastructure.messages_bus import message_bus_instance
-from parcours_doctoral.ddd.jury.commands import ModifierJuryCommand
+from parcours_doctoral.ddd.jury.commands import (
+    DemanderSignaturesCommand,
+    ModifierJuryCommand,
+    ReinitialiserSignaturesCommand,
+)
 from parcours_doctoral.forms.jury.preparation import JuryPreparationForm
 from parcours_doctoral.views.mixins import (
     BusinessExceptionFormViewMixin,
@@ -37,6 +41,8 @@ from parcours_doctoral.views.mixins import (
 
 __all__ = [
     "JuryPreparationFormView",
+    "JuryRequestSignaturesView",
+    "JuryResetSignaturesView",
 ]
 
 __namespace__ = False
@@ -72,3 +78,37 @@ class JuryPreparationFormView(
 
     def get_success_url(self):
         return reverse('parcours_doctoral:jury-preparation', args=[self.parcours_doctoral_uuid])
+
+
+class JuryRequestSignaturesView(ParcoursDoctoralViewMixin, BusinessExceptionFormViewMixin, FormView):
+    urlpatterns = 'jury-request-signatures'
+    form_class = Form
+    permission_required = 'parcours_doctoral.jury_request_signatures'
+
+    def call_command(self, form):
+        message_bus_instance.invoke(
+            DemanderSignaturesCommand(
+                uuid_parcours_doctoral=self.parcours_doctoral_uuid,
+                matricule_auteur=self.request.user.person.global_id,
+            )
+        )
+
+    def get_success_url(self):
+        return reverse('parcours_doctoral:jury', args=[self.parcours_doctoral_uuid])
+
+
+class JuryResetSignaturesView(ParcoursDoctoralViewMixin, BusinessExceptionFormViewMixin, FormView):
+    urlpatterns = 'jury-reset-signatures'
+    form_class = Form
+    permission_required = 'parcours_doctoral.jury_reset_signatures'
+
+    def call_command(self, form):
+        message_bus_instance.invoke(
+            ReinitialiserSignaturesCommand(
+                uuid_jury=self.parcours_doctoral_uuid,
+                matricule_auteur=self.request.user.person.global_id,
+            )
+        )
+
+    def get_success_url(self):
+        return reverse('parcours_doctoral:jury', args=[self.parcours_doctoral_uuid])

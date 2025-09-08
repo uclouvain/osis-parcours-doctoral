@@ -177,6 +177,9 @@ class JuryMemberChangeRoleView(
     urlpatterns = 'change-role'
     permission_required = 'parcours_doctoral.change_jury'
 
+    def get(self, request, *aegs, **kwargs):
+        return redirect(reverse('parcours_doctoral:jury', args=[str(self.kwargs['uuid'])]))
+
     def post(self, request, *args, **kwargs):
         form = JuryMembreRoleForm(data=request.POST)
         if form.is_valid():
@@ -186,7 +189,7 @@ class JuryMemberChangeRoleView(
                         uuid_jury=str(self.kwargs['uuid']),
                         uuid_membre=str(self.kwargs['member_uuid']),
                         role=form.cleaned_data['role'],
-                        matricule_auteur=self.request.user.matricule,
+                        matricule_auteur=self.request.user.person.global_id,
                     )
                 )
             except MultipleBusinessExceptions as multiple_exceptions:

@@ -141,3 +141,9 @@ class RefuserJuryCommand(interface.CommandRequest):
 class RenvoyerInvitationSignatureCommand(interface.CommandRequest):
     uuid_jury: str
     uuid_membre: str
+
+
+@attr.dataclass(frozen=True, slots=True)
+class ReinitialiserSignaturesCommand(interface.CommandRequest):
+    uuid_jury: str
+    matricule_auteur: str

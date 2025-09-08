@@ -46,6 +46,16 @@ class IHistorique(interface.DomainService):
 
     @classmethod
     @abstractmethod
+    def historiser_reinitialisation_signatures(
+        cls,
+        parcours_doctoral: ParcoursDoctoral,
+        jury: Jury,
+        matricule_auteur: str,
+    ):
+        raise NotImplementedError
+
+    @classmethod
+    @abstractmethod
     def historiser_avis(
         cls,
         parcours_doctoral: ParcoursDoctoral,
