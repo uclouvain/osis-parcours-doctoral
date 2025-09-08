@@ -43,6 +43,15 @@ class HistoriqueInMemory(IHistorique):
         pass
 
     @classmethod
+    def historiser_reinitialisation_signatures(
+        cls,
+        parcours_doctoral: ParcoursDoctoral,
+        jury: Jury,
+        matricule_auteur: str,
+    ):
+        pass
+
+    @classmethod
     def historiser_avis(
         cls,
         parcours_doctoral: ParcoursDoctoral,

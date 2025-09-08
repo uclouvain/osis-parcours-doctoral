@@ -1,4 +1,4 @@
-##############################################################################
+# ##############################################################################
 #
 #    OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
@@ -22,26 +22,45 @@
 #    at the root of the source code of this program.  If not,
 #    see http://www.gnu.org/licenses/.
 #
-##############################################################################
-
+# ##############################################################################
+from parcours_doctoral.ddd.builder.parcours_doctoral_identity import (
+    ParcoursDoctoralIdentityBuilder,
+)
 from parcours_doctoral.ddd.jury.builder.jury_identity_builder import JuryIdentityBuilder
-from parcours_doctoral.ddd.jury.builder.membre_jury_builder import MembreJuryBuilder
-from parcours_doctoral.ddd.jury.commands import ModifierMembreCommand
+from parcours_doctoral.ddd.jury.commands import (
+    DemanderSignaturesCommand,
+    ReinitialiserSignaturesCommand,
+)
 from parcours_doctoral.ddd.jury.domain.model.jury import JuryIdentity
+from parcours_doctoral.ddd.jury.domain.service.i_historique import IHistorique
+from parcours_doctoral.ddd.jury.domain.service.i_notification import INotification
+from parcours_doctoral.ddd.jury.domain.validator.validator_by_business_action import (
+    VerifierJuryConditionSignature,
+)
 from parcours_doctoral.ddd.jury.repository.i_jury import IJuryRepository
+from parcours_doctoral.ddd.repository.i_parcours_doctoral import (
+    IParcoursDoctoralRepository,
+)
 
 
-def modifier_membre(
-    cmd: 'ModifierMembreCommand',
+def reinitialiser_signatures(
+    cmd: 'ReinitialiserSignaturesCommand',
     jury_repository: 'IJuryRepository',
+    parcours_doctoral_repository: 'IParcoursDoctoralRepository',
+    historique: 'IHistorique',
 ) -> 'JuryIdentity':
     # GIVEN
-    membre = MembreJuryBuilder.build_from_modifier_membre_command(cmd)
+    entity_id = ParcoursDoctoralIdentityBuilder.build_from_uuid(cmd.uuid_jury)
+    parcours_doctoral = parcours_doctoral_repository.get(entity_id=entity_id)
     jury = jury_repository.get(JuryIdentityBuilder.build_from_uuid(cmd.uuid_jury))
 
     # WHEN
+    parcours_doctoral.deverrouiller_jury_apres_reinitialisation()
+    jury.reinitialiser_signatures()
 
     # THEN
-    jury.modifier_membre(membre)
     jury_repository.save(jury)
+    parcours_doctoral_repository.save(parcours_doctoral)
+    historique.historiser_reinitialisation_signatures(parcours_doctoral, jury, cmd.matricule_auteur)
+
     return jury.entity_id

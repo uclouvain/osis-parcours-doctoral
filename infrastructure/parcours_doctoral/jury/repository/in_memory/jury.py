@@ -143,6 +143,7 @@ class JuryInMemoryRepository(InMemoryGenericRepository, IJuryRepository):
                     uuid=membre.uuid,
                     role=str(membre.role),
                     est_promoteur=membre.est_promoteur,
+                    est_promoteur_de_reference=membre.est_promoteur_de_reference,
                     matricule=membre.matricule,
                     institution=str(membre.institution),
                     autre_institution=str(membre.autre_institution),

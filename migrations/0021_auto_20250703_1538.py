@@ -15,7 +15,7 @@ from parcours_doctoral.mail_templates.jury import (
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("parcours_doctoral", "0019_juryactor_parcoursdoctoral_jury_group_and_more"),
+        ("parcours_doctoral", "0020_juryactor_parcoursdoctoral_jury_group_and_more"),
     ]
 
     operations = [

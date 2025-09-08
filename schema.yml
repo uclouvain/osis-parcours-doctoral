@@ -1902,6 +1902,8 @@ components:
       properties:
         uuid_membre:
           type: string
+        matricule_auteur:
+          type: string
         commentaire_interne:
           type: string
         commentaire_externe:
@@ -3771,8 +3773,6 @@ components:
         * All fields are set to read-only if needed when Meta.read_only is True.
       properties:
         role:
-          type: string
-        matricule_auteur:
           type: string
     Person:
       type: object

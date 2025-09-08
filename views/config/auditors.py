@@ -23,6 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from django.contrib.auth.models import User
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db import transaction
 from django.urls import reverse_lazy
@@ -48,16 +49,10 @@ class AuditorsConfigView(PermissionRequiredMixin, SuccessMessageMixin, FormView)
 
     @transaction.atomic
     def form_valid(self, formset):
-        auditors = [
-            Auditor(entity_id=form.cleaned_data['entity_version'].entity_id, person=form.cleaned_data['auditor'])
-            for form in formset
-            if form.cleaned_data['auditor']
-        ]
-        for auditor in auditors:
+        Auditor.objects.all().delete()
+        User.groups.through.objects.filter(group__name=Auditor.group_name).delete()
+        for form in formset:
             # We cannot use bulk_create as RoleModel.save() needs to be called.
-            auditor.save()
-        auditors_entities_to_be_deleted = [
-            form.cleaned_data['entity_version'].entity_id for form in formset if not form.cleaned_data['auditor']
-        ]
-        Auditor.objects.filter(entity_id__in=auditors_entities_to_be_deleted).delete()
+            if form.cleaned_data['entity_version'] and form.cleaned_data['auditor']:
+                Auditor.objects.create(entity_id=form.cleaned_data['entity_version'].entity_id, person=form.cleaned_data['auditor'])
         return super().form_valid(formset)

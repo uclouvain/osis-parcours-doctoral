@@ -452,6 +452,13 @@ msgstr ""
 msgid "Are you sure you want to remove \"%(prenom)s %(nom)s\" from the jury?"
 msgstr ""
 
+msgid ""
+"Are you sure you want to request signatures to validate the thesis jury?"
+msgstr ""
+
+msgid "Are you sure you want to reset all signatures?"
+msgstr ""
+
 #, python-format
 msgid "Are you sure you want to restore \"%(object)s\"?"
 msgstr ""
@@ -478,6 +485,9 @@ msgid "Attestation"
 msgstr ""
 
 msgid "Attestation of the communication"
+msgstr ""
+
+msgid "Auditor"
 msgstr ""
 
 msgid "Authors"
@@ -1695,20 +1705,6 @@ msgid ""
 "paper"
 msgstr ""
 
-msgid "Mail sent to each actor of the supervision group to request a signature"
-msgstr ""
-
-msgid ""
-"Mail sent to each member of the jury and to the auditor to request a "
-"signature"
-msgstr ""
-
-msgid "Mail sent to each promoter of the jury to request a signature"
-msgstr ""
-
-msgid "Mail sent to promoters when a member of the supervision panel refuses"
-msgstr ""
-
 msgid ""
 "Mail sent to contact supervisor to inform of the submission of complementary "
 "training activities"
@@ -1725,6 +1721,14 @@ msgid ""
 msgstr ""
 
 msgid "Mail sent to each actor of the supervision group to request a signature"
+msgstr ""
+
+msgid ""
+"Mail sent to each member of the jury and to the auditor to request a "
+"signature"
+msgstr ""
+
+msgid "Mail sent to each promoter of the jury to request a signature"
 msgstr ""
 
 msgid "Mail sent to supervisors when a member of the supervision panel refuses"
@@ -2404,6 +2408,9 @@ msgstr ""
 msgid "Request of a new deadline for the confirmation paper"
 msgstr ""
 
+msgid "Request signatures"
+msgstr ""
+
 msgid "Require changes"
 msgstr ""
 
@@ -2444,6 +2451,9 @@ msgid "Resend invitation"
 msgstr ""
 
 msgid "Reset"
+msgstr ""
+
+msgid "Reset signatures"
 msgstr ""
 
 msgid "Restore activity to submitted"
@@ -3434,19 +3444,20 @@ msgid ""
 "training"
 msgstr ""
 
-msgid "You must be the contact supervisor to access this doctoral training"
-msgstr ""
-
 msgid "You must be a member of the jury to access this doctoral training"
 msgstr ""
 
-msgid "You must be the reference promoter to access this doctoral training"
+msgid "You must be the contact supervisor to access this doctoral training"
 msgstr ""
 
 msgid "You must be the request author to access this doctoral training"
 msgstr ""
 
 msgid "You must be the request supervisor to access this doctoral training"
+msgstr ""
+
+msgid ""
+"You must correct the jury composition before you can request signatures."
 msgstr ""
 
 msgid "You must reference a person in UCLouvain."

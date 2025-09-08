@@ -61,6 +61,22 @@ class Historique(IHistorique):
         )
 
     @classmethod
+    def historiser_reinitialisation_signatures(
+        cls,
+        parcours_doctoral: ParcoursDoctoral,
+        jury: Jury,
+        matricule_auteur: str,
+    ):
+        auteur = PersonneConnueUclTranslator().get(matricule_auteur)
+        add_history_entry(
+            parcours_doctoral.entity_id.uuid,
+            "Les signatures ont été réinitialisées.",
+            "Signatures have been reset.",
+            "{auteur.prenom} {auteur.nom}".format(auteur=auteur),
+            tags=["parcours_doctoral", "jury", "status-changed"],
+        )
+
+    @classmethod
     def historiser_avis(
         cls,
         parcours_doctoral: ParcoursDoctoral,
