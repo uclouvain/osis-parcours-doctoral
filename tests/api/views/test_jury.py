@@ -497,6 +497,13 @@ class JuryMembersDetailApiTestCase(APITestCase):
     def test_patch_reference_promoter(self):
         self.client.force_authenticate(user=self.reference_promoter_user)
         response = self.client.patch(self.url, data=self.updated_role_data, format="json")
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN, response.content)
+
+    def test_patch_reference_promoter(self):
+        self.client.force_authenticate(user=self.reference_promoter_user)
+        self.parcours_doctoral.status = ChoixStatutParcoursDoctoral.JURY_SOUMIS.name
+        self.parcours_doctoral.save(update_fields=["status"])
+        response = self.client.patch(self.url, data=self.updated_role_data, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
     def test_patch_other_promoter(self):

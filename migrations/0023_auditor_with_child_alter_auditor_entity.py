@@ -8,7 +8,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ("base", "0714_sicmanagement"),
-        ("parcours_doctoral", "0021_juryactor_is_lead_promoter"),
+        ("parcours_doctoral", "0022_juryactor_is_lead_promoter"),
     ]
 
     operations = [

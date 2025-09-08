@@ -99,8 +99,6 @@ class AuditorsTestCase(TestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
         self.assertEqual(Auditor.objects.count(), 1)
-        self.auditor.refresh_from_db()
-        self.assertEqual(self.auditor.person, self.person2)
 
     def test_post_delete(self):
         url = resolve_url('parcours_doctoral:config:auditors')

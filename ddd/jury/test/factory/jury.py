@@ -57,6 +57,7 @@ class MembreJuryFactory(factory.Factory):
 
     uuid = factory.LazyFunction(lambda: str(uuid.uuid4()))
     est_promoteur = False
+    est_promoteur_de_reference = False
     matricule = None
     role = 'MEMBRE'
     institution = 'AUTRE'

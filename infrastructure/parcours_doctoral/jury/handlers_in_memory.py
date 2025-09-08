@@ -35,6 +35,7 @@ from parcours_doctoral.ddd.jury.commands import (
     RecupererJuryMembreQuery,
     RecupererJuryQuery,
     RefuserJuryCommand,
+    ReinitialiserSignaturesCommand,
     RenvoyerInvitationSignatureCommand,
     RetirerMembreCommand,
     VerifierJuryConditionSignatureQuery,
@@ -70,6 +71,9 @@ from parcours_doctoral.ddd.jury.use_case.write.modifier_role_membre import (
     modifier_role_membre,
 )
 from parcours_doctoral.ddd.jury.use_case.write.refuser_jury_service import refuser_jury
+from parcours_doctoral.ddd.jury.use_case.write.reinitialiser_signatures_service import (
+    reinitialiser_signatures,
+)
 from parcours_doctoral.ddd.jury.use_case.write.renvoyer_invitation_signature_service import (
     renvoyer_invitation_signature,
 )
@@ -174,5 +178,11 @@ COMMAND_HANDLERS = {
         jury_repository=_jury_repository,
         historique=_historique,
         notification=_notification,
+    ),
+    ReinitialiserSignaturesCommand: lambda msg_bus, cmd: reinitialiser_signatures(
+        cmd,
+        jury_repository=_jury_repository,
+        parcours_doctoral_repository=_parcours_doctoral_repository,
+        historique=_historique,
     ),
 }
