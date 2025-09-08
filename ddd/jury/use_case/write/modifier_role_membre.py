@@ -28,6 +28,7 @@ from parcours_doctoral.ddd.builder.parcours_doctoral_identity import (
 )
 from parcours_doctoral.ddd.jury.builder.jury_identity_builder import JuryIdentityBuilder
 from parcours_doctoral.ddd.jury.commands import ModifierRoleMembreCommand
+from parcours_doctoral.ddd.jury.domain.model.enums import RoleJury
 from parcours_doctoral.ddd.jury.domain.model.jury import JuryIdentity
 from parcours_doctoral.ddd.jury.domain.service.i_verifier_modification_role import (
     IVerifierModificationRoleService,
@@ -50,6 +51,6 @@ def modifier_role_membre(
     )
 
     # THEN
-    jury.modifier_role_membre(cmd.uuid_membre, cmd.role)
+    jury.modifier_role_membre(cmd.uuid_membre, RoleJury[cmd.role])
     jury_repository.save(jury)
     return jury.entity_id

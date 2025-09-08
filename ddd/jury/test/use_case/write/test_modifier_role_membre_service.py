@@ -116,7 +116,7 @@ class TestModifierRoleMembre(SimpleTestCase):
 
     def test_should_modifier_role_membre_autre_membre_president(self):
         JuryInMemoryRepository.entities[0].membres.append(
-            MembreJuryFactory(uuid='uuid-president', role=RoleJury.PRESIDENT.name)
+            MembreJuryFactory(uuid='uuid-president', role=RoleJury.PRESIDENT)
         )
 
         self.message_bus.invoke(

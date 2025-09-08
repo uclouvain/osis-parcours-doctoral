@@ -23,9 +23,18 @@
 * see http://www.gnu.org/licenses/.
 {% endcomment %}
 <div>
-<strong>{% if membre.justification_non_docteur %}<a tabindex="0" class="fa fa-exclamation-triangle popover-buttons" data-bs-content="{{ membre.justification_non_docteur|linebreaksbr }}" role="button" data-original-title="" title=""></a> {% endif %}{% if membre.titre and membre.titre != 'NON_DOCTEUR' %}{{ membre.titre | enum_display:'TitreMembre' }} {% endif %}{{ membre.prenom }} {{ membre.nom }}</strong>
-(<a href="mailto:{{ membre.email }}">{{ membre.email }}</a>) - {{ membre.institution }}{% if membre.autre_institution %}, {{ membre.autre_institution }}{% endif %}
-{% if membre.est_promoteur %} - <strong>{% trans "Supervisor" %}</strong>{% endif %}
+  <strong>{% if membre.justification_non_docteur %}<a tabindex="0" class="fa fa-exclamation-triangle popover-buttons" data-bs-content="{{ membre.justification_non_docteur|linebreaksbr }}" role="button" data-original-title="" title=""></a> {% endif %}{% if membre.titre and membre.titre != 'NON_DOCTEUR' %}{{ membre.titre | enum_display:'TitreMembre' }} {% endif %}{{ membre.prenom }} {{ membre.nom }}</strong>
+  (<a href="mailto:{{ membre.email }}">{{ membre.email }}</a>) - {{ membre.institution }}{% if membre.autre_institution %}, {{ membre.autre_institution }}{% endif %}
+  {% if membre.est_promoteur %} - <strong>{% trans "Supervisor" %}</strong>{% endif %}
+  <em>
+    {% if membre.signature.date %}
+      {% blocktrans with state=membre.signature.etat|enum_display:'ChoixEtatSignature' date=membre.signature.date trimmed %}
+        {{ state }} on {{ date }}
+      {% endblocktrans %}
+    {% else %}
+      {{ membre.signature.etat|enum_display:'ChoixEtatSignature' }}
+    {% endif %}
+  </em>
 </div>
 {% if form %}
 <div class="btn-group">
@@ -40,14 +49,14 @@
     {% if not membre.est_promoteur and not membre.role == 'PRESIDENT' %}<li><a class="dropdown-item membre-role-submit" href="#" data-role="PRESIDENT">{% trans "Set as president" %}</a></li>{% endif %}
     {% if not membre.role == 'SECRETAIRE' %}<li><a class="dropdown-item membre-role-submit" href="#" data-role="SECRETAIRE">{% trans "Set as secretary" %}</a></li>{% endif %}
     {% if not membre.role == 'MEMBRE' %}<li><a class="dropdown-item membre-role-submit" href="#" data-role="MEMBRE">{% trans "Set as member" %}</a></li>{% endif %}
-    {% if not membre.est_promoteur %}
+    {% if not membre.est_promoteur and membre.role != 'VERIFICATEUR' %}
     <li><a class="dropdown-item" href="{% url 'parcours_doctoral:update:jury-member:update' uuid=jury.uuid member_uuid=membre.uuid %}">{% trans "Update" context 'verb' %}</a></li>
     <li><a class="dropdown-item" href="#deleteModal-{{ membre.uuid }}" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ membre.uuid }}">{% trans "Remove" context "parcours_doctoral" %}</a></li>
     {% endif %}
   </ul>
 </div>
 
-{% if not membre.est_promoteur %}
+{% if not membre.est_promoteur and membre.role != 'VERIFICATEUR' %}
 <!-- delete modal -->
 <div class="modal fade" id="deleteModal-{{ membre.uuid }}" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel-{{ membre.uuid }}">
   <div class="modal-dialog modal-dialog-centered" role="document">
@@ -55,10 +64,8 @@
       <form action="{% url 'parcours_doctoral:update:jury-member:remove' uuid=jury.uuid member_uuid=membre.uuid %}" method="post">
         {% csrf_token %}
         <div class="modal-header">
-          <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
           <h4 class="modal-title" id="deleteModalLabel-{{ membre.uuid }}">{% trans "Remove?" context "jury member" %}</h4>
+          <button type="button" class="btn-close close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <p>

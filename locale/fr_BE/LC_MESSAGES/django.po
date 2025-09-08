@@ -499,6 +499,13 @@ msgstr "Êtes-vous sûr de vouloir refuser \"%(object)s\" ?"
 msgid "Are you sure you want to remove \"%(prenom)s %(nom)s\" from the jury?"
 msgstr "Êtes-vous sûr de vouloir retirer \"%(prenom)s %(nom)s\" du jury ?"
 
+msgid ""
+"Are you sure you want to request signatures to validate the thesis jury?"
+msgstr "Êtes-vous sûr de vouloir requérir les signatures pour ce jury ?"
+
+msgid "Are you sure you want to reset all signatures?"
+msgstr "Êtes-vous sûr de vouloir réinitialiser toutes les signatures ?"
+
 #, python-format
 msgid "Are you sure you want to restore \"%(object)s\"?"
 msgstr "Êtes-vous sûr de vouloir remettre \"%(object)s\" au statut soumis ?"
@@ -534,6 +541,9 @@ msgstr "Attestation"
 
 msgid "Attestation of the communication"
 msgstr "Attestation de communication"
+
+msgid "Auditor"
+msgstr "Vérificateur.trice"
 
 msgid "Authors"
 msgstr "Auteurs et autrices"
@@ -1845,11 +1855,6 @@ msgstr ""
 "E-mail envoyé aux membres du groupe de supervision pour demander une "
 "signature"
 
-msgid "Mail sent to supervisors when a member of the supervision panel refuses"
-msgstr ""
-"E-mail envoyé aux promoteurs lors du refus d'un membre du groupe de "
-"supervision"
-
 msgid ""
 "Mail sent to each member of the jury and to the auditor to request a "
 "signature"
@@ -1861,7 +1866,7 @@ msgid "Mail sent to each promoter of the jury to request a signature"
 msgstr ""
 "E-mail envoyé aux membres du groupe du jury pour demander une signature"
 
-msgid "Mail sent to promoters when a member of the supervision panel refuses"
+msgid "Mail sent to supervisors when a member of the supervision panel refuses"
 msgstr ""
 "E-mail envoyé aux promoteurs lors du refus d'un membre du groupe de "
 "supervision"
@@ -2621,6 +2626,9 @@ msgstr "Catégories de reporting"
 msgid "Request of a new deadline for the confirmation paper"
 msgstr "Demande d'une nouvelle échéance pour l'épreuve de confirmation"
 
+msgid "Request signatures"
+msgstr "Demander les signatures"
+
 msgid "Require changes"
 msgstr "Demander des changements"
 
@@ -2666,6 +2674,9 @@ msgstr "Renvoyer une invitation"
 
 msgid "Reset"
 msgstr "Réinitialiser"
+
+msgid "Reset signatures"
+msgstr "Réinitialiser les signatures"
 
 msgid "Restore activity to submitted"
 msgstr "Remettre cette activité au statut soumise"
@@ -3789,6 +3800,12 @@ msgstr ""
 "Vous devez être le promoteur de la demande pour accéder à cette formation "
 "doctorale"
 
+msgid ""
+"You must correct the jury composition before you can request signatures."
+msgstr ""
+"Vous devez ajouter au moins deux membres du comité d'accompagnement afin de "
+"demander les signatures."
+
 msgid "You must reference a person in UCLouvain."
 msgstr "Vous devez référencer une personne de l'UCLouvain."
 
@@ -3872,3 +3889,14 @@ msgstr "UCLouvain"
 #, python-brace-format
 msgid "{items} types out of {total}"
 msgstr "{items} types sur {total}"
+
+#~ msgid ""
+#~ "Mail sent to promoters when a member of the supervision panel refuses"
+#~ msgstr ""
+#~ "E-mail envoyé aux promoteurs lors du refus d'un membre du groupe de "
+#~ "supervision"
+
+#~ msgid "You must be the reference promoter to access this doctoral training"
+#~ msgstr ""
+#~ "Vous devez être le·la promoteur·trice de contact pour accéder à cette "
+#~ "formation doctorale"

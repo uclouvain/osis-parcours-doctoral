@@ -8,7 +8,7 @@
 * The core business involves the administration of students, teachers,
 * courses, programs and so on.
 *
-* Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+* Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 *
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -68,6 +68,19 @@
     </div>
   </div>
 
+  {% if membre_verificateur %}
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">{% translate 'Auditor' %}</h4>
+        <div class="list-group">
+        {% for membre in membre_verificateur %}
+          <div class="list-group-item membre-container flex-wrap">{% include "parcours_doctoral/forms/jury/includes/member.html" %}</div>
+        {% endfor %}
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
   {% if form %}
     <div class="card">
       <div class="card-body">
@@ -75,6 +88,38 @@
         {% include "parcours_doctoral/forms/jury/includes/member_form.html" %}
       </div>
     </div>
+  {% endif %}
+
+  {% has_perm 'parcours_doctoral.jury_request_signatures' as can_request_signatures %}
+  {% if can_request_signatures %}
+    <div class="text-center">
+      <button
+        type="button"
+        class="btn btn-success btn-lg"
+        data-bs-toggle="modal"
+        data-bs-target="#request-signatures-modal"
+      >
+        {% trans "Request signatures" %}
+      </button>
+    </div>
+
+    {% include "parcours_doctoral/forms/jury/includes/request_signature_modal.html" %}
+  {% endif %}
+
+  {% has_perm 'parcours_doctoral.jury_reset_signatures' as can_reset_signatures %}
+  {% if can_reset_signatures %}
+    <div class="text-center">
+      <button
+        type="button"
+        class="btn btn-success btn-lg"
+        data-bs-toggle="modal"
+        data-bs-target="#reset-signatures-modal"
+      >
+        {% trans "Reset signatures" %}
+      </button>
+    </div>
+
+    {% include "parcours_doctoral/forms/jury/includes/reset_signature_modal.html" %}
   {% endif %}
 
 {% endblock %}

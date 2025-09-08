@@ -39,6 +39,7 @@ class JuryInMemoryService(IJuryService):
     ) -> MembreJury:
         return MembreJury(
             est_promoteur=False,
+            est_promoteur_de_reference=False,
             matricule='465465456',
             institution='',
             autre_institution='',
