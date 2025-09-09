@@ -32,6 +32,7 @@ from parcours_doctoral.auth.predicates.parcours_doctoral import (
     is_jury_in_progress,
     is_part_of_education_group,
     is_related_to_an_admission,
+    private_defense_is_authorised,
     private_defense_is_submitted,
     submitted_confirmation_paper,
 )
@@ -111,6 +112,9 @@ PROGRAM_MANAGER_RULES = {
     'parcours_doctoral.authorise_private_defense': is_part_of_education_group
     & has_valid_enrollment
     & private_defense_is_submitted,
+    'parcours_doctoral.invite_jury_to_private_defense': is_part_of_education_group
+    & has_valid_enrollment
+    & private_defense_is_authorised,
     'parcours_doctoral.change_private_defense': is_part_of_education_group & has_valid_enrollment,
     # -- Soutenance
     # -- Commentaire

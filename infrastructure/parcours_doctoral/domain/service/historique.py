@@ -31,6 +31,7 @@ from django.utils import translation
 from osis_history.utilities import add_history_entry
 
 from admission.infrastructure.utils import get_message_to_historize
+from ddd.logic.shared_kernel.personne_connue_ucl.dtos import PersonneConnueUclDTO
 from infrastructure.shared_kernel.personne_connue_ucl.personne_connue_ucl import (
     PersonneConnueUclTranslator,
 )
@@ -368,4 +369,18 @@ class Historique(IHistorique):
             'The private defense has been authorised.',
             '{auteur.prenom} {auteur.nom}'.format(auteur=auteur),
             tags=['parcours_doctoral', 'private-defense', 'status-changed'],
+        )
+
+    @classmethod
+    def historiser_invitation_jury_defense_privee(
+        cls,
+        parcours_doctoral: ParcoursDoctoral,
+        auteur: PersonneConnueUclDTO,
+    ):
+        add_history_entry(
+            parcours_doctoral.entity_id.uuid,
+            'Les membres du jury ont été invités à la défense privée.',
+            'The jury members have been invited to the private defense.',
+            '{auteur.prenom} {auteur.nom}'.format(auteur=auteur),
+            tags=['parcours_doctoral', 'private-defense'],
         )

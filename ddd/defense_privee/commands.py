@@ -60,4 +60,13 @@ class SoumettreDefensePriveeCommand(interface.CommandRequest):
 @attr.dataclass(frozen=True, slots=True)
 class AutoriserDefensePriveeCommand(interface.CommandRequest):
     parcours_doctoral_uuid: str
+
+    matricule_auteur: str
+    sujet_message: str
+    corps_message: str
+
+
+@attr.dataclass(frozen=True, slots=True)
+class InviterJuryDefensePriveeCommand(interface.CommandRequest):
+    parcours_doctoral_uuid: str
     matricule_auteur: str

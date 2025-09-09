@@ -35,6 +35,7 @@ from base.ddd.utils.business_validator import (
 from parcours_doctoral.ddd.defense_privee.validators import (
     ShouldDefensePriveeEtreActive,
     ShouldDefensePriveeEtreCompletee,
+    ShouldStatutDoctoratEtreDefensePriveeAutorisee,
     ShouldStatutDoctoratEtreDefensePriveeSoumise,
 )
 from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
@@ -71,6 +72,21 @@ class AutoriserDefensePriveeValidatorList(TwoStepsMultipleBusinessExceptionListV
     def get_invariants_validators(self) -> List[BusinessValidator]:
         return [
             ShouldStatutDoctoratEtreDefensePriveeSoumise(
+                statut=self.statut_parcours_doctoral,
+            ),
+        ]
+
+
+@attr.dataclass(frozen=True, slots=True)
+class InviterJuryDefensePriveeValidatorList(TwoStepsMultipleBusinessExceptionListValidator):
+    statut_parcours_doctoral: ChoixStatutParcoursDoctoral
+
+    def get_data_contract_validators(self) -> List[BusinessValidator]:
+        return []
+
+    def get_invariants_validators(self) -> List[BusinessValidator]:
+        return [
+            ShouldStatutDoctoratEtreDefensePriveeAutorisee(
                 statut=self.statut_parcours_doctoral,
             ),
         ]
