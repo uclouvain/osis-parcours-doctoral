@@ -1,5 +1,6 @@
-{% extends 'blocks/modal/generic_modal.html' %}
-{% load i18n %}
+{% load static %}
+{% load django_bootstrap5 %}
+
 {% comment "License" %}
 * OSIS stands for Open Student Information System. It's an application
 * designed to manage the core business of higher education institutions,
@@ -23,36 +24,6 @@
 * at the root of the source code of this program.  If not,
 * see http://www.gnu.org/licenses/.
 {% endcomment %}
-{% block modal_id %}private-defense-authorisation-form-modal{% endblock %}
 
-{% block modal_header %}
-  <strong>{% translate 'Private defense' %}</strong>
-{% endblock %}
-
-{% block modal_body %}
-  <p>
-  {% translate 'Are you sure you want to authorise the private defense?' %}
-  </p>
-{% endblock %}
-
-{% block modal_footer %}
-  <form
-    method="post"
-    action="{% url 'parcours_doctoral:private-defense:authorise' uuid %}"
-  >
-    {% csrf_token %}
-    <button
-      type="button"
-      class="btn btn-default border border-dark-subtle"
-      data-bs-dismiss="modal"
-    >
-      {% translate "Cancel" %}
-    </button>
-    <button
-      type="submit"
-      class="btn btn-primary"
-    >
-      {% translate "Confirm" %}
-    </button>
-  </form>
-{% endblock %}
+{% bootstrap_form form %}
+<script src="{% static "ckeditor/ckeditor-init.js" %}"></script>

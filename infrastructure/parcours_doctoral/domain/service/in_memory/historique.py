@@ -29,6 +29,7 @@ from typing import Optional
 from admission.ddd.admission.doctorat.preparation.domain.model.enums import (
     ChoixStatutPropositionDoctorale,
 )
+from ddd.logic.shared_kernel.personne_connue_ucl.dtos import PersonneConnueUclDTO
 from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from parcours_doctoral.ddd.domain.model.groupe_de_supervision import (
     GroupeDeSupervision,
@@ -156,5 +157,13 @@ class HistoriqueInMemory(IHistorique):
         cls,
         parcours_doctoral: ParcoursDoctoral,
         matricule_auteur: str,
+    ):
+        pass
+
+    @classmethod
+    def historiser_invitation_jury_defense_privee(
+        cls,
+        parcours_doctoral: ParcoursDoctoral,
+        auteur: PersonneConnueUclDTO,
     ):
         pass

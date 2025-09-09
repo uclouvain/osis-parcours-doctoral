@@ -23,14 +23,11 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from ddd.logic.shared_kernel.personne_connue_ucl.dtos import PersonneConnueUclDTO
-from parcours_doctoral.ddd.defense_privee.domain.service.i_notification import (
-    INotification,
-)
-from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoral
+
+from django import forms
+from django.utils.safestring import mark_safe
 
 
-class NotificationInMemory(INotification):
-    @classmethod
-    def inviter_membres_jury(cls, parcours_doctoral: ParcoursDoctoral, auteur: PersonneConnueUclDTO) -> None:
-        pass
+class ReadOnlyDiv(forms.Widget):
+    def render(self, name, value, attrs=None, renderer=None):
+        return mark_safe(f'<div class="form-control" readonly disabled>{value}</div>')

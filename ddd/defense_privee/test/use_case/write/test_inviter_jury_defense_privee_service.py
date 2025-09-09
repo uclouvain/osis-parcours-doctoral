@@ -27,17 +27,26 @@
 from django.test import SimpleTestCase
 
 from base.ddd.utils.business_validator import MultipleBusinessExceptions
-from parcours_doctoral.ddd.defense_privee.commands import AutoriserDefensePriveeCommand
+from ddd.logic.shared_kernel.personne_connue_ucl.domain.validator.exceptions import (
+    PersonneNonConnueDeLUcl,
+)
+from infrastructure.shared_kernel.personne_connue_ucl.in_memory.personne_connue_ucl import (
+    PersonneConnueUclInMemoryTranslator,
+)
+from parcours_doctoral.ddd.defense_privee.commands import (
+    InviterJuryDefensePriveeCommand,
+)
 from parcours_doctoral.ddd.defense_privee.test.factory.defense_privee import (
     DefensePriveeFactory,
 )
 from parcours_doctoral.ddd.defense_privee.validators.exceptions import (
-    StatutDoctoratDifferentDefensePriveeSoumiseException,
+    StatutDoctoratDifferentDefensePriveeAutoriseeException,
 )
 from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from parcours_doctoral.ddd.domain.validator.exceptions import (
     ParcoursDoctoralNonTrouveException,
 )
+from parcours_doctoral.ddd.test.factory.person import PersonneConnueUclDTOFactory
 from parcours_doctoral.infrastructure.message_bus_in_memory import (
     message_bus_in_memory_instance,
 )
@@ -49,14 +58,17 @@ from parcours_doctoral.infrastructure.parcours_doctoral.repository.in_memory.par
 )
 
 
-class TestAutoriserDefensePrivee(SimpleTestCase):
+class TestInviterJuryDefensePrivee(SimpleTestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.cmd = AutoriserDefensePriveeCommand
+        cls.cmd = InviterJuryDefensePriveeCommand
         cls.message_bus = message_bus_in_memory_instance
         cls.defense_privee_repository = DefensePriveeInMemoryRepository()
         cls.parcours_doctoral_repository = ParcoursDoctoralInMemoryRepository()
+        PersonneConnueUclInMemoryTranslator.personnes_connues_ucl = {
+            PersonneConnueUclDTOFactory(matricule='1234'),
+        }
 
     def setUp(self):
         self.addCleanup(DefensePriveeInMemoryRepository.reset)
@@ -68,13 +80,16 @@ class TestAutoriserDefensePrivee(SimpleTestCase):
         self.parametres_cmd = {
             'parcours_doctoral_uuid': self.defense_privee.parcours_doctoral_id.uuid,
             'matricule_auteur': '1234',
-            'corps_message': '',
-            'sujet_message': '',
         }
 
     def test_should_generer_exception_si_parcours_doctoral_inconnu(self):
         self.parametres_cmd['parcours_doctoral_uuid'] = 'INCONNU'
-        with self.assertRaises(ParcoursDoctoralNonTrouveException) as e:
+        with self.assertRaises(ParcoursDoctoralNonTrouveException):
+            self.message_bus.invoke(self.cmd(**self.parametres_cmd))
+
+    def test_should_generer_exception_si_auteur_inconnu(self):
+        self.parametres_cmd['matricule_auteur'] = 'INCONNU'
+        with self.assertRaises(PersonneNonConnueDeLUcl):
             self.message_bus.invoke(self.cmd(**self.parametres_cmd))
 
     def test_should_generer_exception_si_statut_parcours_doctoral_invalide(self):
@@ -82,13 +97,12 @@ class TestAutoriserDefensePrivee(SimpleTestCase):
         proposition.statut = ChoixStatutParcoursDoctoral.ADMIS
         with self.assertRaises(MultipleBusinessExceptions) as e:
             self.message_bus.invoke(self.cmd(**self.parametres_cmd))
-        self.assertIsInstance(e.exception.exceptions.pop(), StatutDoctoratDifferentDefensePriveeSoumiseException)
+        self.assertIsInstance(e.exception.exceptions.pop(), StatutDoctoratDifferentDefensePriveeAutoriseeException)
 
-    def test_should_changer_statut_parcours_doctoral(self):
+    def test_should_inviter_jury(self):
         proposition = self.parcours_doctoral_repository.get(entity_id=self.defense_privee.parcours_doctoral_id)
-        proposition.statut = ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_SOUMISE
+        proposition.statut = ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_AUTORISEE
 
         resultat = self.message_bus.invoke(self.cmd(**self.parametres_cmd))
 
         self.assertEqual(resultat, proposition.entity_id)
-        self.assertEqual(proposition.statut, ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_AUTORISEE)

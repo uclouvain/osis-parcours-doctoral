@@ -23,14 +23,23 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from django.contrib import messages
-from django.shortcuts import redirect
+from django.shortcuts import resolve_url
 from django.utils.translation import gettext_lazy
 from django.views import View
 
 from infrastructure.messages_bus import message_bus_instance
-from parcours_doctoral.ddd.defense_privee.commands import AutoriserDefensePriveeCommand
-from parcours_doctoral.views.mixins import ParcoursDoctoralBaseViewMixin
+from parcours_doctoral.ddd.defense_privee.commands import (
+    AutoriserDefensePriveeCommand,
+    InviterJuryDefensePriveeCommand,
+)
+from parcours_doctoral.infrastructure.parcours_doctoral.defense_privee.domain.service.notification import (
+    Notification,
+)
+from parcours_doctoral.mail_templates.private_defense import (
+    PARCOURS_DOCTORAL_EMAIL_PRIVATE_DEFENSE_AUTHORISATION,
+    PARCOURS_DOCTORAL_EMAIL_PRIVATE_DEFENSE_JURY_INVITATION,
+)
+from parcours_doctoral.views.email_mixin import BaseEmailFormView
 
 __namespace__ = 'private-defense'
 
@@ -38,28 +47,69 @@ __namespace__ = 'private-defense'
 __all__ = [
     "PrivateDefenseAuthorisationView",
     "PrivateDefenseSuccessView",
+    "PrivateDefenseJuryInvitationView",
 ]
 
 
-class PrivateDefenseAuthorisationView(ParcoursDoctoralBaseViewMixin, View):
+class BasePrivateDefenseActionView(BaseEmailFormView):
+    def get_tokens(self):
+        doctorate = Notification.get_doctorate(doctorate_uuid=self.parcours_doctoral_uuid)
+        return Notification.get_common_tokens(
+            doctorate=doctorate,
+            sender_first_name=self.request.user.person.first_name,
+            sender_last_name=self.request.user.person.last_name,
+        )
+
+    def get_success_url(self):
+        return resolve_url('parcours_doctoral:private-defense', uuid=self.parcours_doctoral_uuid)
+
+
+class PrivateDefenseAuthorisationView(BasePrivateDefenseActionView):
     urlpatterns = 'authorise'
     permission_required = 'parcours_doctoral.authorise_private_defense'
-    http_method_names = ['post']
+    message_on_success = gettext_lazy('The private defense has been authorised.')
+    email_identifier = PARCOURS_DOCTORAL_EMAIL_PRIVATE_DEFENSE_AUTHORISATION
 
-    def post(self, request, *args, **kwargs):
+    def call_command(self, form):
         message_bus_instance.invoke(
             AutoriserDefensePriveeCommand(
                 parcours_doctoral_uuid=self.parcours_doctoral_uuid,
                 matricule_auteur=self.request.user.person.global_id,
+                sujet_message=form.cleaned_data['subject'],
+                corps_message=form.cleaned_data['body'],
             ),
         )
 
-        messages.success(
-            request=request,
-            message=gettext_lazy('The private defense has been authorised.'),
-        )
+        self.htmx_refresh = True
 
-        return redirect('parcours_doctoral:private-defense', uuid=self.parcours_doctoral_uuid)
+
+class PrivateDefenseJuryInvitationView(BasePrivateDefenseActionView):
+    urlpatterns = 'jury-invitation'
+    permission_required = 'parcours_doctoral.invite_jury_to_private_defense'
+    message_on_success = gettext_lazy('The members of the jury have been invited to the private defense.')
+    email_identifier = PARCOURS_DOCTORAL_EMAIL_PRIVATE_DEFENSE_JURY_INVITATION
+    disabled_form = True
+
+    def get_language(self):
+        return self.request.user.person.language
+
+    def get_tokens(self):
+        tokens = super().get_tokens()
+
+        # Examples as the mail will be generated
+        tokens['jury_member_first_name'] = 'John'
+        tokens['jury_member_last_name'] = 'Doe'
+
+        return tokens
+
+    def call_command(self, form):
+        message_bus_instance.invoke(
+            InviterJuryDefensePriveeCommand(
+                parcours_doctoral_uuid=self.parcours_doctoral_uuid,
+                matricule_auteur=self.request.user.person.global_id,
+            )
+        )
+        self.htmx_refresh = True
 
 
 class PrivateDefenseSuccessView(View):

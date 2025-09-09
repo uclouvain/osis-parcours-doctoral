@@ -23,44 +23,47 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from parcours_doctoral.ddd.defense_privee.commands import AutoriserDefensePriveeCommand
+from ddd.logic.shared_kernel.personne_connue_ucl.domain.service.personne_connue_ucl import (
+    IPersonneConnueUclTranslator,
+)
+from parcours_doctoral.ddd.defense_privee.commands import (
+    InviterJuryDefensePriveeCommand,
+)
+from parcours_doctoral.ddd.defense_privee.domain.service.i_notification import (
+    INotification,
+)
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import (
     ParcoursDoctoralIdentity,
 )
 from parcours_doctoral.ddd.domain.service.i_historique import IHistorique
-from parcours_doctoral.ddd.domain.service.i_notification import INotification
 from parcours_doctoral.ddd.repository.i_parcours_doctoral import (
     IParcoursDoctoralRepository,
 )
 
 
-def autoriser_defense_privee(
-    cmd: 'AutoriserDefensePriveeCommand',
+def inviter_jury_defense_privee(
+    cmd: 'InviterJuryDefensePriveeCommand',
     parcours_doctoral_repository: 'IParcoursDoctoralRepository',
     historique: 'IHistorique',
     notification: 'INotification',
+    personne_connue_ucl_translator: 'IPersonneConnueUclTranslator',
 ) -> ParcoursDoctoralIdentity:
     # GIVEN
     parcours_doctoral_identity = ParcoursDoctoralIdentity(uuid=cmd.parcours_doctoral_uuid)
     parcours_doctoral = parcours_doctoral_repository.get(parcours_doctoral_identity)
+    auteur = personne_connue_ucl_translator.get(matricule=cmd.matricule_auteur)
 
     # WHEN
-    parcours_doctoral.autoriser_defense_privee()
+    parcours_doctoral.inviter_jury_defense_privee()
 
     # THEN
-    parcours_doctoral_repository.save(parcours_doctoral)
-    notification.envoyer_message(
+    notification.inviter_membres_jury(
         parcours_doctoral=parcours_doctoral,
-        matricule_emetteur=cmd.matricule_auteur,
-        matricule_doctorant=parcours_doctoral.matricule_doctorant,
-        sujet=cmd.sujet_message,
-        message=cmd.corps_message,
-        cc_promoteurs=True,
-        cc_membres_ca=False,
+        auteur=auteur,
     )
-    historique.historiser_autorisation_defense_privee(
+    historique.historiser_invitation_jury_defense_privee(
         parcours_doctoral=parcours_doctoral,
-        matricule_auteur=cmd.matricule_auteur,
+        auteur=auteur,
     )
 
     return parcours_doctoral_identity

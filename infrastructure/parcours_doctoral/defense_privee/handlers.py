@@ -23,14 +23,23 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from infrastructure.shared_kernel.personne_connue_ucl.personne_connue_ucl import (
+    PersonneConnueUclTranslator,
+)
 from parcours_doctoral.ddd.defense_privee.commands import *
 from parcours_doctoral.ddd.defense_privee.use_case.read import *
 from parcours_doctoral.ddd.defense_privee.use_case.write import *
+from parcours_doctoral.infrastructure.parcours_doctoral.defense_privee.domain.service.notification import (
+    Notification,
+)
 from parcours_doctoral.infrastructure.parcours_doctoral.defense_privee.repository.defense_privee import (
     DefensePriveeRepository,
 )
 from parcours_doctoral.infrastructure.parcours_doctoral.domain.service.historique import (
     Historique,
+)
+from parcours_doctoral.infrastructure.parcours_doctoral.domain.service.notification import (
+    Notification as NotificationGenerale,
 )
 from parcours_doctoral.infrastructure.parcours_doctoral.repository.parcours_doctoral import (
     ParcoursDoctoralRepository,
@@ -58,6 +67,14 @@ COMMAND_HANDLERS = {
     AutoriserDefensePriveeCommand: lambda msg_bus, cmd: autoriser_defense_privee(
         cmd,
         parcours_doctoral_repository=ParcoursDoctoralRepository(),
+        notification=NotificationGenerale(),
         historique=Historique(),
+    ),
+    InviterJuryDefensePriveeCommand: lambda msg_bus, cmd: inviter_jury_defense_privee(
+        cmd,
+        parcours_doctoral_repository=ParcoursDoctoralRepository(),
+        notification=Notification(),
+        historique=Historique(),
+        personne_connue_ucl_translator=PersonneConnueUclTranslator(),
     ),
 }
