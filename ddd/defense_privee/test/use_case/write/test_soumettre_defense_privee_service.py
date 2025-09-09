@@ -34,7 +34,6 @@ from parcours_doctoral.ddd.defense_privee.test.factory.defense_privee import (
 )
 from parcours_doctoral.ddd.defense_privee.validators.exceptions import (
     DefensePriveeNonCompleteeException,
-    DefensePriveeNonTrouveeException,
 )
 from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from parcours_doctoral.infrastructure.message_bus_in_memory import (
@@ -74,11 +73,6 @@ class TestSoumettreDefensePrivee(TestCase):
             'lieu': 'Lieu',
             'date_envoi_manuscrit': datetime.date(2023, 1, 1),
         }
-
-    def test_should_generer_exception_si_defense_privee_inconnue(self):
-        self.parametres_cmd['uuid'] = 'inconnue'
-        with self.assertRaises(DefensePriveeNonTrouveeException):
-            self.message_bus.invoke(self.cmd(**self.parametres_cmd))
 
     def test_should_generer_exception_si_donnees_manquantes(self):
         self.parametres_cmd['date_heure'] = None

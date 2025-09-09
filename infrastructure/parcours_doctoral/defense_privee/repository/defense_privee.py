@@ -23,7 +23,9 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from typing import List
+from typing import List, Optional
+
+from django.db.models import F
 
 from parcours_doctoral.ddd.defense_privee.domain.model.defense_privee import (
     DefensePrivee,
@@ -32,9 +34,6 @@ from parcours_doctoral.ddd.defense_privee.domain.model.defense_privee import (
 from parcours_doctoral.ddd.defense_privee.dtos import DefensePriveeDTO
 from parcours_doctoral.ddd.defense_privee.repository.i_defense_privee import (
     IDefensePriveeRepository,
-)
-from parcours_doctoral.ddd.defense_privee.validators.exceptions import (
-    DefensePriveeNonTrouveeException,
 )
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import (
     ParcoursDoctoralIdentity,
@@ -45,79 +44,43 @@ from parcours_doctoral.models.private_defense import PrivateDefense
 
 class DefensePriveeRepository(IDefensePriveeRepository):
     @classmethod
-    def get(cls, entity_id: 'DefensePriveeIdentity') -> 'DefensePrivee':
-        try:
-            qs = PrivateDefense.objects.for_model_object()
-
-            private_defense: PrivateDefense = qs.get(uuid=entity_id.uuid)
-        except PrivateDefense.DoesNotExist:
-            raise DefensePriveeNonTrouveeException
-
-        return DefensePrivee(
-            entity_id=entity_id,
-            parcours_doctoral_id=ParcoursDoctoralIdentity(uuid=str(private_defense.doctorate_uuid)),  # From annotation
-            est_active=bool(private_defense.current_parcours_doctoral_id),
-            date_heure=private_defense.datetime,
-            lieu=private_defense.place,
-            date_envoi_manuscrit=private_defense.manuscript_submission_date,
-            proces_verbal=private_defense.minutes,
-            canevas_proces_verbal=private_defense.minutes_canvas,
-        )
-
-    @classmethod
-    def get_dto(cls, entity_id: 'DefensePriveeIdentity') -> 'DefensePriveeDTO':
-        try:
-            qs = PrivateDefense.objects.for_dto()
-
-            private_defense = qs.get(uuid=entity_id.uuid)
-        except PrivateDefense.DoesNotExist:
-            raise DefensePriveeNonTrouveeException
-
-        return DefensePriveeRepository.build_dto_from_model(private_defense)
-
-    @classmethod
-    def build_dto_from_model(cls, private_defense: PrivateDefense):
-        return DefensePriveeDTO(
-            uuid=str(private_defense.uuid),
-            titre_these=private_defense.thesis_title,  # From annotation
-            est_active=bool(private_defense.current_parcours_doctoral_id),
-            date_heure=private_defense.datetime,
-            lieu=private_defense.place,
-            date_envoi_manuscrit=private_defense.manuscript_submission_date,
-            proces_verbal=private_defense.minutes,
-            canevas_proces_verbal=private_defense.minutes_canvas,
-        )
-
-    @classmethod
-    def search_dto_by_parcours_doctoral_identity(
+    def search_dto(
         cls,
-        parcours_doctoral_entity_id: 'ParcoursDoctoralIdentity',
+        parcours_doctoral_id: Optional[ParcoursDoctoralIdentity] = None,
+        entity_id: Optional['DefensePriveeIdentity'] = None,
+        seulement_active: bool = False,
     ) -> List['DefensePriveeDTO']:
-        private_defenses = PrivateDefense.objects.for_dto().filter(
-            parcours_doctoral__uuid=parcours_doctoral_entity_id.uuid
+        qs = PrivateDefense.objects.annotate(
+            doctorate_uuid=F('parcours_doctoral__uuid'),
+            thesis_title=F('parcours_doctoral__thesis_proposed_title'),
         )
 
-        return [cls.build_dto_from_model(private_defense) for private_defense in private_defenses]
+        if parcours_doctoral_id:
+            qs = qs.filter(parcours_doctoral__uuid=parcours_doctoral_id.uuid)
 
-    @classmethod
-    def get_active_dto_by_parcours_doctoral_identity(
-        cls,
-        parcours_doctoral_entity_id: 'ParcoursDoctoralIdentity',
-    ) -> 'DefensePriveeDTO':
-        try:
-            private_defense = (
-                PrivateDefense.objects.for_dto()
-                .filter(
-                    parcours_doctoral__uuid=parcours_doctoral_entity_id.uuid,
-                    current_parcours_doctoral__uuid=parcours_doctoral_entity_id.uuid,
-                )
-                .first()
+        if seulement_active:
+            qs = qs.filter(current_parcours_doctoral_id=F('parcours_doctoral_id'))
+
+        if entity_id:
+            qs = qs.filter(uuid=entity_id.uuid)
+
+        if entity_id or (parcours_doctoral_id and seulement_active):
+            qs = qs[:1]
+
+        return [
+            DefensePriveeDTO(
+                uuid=str(private_defense.uuid),
+                parcours_doctoral_uuid=str(private_defense.doctorate_uuid),  # From annotation
+                titre_these=private_defense.thesis_title,  # From annotation
+                est_active=bool(private_defense.current_parcours_doctoral_id),
+                date_heure=private_defense.datetime,
+                lieu=private_defense.place,
+                date_envoi_manuscrit=private_defense.manuscript_submission_date,
+                proces_verbal=private_defense.minutes,
+                canevas_proces_verbal=private_defense.minutes_canvas,
             )
-
-        except PrivateDefense.DoesNotExist:
-            raise DefensePriveeNonTrouveeException
-
-        return DefensePriveeRepository.build_dto_from_model(private_defense)
+            for private_defense in qs
+        ]
 
     @classmethod
     def save(cls, entity: 'DefensePrivee') -> 'DefensePriveeIdentity':
@@ -135,4 +98,5 @@ class DefensePriveeRepository(IDefensePriveeRepository):
                 'minutes_canvas': entity.canevas_proces_verbal,
             },
         )
+
         return entity.entity_id
