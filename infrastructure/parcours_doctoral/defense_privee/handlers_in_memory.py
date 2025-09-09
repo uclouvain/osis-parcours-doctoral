@@ -23,6 +23,9 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from infrastructure.shared_kernel.personne_connue_ucl.in_memory.personne_connue_ucl import (
+    PersonneConnueUclInMemoryTranslator,
+)
 from parcours_doctoral.ddd.defense_privee.commands import *
 from parcours_doctoral.ddd.defense_privee.use_case.read import *
 from parcours_doctoral.ddd.defense_privee.use_case.write import *
@@ -35,6 +38,9 @@ from parcours_doctoral.infrastructure.parcours_doctoral.defense_privee.repositor
 from parcours_doctoral.infrastructure.parcours_doctoral.domain.service.in_memory.historique import (
     HistoriqueInMemory,
 )
+from parcours_doctoral.infrastructure.parcours_doctoral.domain.service.in_memory.notification import (
+    NotificationInMemory as NotificationGeneraleInMemory,
+)
 from parcours_doctoral.infrastructure.parcours_doctoral.repository.in_memory.parcours_doctoral import (
     ParcoursDoctoralInMemoryRepository,
 )
@@ -42,7 +48,9 @@ from parcours_doctoral.infrastructure.parcours_doctoral.repository.in_memory.par
 _defense_privee_repository = DefensePriveeInMemoryRepository()
 _parcours_doctoral_repository = ParcoursDoctoralInMemoryRepository()
 _notification = NotificationInMemory()
+_notification_generale = NotificationGeneraleInMemory()
 _historique = HistoriqueInMemory()
+_personne_connue_ucl_translator = PersonneConnueUclInMemoryTranslator()
 
 
 COMMAND_HANDLERS = {
@@ -67,6 +75,14 @@ COMMAND_HANDLERS = {
     AutoriserDefensePriveeCommand: lambda msg_bus, cmd: autoriser_defense_privee(
         cmd,
         parcours_doctoral_repository=_parcours_doctoral_repository,
+        notification=_notification_generale,
         historique=_historique,
+    ),
+    InviterJuryDefensePriveeCommand: lambda msg_bus, cmd: inviter_jury_defense_privee(
+        cmd,
+        parcours_doctoral_repository=_parcours_doctoral_repository,
+        notification=_notification,
+        historique=_historique,
+        personne_connue_ucl_translator=_personne_connue_ucl_translator,
     ),
 }

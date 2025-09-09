@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -27,6 +27,7 @@ from ckeditor.fields import RichTextFormField
 from django import forms
 from django.utils.translation import gettext_lazy as _
 
+from parcours_doctoral.forms.widgets import ReadOnlyDiv
 from parcours_doctoral.models.cdd_mail_template import CddMailTemplate
 
 
@@ -80,3 +81,13 @@ class BaseEmailTemplateForm(forms.Form):
         label=_("Message body"),
         config_name='osis_mail_template',
     )
+
+    def __init__(self, *args, **kwargs):
+        disabled_form = kwargs.pop('disabled_form', None)
+
+        super().__init__(*args, **kwargs)
+
+        if disabled_form:
+            self.fields['subject'].disabled = True
+            self.fields['body'].disabled = True
+            self.fields['body'].widget = ReadOnlyDiv()
