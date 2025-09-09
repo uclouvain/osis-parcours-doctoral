@@ -26,11 +26,13 @@
 from ._should_defense_privee_etre_completee import (
     ShouldDefensePriveeEtreActive,
     ShouldDefensePriveeEtreCompletee,
+    ShouldStatutDoctoratEtreDefensePriveeAutorisee,
     ShouldStatutDoctoratEtreDefensePriveeSoumise,
 )
 
 __all__ = [
     'ShouldDefensePriveeEtreActive',
     'ShouldDefensePriveeEtreCompletee',
+    'ShouldStatutDoctoratEtreDefensePriveeAutorisee',
     'ShouldStatutDoctoratEtreDefensePriveeSoumise',
 ]

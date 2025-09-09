@@ -62,3 +62,13 @@ class StatutDoctoratDifferentDefensePriveeSoumiseException(BusinessException):
             'status': ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_SOUMISE.value,
         }
         super().__init__(message, **kwargs)
+
+
+class StatutDoctoratDifferentDefensePriveeAutoriseeException(BusinessException):
+    status_code = 'DEFENSE-PRIVEE-5'
+
+    def __init__(self, **kwargs):
+        message = _("The doctorate must be in the status '%(status)s' to realize this action.") % {
+            'status': ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_AUTORISEE.value,
+        }
+        super().__init__(message, **kwargs)

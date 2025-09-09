@@ -30,6 +30,7 @@ from typing import Optional
 from admission.ddd.admission.doctorat.preparation.domain.model.enums import (
     ChoixStatutPropositionDoctorale,
 )
+from ddd.logic.shared_kernel.personne_connue_ucl.dtos import PersonneConnueUclDTO
 from osis_common.ddd import interface
 from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from parcours_doctoral.ddd.domain.model.groupe_de_supervision import (
@@ -173,5 +174,14 @@ class IHistorique(interface.DomainService):
         cls,
         parcours_doctoral: ParcoursDoctoral,
         matricule_auteur: str,
+    ):
+        raise NotImplementedError
+
+    @classmethod
+    @abstractmethod
+    def historiser_invitation_jury_defense_privee(
+        cls,
+        parcours_doctoral: ParcoursDoctoral,
+        auteur: PersonneConnueUclDTO,
     ):
         raise NotImplementedError

@@ -31,6 +31,7 @@ from base.ddd.utils.business_validator import BusinessValidator
 from parcours_doctoral.ddd.defense_privee.validators.exceptions import (
     DefensePriveeNonActiveeException,
     DefensePriveeNonCompleteeException,
+    StatutDoctoratDifferentDefensePriveeAutoriseeException,
     StatutDoctoratDifferentDefensePriveeSoumiseException,
 )
 from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
@@ -62,3 +63,12 @@ class ShouldStatutDoctoratEtreDefensePriveeSoumise(BusinessValidator):
     def validate(self, *args, **kwargs):
         if self.statut != ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_SOUMISE:
             raise StatutDoctoratDifferentDefensePriveeSoumiseException
+
+
+@attr.dataclass(frozen=True, slots=True)
+class ShouldStatutDoctoratEtreDefensePriveeAutorisee(BusinessValidator):
+    statut: ChoixStatutParcoursDoctoral
+
+    def validate(self, *args, **kwargs):
+        if self.statut != ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_AUTORISEE:
+            raise StatutDoctoratDifferentDefensePriveeAutoriseeException

@@ -1,5 +1,5 @@
 {% extends "parcours_doctoral/details/tab_layout.html" %}
-{% load i18n parcours_doctoral %}
+{% load i18n parcours_doctoral static %}
 
 {% comment "License" %}
 * OSIS stands for Open Student Information System. It's an application
@@ -29,9 +29,10 @@
   {% default_tab_context as tab_context %}
   {% has_perm 'parcours_doctoral.change_private_defense' as can_authorise_private_defense %}
   {% has_perm 'parcours_doctoral.authorise_private_defense' as can_authorise_private_defense %}
+  {% has_perm 'parcours_doctoral.invite_jury_to_private_defense' as can_invite_jury_to_private_defense %}
 
-  {% if can_update_tab or can_authorise_private_defense %}
-    <div class="btn-group">
+  {% if can_update_tab or can_authorise_private_defense or can_invite_jury_to_private_defense %}
+    <div id="private-defense-actions" class="btn-group">
       <button
         type="button"
         class="btn btn-default border border-dark-subtle"
@@ -51,14 +52,19 @@
               {% translate "Update" context 'verb' %}
             </a>
           </li>
+          <li><hr class="dropdown-divider"></li>
         {% endif %}
         {% if can_authorise_private_defense %}
-          {% if can_update_tab %}
-            <li><hr class="dropdown-divider"></li>
-          {% endif %}
           <li>
             <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#private-defense-authorisation-form-modal">
               {% translate "Authorise the private defense" %}
+            </a>
+          </li>
+        {% endif %}
+        {% if can_invite_jury_to_private_defense %}
+          <li>
+            <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#private-defense-jury-invitation-form-modal">
+              {% translate "Invite the members of the jury to the private defense" %}
             </a>
           </li>
         {% endif %}
@@ -82,6 +88,28 @@
 
   {% include 'parcours_doctoral/includes/private_defense/previous_private_defenses.html' %}
 
-  {% include "parcours_doctoral/includes/private_defense/authorise_modal.html" %}
+  {% url 'parcours_doctoral:private-defense:authorise' view.kwargs.uuid as authorization_url %}
+  {% translate 'Authorise the private defense' as authorization_title %}
+  {% include 'parcours_doctoral/modal/form_modal.html' with modal_id='private-defense-authorisation-form-modal' modal_title=authorization_title modal_url=authorization_url %}
 
+  {% url 'parcours_doctoral:private-defense:jury-invitation' view.kwargs.uuid as jury_invitation_url %}
+  {% translate 'Invite the members of the jury to the private defense' as jury_invitation_title %}
+  {% translate 'Here is an example message that will be sent to the jury members.' as jury_invitation_message %}
+  {% include 'parcours_doctoral/modal/form_modal.html' with modal_id='private-defense-jury-invitation-form-modal' modal_title=jury_invitation_title modal_message=jury_invitation_message modal_url=jury_invitation_url %}
+
+{% endblock %}
+
+{% block style %}
+  {{ block.super }}
+  <style>
+    {# Facilitate the management of the separator display by hiding it if it's the last element #}
+    #private-defense-actions li:last-child:has(.dropdown-divider) {
+      display: none;
+    }
+  </style>
+{% endblock %}
+
+{% block script %}
+  {{ block.super }}
+  <script src="{% static 'parcours_doctoral/js/submit_ckeditor_data.js' %}"></script>
 {% endblock %}
