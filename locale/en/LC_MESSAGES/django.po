@@ -427,9 +427,6 @@ msgstr ""
 msgid "Approximate date for completing the thesis:"
 msgstr ""
 
-msgid "Are you sure you want to authorise the private defense?"
-msgstr ""
-
 #, python-format
 msgctxt "parcours_doctoral"
 msgid "Are you sure you want to delete \"%(object)s\"?"
@@ -945,6 +942,9 @@ msgstr ""
 msgid "Date of the confirmation paper (DD/MM/YYYY)"
 msgstr ""
 
+msgid "Date of the private defense (DD/MM/YYYY)"
+msgstr ""
+
 msgctxt "dashboard-indicator confirmation"
 msgid "Date postponement"
 msgstr ""
@@ -1412,6 +1412,9 @@ msgstr ""
 msgid "Have you previously enrolled for a PhD?"
 msgstr ""
 
+msgid "Here is an example message that will be sent to the jury members."
+msgstr ""
+
 msgctxt "tab"
 msgid "History"
 msgstr ""
@@ -1554,6 +1557,9 @@ msgid "International scholarship"
 msgstr ""
 
 msgid "Is a promoter"
+msgstr ""
+
+msgid "Invite the members of the jury to the private defense"
 msgstr ""
 
 msgid "Is active"
@@ -1791,13 +1797,36 @@ msgid ""
 msgstr ""
 
 msgid ""
+"Mail sent to the doctoral student to inform him of the defavourable opinion "
+"on the private defense"
+msgstr ""
+
+msgid ""
 "Mail sent to the doctoral student to inform him of the favourable opinion on "
 "the confirmation paper"
 msgstr ""
 
 msgid ""
+"Mail sent to the doctoral student to inform him of the favourable opinion on "
+"the private defense"
+msgstr ""
+
+msgid ""
 "Mail sent to the doctoral student to inform him of the necessity to retake "
 "the confirmation paper"
+msgstr ""
+
+msgid ""
+"Mail sent to the doctoral student to inform him of the necessity to retake "
+"the private defense"
+msgstr ""
+
+msgid ""
+"Mail sent to the doctoral student to inform of the authorisation of the "
+"private defense"
+msgstr ""
+
+msgid "Mail sent to the jury members to invite them to the private defense"
 msgstr ""
 
 msgid ""
@@ -1968,6 +1997,15 @@ msgid "Name of the ADRE manager"
 msgstr ""
 
 msgid "Name of the doctoral commission"
+msgstr ""
+
+msgid "Name in the language of the manifestation"
+msgstr ""
+
+msgid "Name of the management entity"
+msgstr ""
+
+msgid "Name of the manager sending the email"
 msgstr ""
 
 msgid "Name or brief description"
@@ -2207,6 +2245,9 @@ msgid "PhD research experience"
 msgstr ""
 
 msgid "PhD training"
+msgstr ""
+
+msgid "Place of the private defense"
 msgstr ""
 
 msgid "Plain text"
@@ -3105,6 +3146,9 @@ msgstr ""
 msgid "The export has failed"
 msgstr ""
 
+msgid "The first name of the jury member"
+msgstr ""
+
 msgid "The first name of the recipient"
 msgstr ""
 
@@ -3131,6 +3175,9 @@ msgstr ""
 msgid "The jury signing is not in progress"
 msgstr ""
 
+msgid "The last name of the jury member"
+msgstr ""
+
 msgid "The last name of the recipient"
 msgstr ""
 
@@ -3140,6 +3187,12 @@ msgstr ""
 msgid "The last name of the student"
 msgstr ""
 
+msgid "The link to the private defense minutes"
+msgstr ""
+
+msgid "The link to the thesis distribution authorisation page"
+msgstr ""
+
 msgid "The member is already in the jury."
 msgstr ""
 
@@ -3147,6 +3200,9 @@ msgid "The member is not external."
 msgstr ""
 
 msgid "The member was not found in the jury."
+msgstr ""
+
+msgid "The members of the jury have been invited to the private defense."
 msgstr ""
 
 #, python-format
