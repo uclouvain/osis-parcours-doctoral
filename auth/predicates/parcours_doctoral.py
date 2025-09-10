@@ -79,6 +79,12 @@ def is_jury_in_progress(self, user: User, obj: ParcoursDoctoral):
 
 
 @predicate(bind=True)
+@predicate_failed_msg(message=_("The jury signing is not in progress"))
+def is_jury_signing_in_progress(self, user: User, obj: ParcoursDoctoral):
+    return obj.status == ChoixStatutParcoursDoctoral.JURY_SOUMIS.name
+
+
+@predicate(bind=True)
 @predicate_failed_msg(message=_("The confirmation paper is not in progress"))
 def submitted_confirmation_paper(self, user: User, obj: ParcoursDoctoral):
     return obj.status == ChoixStatutParcoursDoctoral.CONFIRMATION_SOUMISE.name
@@ -148,6 +154,12 @@ def is_part_of_committee(self, user: User, obj: ParcoursDoctoral):
         and obj.supervision_group
         and user.person.pk in [actor.person_id for actor in obj.supervision_group.actors.all()]
     )
+
+
+@predicate(bind=True)
+@predicate_failed_msg(message=_("You must be a member of the jury to access this doctoral training"))
+def is_part_of_jury(self, user: User, obj: ParcoursDoctoral):
+    return user.person.pk in [actor.person_id for actor in obj.jury_group.actors.all()]
 
 
 @predicate(bind=True)

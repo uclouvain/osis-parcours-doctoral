@@ -64,7 +64,6 @@ from parcours_doctoral.ddd.domain.model.enums import (
     ChoixCommissionProximiteCDEouCLSM,
     ChoixCommissionProximiteCDSS,
     ChoixDoctoratDejaRealise,
-    ChoixLangueDefense,
     ChoixSousDomaineSciences,
     ChoixStatutParcoursDoctoral,
     ChoixTypeFinancement,
@@ -189,7 +188,7 @@ class ParcoursDoctoralQuerySet(models.QuerySet):
             },
         )
 
-    def annotate_intitule_secteur_formation(self):
+    def annotate_secteur_formation(self):
         cte = EntityVersion.objects.with_children(entity_id=OuterRef("training__management_entity_id"))
         sector_subqs = (
             cte.join(EntityVersion, id=cte.col.id)
@@ -200,6 +199,7 @@ class ParcoursDoctoralQuerySet(models.QuerySet):
 
         return self.annotate(
             intitule_secteur_formation=CTESubquery(sector_subqs.values("title")[:1]),
+            sigle_secteur_formation=CTESubquery(sector_subqs.values("acronym")[:1]),
         )
 
 
@@ -278,6 +278,7 @@ class ParcoursDoctoral(models.Model):
         'reference.Language',
         on_delete=models.PROTECT,
         verbose_name=_("Thesis language"),
+        related_name='+',
         null=True,
         blank=True,
     )
@@ -428,16 +429,18 @@ class ParcoursDoctoral(models.Model):
         default='',
         blank=True,
     )
-    defense_indicative_date = models.DateField(
+    defense_indicative_date = models.CharField(
+        max_length=255,
         verbose_name=_("Defense indicative date"),
-        null=True,
+        default='',
         blank=True,
     )
-    defense_language = models.CharField(
-        max_length=255,
+    defense_language = models.ForeignKey(
+        'reference.Language',
+        on_delete=models.PROTECT,
         verbose_name=_("Defense language"),
-        choices=ChoixLangueDefense.choices(),
-        default=ChoixLangueDefense.UNDECIDED.name,
+        related_name='+',
+        null=True,
         blank=True,
     )
     comment_about_jury = models.TextField(
@@ -523,7 +526,8 @@ class ParcoursDoctoral(models.Model):
     )
 
     # Supervision
-    supervision_group = SignatureProcessField()
+    supervision_group = SignatureProcessField(related_name='+')
+    jury_group = SignatureProcessField(related_name='+')
 
     objects = models.Manager.from_queryset(ParcoursDoctoralQuerySet)()
 

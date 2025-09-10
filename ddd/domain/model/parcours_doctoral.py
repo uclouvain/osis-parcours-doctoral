@@ -301,3 +301,12 @@ class ParcoursDoctoral(interface.RootEntity):
             convention=convention,
             autres_documents=autres_documents,
         )
+
+    def verrouiller_jury_pour_signature(self):
+        self.statut = ChoixStatutParcoursDoctoral.JURY_SOUMIS
+
+    def deverrouiller_jury_apres_refus(self):
+        self.statut = ChoixStatutParcoursDoctoral.CONFIRMATION_REUSSIE
+
+    def deverrouiller_jury_apres_reinitialisation(self):
+        self.statut = ChoixStatutParcoursDoctoral.CONFIRMATION_REUSSIE

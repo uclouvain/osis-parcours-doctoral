@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -23,43 +23,38 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-import datetime
+from django.test import SimpleTestCase
 
-from django.test import TestCase
-
-from parcours_doctoral.ddd.jury.commands import RecupererJuryQuery
-from parcours_doctoral.ddd.jury.dtos.jury import JuryDTO
-from parcours_doctoral.ddd.jury.validator.exceptions import JuryNonTrouveException
+from parcours_doctoral.ddd.jury.commands import DemanderSignaturesCommand
+from parcours_doctoral.ddd.jury.domain.model.enums import ChoixEtatSignature
+from parcours_doctoral.ddd.jury.domain.model.jury import JuryIdentity
 from parcours_doctoral.infrastructure.message_bus_in_memory import (
     message_bus_in_memory_instance,
 )
+from parcours_doctoral.infrastructure.parcours_doctoral.jury.repository.in_memory.jury import (
+    JuryInMemoryRepository,
+)
+from parcours_doctoral.infrastructure.parcours_doctoral.repository.in_memory.parcours_doctoral import (
+    ParcoursDoctoralInMemoryRepository,
+)
 
 
-class TestRecupererJury(TestCase):
+class TestDemanderSignatures(SimpleTestCase):
     def setUp(self) -> None:
         self.message_bus = message_bus_in_memory_instance
 
-    def test_should_pas_trouver_si_jury_inconnu(self):
-        with self.assertRaises(JuryNonTrouveException):
-            self.message_bus.invoke(
-                RecupererJuryQuery(
-                    uuid_jury='inconnu',
-                )
-            )
+    def tearDown(self) -> None:
+        JuryInMemoryRepository.reset()
+        ParcoursDoctoralInMemoryRepository.reset()
 
-    def test_should_recuperer_jury_connu(self):
-        jury_dto: JuryDTO = self.message_bus.invoke(
-            RecupererJuryQuery(
-                uuid_jury='uuid-jury',
+    def test_demander_signatures(self):
+        self.message_bus.invoke(
+            DemanderSignaturesCommand(
+                uuid_parcours_doctoral='uuid-SC3DP-promoteurs-membres-deja-approuves',
+                matricule_auteur='0132456798',
             )
         )
-        self.assertEqual(jury_dto.uuid, 'uuid-jury')
-        self.assertEqual(jury_dto.titre_propose, 'titre_propose')
-        self.assertEqual(len(jury_dto.membres), 2)
-        self.assertEqual(jury_dto.formule_defense, 'DEUX_TEMPS')
-        self.assertEqual(jury_dto.date_indicative, datetime.date(2022, 1, 1))
-        self.assertEqual(jury_dto.langue_redaction, 'english')
-        self.assertEqual(jury_dto.langue_soutenance, 'english')
-        self.assertEqual(jury_dto.commentaire, '')
-        self.assertIsNone(jury_dto.situation_comptable)
-        self.assertIsNone(jury_dto.approbation_pdf)
+
+        jury = JuryInMemoryRepository.get(JuryIdentity(uuid='uuid-SC3DP-promoteurs-membres-deja-approuves'))
+        for membre in jury.membres:
+            self.assertEqual(membre.signature.etat, ChoixEtatSignature.INVITED)

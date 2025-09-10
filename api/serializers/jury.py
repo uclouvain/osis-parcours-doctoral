@@ -23,15 +23,24 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-
+from drf_spectacular.types import OpenApiTypes
+from drf_spectacular.utils import extend_schema_field
 from rest_framework import serializers
 
 from base.utils.serializers import DTOSerializer
+from parcours_doctoral.api.serializers.external import (
+    ExternalParcoursDoctoralDTOSerializer,
+)
+from parcours_doctoral.api.serializers.fields import RelatedInstituteField
 from parcours_doctoral.ddd.jury.commands import (
     AjouterMembreCommand,
+    ApprouverJuryCommand,
+    ApprouverJuryParPdfCommand,
     ModifierJuryCommand,
     ModifierMembreCommand,
     ModifierRoleMembreCommand,
+    RefuserJuryCommand,
+    RenvoyerInvitationSignatureCommand,
     RetirerMembreCommand,
 )
 from parcours_doctoral.ddd.jury.dtos.jury import JuryDTO, MembreJuryDTO
@@ -49,8 +58,16 @@ __all__ = [
 
 
 class JuryDTOSerializer(DTOSerializer):
+    has_change_roles_permission = serializers.SerializerMethodField()
+
     class Meta:
         source = JuryDTO
+
+    @extend_schema_field(OpenApiTypes.BOOL)
+    def get_has_change_roles_permission(self, obj):
+        return self.context['request'].user.has_perm(
+            'parcours_doctoral.api_change_jury_role', self.context['parcours_doctoral']
+        )
 
 
 class JuryIdentityDTOSerializer(serializers.Serializer):
@@ -91,6 +108,41 @@ class ModifierMembreCommandSerializer(DTOSerializer):
 class ModifierRoleMembreCommandSerializer(DTOSerializer):
     uuid_jury = None
     uuid_membre = None
+    matricule_auteur = None
 
     class Meta:
         source = ModifierRoleMembreCommand
+
+
+class ExternalJuryDTOSerializer(serializers.Serializer):
+    parcours_doctoral = ExternalParcoursDoctoralDTOSerializer()
+    jury = JuryDTOSerializer()
+
+
+class RenvoyerInvitationSignatureExterneSerializer(DTOSerializer):
+    uuid_jury = None
+
+    class Meta:
+        source = RenvoyerInvitationSignatureCommand
+
+
+class ApprouverJuryCommandSerializer(DTOSerializer):
+    uuid_jury = None
+
+    class Meta:
+        source = ApprouverJuryCommand
+
+
+class RefuserJuryCommandSerializer(DTOSerializer):
+    uuid_jury = None
+
+    class Meta:
+        source = RefuserJuryCommand
+
+
+class ApprouverJuryParPdfCommandSerializer(DTOSerializer):
+    uuid_jury = None
+    matricule_auteur = None
+
+    class Meta:
+        source = ApprouverJuryParPdfCommand

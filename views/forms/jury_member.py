@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -23,7 +23,6 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from base.ddd.utils.business_validator import MultipleBusinessExceptions
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import Http404
@@ -34,6 +33,7 @@ from django.utils.translation import gettext_lazy as _
 from django.views import View
 from django.views.generic import FormView
 
+from base.ddd.utils.business_validator import MultipleBusinessExceptions
 from infrastructure.messages_bus import message_bus_instance
 from parcours_doctoral.ddd.jury.commands import (
     ModifierMembreCommand,
@@ -68,9 +68,8 @@ __all__ = [
 __namespace__ = {'jury-member': 'jury-member/<uuid:member_uuid>'}
 
 from osis_role.contrib.views import PermissionRequiredMixin
-from reference.models.country import Country
-
 from parcours_doctoral.forms.jury.membre_role import JuryMembreRoleForm
+from reference.models.country import Country
 
 
 class JuryMemberRemoveView(
@@ -153,6 +152,7 @@ class JuryMembreUpdateFormView(
             'justification_non_docteur': self.membre.justification_non_docteur,
             'genre': self.membre.genre,
             'email': self.membre.email,
+            'langue': self.membre.langue,
         }
 
     def call_command(self, form):
@@ -177,6 +177,9 @@ class JuryMemberChangeRoleView(
     urlpatterns = 'change-role'
     permission_required = 'parcours_doctoral.change_jury'
 
+    def get(self, request, *aegs, **kwargs):
+        return redirect(reverse('parcours_doctoral:jury', args=[str(self.kwargs['uuid'])]))
+
     def post(self, request, *args, **kwargs):
         form = JuryMembreRoleForm(data=request.POST)
         if form.is_valid():
@@ -186,6 +189,7 @@ class JuryMemberChangeRoleView(
                         uuid_jury=str(self.kwargs['uuid']),
                         uuid_membre=str(self.kwargs['member_uuid']),
                         role=form.cleaned_data['role'],
+                        matricule_auteur=self.request.user.person.global_id,
                     )
                 )
             except MultipleBusinessExceptions as multiple_exceptions:

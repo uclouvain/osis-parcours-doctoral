@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -34,10 +34,17 @@ def modifier_jury(
     jury_repository: 'IJuryRepository',
 ) -> 'JuryIdentity':
     # GIVEN
-    jury = JuryBuilder.build(cmd)
+    jury = jury_repository.get(JuryIdentity(uuid=cmd.uuid_parcours_doctoral))
 
     # WHEN
-    jury.validate()
+    jury.modifier(
+        titre_propose=cmd.titre_propose,
+        formule_defense=cmd.formule_defense,
+        date_indicative=cmd.date_indicative,
+        langue_redaction=cmd.langue_redaction,
+        langue_soutenance=cmd.langue_soutenance,
+        commentaire=cmd.commentaire,
+    )
 
     # THEN
     jury_repository.save(jury)

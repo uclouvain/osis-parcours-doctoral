@@ -58,13 +58,6 @@ STATUTS_DOCTORAT_EPREUVE_CONFIRMATION_EN_COURS = {
 }
 
 
-class ChoixLangueDefense(ChoiceEnum):
-    FRENCH = _('French')
-    ENGLISH = _('English')
-    OTHER = _('Other')
-    UNDECIDED = _('Undecided')
-
-
 class ChoixDoctoratDejaRealise(ChoiceEnum):
     YES = _('YES')
     NO = _('NO')

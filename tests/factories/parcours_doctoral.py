@@ -50,6 +50,8 @@ from parcours_doctoral.ddd.domain.model.enums import (
     ChoixTypeFinancement,
 )
 from parcours_doctoral.models.parcours_doctoral import ParcoursDoctoral
+from parcours_doctoral.tests.factories.jury import JuryMemberWithInternalPromoterFactory, \
+    JuryMemberWithExternalPromoterFactory, JuryMemberFactory
 from parcours_doctoral.tests.factories.roles import StudentRoleFactory
 from parcours_doctoral.tests.factories.supervision import (
     CaMemberFactory,
@@ -152,6 +154,16 @@ class ParcoursDoctoralFactory(factory.django.DjangoModelFactory):
             CaMemberFactory(actor_ptr__process=process)
             CaMemberFactory(actor_ptr__process=process)
             self.supervision_group = process
+
+    @factory.post_generation
+    def create_jury_group(self, create, extracted, **kwargs):
+        if create and not extracted and not self.jury_group_id:
+            process = _ProcessFactory()
+            JuryMemberWithInternalPromoterFactory(process=process)
+            JuryMemberWithExternalPromoterFactory(process=process)
+            JuryMemberFactory(process=process)
+            JuryMemberFactory(process=process)
+            self.jury_group = process
 
     class Params:
         with_cotutelle = factory.Trait(

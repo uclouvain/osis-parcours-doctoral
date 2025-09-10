@@ -23,10 +23,18 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from drf_spectacular.utils import extend_schema
+from datetime import timedelta
+
+from django.utils.functional import cached_property
+from django.utils.timezone import now
+from drf_spectacular.utils import OpenApiResponse, extend_schema, extend_schema_view
+from osis_signature.utils import get_actor_from_token
 from rest_framework import mixins, status
+from rest_framework.exceptions import PermissionDenied
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
+from rest_framework.settings import api_settings
+from rest_framework.views import APIView
 
 from infrastructure.messages_bus import message_bus_instance
 from parcours_doctoral.api.permissions import DoctorateAPIPermissionRequiredMixin
@@ -40,21 +48,46 @@ from parcours_doctoral.api.serializers import (
     ModifierMembreCommandSerializer,
     ModifierRoleMembreCommandSerializer,
 )
+from parcours_doctoral.api.serializers.jury import (
+    ApprouverJuryCommandSerializer,
+    ApprouverJuryParPdfCommandSerializer,
+    ExternalJuryDTOSerializer,
+    RefuserJuryCommandSerializer,
+    RenvoyerInvitationSignatureExterneSerializer,
+)
+from parcours_doctoral.ddd.commands import (
+    GenererPdfArchiveCommand,
+    RecupererParcoursDoctoralQuery,
+)
 from parcours_doctoral.ddd.jury.commands import (
     AjouterMembreCommand,
+    ApprouverJuryCommand,
+    ApprouverJuryParPdfCommand,
+    DemanderSignaturesCommand,
     ModifierJuryCommand,
     ModifierMembreCommand,
     ModifierRoleMembreCommand,
     RecupererJuryMembreQuery,
     RecupererJuryQuery,
+    RefuserJuryCommand,
+    RenvoyerInvitationSignatureCommand,
     RetirerMembreCommand,
+    VerifierJuryConditionSignatureQuery,
 )
+from parcours_doctoral.utils.cache import get_cached_parcours_doctoral_perm_obj
+from parcours_doctoral.utils.ddd import gather_business_exceptions
 
 __all__ = [
     "JuryPreparationAPIView",
     "JuryMembersListAPIView",
     "JuryMemberDetailAPIView",
+    "JuryRequestSignaturesAPIView",
+    "JuryApprovePropositionAPIView",
+    "JuryExternalApprovalPropositionAPIView",
+    "JuryApproveByPdfPropositionAPIView",
 ]
+
+EXTERNAL_ACTOR_TOKEN_EXPIRATION_DAYS = 7
 
 
 class JuryPreparationAPIView(
@@ -78,7 +111,9 @@ class JuryPreparationAPIView(
     def get(self, request, *args, **kwargs):
         """Get the Jury of a doctorate"""
         jury = message_bus_instance.invoke(RecupererJuryQuery(uuid_jury=self.doctorate_uuid))
-        serializer = JuryDTOSerializer(instance=jury)
+        serializer = JuryDTOSerializer(
+            instance=jury, context={'request': request, 'parcours_doctoral': self.get_permission_object()}
+        )
         return Response(serializer.data)
 
     @extend_schema(
@@ -156,7 +191,7 @@ class JuryMemberDetailAPIView(
     permission_mapping = {
         'GET': 'parcours_doctoral.api_view_jury',
         'PUT': 'parcours_doctoral.api_change_jury',
-        'PATCH': 'parcours_doctoral.api_change_jury',
+        'PATCH': 'parcours_doctoral.api_change_jury_role',
         'DELETE': 'parcours_doctoral.api_change_jury',
     }
 
@@ -209,6 +244,7 @@ class JuryMemberDetailAPIView(
             ModifierRoleMembreCommand(
                 uuid_jury=str(self.doctorate_uuid),
                 uuid_membre=str(self.kwargs['member_uuid']),
+                matricule_auteur=self.request.user.person.global_id,
                 **serializer.data,
             )
         )
@@ -229,3 +265,218 @@ class JuryMemberDetailAPIView(
             )
         )
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class JuryRequestSignaturesAPIView(DoctorateAPIPermissionRequiredMixin, APIView):
+    name = "jury-request-signatures"
+    pagination_class = None
+    filter_backends = []
+    permission_mapping = {
+        'PUT': 'parcours_doctoral.api_resend_external_invitation',
+        'POST': 'parcours_doctoral.api_request_signatures',
+    }
+
+    @extend_schema(
+        request=None,
+        responses=OpenApiResponse(
+            response={
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "status_code": {
+                            "type": "string",
+                        },
+                        "detail": {
+                            "type": "string",
+                        },
+                    },
+                },
+            },
+            description="Project verification errors",
+        ),
+        operation_id='signature_conditions',
+    )
+    def get(self, request, *args, **kwargs):
+        """Gather the exceptions from signature validation."""
+        data = gather_business_exceptions(VerifierJuryConditionSignatureQuery(uuid_jury=str(kwargs["uuid"])))
+        return Response(data.get(api_settings.NON_FIELD_ERRORS_KEY, []), status=status.HTTP_200_OK)
+
+    @extend_schema(
+        request=RenvoyerInvitationSignatureExterneSerializer,
+        responses=JuryIdentityDTOSerializer,
+        operation_id='resend_invite',
+    )
+    def put(self, request, *args, **kwargs):
+        """Resend an invitation for an external member."""
+        serializer = RenvoyerInvitationSignatureExterneSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        result = message_bus_instance.invoke(
+            RenvoyerInvitationSignatureCommand(uuid_jury=str(kwargs["uuid"]), **serializer.data)
+        )
+        serializer = JuryIdentityDTOSerializer(instance=result)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @extend_schema(
+        request=None,
+        responses=JuryIdentityDTOSerializer,
+        operation_id='request_signatures',
+    )
+    def post(self, request, *args, **kwargs):
+        """Ask for all promoters and members to sign the jury."""
+        message_bus_instance.invoke(
+            GenererPdfArchiveCommand(
+                auteur=self.get_permission_object().student.global_id,
+                uuid_parcours_doctoral=str(kwargs["uuid"]),
+            )
+        )
+        result = message_bus_instance.invoke(
+            DemanderSignaturesCommand(
+                matricule_auteur=self.get_permission_object().student.global_id,
+                uuid_parcours_doctoral=str(kwargs["uuid"]),
+            )
+        )
+        serializer = JuryIdentityDTOSerializer(instance=result)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+class ApprovePropositionMixin:
+    def post(self, request, *args, **kwargs):
+        """Approve the jury."""
+        serializer = ApprouverJuryCommandSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        jury_id = message_bus_instance.invoke(
+            ApprouverJuryCommand(
+                uuid_jury=str(kwargs["uuid"]),
+                matricule_auteur=self.request.user.person.global_id if self.request.user.is_authenticated else '',
+                **serializer.data,
+            ),
+        )
+
+        serializer = JuryIdentityDTOSerializer(instance=jury_id)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def put(self, request, *args, **kwargs):
+        """Reject the jury."""
+        serializer = RefuserJuryCommandSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        jury_id = message_bus_instance.invoke(
+            RefuserJuryCommand(
+                uuid_jury=str(kwargs["uuid"]),
+                **serializer.data,
+            ),
+        )
+
+        serializer = JuryIdentityDTOSerializer(instance=jury_id)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@extend_schema_view(
+    post=extend_schema(
+        request=ApprouverJuryCommandSerializer,
+        responses=JuryIdentityDTOSerializer,
+        operation_id='approve_jury',
+    ),
+    put=extend_schema(
+        request=RefuserJuryCommandSerializer,
+        responses=JuryIdentityDTOSerializer,
+        operation_id='reject_jury',
+    ),
+)
+class JuryApprovePropositionAPIView(ApprovePropositionMixin, DoctorateAPIPermissionRequiredMixin, APIView):
+    name = "jury-approvals"
+    permission_mapping = {
+        'POST': 'parcours_doctoral.api_approve_jury',
+        'PUT': 'parcours_doctoral.api_approve_jury',
+    }
+
+
+@extend_schema_view(
+    get=extend_schema(
+        responses=ExternalJuryDTOSerializer,
+        operation_id='get_external_jury',
+    ),
+    post=extend_schema(
+        request=ApprouverJuryCommandSerializer,
+        responses=JuryIdentityDTOSerializer,
+        operation_id='approve_external_jury',
+    ),
+    put=extend_schema(
+        request=RefuserJuryCommandSerializer,
+        responses=JuryIdentityDTOSerializer,
+        operation_id='reject_external_jury',
+    ),
+)
+class JuryExternalApprovalPropositionAPIView(ApprovePropositionMixin, APIView):
+    name = "jury-external-approvals"
+    authentication_classes = []
+    permission_classes = []
+
+    @property
+    def doctorate_uuid(self):
+        return self.kwargs.get('uuid')
+
+    def get_permission_object(self):
+        return get_cached_parcours_doctoral_perm_obj(self.doctorate_uuid)
+
+    @cached_property
+    def actor(self):
+        return get_actor_from_token(self.kwargs['token'])
+
+    def initial(self, request, *args, **kwargs):
+        super().initial(request, *args, **kwargs)
+        # Load actor from token
+        if (
+            not self.actor
+            # must be part of supervision group
+            or self.actor.process_id != self.get_permission_object().jury_group_id
+            # must be not older than 7 days
+            or self.actor.states.last().created_at < now() - timedelta(days=EXTERNAL_ACTOR_TOKEN_EXPIRATION_DAYS)
+        ):
+            raise PermissionDenied
+        # Override the request data to use the actor's uuid loaded from token
+        request.data['uuid_membre'] = str(self.actor.uuid)
+
+    def get(self, request, *args, **kwargs):
+        """Returns necessary info about jury while checking token."""
+        parcours_doctoral = message_bus_instance.invoke(
+            RecupererParcoursDoctoralQuery(parcours_doctoral_uuid=kwargs.get('uuid'))
+        )
+        jury = message_bus_instance.invoke(RecupererJuryQuery(uuid_jury=kwargs['uuid']))
+        serializer = ExternalJuryDTOSerializer(
+            instance={
+                'parcours_doctoral': parcours_doctoral,
+                'jury': jury,
+            },
+        )
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class JuryApproveByPdfPropositionAPIView(DoctorateAPIPermissionRequiredMixin, APIView):
+    name = "jury-approve-by-pdf"
+    permission_mapping = {
+        'POST': 'parcours_doctoral.api_approve_jury_by_pdf',
+    }
+
+    @extend_schema(
+        request=ApprouverJuryParPdfCommandSerializer,
+        responses=JuryIdentityDTOSerializer,
+        operation_id='approve_by_pdf',
+    )
+    def post(self, request, *args, **kwargs):
+        """Approve the jury with a pdf file."""
+        serializer = ApprouverJuryParPdfCommandSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        jury_id = message_bus_instance.invoke(
+            ApprouverJuryParPdfCommand(
+                uuid_jury=str(kwargs["uuid"]),
+                matricule_auteur=self.get_permission_object().student.global_id,
+                **serializer.data,
+            ),
+        )
+
+        serializer = JuryIdentityDTOSerializer(instance=jury_id)
+        return Response(serializer.data, status=status.HTTP_200_OK)

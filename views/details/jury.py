@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -92,6 +92,9 @@ class JuryView(
         context['membre_president'] = [membre for membre in self.jury.membres if membre.role == RoleJury.PRESIDENT.name]
         context['membre_secretaire'] = [
             membre for membre in self.jury.membres if membre.role == RoleJury.SECRETAIRE.name
+        ]
+        context['membre_verificateur'] = [
+            membre for membre in self.jury.membres if membre.role == RoleJury.VERIFICATEUR.name
         ]
         context['membres'] = [membre for membre in self.jury.membres if membre.role == RoleJury.MEMBRE.name]
         if not self.request.user.has_perm('parcours_doctoral.change_jury', obj=self.parcours_doctoral):

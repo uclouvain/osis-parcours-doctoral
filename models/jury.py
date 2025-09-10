@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -23,12 +23,11 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-import uuid
-
 from django.db import models
-from django.db.models import CheckConstraint, Q
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import pgettext_lazy
+from osis_document.contrib import FileField
+from osis_signature.models import Actor
 
 from parcours_doctoral.ddd.jury.domain.model.enums import (
     GenreMembre,
@@ -36,81 +35,40 @@ from parcours_doctoral.ddd.jury.domain.model.enums import (
     TitreMembre,
 )
 
-__all__ = ['JuryMember']
-
-from parcours_doctoral.models.actor import ActorType
+__all__ = ['JuryActor']
 
 
-class JuryMember(models.Model):
-    uuid = models.UUIDField(
-        default=uuid.uuid4,
-        editable=False,
-        unique=True,
-        db_index=True,
+def actor_upload_directory_path(instance: 'JuryActor', filename):
+    """Return the file upload directory path."""
+    from parcours_doctoral.models import ParcoursDoctoral
+
+    parcours_doctoral = ParcoursDoctoral.objects.select_related('student').get(
+        jury_group=instance.process,
+    )
+    return 'parcours_doctoral/{}/{}/jury/{}'.format(
+        parcours_doctoral.student.uuid,
+        parcours_doctoral.uuid,
+        filename,
+    )
+
+
+class JuryActor(Actor):
+    """This model extends Actor from OSIS-Signature"""
+
+    is_promoter = models.BooleanField(
+        verbose_name=_('Is a promoter'),
+        default=False,
+        blank=True,
+    )
+    is_lead_promoter = models.BooleanField(
+        verbose_name=_('Is the lead promoter'),
+        default=False,
+        blank=True,
     )
     role = models.CharField(
         verbose_name=pgettext_lazy('jury', 'Role'),
         choices=RoleJury.choices(),
         max_length=50,
-    )
-    parcours_doctoral = models.ForeignKey(
-        'parcours_doctoral.ParcoursDoctoral',
-        verbose_name=_('Doctorate'),
-        on_delete=models.CASCADE,
-        related_name='jury_members',
-    )
-
-    other_institute = models.CharField(
-        verbose_name=_('Other institute'),
-        max_length=255,
-        default='',
-        blank=True,
-    )
-
-    # Promoter only
-    promoter = models.ForeignKey(
-        'parcours_doctoral.ParcoursDoctoralSupervisionActor',
-        verbose_name=_('Supervisor'),
-        on_delete=models.PROTECT,
-        limit_choices_to={"type": ActorType.PROMOTER.name},
-        null=True,
-        blank=True,
-    )
-
-    # UCL member only
-    person = models.ForeignKey(
-        'base.Person',
-        verbose_name=_("Person"),
-        on_delete=models.PROTECT,
-        null=True,
-        blank=True,
-    )
-
-    # External member only
-    institute = models.CharField(
-        verbose_name=pgettext_lazy('jury', 'Institute'),
-        max_length=255,
-        default='',
-        blank=True,
-    )
-    country = models.ForeignKey(
-        'reference.Country',
-        verbose_name=_("Country"),
-        blank=True,
-        null=True,
-        on_delete=models.SET_NULL,
-    )
-    last_name = models.CharField(
-        verbose_name=_('Surname'),
-        max_length=255,
-        default='',
-        blank=True,
-    )
-    first_name = models.CharField(
-        verbose_name=_('First name'),
-        max_length=255,
-        default='',
-        blank=True,
     )
     title = models.CharField(
         verbose_name=pgettext_lazy('admission', 'Title'),
@@ -125,67 +83,36 @@ class JuryMember(models.Model):
         default='',
         blank=True,
     )
-    gender = models.CharField(
-        verbose_name=_('Gender'),
-        choices=GenreMembre.choices(),
-        max_length=50,
-        default='',
-        blank=True,
-    )
-    email = models.EmailField(
-        verbose_name=pgettext_lazy('admission', 'Email'),
+    other_institute = models.CharField(
+        verbose_name=_('Other institute'),
         max_length=255,
         default='',
         blank=True,
     )
-
-    class Meta:
-        constraints = [
-            CheckConstraint(
-                check=(
-                    Q(promoter__isnull=False)
-                    & Q(person__isnull=True)
-                    & Q(institute='')
-                    & Q(other_institute='')
-                    & Q(country__isnull=True)
-                    & Q(last_name='')
-                    & Q(first_name='')
-                    & Q(title='')
-                    & Q(gender='')
-                    & Q(email='')
-                )
-                | (
-                    Q(promoter__isnull=True)
-                    & Q(person__isnull=False)
-                    & Q(institute='')
-                    & Q(country__isnull=True)
-                    & Q(last_name='')
-                    & Q(first_name='')
-                    & Q(title='')
-                    & Q(gender='')
-                    & Q(email='')
-                )
-                | (
-                    Q(promoter__isnull=True)
-                    & Q(person__isnull=True)
-                    & ~Q(institute='')
-                    & Q(country__isnull=False)
-                    & ~Q(last_name='')
-                    & ~Q(first_name='')
-                    & ~Q(title='')
-                    & ~Q(gender='')
-                    & ~Q(email='')
-                ),
-                name='admission_jurymember_constraint',
-            ),
-        ]
+    gender = models.CharField(
+        verbose_name=_('Gender'),
+        choices=GenreMembre.choices(),
+        max_length=50,
+    )
+    internal_comment = models.TextField(
+        default='',
+        verbose_name=_('Internal comment'),
+        blank=True,
+    )
+    rejection_reason = models.CharField(
+        default='',
+        max_length=50,
+        blank=True,
+        verbose_name=_('Grounds for denied'),
+    )
+    pdf_from_candidate = FileField(
+        min_files=1,
+        max_files=1,
+        mimetypes=['application/pdf'],
+        verbose_name=_("PDF file"),
+        upload_to=actor_upload_directory_path,
+    )
 
     @property
     def complete_name(self):
-        if self.promoter_id:
-            return f"{self.promoter.last_name}, {self.promoter.first_name}"
-
-        if self.person_id:
-            return f"{self.person.last_name}, {self.person.first_name}"
-
-        return f"{self.last_name}, {self.first_name}"
+        return f'{self.last_name}, {self.first_name}'

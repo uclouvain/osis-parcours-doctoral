@@ -152,6 +152,7 @@ class ParcoursDoctoralInMemoryRepository(InMemoryGenericRepository, IParcoursDoc
             justification="",
             intitule_secteur_formation="FOO",
             reference=str(parcours_doctoral.reference),
+            sigle_entite_gestion='',
             matricule_doctorant=parcours_doctoral.matricule_doctorant,
             noma_doctorant=doctorant.noma,
             photo_identite_doctorant=['foo'],
@@ -234,6 +235,7 @@ class ParcoursDoctoralInMemoryRepository(InMemoryGenericRepository, IParcoursDoc
                 autres_documents=[],
             ),
             cree_le=timezone.now(),
+            archive=[],
             commission_proximite='',
         )
 

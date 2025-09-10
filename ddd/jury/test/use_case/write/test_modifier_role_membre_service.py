@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -23,11 +23,12 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from base.ddd.utils.business_validator import MultipleBusinessExceptions
-from django.test import TestCase
+from django.test import SimpleTestCase
 
+from base.ddd.utils.business_validator import MultipleBusinessExceptions
 from parcours_doctoral.ddd.jury.commands import ModifierRoleMembreCommand
 from parcours_doctoral.ddd.jury.domain.model.enums import RoleJury
+from parcours_doctoral.ddd.jury.domain.model.jury import JuryIdentity
 from parcours_doctoral.ddd.jury.test.factory.jury import MembreJuryFactory
 from parcours_doctoral.ddd.jury.validator.exceptions import (
     JuryNonTrouveException,
@@ -42,7 +43,7 @@ from parcours_doctoral.infrastructure.parcours_doctoral.jury.repository.in_memor
 )
 
 
-class TestModifierRoleMembre(TestCase):
+class TestModifierRoleMembre(SimpleTestCase):
     def setUp(self) -> None:
         self.message_bus = message_bus_in_memory_instance
 
@@ -55,13 +56,14 @@ class TestModifierRoleMembre(TestCase):
                 uuid_jury='uuid-jury',
                 uuid_membre='uuid-membre',
                 role='PRESIDENT',
+                matricule_auteur='0123456789',
             )
         )
 
-        jury = JuryInMemoryRepository.entities[0]
+        jury = JuryInMemoryRepository.get(JuryIdentity(uuid='uuid-jury'))
         self.assertEqual(len(jury.membres), 2)
         membre = jury.membres[-1]
-        self.assertEqual(membre.role, RoleJury.PRESIDENT.name)
+        self.assertEqual(membre.role, RoleJury.PRESIDENT)
 
     def test_should_pas_trouve_si_modifier_role_membre_inexistant(self):
         with self.assertRaises(MultipleBusinessExceptions) as context:
@@ -70,6 +72,7 @@ class TestModifierRoleMembre(TestCase):
                     uuid_jury='uuid-jury',
                     uuid_membre='uuid-membre-inexistant',
                     role='PRESIDENT',
+                    matricule_auteur='0123456789',
                 )
             )
             self.assertIsInstance(context.exception.exceptions.pop(), MembreNonTrouveDansJuryException)
@@ -81,6 +84,7 @@ class TestModifierRoleMembre(TestCase):
                     uuid_jury='uuid-jury-inexistant',
                     uuid_membre='uuid-membre',
                     role='PRESIDENT',
+                    matricule_auteur='0123456789',
                 )
             )
 
@@ -90,13 +94,14 @@ class TestModifierRoleMembre(TestCase):
                 uuid_jury='uuid-jury',
                 uuid_membre='uuid-promoteur',
                 role='SECRETAIRE',
+                matricule_auteur='0123456789',
             )
         )
 
-        jury = JuryInMemoryRepository.entities[0]
+        jury = JuryInMemoryRepository.get(JuryIdentity(uuid='uuid-jury'))
         self.assertEqual(len(jury.membres), 2)
         promoteur = jury.membres[-1]
-        self.assertEqual(promoteur.role, RoleJury.SECRETAIRE.name)
+        self.assertEqual(promoteur.role.name, RoleJury.SECRETAIRE.name)
 
     def test_should_exception_si_modifier_role_promoteur_president(self):
         with self.assertRaises(PromoteurPresidentException):
@@ -105,12 +110,13 @@ class TestModifierRoleMembre(TestCase):
                     uuid_jury='uuid-jury',
                     uuid_membre='uuid-promoteur',
                     role='PRESIDENT',
+                    matricule_auteur='0123456789',
                 )
             )
 
     def test_should_modifier_role_membre_autre_membre_president(self):
         JuryInMemoryRepository.entities[0].membres.append(
-            MembreJuryFactory(uuid='uuid-president', role=RoleJury.PRESIDENT.name)
+            MembreJuryFactory(uuid='uuid-president', role=RoleJury.PRESIDENT)
         )
 
         self.message_bus.invoke(
@@ -118,13 +124,14 @@ class TestModifierRoleMembre(TestCase):
                 uuid_jury='uuid-jury',
                 uuid_membre='uuid-membre',
                 role='PRESIDENT',
+                matricule_auteur='0123456789',
             )
         )
 
-        jury = JuryInMemoryRepository.entities[0]
+        jury = JuryInMemoryRepository.get(JuryIdentity(uuid='uuid-jury'))
         self.assertEqual(len(jury.membres), 3)
         for membre in jury.membres:
             if membre.uuid == 'uuid-president':
-                self.assertEqual(membre.role, RoleJury.MEMBRE.name)
+                self.assertEqual(membre.role, RoleJury.MEMBRE)
             elif membre.uuid == 'uuid-membre':
-                self.assertEqual(membre.role, RoleJury.PRESIDENT.name)
+                self.assertEqual(membre.role, RoleJury.PRESIDENT)

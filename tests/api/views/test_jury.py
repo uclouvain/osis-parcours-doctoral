@@ -30,7 +30,7 @@ from rest_framework.test import APITestCase
 from base.tests.factories.entity import EntityFactory
 from base.tests.factories.person import PersonFactory
 from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
-from parcours_doctoral.models import JuryMember, ParcoursDoctoral
+from parcours_doctoral.models import ParcoursDoctoral, JuryActor
 from parcours_doctoral.tests.factories.jury import ExternalJuryMemberFactory
 from parcours_doctoral.tests.factories.parcours_doctoral import ParcoursDoctoralFactory
 from parcours_doctoral.tests.factories.roles import StudentRoleFactory
@@ -64,6 +64,7 @@ class JuryApiTestCase(APITestCase):
         cls.url = resolve_url(cls.base_namespace, uuid=cls.parcours_doctoral.uuid)
         # Create an parcours_doctoral supervision group
         promoter = PromoterFactory()
+        reference_promoter = PromoterFactory(process=promoter.process, is_reference_promoter=True)
         committee_member = CaMemberFactory(process=promoter.process)
         cls.parcours_doctoral.supervision_group = promoter.process
         cls.parcours_doctoral.save()
@@ -72,6 +73,7 @@ class JuryApiTestCase(APITestCase):
         cls.other_student_user = StudentRoleFactory().person.user
         cls.no_role_user = PersonFactory().user
         cls.promoter_user = promoter.person.user
+        cls.reference_promoter_user = reference_promoter.person.user
         cls.other_promoter_user = PromoterFactory().person.user
         cls.committee_member_user = committee_member.person.user
         cls.other_committee_member_user = CaMemberFactory().person.user
@@ -161,6 +163,11 @@ class JuryApiTestCase(APITestCase):
     def test_jury_update_promoter(self):
         self.client.force_authenticate(user=self.promoter_user)
         response = self.client.post(self.url, data=self.updated_data, format="json")
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN, response.content)
+
+    def test_jury_update_reference_promoter(self):
+        self.client.force_authenticate(user=self.reference_promoter_user)
+        response = self.client.post(self.url, data=self.updated_data, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
     def test_jury_get_other_promoter(self):
@@ -205,11 +212,13 @@ class JuryMembersListApiTestCase(APITestCase):
             'justification_non_docteur': '',
             'genre': 'AUTRE',
             'email': 'email@example.org',
+            'langue': 'FR',
         }
         # Targeted url
         cls.url = resolve_url("parcours_doctoral_api_v1:jury-members-list", uuid=cls.parcours_doctoral.uuid)
         # Create an parcours_doctoral supervision group
         promoter = PromoterFactory()
+        reference_promoter = PromoterFactory(process=promoter.process, is_reference_promoter=True)
         committee_member = CaMemberFactory(process=promoter.process)
         cls.parcours_doctoral.supervision_group = promoter.process
         cls.parcours_doctoral.save()
@@ -218,6 +227,7 @@ class JuryMembersListApiTestCase(APITestCase):
         cls.other_student_user = StudentRoleFactory().person.user
         cls.no_role_user = PersonFactory().user
         cls.promoter_user = promoter.person.user
+        cls.reference_promoter_user = reference_promoter.person.user
         cls.other_promoter_user = PromoterFactory().person.user
         cls.committee_member_user = committee_member.person.user
         cls.other_committee_member_user = CaMemberFactory().person.user
@@ -264,7 +274,7 @@ class JuryMembersListApiTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
 
         parcours_doctoral = ParcoursDoctoral.objects.get()
-        membre = parcours_doctoral.jury_members.filter(promoter__isnull=True).first()
+        membre = JuryActor.objects.filter(process=parcours_doctoral.jury_group, is_promoter=False).last()
         self.assertEqual(membre.first_name, "nouveau prenom")
 
         response = self.client.get(self.url, format="json")
@@ -289,6 +299,11 @@ class JuryMembersListApiTestCase(APITestCase):
 
     def test_jury_post_promoter(self):
         self.client.force_authenticate(user=self.promoter_user)
+        response = self.client.post(self.url, data=self.created_data, format="json")
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN, response.content)
+
+    def test_jury_post_reference_promoter(self):
+        self.client.force_authenticate(user=self.reference_promoter_user)
         response = self.client.post(self.url, data=self.created_data, format="json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
 
@@ -323,7 +338,7 @@ class JuryMembersDetailApiTestCase(APITestCase):
             training__management_entity=doctoral_commission,
             thesis_proposed_title='Thesis title',
         )
-        cls.member = ExternalJuryMemberFactory(parcours_doctoral=cls.parcours_doctoral)
+        cls.member = ExternalJuryMemberFactory(process=cls.parcours_doctoral.jury_group)
         cls.udpated_data = {
             'matricule': '',
             'institution': 'institution',
@@ -335,6 +350,7 @@ class JuryMembersDetailApiTestCase(APITestCase):
             'justification_non_docteur': '',
             'genre': 'AUTRE',
             'email': 'email@example.org',
+            'langue': 'fr-be',
         }
         cls.updated_role_data = {'role': 'PRESIDENT'}
         # Targeted url
@@ -343,6 +359,7 @@ class JuryMembersDetailApiTestCase(APITestCase):
         )
         # Create an parcours_doctoral supervision group
         promoter = PromoterFactory()
+        reference_promoter = PromoterFactory(process=promoter.process, is_reference_promoter=True)
         committee_member = CaMemberFactory(process=promoter.process)
         cls.parcours_doctoral.supervision_group = promoter.process
         cls.parcours_doctoral.save()
@@ -351,6 +368,7 @@ class JuryMembersDetailApiTestCase(APITestCase):
         cls.other_student_user = StudentRoleFactory().person.user
         cls.no_role_user = PersonFactory().user
         cls.promoter_user = promoter.person.user
+        cls.reference_promoter_user = reference_promoter.person.user
         cls.other_promoter_user = PromoterFactory().person.user
         cls.committee_member_user = committee_member.person.user
         cls.other_committee_member_user = CaMemberFactory().person.user
@@ -387,9 +405,6 @@ class JuryMembersDetailApiTestCase(APITestCase):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
-        membre = JuryMember.objects.get(uuid=self.member.uuid)
-        self.assertEqual(membre.first_name, "first_name")
-
     def test_get_other_student(self):
         self.client.force_authenticate(user=self.other_student_user)
         response = self.client.get(self.url)
@@ -424,7 +439,7 @@ class JuryMembersDetailApiTestCase(APITestCase):
         response = self.client.put(self.url, data=self.udpated_data, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
-        membre = JuryMember.objects.get(uuid=self.member.uuid)
+        membre = JuryActor.objects.get(uuid=self.member.uuid)
         self.assertEqual(membre.first_name, "nouveau prenom")
 
     def test_put_other_student(self):
@@ -434,6 +449,11 @@ class JuryMembersDetailApiTestCase(APITestCase):
 
     def test_put_promoter(self):
         self.client.force_authenticate(user=self.promoter_user)
+        response = self.client.put(self.url, data=self.udpated_data, format="json")
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN, response.content)
+
+    def test_put_reference_promoter(self):
+        self.client.force_authenticate(user=self.reference_promoter_user)
         response = self.client.put(self.url, data=self.udpated_data, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -461,7 +481,7 @@ class JuryMembersDetailApiTestCase(APITestCase):
         response = self.client.patch(self.url, data=self.updated_role_data, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
-        membre = JuryMember.objects.get(uuid=self.member.uuid)
+        membre = JuryActor.objects.get(uuid=self.member.uuid)
         self.assertEqual(membre.role, "PRESIDENT")
 
     def test_patch_other_student(self):
@@ -471,6 +491,18 @@ class JuryMembersDetailApiTestCase(APITestCase):
 
     def test_patch_promoter(self):
         self.client.force_authenticate(user=self.promoter_user)
+        response = self.client.patch(self.url, data=self.updated_role_data, format="json")
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN, response.content)
+
+    def test_patch_reference_promoter(self):
+        self.client.force_authenticate(user=self.reference_promoter_user)
+        response = self.client.patch(self.url, data=self.updated_role_data, format="json")
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN, response.content)
+
+    def test_patch_reference_promoter(self):
+        self.client.force_authenticate(user=self.reference_promoter_user)
+        self.parcours_doctoral.status = ChoixStatutParcoursDoctoral.JURY_SOUMIS.name
+        self.parcours_doctoral.save(update_fields=["status"])
         response = self.client.patch(self.url, data=self.updated_role_data, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -495,8 +527,8 @@ class JuryMembersDetailApiTestCase(APITestCase):
         response = self.client.delete(self.url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
 
-        with self.assertRaises(JuryMember.DoesNotExist):
-            JuryMember.objects.get(uuid=self.member.uuid)
+        with self.assertRaises(JuryActor.DoesNotExist):
+            JuryActor.objects.get(uuid=self.member.uuid)
 
     def test_delete_other_student(self):
         self.client.force_authenticate(user=self.other_student_user)
@@ -505,6 +537,11 @@ class JuryMembersDetailApiTestCase(APITestCase):
 
     def test_delete_promoter(self):
         self.client.force_authenticate(user=self.promoter_user)
+        response = self.client.delete(self.url)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN, response.content)
+
+    def test_delete_reference_promoter(self):
+        self.client.force_authenticate(user=self.reference_promoter_user)
         response = self.client.delete(self.url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
 

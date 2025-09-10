@@ -418,6 +418,9 @@ msgstr ""
 msgid "All history"
 msgstr "Historique complet"
 
+msgid "All roles are not defined."
+msgstr "Tous les roles ne sont pas définis."
+
 msgid "All supervisors must have approved the proposition."
 msgstr "Tous les promoteurs doivent approuver la proposition."
 
@@ -427,6 +430,9 @@ msgstr ""
 
 msgid "Allow you to manage the doctoral training activities"
 msgstr "Permet d’administrer les activités de formation doctorale"
+
+msgid "Allow you to manage who are auditors for institutes."
+msgstr "Permet d’administrer qui sont les vérificateurs pour les instituts"
 
 msgid "Already a member."
 msgstr "Déjà membre."
@@ -451,6 +457,13 @@ msgstr "Un membre externe doit avoir un email."
 
 msgid "An external member must have an institute."
 msgstr "Un membre externe doit avoir une institution."
+
+msgid ""
+"Anticipated date or period for private defence (Format 1) or admissibility "
+"(Format 2)"
+msgstr ""
+"Date ou période envisagée de la défense privée (formule 1) ou de la "
+"recevabilité (formule 2)"
 
 msgid "Application numero"
 msgstr "Numéro de demande"
@@ -498,6 +511,13 @@ msgstr "Êtes-vous sûr de vouloir refuser \"%(object)s\" ?"
 msgid "Are you sure you want to remove \"%(prenom)s %(nom)s\" from the jury?"
 msgstr "Êtes-vous sûr de vouloir retirer \"%(prenom)s %(nom)s\" du jury ?"
 
+msgid ""
+"Are you sure you want to request signatures to validate the thesis jury?"
+msgstr "Êtes-vous sûr de vouloir requérir les signatures pour ce jury ?"
+
+msgid "Are you sure you want to reset all signatures?"
+msgstr "Êtes-vous sûr de vouloir réinitialiser toutes les signatures ?"
+
 #, python-format
 msgid "Are you sure you want to restore \"%(object)s\"?"
 msgstr "Êtes-vous sûr de vouloir remettre \"%(object)s\" au statut soumis ?"
@@ -526,6 +546,9 @@ msgstr "Attestation"
 
 msgid "Attestation of the communication"
 msgstr "Attestation de communication"
+
+msgid "Auditor"
+msgstr "Vérificateur.trice"
 
 msgid "Authors"
 msgstr "Auteurs et autrices"
@@ -759,6 +782,9 @@ msgstr "Formation complémentaire non activée"
 
 msgid "Complementary training proposition"
 msgstr "Proposition de formation complémentaire"
+
+msgid "Configuration"
+msgstr "Configuration"
 
 msgid "Configuration saved."
 msgstr "Configuration enregistrée."
@@ -1091,7 +1117,7 @@ msgid "Do you wish to move the doctorate to the \"%(status)s\" state?"
 msgstr "Souhaitez-vous passer la demande dans l'état \"%(status)s\" ?"
 
 msgid "Doctor"
-msgstr "Docteur"
+msgstr "Docteur.e"
 
 msgid "Doctoral commissions"
 msgstr "Commissions doctorales"
@@ -1157,9 +1183,6 @@ msgstr "Type de document"
 
 msgid "Documents"
 msgstr "Documents"
-
-msgid "Does not have a doctor title"
-msgstr "N'est pas porteur du titre de docteur"
 
 msgid "Domain doctoral committee"
 msgstr "Commission doctorale de domaine"
@@ -1551,10 +1574,6 @@ msgstr ""
 "Les informations concernant une éventuelle cotutelle sont à indiquer dans la "
 "partie « Recherche »."
 
-msgctxt "jury"
-msgid "Institute"
-msgstr "Institution"
-
 msgctxt "parcours_doctoral"
 msgid "Institute"
 msgstr "Établissement"
@@ -1567,6 +1586,9 @@ msgstr "Adresse de l'établissement"
 
 msgid "Institute name"
 msgstr "Nom de l'établissement"
+
+msgid "Institutes auditors configuration"
+msgstr "Configuration des vérificateurs des instituts"
 
 msgid "Institution"
 msgstr "Institution"
@@ -1600,6 +1622,9 @@ msgstr "Publication internationale"
 msgid "International scholarship"
 msgstr "Bourse internationale"
 
+msgid "Is a promoter"
+msgstr "Est Promoteur·trice"
+
 msgid "Is active"
 msgstr "Est active"
 
@@ -1608,6 +1633,9 @@ msgstr "S'agit-il d'une institution de la Fédération Wallonie-Bruxelles ?"
 
 msgid "Is publication national"
 msgstr "Est une publication nationale"
+
+msgid "Is the lead promoter"
+msgstr "Est Promoteur·trice de référence"
 
 msgid ""
 "Is your admission request linked with a FNRS, FRIA, FRESH or CSC application?"
@@ -1735,6 +1763,9 @@ msgstr "Lien vers la page liée à la formation doctorale (back-office)"
 msgid "Link to the doctoral training panel (front-office)"
 msgstr "Lien vers la page liée à la formation doctorale (front-office)"
 
+msgid "Link to the doctorate jury panel (front-office)"
+msgstr "Lien vers le jury du doctorat (front-office)"
+
 msgid "Link to the doctorate supervisory panel (front-office)"
 msgstr "Lien vers le groupe de supervision du doctorat (front-office)"
 
@@ -1828,6 +1859,17 @@ msgstr ""
 "E-mail envoyé aux membres du groupe de supervision pour demander une "
 "signature"
 
+msgid ""
+"Mail sent to each member of the jury and to the auditor to request a "
+"signature"
+msgstr ""
+"E-mail envoyé aux membres du jury et au vérificateur pour demander une "
+"signature"
+
+msgid "Mail sent to each promoter of the jury to request a signature"
+msgstr ""
+"E-mail envoyé aux membres du groupe du jury pour demander une signature"
+
 msgid "Mail sent to supervisors when a member of the supervision panel refuses"
 msgstr ""
 "E-mail envoyé aux promoteurs lors du refus d'un membre du groupe de "
@@ -1913,6 +1955,10 @@ msgstr ""
 "E-mail envoyé à l'étudiant pour mettre à jour une activité de formation "
 "doctorale"
 
+msgid "Mail sent to the student when one of the member refuse the jury"
+msgstr ""
+"E-mail envoyé à l'étudiant pour lui informer du refus d'un membre du jury"
+
 msgid "Main institute"
 msgstr "Institution principale"
 
@@ -1940,6 +1986,15 @@ msgstr "Membre %(ca_member_index)s"
 
 msgid "Member not found"
 msgstr "Membre non trouvé"
+
+msgid "Member of jury already invited."
+msgstr "Membre du jury déjà invité."
+
+msgid "Member of jury not found."
+msgstr "Membre du jury non trouvé"
+
+msgid "Member of jury not invited."
+msgstr "Membre du jury non invité."
 
 msgid "Member of supervision group already invited."
 msgstr "Membre du groupe de supervision déjà invité."
@@ -2025,8 +2080,14 @@ msgstr "Nom"
 msgid "Name in the language of the manifestation"
 msgstr "Nom dans la langue de la manifestation"
 
+msgid "Name of the doctoral commission"
+msgstr "Nom de la commission doctorale"
+
 msgid "Name or brief description"
 msgstr "Nom ou description brève"
+
+msgid "Names of the CDD managers"
+msgstr "Nom des gestionnaires CDD"
 
 msgid "National publication"
 msgstr "Publication nationale"
@@ -2045,6 +2106,12 @@ msgstr "Doctorat suivant"
 
 msgid "No"
 msgstr "Non"
+
+msgid "No CDD found for this doctorate."
+msgstr "Pas de CDD trouvé pour ce doctorat."
+
+msgid "No auditor are set for this training."
+msgstr "Aucun vérificateur.trice configuré.e pour cette formation."
 
 msgid "No confirmation paper yet"
 msgstr "Pas encore d'épreuve de confirmation"
@@ -2126,6 +2193,20 @@ msgstr "En ligne ou en présentiel"
 
 msgid "Only author"
 msgstr "Auteur.trice unique"
+
+msgid "Only the auditor can change jury roles for SST doctorate."
+msgstr ""
+"Uniquement le vérificateur peut changer les rôles du jury pour les doctorats "
+"SST."
+
+msgid "Only the lead supervisor can change jury roles for SSH doctorate."
+msgstr ""
+"Uniquement le.a promoteur.trice de référence peut changer les rôles du jury "
+"pour les doctorats SSH."
+
+msgid "Only the student can change jury roles for SSS doctorate."
+msgstr ""
+"Uniquement l'étudiant peut changer les rôles du jury pour les doctorats SSS."
 
 msgid "Open the related list"
 msgstr "Ouvrir la liste associée"
@@ -2219,9 +2300,6 @@ msgstr "Participations"
 msgid "Partner institution"
 msgstr "Institution partenaire"
 
-msgid "Person"
-msgstr "Personne"
-
 msgid "PhD"
 msgstr "Doctorat"
 
@@ -2274,9 +2352,12 @@ msgstr "Veuillez choisir une formation correct."
 msgid "Please correct the errors below"
 msgstr "Veuillez corriger les erreurs ci-dessous"
 
-msgid "Please justify why the member does not have a doctor title"
+msgid ""
+"Please input all required information from the \"Defense Method\" tab before "
+"requesting the signatures."
 msgstr ""
-"Merci de justifier pourquoi le membre n'est pas porteur du titre de docteur"
+"Veuillez compléter toutes les zones obligatoires de l'onglet \"Modalités de "
+"défense\" avant de demander les signatures."
 
 msgid ""
 "Please look up the website of your domain doctoral committee on how to "
@@ -2345,7 +2426,7 @@ msgid "Private defense / Public defense (formula 2)"
 msgstr "Défense privée / Soutenance (formule 2)"
 
 msgid "Professor"
-msgstr "Professeur"
+msgstr "Professeur.e"
 
 msgid "Program proposition"
 msgstr "Proposition de programme"
@@ -2486,6 +2567,9 @@ msgstr "Référence"
 msgid "Reference DIAL.Pr"
 msgstr "Référence DIAL.Pr"
 
+msgid "Refusal reason"
+msgstr "Raison de refus"
+
 msgid "Refuse activity"
 msgstr "Refuser l'activité"
 
@@ -2520,6 +2604,9 @@ msgstr "Catégories de reporting"
 
 msgid "Request of a new deadline for the confirmation paper"
 msgstr "Demande d'une nouvelle échéance pour l'épreuve de confirmation"
+
+msgid "Request signatures"
+msgstr "Demander les signatures"
 
 msgid "Require changes"
 msgstr "Demander des changements"
@@ -2567,6 +2654,9 @@ msgstr "Renvoyer une invitation"
 msgid "Reset"
 msgstr "Réinitialiser"
 
+msgid "Reset signatures"
+msgstr "Réinitialiser les signatures"
+
 msgid "Restore activity to submitted"
 msgstr "Remettre cette activité au statut soumise"
 
@@ -2593,6 +2683,9 @@ msgstr "Rôle: Secrétaires ADRE"
 msgid "Role: ADRE secretary"
 msgstr "Rôle: Secrétaire ADRE"
 
+msgid "Role: Auditor"
+msgstr "Rôle: Vérificateur"
+
 msgid "Role: CDD configurator"
 msgstr "Rôle: Configurateur CDD"
 
@@ -2605,11 +2698,23 @@ msgstr "Rôle: Lecteur doctorat"
 msgid "Role: Doctorate readers"
 msgstr "Rôle: Lecteurs doctorat"
 
+msgid "Role: Jury member"
+msgstr "Rôle: Membre du jury"
+
+msgid "Role: Jury members"
+msgstr "Rôle: Membres du jury"
+
 msgid "Role: Jury secretaries"
 msgstr "Rôle: Secrétaires de jury"
 
 msgid "Role: Jury secretary"
 msgstr "Rôle: Secrétaire de jury"
+
+msgid "Role: Sector administrative director"
+msgstr "Rôle: Directeur.trice administratif de secteur"
+
+msgid "Role: Sector administrative directors"
+msgstr "Rôle: Directeur.trices administratif de secteur"
 
 msgid "Role: Student"
 msgstr "Rôle: Étudiant"
@@ -2638,6 +2743,9 @@ msgid "SERVICE types"
 msgstr ""
 "Types d'activité pour la catégorie Service institutionnel, didactique et "
 "d'expertise scientifique"
+
+msgid "SIGNED"
+msgstr "Signé"
 
 msgid "SIGNING_IN_PROGRESS"
 msgstr "Signatures en cours"
@@ -3131,6 +3239,18 @@ msgstr ""
 msgid "The jury is not in progress"
 msgstr "Le jury n'est pas en cours"
 
+msgid ""
+"The jury must have at least one member from another institute than the "
+"UCLouvain, chosen depending on their particular expertise about the subject "
+"of the thesis."
+msgstr ""
+"Le jury doit comporter au moins un membre faisant partie d'une autre "
+"institution que l'UCLouvain, choisi en fonction de ses compétences "
+"particulières dans le sujet de la thèse soutenue."
+
+msgid "The jury signing is not in progress"
+msgstr "Le jury n'est pas en cours de signature"
+
 msgid "The last name of the recipient"
 msgstr "Le nom du destinataire"
 
@@ -3512,6 +3632,9 @@ msgctxt "CategorieActivite"
 msgid "VAE"
 msgstr "Valorisation des acquis de l'expérience"
 
+msgid "VERIFICATEUR"
+msgstr "Vérificateur.trice"
+
 msgid "Validate selected courses"
 msgstr "Valider les cours sélectionnées"
 
@@ -3555,6 +3678,9 @@ msgstr "Avec comité de lecture"
 
 msgid "Withdraw"
 msgstr "Désinscrire"
+
+msgid "Without PhD degree"
+msgstr "Sans grade de doctorat"
 
 msgid "Without reading committee"
 msgstr "Sans comité de lecture"
@@ -3631,6 +3757,10 @@ msgstr ""
 "Vous devez être membre de la commission doctorale pour accéder à cette "
 "formation doctorale"
 
+msgid "You must be a member of the jury to access this doctoral training"
+msgstr ""
+"Vous devez être membre du comité pour accéder à cette formation doctorale"
+
 msgid "You must be the contact supervisor to access this doctoral training"
 msgstr ""
 "Vous devez être le·la promoteur·trice de contact pour accéder à cette "
@@ -3645,6 +3775,12 @@ msgid "You must be the request supervisor to access this doctoral training"
 msgstr ""
 "Vous devez être le promoteur de la demande pour accéder à cette formation "
 "doctorale"
+
+msgid ""
+"You must correct the jury composition before you can request signatures."
+msgstr ""
+"Vous devez ajouter au moins deux membres du comité d'accompagnement afin de "
+"demander les signatures."
 
 msgid "You must reference a person in UCLouvain."
 msgstr "Vous devez référencer une personne de l'UCLouvain."
@@ -3677,6 +3813,10 @@ msgid ""
 msgstr ""
 "Vos informations de cotutelle pourront être complétées ultérieurement; "
 "veuillez indiquer \"non\" si vous ne disposez pas encore des informations"
+
+#, python-format
+msgid "Your jury must have at least %s members."
+msgstr "Votre jury doit être composé d'au moins %s membres."
 
 msgid "Your participation"
 msgstr "Votre participation"
@@ -3725,3 +3865,14 @@ msgstr "UCLouvain"
 #, python-brace-format
 msgid "{items} types out of {total}"
 msgstr "{items} types sur {total}"
+
+#~ msgid ""
+#~ "Mail sent to promoters when a member of the supervision panel refuses"
+#~ msgstr ""
+#~ "E-mail envoyé aux promoteurs lors du refus d'un membre du groupe de "
+#~ "supervision"
+
+#~ msgid "You must be the reference promoter to access this doctoral training"
+#~ msgstr ""
+#~ "Vous devez être le·la promoteur·trice de contact pour accéder à cette "
+#~ "formation doctorale"
