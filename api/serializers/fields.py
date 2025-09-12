@@ -164,6 +164,11 @@ PARCOURS_DOCTORAL_ACTION_LINKS = {
         'method': 'PUT',
         'params': ['uuid'],
     },
+    'retrieve_private_defense_minutes_canvas': {
+        'path_name': 'parcours_doctoral_api_v1:private-defense-minutes',
+        'method': 'GET',
+        'params': ['uuid'],
+    },
 }
 
 

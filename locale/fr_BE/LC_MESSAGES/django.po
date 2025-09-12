@@ -664,6 +664,9 @@ msgstr "Peut voir les informations relatives à l'épreuve de confirmation"
 msgid "Cancel"
 msgstr "Annuler"
 
+msgid "Canvas of the private defence minutes to download"
+msgstr "Canevas de procès-verbal de la défense privée à télécharger"
+
 msgid "Canvas of the report of the supervisory panel"
 msgstr "Canevas du procès-verbal du comité d'accompagnement"
 
@@ -3536,6 +3539,9 @@ msgid ""
 msgstr ""
 "À téléverser dans votre dossier sur la plateforme doctorale dans les plus "
 "brefs délais après l’épreuve de confirmation"
+
+msgid "To complete"
+msgstr "A compléter"
 
 msgid ""
 "To visualize and edit a document, please select it in the list opposite."
