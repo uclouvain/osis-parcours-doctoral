@@ -23,25 +23,26 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from rest_framework import serializers
 
-from base.utils.serializers import DTOSerializer
-from parcours_doctoral.ddd.defense_privee.commands import SoumettreDefensePriveeCommand
-from parcours_doctoral.ddd.defense_privee.dtos import DefensePriveeDTO
+from django.views.generic import RedirectView
 
+from parcours_doctoral.exports.private_defense_minutes_canvas import (
+    private_defense_minutes_canvas_url,
+)
+from parcours_doctoral.views.mixins import ParcoursDoctoralViewMixin
 
-class PrivateDefenseDTOSerializer(DTOSerializer):
-    class Meta:
-        source = DefensePriveeDTO
-
-
-class SubmitPrivateDefenseSerializer(DTOSerializer):
-    uuid = None
-    matricule_auteur = None
-
-    class Meta:
-        source = SoumettreDefensePriveeCommand
+__all__ = [
+    "PrivateDefenseMinutesCanvasView",
+]
 
 
-class PrivateDefenseMinutesCanvasSerializer(serializers.Serializer):
-    url = serializers.URLField(read_only=True)
+class PrivateDefenseMinutesCanvasView(ParcoursDoctoralViewMixin, RedirectView):
+    permission_required = 'parcours_doctoral.view_private_defense'
+
+    def get(self, request, *args, **kwargs):
+        self.url = private_defense_minutes_canvas_url(
+            doctorate_uuid=self.parcours_doctoral_uuid,
+            language=self.parcours_doctoral.student.language,
+        )
+
+        return super().get(request, *args, **kwargs)
