@@ -83,6 +83,13 @@
     {% field_data _("Private defence date and time") current_private_defense.date_heure inline=True %}
     {% field_data _("Private defence location") current_private_defense.lieu inline=True %}
     {% field_data _("Date of manuscript submission to the thesis exam board") current_private_defense.date_envoi_manuscrit inline=True %}
+
+    <p>
+      <a href="{% url 'parcours_doctoral:private-defense-minutes-canvas' view.kwargs.uuid %}" target="_blank">
+        {% translate 'Canvas of the private defence minutes to download' %}
+      </a>
+    </p>
+
     {% field_data _("Private defence minutes") current_private_defense.proces_verbal %}
   </div>
 

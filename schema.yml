@@ -1146,6 +1146,39 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '404':
           $ref: '#/components/responses/NotFound'
+  /doctorate/{uuid}/private-defense/minutes:
+    get:
+      operationId: retrieve_private_defense_minutes_canvas
+      parameters:
+      - in: path
+        name: uuid
+        schema:
+          type: string
+          format: uuid
+        required: true
+      - $ref: '#/components/parameters/Accept-Language'
+      - $ref: '#/components/parameters/X-User-FirstName'
+      - $ref: '#/components/parameters/X-User-LastName'
+      - $ref: '#/components/parameters/X-User-Email'
+      - $ref: '#/components/parameters/X-User-GlobalID'
+      tags:
+      - doctorate
+      security:
+      - tokenAuth: []
+      - Token: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PrivateDefenseMinutesCanvas'
+          description: ''
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
   /doctorate/{uuid}/project:
     get:
       operationId: retrieve_project
@@ -3385,6 +3418,8 @@ components:
               $ref: '#/components/schemas/ActionLink'
             update_private_defense:
               $ref: '#/components/schemas/ActionLink'
+            retrieve_private_defense_minutes_canvas:
+              $ref: '#/components/schemas/ActionLink'
           readOnly: true
           default: {}
       required:
@@ -3567,6 +3602,13 @@ components:
       - proces_verbal
       - titre_these
       - uuid
+    PrivateDefenseMinutesCanvas:
+      type: object
+      properties:
+        url:
+          type: string
+          format: uri
+          readOnly: true
     ProjetDTONested:
       type: object
       description: |-

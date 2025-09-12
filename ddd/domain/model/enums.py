@@ -66,6 +66,7 @@ STATUTS_DOCTORAT_EPREUVE_CONFIRMATION_EN_COURS = {
 
 STATUTS_DOCTORAT_DEFENSE_PRIVEE_EN_COURS = {
     ChoixStatutParcoursDoctoral.JURY_APPROUVE_ADRE.name,
+    ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_AUTORISEE.name,
     ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_SOUMISE.name,
     ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_A_RECOMMENCER.name,
 }
