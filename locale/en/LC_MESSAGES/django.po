@@ -628,6 +628,9 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
+msgid "Canvas of the private defence minutes to download"
+msgstr ""
+
 msgid "Canvas of the report of the supervisory panel"
 msgstr ""
 
@@ -3427,6 +3430,9 @@ msgstr ""
 msgid ""
 "To be uploaded in your dossier on the doctoral platform as soon as possible "
 "after the confirmation test"
+msgstr ""
+
+msgid "To complete"
 msgstr ""
 
 msgid ""

@@ -67,6 +67,7 @@ urlpatterns = [
     path('doctorate/<uuid:uuid>/jury/approve-by-pdf', views.JuryApproveByPdfPropositionAPIView),
     # Private defense
     path('doctorate/<uuid:uuid>/private-defense', views.PrivateDefenseListAPIView),
+    path('doctorate/<uuid:uuid>/private-defense/minutes', views.PrivateDefenseMinutesAPIView),
     path('doctorate/<uuid:uuid>/private-defense/<uuid:private_defense_uuid>', views.PrivateDefenseAPIView),
     # Training
     path('doctorate/<uuid:uuid>/training/config', views.TrainingConfigView),
