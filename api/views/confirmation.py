@@ -188,7 +188,6 @@ class LastConfirmationCanvasAPIView(DoctorateAPIPermissionRequiredMixin, mixins.
         )
 
         uuid = parcours_doctoral_pdf_confirmation_canvas(
-            parcours_doctoral=doctorate,
             language=doctorate.student.language,
             context={
                 'parcours_doctoral': parcours_doctoral,

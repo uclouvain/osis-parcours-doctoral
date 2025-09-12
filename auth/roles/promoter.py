@@ -75,5 +75,8 @@ class Promoter(AdmissionPromoter):
             'parcours_doctoral.api_view_course_enrollment': is_parcours_doctoral_promoter,
             'parcours_doctoral.api_view_training': is_parcours_doctoral_promoter,
             'parcours_doctoral.api_assent_training': is_parcours_doctoral_reference_promoter,
+            # Private defense
+            'parcours_doctoral.api_view_private_defense': is_parcours_doctoral_promoter,
+            'parcours_doctoral.api_view_private_defense_minutes': is_parcours_doctoral_promoter,
         }
         return RuleSet(rules)
