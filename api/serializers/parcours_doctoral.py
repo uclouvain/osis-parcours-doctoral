@@ -77,6 +77,7 @@ class ParcoursDoctoralDTOSerializer(DTOSerializer):
                 # Private defense
                 'retrieve_private_defense',
                 'update_private_defense',
+                'retrieve_private_defense_minutes_canvas',
             ]
         }
     )

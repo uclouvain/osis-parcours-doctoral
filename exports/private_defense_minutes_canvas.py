@@ -25,22 +25,47 @@
 # ##############################################################################
 
 from django.utils import translation
+from osis_document.api.utils import get_remote_token
+from osis_document.enums import PostProcessingWanted
+from osis_document.utils import get_file_url
 
+from infrastructure.messages_bus import message_bus_instance
+from parcours_doctoral.ddd.commands import RecupererParcoursDoctoralQuery
+from parcours_doctoral.ddd.dtos import ParcoursDoctoralDTO
 from parcours_doctoral.exports.utils import parcours_doctoral_generate_pdf
-from parcours_doctoral.models.confirmation_paper import ConfirmationPaper
+from parcours_doctoral.models.private_defense import PrivateDefense
 
 
-def parcours_doctoral_pdf_confirmation_canvas(language, context):
+def private_defense_minutes_canvas_url(doctorate_uuid, language):
+    """For a doctorate uuid, create the private defense canvas, save it and return the file url."""
     with translation.override(language=language):
+        doctorate_dto: ParcoursDoctoralDTO = message_bus_instance.invoke(
+            RecupererParcoursDoctoralQuery(
+                parcours_doctoral_uuid=doctorate_uuid,
+            )
+        )
+
         # Generate the pdf
         save_token = parcours_doctoral_generate_pdf(
-            template='parcours_doctoral/exports/confirmation_export.html',
-            filename='confirmation.pdf',
-            context=context,
+            template='parcours_doctoral/exports/private_defense_minutes_canvas.html',
+            filename=f'private_defense_canvas_{doctorate_dto.reference}.pdf',
+            context={
+                'parcours_doctoral': doctorate_dto,
+            },
         )
+
         # Attach the file to the object
-        confirmation_paper = ConfirmationPaper.objects.get(uuid=context.get('confirmation_paper').uuid)
-        confirmation_paper.supervisor_panel_report_canvas = [save_token]
-        confirmation_paper.save()
-        # Return the file UUID
-        return confirmation_paper.supervisor_panel_report_canvas[0]
+        current_private_defense = PrivateDefense.objects.get(
+            current_parcours_doctoral__uuid=doctorate_uuid,
+        )
+        current_private_defense.minutes_canvas = [save_token]
+        current_private_defense.save(update_fields=['minutes_canvas'])
+
+        reading_token = get_remote_token(
+            current_private_defense.minutes_canvas[0],
+            wanted_post_process=PostProcessingWanted.ORIGINAL.name,
+        )
+
+        url = get_file_url(reading_token)
+
+        return url
