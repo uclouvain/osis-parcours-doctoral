@@ -171,20 +171,6 @@ class Notification(INotification):
             process=parcours_doctoral_instance.supervision_group
         ).select_related('person')
 
-        # Envoyer aux gestionnaires CDD
-        for manager in get_parcours_doctoral_cdd_managers(parcours_doctoral_instance.training.education_group_id):
-            with translation.override(manager.language):
-                content = (
-                    _(
-                        '<a href="%(parcours_doctoral_link_back)s">%(reference)s</a> - '
-                        '%(student_first_name)s %(student_last_name)s requested '
-                        'signatures for %(training_title)s'
-                    )
-                    % common_tokens
-                )
-                web_notification = WebNotification(recipient=manager, content=str(content))
-            WebNotificationHandler.create(web_notification)
-
         # Envoyer au doctorant
         with translation.override(doctorant.language):
             actor_list_str = [

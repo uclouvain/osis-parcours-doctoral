@@ -54,6 +54,7 @@ class AdreSecretary(RoleModel):
             'base.can_access_student_path': rules.always_allow,
             # Doctorate
             'parcours_doctoral.view_parcours_doctoral': rules.always_allow,
+            'parcours_doctoral.view_parcours_doctoral_home': rules.always_allow,
             'parcours_doctoral.view_person': rules.always_allow,
             'parcours_doctoral.view_coordinates': rules.always_allow,
             'parcours_doctoral.view_secondary_studies': rules.always_allow,

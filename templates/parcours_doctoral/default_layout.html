@@ -1,5 +1,5 @@
-{% extends "parcours_doctoral/default_layout.html" %}
-{% load i18n static parcours_doctoral %}
+{% extends "bootstrap5/layout.html" %}
+{% load i18n %}
 
 {% comment "License" %}
   * OSIS stands for Open Student Information System. It's an application
@@ -26,28 +26,6 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-  {{ block.super }}
-  <li class="breadcrumb-item">
-    <a href="{% url 'parcours_doctoral:list' %}" id="lnk_parcours_doctorals">
-      {% trans 'Doctoral trainings' %}
-    </a>
-  </li>
-  <li class="breadcrumb-item active">
-    {% translate 'Dashboard' %}
-  </li>
-{% endblock %}
-
-{% block content %}
-  <div class="page-header">
-    <h2 class="d-inline-block">{% trans "Dashboard" %}</h2>
-  </div>
-
-  {% include 'parcours_doctoral/dashboard_htmx.html' %}
-{% endblock %}
-
-{% block style %}
-
-  {{ block.super }}
-
-  <link rel="stylesheet" href="{% static 'parcours_doctoral/parcours_doctoral.css' %}" type='text/css'>
+  <li class="breadcrumb-item"><a href="{% url 'studies' %}">{% translate 'Student path' %}</a></li>
+  <li class="breadcrumb-item"><a href="{% url 'parcours_doctoral:home' %}">{% translate "PhD management" %}</a></li>
 {% endblock %}
