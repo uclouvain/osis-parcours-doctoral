@@ -116,6 +116,9 @@ PROGRAM_MANAGER_RULES = {
     'parcours_doctoral.invite_jury_to_private_defense': is_part_of_education_group
     & has_valid_enrollment
     & private_defense_is_authorised,
+    'parcours_doctoral.make_private_defense_decision': is_part_of_education_group
+    & has_valid_enrollment
+    & private_defense_is_authorised,
     'parcours_doctoral.change_private_defense': is_part_of_education_group & has_valid_enrollment,
     # -- Soutenance
     # -- Commentaire

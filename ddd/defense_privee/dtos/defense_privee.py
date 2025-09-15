@@ -45,3 +45,7 @@ class DefensePriveeDTO(interface.DTO):
     date_envoi_manuscrit: Optional[datetime.date]
     proces_verbal: List[str]
     canevas_proces_verbal: List[str]
+
+    @property
+    def est_valide_pour_decision(self):
+        return bool(self.date_heure and self.proces_verbal)

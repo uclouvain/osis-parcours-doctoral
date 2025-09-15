@@ -82,4 +82,11 @@ COMMAND_HANDLERS = {
         historique=Historique(),
         personne_connue_ucl_translator=PersonneConnueUclTranslator(),
     ),
+    ConfirmerReussiteDefensePriveeCommand: lambda msg_bus, cmd: confirmer_reussite_defense_privee(
+        cmd,
+        parcours_doctoral_repository=ParcoursDoctoralRepository(),
+        defense_privee_repository=DefensePriveeRepository(),
+        historique=Historique(),
+        notification=NotificationGenerale(),
+    ),
 }
