@@ -31,8 +31,10 @@ import attr
 
 from ddd.logic.reference.domain.model.bourse import BourseIdentity
 from osis_common.ddd import interface
+from parcours_doctoral.ddd.defense_privee.dtos import DefensePriveeDTO
 from parcours_doctoral.ddd.defense_privee.validators.validator_by_business_action import (
     AutoriserDefensePriveeValidatorList,
+    DonnerDecisionDefensePriveeValidatorList,
     InviterJuryDefensePriveeValidatorList,
 )
 from parcours_doctoral.ddd.domain.model._cotutelle import Cotutelle
@@ -348,3 +350,11 @@ class ParcoursDoctoral(interface.RootEntity):
         InviterJuryDefensePriveeValidatorList(
             statut_parcours_doctoral=self.statut,
         ).validate()
+
+    def confirmer_reussite_defense_privee(self, defense_privee: DefensePriveeDTO):
+        DonnerDecisionDefensePriveeValidatorList(
+            defense_privee=defense_privee,
+            statut_parcours_doctoral=self.statut,
+        ).validate()
+
+        self.statut = ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_REUSSIE

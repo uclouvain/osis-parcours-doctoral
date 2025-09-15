@@ -78,3 +78,12 @@ class SoumettreProcesVerbalDefensePriveeCommand(interface.CommandRequest):
     matricule_auteur: str
 
     proces_verbal: list[str]
+
+
+@attr.dataclass(frozen=True, slots=True)
+class ConfirmerReussiteDefensePriveeCommand(interface.CommandRequest):
+    parcours_doctoral_uuid: str
+
+    matricule_auteur: str
+    sujet_message: str
+    corps_message: str

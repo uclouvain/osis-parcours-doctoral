@@ -57,5 +57,5 @@ class DefensePriveeFactory(factory.Factory):
     date_heure = FuzzyNaiveDateTime(start_dt=datetime.datetime(2020, 1, 1))
     lieu = factory.Faker('address')
     date_envoi_manuscrit = FuzzyDate(start_date=datetime.date(2020, 1, 1))
-    proces_verbal = factory.ListFactory()
-    canevas_proces_verbal = factory.ListFactory()
+    proces_verbal = factory.List(['file-1'])
+    canevas_proces_verbal = factory.List(['file-2'])
