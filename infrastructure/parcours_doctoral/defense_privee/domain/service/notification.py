@@ -49,7 +49,7 @@ from parcours_doctoral.utils.url import (
 
 class Notification(NotificationMixin, INotification):
     @classmethod
-    def get_doctorate(cls, doctorate_uuid):
+    def get_doctorate(cls, doctorate_uuid) -> ParcoursDoctoralDBModel:
         return (
             ParcoursDoctoralDBModel.objects.select_related(
                 'student',
@@ -74,8 +74,14 @@ class Notification(NotificationMixin, INotification):
             'training_title': cls._get_parcours_doctoral_title_translation(doctorate),
             'parcours_doctoral_link_front': get_parcours_doctoral_link_front(doctorate.uuid),
             'parcours_doctoral_link_back': get_parcours_doctoral_link_back(doctorate.uuid),
-            'private_defense_link_front': get_parcours_doctoral_link_front(doctorate.uuid, 'private-defense'),
-            'private_defense_link_back': get_parcours_doctoral_link_back(doctorate.uuid, 'private-defense'),
+            'parcours_doctoral_link_front_private_defense_minutes': get_parcours_doctoral_link_front(
+                doctorate.uuid,
+                'private-defense/minutes',
+            ),
+            'parcours_doctoral_link_front_thesis_distribution_authorisation': get_parcours_doctoral_link_front(
+                doctorate.uuid,
+                'thesis-distribution-authorisation',
+            ),
             'private_defense_date': cls._format_date(doctorate.current_private_defense.datetime),
             'private_defense_place': doctorate.current_private_defense.place,
             'reference': doctorate.reference,

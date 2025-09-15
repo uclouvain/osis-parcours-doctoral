@@ -52,12 +52,17 @@ from parcours_doctoral.ddd.domain.service.i_notification import INotification
 from parcours_doctoral.ddd.domain.validator.exceptions import (
     SignataireNonTrouveException,
 )
+from parcours_doctoral.infrastructure.mixins.notification import NotificationMixin
 from parcours_doctoral.mail_templates.signatures import (
     PARCOURS_DOCTORAL_EMAIL_MEMBER_REMOVED,
     PARCOURS_DOCTORAL_EMAIL_SIGNATURE_REQUESTS_ACTOR,
     PARCOURS_DOCTORAL_EMAIL_SIGNATURE_REQUESTS_STUDENT,
 )
-from parcours_doctoral.models import ActorType, ParcoursDoctoralSupervisionActor
+from parcours_doctoral.models import (
+    ActorType,
+    JuryMember,
+    ParcoursDoctoralSupervisionActor,
+)
 from parcours_doctoral.models.parcours_doctoral import (
     ParcoursDoctoral as ParcoursDoctoralModel,
 )
@@ -69,7 +74,7 @@ from parcours_doctoral.utils.url import (
 )
 
 
-class Notification(INotification):
+class Notification(NotificationMixin, INotification):
     @classmethod
     def envoyer_message(
         cls,
@@ -80,6 +85,7 @@ class Notification(INotification):
         message: str,
         cc_promoteurs: bool,
         cc_membres_ca: bool,
+        cc_jury: bool = False,
     ) -> EmailMessage:
         parcours_doctoral_instance = ParcoursDoctoralModel.objects.get(uuid=parcours_doctoral.entity_id.uuid)
 
@@ -92,18 +98,35 @@ class Notification(INotification):
                 message,
             )
         )
-        actors = ParcoursDoctoralSupervisionActor.objects.filter(
-            process=parcours_doctoral_instance.supervision_group
-        ).select_related('person')
-        cc_list = []
-        if cc_promoteurs:
-            for promoter in actors.filter(type=ActorType.PROMOTER.name):
-                cc_list.append(cls._format_email(promoter))
-        if cc_membres_ca:
-            for ca_member in actors.filter(type=ActorType.CA_MEMBER.name):
-                cc_list.append(cls._format_email(ca_member))
+
+        cc_list = set()
+
+        if cc_promoteurs or cc_membres_ca:
+            actors = ParcoursDoctoralSupervisionActor.objects.filter(
+                process=parcours_doctoral_instance.supervision_group
+            ).select_related('person')
+
+            if cc_promoteurs:
+                for promoter in actors.filter(type=ActorType.PROMOTER.name):
+                    cc_list.add(cls._format_email(promoter))
+
+            if cc_membres_ca:
+                for ca_member in actors.filter(type=ActorType.CA_MEMBER.name):
+                    cc_list.add(cls._format_email(ca_member))
+
+        if cc_jury:
+            jury_members = JuryMember.objects.select_related(
+                'promoter__person',
+                'person',
+            ).filter(parcours_doctoral=parcours_doctoral_instance)
+
+            for jury_member in jury_members:
+                jury_member_info = cls.get_jury_member_info(jury_member=jury_member)
+                cc_list.add(cls._format_email_jury_member(jury_member_info=jury_member_info))
+
         if cc_list:
             email_message['Cc'] = ','.join(cc_list)
+
         EmailNotificationHandler.create(email_message, person=parcours_doctoral_instance.student)
 
         return email_message
@@ -134,6 +157,10 @@ class Notification(INotification):
     @classmethod
     def _format_email(cls, actor: ParcoursDoctoralSupervisionActor):
         return "{a.first_name} {a.last_name} <{a.email}>".format(a=actor)
+
+    @classmethod
+    def _format_email_jury_member(cls, jury_member_info: NotificationMixin.JuryMemberInfo):
+        return "%(first_name)s %(last_name)s <%(email)s>" % jury_member_info
 
     @classmethod
     def envoyer_signatures(
