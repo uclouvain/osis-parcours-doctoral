@@ -64,6 +64,11 @@ COMMAND_HANDLERS = {
         defense_privee_repository=DefensePriveeRepository(),
         historique=Historique(),
     ),
+    SoumettreProcesVerbalDefensePriveeCommand: lambda msg_bus, cmd: soumettre_proces_verbal_defense_privee(
+        cmd,
+        defense_privee_repository=DefensePriveeRepository(),
+        historique=Historique(),
+    ),
     AutoriserDefensePriveeCommand: lambda msg_bus, cmd: autoriser_defense_privee(
         cmd,
         parcours_doctoral_repository=ParcoursDoctoralRepository(),
