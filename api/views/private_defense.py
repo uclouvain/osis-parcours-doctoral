@@ -34,12 +34,14 @@ from parcours_doctoral.api.serializers import ParcoursDoctoralIdentityDTOSeriali
 from parcours_doctoral.api.serializers.private_defense import (
     PrivateDefenseDTOSerializer,
     PrivateDefenseMinutesCanvasSerializer,
+    SubmitPrivateDefenseMinutesSerializer,
     SubmitPrivateDefenseSerializer,
 )
 from parcours_doctoral.ddd.defense_privee.commands import (
     RecupererDefensePriveeQuery,
     RecupererDefensesPriveesQuery,
     SoumettreDefensePriveeCommand,
+    SoumettreProcesVerbalDefensePriveeCommand,
 )
 from parcours_doctoral.exports.private_defense_minutes_canvas import (
     private_defense_minutes_canvas_url,
@@ -130,6 +132,11 @@ class PrivateDefenseAPIView(DoctorateAPIPermissionRequiredMixin, mixins.Retrieve
         responses=PrivateDefenseMinutesCanvasSerializer,
         operation_id='retrieve_private_defense_minutes_canvas',
     ),
+    put=extend_schema(
+        request=SubmitPrivateDefenseMinutesSerializer,
+        responses=ParcoursDoctoralIdentityDTOSerializer,
+        operation_id='submit_private_defense_minutes',
+    ),
 )
 class PrivateDefenseMinutesAPIView(DoctorateAPIPermissionRequiredMixin, RetrieveAPIView):
     name = "private-defense-minutes"
@@ -149,3 +156,20 @@ class PrivateDefenseMinutesAPIView(DoctorateAPIPermissionRequiredMixin, Retrieve
         )
 
         return {'url': url}
+
+    def put(self, request, *args, **kwargs):
+        """Submit the minutes of the private defense"""
+        serializer = SubmitPrivateDefenseMinutesSerializer(data=request.data)
+
+        serializer.is_valid(raise_exception=True)
+
+        result = message_bus_instance.invoke(
+            SoumettreProcesVerbalDefensePriveeCommand(
+                matricule_auteur=self.request.user.person.global_id,
+                **serializer.validated_data,
+            )
+        )
+
+        serializer = ParcoursDoctoralIdentityDTOSerializer(instance=result)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
