@@ -115,7 +115,7 @@ class DoctorateListViewTestCase(QueriesAssertionsMixin, APITestCase):
     def test_list_with_current_student(self):
         self.client.force_authenticate(user=self.student.user)
 
-        with self.assertNumQueriesLessThan(12, verbose=True):
+        with self.assertNumQueriesLessThan(12):
             response = self.client.get(self.url, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -176,7 +176,7 @@ class DoctorateListViewTestCase(QueriesAssertionsMixin, APITestCase):
     def test_list_with_other_student(self):
         self.client.force_authenticate(user=self.other_student.user)
 
-        with self.assertNumQueriesLessThan(12, verbose=True):
+        with self.assertNumQueriesLessThan(12):
             response = self.client.get(self.url, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)

@@ -100,6 +100,18 @@
     $(function () {
       $('[data-bs-toggle="popover"]').popover();
 
+      $('.accept-activity-btn').on('click', function (event) {
+          event.preventDefault();
+          $('[name=activity_ids]').val([$(this).attr('data-uuid')]);
+          $('button[name=_accept]').click();
+      });
+
+      $('.submit-activity-btn').on('click', function (event) {
+          event.preventDefault();
+          $('[name=activity_ids]').val([$(this).attr('data-uuid')]);
+          $('form#activities').submit();
+      });
+
       // Open the right panel depending on location hash
       if (document.location.hash) {
         const uuid = document.location.hash.slice(1);

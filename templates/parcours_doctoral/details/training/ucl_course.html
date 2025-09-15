@@ -58,7 +58,7 @@
         </div>
       {% else %}
         <div class="mb-3">
-          {{ activity.learning_unit_year.acronym }} - {{ activity.learning_unit_year.complete_title_i18n }} - {{ activity.learning_unit_year.academic_year }}
+          {% include "parcours_doctoral/details/training/description/ucl_course.html" %}
         </div>
 
         <div class="row">

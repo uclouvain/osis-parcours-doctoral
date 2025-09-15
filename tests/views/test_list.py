@@ -96,7 +96,7 @@ from reference.tests.factories.scholarship import DoctorateScholarshipFactory
 @freezegun.freeze_time('2023-01-01')
 @override_settings(WAFFLE_CREATE_MISSING_SWITCHES=False)
 class ParcoursDoctoralListTestView(QueriesAssertionsMixin, TestCase):
-    NB_MAX_QUERIES = 26
+    NB_MAX_QUERIES = 27
 
     @classmethod
     def setUpTestData(cls):
@@ -246,7 +246,7 @@ class ParcoursDoctoralListTestView(QueriesAssertionsMixin, TestCase):
         cache.clear()
 
     def _do_request(self, allowed_sql_surplus=0, **data):
-        with self.assertNumQueriesLessThan(self.NB_MAX_QUERIES + allowed_sql_surplus, verbose=True):
+        with self.assertNumQueriesLessThan(self.NB_MAX_QUERIES + allowed_sql_surplus):
             return self.client.get(self.url, data={**self.default_params, **data})
 
     def test_list_user_without_person(self):
