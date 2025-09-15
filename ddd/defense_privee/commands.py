@@ -70,3 +70,11 @@ class AutoriserDefensePriveeCommand(interface.CommandRequest):
 class InviterJuryDefensePriveeCommand(interface.CommandRequest):
     parcours_doctoral_uuid: str
     matricule_auteur: str
+
+
+@attr.dataclass(frozen=True, slots=True)
+class SoumettreProcesVerbalDefensePriveeCommand(interface.CommandRequest):
+    uuid: str
+    matricule_auteur: str
+
+    proces_verbal: list[str]

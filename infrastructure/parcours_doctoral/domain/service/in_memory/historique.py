@@ -153,6 +153,14 @@ class HistoriqueInMemory(IHistorique):
         pass
 
     @classmethod
+    def historiser_soumission_proces_verbal_defense_privee(
+        cls,
+        parcours_doctoral_identity: ParcoursDoctoralIdentity,
+        matricule_auteur: str,
+    ):
+        pass
+
+    @classmethod
     def historiser_autorisation_defense_privee(
         cls,
         parcours_doctoral: ParcoursDoctoral,

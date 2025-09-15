@@ -31,6 +31,7 @@ import attr
 from osis_common.ddd import interface
 from parcours_doctoral.ddd.defense_privee.validators.validator_by_business_action import (
     SoumettreDefensePriveeValidatorList,
+    SoumettreProcesVerbalDefensePriveeValidatorList,
 )
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import (
     ParcoursDoctoralIdentity,
@@ -65,6 +66,16 @@ class DefensePrivee(interface.RootEntity):
         self.date_heure = date_heure
         self.lieu = lieu
         self.date_envoi_manuscrit = date_envoi_manuscrit
+
+    def soumettre_proces_verbal(
+        self,
+        proces_verbal: list[str],
+    ):
+        SoumettreProcesVerbalDefensePriveeValidatorList(
+            est_active=self.est_active,
+        ).validate()
+
+        self.proces_verbal = proces_verbal
 
     def verifier_soumission(
         self,

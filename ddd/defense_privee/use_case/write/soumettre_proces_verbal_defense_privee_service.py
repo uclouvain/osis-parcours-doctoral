@@ -23,9 +23,39 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from .autoriser_defense_privee_service import autoriser_defense_privee
-from .inviter_jury_defense_privee_service import inviter_jury_defense_privee
-from .soumettre_defense_privee_service import soumettre_defense_privee
-from .soumettre_proces_verbal_defense_privee_service import (
-    soumettre_proces_verbal_defense_privee,
+from parcours_doctoral.ddd.defense_privee.builder.defense_privee_identity import (
+    DefensePriveeIdentityBuilder,
 )
+from parcours_doctoral.ddd.defense_privee.commands import (
+    SoumettreProcesVerbalDefensePriveeCommand,
+)
+from parcours_doctoral.ddd.defense_privee.repository.i_defense_privee import (
+    IDefensePriveeRepository,
+)
+from parcours_doctoral.ddd.domain.model.parcours_doctoral import (
+    ParcoursDoctoralIdentity,
+)
+from parcours_doctoral.ddd.domain.service.i_historique import IHistorique
+
+
+def soumettre_proces_verbal_defense_privee(
+    cmd: 'SoumettreProcesVerbalDefensePriveeCommand',
+    defense_privee_repository: 'IDefensePriveeRepository',
+    historique: 'IHistorique',
+) -> ParcoursDoctoralIdentity:
+    # GIVEN
+    defense_privee_id = DefensePriveeIdentityBuilder.build_from_uuid(cmd.uuid)
+    defense_privee = defense_privee_repository.get(defense_privee_id)
+
+    # WHEN
+    defense_privee.soumettre_proces_verbal(proces_verbal=cmd.proces_verbal)
+
+    # THEN
+    defense_privee_repository.save(defense_privee)
+
+    historique.historiser_soumission_proces_verbal_defense_privee(
+        parcours_doctoral_identity=defense_privee.parcours_doctoral_id,
+        matricule_auteur=cmd.matricule_auteur,
+    )
+
+    return defense_privee.parcours_doctoral_id
