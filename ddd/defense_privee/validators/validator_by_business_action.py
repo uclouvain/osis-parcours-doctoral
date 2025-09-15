@@ -63,6 +63,21 @@ class SoumettreDefensePriveeValidatorList(TwoStepsMultipleBusinessExceptionListV
 
 
 @attr.dataclass(frozen=True, slots=True)
+class SoumettreProcesVerbalDefensePriveeValidatorList(TwoStepsMultipleBusinessExceptionListValidator):
+    est_active: bool
+
+    def get_data_contract_validators(self) -> List[BusinessValidator]:
+        return []
+
+    def get_invariants_validators(self) -> List[BusinessValidator]:
+        return [
+            ShouldDefensePriveeEtreActive(
+                est_active=self.est_active,
+            ),
+        ]
+
+
+@attr.dataclass(frozen=True, slots=True)
 class AutoriserDefensePriveeValidatorList(TwoStepsMultipleBusinessExceptionListValidator):
     statut_parcours_doctoral: ChoixStatutParcoursDoctoral
 

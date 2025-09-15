@@ -1179,6 +1179,45 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '404':
           $ref: '#/components/responses/NotFound'
+    put:
+      operationId: submit_private_defense_minutes
+      description: Submit the minutes of the private defense
+      parameters:
+      - in: path
+        name: uuid
+        schema:
+          type: string
+          format: uuid
+        required: true
+      - $ref: '#/components/parameters/Accept-Language'
+      - $ref: '#/components/parameters/X-User-FirstName'
+      - $ref: '#/components/parameters/X-User-LastName'
+      - $ref: '#/components/parameters/X-User-Email'
+      - $ref: '#/components/parameters/X-User-GlobalID'
+      tags:
+      - doctorate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubmitPrivateDefenseMinutes'
+        required: true
+      security:
+      - tokenAuth: []
+      - Token: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParcoursDoctoralIdentityDTO'
+          description: ''
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
   /doctorate/{uuid}/project:
     get:
       operationId: retrieve_project
@@ -3420,6 +3459,8 @@ components:
               $ref: '#/components/schemas/ActionLink'
             retrieve_private_defense_minutes_canvas:
               $ref: '#/components/schemas/ActionLink'
+            submit_private_defense_minutes:
+              $ref: '#/components/schemas/ActionLink'
           readOnly: true
           default: {}
       required:
@@ -4362,6 +4403,23 @@ components:
       required:
       - date_heure
       - titre_these
+    SubmitPrivateDefenseMinutes:
+      type: object
+      description: |-
+        A `DTOSerializer` is just a regular `Serializer`, except that:
+
+        * A set of default fields are automatically populated from the Meta.source dataclass.
+        * All fields are set to read-only if needed when Meta.read_only is True.
+      properties:
+        uuid:
+          type: string
+        proces_verbal:
+          type: array
+          items:
+            type: string
+      required:
+      - proces_verbal
+      - uuid
     SupervisionCanvas:
       type: object
       properties:
