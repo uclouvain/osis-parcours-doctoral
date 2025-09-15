@@ -356,6 +356,22 @@ class Historique(IHistorique):
         )
 
     @classmethod
+    def historiser_soumission_proces_verbal_defense_privee(
+        cls,
+        parcours_doctoral_identity: ParcoursDoctoralIdentity,
+        matricule_auteur: str,
+    ):
+        auteur = PersonneConnueUclTranslator().get(matricule_auteur)
+
+        add_history_entry(
+            parcours_doctoral_identity.uuid,
+            'Le procès verbal de la défense privée a été modifié.',
+            'The minutes of the private defense have been updated.',
+            '{auteur.prenom} {auteur.nom}'.format(auteur=auteur),
+            tags=['parcours_doctoral', 'private-defense'],
+        )
+
+    @classmethod
     def historiser_autorisation_defense_privee(
         cls,
         parcours_doctoral: ParcoursDoctoral,

@@ -213,6 +213,7 @@ class ParcoursDoctoralAPIViewTestCase(CheckActionLinksMixin, APITestCase):
                 'create_jury_members',
                 'update_private_defense',
                 'retrieve_private_defense_minutes_canvas',
+                'submit_private_defense_minutes',
             ],
         )
 
