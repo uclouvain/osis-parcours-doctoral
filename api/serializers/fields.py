@@ -184,6 +184,11 @@ PARCOURS_DOCTORAL_ACTION_LINKS = {
         'method': 'GET',
         'params': ['uuid'],
     },
+    'submit_private_defense_minutes': {
+        'path_name': 'parcours_doctoral_api_v1:private-defense-minutes',
+        'method': 'PUT',
+        'params': ['uuid'],
+    },
 }
 
 

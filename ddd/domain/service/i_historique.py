@@ -170,6 +170,15 @@ class IHistorique(interface.DomainService):
 
     @classmethod
     @abstractmethod
+    def historiser_soumission_proces_verbal_defense_privee(
+        cls,
+        parcours_doctoral_identity: ParcoursDoctoralIdentity,
+        matricule_auteur: str,
+    ):
+        raise NotImplementedError
+
+    @classmethod
+    @abstractmethod
     def historiser_autorisation_defense_privee(
         cls,
         parcours_doctoral: ParcoursDoctoral,

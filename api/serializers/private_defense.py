@@ -26,7 +26,10 @@
 from rest_framework import serializers
 
 from base.utils.serializers import DTOSerializer
-from parcours_doctoral.ddd.defense_privee.commands import SoumettreDefensePriveeCommand
+from parcours_doctoral.ddd.defense_privee.commands import (
+    SoumettreDefensePriveeCommand,
+    SoumettreProcesVerbalDefensePriveeCommand,
+)
 from parcours_doctoral.ddd.defense_privee.dtos import DefensePriveeDTO
 
 
@@ -45,3 +48,10 @@ class SubmitPrivateDefenseSerializer(DTOSerializer):
 
 class PrivateDefenseMinutesCanvasSerializer(serializers.Serializer):
     url = serializers.URLField(read_only=True)
+
+
+class SubmitPrivateDefenseMinutesSerializer(DTOSerializer):
+    matricule_auteur = None
+
+    class Meta:
+        source = SoumettreProcesVerbalDefensePriveeCommand
