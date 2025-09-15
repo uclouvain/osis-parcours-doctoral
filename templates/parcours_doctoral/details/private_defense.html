@@ -1,4 +1,5 @@
 {% extends "parcours_doctoral/details/tab_layout.html" %}
+{% load doctorate_enums %}
 {% load i18n parcours_doctoral static %}
 
 {% comment "License" %}
@@ -30,8 +31,9 @@
   {% has_perm 'parcours_doctoral.change_private_defense' as can_authorise_private_defense %}
   {% has_perm 'parcours_doctoral.authorise_private_defense' as can_authorise_private_defense %}
   {% has_perm 'parcours_doctoral.invite_jury_to_private_defense' as can_invite_jury_to_private_defense %}
+  {% has_perm 'parcours_doctoral.make_private_defense_decision' as can_make_decision %}
 
-  {% if can_update_tab or can_authorise_private_defense or can_invite_jury_to_private_defense %}
+  {% if can_update_tab or can_authorise_private_defense or can_invite_jury_to_private_defense or can_make_decision %}
     <div id="private-defense-actions" class="btn-group">
       <button
         type="button"
@@ -68,6 +70,23 @@
             </a>
           </li>
         {% endif %}
+        {% if can_make_decision %}
+          {% if current_private_defense.est_valide_pour_decision %}
+            <li>
+              <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#private-defense-success-decision-form-modal">
+                {% translate "Successful defense" %}
+              </a>
+            </li>
+          {% else %}
+            {% with _("Please be sure that the date and time of the defence have been filled in and that the defence minutes have been submitted in the application.") as error_message %}
+              <li title="{{ error_message }}">
+                <a class="dropdown-item disabled" href="#">
+                  {% translate "Successful defense" %}
+                </a>
+              </li>
+            {% endwith %}
+          {% endif %}
+        {% endif %}
       </ul>
     </div>
   {% endif %}
@@ -103,6 +122,10 @@
   {% translate 'Invite the members of the jury to the private defense' as jury_invitation_title %}
   {% translate 'Here is an example message that will be sent to the jury members.' as jury_invitation_message %}
   {% include 'parcours_doctoral/modal/form_modal.html' with modal_id='private-defense-jury-invitation-form-modal' modal_title=jury_invitation_title modal_message=jury_invitation_message modal_url=jury_invitation_url %}
+
+  {% url 'parcours_doctoral:private-defense:success' view.kwargs.uuid as success_decision_url %}
+  {% blocktranslate with status='DEFENSE_PRIVEE_REUSSIE'|enum_display:'ChoixStatutParcoursDoctoral' asvar success_decision_title %}Move the doctorate to the "{{ status }}" state?{% endblocktranslate %}
+  {% include 'parcours_doctoral/modal/form_modal.html' with modal_id='private-defense-success-decision-form-modal' modal_title=success_decision_title modal_url=success_decision_url %}
 
 {% endblock %}
 

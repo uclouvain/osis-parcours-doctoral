@@ -72,3 +72,14 @@ class StatutDoctoratDifferentDefensePriveeAutoriseeException(BusinessException):
             'status': ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_AUTORISEE.value,
         }
         super().__init__(message, **kwargs)
+
+
+class DefensePriveeNonCompleteePourDecisionException(BusinessException):
+    status_code = 'DEFENSE-PRIVEE-6'
+
+    def __init__(self, **kwargs):
+        message = _(
+            'Please be sure that the date and time of the defence have been filled in and that '
+            'the defence minutes have been submitted in the application.'
+        )
+        super().__init__(message, **kwargs)
