@@ -33,6 +33,7 @@ from parcours_doctoral.auth.predicates.parcours_doctoral import (
     is_parcours_doctoral_promoter,
     is_parcours_doctoral_reference_promoter,
     is_related_to_an_admission,
+    private_defense_is_authorised,
 )
 
 
@@ -82,5 +83,7 @@ class Promoter(AdmissionPromoter):
             # Private defense
             'parcours_doctoral.api_view_private_defense': is_parcours_doctoral_promoter,
             'parcours_doctoral.api_view_private_defense_minutes': is_parcours_doctoral_promoter,
+            'parcours_doctoral.api_upload_private_defense_minutes': is_parcours_doctoral_promoter
+            & private_defense_is_authorised,
         }
         return RuleSet(rules)
