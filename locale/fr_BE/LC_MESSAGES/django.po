@@ -2320,6 +2320,12 @@ msgstr "Texte brut"
 msgid "Planned duration"
 msgstr "Durée prévue"
 
+msgid ""
+"Please be sure that the date and time of the defence have been filled in and "
+"that the defence minutes have been submitted in the application."
+msgstr ""
+"Veuillez vous assurer que la date et heure de la défense ont bien été complétés et que le procès verbal de la défense a bien été déposé dans l'application."
+
 #, python-format
 msgid ""
 "Please be sure the corrected mark is related to the desired session "
@@ -3022,6 +3028,9 @@ msgstr "Défense soumise / Soutenance soumise"
 msgctxt "dashboard-indicator formula-1-public-defense"
 msgid "Submitted public defense"
 msgstr "Soutenance soumise"
+
+msgid "Successful defense"
+msgstr "Défense réussie"
 
 msgid "Successful test"
 msgstr "Epreuve réussie"

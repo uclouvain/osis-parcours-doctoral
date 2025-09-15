@@ -2146,6 +2146,11 @@ msgstr ""
 msgid "Planned duration"
 msgstr ""
 
+msgid ""
+"Please be sure that the date and time of the defence have been filled in and "
+"that the defence minutes have been submitted in the application."
+msgstr ""
+
 #, python-format
 msgid ""
 "Please be sure the corrected mark is related to the desired session "
@@ -2812,6 +2817,9 @@ msgstr ""
 
 msgctxt "dashboard-indicator formula-1-public-defense"
 msgid "Submitted public defense"
+msgstr ""
+
+msgid "Successful defense"
 msgstr ""
 
 msgid "Successful test"
