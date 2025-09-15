@@ -25,19 +25,21 @@
 # ##############################################################################
 from django.shortcuts import resolve_url
 from django.utils.translation import gettext_lazy
-from django.views import View
 
 from infrastructure.messages_bus import message_bus_instance
 from parcours_doctoral.ddd.defense_privee.commands import (
     AutoriserDefensePriveeCommand,
+    ConfirmerReussiteDefensePriveeCommand,
     InviterJuryDefensePriveeCommand,
 )
+from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from parcours_doctoral.infrastructure.parcours_doctoral.defense_privee.domain.service.notification import (
     Notification,
 )
 from parcours_doctoral.mail_templates.private_defense import (
     PARCOURS_DOCTORAL_EMAIL_PRIVATE_DEFENSE_AUTHORISATION,
     PARCOURS_DOCTORAL_EMAIL_PRIVATE_DEFENSE_JURY_INVITATION,
+    PARCOURS_DOCTORAL_EMAIL_PRIVATE_DEFENSE_ON_SUCCESS,
 )
 from parcours_doctoral.views.email_mixin import BaseEmailFormView
 
@@ -112,5 +114,21 @@ class PrivateDefenseJuryInvitationView(BasePrivateDefenseActionView):
         self.htmx_refresh = True
 
 
-class PrivateDefenseSuccessView(View):
+class PrivateDefenseSuccessView(BasePrivateDefenseActionView):
     urlpatterns = 'success'
+    permission_required = 'parcours_doctoral.make_private_defense_decision'
+    email_identifier = PARCOURS_DOCTORAL_EMAIL_PRIVATE_DEFENSE_ON_SUCCESS
+
+    def call_command(self, form):
+        message_bus_instance.invoke(
+            ConfirmerReussiteDefensePriveeCommand(
+                parcours_doctoral_uuid=self.parcours_doctoral_uuid,
+                matricule_auteur=self.request.user.person.global_id,
+                sujet_message=form.cleaned_data['subject'],
+                corps_message=form.cleaned_data['body'],
+            )
+        )
+        self.message_on_success = gettext_lazy('The status has been changed to %(status)s.') % {
+            'status': ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_REUSSIE.value
+        }
+        self.htmx_refresh = True
