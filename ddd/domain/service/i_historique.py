@@ -221,3 +221,12 @@ class IHistorique(interface.DomainService):
         matricule_auteur: str,
     ):
         raise NotImplementedError
+
+    @classmethod
+    @abstractmethod
+    def historiser_modification_defense_privee(
+        cls,
+        parcours_doctoral: ParcoursDoctoral,
+        matricule_auteur: str,
+    ):
+        raise NotImplementedError
