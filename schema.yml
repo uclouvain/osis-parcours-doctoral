@@ -3603,11 +3603,7 @@ components:
           maxLength: 10
     PrivateDefenseDTO:
       type: object
-      description: |-
-        A `DTOSerializer` is just a regular `Serializer`, except that:
-
-        * A set of default fields are automatically populated from the Meta.source dataclass.
-        * All fields are set to read-only if needed when Meta.read_only is True.
+      description: Contains the information related to the private defense.
       properties:
         uuid:
           type: string
@@ -3645,6 +3641,7 @@ components:
       - uuid
     PrivateDefenseMinutesCanvas:
       type: object
+      description: Contains the private defense minutes canvas url.
       properties:
         url:
           type: string
@@ -4383,11 +4380,7 @@ components:
       - nouvelle_echeance
     SubmitPrivateDefense:
       type: object
-      description: |-
-        A `DTOSerializer` is just a regular `Serializer`, except that:
-
-        * A set of default fields are automatically populated from the Meta.source dataclass.
-        * All fields are set to read-only if needed when Meta.read_only is True.
+      description: Contains the submitted data to complete a private defense.
       properties:
         titre_these:
           type: string
@@ -4405,11 +4398,7 @@ components:
       - titre_these
     SubmitPrivateDefenseMinutes:
       type: object
-      description: |-
-        A `DTOSerializer` is just a regular `Serializer`, except that:
-
-        * A set of default fields are automatically populated from the Meta.source dataclass.
-        * All fields are set to read-only if needed when Meta.read_only is True.
+      description: Contains the submitted data to complete the private defense minutes.
       properties:
         uuid:
           type: string
