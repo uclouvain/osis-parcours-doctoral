@@ -1514,6 +1514,11 @@ msgstr ""
 "Si connu, indiquez ici par exemple le nom du laboratoire, du service "
 "clinique, du centre de recherche, ... où sera réalisée la thèse à l'UCLouvain"
 
+msgid "If necessary, contact your administrator for practical arrangements."
+msgstr ""
+"Si nécessaire, prenez contact avec votre gestionnaire pour les modalités "
+"pratiques."
+
 msgid ""
 "If necessary, please finish inputting doctoral activities and complete the "
 "defense preparation below before submitting the jury proposition."
@@ -3294,6 +3299,12 @@ msgstr "Le membre n'a pas été trouvé dans le jury."
 msgid "The members of the jury have been invited to the private defense."
 msgstr "Les membres du jury ont été invités à la défense privée."
 
+msgid ""
+"The minutes will be uploaded by the thesis exam board secretary or chair."
+msgstr ""
+"Le procès verbal sera téléversé par le·la secrétaire du jury ou le·la "
+"président·e du jury."
+
 #, python-format
 msgid ""
 "The number of acquired <strong>doctoral</strong> credits amounts to "
@@ -3321,6 +3332,13 @@ msgstr ""
 
 msgid "The person has not been found."
 msgstr "La personne n'a pas été trouvée."
+
+msgid ""
+"The private defence date is chosen collectively by the jury and in agreement "
+"with the PhD student"
+msgstr ""
+"La date de la défense privée est choisie collégialement par le jury, en "
+"accord avec le doctorant ou la doctorante."
 
 msgid "The private defense has been authorised."
 msgstr "La défense privée a été autorisée."
@@ -3854,6 +3872,9 @@ msgstr "jj/mm/aaaa"
 #, python-format
 msgid "from %(start)s to %(end)s"
 msgstr "du %(start)s au %(end)s"
+
+msgid "hh:mm"
+msgstr "hh:mm"
 
 msgid "hours"
 msgstr "heures"

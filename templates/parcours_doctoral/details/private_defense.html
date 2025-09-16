@@ -28,12 +28,12 @@
 
 {% block actions-group %}
   {% default_tab_context as tab_context %}
-  {% has_perm 'parcours_doctoral.change_private_defense' as can_authorise_private_defense %}
+  {% has_perm 'parcours_doctoral.change_private_defense' as can_change_private_defense %}
   {% has_perm 'parcours_doctoral.authorise_private_defense' as can_authorise_private_defense %}
   {% has_perm 'parcours_doctoral.invite_jury_to_private_defense' as can_invite_jury_to_private_defense %}
   {% has_perm 'parcours_doctoral.make_private_defense_decision' as can_make_decision %}
 
-  {% if can_update_tab or can_authorise_private_defense or can_invite_jury_to_private_defense or can_make_decision %}
+  {% if can_change_private_defense or can_authorise_private_defense or can_invite_jury_to_private_defense or can_make_decision %}
     <div id="private-defense-actions" class="btn-group">
       <button
         type="button"
@@ -46,10 +46,11 @@
         <i class="fa-solid fa-caret-down"></i>
       </button>
       <ul class="dropdown-menu float-end">
-        {% if can_update_tab %}
+        {% if can_change_private_defense %}
           <li>
             <a
               class="dropdown-item"
+              href="{% url 'parcours_doctoral:update:private-defense' view.kwargs.uuid %}"
             >
               {% translate "Update" context 'verb' %}
             </a>
