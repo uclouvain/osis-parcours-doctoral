@@ -28,7 +28,7 @@ from django.test import SimpleTestCase
 
 from base.ddd.utils.business_validator import MultipleBusinessExceptions
 from parcours_doctoral.ddd.defense_privee.commands import (
-    ConfirmerReussiteDefensePriveeCommand,
+    ConfirmerEchecDefensePriveeCommand,
 )
 from parcours_doctoral.ddd.defense_privee.test.factory.defense_privee import (
     DefensePriveeFactory,
@@ -53,11 +53,11 @@ from parcours_doctoral.infrastructure.parcours_doctoral.repository.in_memory.par
 )
 
 
-class TestConfirmerReussiteDefensePrivee(SimpleTestCase):
+class TestConfirmerEchecDefensePrivee(SimpleTestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.cmd = ConfirmerReussiteDefensePriveeCommand
+        cls.cmd = ConfirmerEchecDefensePriveeCommand
         cls.message_bus = message_bus_in_memory_instance
         cls.defense_privee_repository = DefensePriveeInMemoryRepository()
         cls.parcours_doctoral_repository = ParcoursDoctoralInMemoryRepository()
@@ -121,4 +121,4 @@ class TestConfirmerReussiteDefensePrivee(SimpleTestCase):
         resultat = self.message_bus.invoke(self.cmd(**self.parametres_cmd))
 
         self.assertEqual(resultat, self.parcours_doctoral.entity_id)
-        self.assertEqual(self.parcours_doctoral.statut, ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_REUSSIE)
+        self.assertEqual(self.parcours_doctoral.statut, ChoixStatutParcoursDoctoral.NON_AUTORISE_A_POURSUIVRE)
