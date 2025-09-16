@@ -26,6 +26,7 @@
 
 from typing import List
 
+from django.utils.functional import cached_property
 from django.views.generic import TemplateView
 
 from infrastructure.messages_bus import message_bus_instance
@@ -39,24 +40,30 @@ __all__ = [
 ]
 
 
-class PrivateDefenseDetailView(ParcoursDoctoralViewMixin, TemplateView):
-    template_name = 'parcours_doctoral/details/private_defense.html'
-    permission_required = 'parcours_doctoral.view_private_defense'
+class PrivateDefenseCommonViewMixin:
+    @cached_property
+    def private_defenses(self) -> list[DefensePriveeDTO]:
+        return message_bus_instance.invoke(
+            RecupererDefensesPriveesQuery(parcours_doctoral_uuid=self.parcours_doctoral_uuid)
+        )
+
+    @cached_property
+    def current_private_defense(self) -> DefensePriveeDTO:
+        return next((private_defense for private_defense in self.private_defenses if private_defense.est_active), None)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        all_private_defenses: List[DefensePriveeDTO] = message_bus_instance.invoke(
-            RecupererDefensesPriveesQuery(parcours_doctoral_uuid=self.parcours_doctoral_uuid)
-        )
-
-        if all_private_defenses:
-            context['current_private_defense'] = all_private_defenses.pop(0)
-
-        context['previous_private_defenses'] = all_private_defenses
+        context['all_private_defenses'] = self.private_defenses
+        context['current_private_defense'] = self.current_private_defense
 
         context['supervision'] = message_bus_instance.invoke(
             GetGroupeDeSupervisionQuery(uuid_parcours_doctoral=self.parcours_doctoral_uuid)
         )
 
         return context
+
+
+class PrivateDefenseDetailView(PrivateDefenseCommonViewMixin, ParcoursDoctoralViewMixin, TemplateView):
+    template_name = 'parcours_doctoral/details/private_defense.html'
+    permission_required = 'parcours_doctoral.view_private_defense'

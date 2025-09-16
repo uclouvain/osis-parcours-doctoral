@@ -58,6 +58,18 @@ class SoumettreDefensePriveeCommand(interface.CommandRequest):
 
 
 @attr.dataclass(frozen=True, slots=True)
+class ModifierDefensePriveeCommand(interface.CommandRequest):
+    uuid: str
+    matricule_auteur: str
+
+    titre_these: str
+    date_heure: datetime.datetime
+    lieu: Optional[str]
+    date_envoi_manuscrit: Optional[datetime.date]
+    proces_verbal: list[str]
+
+
+@attr.dataclass(frozen=True, slots=True)
 class AutoriserDefensePriveeCommand(interface.CommandRequest):
     parcours_doctoral_uuid: str
 
