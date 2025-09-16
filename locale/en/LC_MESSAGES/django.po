@@ -1416,6 +1416,9 @@ msgid ""
 "UCLouvain"
 msgstr ""
 
+msgid "If necessary, contact your administrator for practical arrangements."
+msgstr ""
+
 msgid ""
 "If necessary, please finish inputting doctoral activities and complete the "
 "defense preparation below before submitting the jury proposition."
@@ -3058,6 +3061,10 @@ msgstr ""
 msgid "The members of the jury have been invited to the private defense."
 msgstr ""
 
+msgid ""
+"The minutes will be uploaded by the thesis exam board secretary or chair."
+msgstr ""
+
 #, python-format
 msgid ""
 "The number of acquired <strong>doctoral</strong> credits amounts to "
@@ -3078,6 +3085,11 @@ msgid ""
 msgstr ""
 
 msgid "The person has not been found."
+msgstr ""
+
+msgid ""
+"The private defence date is chosen collectively by the jury and in agreement "
+"with the PhD student"
 msgstr ""
 
 msgid "The private defense has been authorised."
@@ -3545,6 +3557,9 @@ msgstr ""
 
 #, python-format
 msgid "from %(start)s to %(end)s"
+msgstr ""
+
+msgid "hh:mm"
 msgstr ""
 
 msgid "hours"

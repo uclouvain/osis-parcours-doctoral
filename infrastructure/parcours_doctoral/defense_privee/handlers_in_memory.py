@@ -111,4 +111,10 @@ COMMAND_HANDLERS = {
         historique=_historique,
         notification=_notification_generale,
     ),
+    ModifierDefensePriveeCommand: lambda msg_bus, cmd: modifier_defense_privee(
+        cmd,
+        parcours_doctoral_repository=_parcours_doctoral_repository,
+        defense_privee_repository=_defense_privee_repository,
+        historique=_historique,
+    ),
 }
