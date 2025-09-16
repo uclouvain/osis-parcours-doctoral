@@ -23,7 +23,8 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-
+import datetime
+import uuid
 from typing import Optional
 
 import freezegun
@@ -57,7 +58,8 @@ class PrivateDefenseFormViewTestCase(MockOsisDocumentMixin, TestCase):
         cls.student = PersonFactory()
         cls.manager = ProgramManagerFactory(education_group=cls.training.education_group).person
 
-        cls.namespace = 'parcours_doctoral:private-defense'
+        cls.detail_path = 'parcours_doctoral:private-defense'
+        cls.update_path = 'parcours_doctoral:update:private-defense'
 
     def setUp(self):
         super().setUp()
@@ -67,12 +69,13 @@ class PrivateDefenseFormViewTestCase(MockOsisDocumentMixin, TestCase):
             student=self.student,
         )
 
-        self.url = resolve_url(self.namespace, uuid=self.doctorate.uuid)
+        self.update_url = resolve_url(self.update_path, uuid=self.doctorate.uuid)
+        self.detail_url = resolve_url(self.detail_path, uuid=self.doctorate.uuid)
 
-    def test_with_no_private_defense(self):
+    def test_get_with_no_private_defense(self):
         self.client.force_login(self.manager.user)
 
-        response = self.client.get(self.url)
+        response = self.client.get(self.update_url)
 
         self.assertEqual(response.status_code, 200)
 
@@ -84,14 +87,14 @@ class PrivateDefenseFormViewTestCase(MockOsisDocumentMixin, TestCase):
         self.assertEqual(all_private_defenses, [])
         self.assertIsNotNone(supervision)
 
-    def test_with_one_private_defense(self):
+    def test_get_with_one_private_defense(self):
         self.client.force_login(self.manager.user)
 
         private_defense = PrivateDefenseFactory(parcours_doctoral=self.doctorate)
 
         private_defense.refresh_from_db()
 
-        response = self.client.get(self.url)
+        response = self.client.get(self.update_url)
 
         self.assertEqual(response.status_code, 200)
 
@@ -111,7 +114,20 @@ class PrivateDefenseFormViewTestCase(MockOsisDocumentMixin, TestCase):
         self.assertEqual(current_private_defense.proces_verbal, private_defense.minutes)
         self.assertEqual(current_private_defense.canevas_proces_verbal, private_defense.minutes_canvas)
 
-    def test_with_several_private_defenses(self):
+        form = response.context['form']
+
+        self.assertEqual(
+            form.initial,
+            {
+                'titre_these': current_private_defense.titre_these,
+                'date_heure': current_private_defense.date_heure,
+                'lieu': current_private_defense.lieu,
+                'date_envoi_manuscrit': current_private_defense.date_envoi_manuscrit,
+                'proces_verbal': current_private_defense.proces_verbal,
+            },
+        )
+
+    def test_get_with_several_private_defenses(self):
         self.client.force_login(self.manager.user)
 
         with freezegun.freeze_time('2025-01-01'):
@@ -126,7 +142,7 @@ class PrivateDefenseFormViewTestCase(MockOsisDocumentMixin, TestCase):
         private_defense.refresh_from_db()
         old_private_defense.refresh_from_db()
 
-        response = self.client.get(self.url)
+        response = self.client.get(self.update_url)
 
         self.assertEqual(response.status_code, 200)
 
@@ -158,3 +174,47 @@ class PrivateDefenseFormViewTestCase(MockOsisDocumentMixin, TestCase):
         self.assertEqual(other_private_defense.date_envoi_manuscrit, old_private_defense.manuscript_submission_date)
         self.assertEqual(other_private_defense.proces_verbal, old_private_defense.minutes)
         self.assertEqual(other_private_defense.canevas_proces_verbal, old_private_defense.minutes_canvas)
+
+        form = response.context['form']
+
+        self.assertEqual(
+            form.initial,
+            {
+                'titre_these': current_private_defense.titre_these,
+                'date_heure': current_private_defense.date_heure,
+                'lieu': current_private_defense.lieu,
+                'date_envoi_manuscrit': current_private_defense.date_envoi_manuscrit,
+                'proces_verbal': current_private_defense.proces_verbal,
+            },
+        )
+
+    def test_post_with_valid_data(self):
+        self.client.force_login(self.manager.user)
+
+        private_defense = PrivateDefenseFactory(
+            parcours_doctoral=self.doctorate,
+        )
+
+        data = {
+            'titre_these': 'Title 2',
+            'date_heure_0': '01/01/2026',
+            'date_heure_1': '11:00',
+            'lieu': 'L2',
+            'date_envoi_manuscrit': datetime.date(2025, 2, 2),
+            'proces_verbal_0': [uuid.uuid4()],
+        }
+
+        response = self.client.post(self.update_url, data=data)
+
+        self.assertRedirects(response=response, expected_url=self.detail_url, fetch_redirect_response=False)
+
+        self.doctorate.refresh_from_db()
+
+        self.assertEqual(self.doctorate.thesis_proposed_title, data['titre_these'])
+
+        private_defense.refresh_from_db()
+
+        self.assertEqual(private_defense.datetime, datetime.datetime(2026, 1, 1, 11))
+        self.assertEqual(private_defense.place, data['lieu'])
+        self.assertEqual(private_defense.manuscript_submission_date, data['date_envoi_manuscrit'])
+        self.assertEqual(private_defense.minutes, [uuid.UUID('4bdffb42-552d-415d-9e4c-725f10dce228')])
