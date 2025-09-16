@@ -41,8 +41,8 @@ class Migration(migrations.Migration):
                         "osis-parcours-doctoral-private-defense-on-success",
                     ),
                     (
-                        "osis-parcours-doctoral-private-defense-on-retaking",
-                        "osis-parcours-doctoral-private-defense-on-retaking",
+                        "osis-parcours-doctoral-private-defense-on-repeat",
+                        "osis-parcours-doctoral-private-defense-on-repeat",
                     ),
                     (
                         "osis-parcours-doctoral-private-defense-on-failure",

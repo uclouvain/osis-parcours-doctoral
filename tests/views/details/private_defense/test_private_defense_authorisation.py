@@ -118,7 +118,7 @@ class PrivateDefenseAuthorisationViewTestCase(MockOsisDocumentMixin, TestCase):
         self.assertIn(FIELD_REQUIRED_MESSAGE, form.errors.get('body', []))
 
         # Valid status and data
-        response = self.client.post(self.url, data={'subject': 'Subject', 'body': 'Body'})
+        response = self.client.post(self.url, data={'authorise-subject': 'Subject', 'authorise-body': 'Body'})
 
         self.assertRedirects(response, expected_url=self.details_url)
 

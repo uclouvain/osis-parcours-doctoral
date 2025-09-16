@@ -35,7 +35,7 @@
   {% if modal_message %}<p>{{ modal_message }}</p>{% endif %}
   <div
     hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-    hx-trigger="shown.bs.modal from:#{{ modal_id }}"
+    hx-trigger="shown.bs.modal from:#{{ modal_id }} once"
     hx-get="{{ modal_url }}"
     hx-target="#{{ modal_id }}-form"
     hx-indicator="#htmx-overlay"
