@@ -76,6 +76,7 @@ from parcours_doctoral.tests.factories.parcours_doctoral import (
     FormationFactory,
     ParcoursDoctoralFactory,
 )
+from parcours_doctoral.tests.factories.private_defense import PrivateDefenseFactory
 
 
 @override_settings(OSIS_DOCUMENT_BASE_URL='http://dummyurl/')
@@ -482,6 +483,44 @@ class DashboardCommandTestCase(TestCase):
         doctorate.save()
 
         self.assert_dashboard_value(category, indicator, 1)
+
+    def test_submitted_private_defense_1(self):
+        category = CategorieTableauBordEnum.FORMULE_1_DEFENSE_PRIVEE.name
+        indicator = IndicateurTableauBordEnum.FORMULE_1_DEFENSE_PRIVEE_SOUMISE.name
+
+        self.assert_dashboard_value(category, indicator, 0)
+
+        doctorate = ParcoursDoctoralFactory(status=ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_AUTORISEE.name)
+
+        self.assert_dashboard_value(category, indicator, 0)
+
+        doctorate.status = ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_SOUMISE.name
+        doctorate.save()
+
+        self.assert_dashboard_value(category, indicator, 1)
+
+    def test_submitted_private_defense_1_with_minutes(self):
+        category = CategorieTableauBordEnum.FORMULE_1_DEFENSE_PRIVEE.name
+        indicator = IndicateurTableauBordEnum.FORMULE_1_DEFENSE_PRIVEE_PV_TELEVERSE.name
+
+        self.assert_dashboard_value(category, indicator, 0)
+
+        doctorate = ParcoursDoctoralFactory(status=ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_AUTORISEE.name)
+        private_defense = PrivateDefenseFactory(parcours_doctoral=doctorate)
+
+        self.assert_dashboard_value(category, indicator, 0)
+
+        doctorate.status = ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_SOUMISE.name
+        doctorate.save()
+
+        self.assert_dashboard_value(category, indicator, 1)
+
+        private_defense.current_parcours_doctoral = None
+        private_defense.save()
+
+        new_private_defense = PrivateDefenseFactory(parcours_doctoral=doctorate, minutes=[])
+
+        self.assert_dashboard_value(category, indicator, 0)
 
 
 @override_settings(OSIS_DOCUMENT_BASE_URL='http://dummyurl/')
