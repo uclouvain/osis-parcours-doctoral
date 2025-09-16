@@ -103,4 +103,10 @@ COMMAND_HANDLERS = {
         historique=Historique(),
         notification=NotificationGenerale(),
     ),
+    ModifierDefensePriveeCommand: lambda msg_bus, cmd: modifier_defense_privee(
+        cmd,
+        parcours_doctoral_repository=ParcoursDoctoralRepository(),
+        defense_privee_repository=DefensePriveeRepository(),
+        historique=Historique(),
+    ),
 }

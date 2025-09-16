@@ -91,3 +91,15 @@ class DefensePrivee(interface.RootEntity):
 
     def rendre_inactive(self):
         self.est_active = False
+
+    def modifier(
+        self,
+        date_heure: datetime.datetime,
+        lieu: str,
+        date_envoi_manuscrit: Optional[datetime.datetime],
+        proces_verbal: list[str],
+    ):
+        self.date_heure = date_heure
+        self.lieu = lieu
+        self.date_envoi_manuscrit = date_envoi_manuscrit
+        self.proces_verbal = proces_verbal
