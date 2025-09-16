@@ -28,7 +28,6 @@ import datetime
 import attr
 
 from base.ddd.utils.business_validator import BusinessValidator
-from parcours_doctoral.ddd.defense_privee.dtos import DefensePriveeDTO
 from parcours_doctoral.ddd.defense_privee.validators.exceptions import (
     DefensePriveeNonActiveeException,
     DefensePriveeNonCompleteeException,
@@ -51,10 +50,10 @@ class ShouldDefensePriveeEtreCompletee(BusinessValidator):
 
 @attr.dataclass(frozen=True, slots=True)
 class ShouldDefensePriveeEtreCompleteePourDecision(BusinessValidator):
-    defense_privee: DefensePriveeDTO
+    defense_privee: 'DefensePrivee'
 
     def validate(self, *args, **kwargs):
-        if not self.defense_privee.est_valide_pour_decision:
+        if not (self.defense_privee.proces_verbal and self.defense_privee.date_heure):
             raise DefensePriveeNonCompleteePourDecisionException
 
 

@@ -44,9 +44,9 @@ from base.tests.factories.program_manager import ProgramManagerFactory
 from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import ENTITY_CDE
 from parcours_doctoral.mail_templates.private_defense import (
-    PARCOURS_DOCTORAL_EMAIL_PRIVATE_DEFENSE_ON_FAILURE,
-    PARCOURS_DOCTORAL_EMAIL_PRIVATE_DEFENSE_ON_SUCCESS,
+    PARCOURS_DOCTORAL_EMAIL_PRIVATE_DEFENSE_ON_REPEAT,
 )
+from parcours_doctoral.models.private_defense import PrivateDefense
 from parcours_doctoral.tests.factories.jury import (
     ExternalJuryMemberFactory,
     JuryMemberFactory,
@@ -60,7 +60,7 @@ from parcours_doctoral.tests.mixins import MockOsisDocumentMixin
 
 
 @override_settings(OSIS_DOCUMENT_BASE_URL='http://dummyurl')
-class PrivateDefenseFailureViewTestCase(MockOsisDocumentMixin, TestCase):
+class PrivateDefenseRepeatViewTestCase(MockOsisDocumentMixin, TestCase):
     @classmethod
     def setUpTestData(cls):
         cls.academic_years = [AcademicYearFactory(year=year) for year in [2021, 2022]]
@@ -73,10 +73,10 @@ class PrivateDefenseFailureViewTestCase(MockOsisDocumentMixin, TestCase):
         cls.student = PersonFactory()
         cls.manager = ProgramManagerFactory(education_group=cls.training.education_group).person
 
-        cls.path = 'parcours_doctoral:private-defense:failure'
+        cls.path = 'parcours_doctoral:private-defense:repeat'
         cls.details_path = 'parcours_doctoral:private-defense'
 
-        cls.data = {'failure-subject': 'subject', 'failure-body': 'body'}
+        cls.data = {'repeat-subject': 'subject', 'repeat-body': 'body'}
 
     def setUp(self):
         super().setUp()
@@ -91,6 +91,7 @@ class PrivateDefenseFailureViewTestCase(MockOsisDocumentMixin, TestCase):
             person__first_name='John',
             person__last_name='Poe',
             person__email='john.poe@test.be',
+            person__language=settings.LANGUAGE_CODE_EN,
             parcours_doctoral=self.doctorate,
         )
         self.external_jury_member = ExternalJuryMemberFactory(
@@ -108,6 +109,7 @@ class PrivateDefenseFailureViewTestCase(MockOsisDocumentMixin, TestCase):
         self.jury_member_with_external_promoter = JuryMemberWithExternalPromoterFactory(
             promoter__first_name='Tom',
             promoter__last_name='Doe',
+            promoter__language=settings.LANGUAGE_CODE_EN,
             promoter__email='tom.doe@test.be',
             parcours_doctoral=self.doctorate,
         )
@@ -117,7 +119,7 @@ class PrivateDefenseFailureViewTestCase(MockOsisDocumentMixin, TestCase):
         self.url = resolve_url(self.path, uuid=self.doctorate.uuid)
         self.details_url = resolve_url(self.details_path, uuid=self.doctorate.uuid)
 
-    def test_get_failure_form(self):
+    def test_get_repeat_form(self):
         self.client.force_login(self.manager.user)
 
         response = self.client.get(self.url)
@@ -136,7 +138,7 @@ class PrivateDefenseFailureViewTestCase(MockOsisDocumentMixin, TestCase):
 
         # With cdd email templates
         fr_cdd_template = CddMailTemplateFactory(
-            identifier=PARCOURS_DOCTORAL_EMAIL_PRIVATE_DEFENSE_ON_FAILURE,
+            identifier=PARCOURS_DOCTORAL_EMAIL_PRIVATE_DEFENSE_ON_REPEAT,
             language=settings.LANGUAGE_CODE_FR,
             cdd=self.doctorate.training.management_entity,
             name="My custom mail",
@@ -145,7 +147,7 @@ class PrivateDefenseFailureViewTestCase(MockOsisDocumentMixin, TestCase):
         )
 
         en_cdd_template = CddMailTemplateFactory(
-            identifier=PARCOURS_DOCTORAL_EMAIL_PRIVATE_DEFENSE_ON_FAILURE,
+            identifier=PARCOURS_DOCTORAL_EMAIL_PRIVATE_DEFENSE_ON_REPEAT,
             language=settings.LANGUAGE_CODE_EN,
             cdd=self.doctorate.training.management_entity,
             name="My custom mail",
@@ -162,7 +164,7 @@ class PrivateDefenseFailureViewTestCase(MockOsisDocumentMixin, TestCase):
         self.assertEqual(form.initial.get('subject'), 'FR[SUBJECT]')
         self.assertEqual(form.initial.get('body'), 'FR[BODY]')
 
-    def test_post_failure_form_with_invalid_data(self):
+    def test_post_repeat_form_with_invalid_data(self):
         self.client.force_login(self.manager.user)
 
         # Invalid status
@@ -231,7 +233,7 @@ class PrivateDefenseFailureViewTestCase(MockOsisDocumentMixin, TestCase):
             form.errors.get('__all__', []),
         )
 
-    def test_post_failure_form_with_valid_data(self):
+    def test_post_repeat_form_with_valid_data(self):
         self.client.force_login(self.manager.user)
 
         response = self.client.post(self.url, data=self.data)
@@ -241,7 +243,20 @@ class PrivateDefenseFailureViewTestCase(MockOsisDocumentMixin, TestCase):
 
         # Check the data update
         self.doctorate.refresh_from_db()
-        self.assertEqual(self.doctorate.status, ChoixStatutParcoursDoctoral.NON_AUTORISE_A_POURSUIVRE.name)
+        self.assertEqual(self.doctorate.status, ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_A_RECOMMENCER.name)
+
+        private_defenses = PrivateDefense.objects.filter(parcours_doctoral=self.doctorate)
+
+        self.assertEqual(len(private_defenses), 2)
+
+        old_private_defense, new_private_defense = (
+            private_defenses
+            if private_defenses[0] == self.private_defense
+            else [private_defenses[1], private_defenses[0]]
+        )
+
+        self.assertIsNone(old_private_defense.current_parcours_doctoral)
+        self.assertEqual(new_private_defense.current_parcours_doctoral, self.doctorate)
 
         # Check the creation of a history entry
         history_entries = HistoryEntry.objects.filter(object_uuid=self.doctorate.uuid)
