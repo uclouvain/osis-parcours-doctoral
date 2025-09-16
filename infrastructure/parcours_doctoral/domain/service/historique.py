@@ -415,3 +415,18 @@ class Historique(IHistorique):
             '{auteur.prenom} {auteur.nom}'.format(auteur=auteur),
             tags=['parcours_doctoral', 'private-defense', 'status-changed'],
         )
+
+    @classmethod
+    def historiser_decision_echec_defense_privee(
+        cls,
+        parcours_doctoral: ParcoursDoctoral,
+        matricule_auteur: str,
+    ):
+        auteur = PersonneConnueUclTranslator().get(matricule_auteur)
+        add_history_entry(
+            parcours_doctoral.entity_id.uuid,
+            'La décision de la défense privée a été donnée : le candidat n\'est pas autorisé à poursuivre.',
+            'The decision of the private defense has been made: the candidate is not authorized to continue.',
+            '{auteur.prenom} {auteur.nom}'.format(auteur=auteur),
+            tags=['parcours_doctoral', 'private-defense', 'status-changed'],
+        )
