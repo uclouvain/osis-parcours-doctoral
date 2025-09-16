@@ -96,4 +96,11 @@ COMMAND_HANDLERS = {
         historique=Historique(),
         notification=NotificationGenerale(),
     ),
+    ConfirmerRepetitionDefensePriveeCommand: lambda msg_bus, cmd: confirmer_repetition_defense_privee(
+        cmd,
+        parcours_doctoral_repository=ParcoursDoctoralRepository(),
+        defense_privee_repository=DefensePriveeRepository(),
+        historique=Historique(),
+        notification=NotificationGenerale(),
+    ),
 }
