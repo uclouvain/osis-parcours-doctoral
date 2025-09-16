@@ -1286,6 +1286,9 @@ msgstr ""
 msgid "Failure of the confirmation paper"
 msgstr ""
 
+msgid "Failure of the defense"
+msgstr ""
+
 msgid "Failure of the test"
 msgstr ""
 

@@ -77,11 +77,21 @@
                 {% translate "Successful defense" %}
               </a>
             </li>
+            <li>
+              <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#private-defense-failure-decision-form-modal">
+                {% translate "Failure of the defense" %}
+              </a>
+            </li>
           {% else %}
             {% with _("Please be sure that the date and time of the defence have been filled in and that the defence minutes have been submitted in the application.") as error_message %}
               <li title="{{ error_message }}">
                 <a class="dropdown-item disabled" href="#">
                   {% translate "Successful defense" %}
+                </a>
+              </li>
+              <li title="{{ error_message }}">
+                <a class="dropdown-item disabled" href="#">
+                  {% translate "Failure of the defense" %}
                 </a>
               </li>
             {% endwith %}
@@ -126,6 +136,10 @@
   {% url 'parcours_doctoral:private-defense:success' view.kwargs.uuid as success_decision_url %}
   {% blocktranslate with status='DEFENSE_PRIVEE_REUSSIE'|enum_display:'ChoixStatutParcoursDoctoral' asvar success_decision_title %}Move the doctorate to the "{{ status }}" state?{% endblocktranslate %}
   {% include 'parcours_doctoral/modal/form_modal.html' with modal_id='private-defense-success-decision-form-modal' modal_title=success_decision_title modal_url=success_decision_url %}
+
+  {% url 'parcours_doctoral:private-defense:failure' view.kwargs.uuid as failure_decision_url %}
+  {% blocktranslate with status='NON_AUTORISE_A_POURSUIVRE'|enum_display:'ChoixStatutParcoursDoctoral' asvar failure_decision_title %}Move the doctorate to the "{{ status }}" state?{% endblocktranslate %}
+  {% include 'parcours_doctoral/modal/form_modal.html' with modal_id='private-defense-failure-decision-form-modal' modal_title=failure_decision_title modal_url=failure_decision_url %}
 
 {% endblock %}
 
