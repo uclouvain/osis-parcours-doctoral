@@ -92,7 +92,7 @@ salutations et reste bien entendu à votre entière disposition.</p>
             },
         ),
         MailTemplateMigration(
-            PARCOURS_DOCTORAL_EMAIL_PRIVATE_DEFENSE_ON_RETAKING,
+            PARCOURS_DOCTORAL_EMAIL_PRIVATE_DEFENSE_ON_REPEAT,
             {
                 'en': 'Repeat private thesis defence for {student_first_name} {student_last_name}',
                 'fr-be': 'Défense privée à recommencer {student_first_name} {student_last_name}',
