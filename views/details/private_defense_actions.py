@@ -29,6 +29,7 @@ from django.utils.translation import gettext_lazy
 from infrastructure.messages_bus import message_bus_instance
 from parcours_doctoral.ddd.defense_privee.commands import (
     AutoriserDefensePriveeCommand,
+    ConfirmerEchecDefensePriveeCommand,
     ConfirmerReussiteDefensePriveeCommand,
     InviterJuryDefensePriveeCommand,
 )
@@ -39,6 +40,7 @@ from parcours_doctoral.infrastructure.parcours_doctoral.defense_privee.domain.se
 from parcours_doctoral.mail_templates.private_defense import (
     PARCOURS_DOCTORAL_EMAIL_PRIVATE_DEFENSE_AUTHORISATION,
     PARCOURS_DOCTORAL_EMAIL_PRIVATE_DEFENSE_JURY_INVITATION,
+    PARCOURS_DOCTORAL_EMAIL_PRIVATE_DEFENSE_ON_FAILURE,
     PARCOURS_DOCTORAL_EMAIL_PRIVATE_DEFENSE_ON_SUCCESS,
 )
 from parcours_doctoral.views.email_mixin import BaseEmailFormView
@@ -48,8 +50,9 @@ __namespace__ = 'private-defense'
 
 __all__ = [
     "PrivateDefenseAuthorisationView",
-    "PrivateDefenseSuccessView",
+    "PrivateDefenseFailureView",
     "PrivateDefenseJuryInvitationView",
+    "PrivateDefenseSuccessView",
 ]
 
 
@@ -130,5 +133,25 @@ class PrivateDefenseSuccessView(BasePrivateDefenseActionView):
         )
         self.message_on_success = gettext_lazy('The status has been changed to %(status)s.') % {
             'status': ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_REUSSIE.value
+        }
+        self.htmx_refresh = True
+
+
+class PrivateDefenseFailureView(BasePrivateDefenseActionView):
+    urlpatterns = 'failure'
+    permission_required = 'parcours_doctoral.make_private_defense_decision'
+    email_identifier = PARCOURS_DOCTORAL_EMAIL_PRIVATE_DEFENSE_ON_FAILURE
+
+    def call_command(self, form):
+        message_bus_instance.invoke(
+            ConfirmerEchecDefensePriveeCommand(
+                parcours_doctoral_uuid=self.parcours_doctoral_uuid,
+                matricule_auteur=self.request.user.person.global_id,
+                sujet_message=form.cleaned_data['subject'],
+                corps_message=form.cleaned_data['body'],
+            )
+        )
+        self.message_on_success = gettext_lazy('The status has been changed to %(status)s.') % {
+            'status': ChoixStatutParcoursDoctoral.NON_AUTORISE_A_POURSUIVRE.value
         }
         self.htmx_refresh = True
