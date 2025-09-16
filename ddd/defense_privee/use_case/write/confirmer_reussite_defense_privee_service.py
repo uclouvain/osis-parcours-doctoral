@@ -50,7 +50,7 @@ def confirmer_reussite_defense_privee(
     parcours_doctoral_identity = ParcoursDoctoralIdentity(uuid=cmd.parcours_doctoral_uuid)
     parcours_doctoral = parcours_doctoral_repository.get(parcours_doctoral_identity)
 
-    defense_privee = defense_privee_repository.get_active_dto_by_parcours_doctoral_identity(parcours_doctoral_identity)
+    defense_privee = defense_privee_repository.get_active(parcours_doctoral_identity)
 
     # WHEN
     parcours_doctoral.confirmer_reussite_defense_privee(defense_privee=defense_privee)

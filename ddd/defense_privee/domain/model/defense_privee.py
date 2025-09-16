@@ -88,3 +88,6 @@ class DefensePrivee(interface.RootEntity):
             date_heure=date_heure,
             est_active=est_active,
         ).validate()
+
+    def rendre_inactive(self):
+        self.est_active = False
