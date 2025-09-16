@@ -1315,6 +1315,9 @@ msgstr "FNRS, FRIA, FRESH, CSC"
 msgid "Failure of the confirmation paper"
 msgstr "Échec de l'épreuve de confirmation"
 
+msgid "Failure of the defense"
+msgstr "Défense en échec"
+
 msgid "Failure of the test"
 msgstr "Échec de l'épreuve"
 
@@ -2323,7 +2326,9 @@ msgid ""
 "Please be sure that the date and time of the defence have been filled in and "
 "that the defence minutes have been submitted in the application."
 msgstr ""
-"Veuillez vous assurer que la date et heure de la défense ont bien été complétés et que le procès verbal de la défense a bien été déposé dans l'application."
+"Veuillez vous assurer que la date et heure de la défense ont bien été "
+"complétés et que le procès verbal de la défense a bien été déposé dans "
+"l'application."
 
 #, python-format
 msgid ""

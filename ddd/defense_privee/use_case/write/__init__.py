@@ -24,6 +24,7 @@
 #
 # ##############################################################################
 from .autoriser_defense_privee_service import autoriser_defense_privee
+from .confirmer_echec_defense_privee_service import confirmer_echec_defense_privee
 from .confirmer_reussite_defense_privee_service import confirmer_reussite_defense_privee
 from .inviter_jury_defense_privee_service import inviter_jury_defense_privee
 from .soumettre_defense_privee_service import soumettre_defense_privee
