@@ -93,7 +93,10 @@ class TableauBordRepository(TableauBordRepositoryAdmissionMixin, ITableauBordRep
         IndicateurTableauBordEnum.FORMULE_1_DEFENSE_PRIVEE_SOUMISE.name: Q(
             status=ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_SOUMISE.name,
         ),
-        # IndicateurTableauBordEnum.DEFENSE_PRIVEE_PV_TELEVERSE.name: Q(),
+        IndicateurTableauBordEnum.FORMULE_1_DEFENSE_PRIVEE_PV_TELEVERSE.name: Q(
+            status=ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_SOUMISE.name,
+            current_private_defense__minutes__len__gt=0,
+        ),
         # IndicateurTableauBordEnum.AUTORISATION_DIFFUSION_THESE_ECHEANCE_15_JOURS.name: Q(),
         # IndicateurTableauBordEnum.AUTORISATION_DIFFUSION_THESE_REJET_ADRE.name: Q(),
         # IndicateurTableauBordEnum.AUTORISATION_DIFFUSION_THESE_REJET_SCEB.name: Q(),
