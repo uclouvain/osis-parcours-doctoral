@@ -32,7 +32,6 @@ from base.ddd.utils.business_validator import (
     BusinessValidator,
     TwoStepsMultipleBusinessExceptionListValidator,
 )
-from parcours_doctoral.ddd.defense_privee.dtos import DefensePriveeDTO
 from parcours_doctoral.ddd.defense_privee.validators import (
     ShouldDefensePriveeEtreActive,
     ShouldDefensePriveeEtreCompletee,
@@ -111,7 +110,7 @@ class InviterJuryDefensePriveeValidatorList(TwoStepsMultipleBusinessExceptionLis
 
 @attr.dataclass(frozen=True, slots=True)
 class DonnerDecisionDefensePriveeValidatorList(TwoStepsMultipleBusinessExceptionListValidator):
-    defense_privee: DefensePriveeDTO
+    defense_privee: 'DefensePrivee'
     statut_parcours_doctoral: ChoixStatutParcoursDoctoral
 
     def get_data_contract_validators(self) -> List[BusinessValidator]:

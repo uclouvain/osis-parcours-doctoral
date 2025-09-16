@@ -45,7 +45,16 @@ class DefensePriveeBuilder(RootEntityBuilder):
 
     @classmethod
     def build_from_repository_dto(cls, dto_object: 'DefensePriveeDTO') -> 'DefensePrivee':
-        raise NotImplementedError
+        return DefensePrivee(
+            entity_id=DefensePriveeIdentityBuilder.build_from_uuid(uuid=dto_object.uuid),
+            parcours_doctoral_id=ParcoursDoctoralIdentity(uuid=dto_object.parcours_doctoral_uuid),
+            est_active=dto_object.est_active,
+            date_heure=dto_object.date_heure,
+            lieu=dto_object.lieu,
+            date_envoi_manuscrit=dto_object.date_envoi_manuscrit,
+            proces_verbal=dto_object.proces_verbal,
+            canevas_proces_verbal=dto_object.canevas_proces_verbal,
+        )
 
     @classmethod
     def build_from_parcours_doctoral_id(cls, parcours_doctoral_id: 'ParcoursDoctoralIdentity') -> 'DefensePrivee':

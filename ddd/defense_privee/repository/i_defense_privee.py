@@ -28,6 +28,9 @@ import abc
 from typing import List, Optional
 
 from osis_common.ddd import interface
+from parcours_doctoral.ddd.defense_privee.builder.defense_privee import (
+    DefensePriveeBuilder,
+)
 from parcours_doctoral.ddd.defense_privee.domain.model.defense_privee import (
     DefensePrivee,
     DefensePriveeIdentity,
@@ -92,14 +95,9 @@ class IDefensePriveeRepository(interface.AbstractRepository):
     @classmethod
     def get(cls, entity_id: 'DefensePriveeIdentity') -> 'DefensePrivee':
         defense_privee = cls.get_dto(entity_id=entity_id)
+        return DefensePriveeBuilder.build_from_repository_dto(defense_privee)
 
-        return DefensePrivee(
-            entity_id=entity_id,
-            parcours_doctoral_id=ParcoursDoctoralIdentity(uuid=defense_privee.parcours_doctoral_uuid),
-            est_active=defense_privee.est_active,
-            date_heure=defense_privee.date_heure,
-            lieu=defense_privee.lieu,
-            date_envoi_manuscrit=defense_privee.date_envoi_manuscrit,
-            proces_verbal=defense_privee.proces_verbal,
-            canevas_proces_verbal=defense_privee.canevas_proces_verbal,
-        )
+    @classmethod
+    def get_active(cls, parcours_doctoral_entity_id: 'ParcoursDoctoralIdentity') -> 'DefensePrivee':
+        defense_privee = cls.get_active_dto_by_parcours_doctoral_identity(parcours_doctoral_entity_id)
+        return DefensePriveeBuilder.build_from_repository_dto(defense_privee)

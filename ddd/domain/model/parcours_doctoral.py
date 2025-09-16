@@ -31,7 +31,6 @@ import attr
 
 from ddd.logic.reference.domain.model.bourse import BourseIdentity
 from osis_common.ddd import interface
-from parcours_doctoral.ddd.defense_privee.dtos import DefensePriveeDTO
 from parcours_doctoral.ddd.defense_privee.validators.validator_by_business_action import (
     AutoriserDefensePriveeValidatorList,
     DonnerDecisionDefensePriveeValidatorList,
@@ -325,7 +324,7 @@ class ParcoursDoctoral(interface.RootEntity):
             statut_parcours_doctoral=self.statut,
         ).validate()
 
-    def confirmer_reussite_defense_privee(self, defense_privee: DefensePriveeDTO):
+    def confirmer_reussite_defense_privee(self, defense_privee: 'DefensePrivee'):
         DonnerDecisionDefensePriveeValidatorList(
             defense_privee=defense_privee,
             statut_parcours_doctoral=self.statut,
@@ -333,10 +332,18 @@ class ParcoursDoctoral(interface.RootEntity):
 
         self.statut = ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_REUSSIE
 
-    def confirmer_echec_defense_privee(self, defense_privee: DefensePriveeDTO):
+    def confirmer_echec_defense_privee(self, defense_privee: 'DefensePrivee'):
         DonnerDecisionDefensePriveeValidatorList(
             defense_privee=defense_privee,
             statut_parcours_doctoral=self.statut,
         ).validate()
 
         self.statut = ChoixStatutParcoursDoctoral.NON_AUTORISE_A_POURSUIVRE
+
+    def confirmer_repetition_defense_privee(self, defense_privee: 'DefensePrivee'):
+        DonnerDecisionDefensePriveeValidatorList(
+            defense_privee=defense_privee,
+            statut_parcours_doctoral=self.statut,
+        ).validate()
+
+        self.statut = ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_A_RECOMMENCER
