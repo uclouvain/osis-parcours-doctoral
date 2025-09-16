@@ -1818,13 +1818,13 @@ msgid ""
 msgstr ""
 
 msgid ""
-"Mail sent to the doctoral student to inform him of the necessity to retake "
-"the confirmation paper"
+"Mail sent to the doctoral student to inform him of the necessity to repeat "
+"the private defense"
 msgstr ""
 
 msgid ""
 "Mail sent to the doctoral student to inform him of the necessity to retake "
-"the private defense"
+"the confirmation paper"
 msgstr ""
 
 msgid ""
@@ -2563,6 +2563,9 @@ msgstr ""
 
 msgctxt "jury member"
 msgid "Remove?"
+msgstr ""
+
+msgid "Repeat of the defense"
 msgstr ""
 
 msgid "Reporting categories"

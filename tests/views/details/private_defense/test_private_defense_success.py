@@ -75,7 +75,7 @@ class PrivateDefenseSuccessViewTestCase(MockOsisDocumentMixin, TestCase):
         cls.path = 'parcours_doctoral:private-defense:success'
         cls.details_path = 'parcours_doctoral:private-defense'
 
-        cls.data = {'subject': 'subject', 'body': 'body'}
+        cls.data = {'success-subject': 'subject', 'success-body': 'body'}
 
     def setUp(self):
         super().setUp()
