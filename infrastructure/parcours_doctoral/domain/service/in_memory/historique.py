@@ -191,3 +191,11 @@ class HistoriqueInMemory(IHistorique):
         matricule_auteur: str,
     ):
         pass
+
+    @classmethod
+    def historiser_decision_repetition_defense_privee(
+        cls,
+        parcours_doctoral: ParcoursDoctoral,
+        matricule_auteur: str,
+    ):
+        pass
