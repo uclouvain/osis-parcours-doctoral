@@ -347,3 +347,6 @@ class ParcoursDoctoral(interface.RootEntity):
         ).validate()
 
         self.statut = ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_A_RECOMMENCER
+
+    def modifier_titre_these(self, titre_these):
+        self.titre_these_propose = titre_these
