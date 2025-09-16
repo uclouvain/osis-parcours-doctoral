@@ -23,8 +23,11 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from parcours_doctoral.ddd.defense_privee.builder.defense_privee import (
+    DefensePriveeBuilder,
+)
 from parcours_doctoral.ddd.defense_privee.commands import (
-    ConfirmerEchecDefensePriveeCommand,
+    ConfirmerRepetitionDefensePriveeCommand,
 )
 from parcours_doctoral.ddd.defense_privee.repository.i_defense_privee import (
     IDefensePriveeRepository,
@@ -39,8 +42,8 @@ from parcours_doctoral.ddd.repository.i_parcours_doctoral import (
 )
 
 
-def confirmer_echec_defense_privee(
-    cmd: 'ConfirmerEchecDefensePriveeCommand',
+def confirmer_repetition_defense_privee(
+    cmd: 'ConfirmerRepetitionDefensePriveeCommand',
     parcours_doctoral_repository: 'IParcoursDoctoralRepository',
     defense_privee_repository: 'IDefensePriveeRepository',
     historique: 'IHistorique',
@@ -51,12 +54,16 @@ def confirmer_echec_defense_privee(
     parcours_doctoral = parcours_doctoral_repository.get(parcours_doctoral_identity)
 
     defense_privee = defense_privee_repository.get_active(parcours_doctoral_identity)
+    nouvelle_defense_privee = DefensePriveeBuilder.build_from_parcours_doctoral_id(parcours_doctoral_identity)
 
     # WHEN
-    parcours_doctoral.confirmer_echec_defense_privee(defense_privee=defense_privee)
+    parcours_doctoral.confirmer_repetition_defense_privee(defense_privee=defense_privee)
+    defense_privee.rendre_inactive()
 
     # THEN
     parcours_doctoral_repository.save(parcours_doctoral)
+    defense_privee_repository.save(defense_privee)
+    defense_privee_repository.save(nouvelle_defense_privee)
 
     notification.envoyer_message(
         parcours_doctoral=parcours_doctoral,
@@ -69,7 +76,7 @@ def confirmer_echec_defense_privee(
         cc_jury=True,
     )
 
-    historique.historiser_decision_echec_defense_privee(
+    historique.historiser_decision_repetition_defense_privee(
         parcours_doctoral=parcours_doctoral,
         matricule_auteur=cmd.matricule_auteur,
     )

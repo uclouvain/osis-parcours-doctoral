@@ -30,6 +30,7 @@ from infrastructure.messages_bus import message_bus_instance
 from parcours_doctoral.ddd.defense_privee.commands import (
     AutoriserDefensePriveeCommand,
     ConfirmerEchecDefensePriveeCommand,
+    ConfirmerRepetitionDefensePriveeCommand,
     ConfirmerReussiteDefensePriveeCommand,
     InviterJuryDefensePriveeCommand,
 )
@@ -41,6 +42,7 @@ from parcours_doctoral.mail_templates.private_defense import (
     PARCOURS_DOCTORAL_EMAIL_PRIVATE_DEFENSE_AUTHORISATION,
     PARCOURS_DOCTORAL_EMAIL_PRIVATE_DEFENSE_JURY_INVITATION,
     PARCOURS_DOCTORAL_EMAIL_PRIVATE_DEFENSE_ON_FAILURE,
+    PARCOURS_DOCTORAL_EMAIL_PRIVATE_DEFENSE_ON_REPEAT,
     PARCOURS_DOCTORAL_EMAIL_PRIVATE_DEFENSE_ON_SUCCESS,
 )
 from parcours_doctoral.views.email_mixin import BaseEmailFormView
@@ -52,6 +54,7 @@ __all__ = [
     "PrivateDefenseAuthorisationView",
     "PrivateDefenseFailureView",
     "PrivateDefenseJuryInvitationView",
+    "PrivateDefenseRepeatView",
     "PrivateDefenseSuccessView",
 ]
 
@@ -74,6 +77,7 @@ class PrivateDefenseAuthorisationView(BasePrivateDefenseActionView):
     permission_required = 'parcours_doctoral.authorise_private_defense'
     message_on_success = gettext_lazy('The private defense has been authorised.')
     email_identifier = PARCOURS_DOCTORAL_EMAIL_PRIVATE_DEFENSE_AUTHORISATION
+    prefix = 'authorise'
 
     def call_command(self, form):
         message_bus_instance.invoke(
@@ -94,6 +98,7 @@ class PrivateDefenseJuryInvitationView(BasePrivateDefenseActionView):
     message_on_success = gettext_lazy('The members of the jury have been invited to the private defense.')
     email_identifier = PARCOURS_DOCTORAL_EMAIL_PRIVATE_DEFENSE_JURY_INVITATION
     disabled_form = True
+    prefix = 'jury-invitation'
 
     def get_language(self):
         return self.request.user.person.language
@@ -121,6 +126,7 @@ class PrivateDefenseSuccessView(BasePrivateDefenseActionView):
     urlpatterns = 'success'
     permission_required = 'parcours_doctoral.make_private_defense_decision'
     email_identifier = PARCOURS_DOCTORAL_EMAIL_PRIVATE_DEFENSE_ON_SUCCESS
+    prefix = 'success'
 
     def call_command(self, form):
         message_bus_instance.invoke(
@@ -141,6 +147,7 @@ class PrivateDefenseFailureView(BasePrivateDefenseActionView):
     urlpatterns = 'failure'
     permission_required = 'parcours_doctoral.make_private_defense_decision'
     email_identifier = PARCOURS_DOCTORAL_EMAIL_PRIVATE_DEFENSE_ON_FAILURE
+    prefix = 'failure'
 
     def call_command(self, form):
         message_bus_instance.invoke(
@@ -153,5 +160,26 @@ class PrivateDefenseFailureView(BasePrivateDefenseActionView):
         )
         self.message_on_success = gettext_lazy('The status has been changed to %(status)s.') % {
             'status': ChoixStatutParcoursDoctoral.NON_AUTORISE_A_POURSUIVRE.value
+        }
+        self.htmx_refresh = True
+
+
+class PrivateDefenseRepeatView(BasePrivateDefenseActionView):
+    urlpatterns = 'repeat'
+    permission_required = 'parcours_doctoral.make_private_defense_decision'
+    email_identifier = PARCOURS_DOCTORAL_EMAIL_PRIVATE_DEFENSE_ON_REPEAT
+    prefix = 'repeat'
+
+    def call_command(self, form):
+        message_bus_instance.invoke(
+            ConfirmerRepetitionDefensePriveeCommand(
+                parcours_doctoral_uuid=self.parcours_doctoral_uuid,
+                matricule_auteur=self.request.user.person.global_id,
+                sujet_message=form.cleaned_data['subject'],
+                corps_message=form.cleaned_data['body'],
+            )
+        )
+        self.message_on_success = gettext_lazy('The status has been changed to %(status)s.') % {
+            'status': ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_A_RECOMMENCER.value
         }
         self.htmx_refresh = True
