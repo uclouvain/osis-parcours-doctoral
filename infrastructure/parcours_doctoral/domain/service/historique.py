@@ -341,19 +341,17 @@ class Historique(IHistorique):
         matricule_auteur: str,
         statut_original_parcours_doctoral: ChoixStatutParcoursDoctoral,
     ):
-        auteur = PersonneConnueUclTranslator().get(matricule_auteur)
-        tags = ["parcours_doctoral", "private-defense"]
-
         if parcours_doctoral.statut != statut_original_parcours_doctoral:
-            tags.append("status-changed")
+            auteur = PersonneConnueUclTranslator().get(matricule_auteur)
+            tags = ["parcours_doctoral", "private-defense", "status-changed"]
 
-        add_history_entry(
-            parcours_doctoral.entity_id.uuid,
-            "Le doctorant a renseigné des informations relatives à la défense privée.",
-            "The doctoral student has filled in information relating to the private defense.",
-            "{auteur.prenom} {auteur.nom}".format(auteur=auteur),
-            tags=tags,
-        )
+            add_history_entry(
+                parcours_doctoral.entity_id.uuid,
+                "Le doctorant a renseigné des informations relatives à la défense privée.",
+                "The doctoral student has filled in information relating to the private defense.",
+                "{auteur.prenom} {auteur.nom}".format(auteur=auteur),
+                tags=tags,
+            )
 
     @classmethod
     def historiser_soumission_proces_verbal_defense_privee(
