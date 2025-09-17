@@ -30,7 +30,7 @@ from infrastructure.messages_bus import message_bus_instance
 from parcours_doctoral.ddd.defense_privee.commands import (
     AutoriserDefensePriveeCommand,
     ConfirmerEchecDefensePriveeCommand,
-    ConfirmerRepetitionDefensePriveeCommand,
+    ConfirmerDefensePriveeARecommencerCommand,
     ConfirmerReussiteDefensePriveeCommand,
     InviterJuryDefensePriveeCommand,
 )
@@ -172,7 +172,7 @@ class PrivateDefenseRepeatView(BasePrivateDefenseActionView):
 
     def call_command(self, form):
         message_bus_instance.invoke(
-            ConfirmerRepetitionDefensePriveeCommand(
+            ConfirmerDefensePriveeARecommencerCommand(
                 parcours_doctoral_uuid=self.parcours_doctoral_uuid,
                 matricule_auteur=self.request.user.person.global_id,
                 sujet_message=form.cleaned_data['subject'],
