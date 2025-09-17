@@ -75,7 +75,6 @@ COMMAND_HANDLERS = {
     SoumettreProcesVerbalDefensePriveeCommand: lambda msg_bus, cmd: soumettre_proces_verbal_defense_privee(
         cmd,
         defense_privee_repository=_defense_privee_repository,
-        historique=_historique,
     ),
     AutoriserDefensePriveeCommand: lambda msg_bus, cmd: autoriser_defense_privee(
         cmd,
@@ -87,7 +86,6 @@ COMMAND_HANDLERS = {
         cmd,
         parcours_doctoral_repository=_parcours_doctoral_repository,
         notification=_notification,
-        historique=_historique,
         personne_connue_ucl_translator=_personne_connue_ucl_translator,
     ),
     ConfirmerReussiteDefensePriveeCommand: lambda msg_bus, cmd: confirmer_reussite_defense_privee(
@@ -115,6 +113,5 @@ COMMAND_HANDLERS = {
         cmd,
         parcours_doctoral_repository=_parcours_doctoral_repository,
         defense_privee_repository=_defense_privee_repository,
-        historique=_historique,
     ),
 }
