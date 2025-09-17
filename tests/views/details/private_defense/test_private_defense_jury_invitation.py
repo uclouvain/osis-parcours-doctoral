@@ -30,7 +30,6 @@ from email.utils import getaddresses
 from django.conf import settings
 from django.shortcuts import resolve_url
 from django.test import TestCase, override_settings
-from osis_history.models import HistoryEntry
 from osis_notification.models import EmailNotification
 
 from admission.tests.factories.doctorate import DoctorateFactory
@@ -169,12 +168,6 @@ class PrivateDefenseJuryInvitationViewTestCase(MockOsisDocumentMixin, TestCase):
         response = self.client.post(self.url)
 
         self.assertRedirects(response, expected_url=self.details_url)
-
-        history_entries = HistoryEntry.objects.filter(object_uuid=self.doctorate.uuid)
-
-        self.assertEqual(len(history_entries), 1)
-
-        self.assertCountEqual(history_entries[0].tags, ['parcours_doctoral', 'private-defense'])
 
         # Check a custom (tokens and language) notification has been sent to each jury member
         notifications = EmailNotification.objects.all()

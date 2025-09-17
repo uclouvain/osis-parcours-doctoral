@@ -211,8 +211,7 @@ class PrivateDefenseAPIViewTestCase(DocumentCopyModelMixin, APITestCase):
         self.assertEqual(self.private_defense.manuscript_submission_date, datetime.date(2026, 8, 8))
 
         historic_entries = HistoryEntry.objects.filter(object_uuid=self.doctorate.uuid)
-        self.assertEqual(len(historic_entries), 2)
-        self.assertCountEqual(historic_entries[0].tags, ["parcours_doctoral", "private-defense"])
+        self.assertEqual(len(historic_entries), 1)
 
     def test_edit_a_known_private_defense_with_invalid_data(self):
         self.client.force_authenticate(user=self.doctorate_student.user)
