@@ -76,6 +76,7 @@ class PrivateDefenseListAPIView(DoctorateAPIPermissionRequiredMixin, GenericAPIV
         serializer = PrivateDefenseDTOSerializer(instance=private_defenses, many=True)
         return Response(serializer.data)
 
+    @extend_schema(exclude=True)
     def put(self, request, *args, **kwargs):
         """Only used for permissions"""
         return Response()

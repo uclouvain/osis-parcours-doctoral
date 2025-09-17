@@ -28,7 +28,6 @@ from django.shortcuts import resolve_url
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from admission.models.mixins import DocumentCopyModelMixin
 from base.tests.factories.user import UserFactory
 from parcours_doctoral.models.private_defense import PrivateDefense
 from parcours_doctoral.tests.factories.parcours_doctoral import ParcoursDoctoralFactory
@@ -36,7 +35,7 @@ from parcours_doctoral.tests.factories.private_defense import PrivateDefenseFact
 from parcours_doctoral.tests.factories.roles import StudentRoleFactory
 
 
-class PrivateDefenseListAPIViewTestCase(DocumentCopyModelMixin, APITestCase):
+class PrivateDefenseListAPIViewTestCase(APITestCase):
     @classmethod
     def setUpTestData(cls):
         cls.user_with_no_role = UserFactory()

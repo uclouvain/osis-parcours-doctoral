@@ -131,6 +131,17 @@ class ParcoursDoctoralDTO(interface.DTO):
     commission_proximite: str
     date_admission_par_cdd: Optional[datetime.datetime]
 
+    titre_these_propose: str
+    langue_soutenance_publique: str
+    date_heure_soutenance_publique: Optional[datetime.datetime]
+    lieu_soutenance_publique: str
+    local_deliberation: str
+    informations_complementaires_soutenance_publique: str
+    resume_annonce: str
+    photo_annonce: list[str]
+    proces_verbal_soutenance_publique: list[str]
+    date_retrait_diplome: Optional[datetime.date]
+
     @property
     def commission_proximite_display(self):
         return CHOIX_COMMISSION_PROXIMITE.get(self.commission_proximite, '')
