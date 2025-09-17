@@ -24,10 +24,10 @@
 #
 # ##############################################################################
 from .autoriser_defense_privee_service import autoriser_defense_privee
-from .confirmer_echec_defense_privee_service import confirmer_echec_defense_privee
 from .confirmer_defense_privee_a_recommencer_service import (
     confirmer_defense_privee_a_recommencer,
 )
+from .confirmer_echec_defense_privee_service import confirmer_echec_defense_privee
 from .confirmer_reussite_defense_privee_service import confirmer_reussite_defense_privee
 from .inviter_jury_defense_privee_service import inviter_jury_defense_privee
 from .modifier_defense_privee_service import modifier_defense_privee

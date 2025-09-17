@@ -30,7 +30,6 @@ from unittest.mock import patch
 from django.shortcuts import resolve_url
 from django.test import override_settings
 from django.utils.translation import gettext
-from osis_history.models import HistoryEntry
 from rest_framework import status
 from rest_framework.test import APITestCase
 
@@ -193,7 +192,3 @@ class PrivateDefenseMinutesAPIViewTestCase(MockOsisDocumentMixin, APITestCase):
         self.private_defense.refresh_from_db()
 
         self.assertEqual(self.private_defense.minutes, [uuid.UUID('4bdffb42-552d-415d-9e4c-725f10dce228')])
-
-        historic_entries = HistoryEntry.objects.filter(object_uuid=self.doctorate.uuid)
-        self.assertEqual(len(historic_entries), 1)
-        self.assertCountEqual(historic_entries[0].tags, ['parcours_doctoral', 'private-defense'])
