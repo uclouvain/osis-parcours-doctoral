@@ -44,7 +44,6 @@ from parcours_doctoral.ddd.repository.i_parcours_doctoral import (
 def inviter_jury_defense_privee(
     cmd: 'InviterJuryDefensePriveeCommand',
     parcours_doctoral_repository: 'IParcoursDoctoralRepository',
-    historique: 'IHistorique',
     notification: 'INotification',
     personne_connue_ucl_translator: 'IPersonneConnueUclTranslator',
 ) -> ParcoursDoctoralIdentity:
@@ -58,10 +57,6 @@ def inviter_jury_defense_privee(
 
     # THEN
     notification.inviter_membres_jury(
-        parcours_doctoral=parcours_doctoral,
-        auteur=auteur,
-    )
-    historique.historiser_invitation_jury_defense_privee(
         parcours_doctoral=parcours_doctoral,
         auteur=auteur,
     )

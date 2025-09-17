@@ -29,8 +29,8 @@ from django.utils.translation import gettext_lazy
 from infrastructure.messages_bus import message_bus_instance
 from parcours_doctoral.ddd.defense_privee.commands import (
     AutoriserDefensePriveeCommand,
-    ConfirmerEchecDefensePriveeCommand,
     ConfirmerDefensePriveeARecommencerCommand,
+    ConfirmerEchecDefensePriveeCommand,
     ConfirmerReussiteDefensePriveeCommand,
     InviterJuryDefensePriveeCommand,
 )
@@ -159,7 +159,7 @@ class PrivateDefenseFailureView(BasePrivateDefenseActionView):
             )
         )
         self.message_on_success = gettext_lazy('The status has been changed to %(status)s.') % {
-            'status': ChoixStatutParcoursDoctoral.NON_AUTORISE_A_POURSUIVRE.value
+            'status': ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_EN_ECHEC.value
         }
         self.htmx_refresh = True
 
