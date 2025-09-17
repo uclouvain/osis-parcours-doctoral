@@ -43,7 +43,6 @@ def modifier_defense_privee(
     cmd: 'ModifierDefensePriveeCommand',
     parcours_doctoral_repository: 'IParcoursDoctoralRepository',
     defense_privee_repository: 'IDefensePriveeRepository',
-    historique: 'IHistorique',
 ) -> ParcoursDoctoralIdentity:
     # GIVEN
     defense_privee_id = DefensePriveeIdentityBuilder.build_from_uuid(cmd.uuid)
@@ -64,9 +63,5 @@ def modifier_defense_privee(
     # THEN
     parcours_doctoral_repository.save(parcours_doctoral)
     defense_privee_repository.save(defense_privee)
-    historique.historiser_modification_defense_privee(
-        parcours_doctoral=parcours_doctoral,
-        matricule_auteur=cmd.matricule_auteur,
-    )
 
     return defense_privee.parcours_doctoral_id
