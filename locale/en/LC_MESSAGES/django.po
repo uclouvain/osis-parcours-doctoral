@@ -326,6 +326,9 @@ msgstr ""
 msgid "Add validation of prior experience (VAE)"
 msgstr ""
 
+msgid "Additional information"
+msgstr ""
+
 msgctxt "parcours_doctoral"
 msgid "Additional training"
 msgstr ""
@@ -976,6 +979,9 @@ msgstr ""
 msgid "Date of the private defense (DD/MM/YYYY)"
 msgstr ""
 
+msgid "Date of the public defense (DD/MM/YYYY)"
+msgstr ""
+
 msgctxt "dashboard-indicator confirmation"
 msgid "Date postponement"
 msgstr ""
@@ -1051,6 +1057,9 @@ msgstr ""
 msgid "Delete the document"
 msgstr ""
 
+msgid "Deliberation room"
+msgstr ""
+
 msgctxt "admission decision"
 msgid "Denied"
 msgstr ""
@@ -1088,6 +1097,9 @@ msgid "Detailed curriculum vitae"
 msgstr ""
 
 msgid "Detailed doctoral training"
+msgstr ""
+
+msgid "Diploma collection date"
 msgstr ""
 
 msgid "Do not reorder values, and keep the same count"
@@ -1840,6 +1852,11 @@ msgid ""
 msgstr ""
 
 msgid ""
+"Mail sent to the doctoral student to inform him of the favourable opinion on "
+"the public defense"
+msgstr ""
+
+msgid ""
 "Mail sent to the doctoral student to inform him of the necessity to repeat "
 "the private defense"
 msgstr ""
@@ -1854,7 +1871,15 @@ msgid ""
 "private defense"
 msgstr ""
 
+msgid ""
+"Mail sent to the doctoral student to inform of the authorisation of the "
+"public defense"
+msgstr ""
+
 msgid "Mail sent to the jury members to invite them to the private defense"
+msgstr ""
+
+msgid "Mail sent to the jury members to invite them to the public defense"
 msgstr ""
 
 msgid ""
@@ -2186,6 +2211,9 @@ msgstr ""
 msgid "Other cotutelle-related documents"
 msgstr ""
 
+msgid "Other defense language"
+msgstr ""
+
 msgid "Other documents relating to joint supervision"
 msgstr ""
 
@@ -2222,6 +2250,9 @@ msgstr "President"
 
 msgid "PRIVATE_DEFENSE"
 msgstr "Private defence"
+
+msgid "PROCLAME"
+msgstr ""
 
 msgctxt "CategorieActivite"
 msgid "PUBLICATION"
@@ -2293,7 +2324,13 @@ msgstr ""
 msgid "PhD training"
 msgstr ""
 
+msgid "Photo for announcement"
+msgstr ""
+
 msgid "Place of the private defense"
+msgstr ""
+
+msgid "Place of the public defense"
 msgstr ""
 
 msgid "Plain text"
@@ -2516,8 +2553,23 @@ msgstr ""
 msgid "Proximity commission for public health, health and society (SPSS)"
 msgstr ""
 
+msgid "Public defence date and time"
+msgstr ""
+
+msgid "Public defence location"
+msgstr ""
+
+msgid "Public defence minutes"
+msgstr ""
+
+msgid "Public defence minutes canvas"
+msgstr ""
+
 msgctxt "dashboard-category"
 msgid "Public defense (formula 1)"
+msgstr ""
+
+msgid "Public defense not completed."
 msgstr ""
 
 msgid "Publication status"
@@ -2764,6 +2816,12 @@ msgstr "Submitted"
 
 msgid "SOUTENANCE_PUBLIQUE"
 msgstr "Public defense"
+
+msgid "SOUTENANCE_PUBLIQUE_AUTORISEE"
+msgstr "Authorized public defense"
+
+msgid "SOUTENANCE_PUBLIQUE_SOUMISE"
+msgstr "Submitted public defense"
 
 msgid "STATISTICS"
 msgstr "Statistics"
@@ -3039,6 +3097,9 @@ msgctxt "paper summary"
 msgid "Summary"
 msgstr ""
 
+msgid "Summary for announcement"
+msgstr ""
+
 msgid "Summary of the communication"
 msgstr ""
 
@@ -3261,6 +3322,9 @@ msgstr ""
 msgid "The link to the private defense minutes"
 msgstr ""
 
+msgid "The link to the public defense minutes"
+msgstr ""
+
 msgid "The link to the thesis distribution authorisation page"
 msgstr ""
 
@@ -3327,6 +3391,9 @@ msgstr ""
 msgid "The public defence will take place on __________ at _____."
 msgstr ""
 
+msgid "The public defense is not in progress"
+msgstr ""
+
 msgid "The reason for needing update"
 msgstr ""
 
@@ -3344,6 +3411,9 @@ msgstr ""
 
 #, python-format
 msgid "The status has been changed to %(status)s."
+msgstr ""
+
+msgid "The step related to the public defense is not in progress."
 msgstr ""
 
 msgid "The student has been re-enrolled to this assessment."

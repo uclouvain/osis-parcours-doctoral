@@ -382,6 +382,9 @@ msgstr "Ajouter un filtre de date"
 msgid "Add validation of prior experience (VAE)"
 msgstr "Ajouter une valorisation des acquis de l'expérience"
 
+msgid "Additional information"
+msgstr "Informations complémentaires"
+
 msgctxt "parcours_doctoral"
 msgid "Additional training"
 msgstr "Formation complémentaire"
@@ -1056,6 +1059,9 @@ msgstr "Date de l'épreuve de confirmation (JJ/MM/AAAA)"
 msgid "Date of the private defense (DD/MM/YYYY)"
 msgstr "Date de la défense privée (JJ/MM/AAAA)"
 
+msgid "Date of the public defense (DD/MM/YYYY)"
+msgstr "Date de la soutenance publique (JJ/MM/AAAA)"
+
 msgctxt "dashboard-indicator confirmation"
 msgid "Date postponement"
 msgstr "Report de date"
@@ -1131,6 +1137,9 @@ msgstr "Supprimer le template d'email personnalisé \"%(name)s\" ?"
 msgid "Delete the document"
 msgstr "Supprimer le document"
 
+msgid "Deliberation room"
+msgstr "Local de délibération"
+
 msgctxt "admission decision"
 msgid "Denied"
 msgstr "Rejetée"
@@ -1176,6 +1185,9 @@ msgstr "Curriculum vitae détaillé"
 
 msgid "Detailed doctoral training"
 msgstr "Formation doctorale détaillée"
+
+msgid "Diploma collection date"
+msgstr "Date de retrait du diplôme"
 
 msgid "Do not reorder values, and keep the same count"
 msgstr "Ne pas réordonner les valeurs, et garder le même nombre"
@@ -2006,6 +2018,13 @@ msgstr ""
 "défense privée"
 
 msgid ""
+"Mail sent to the doctoral student to inform him of the favourable opinion on "
+"the public defense"
+msgstr ""
+"E-Mail envoyé au doctorand pour l'informer de l'issue favorable de sa "
+"soutenance publique"
+
+msgid ""
 "Mail sent to the doctoral student to inform him of the necessity to repeat "
 "the private defense"
 msgstr ""
@@ -2026,8 +2045,18 @@ msgstr ""
 "E-Mail envoyé au doctorand pour l'informer de l'autorisation de sa défense "
 "privée"
 
+msgid ""
+"Mail sent to the doctoral student to inform of the authorisation of the "
+"public defense"
+msgstr ""
+"E-Mail envoyé au doctorand pour l'informer de l'autorisation de sa soutenance "
+"publique"
+
 msgid "Mail sent to the jury members to invite them to the private defense"
 msgstr "E-Mail envoyé aux membres du jury pour les inviter à la défense privée"
+
+msgid "Mail sent to the jury members to invite them to the public defense"
+msgstr "E-Mail envoyé aux membres du jury pour les inviter à la soutenance publique"
 
 msgid ""
 "Mail sent to the member of the supervision panel when deleted by the student"
@@ -2392,6 +2421,9 @@ msgstr "Autre"
 msgid "Other cotutelle-related documents"
 msgstr "Autres documents relatifs à la cotutelle"
 
+msgid "Other defense language"
+msgstr "Autre langue de la soutenance"
+
 msgid "Other documents relating to joint supervision"
 msgstr "Autres documents relatifs à la cotutelle"
 
@@ -2428,6 +2460,9 @@ msgstr "Président"
 
 msgid "PRIVATE_DEFENSE"
 msgstr "Défense privée"
+
+msgid "PROCLAME"
+msgstr "Proclamé"
 
 msgctxt "CategorieActivite"
 msgid "PUBLICATION"
@@ -2499,8 +2534,14 @@ msgstr "Doctorant"
 msgid "PhD training"
 msgstr "Formation doctorale"
 
+msgid "Photo for announcement"
+msgstr "Photo pour l'annonce"
+
 msgid "Place of the private defense"
 msgstr "Lieu de la défense privée"
+
+msgid "Place of the public defense"
+msgstr "Lieu de la soutenance publique"
 
 msgid "Plain text"
 msgstr "Texte brut"
@@ -2746,9 +2787,24 @@ msgstr "Commission de proximité de recherche expérimentale et clinique (ECLI)"
 msgid "Proximity commission for public health, health and society (SPSS)"
 msgstr "Commission de proximité de santé publique, santé et société (SPSS)"
 
+msgid "Public defence date and time"
+msgstr "Date et heure de la soutenance publique"
+
+msgid "Public defence location"
+msgstr "Lieu de la soutenance publique"
+
+msgid "Public defence minutes"
+msgstr "Procès verbal de la soutenance publique"
+
+msgid "Public defence minutes canvas"
+msgstr "Canevas du procès verbal de la soutenance publique"
+
 msgctxt "dashboard-category"
 msgid "Public defense (formula 1)"
 msgstr "Soutenance publique (formule 1)"
+
+msgid "Public defense not completed."
+msgstr "Soutenance publique non complétée."
 
 msgid "Publication status"
 msgstr "Statut de publication"
@@ -2782,6 +2838,13 @@ msgstr "Réinscrire"
 
 msgid "Reason for exceeding the deadline"
 msgstr "Motif du dépassement de l’échéance"
+
+msgid ""
+"Reasoned opinion and list of questions asked by any jury member(s) who may "
+"be absent due to force majeure"
+msgstr ""
+"Avis motivé et inventaire des questions posées par un/des membre(s) du jury "
+"éventuellement absent(s) pour cas de force majeure"
 
 msgctxt "dashboard-category"
 msgid "Recevability (formula 2)"
@@ -3003,6 +3066,12 @@ msgstr "Soumise"
 
 msgid "SOUTENANCE_PUBLIQUE"
 msgstr "Soutenance publique"
+
+msgid "SOUTENANCE_PUBLIQUE_AUTORISEE"
+msgstr "Soutenance publique autorisée"
+
+msgid "SOUTENANCE_PUBLIQUE_SOUMISE"
+msgstr "Soutenance publique soumise"
 
 msgid "STATISTICS"
 msgstr "Statistiques"
@@ -3288,6 +3357,9 @@ msgctxt "paper summary"
 msgid "Summary"
 msgstr "Résumé"
 
+msgid "Summary for announcement"
+msgstr "Résumé pour l'annonce"
+
 msgid "Summary of the communication"
 msgstr "Résumé de la communication"
 
@@ -3536,6 +3608,18 @@ msgstr ""
 msgid "The jury signing is not in progress"
 msgstr "Le jury n'est pas en cours de signature"
 
+msgid "The jury members"
+msgstr "Les membres du jury"
+
+msgid ""
+"The jury shall verify that the candidate has completed their "
+"<strong>doctoral training</strong> and obtained the 60 credits required by "
+"the decree, validated by the domain doctoral committee."
+msgstr ""
+"Le jury constate l'achèvement de la <strong>formation doctorale</strong> du "
+"ou de la candidat·e et l'obtention des 60 crédits exigés par le décret, "
+"validés par la commission doctorale du domaine."
+
 msgid "The last name of the jury member"
 msgstr "Le nom du membre du jury"
 
@@ -3550,6 +3634,9 @@ msgstr "Le nom de l'étudiant"
 
 msgid "The link to the private defense minutes"
 msgstr "Le lien vers le procès verbal de la défense privée"
+
+msgid "The link to the public defense minutes"
+msgstr "Le lien vers le procès verbal de la soutenance publique"
 
 msgid "The link to the thesis distribution authorisation page"
 msgstr "Le lien vers la page d'autorisation de diffusion de la thèse"
@@ -3631,6 +3718,9 @@ msgstr ""
 "La date et l'heure de la soutenance publique sont fixées au __________ à "
 "_____."
 
+msgid "The public defense is not in progress"
+msgstr "La soutenance publique n'est pas en cours"
+
 msgid "The reason for needing update"
 msgstr "La raison de la demande de mise à jour"
 
@@ -3649,6 +3739,9 @@ msgstr "La date de début ne peut être postérieure à la date de fin"
 #, python-format
 msgid "The status has been changed to %(status)s."
 msgstr "Le statut a bien été modifié pour : %(status)s."
+
+msgid "The step related to the public defense is not in progress."
+msgstr "L'étape relative à la soutenance publique n'est pas en cours."
 
 msgid "The student has been re-enrolled to this assessment."
 msgstr "L'étudiant·e a été réinscrit·e à cette évaluation."

@@ -34,6 +34,7 @@ from osis_role.errors import predicate_failed_msg
 from parcours_doctoral.ddd.domain.model.enums import (
     STATUTS_DOCTORAT_DEFENSE_PRIVEE_EN_COURS,
     STATUTS_DOCTORAT_EPREUVE_CONFIRMATION_EN_COURS,
+    STATUTS_DOCTORAT_SOUTENANCE_PUBLIQUE_EN_COURS,
     ChoixStatutParcoursDoctoral,
 )
 from parcours_doctoral.ddd.jury.domain.model.enums import RoleJury
@@ -137,6 +138,12 @@ def confirmation_paper_in_progress(self, user: User, obj: ParcoursDoctoral):
 @predicate_failed_msg(message=_("The private defense is not in progress"))
 def private_defense_in_progress(self, user: User, obj: ParcoursDoctoral):
     return obj.status in STATUTS_DOCTORAT_DEFENSE_PRIVEE_EN_COURS
+
+
+@predicate(bind=True)
+@predicate_failed_msg(message=_("The public defense is not in progress"))
+def public_defense_in_progress(self, user: User, obj: ParcoursDoctoral):
+    return obj.status in STATUTS_DOCTORAT_SOUTENANCE_PUBLIQUE_EN_COURS
 
 
 @predicate(bind=True)

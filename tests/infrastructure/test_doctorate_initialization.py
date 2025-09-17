@@ -257,12 +257,15 @@ class DoctorateInitializationTestCase(TestCase):
             cotutelle_opening_request=self.documents_tokens['cotutelle_opening_request'],
             cotutelle_convention=self.documents_tokens['cotutelle_convention'],
             cotutelle_other_documents=self.documents_tokens['cotutelle_other_documents'],
+            related_pre_admission=None,
         )
 
         # Mock documents
         patcher = patch('osis_document_components.services.get_remote_tokens')
         patched = patcher.start()
-        patched.side_effect = lambda uuids, **kwargs: {uuid: uuid.uuid4() for index, uuid in enumerate(uuids)}
+        patched.side_effect = lambda uuids, **kwargs: {
+            current_uuid: f'token-{index}' for index, current_uuid in enumerate(uuids)
+        }
         self.addCleanup(patcher.stop)
 
         patcher = patch('osis_document_components.services.get_several_remote_metadata')
@@ -303,7 +306,8 @@ class DoctorateInitializationTestCase(TestCase):
         self.addCleanup(patcher.stop)
 
         self.documents_remote_duplicate_patcher = patch(
-            'parcours_doctoral.infrastructure.parcours_doctoral.domain.service.parcours_doctoral.documents_remote_duplicate'
+            'parcours_doctoral.infrastructure.parcours_doctoral.domain.service.parcours_doctoral.'
+            'documents_remote_duplicate'
         )
         self.documents_remote_duplicate_patched = self.documents_remote_duplicate_patcher.start()
         self.documents_remote_duplicate_patched.return_value = self.duplicated_documents_tokens_by_uuid
