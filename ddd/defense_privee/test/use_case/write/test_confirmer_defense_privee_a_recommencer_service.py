@@ -28,7 +28,7 @@ from django.test import SimpleTestCase
 
 from base.ddd.utils.business_validator import MultipleBusinessExceptions
 from parcours_doctoral.ddd.defense_privee.commands import (
-    ConfirmerRepetitionDefensePriveeCommand,
+    ConfirmerDefensePriveeARecommencerCommand,
     ConfirmerReussiteDefensePriveeCommand,
 )
 from parcours_doctoral.ddd.defense_privee.test.factory.defense_privee import (
@@ -54,11 +54,11 @@ from parcours_doctoral.infrastructure.parcours_doctoral.repository.in_memory.par
 )
 
 
-class TestConfirmerRepetitionDefensePrivee(SimpleTestCase):
+class TestConfirmerDefensePriveeARecommencer(SimpleTestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.cmd = ConfirmerRepetitionDefensePriveeCommand
+        cls.cmd = ConfirmerDefensePriveeARecommencerCommand
         cls.message_bus = message_bus_in_memory_instance
         cls.defense_privee_repository = DefensePriveeInMemoryRepository()
         cls.parcours_doctoral_repository = ParcoursDoctoralInMemoryRepository()
