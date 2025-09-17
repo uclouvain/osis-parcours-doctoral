@@ -41,7 +41,6 @@ from parcours_doctoral.ddd.domain.service.i_historique import IHistorique
 def soumettre_proces_verbal_defense_privee(
     cmd: 'SoumettreProcesVerbalDefensePriveeCommand',
     defense_privee_repository: 'IDefensePriveeRepository',
-    historique: 'IHistorique',
 ) -> ParcoursDoctoralIdentity:
     # GIVEN
     defense_privee_id = DefensePriveeIdentityBuilder.build_from_uuid(cmd.uuid)
@@ -52,10 +51,5 @@ def soumettre_proces_verbal_defense_privee(
 
     # THEN
     defense_privee_repository.save(defense_privee)
-
-    historique.historiser_soumission_proces_verbal_defense_privee(
-        parcours_doctoral_identity=defense_privee.parcours_doctoral_id,
-        matricule_auteur=cmd.matricule_auteur,
-    )
 
     return defense_privee.parcours_doctoral_id
