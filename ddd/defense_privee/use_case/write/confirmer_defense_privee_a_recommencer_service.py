@@ -27,7 +27,7 @@ from parcours_doctoral.ddd.defense_privee.builder.defense_privee import (
     DefensePriveeBuilder,
 )
 from parcours_doctoral.ddd.defense_privee.commands import (
-    ConfirmerRepetitionDefensePriveeCommand,
+    ConfirmerDefensePriveeARecommencerCommand,
 )
 from parcours_doctoral.ddd.defense_privee.repository.i_defense_privee import (
     IDefensePriveeRepository,
@@ -42,8 +42,8 @@ from parcours_doctoral.ddd.repository.i_parcours_doctoral import (
 )
 
 
-def confirmer_repetition_defense_privee(
-    cmd: 'ConfirmerRepetitionDefensePriveeCommand',
+def confirmer_defense_privee_a_recommencer(
+    cmd: 'ConfirmerDefensePriveeARecommencerCommand',
     parcours_doctoral_repository: 'IParcoursDoctoralRepository',
     defense_privee_repository: 'IDefensePriveeRepository',
     historique: 'IHistorique',
