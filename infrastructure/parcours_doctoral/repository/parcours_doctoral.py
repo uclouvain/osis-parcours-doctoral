@@ -48,6 +48,7 @@ from parcours_doctoral.ddd.domain.model.enums import (
     ChoixCommissionProximiteCDEouCLSM,
     ChoixCommissionProximiteCDSS,
     ChoixDoctoratDejaRealise,
+    ChoixLangueDefense,
     ChoixSousDomaineSciences,
     ChoixStatutParcoursDoctoral,
     ChoixTypeFinancement,
@@ -183,6 +184,19 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
                 est_lie_fnrs_fria_fresh_csc=parcours_doctoral.is_fnrs_fria_fresh_csc_linked,
                 commentaire=parcours_doctoral.financing_comment,
             ),
+            # Public defense
+            langue_soutenance_publique=(
+                ChoixLangueDefense[parcours_doctoral.defense_language] if parcours_doctoral.defense_language else None
+            ),
+            autre_langue_soutenance_publique=parcours_doctoral.other_defense_language,
+            date_heure_soutenance_publique=parcours_doctoral.defense_datetime,
+            lieu_soutenance_publique=parcours_doctoral.defense_place,
+            local_deliberation=parcours_doctoral.defense_deliberation_room,
+            informations_complementaires_soutenance_publique=parcours_doctoral.defense_additional_information,
+            resume_annonce=parcours_doctoral.announcement_summary,
+            photo_annonce=parcours_doctoral.announcement_photo,
+            proces_verbal_soutenance_publique=parcours_doctoral.defense_minutes,
+            date_retrait_diplome=parcours_doctoral.diploma_collection_date,
         )
 
     @classmethod
@@ -261,6 +275,17 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
                 'justification': entity.justification,
                 # Thesis
                 'thesis_proposed_title': entity.titre_these_propose,
+                # Public defense
+                'defense_language': entity.langue_soutenance_publique.name if entity.langue_soutenance_publique else '',
+                'other_defense_language': entity.autre_langue_soutenance_publique,
+                'defense_datetime': entity.date_heure_soutenance_publique,
+                'defense_place': entity.lieu_soutenance_publique,
+                'defense_deliberation_room': entity.local_deliberation,
+                'defense_additional_information': entity.informations_complementaires_soutenance_publique,
+                'announcement_summary': entity.resume_annonce,
+                'announcement_photo': entity.photo_annonce,
+                'defense_minutes': entity.proces_verbal_soutenance_publique,
+                'diploma_collection_date': entity.date_retrait_diplome,
             },
         )
 
@@ -414,6 +439,18 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
                 est_lie_fnrs_fria_fresh_csc=parcours_doctoral.is_fnrs_fria_fresh_csc_linked,
                 commentaire=parcours_doctoral.financing_comment,
             ),
+            # Public defense
+            titre_these_propose=parcours_doctoral.thesis_proposed_title,
+            langue_soutenance_publique=parcours_doctoral.defense_language,
+            autre_langue_soutenance_publique=parcours_doctoral.other_defense_language,
+            date_heure_soutenance_publique=parcours_doctoral.defense_datetime,
+            lieu_soutenance_publique=parcours_doctoral.defense_place,
+            local_deliberation=parcours_doctoral.defense_deliberation_room,
+            informations_complementaires_soutenance_publique=parcours_doctoral.defense_additional_information,
+            resume_annonce=parcours_doctoral.announcement_summary,
+            photo_annonce=parcours_doctoral.announcement_photo,
+            proces_verbal_soutenance_publique=parcours_doctoral.defense_minutes,
+            date_retrait_diplome=parcours_doctoral.diploma_collection_date,
         )
 
     @classmethod

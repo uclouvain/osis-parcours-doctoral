@@ -44,6 +44,7 @@ from base.forms.utils.file_field import PDF_MIME_TYPE
 from base.models.entity_version import EntityVersion
 from base.models.organization import Organization
 from osis_profile.utils.utils import get_superior_institute_queryset, format_school_title
+from osis_profile.constants import IMAGE_MIME_TYPES
 from parcours_doctoral.auth.constants import READ_ACTIONS_BY_TAB, UPDATE_ACTIONS_BY_TAB
 from parcours_doctoral.constants import CAMPUSES_UUIDS
 from parcours_doctoral.ddd.domain.model.enums import (
@@ -66,10 +67,6 @@ from reference.models.country import Country
 from reference.models.language import Language
 
 register = template.Library()
-
-JPEG_MIME_TYPE = 'image/jpeg'
-PNG_MIME_TYPE = 'image/png'
-IMAGE_MIME_TYPES = {JPEG_MIME_TYPE, PNG_MIME_TYPE}
 
 
 @dataclass

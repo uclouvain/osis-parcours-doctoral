@@ -50,6 +50,7 @@ from osis_history.models import HistoryEntry
 from osis_signature.contrib.fields import SignatureProcessField
 
 from admission.models.functions import ToChar
+from base.forms.utils.file_field import PDF_MIME_TYPE
 from base.models.education_group_year import EducationGroupYear
 from base.models.entity_version import EntityVersion
 from base.models.enums.education_group_categories import Categories
@@ -60,6 +61,7 @@ from base.models.student import Student
 from base.utils.cte import CTESubquery
 from epc.models.enums.etat_inscription import EtatInscriptionFormation
 from epc.models.inscription_programme_annuel import InscriptionProgrammeAnnuel
+from osis_profile.constants import JPEG_MIME_TYPE, PNG_MIME_TYPE
 from parcours_doctoral.ddd.domain.model.enums import (
     ChoixCommissionProximiteCDEouCLSM,
     ChoixCommissionProximiteCDSS,
@@ -449,6 +451,12 @@ class ParcoursDoctoral(models.Model):
         default=ChoixLangueDefense.UNDECIDED.name,
         blank=True,
     )
+    other_defense_language = models.CharField(
+        max_length=255,
+        verbose_name=_('Other defense language'),
+        blank=True,
+        default='',
+    )
     comment_about_jury = models.TextField(
         default="",
         verbose_name=_("Comment about jury"),
@@ -461,6 +469,54 @@ class ParcoursDoctoral(models.Model):
     jury_approval = FileField(
         verbose_name=_("Jury approval"),
         upload_to=parcours_doctoral_directory_path,
+    )
+
+    # Defense
+    defense_datetime = models.DateTimeField(
+        verbose_name=_('Public defence date and time'),
+        null=True,
+        blank=True,
+    )
+    defense_place = models.TextField(
+        verbose_name=_('Public defence location'),
+        blank=True,
+        default='',
+    )
+    defense_deliberation_room = models.TextField(
+        verbose_name=_('Deliberation room'),
+        blank=True,
+        default='',
+    )
+    defense_additional_information = models.TextField(
+        verbose_name=_('Additional information'),
+        blank=True,
+        default='',
+    )
+    announcement_summary = models.TextField(
+        verbose_name=_('Summary for announcement'),
+        blank=True,
+        default='',
+    )
+    announcement_photo = FileField(
+        verbose_name=_('Photo for announcement'),
+        upload_to=parcours_doctoral_directory_path,
+        max_files=1,
+        mimetypes=[JPEG_MIME_TYPE, PNG_MIME_TYPE],
+    )
+    defense_minutes = FileField(
+        verbose_name=_('Public defence minutes'),
+        upload_to=parcours_doctoral_directory_path,
+        mimetypes=[PDF_MIME_TYPE],
+    )
+    defense_minutes_canvas = FileField(
+        verbose_name=_('Public defence minutes canvas'),
+        upload_to=parcours_doctoral_directory_path,
+        mimetypes=[PDF_MIME_TYPE],
+    )
+    diploma_collection_date = models.DateField(
+        verbose_name=_('Diploma collection date'),
+        blank=True,
+        null=True,
     )
 
     # Financement

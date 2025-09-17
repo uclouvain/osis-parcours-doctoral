@@ -36,6 +36,7 @@ from base.tests.factories.entity_version import EntityVersionFactory
 from base.tests.factories.person import PersonFactory
 from parcours_doctoral.ddd.domain.model.enums import (
     ChoixDoctoratDejaRealise,
+    ChoixLangueDefense,
     ChoixStatutParcoursDoctoral,
     ChoixTypeFinancement,
 )
@@ -106,6 +107,16 @@ class ParcoursDoctoralAPIViewTestCase(CheckActionLinksMixin, APITestCase):
             dedicated_time=30,
             is_fnrs_fria_fresh_csc_linked=True,
             financing_comment='Funding comment',
+            defense_language=ChoixLangueDefense.FRENCH.name,
+            defense_datetime=datetime.datetime(2025, 1, 5, 11, 30),
+            defense_place='Louvain-La-Neuve',
+            defense_deliberation_room='D1',
+            defense_additional_information='Additional information',
+            announcement_summary='Announcement summary',
+            announcement_photo=[uuid4()],
+            defense_minutes=[uuid4()],
+            defense_minutes_canvas=[uuid4()],
+            diploma_collection_date=datetime.date(2026, 1, 6),
         )
         cls.first_teaching_campus = (
             cls.doctorate.training.educationgroupversion_set.first().root_group.main_teaching_campus
@@ -202,6 +213,7 @@ class ParcoursDoctoralAPIViewTestCase(CheckActionLinksMixin, APITestCase):
                 'update_confirmation_extension',
                 'retrieve_assessment_enrollment',
                 'retrieve_private_defense',
+                'retrieve_public_defense',
             ],
             forbidden_actions=[
                 'retrieve_complementary_training',
@@ -211,6 +223,7 @@ class ParcoursDoctoralAPIViewTestCase(CheckActionLinksMixin, APITestCase):
                 'update_private_defense',
                 'retrieve_private_defense_minutes_canvas',
                 'submit_private_defense_minutes',
+                'update_public_defense',
             ],
         )
 
@@ -269,17 +282,21 @@ class ParcoursDoctoralAPIViewTestCase(CheckActionLinksMixin, APITestCase):
         self.assertEqual(json_response['cotutelle']['institution'], str(self.doctorate.cotutelle_institution))
         self.assertEqual(json_response['cotutelle']['autre_institution'], True)
         self.assertEqual(
-            json_response['cotutelle']['autre_institution_nom'], self.doctorate.cotutelle_other_institution_name
+            json_response['cotutelle']['autre_institution_nom'],
+            self.doctorate.cotutelle_other_institution_name,
         )
         self.assertEqual(
-            json_response['cotutelle']['autre_institution_adresse'], self.doctorate.cotutelle_other_institution_address
+            json_response['cotutelle']['autre_institution_adresse'],
+            self.doctorate.cotutelle_other_institution_address,
         )
         self.assertEqual(
-            json_response['cotutelle']['demande_ouverture'], [str(self.doctorate.cotutelle_opening_request[0])]
+            json_response['cotutelle']['demande_ouverture'],
+            [str(self.doctorate.cotutelle_opening_request[0])],
         )
         self.assertEqual(json_response['cotutelle']['convention'], [str(self.doctorate.cotutelle_convention[0])])
         self.assertEqual(
-            json_response['cotutelle']['autres_documents'], [str(self.doctorate.cotutelle_other_documents[0])]
+            json_response['cotutelle']['autres_documents'],
+            [str(self.doctorate.cotutelle_other_documents[0])],
         )
 
         # Funding
@@ -298,13 +315,16 @@ class ParcoursDoctoralAPIViewTestCase(CheckActionLinksMixin, APITestCase):
             self.doctorate.international_scholarship.long_name,
         )
         self.assertEqual(
-            json_response['financement']['autre_bourse_recherche'], self.doctorate.other_international_scholarship
+            json_response['financement']['autre_bourse_recherche'],
+            self.doctorate.other_international_scholarship,
         )
         self.assertEqual(
-            json_response['financement']['bourse_date_debut'], self.doctorate.scholarship_start_date.isoformat()
+            json_response['financement']['bourse_date_debut'],
+            self.doctorate.scholarship_start_date.isoformat(),
         )
         self.assertEqual(
-            json_response['financement']['bourse_date_fin'], self.doctorate.scholarship_end_date.isoformat()
+            json_response['financement']['bourse_date_fin'],
+            self.doctorate.scholarship_end_date.isoformat(),
         )
         self.assertEqual(json_response['financement']['bourse_preuve'], [str(self.doctorate.scholarship_proof[0])])
         self.assertEqual(json_response['financement']['duree_prevue'], self.doctorate.planned_duration)
@@ -322,7 +342,8 @@ class ParcoursDoctoralAPIViewTestCase(CheckActionLinksMixin, APITestCase):
             [str(self.doctorate.additional_training_project[0])],
         )
         self.assertEqual(
-            json_response['projet']['lettres_recommandation'], [str(self.doctorate.recommendation_letters[0])]
+            json_response['projet']['lettres_recommandation'],
+            [str(self.doctorate.recommendation_letters[0])],
         )
         self.assertEqual(json_response['projet']['langue_redaction_these'], self.doctorate.thesis_language.code)
         self.assertEqual(json_response['projet']['nom_langue_redaction_these'], self.doctorate.thesis_language.name)
@@ -332,17 +353,36 @@ class ParcoursDoctoralAPIViewTestCase(CheckActionLinksMixin, APITestCase):
         self.assertEqual(json_response['projet']['lieu_these'], self.doctorate.thesis_location)
         self.assertEqual(json_response['projet']['projet_doctoral_deja_commence'], self.doctorate.phd_alread_started)
         self.assertEqual(
-            json_response['projet']['projet_doctoral_institution'], self.doctorate.phd_alread_started_institute
+            json_response['projet']['projet_doctoral_institution'],
+            self.doctorate.phd_alread_started_institute,
         )
         self.assertEqual(
-            json_response['projet']['projet_doctoral_date_debut'], self.doctorate.work_start_date.isoformat()
+            json_response['projet']['projet_doctoral_date_debut'],
+            self.doctorate.work_start_date.isoformat(),
         )
         self.assertEqual(json_response['projet']['doctorat_deja_realise'], self.doctorate.phd_already_done)
         self.assertEqual(json_response['projet']['institution'], self.doctorate.phd_already_done_institution)
         self.assertEqual(json_response['projet']['domaine_these'], self.doctorate.phd_already_done_thesis_domain)
         self.assertEqual(
-            json_response['projet']['date_soutenance'], self.doctorate.phd_already_done_defense_date.isoformat()
+            json_response['projet']['date_soutenance'],
+            self.doctorate.phd_already_done_defense_date.isoformat(),
         )
         self.assertEqual(
-            json_response['projet']['raison_non_soutenue'], self.doctorate.phd_already_done_no_defense_reason
+            json_response['projet']['raison_non_soutenue'],
+            self.doctorate.phd_already_done_no_defense_reason,
         )
+
+        # Public defense
+        self.assertEqual(json_response['langue_soutenance_publique'], self.doctorate.defense_language)
+        self.assertEqual(json_response['autre_langue_soutenance_publique'], self.doctorate.other_defense_language)
+        self.assertEqual(json_response['date_heure_soutenance_publique'], self.doctorate.defense_datetime.isoformat())
+        self.assertEqual(json_response['lieu_soutenance_publique'], self.doctorate.defense_place)
+        self.assertEqual(json_response['local_deliberation'], self.doctorate.defense_deliberation_room)
+        self.assertEqual(
+            json_response['informations_complementaires_soutenance_publique'],
+            self.doctorate.defense_additional_information,
+        )
+        self.assertEqual(json_response['resume_annonce'], self.doctorate.announcement_summary)
+        self.assertEqual(json_response['photo_annonce'], [str(self.doctorate.announcement_photo[0])])
+        self.assertEqual(json_response['proces_verbal_soutenance_publique'], [str(self.doctorate.defense_minutes[0])])
+        self.assertEqual(json_response['date_retrait_diplome'], self.doctorate.diploma_collection_date.isoformat())

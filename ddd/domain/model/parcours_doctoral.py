@@ -24,7 +24,7 @@
 #
 # ##############################################################################
 import uuid
-from datetime import datetime
+from datetime import date, datetime
 from typing import List, Optional, Union
 
 import attr
@@ -49,6 +49,7 @@ from parcours_doctoral.ddd.domain.model.enums import (
     ChoixCommissionProximiteCDEouCLSM,
     ChoixCommissionProximiteCDSS,
     ChoixDoctoratDejaRealise,
+    ChoixLangueDefense,
     ChoixSousDomaineSciences,
     ChoixStatutParcoursDoctoral,
     ChoixTypeFinancement,
@@ -56,6 +57,9 @@ from parcours_doctoral.ddd.domain.model.enums import (
 from parcours_doctoral.ddd.domain.validator.validator_by_business_action import (
     ModifierFinancementValidatorList,
     ProjetDoctoralValidatorList,
+)
+from parcours_doctoral.ddd.soutenance_publique.validators.validator_by_business_action import (
+    SoumettreSoutenancePubliqueValidatorList,
 )
 
 ENTITY_CDE = 'CDE'
@@ -97,7 +101,19 @@ class ParcoursDoctoral(interface.RootEntity):
         ]
     ] = None
     justification: str = ''
+
+    # Soutenance publique
     titre_these_propose: str = ''
+    langue_soutenance_publique: Optional[ChoixLangueDefense] = None
+    autre_langue_soutenance_publique: str = ''
+    date_heure_soutenance_publique: Optional[datetime] = None
+    lieu_soutenance_publique: str = ''
+    local_deliberation: str = ''
+    informations_complementaires_soutenance_publique: str = ''
+    resume_annonce: str = ''
+    photo_annonce: list[str] = attr.Factory(list)
+    proces_verbal_soutenance_publique: list[str] = attr.Factory(list)
+    date_retrait_diplome: Optional[date] = None
 
     def verrouiller_parcours_doctoral_pour_signature(self):
         self.statut = ChoixStatutParcoursDoctoral.EN_ATTENTE_DE_SIGNATURE
@@ -308,6 +324,7 @@ class ParcoursDoctoral(interface.RootEntity):
             autres_documents=autres_documents,
         )
 
+    # Défense privée
     def soumettre_defense_privee(self, titre_these: str):
         self.statut = ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_SOUMISE
         self.titre_these_propose = titre_these
@@ -350,3 +367,32 @@ class ParcoursDoctoral(interface.RootEntity):
 
     def modifier_titre_these(self, titre_these):
         self.titre_these_propose = titre_these
+
+    # Soutenance publique
+    def soumettre_soutenance_publique(
+        self,
+        langue: str,
+        autre_langue,
+        date_heure: datetime,
+        lieu: str,
+        local_deliberation: str,
+        resume_annonce: str,
+        photo_annonce: list[str],
+    ):
+        SoumettreSoutenancePubliqueValidatorList(
+            langue_soutenance_publique=langue,
+            autre_langue_soutenance_publique=autre_langue,
+            date_heure_soutenance_publique=date_heure,
+            photo_annonce=photo_annonce,
+            statut_parcours_doctoral=self.statut,
+        ).validate()
+
+        self.langue_soutenance_publique = ChoixLangueDefense[langue]
+        self.autre_langue_soutenance_publique = autre_langue
+        self.date_heure_soutenance_publique = date_heure
+        self.lieu_soutenance_publique = lieu
+        self.local_deliberation = local_deliberation
+        self.resume_annonce = resume_annonce
+        self.photo_annonce = photo_annonce
+
+        self.statut = ChoixStatutParcoursDoctoral.SOUTENANCE_PUBLIQUE_SOUMISE

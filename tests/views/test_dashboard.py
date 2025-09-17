@@ -522,6 +522,21 @@ class DashboardCommandTestCase(TestCase):
 
         self.assert_dashboard_value(category, indicator, 0)
 
+    def test_submitted_public_defense_1(self):
+        category = CategorieTableauBordEnum.FORMULE_1_SOUTENANCE_PUBLIQUE.name
+        indicator = IndicateurTableauBordEnum.FORMULE_1_SOUTENANCE_PUBLIQUE_SOUMISE.name
+
+        self.assert_dashboard_value(category, indicator, 0)
+
+        doctorate = ParcoursDoctoralFactory(status=ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_REUSSIE.name)
+
+        self.assert_dashboard_value(category, indicator, 0)
+
+        doctorate.status = ChoixStatutParcoursDoctoral.SOUTENANCE_PUBLIQUE_SOUMISE.name
+        doctorate.save()
+
+        self.assert_dashboard_value(category, indicator, 1)
+
 
 @override_settings(OSIS_DOCUMENT_BASE_URL='http://dummyurl/')
 class DashboardViewTestCase(TestCase):

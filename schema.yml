@@ -1022,45 +1022,6 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '404':
           $ref: '#/components/responses/NotFound'
-    put:
-      operationId: doctorate_private_defense_update
-      description: Only used for permissions
-      parameters:
-      - in: path
-        name: uuid
-        schema:
-          type: string
-          format: uuid
-        required: true
-      - $ref: '#/components/parameters/Accept-Language'
-      - $ref: '#/components/parameters/X-User-FirstName'
-      - $ref: '#/components/parameters/X-User-LastName'
-      - $ref: '#/components/parameters/X-User-Email'
-      - $ref: '#/components/parameters/X-User-GlobalID'
-      tags:
-      - doctorate
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PrivateDefenseDTO'
-        required: true
-      security:
-      - tokenAuth: []
-      - Token: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PrivateDefenseDTO'
-          description: ''
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '404':
-          $ref: '#/components/responses/NotFound'
   /doctorate/{uuid}/private-defense/{private_defense_uuid}:
     get:
       operationId: retrieve_private_defense
@@ -1244,6 +1205,46 @@ paths:
       responses:
         '200':
           description: No response body
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /doctorate/{uuid}/public-defense:
+    put:
+      operationId: submit_public_defense
+      description: Submit a private defense
+      parameters:
+      - in: path
+        name: uuid
+        schema:
+          type: string
+          format: uuid
+        required: true
+      - $ref: '#/components/parameters/Accept-Language'
+      - $ref: '#/components/parameters/X-User-FirstName'
+      - $ref: '#/components/parameters/X-User-LastName'
+      - $ref: '#/components/parameters/X-User-Email'
+      - $ref: '#/components/parameters/X-User-GlobalID'
+      tags:
+      - doctorate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubmitPublicDefense'
+        required: true
+      security:
+      - tokenAuth: []
+      - Token: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParcoursDoctoralIdentityDTO'
+          description: ''
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -3414,6 +3415,36 @@ components:
           type: string
           format: date-time
           nullable: true
+        titre_these_propose:
+          type: string
+        langue_soutenance_publique:
+          type: string
+        autre_langue_soutenance_publique:
+          type: string
+        date_heure_soutenance_publique:
+          type: string
+          format: date-time
+          nullable: true
+        lieu_soutenance_publique:
+          type: string
+        local_deliberation:
+          type: string
+        informations_complementaires_soutenance_publique:
+          type: string
+        resume_annonce:
+          type: string
+        photo_annonce:
+          type: array
+          items:
+            type: string
+        proces_verbal_soutenance_publique:
+          type: array
+          items:
+            type: string
+        date_retrait_diplome:
+          type: string
+          format: date
+          nullable: true
         links:
           type: object
           properties:
@@ -3467,9 +3498,14 @@ components:
               $ref: '#/components/schemas/ActionLink'
             submit_private_defense_minutes:
               $ref: '#/components/schemas/ActionLink'
+            retrieve_public_defense:
+              $ref: '#/components/schemas/ActionLink'
+            update_public_defense:
+              $ref: '#/components/schemas/ActionLink'
           readOnly: true
           default: {}
       required:
+      - autre_langue_soutenance_publique
       - commission_proximite
       - cotutelle
       - cree_le
@@ -3477,17 +3513,25 @@ components:
       - financement
       - formation
       - genre_doctorant
+      - informations_complementaires_soutenance_publique
       - intitule_secteur_formation
+      - langue_soutenance_publique
       - lieu_naissance_doctorant
+      - lieu_soutenance_publique
+      - local_deliberation
       - matricule_doctorant
       - nom_doctorant
       - noma_doctorant
       - pays_naissance_doctorant
+      - photo_annonce
       - photo_identite_doctorant
       - prenom_doctorant
+      - proces_verbal_soutenance_publique
       - projet
       - reference
+      - resume_annonce
       - statut
+      - titre_these_propose
       - type_admission
       - uuid
       - uuid_admission
@@ -3571,6 +3615,10 @@ components:
             retrieve_private_defense:
               $ref: '#/components/schemas/ActionLink'
             update_private_defense:
+              $ref: '#/components/schemas/ActionLink'
+            retrieve_public_defense:
+              $ref: '#/components/schemas/ActionLink'
+            update_public_defense:
               $ref: '#/components/schemas/ActionLink'
           readOnly: true
           default: {}
@@ -4415,6 +4463,30 @@ components:
       required:
       - proces_verbal
       - uuid
+    SubmitPublicDefense:
+      type: object
+      description: Contains the submitted data to complete a public defense.
+      properties:
+        langue:
+          type: string
+        autre_langue:
+          type: string
+        date_heure:
+          type: string
+          format: date-time
+          nullable: true
+        lieu:
+          type: string
+        local_deliberation:
+          type: string
+        resume_annonce:
+          type: string
+        photo_annonce:
+          type: array
+          items:
+            type: string
+      required:
+      - photo_annonce
     SupervisionCanvas:
       type: object
       properties:

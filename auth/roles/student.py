@@ -81,5 +81,9 @@ class Student(RoleModel):
             'parcours_doctoral.api_view_private_defense': parcours_doctoral.is_parcours_doctoral_student,
             'parcours_doctoral.api_change_private_defense': parcours_doctoral.is_parcours_doctoral_student
             & parcours_doctoral.private_defense_in_progress,
+            # Public defense
+            'parcours_doctoral.api_view_public_defense': parcours_doctoral.is_parcours_doctoral_student,
+            'parcours_doctoral.api_change_public_defense': parcours_doctoral.is_parcours_doctoral_student
+            & parcours_doctoral.public_defense_in_progress,
         }
         return RuleSet(rules)
