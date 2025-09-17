@@ -121,4 +121,4 @@ class TestConfirmerEchecDefensePrivee(SimpleTestCase):
         resultat = self.message_bus.invoke(self.cmd(**self.parametres_cmd))
 
         self.assertEqual(resultat, self.parcours_doctoral.entity_id)
-        self.assertEqual(self.parcours_doctoral.statut, ChoixStatutParcoursDoctoral.NON_AUTORISE_A_POURSUIVRE)
+        self.assertEqual(self.parcours_doctoral.statut, ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_EN_ECHEC)

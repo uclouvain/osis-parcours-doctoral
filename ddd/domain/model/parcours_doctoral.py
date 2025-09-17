@@ -364,7 +364,7 @@ class ParcoursDoctoral(interface.RootEntity):
             statut_parcours_doctoral=self.statut,
         ).validate()
 
-        self.statut = ChoixStatutParcoursDoctoral.NON_AUTORISE_A_POURSUIVRE
+        self.statut = ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_EN_ECHEC
 
     def confirmer_repetition_defense_privee(self, defense_privee: 'DefensePrivee'):
         DonnerDecisionDefensePriveeValidatorList(
