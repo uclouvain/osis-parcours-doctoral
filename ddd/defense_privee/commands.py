@@ -99,7 +99,7 @@ class ConfirmerEchecDefensePriveeCommand(interface.CommandRequest):
 
 
 @attr.dataclass(frozen=True, slots=True)
-class ConfirmerRepetitionDefensePriveeCommand(interface.CommandRequest):
+class ConfirmerDefensePriveeARecommencerCommand(interface.CommandRequest):
     parcours_doctoral_uuid: str
 
     matricule_auteur: str
