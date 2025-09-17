@@ -104,7 +104,7 @@ COMMAND_HANDLERS = {
         historique=_historique,
         notification=_notification_generale,
     ),
-    ConfirmerRepetitionDefensePriveeCommand: lambda msg_bus, cmd: confirmer_repetition_defense_privee(
+    ConfirmerDefensePriveeARecommencerCommand: lambda msg_bus, cmd: confirmer_defense_privee_a_recommencer(
         cmd,
         parcours_doctoral_repository=_parcours_doctoral_repository,
         defense_privee_repository=_defense_privee_repository,
