@@ -241,7 +241,7 @@ class PrivateDefenseFailureViewTestCase(MockOsisDocumentMixin, TestCase):
 
         # Check the data update
         self.doctorate.refresh_from_db()
-        self.assertEqual(self.doctorate.status, ChoixStatutParcoursDoctoral.NON_AUTORISE_A_POURSUIVRE.name)
+        self.assertEqual(self.doctorate.status, ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_EN_ECHEC.name)
 
         # Check the creation of a history entry
         history_entries = HistoryEntry.objects.filter(object_uuid=self.doctorate.uuid)

@@ -936,6 +936,9 @@ msgstr "Défense privée autorisée"
 msgid "DEFENSE_PRIVEE_A_RECOMMENCER"
 msgstr "Défense privée à recommencer"
 
+msgid "DEFENSE_PRIVEE_EN_ECHEC"
+msgstr "Défense privée en échec"
+
 msgid "DEFENSE_PRIVEE_REUSSIE"
 msgstr "Défense privée réussie"
 
