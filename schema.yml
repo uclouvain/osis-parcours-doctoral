@@ -3034,6 +3034,8 @@ components:
           type: string
         email:
           type: string
+        ville:
+          type: string
       required:
       - autre_institution
       - email
@@ -3048,6 +3050,7 @@ components:
       - role
       - titre
       - uuid
+      - ville
     MembreJuryDTONested:
       type: object
       description: |-
@@ -3082,6 +3085,8 @@ components:
           type: string
         email:
           type: string
+        ville:
+          type: string
       required:
       - autre_institution
       - email
@@ -3096,6 +3101,7 @@ components:
       - role
       - titre
       - uuid
+      - ville
     MembreJuryIdentityDTO:
       type: object
       properties:

@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -25,13 +25,12 @@
 # ##############################################################################
 from typing import List, Optional
 
-from base.models.person import Person
 from django.db import transaction
 from django.db.models import Prefetch, Q
-from osis_common.ddd.interface import ApplicationService, EntityIdentity, RootEntity
-from reference.models.country import Country
-from reference.models.language import Language
 
+from base.models.person import Person
+from osis_common.ddd.interface import ApplicationService, EntityIdentity, RootEntity
+from parcours_doctoral.constants import INSTITUTION_UCL
 from parcours_doctoral.ddd.jury.domain.model.enums import RoleJury
 from parcours_doctoral.ddd.jury.domain.model.jury import Jury, JuryIdentity, MembreJury
 from parcours_doctoral.ddd.jury.dtos.jury import JuryDTO, MembreJuryDTO
@@ -43,8 +42,8 @@ from parcours_doctoral.ddd.jury.validator.exceptions import (
 from parcours_doctoral.models import ActorType, ParcoursDoctoralSupervisionActor
 from parcours_doctoral.models.jury import JuryMember
 from parcours_doctoral.models.parcours_doctoral import ParcoursDoctoral
-
-INSTITUTION_UCL = "UCLouvain"
+from reference.models.country import Country
+from reference.models.language import Language
 
 
 class JuryRepository(IJuryRepository):
@@ -225,6 +224,7 @@ class JuryRepository(IJuryRepository):
                     justification_non_docteur=membre.justification_non_docteur,
                     genre=membre.genre,
                     email=membre.email,
+                    ville=membre.ville,
                 )
                 for membre in jury.membres
             ],
@@ -279,6 +279,7 @@ class JuryRepository(IJuryRepository):
                         justification_non_docteur='',
                         genre='',
                         email=membre.promoter.email,
+                        ville=membre.promoter.city,
                     )
             elif membre.person is not None:
                 return MembreJury(
