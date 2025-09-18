@@ -84,7 +84,7 @@ class MembreJury(interface.ValueObject):
     signature: SignatureMembre = attr.Factory(SignatureMembre)
     uuid: str = attr.Factory(uuid.uuid4)
     role: 'RoleJury' = RoleJury.MEMBRE
-
+    ville: str = ''
 
 @attr.dataclass(frozen=True, slots=True)
 class MembreJuryIdentity(interface.EntityIdentity):

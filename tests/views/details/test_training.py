@@ -45,8 +45,8 @@ from base.tests.factories.program_manager import ProgramManagerFactory
 from deliberation.models.enums.numero_session import Session
 from learning_unit.tests.factories.learning_class_year import (
     LearningClassLecturingFactory,
-    LearningClassYearFactory,
 )
+from parcours_doctoral.constants import INSTITUTION_UCL
 from parcours_doctoral.ddd.formation.domain.model.enums import (
     CategorieActivite,
     ChoixComiteSelection,
@@ -54,10 +54,7 @@ from parcours_doctoral.ddd.formation.domain.model.enums import (
     ContexteFormation,
     StatutActivite,
 )
-from parcours_doctoral.forms.training.activity import (
-    INSTITUTION_UCL,
-    UclCompletedCourseForm,
-)
+from parcours_doctoral.forms.training.activity import UclCompletedCourseForm
 from parcours_doctoral.models.activity import Activity
 from parcours_doctoral.models.cdd_config import CddConfiguration
 from parcours_doctoral.tests.factories.activity import (
