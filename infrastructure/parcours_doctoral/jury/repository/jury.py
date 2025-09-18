@@ -50,6 +50,17 @@ from parcours_doctoral.ddd.jury.domain.model.jury import (
     SignatureMembre,
 )
 from parcours_doctoral.ddd.jury.domain.validator.exceptions import (
+from django.db import transaction
+from django.db.models import Prefetch, Q
+
+from base.models.person import Person
+from osis_common.ddd.interface import ApplicationService, EntityIdentity, RootEntity
+from parcours_doctoral.constants import INSTITUTION_UCL
+from parcours_doctoral.ddd.jury.domain.model.enums import RoleJury
+from parcours_doctoral.ddd.jury.domain.model.jury import Jury, JuryIdentity, MembreJury
+from parcours_doctoral.ddd.jury.dtos.jury import JuryDTO, MembreJuryDTO
+from parcours_doctoral.ddd.jury.repository.i_jury import IJuryRepository
+from parcours_doctoral.ddd.jury.validator.exceptions import (
     JuryNonTrouveException,
     MembreNonTrouveDansJuryException,
 )
@@ -64,8 +75,6 @@ from parcours_doctoral.models.jury import JuryActor
 from parcours_doctoral.models.parcours_doctoral import ParcoursDoctoral
 from reference.models.country import Country
 from reference.models.language import Language
-
-INSTITUTION_UCL = "UCLouvain"
 
 
 class JuryRepository(IJuryRepository):
@@ -288,6 +297,7 @@ class JuryRepository(IJuryRepository):
                         motif_refus=membre.signature.motif_refus,
                         pdf=membre.signature.pdf,
                     ),
+                    ville=membre.ville,
                 )
                 for membre in jury.membres
             ],
