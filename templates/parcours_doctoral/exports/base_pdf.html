@@ -125,6 +125,49 @@
       dd {
           margin-left: 5px;
       }
+
+      .dashed-line {
+        flex: 1;
+        border: none;
+        border-bottom: 1px dashed black;
+        opacity: 1;
+        margin-top: 0;
+        margin-bottom: 0;
+        height: 1.2em;
+      }
+
+      .solid-line {
+        border: none;
+        border-bottom: 1px solid black;
+        color: black;
+        opacity: 1;
+        margin: 1px 5px;
+        height: 1em;
+      }
+
+      .list-title {
+        margin-bottom: 10px;
+        text-decoration: underline;
+        font-weight: bold;
+      }
+
+      .avoid-break-inside {
+        break-inside: avoid;
+      }
+
+      .complete-after {
+        overflow: hidden;
+        position: relative;
+      }
+
+      .complete-after:after {
+        content: "";
+        width: 100%;
+        position: absolute;
+        bottom: 0;
+        border-bottom: 1px dashed black;
+        margin: 5px;
+      }
   </style>
   {% block extra_head %}{% endblock %}
 </head>

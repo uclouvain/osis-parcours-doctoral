@@ -31,18 +31,26 @@ from osis_document.utils import get_file_url
 
 from infrastructure.messages_bus import message_bus_instance
 from parcours_doctoral.ddd.commands import RecupererParcoursDoctoralQuery
-from parcours_doctoral.ddd.dtos import ParcoursDoctoralDTO
+from parcours_doctoral.ddd.defense_privee.commands import (
+    RecupererDerniereDefensePriveeQuery,
+)
+from parcours_doctoral.ddd.jury.commands import RecupererJuryQuery
 from parcours_doctoral.exports.utils import parcours_doctoral_generate_pdf
+from parcours_doctoral.models import Activity
 from parcours_doctoral.models.private_defense import PrivateDefense
 
 
 def private_defense_minutes_canvas_url(doctorate_uuid, language):
     """For a doctorate uuid, create the private defense canvas, save it and return the file url."""
     with translation.override(language=language):
-        doctorate_dto: ParcoursDoctoralDTO = message_bus_instance.invoke(
-            RecupererParcoursDoctoralQuery(
-                parcours_doctoral_uuid=doctorate_uuid,
-            )
+        has_additional_training = Activity.objects.has_complementary_training(parcours_doctoral_uuid=doctorate_uuid)
+
+        jury_dto, private_defense_dto, doctorate_dto = message_bus_instance.invoke_multiple(
+            [
+                RecupererJuryQuery(uuid_jury=doctorate_uuid),
+                RecupererDerniereDefensePriveeQuery(parcours_doctoral_uuid=doctorate_uuid),
+                RecupererParcoursDoctoralQuery(parcours_doctoral_uuid=doctorate_uuid),
+            ]
         )
 
         # Generate the pdf
@@ -51,6 +59,9 @@ def private_defense_minutes_canvas_url(doctorate_uuid, language):
             filename=f'private_defense_canvas_{doctorate_dto.reference}.pdf',
             context={
                 'parcours_doctoral': doctorate_dto,
+                'has_additional_training': has_additional_training,
+                'jury': jury_dto,
+                'private_defense': private_defense_dto,
             },
         )
 

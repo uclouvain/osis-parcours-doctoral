@@ -40,6 +40,7 @@ from base.forms.utils.datefield import DatePickerInput
 from base.models.academic_year import AcademicYear, current_academic_year
 from base.models.learning_unit_year import LearningUnitYear
 from deliberation.models.enums.numero_session import Session
+from parcours_doctoral.constants import INSTITUTION_UCL
 from parcours_doctoral.ddd.formation.domain.model.enums import (
     CategorieActivite,
     ChoixComiteSelection,
@@ -74,7 +75,6 @@ __all__ = [
 
 from parcours_doctoral.models.parcours_doctoral import ParcoursDoctoral
 
-INSTITUTION_UCL = "UCLouvain"
 MINIMUM_YEAR = 2000
 
 

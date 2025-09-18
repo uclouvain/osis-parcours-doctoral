@@ -105,6 +105,7 @@ class JuryInMemoryRepository(InMemoryGenericRepository, IJuryRepository):
                     justification_non_docteur=membre.justification_non_docteur,
                     genre=str(membre.genre),
                     email=membre.email,
+                    ville=membre.ville,
                 )
                 for membre in jury.membres
             ],
