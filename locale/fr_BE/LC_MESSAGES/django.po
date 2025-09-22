@@ -593,6 +593,9 @@ msgstr "L'auteur de cette commande n'est pas de la CDD du doctorat."
 msgid "Authorise the private defense"
 msgstr "Autoriser la défense privée"
 
+msgid "Authorise the public defense"
+msgstr "Autoriser la soutenance publique"
+
 msgid "Authors"
 msgstr "Auteurs et autrices"
 
@@ -2852,13 +2855,6 @@ msgstr "Réinscrire"
 msgid "Reason for exceeding the deadline"
 msgstr "Motif du dépassement de l’échéance"
 
-msgid ""
-"Reasoned opinion and list of questions asked by any jury member(s) who may "
-"be absent due to force majeure"
-msgstr ""
-"Avis motivé et inventaire des questions posées par un/des membre(s) du jury "
-"éventuellement absent(s) pour cas de force majeure"
-
 msgctxt "dashboard-category"
 msgid "Recevability (formula 2)"
 msgstr "Recevabilité (formule 2)"
@@ -3733,6 +3729,9 @@ msgid "The public defence will take place on __________ at _____."
 msgstr ""
 "La date et l'heure de la soutenance publique sont fixées au __________ à "
 "_____."
+
+msgid "The public defense has been authorised."
+msgstr "La soutenance publique a été autorisée."
 
 msgid "The public defense is not in progress"
 msgstr "La soutenance publique n'est pas en cours"
