@@ -28,9 +28,11 @@ from ._should_soutenance_publique_etre_completee import (
 )
 from ._should_statut_parcours_doctoral_etre_valide import (
     ShouldEtapeSoutenancePubliqueEtreEnCours,
+    ShouldStatutDoctoratEtreSoutenancePubliqueSoumise,
 )
 
 __all__ = [
     'ShouldEtapeSoutenancePubliqueEtreEnCours',
     'ShouldSoutenancePubliqueEtreCompletee',
+    'ShouldStatutDoctoratEtreSoutenancePubliqueSoumise',
 ]

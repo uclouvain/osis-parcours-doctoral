@@ -23,4 +23,5 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from .inviter_jury_soutenance_publique_service import inviter_jury_soutenance_publique
 from .soumettre_soutenance_publique_service import soumettre_soutenance_publique

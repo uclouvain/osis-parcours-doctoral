@@ -44,7 +44,7 @@ from parcours_doctoral.tests.mixins import MockOsisDocumentMixin
 
 
 @override_settings(OSIS_DOCUMENT_BASE_URL='http://dummyurl')
-class PrivateDefenseFormViewTestCase(MockOsisDocumentMixin, TestCase):
+class PrivateDefenseDetailViewTestCase(MockOsisDocumentMixin, TestCase):
     @classmethod
     def setUpTestData(cls):
         cls.academic_years = [AcademicYearFactory(year=year) for year in [2021, 2022]]

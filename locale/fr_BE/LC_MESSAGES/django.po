@@ -989,6 +989,9 @@ msgstr "Défense privée soumise"
 msgid "DESINSCRITE"
 msgstr "Désinscrite"
 
+msgid "DIAL link"
+msgstr "Lien DIAL"
+
 msgid "DOCTORAL_TRAINING"
 msgstr "Formation doctorale"
 
@@ -1678,6 +1681,9 @@ msgstr "Bourse internationale"
 msgid "Invite the members of the jury to the private defense"
 msgstr "Inviter les membres du jury à la défense privée"
 
+msgid "Invite the members of the jury to the public defense"
+msgstr "Inviter les membres du jury à la soutenance publique"
+
 msgid "Is active"
 msgstr "Est active"
 
@@ -1985,14 +1991,15 @@ msgid ""
 "Mail sent to the doctoral student to inform of the authorisation of the "
 "public defense"
 msgstr ""
-"E-Mail envoyé au doctorand pour l'informer de l'autorisation de sa soutenance "
-"publique"
+"E-Mail envoyé au doctorand pour l'informer de l'autorisation de sa "
+"soutenance publique"
 
 msgid "Mail sent to the jury members to invite them to the private defense"
 msgstr "E-Mail envoyé aux membres du jury pour les inviter à la défense privée"
 
 msgid "Mail sent to the jury members to invite them to the public defense"
-msgstr "E-Mail envoyé aux membres du jury pour les inviter à la soutenance publique"
+msgstr ""
+"E-Mail envoyé aux membres du jury pour les inviter à la soutenance publique"
 
 msgid ""
 "Mail sent to the member of the supervision panel when deleted by the student"
@@ -2653,6 +2660,9 @@ msgstr "Commission de proximité de santé publique, santé et société (SPSS)"
 msgid "Public defence date and time"
 msgstr "Date et heure de la soutenance publique"
 
+msgid "Public defence language"
+msgstr "Langue de la soutenance de la thèse"
+
 msgid "Public defence location"
 msgstr "Lieu de la soutenance publique"
 
@@ -2661,6 +2671,9 @@ msgstr "Procès verbal de la soutenance publique"
 
 msgid "Public defence minutes canvas"
 msgstr "Canevas du procès verbal de la soutenance publique"
+
+msgid "Public defense"
+msgstr "Soutenance publique"
 
 msgctxt "dashboard-category"
 msgid "Public defense (formula 1)"
@@ -3467,6 +3480,9 @@ msgstr "Le membre n'a pas été trouvé dans le jury."
 
 msgid "The members of the jury have been invited to the private defense."
 msgstr "Les membres du jury ont été invités à la défense privée."
+
+msgid "The members of the jury have been invited to the public defense."
+msgstr "Les membres du jury ont été invités à la soutenance publique."
 
 msgid ""
 "The minutes will be uploaded by the thesis exam board secretary or chair."

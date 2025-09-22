@@ -23,31 +23,16 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from infrastructure.shared_kernel.personne_connue_ucl.personne_connue_ucl import (
-    PersonneConnueUclTranslator,
-)
-from parcours_doctoral.ddd.soutenance_publique.commands import *
-from parcours_doctoral.ddd.soutenance_publique.use_case.write import *
-from parcours_doctoral.infrastructure.parcours_doctoral.domain.service.historique import (
-    Historique,
-)
-from parcours_doctoral.infrastructure.parcours_doctoral.repository.parcours_doctoral import (
-    ParcoursDoctoralRepository,
-)
-from parcours_doctoral.infrastructure.parcours_doctoral.soutenance_publique.domain.service.notification import (
-    Notification,
-)
 
-COMMAND_HANDLERS = {
-    SoumettreSoutenancePubliqueCommand: lambda msg_bus, cmd: soumettre_soutenance_publique(
-        cmd,
-        parcours_doctoral_repository=ParcoursDoctoralRepository(),
-        historique=Historique(),
-    ),
-    InviterJurySoutenancePubliqueCommand: lambda msg_bus, cmd: inviter_jury_soutenance_publique(
-        cmd,
-        parcours_doctoral_repository=ParcoursDoctoralRepository(),
-        notification=Notification(),
-        personne_connue_ucl_translator=PersonneConnueUclTranslator(),
-    ),
-}
+from django.views.generic import TemplateView
+
+from parcours_doctoral.views.mixins import ParcoursDoctoralViewMixin
+
+__all__ = [
+    "PublicDefenseDetailView",
+]
+
+
+class PublicDefenseDetailView(ParcoursDoctoralViewMixin, TemplateView):
+    template_name = 'parcours_doctoral/details/public_defense.html'
+    permission_required = 'parcours_doctoral.view_public_defense'

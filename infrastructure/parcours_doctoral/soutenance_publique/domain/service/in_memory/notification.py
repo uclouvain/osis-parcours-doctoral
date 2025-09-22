@@ -23,31 +23,14 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from infrastructure.shared_kernel.personne_connue_ucl.personne_connue_ucl import (
-    PersonneConnueUclTranslator,
-)
-from parcours_doctoral.ddd.soutenance_publique.commands import *
-from parcours_doctoral.ddd.soutenance_publique.use_case.write import *
-from parcours_doctoral.infrastructure.parcours_doctoral.domain.service.historique import (
-    Historique,
-)
-from parcours_doctoral.infrastructure.parcours_doctoral.repository.parcours_doctoral import (
-    ParcoursDoctoralRepository,
-)
-from parcours_doctoral.infrastructure.parcours_doctoral.soutenance_publique.domain.service.notification import (
-    Notification,
+from ddd.logic.shared_kernel.personne_connue_ucl.dtos import PersonneConnueUclDTO
+from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoral
+from parcours_doctoral.ddd.soutenance_publique.domain.service.i_notification import (
+    INotification,
 )
 
-COMMAND_HANDLERS = {
-    SoumettreSoutenancePubliqueCommand: lambda msg_bus, cmd: soumettre_soutenance_publique(
-        cmd,
-        parcours_doctoral_repository=ParcoursDoctoralRepository(),
-        historique=Historique(),
-    ),
-    InviterJurySoutenancePubliqueCommand: lambda msg_bus, cmd: inviter_jury_soutenance_publique(
-        cmd,
-        parcours_doctoral_repository=ParcoursDoctoralRepository(),
-        notification=Notification(),
-        personne_connue_ucl_translator=PersonneConnueUclTranslator(),
-    ),
-}
+
+class NotificationInMemory(INotification):
+    @classmethod
+    def inviter_membres_jury(cls, parcours_doctoral: ParcoursDoctoral, auteur: PersonneConnueUclDTO) -> None:
+        pass

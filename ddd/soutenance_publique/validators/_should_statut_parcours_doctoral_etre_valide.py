@@ -33,6 +33,7 @@ from parcours_doctoral.ddd.domain.model.enums import (
 )
 from parcours_doctoral.ddd.soutenance_publique.validators.exceptions import (
     EtapeSoutenancePubliquePasEnCoursException,
+    StatutDoctoratDifferentSoutenancePubliqueSoumiseException,
 )
 
 
@@ -43,3 +44,12 @@ class ShouldEtapeSoutenancePubliqueEtreEnCours(BusinessValidator):
     def validate(self, *args, **kwargs):
         if self.statut.name not in STATUTS_DOCTORAT_SOUTENANCE_PUBLIQUE_EN_COURS:
             raise EtapeSoutenancePubliquePasEnCoursException
+
+
+@attr.dataclass(frozen=True, slots=True)
+class ShouldStatutDoctoratEtreSoutenancePubliqueSoumise(BusinessValidator):
+    statut: ChoixStatutParcoursDoctoral
+
+    def validate(self, *args, **kwargs):
+        if self.statut != ChoixStatutParcoursDoctoral.SOUTENANCE_PUBLIQUE_SOUMISE:
+            raise StatutDoctoratDifferentSoutenancePubliqueSoumiseException

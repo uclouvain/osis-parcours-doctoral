@@ -23,6 +23,9 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from infrastructure.shared_kernel.personne_connue_ucl.in_memory.personne_connue_ucl import (
+    PersonneConnueUclInMemoryTranslator,
+)
 from parcours_doctoral.ddd.soutenance_publique.commands import *
 from parcours_doctoral.ddd.soutenance_publique.use_case.write import *
 from parcours_doctoral.infrastructure.parcours_doctoral.domain.service.in_memory.historique import (
@@ -35,8 +38,11 @@ from parcours_doctoral.infrastructure.parcours_doctoral.repository.in_memory.par
     ParcoursDoctoralInMemoryRepository,
 )
 
+from .domain.service.in_memory.notification import NotificationInMemory
+
 _parcours_doctoral_repository = ParcoursDoctoralInMemoryRepository()
 _notification_generale = NotificationGeneraleInMemory()
+_notification = NotificationInMemory()
 _historique = HistoriqueInMemory()
 
 
@@ -45,5 +51,11 @@ COMMAND_HANDLERS = {
         cmd,
         parcours_doctoral_repository=_parcours_doctoral_repository,
         historique=_historique,
+    ),
+    InviterJurySoutenancePubliqueCommand: lambda msg_bus, cmd: inviter_jury_soutenance_publique(
+        cmd,
+        parcours_doctoral_repository=_parcours_doctoral_repository,
+        notification=_notification,
+        personne_connue_ucl_translator=PersonneConnueUclInMemoryTranslator(),
     ),
 }

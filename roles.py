@@ -34,6 +34,7 @@ from parcours_doctoral.auth.predicates.parcours_doctoral import (
     is_related_to_an_admission,
     private_defense_is_authorised,
     private_defense_is_submitted,
+    public_defense_is_submitted,
     submitted_confirmation_paper,
 )
 from parcours_doctoral.auth.roles.adre import AdreSecretary
@@ -121,6 +122,10 @@ PROGRAM_MANAGER_RULES = {
     & private_defense_is_authorised,
     'parcours_doctoral.change_private_defense': is_part_of_education_group & has_valid_enrollment,
     # -- Soutenance
+    'parcours_doctoral.view_public_defense': is_part_of_education_group,
+    'parcours_doctoral.invite_jury_to_public_defense': is_part_of_education_group
+    & has_valid_enrollment
+    & public_defense_is_submitted,
     # -- Commentaire
     'parcours_doctoral.view_comments': is_part_of_education_group,
     'parcours_doctoral.change_comments': is_part_of_education_group,
