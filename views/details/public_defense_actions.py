@@ -28,12 +28,14 @@ from django.utils.translation import gettext_lazy
 
 from infrastructure.messages_bus import message_bus_instance
 from parcours_doctoral.ddd.soutenance_publique.commands import (
+    AutoriserSoutenancePubliqueCommand,
     InviterJurySoutenancePubliqueCommand,
 )
 from parcours_doctoral.infrastructure.parcours_doctoral.soutenance_publique.domain.service.notification import (
     Notification,
 )
 from parcours_doctoral.mail_templates.public_defense import (
+    PARCOURS_DOCTORAL_EMAIL_PUBLIC_DEFENSE_AUTHORISATION,
     PARCOURS_DOCTORAL_EMAIL_PUBLIC_DEFENSE_JURY_INVITATION,
 )
 from parcours_doctoral.views.email_mixin import BaseEmailFormView
@@ -42,6 +44,7 @@ __namespace__ = 'public-defense'
 
 
 __all__ = [
+    "PublicDefenseAuthorisationView",
     "PublicDefenseJuryInvitationView",
     "PublicDefenseSuccessView",
 ]
@@ -87,6 +90,26 @@ class PublicDefenseJuryInvitationView(BasePublicDefenseActionView):
                 matricule_auteur=self.request.user.person.global_id,
             )
         )
+
+
+class PublicDefenseAuthorisationView(BasePublicDefenseActionView):
+    urlpatterns = 'authorise'
+    permission_required = 'parcours_doctoral.authorise_public_defense'
+    message_on_success = gettext_lazy('The public defense has been authorised.')
+    email_identifier = PARCOURS_DOCTORAL_EMAIL_PUBLIC_DEFENSE_AUTHORISATION
+    prefix = 'authorise'
+
+    def call_command(self, form):
+        message_bus_instance.invoke(
+            AutoriserSoutenancePubliqueCommand(
+                parcours_doctoral_uuid=self.parcours_doctoral_uuid,
+                matricule_auteur=self.request.user.person.global_id,
+                sujet_message=form.cleaned_data['subject'],
+                corps_message=form.cleaned_data['body'],
+            ),
+        )
+
+        self.htmx_refresh = True
 
 
 class PublicDefenseSuccessView(BasePublicDefenseActionView):

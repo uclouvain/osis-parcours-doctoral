@@ -27,8 +27,9 @@
 
 {% block actions-group %}
   {% has_perm 'parcours_doctoral.invite_jury_to_public_defense' as can_invite_jury_to_public_defense %}
+  {% has_perm 'parcours_doctoral.authorise_public_defense' as can_authorise_public_defense %}
 
-  {% if can_invite_jury_to_public_defense %}
+  {% if can_invite_jury_to_public_defense or can_authorise_public_defense %}
     <div id="public-defense-actions" class="btn-group">
       <button
         type="button"
@@ -45,6 +46,13 @@
           <li>
             <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#public-defense-jury-invitation-form-modal">
               {% translate "Invite the members of the jury to the public defense" %}
+            </a>
+          </li>
+        {% endif %}
+        {% if can_authorise_public_defense %}
+          <li>
+            <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#public-defense-authorisation-form-modal">
+              {% translate "Authorise the public defense" %}
             </a>
           </li>
         {% endif %}
@@ -77,6 +85,10 @@
   {% translate 'Invite the members of the jury to the public defense' as jury_invitation_title %}
   {% translate 'Here is an example message that will be sent to the jury members.' as jury_invitation_message %}
   {% include 'parcours_doctoral/modal/form_modal.html' with modal_id='public-defense-jury-invitation-form-modal' modal_title=jury_invitation_title modal_message=jury_invitation_message modal_url=jury_invitation_url %}
+
+  {% url 'parcours_doctoral:public-defense:authorise' view.kwargs.uuid as authorization_url %}
+  {% translate 'Authorise the public defense' as authorization_title %}
+  {% include 'parcours_doctoral/modal/form_modal.html' with modal_id='public-defense-authorisation-form-modal' modal_title=authorization_title modal_url=authorization_url %}
 {% endblock %}
 
 {% block style %}

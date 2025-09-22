@@ -58,4 +58,10 @@ COMMAND_HANDLERS = {
         notification=_notification,
         personne_connue_ucl_translator=PersonneConnueUclInMemoryTranslator(),
     ),
+    AutoriserSoutenancePubliqueCommand: lambda msg_bus, cmd: autoriser_soutenance_publique(
+        cmd,
+        parcours_doctoral_repository=_parcours_doctoral_repository,
+        notification=_notification_generale,
+        historique=_historique,
+    ),
 }

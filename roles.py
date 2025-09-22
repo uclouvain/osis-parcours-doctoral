@@ -126,6 +126,9 @@ PROGRAM_MANAGER_RULES = {
     'parcours_doctoral.invite_jury_to_public_defense': is_part_of_education_group
     & has_valid_enrollment
     & public_defense_is_submitted,
+    'parcours_doctoral.authorise_public_defense': is_part_of_education_group
+    & has_valid_enrollment
+    & public_defense_is_submitted,
     # -- Commentaire
     'parcours_doctoral.view_comments': is_part_of_education_group,
     'parcours_doctoral.change_comments': is_part_of_education_group,

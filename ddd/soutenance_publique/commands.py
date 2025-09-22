@@ -49,3 +49,12 @@ class SoumettreSoutenancePubliqueCommand(interface.CommandRequest):
 class InviterJurySoutenancePubliqueCommand(interface.CommandRequest):
     parcours_doctoral_uuid: str
     matricule_auteur: str
+
+
+@attr.dataclass(frozen=True, slots=True)
+class AutoriserSoutenancePubliqueCommand(interface.CommandRequest):
+    parcours_doctoral_uuid: str
+    matricule_auteur: str
+
+    sujet_message: str
+    corps_message: str

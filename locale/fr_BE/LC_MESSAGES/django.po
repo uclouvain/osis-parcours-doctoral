@@ -551,6 +551,9 @@ msgstr "Attestation de communication"
 msgid "Authorise the private defense"
 msgstr "Autoriser la défense privée"
 
+msgid "Authorise the public defense"
+msgstr "Autoriser la soutenance publique"
+
 msgid "Authors"
 msgstr "Auteurs et autrices"
 
@@ -2715,13 +2718,6 @@ msgstr "Réinscrire"
 msgid "Reason for exceeding the deadline"
 msgstr "Motif du dépassement de l’échéance"
 
-msgid ""
-"Reasoned opinion and list of questions asked by any jury member(s) who may "
-"be absent due to force majeure"
-msgstr ""
-"Avis motivé et inventaire des questions posées par un/des membre(s) du jury "
-"éventuellement absent(s) pour cas de force majeure"
-
 msgctxt "dashboard-category"
 msgid "Recevability (formula 2)"
 msgstr "Recevabilité (formule 2)"
@@ -3436,18 +3432,6 @@ msgstr ""
 msgid "The jury is not in progress"
 msgstr "Le jury n'est pas en cours"
 
-msgid "The jury members"
-msgstr "Les membres du jury"
-
-msgid ""
-"The jury shall verify that the candidate has completed their "
-"<strong>doctoral training</strong> and obtained the 60 credits required by "
-"the decree, validated by the domain doctoral committee."
-msgstr ""
-"Le jury constate l'achèvement de la <strong>formation doctorale</strong> du "
-"ou de la candidat·e et l'obtention des 60 crédits exigés par le décret, "
-"validés par la commission doctorale du domaine."
-
 msgid "The last name of the jury member"
 msgstr "Le nom du membre du jury"
 
@@ -3545,6 +3529,9 @@ msgid "The public defence will take place on __________ at _____."
 msgstr ""
 "La date et l'heure de la soutenance publique sont fixées au __________ à "
 "_____."
+
+msgid "The public defense has been authorised."
+msgstr "La soutenance publique a été autorisée."
 
 msgid "The public defense is not in progress"
 msgstr "La soutenance publique n'est pas en cours"
