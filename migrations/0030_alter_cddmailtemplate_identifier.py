@@ -7,7 +7,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("parcours_doctoral", "0023_public_defense_mail_templates"),
+        ("parcours_doctoral", "0029_alter_parcoursdoctoral_status"),
     ]
 
     operations = [

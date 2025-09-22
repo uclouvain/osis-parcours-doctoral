@@ -44,10 +44,10 @@ from parcours_doctoral.mail_templates.public_defense import (
     PARCOURS_DOCTORAL_EMAIL_PUBLIC_DEFENSE_JURY_INVITATION,
 )
 from parcours_doctoral.tests.factories.jury import (
-    ExternalJuryMemberFactory,
-    JuryMemberFactory,
-    JuryMemberWithExternalPromoterFactory,
-    JuryMemberWithInternalPromoterFactory,
+    ExternalJuryActorFactory,
+    JuryActorFactory,
+    JuryActorWithExternalPromoterFactory,
+    JuryActorWithInternalPromoterFactory,
 )
 from parcours_doctoral.tests.factories.mail_template import CddMailTemplateFactory
 from parcours_doctoral.tests.factories.parcours_doctoral import ParcoursDoctoralFactory
@@ -80,30 +80,30 @@ class PublicDefenseJuryInvitationViewTestCase(MockOsisDocumentMixin, TestCase):
             status=ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_REUSSIE.name,
         )
 
-        self.jury_member = JuryMemberFactory(
+        self.jury_member = JuryActorFactory(
             person__first_name='John',
             person__last_name='Poe',
             person__email='john.poe@test.be',
             person__language=settings.LANGUAGE_CODE_EN,
             parcours_doctoral=self.doctorate,
         )
-        self.external_jury_member = ExternalJuryMemberFactory(
+        self.external_jury_member = ExternalJuryActorFactory(
             first_name='Jim',
             last_name='Poe',
             email='jim.poe@test.be',
             parcours_doctoral=self.doctorate,
         )
-        self.jury_member_with_internal_promoter = JuryMemberWithInternalPromoterFactory(
-            promoter__actor_ptr__person__first_name='Jane',
-            promoter__actor_ptr__person__last_name='Doe',
-            promoter__actor_ptr__person__email='jane.doe@test.be',
+        self.jury_member_with_internal_promoter = JuryActorWithInternalPromoterFactory(
+            person__first_name='Jane',
+            person__last_name='Doe',
+            person__email='jane.doe@test.be',
             parcours_doctoral=self.doctorate,
         )
-        self.jury_member_with_external_promoter = JuryMemberWithExternalPromoterFactory(
-            promoter__first_name='Tom',
-            promoter__last_name='Doe',
-            promoter__language=settings.LANGUAGE_CODE_EN,
-            promoter__email='tom.doe@test.be',
+        self.jury_member_with_external_promoter = JuryActorWithExternalPromoterFactory(
+            first_name='Tom',
+            last_name='Doe',
+            language=settings.LANGUAGE_CODE_EN,
+            email='tom.doe@test.be',
             parcours_doctoral=self.doctorate,
         )
 
