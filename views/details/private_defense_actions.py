@@ -119,7 +119,6 @@ class PrivateDefenseJuryInvitationView(BasePrivateDefenseActionView):
                 matricule_auteur=self.request.user.person.global_id,
             )
         )
-        self.htmx_refresh = True
 
 
 class PrivateDefenseSuccessView(BasePrivateDefenseActionView):

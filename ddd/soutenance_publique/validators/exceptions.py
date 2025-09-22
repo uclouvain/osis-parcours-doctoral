@@ -27,6 +27,7 @@
 from django.utils.translation import gettext as _
 
 from osis_common.ddd.interface import BusinessException
+from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 
 
 class SoutenancePubliqueNonCompleteeException(BusinessException):
@@ -42,4 +43,14 @@ class EtapeSoutenancePubliquePasEnCoursException(BusinessException):
 
     def __init__(self, **kwargs):
         message = _('The step related to the public defense is not in progress.')
+        super().__init__(message, **kwargs)
+
+
+class StatutDoctoratDifferentSoutenancePubliqueSoumiseException(BusinessException):
+    status_code = 'SOUTENANCE-PUBLIQUE-3'
+
+    def __init__(self, **kwargs):
+        message = _("The doctorate must be in the status '%(status)s' to realize this action.") % {
+            'status': ChoixStatutParcoursDoctoral.SOUTENANCE_PUBLIQUE_SOUMISE.value,
+        }
         super().__init__(message, **kwargs)
