@@ -60,6 +60,7 @@ from parcours_doctoral.ddd.domain.validator.validator_by_business_action import 
 )
 from parcours_doctoral.ddd.jury.domain.model.enums import ChoixEtatSignature
 from parcours_doctoral.ddd.soutenance_publique.validators.validator_by_business_action import (
+    AutoriserSoutenancePubliqueValidatorList,
     InviterJurySoutenancePubliqueValidatorList,
     SoumettreSoutenancePubliqueValidatorList,
 )
@@ -424,3 +425,10 @@ class ParcoursDoctoral(interface.RootEntity):
         InviterJurySoutenancePubliqueValidatorList(
             statut_parcours_doctoral=self.statut,
         ).validate()
+
+    def autoriser_soutenance_publique(self):
+        AutoriserSoutenancePubliqueValidatorList(
+            statut_parcours_doctoral=self.statut,
+        ).validate()
+
+        self.statut = ChoixStatutParcoursDoctoral.SOUTENANCE_PUBLIQUE_AUTORISEE

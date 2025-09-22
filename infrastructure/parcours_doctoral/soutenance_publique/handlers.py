@@ -31,6 +31,9 @@ from parcours_doctoral.ddd.soutenance_publique.use_case.write import *
 from parcours_doctoral.infrastructure.parcours_doctoral.domain.service.historique import (
     Historique,
 )
+from parcours_doctoral.infrastructure.parcours_doctoral.domain.service.notification import (
+    Notification as NotificationGenerale,
+)
 from parcours_doctoral.infrastructure.parcours_doctoral.repository.parcours_doctoral import (
     ParcoursDoctoralRepository,
 )
@@ -49,5 +52,11 @@ COMMAND_HANDLERS = {
         parcours_doctoral_repository=ParcoursDoctoralRepository(),
         notification=Notification(),
         personne_connue_ucl_translator=PersonneConnueUclTranslator(),
+    ),
+    AutoriserSoutenancePubliqueCommand: lambda msg_bus, cmd: autoriser_soutenance_publique(
+        cmd,
+        parcours_doctoral_repository=ParcoursDoctoralRepository(),
+        notification=NotificationGenerale(),
+        historique=Historique(),
     ),
 }

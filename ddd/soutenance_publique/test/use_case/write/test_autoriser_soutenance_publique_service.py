@@ -27,23 +27,16 @@
 from django.test import SimpleTestCase
 
 from base.ddd.utils.business_validator import MultipleBusinessExceptions
-from ddd.logic.shared_kernel.personne_connue_ucl.domain.validator.exceptions import (
-    PersonneNonConnueDeLUcl,
-)
-from infrastructure.shared_kernel.personne_connue_ucl.in_memory.personne_connue_ucl import (
-    PersonneConnueUclInMemoryTranslator,
-)
 from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from parcours_doctoral.ddd.domain.validator.exceptions import (
     ParcoursDoctoralNonTrouveException,
 )
 from parcours_doctoral.ddd.soutenance_publique.commands import (
-    InviterJurySoutenancePubliqueCommand,
+    AutoriserSoutenancePubliqueCommand,
 )
 from parcours_doctoral.ddd.soutenance_publique.validators.exceptions import (
     StatutDoctoratDifferentSoutenancePubliqueSoumiseException,
 )
-from parcours_doctoral.ddd.test.factory.person import PersonneConnueUclDTOFactory
 from parcours_doctoral.infrastructure.message_bus_in_memory import (
     message_bus_in_memory_instance,
 )
@@ -52,48 +45,43 @@ from parcours_doctoral.infrastructure.parcours_doctoral.repository.in_memory.par
 )
 
 
-class TestInviterJurySoutenancePublique(SimpleTestCase):
+class TestAutoriserSoutenancePublique(SimpleTestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.cmd = InviterJurySoutenancePubliqueCommand
+        cls.cmd = AutoriserSoutenancePubliqueCommand
         cls.message_bus = message_bus_in_memory_instance
         cls.parcours_doctoral_repository = ParcoursDoctoralInMemoryRepository()
-        PersonneConnueUclInMemoryTranslator.personnes_connues_ucl = {
-            PersonneConnueUclDTOFactory(matricule='1234'),
-        }
-        cls.id_parcours_doctoral = cls.parcours_doctoral_repository.entities[0].entity_id
 
     def setUp(self):
         self.addCleanup(ParcoursDoctoralInMemoryRepository.reset)
+        self.parcours_doctoral_id = ParcoursDoctoralInMemoryRepository.entities[0].entity_id
         self.parametres_cmd = {
-            'parcours_doctoral_uuid': self.id_parcours_doctoral.uuid,
+            'parcours_doctoral_uuid': self.parcours_doctoral_id.uuid,
             'matricule_auteur': '1234',
+            'corps_message': '',
+            'sujet_message': '',
         }
 
     def test_should_generer_exception_si_parcours_doctoral_inconnu(self):
         self.parametres_cmd['parcours_doctoral_uuid'] = 'INCONNU'
-        with self.assertRaises(ParcoursDoctoralNonTrouveException):
-            self.message_bus.invoke(self.cmd(**self.parametres_cmd))
-
-    def test_should_generer_exception_si_auteur_inconnu(self):
-        self.parametres_cmd['matricule_auteur'] = 'INCONNU'
-        with self.assertRaises(PersonneNonConnueDeLUcl):
+        with self.assertRaises(ParcoursDoctoralNonTrouveException) as e:
             self.message_bus.invoke(self.cmd(**self.parametres_cmd))
 
     def test_should_generer_exception_si_statut_parcours_doctoral_invalide(self):
-        proposition = self.parcours_doctoral_repository.get(entity_id=self.id_parcours_doctoral)
-        proposition.statut = ChoixStatutParcoursDoctoral.ADMIS
+        proposition = self.parcours_doctoral_repository.get(entity_id=self.parcours_doctoral_id)
+        proposition.statut = ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_REUSSIE
 
         with self.assertRaises(MultipleBusinessExceptions) as e:
             self.message_bus.invoke(self.cmd(**self.parametres_cmd))
 
         self.assertIsInstance(e.exception.exceptions.pop(), StatutDoctoratDifferentSoutenancePubliqueSoumiseException)
 
-    def test_should_inviter_jury(self):
-        proposition = self.parcours_doctoral_repository.get(entity_id=self.id_parcours_doctoral)
+    def test_should_changer_statut_parcours_doctoral(self):
+        proposition = self.parcours_doctoral_repository.get(entity_id=self.parcours_doctoral_id)
         proposition.statut = ChoixStatutParcoursDoctoral.SOUTENANCE_PUBLIQUE_SOUMISE
 
         resultat = self.message_bus.invoke(self.cmd(**self.parametres_cmd))
 
         self.assertEqual(resultat, proposition.entity_id)
+        self.assertEqual(proposition.statut, ChoixStatutParcoursDoctoral.SOUTENANCE_PUBLIQUE_AUTORISEE)

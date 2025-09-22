@@ -523,6 +523,9 @@ msgstr ""
 msgid "Authorise the private defense"
 msgstr ""
 
+msgid "Authorise the public defense"
+msgstr ""
+
 msgid "Authors"
 msgstr ""
 
@@ -3404,6 +3407,9 @@ msgid ""
 msgstr ""
 
 msgid "The public defence will take place on __________ at _____."
+msgstr ""
+
+msgid "The public defense has been authorised."
 msgstr ""
 
 msgid "The public defense is not in progress"
