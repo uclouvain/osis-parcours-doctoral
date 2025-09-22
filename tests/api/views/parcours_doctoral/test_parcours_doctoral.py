@@ -107,6 +107,7 @@ class ParcoursDoctoralAPIViewTestCase(CheckActionLinksMixin, APITestCase):
             dedicated_time=30,
             is_fnrs_fria_fresh_csc_linked=True,
             financing_comment='Funding comment',
+            # Defense information
             defense_language=ChoixLangueDefense.FRENCH.name,
             defense_datetime=datetime.datetime(2025, 1, 5, 11, 30),
             defense_place='Louvain-La-Neuve',

@@ -913,6 +913,9 @@ msgstr "Submitted private defense"
 msgid "DESINSCRITE"
 msgstr "Withdrawn"
 
+msgid "DIAL link"
+msgstr ""
+
 msgid "DOCTORAL_TRAINING"
 msgstr "PhD training"
 
@@ -1557,6 +1560,9 @@ msgid "International scholarship"
 msgstr ""
 
 msgid "Invite the members of the jury to the private defense"
+msgstr ""
+
+msgid "Invite the members of the jury to the public defense"
 msgstr ""
 
 msgid "Is active"
@@ -2437,6 +2443,9 @@ msgstr ""
 msgid "Public defence date and time"
 msgstr ""
 
+msgid "Public defence language"
+msgstr ""
+
 msgid "Public defence location"
 msgstr ""
 
@@ -2444,6 +2453,9 @@ msgid "Public defence minutes"
 msgstr ""
 
 msgid "Public defence minutes canvas"
+msgstr ""
+
+msgid "Public defense"
 msgstr ""
 
 msgctxt "dashboard-category"
@@ -3174,6 +3186,9 @@ msgid "The member was not found in the jury."
 msgstr ""
 
 msgid "The members of the jury have been invited to the private defense."
+msgstr ""
+
+msgid "The members of the jury have been invited to the public defense."
 msgstr ""
 
 msgid ""

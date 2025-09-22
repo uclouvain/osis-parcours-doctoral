@@ -43,3 +43,9 @@ class SoumettreSoutenancePubliqueCommand(interface.CommandRequest):
     local_deliberation: Optional[str]
     resume_annonce: Optional[str]
     photo_annonce: list[str]
+
+
+@attr.dataclass(frozen=True, slots=True)
+class InviterJurySoutenancePubliqueCommand(interface.CommandRequest):
+    parcours_doctoral_uuid: str
+    matricule_auteur: str
