@@ -231,3 +231,12 @@ def is_part_of_education_group(self, user: User, obj: ParcoursDoctoral):
         setattr(user, cache_key, self.context['role_qs'].get_education_groups_affected())
 
     return obj.training.education_group_id in getattr(user, cache_key)
+
+
+@predicate(bind=True)
+@predicate_failed_msg(
+    message=_("The doctorate must be in the status '%(status)s' to realize this action.")
+    % {'status': ChoixStatutParcoursDoctoral.SOUTENANCE_PUBLIQUE_SOUMISE.value}
+)
+def public_defense_is_submitted(self, user: User, obj: ParcoursDoctoral):
+    return obj.status == ChoixStatutParcoursDoctoral.SOUTENANCE_PUBLIQUE_SOUMISE.name
