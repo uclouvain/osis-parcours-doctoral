@@ -27,7 +27,7 @@
 from django.template.loader import render_to_string
 from django.utils import translation
 from django.utils.translation import override
-from osis_document.api.utils import change_remote_metadata
+from osis_document_components.services import change_remote_metadata
 from weasyprint import HTML
 
 from osis_common.utils.url_fetcher import django_url_fetcher
@@ -62,7 +62,7 @@ def parcours_doctoral_generate_pdf(
     :param author: Author
     :return: Writing token of the saved file
     """
-    from osis_document.utils import save_raw_content_remotely
+    from osis_document_components.services import save_raw_content_remotely
 
     current_language = translation.get_language()
     try:
@@ -100,7 +100,8 @@ def generate_temporary_pdf(
     :param stylesheets: Stylesheets
     :return: URL of the temporary file
     """
-    from osis_document.utils import get_file_url, save_raw_content_remotely
+    from osis_document_components.utils import get_file_url
+    from osis_document_components.services import  save_raw_content_remotely
 
     with override(language or translation.get_language()):
         result = get_pdf_from_template(

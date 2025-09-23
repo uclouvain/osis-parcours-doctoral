@@ -1,6 +1,6 @@
 {% extends "parcours_doctoral/details/tab_layout.html" %}
 {% load i18n parcours_doctoral %}
-{% load osis_document %}
+{% load osis_document_components %}
 
 {% comment "License" %}
 * OSIS stands for Open Student Information System. It's an application
@@ -25,6 +25,12 @@
 * at the root of the source code of this program.  If not,
 * see http://www.gnu.org/licenses/.
 {% endcomment %}
+
+{% block actions-group %}
+  {% if parcours_doctoral.statut == 'ADMIS' or parcours_doctoral.statut == 'CONFIRMATION_SOUMISE' %}
+    {{ block.super }}
+  {% endif %}
+{% endblock %}
 
 {% block additional_actions %}
   <li>

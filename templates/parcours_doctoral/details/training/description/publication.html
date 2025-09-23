@@ -1,4 +1,4 @@
-{% load i18n osis_document parcours_doctoral enums %}
+{% load i18n osis_document_components parcours_doctoral enums %}
 
 {% comment "License" %}
   * OSIS stands for Open Student Information System. It's an application
@@ -24,5 +24,5 @@
   * see http://www.gnu.org/licenses/.
 {% endcomment %}
 
-{{ activity.type }}&nbsp;: {{ activity.authors }} {{ activity.start_date|date:'Y' }}.
-{{ activity.title }}. {{ activity.journal }}, {{ activity.publication_status|enum_display:'ChoixStatutPublication' }}.
+{{ activity.type }}&nbsp;: {{ activity.authors }}, {{ activity.start_date|date:'Y' }},
+{{ activity.title }}{% if activity.journal %}, {{ activity.journal }}{% endif %}, {{ activity.publication_status|enum_display:'ChoixStatutPublication' }}

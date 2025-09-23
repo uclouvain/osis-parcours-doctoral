@@ -27,7 +27,8 @@ from typing import Optional
 
 from django.urls import reverse
 from django.views.generic import FormView
-from osis_document.api.utils import get_remote_metadata, get_remote_token
+from osis_document_components.services import get_remote_metadata, get_remote_token
+from osis_document_components.enums import PostProcessingWanted
 
 from base.utils.htmx import HtmxPermissionRequiredMixin
 from infrastructure.messages_bus import message_bus_instance
@@ -90,7 +91,10 @@ class DocumentFormView(HtmxPermissionRequiredMixin, ParcoursDoctoralFormMixin, F
 
         if self.document_uuid:
             context['document_uuid'] = self.document_uuid
-            context['document_token'] = get_remote_token(uuid=self.document_uuid)
+            context['document_token'] = get_remote_token(
+                uuid=self.document_uuid,
+                wanted_post_process=PostProcessingWanted.ORIGINAL.name,
+            )
             context['document_metadata'] = get_remote_metadata(token=context['document_token'])
 
         return context

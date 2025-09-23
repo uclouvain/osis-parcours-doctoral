@@ -24,7 +24,8 @@
 #
 # ##############################################################################
 from django.views.generic import TemplateView
-from osis_document.api.utils import get_remote_metadata, get_remote_token
+from osis_document_components.services import get_remote_metadata, get_remote_token
+from osis_document_components.enums import PostProcessingWanted
 
 from parcours_doctoral.ddd.domain.model.document import TypeDocument
 from parcours_doctoral.forms.document import FreeDocumentUploadForm
@@ -51,7 +52,10 @@ class DocumentDetailsView(ParcoursDoctoralViewMixin, TemplateView):
 
         context['document_uuid'] = document_uuid
         context['document_identifier'] = self.request.GET.get('document_identifier')
-        context['document_token'] = get_remote_token(uuid=document_uuid)
+        context['document_token'] = get_remote_token(
+            uuid=document_uuid,
+            wanted_post_process=PostProcessingWanted.ORIGINAL.name,
+        )
         context['document_metadata'] = get_remote_metadata(token=context['document_token'])
 
         if document_type == TypeDocument.LIBRE.name and self.request.user.has_perm(

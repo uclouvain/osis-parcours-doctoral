@@ -1,4 +1,4 @@
-{% load i18n osis_document parcours_doctoral enums %}
+{% load i18n osis_document_components parcours_doctoral enums %}
 
 {% comment "License" %}
   * OSIS stands for Open Student Information System. It's an application
@@ -84,7 +84,7 @@
       {% if activity.participating_proof %}
         <div class="mb-3">
           <strong class="d-block">{% trans "Proof of participation or success" %}</strong>
-          {% document_visualizer activity.participating_proof for_modified_upload=True %}
+          {% document_visualizer activity.participating_proof for_modified_upload=True wanted_post_process="ORIGINAL" %}
         </div>
       {% endif %}
       {% if activity.comment %}

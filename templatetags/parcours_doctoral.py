@@ -37,7 +37,8 @@ from django.utils.translation import get_language
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import pgettext_lazy
 from django_bootstrap5.renderers import FieldRenderer
-from osis_document.api.utils import get_remote_metadata, get_remote_token
+from osis_document_components.services import get_remote_metadata, get_remote_token
+from osis_document_components.enums import PostProcessingWanted
 
 from base.forms.utils.file_field import PDF_MIME_TYPE
 from base.models.entity_version import EntityVersion
@@ -60,6 +61,7 @@ from parcours_doctoral.ddd.repository.i_parcours_doctoral import formater_refere
 from parcours_doctoral.forms.supervision import MemberSupervisionForm
 from parcours_doctoral.models import Activity, ParcoursDoctoral
 from parcours_doctoral.utils.formatting import format_activity_ects
+from parcours_doctoral.utils.trainings import training_categories_stats
 from reference.models.country import Country
 from reference.models.language import Language
 
@@ -282,71 +284,9 @@ def status_as_class(activity):
     }.get(str(status), 'info')
 
 
-def _training_categories_stats(activities):
-    added, validated = 0, 0
-
-    categories = {
-        _("Participations"): [0, 0],
-        _("Scientific communications"): [0, 0],
-        _("Publications"): [0, 0],
-        _("Courses and trainings"): [0, 0],
-        _("Services"): [0, 0],
-        _("VAE"): [0, 0],
-        _("Scientific residencies"): [0, 0],
-        _("Confirmation exam"): [0, 0],
-        _("Thesis defense"): [0, 0],
-        _("Total"): [0, 0],
-    }
-    for activity in activities:
-        # Increment global counts
-        if activity.status not in [StatutActivite.SOUMISE.name, StatutActivite.ACCEPTEE.name]:
-            continue
-        added += activity.ects
-        if activity.status == StatutActivite.ACCEPTEE.name:
-            validated += activity.ects
-
-        # Increment category counts
-        index = int(activity.status == StatutActivite.ACCEPTEE.name)
-        categories[_("Total")][index] += activity.ects
-
-        if (
-            activity.category == CategorieActivite.CONFERENCE.name
-            or activity.category == CategorieActivite.SEMINAR.name
-        ):
-            categories[_("Participations")][index] += activity.ects
-        elif activity.category == CategorieActivite.COMMUNICATION.name and (
-            activity.parent_id is None or activity.parent.category == CategorieActivite.CONFERENCE.name
-        ):
-            categories[_("Scientific communications")][index] += activity.ects
-        elif activity.category == CategorieActivite.PUBLICATION.name and (
-            activity.parent_id is None or activity.parent.category == CategorieActivite.CONFERENCE.name
-        ):
-            categories[_("Publications")][index] += activity.ects
-        elif activity.category == CategorieActivite.SERVICE.name:
-            categories[_("Services")][index] += activity.ects
-        elif (
-            activity.category == CategorieActivite.RESIDENCY.name
-            or activity.parent_id
-            and activity.parent.category == CategorieActivite.RESIDENCY.name
-        ):
-            categories[_("Scientific residencies")][index] += activity.ects
-        elif activity.category == CategorieActivite.VAE.name:
-            categories[_("VAE")][index] += activity.ects
-        elif activity.category in [CategorieActivite.COURSE.name, CategorieActivite.UCL_COURSE.name]:
-            categories[_("Courses and trainings")][index] += activity.ects
-        elif (
-            activity.category == CategorieActivite.PAPER.name
-            and activity.type == ChoixTypeEpreuve.CONFIRMATION_PAPER.name
-        ):
-            categories[_("Confirmation exam")][index] += activity.ects
-        elif activity.category == CategorieActivite.PAPER.name:
-            categories[_("Thesis defense")][index] += activity.ects
-    return added, validated, categories
-
-
 @register.inclusion_tag('parcours_doctoral/includes/training_categories.html')
 def training_categories(activities):
-    added, validated, categories = _training_categories_stats(activities)
+    added, validated, categories = training_categories_stats(activities)
     if not added:
         return {}
     return {
@@ -360,7 +300,7 @@ def training_categories(activities):
 @register.inclusion_tag('parcours_doctoral/includes/training_categories_credits_table.html')
 def training_categories_credits_table(parcours_doctoral_uuid):
     activities = Activity.objects.for_doctoral_training(parcours_doctoral_uuid)
-    added, _, categories = _training_categories_stats(activities)
+    added, _, categories = training_categories_stats(activities)
     if not added:
         return {}
     return {
@@ -434,7 +374,7 @@ def field_data(
         elif context.get('load_files') is False:
             data = _('Specified') if data else _('Incomplete field')
         elif data:
-            template_string = "{% load osis_document %}{% document_visualizer files %}"
+            template_string = "{% load osis_document_components %}{% document_visualizer files wanted_post_process='ORIGINAL' %}"
             template_context = {'files': data}
             data = template.Template(template_string).render(template.Context(template_context))
         else:
@@ -514,7 +454,11 @@ def formatted_language(language: str):
 def get_image_file_url(file_uuids):
     """Returns the url of the file whose uuid is the first of the specified ones, if it is an image."""
     if file_uuids:
-        token = get_remote_token(file_uuids[0], for_modified_upload=True)
+        token = get_remote_token(
+            file_uuids[0],
+            wanted_post_process=PostProcessingWanted.ORIGINAL.name,
+            for_modified_upload=True,
+        )
         if token:
             metadata = get_remote_metadata(token)
             if metadata and metadata.get('mimetype') in IMAGE_MIME_TYPES:
@@ -640,7 +584,7 @@ def document_component(document_write_token, document_metadata, can_edit=True):
             if not can_edit:
                 attrs = {action: False for action in ['comment', 'highlight', 'rotation']}
             return {
-                'template': 'osis_document/editor.html',
+                'template': 'osis_document_components/editor.html',
                 'value': document_write_token,
                 'base_url': settings.OSIS_DOCUMENT_BASE_URL,
                 'attrs': attrs,

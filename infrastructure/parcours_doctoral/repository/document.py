@@ -27,6 +27,7 @@ from typing import Dict, List
 
 from django.db.models import Prefetch
 from django.utils.dateparse import parse_datetime
+from osis_document_components.enums import PostProcessingWanted
 
 from base.models.person import Person
 from parcours_doctoral.ddd.domain.model.document import (
@@ -78,12 +79,15 @@ class DocumentRepository(IDocumentRepository):
 
     @classmethod
     def recuperer_metadonnees_par_uuid_document(cls, uuids_documents: List[str]) -> Dict[str, Dict]:
-        from osis_document.api.utils import (
+        from osis_document_components.services import (
             get_remote_tokens,
             get_several_remote_metadata,
         )
 
-        tokens = get_remote_tokens(uuids_documents)
+        tokens = get_remote_tokens(
+            uuids_documents,
+            wanted_post_process=PostProcessingWanted.ORIGINAL.name,
+        )
         metadata = get_several_remote_metadata(list(tokens.values()))
 
         return {
