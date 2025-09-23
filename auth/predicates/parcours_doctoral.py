@@ -30,7 +30,6 @@ from rules import predicate
 from admission.ddd.admission.doctorat.preparation.domain.model.enums import (
     ChoixTypeAdmission,
 )
-from osis_role.cache import predicate_cache
 from osis_role.errors import predicate_failed_msg
 from parcours_doctoral.ddd.domain.model.enums import (
     STATUTS_DOCTORAT_EPREUVE_CONFIRMATION_EN_COURS,
