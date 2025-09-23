@@ -111,16 +111,16 @@
     </div>
 
     {% if parcours_doctoral.genre_doctorant == "F" %}
-      {% translate "Doctoral student" as student_title context "female gender" %}
+      {% translate "PhD student" as student_title context "female gender" %}
     {% elif parcours_doctoral.genre_doctorant == "H" %}
-      {% translate "Doctoral student" as student_title context "male gender" %}
+      {% translate "PhD student" as student_title context "male gender" %}
     {% else %}
-      {% translate "Doctoral student" as student_title context "gender" %}
+      {% translate "PhD student" as student_title context "gender" %}
     {% endif %}
     {% concat "<span class='bold-text text-uppercase'>" parcours_doctoral.nom_doctorant "</span> " parcours_doctoral.prenom_doctorant as full_name %}
     {% field_data _("Doctorate") parcours_doctoral.formation.nom_complet inline=True %}
     {% field_data student_title full_name|safe inline=True %}
-    {% field_data _("Registration Id") parcours_doctoral.noma_doctorant inline=True %}
+    {% field_data _("Noma") parcours_doctoral.noma_doctorant inline=True %}
 
     {% if parcours_doctoral.cotutelle.cotutelle %}
       {% get_superior_institute_name parcours_doctoral.cotutelle.institution as institute_name %}

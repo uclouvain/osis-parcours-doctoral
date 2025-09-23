@@ -25,7 +25,7 @@
 # ##############################################################################
 from django import forms
 from django.utils.translation import gettext_lazy as _
-from osis_document.contrib import FileUploadField
+from osis_document_components.fields import FileUploadField
 
 from base.forms.utils.datefield import CustomDateInput
 from parcours_doctoral.forms.fields import DoctorateDateTimeField

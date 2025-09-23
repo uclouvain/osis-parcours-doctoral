@@ -43,9 +43,6 @@ msgstr "%(state)s le %(date)s"
 msgid "(if applicable):"
 msgstr "(le cas échéant) :"
 
-msgid "(minimum period of one month in formula 1)."
-msgstr "(délai minimal d'un mois en formule 1)."
-
 msgid "(or attach a confirmation email):"
 msgstr "(ou joindre un courriel de confirmation) :"
 
@@ -179,23 +176,31 @@ msgstr ""
 "courrier de confirmation</span>)"
 
 msgid ""
-"<strong>the thesis is acceptable subject to modifications</strong> "
-"achievable within less than three months of full-time work. In this case, "
-"the promoter(s) is/are responsible for verifying and approving these changes "
-"before the date of the public defence. Please attach a report that "
-"<u>explicitly</u> specifies all the requested changes. This report, which "
-"allows the domain doctoral committee to note the outcome of the private "
-"defence, must be signed by all members of the jury."
+"<strong>admissible subject to minor changes</strong> achievable in less than "
+"three months of full-time work. In this case, the supervisor(s) is/are "
+"responsible for checking and approving the changes before the public "
+"defence. Please attach a report <u>clearly</u> specifying all requested "
+"changes. This report, which informs the PhD Field Committee of the private "
+"defence results, must be signed by all PhD Exam Board members."
 msgstr ""
-"<strong>la thèse est recevable moyennant des modifications</strong> mineures, réalisables dans un délai inférieur à trois mois de travail à temps plein. "
-"Dans ce cas, la, le ou les promoteur·trices est/sont chargé·es de vérifier et approuver ces modifications avant la date de la soutenance publique. Veuillez joindre un rapport précisant explicitement toutes les modifications demandées. Ce rapport permettant à la commission doctorale du domaine de constater le résultat de la défense privée doit être signé par l'ensemble des membres du jury."
+"<strong>la thèse est recevable moyennant des modifications</strong> "
+"mineures, réalisables dans un délai inférieur à trois mois de travail à "
+"temps plein. Dans ce cas, la, le ou les promoteur·trices est/sont chargé·es "
+"de vérifier et approuver ces modifications avant la date de la soutenance "
+"publique. Veuillez joindre un rapport précisant <u>explicitement</u> toutes "
+"les modifications demandées. Ce rapport permettant à la commission doctorale "
+"du domaine de constater le résultat de la défense privée doit être signé par "
+"l'ensemble des membres du jury."
 
 msgid ""
-"<strong>the thesis is deemed inadmissible</strong> (changes requiring more "
-"than three months of full-time work). In this case, a new private defence "
-"must be organised. Please attach a report justifying the decision."
+"<strong>non-admissible</strong> (changes requiring more than three months of "
+"full-time work). In this case, a new private defence must be held. Please "
+"attach a report explaining the reasons for the decision."
 msgstr ""
-"<strong>la thèse est jugée non recevable</strong> (modifications nécessitant plus de trois mois de travail à temps plein). Dans ce cas, une nouvelle défense privée doit être organisée. Veuillez joindre un rapport motivant la décision."
+"<strong>la thèse est jugée non recevable</strong> (modifications nécessitant "
+"plus de trois mois de travail à temps plein). Dans ce cas, une nouvelle "
+"défense privée doit être organisée. Veuillez joindre un rapport motivant la "
+"décision."
 
 msgid "A comment is required."
 msgstr "Un commentaire est requis."
@@ -454,6 +459,9 @@ msgstr "Un membre externe doit avoir un email."
 
 msgid "An external member must have an institute."
 msgstr "Un membre externe doit avoir une institution."
+
+msgid "Appendices:"
+msgstr "Annexes :"
 
 msgid "Application numero"
 msgstr "Numéro de demande"
@@ -773,6 +781,9 @@ msgstr "Formation complémentaire non activée"
 msgid "Complementary training proposition"
 msgstr "Proposition de formation complémentaire"
 
+msgid "Concluded in"
+msgstr "Fait à"
+
 msgid "Configuration saved."
 msgstr "Configuration enregistrée."
 
@@ -934,6 +945,11 @@ msgctxt "private defense"
 msgid "Created at"
 msgstr "Créée le"
 
+msgid ""
+"Credits for <strong>further training</strong> have been obtained: yes / no."
+msgstr ""
+"La <strong>formation complémentaire</strong> a été réalisée : oui / non."
+
 msgid "Current funding"
 msgstr "Financement actuel"
 
@@ -1053,9 +1069,6 @@ msgctxt "parcours_doctoral tab"
 msgid "Defense method"
 msgstr "Formule de défense"
 
-msgid "Definitive admission date to doctorate"
-msgstr "Date de l'admission définitive au doctorat"
-
 msgid "Definitive admission date:"
 msgstr "Date de l'admission définitive au doctorat :"
 
@@ -1137,18 +1150,6 @@ msgstr "Parcours doctoraux"
 
 msgid "Doctoral research project"
 msgstr "Projet de recherche doctorale"
-
-msgctxt "female gender"
-msgid "Doctoral student"
-msgstr "Doctorante"
-
-msgctxt "gender"
-msgid "Doctoral student"
-msgstr "Doctorant·e"
-
-msgctxt "male gender"
-msgid "Doctoral student"
-msgstr "Doctorant"
 
 msgid "Doctoral training"
 msgstr "Formation doctorale"
@@ -1305,6 +1306,9 @@ msgstr "Nom de l'événement"
 
 msgid "Event website"
 msgstr "Site web de l'événement"
+
+msgid "Exam Board Members"
+msgstr "Les membres du jury"
 
 msgid "Example"
 msgstr "Exemple"
@@ -2196,11 +2200,14 @@ msgid "Not in order of registration"
 msgstr "Pas en ordre d'inscription"
 
 msgid ""
-"Note: in cases of force majeure, an absent member shall send the chair, "
-"prior to the meeting, a written report with their reasoned opinion on the "
-"value of the thesis and a list of questions they wish to ask the candidate."
+"Note: in cases of force majeure, an absent member shall send the chair a "
+"written report prior to the meeting, setting out their reasoned opinion on "
+"the value of the thesis and a list of questions they wish to ask the student."
 msgstr ""
-"Remarque : en cas de force majeure, une personne absente fait parvenir au président ou à la présidente, avant la séance, un rapport écrit avec son avis motivé sur la valeur de la thèse et l’inventaire des questions qu’elle souhaite poser au candidat ou à la candidate."
+"Remarque : en cas de force majeure, une personne absente fait parvenir au "
+"président ou à la présidente, avant la séance, un rapport écrit avec son "
+"avis motivé sur la valeur de la thèse et l’inventaire des questions qu’elle "
+"souhaite poser au candidat ou à la candidate."
 
 msgid "Number of days participating"
 msgstr "Nombre de jours de participation"
@@ -2338,6 +2345,9 @@ msgstr "Doctorat"
 msgid "PhD already done"
 msgstr "Doctorat déjà réalisé"
 
+msgid "PhD final admission date"
+msgstr "Date de l'admission définitive au doctorat"
+
 msgid "PhD first inscription date"
 msgstr "Date de la première inscription au doctorat"
 
@@ -2346,6 +2356,18 @@ msgstr "Gestion des doctorats"
 
 msgid "PhD research experience"
 msgstr "Expérience de recherche doctorale"
+
+msgctxt "female gender"
+msgid "PhD student"
+msgstr "Doctorante"
+
+msgctxt "gender"
+msgid "PhD student"
+msgstr "Doctorant·e"
+
+msgctxt "male gender"
+msgid "PhD student"
+msgstr "Doctorant"
 
 msgid "PhD training"
 msgstr "Formation doctorale"
@@ -2473,6 +2495,9 @@ msgstr "Doctorat précédent"
 msgid "Previous private defenses"
 msgstr "Défenses privées passées"
 
+msgid "Private defence assessment"
+msgstr "Procès verbal de la défense privée"
+
 msgid "Private defence date and time"
 msgstr "Date et heure de la défense privée"
 
@@ -2484,9 +2509,6 @@ msgstr "Procès verbal de la défense privée"
 
 msgid "Private defence minutes canvas"
 msgstr "Canevas du procès verbal de la défense privée"
-
-msgid "Private defence report (if applicable)"
-msgstr "Rapport de défense privée (le cas échéant)"
 
 msgid "Private defense"
 msgstr "Défense privée"
@@ -2624,12 +2646,6 @@ msgstr "Réinscrire"
 msgid "Reason for exceeding the deadline"
 msgstr "Motif du dépassement de l’échéance"
 
-msgid ""
-"Reasoned opinion and list of questions asked by any jury member(s) who may "
-"be absent due to force majeure"
-msgstr ""
-"Avis motivé et inventaire des questions posées par un/des membre(s) du jury éventuellement absent(s) pour cas de force majeure"
-
 msgctxt "dashboard-category"
 msgid "Recevability (formula 2)"
 msgstr "Recevabilité (formule 2)"
@@ -2658,9 +2674,6 @@ msgstr "Référence DIAL.Pr"
 
 msgid "Refuse activity"
 msgstr "Refuser l'activité"
-
-msgid "Registration Id"
-msgstr "Noma"
 
 msgctxt "dashboard-indicator jury"
 msgid "Rejected by ADRE"
@@ -3160,15 +3173,10 @@ msgstr ""
 "Le <span class=\"text-uppercase underline-text bold-text\">nouveau</span> "
 "comité d'accompagnement serait composé de manière suivante :"
 
-msgid ""
-"The <strong>additional training</strong> credits have been obtained: yes / "
-"no."
-msgstr ""
-"La <strong>formation complémentaire</strong> a été réalisée : oui / non."
-
 msgid "The <strong>additional training</strong> has been completed: yes / no."
 msgstr ""
-"Les crédits de la <strong>formation complémentaire</strong> ont été obtenus : oui / non."
+"Les crédits de la <strong>formation complémentaire</strong> ont été "
+"obtenus : oui / non."
 
 msgid "The CA members"
 msgstr "Les membres du comité d'accompagnement"
@@ -3242,12 +3250,15 @@ msgstr "L'épreuve de confirmation n'est pas en cours"
 msgid "The contact supervisor must be internal UCLouvain"
 msgstr "Le·la promoteur·trice de contact doit être interne UCLouvain"
 
-msgid "The current training is attached to this document."
+msgid ""
+"The course elements completed to date are listed in the appendix to these "
+"minutes."
 msgstr ""
 "La formation réalisée à ce jour se trouve en annexe à ce procès-verbal."
 
-msgid "The date and time of the public defence are set for:"
-msgstr "La date et l'heure de la soutenance publique sont fixées au :"
+msgid "The current training is attached to this document."
+msgstr ""
+"La formation réalisée à ce jour se trouve en annexe à ce procès-verbal."
 
 msgid "The date cannot be in the future."
 msgstr "La date ne peut pas être dans le futur."
@@ -3269,6 +3280,9 @@ msgstr ""
 "aux dispositions particulières de votre domaine. Veuillez consulter ces "
 "dispositions sur la page web de votre Commission Doctorale de Domaine (CDD) "
 "pour plus d’informations."
+
+msgid "The definitive thesis title is:"
+msgstr "Le titre définitif de la thèse est le suivant :"
 
 msgctxt "female gender"
 msgid "The doctoral student"
@@ -3302,11 +3316,17 @@ msgstr ""
 msgid "The enrollment has not been found"
 msgstr "L'évaluation n'a pas été trouvée"
 
+msgid ""
+"The exam board notes that the student has completed their <strong>PhD "
+"course</strong> and obtained the 60 credits required by French Community "
+"decree, as validated by the PhD Field Committee."
+msgstr ""
+"Le jury constate l'achèvement de la <strong>formation doctorale</strong> du "
+"ou de la candidat·e et l'obtention des 60 crédits exigés par le décret, "
+"validés par la commission doctorale du domaine."
+
 msgid "The export has failed"
 msgstr "L'export a échoué"
-
-msgid "The final title of the thesis is as follows:"
-msgstr "Le titre définitif de la thèse est le suivant :"
 
 msgid "The first name of the jury member"
 msgstr "Le prénom du membre du jury"
@@ -3330,16 +3350,6 @@ msgstr ""
 
 msgid "The jury is not in progress"
 msgstr "Le jury n'est pas en cours"
-
-msgid "The jury members"
-msgstr "Les membres du jury"
-
-msgid ""
-"The jury shall verify that the candidate has completed their "
-"<strong>doctoral training</strong> and obtained the 60 credits required by "
-"the decree, validated by the domain doctoral committee."
-msgstr ""
-"Le jury constate l'achèvement de la <strong>formation doctorale</strong> du ou de la candidat·e et l'obtention des 60 crédits exigés par le décret, validés par la commission doctorale du domaine."
 
 msgid "The last name of the jury member"
 msgstr "Le nom du membre du jury"
@@ -3421,6 +3431,18 @@ msgstr "La défense privée n'est pas en cours"
 msgid "The public comment about the approval/refusal"
 msgstr "Le commentaire public de la décision"
 
+msgid ""
+"The public defence will take place on __________ at _____ (minimum period of "
+"one month in formula 1)."
+msgstr ""
+"La date et l'heure de la soutenance publique sont fixées au __________ à "
+"_____ (délai minimal d'un mois en formule 1)."
+
+msgid "The public defence will take place on __________ at _____."
+msgstr ""
+"La date et l'heure de la soutenance publique sont fixées au __________ à "
+"_____."
+
 msgid "The reason for needing update"
 msgstr "La raison de la demande de mise à jour"
 
@@ -3449,10 +3471,6 @@ msgstr "L'étudiant·e a été désinscrit·e de cette évaluation."
 msgid "The student has been withdrawn lately from this assessment."
 msgstr "L'étudiant·e a été désinscrit·e tardivement de cette évaluation."
 
-msgid "The training completed to date is attached to these minutes."
-msgstr ""
-"La formation réalisée à ce jour se trouve en annexe à ce procès-verbal."
-
 msgid "There can be no more CA members in the supervision group."
 msgstr ""
 "Il ne peut y avoir davantage de membres du comité d'accompagnement dans le "
@@ -3464,6 +3482,10 @@ msgstr ""
 
 msgid "There is no request for a new deadline."
 msgstr "Il n'y a pas de demande de nouvelle échéance."
+
+#, python-format
+msgid "Thesis completed under joint supervision with %(institute_name)s"
+msgstr "Thèse réalisée en cotutelle avec %(institute_name)s"
 
 msgid "Thesis defense"
 msgstr "Défense et soutenance"
@@ -3637,11 +3659,8 @@ msgstr "Intitulé de la formation"
 msgid "To"
 msgstr "À"
 
-msgid "To be completed and signed by the jury"
+msgid "To be completed and signed by the exam board"
 msgstr "À compléter et signer par le jury"
-
-msgid "To be sent to the CDD manager"
-msgstr "À transmettre à la ou le gestionnaire CDD"
 
 msgid ""
 "To be sent to the CDD secretariat <br> (To help you to fill this form, "
@@ -3652,6 +3671,9 @@ msgstr ""
 "ce formulaire, vous êtes invité.e à prendre connaissance du Règlement "
 "doctoral de l’UCLouvain et des dispositions particulières de votre "
 "Commissions doctorale de domaine (CDD))."
+
+msgid "To be submitted to the CDD administrator"
+msgstr "À transmettre à la ou le gestionnaire CDD"
 
 msgid ""
 "To be uploaded in your dossier on the doctoral platform as soon as possible "
@@ -3802,10 +3824,11 @@ msgstr ""
 
 #, python-format
 msgid ""
-"We, the undersigned, members of the doctoral thesis jury in "
-"%(training_name)s for the interested party,"
+"We, the undersigned members of the PhD Thesis Exam Board in "
+"%(training_name)s for"
 msgstr ""
-"Nous, soussigné·es, membres du jury de thèse de doctorat en %(training_name)s de l’intéressé·e,"
+"Nous, soussigné·es, membres du jury de thèse de doctorat en "
+"%(training_name)s de l’intéressé·e,"
 
 msgctxt "admission"
 msgid "Website"
@@ -3945,6 +3968,12 @@ msgstr "Votre participation"
 msgid "Your participation in the event"
 msgstr "Votre participation à l'événement"
 
+msgid "admissible and accepted as is."
+msgstr "la thèse est jugée recevable et le manuscrit est accepté tel quel."
+
+msgid "and supervisor"
+msgstr "et promoteur·trice"
+
 msgctxt "doctorate"
 msgid "city"
 msgstr "ville"
@@ -3964,13 +3993,14 @@ msgstr "du %(start)s au %(end)s"
 
 #, python-format
 msgid ""
-"having attended the %(private_defense_date)s oral presentation by the "
-"candidate of their provisional manuscript entitled: "
-"<strong>%(thesis_title)s</strong> <br> and having deliberated, we declare "
-"that:"
+"having attended the student's %(private_defense_date)s oral presentation of "
+"their provisional manuscript entitled: <strong>%(thesis_title)s</strong> "
+"<br> and having deliberated it, declare the thesis is:"
 msgstr ""
-"ayant assisté le %(private_defense_date)s à la présentation orale par l'intéressé·e de son manuscrit provisoire intitulé : "
-"<strong>%(thesis_title)s</strong> <br> et ayant délibéré, nous déclarons que :"
+"ayant assisté le %(private_defense_date)s à la présentation orale par "
+"l'intéressé·e de son manuscrit provisoire intitulé : "
+"<strong>%(thesis_title)s</strong> <br> et ayant délibéré, nous déclarons "
+"que :"
 
 msgid "hh:mm"
 msgstr "hh:mm"
@@ -3981,6 +4011,19 @@ msgstr "heures"
 msgid "items per page"
 msgstr "éléments par page"
 
+msgid "on"
+msgstr ", le"
+
+msgid "private defence report (if applicable);"
+msgstr "Rapport de défense privée (le cas échéant);"
+
+msgid ""
+"reasoned opinion and list of questions asked by any exam board members who "
+"may have been absent due to force majeure."
+msgstr ""
+"Avis motivé et inventaire des questions posées par un/des membre(s) du jury "
+"éventuellement absent(s) pour cas de force majeure."
+
 msgid "the <strong>failure</strong> of the confirmation paper."
 msgstr "l'<strong>échec</strong> de l'épreuve de confirmation."
 
@@ -3989,9 +4032,6 @@ msgstr "la <strong>non-poursuite</strong> du doctorat."
 
 msgid "the <strong>successful completion</strong> of the confirmation paper."
 msgstr "la <strong>réussite</strong> de l'épreuve de confirmation."
-
-msgid "the thesis is deemed admissible and the manuscript is accepted as is."
-msgstr "la thèse est jugée recevable et le manuscrit est accepté tel quel."
 
 msgid "to"
 msgstr "à"
