@@ -3,7 +3,7 @@
 import uuid
 
 import django.db.models.deletion
-import osis_document.contrib.fields
+import osis_document_components.fields
 from django.db import migrations, models
 
 
@@ -25,7 +25,7 @@ def initialise_private_defenses(apps, _):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("parcours_doctoral", "0017_assessmentenrollment_late_unenrollment_and_more"),
+        ("parcours_doctoral", "0025_adre_manager_role"),
     ]
 
     operations = [
@@ -99,7 +99,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "minutes",
-                    osis_document.contrib.fields.FileField(
+                    osis_document_components.fields.FileField(
                         base_field=models.UUIDField(),
                         default=list,
                         size=None,
@@ -108,7 +108,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "minutes_canvas",
-                    osis_document.contrib.fields.FileField(
+                    osis_document_components.fields.FileField(
                         base_field=models.UUIDField(),
                         default=list,
                         size=None,

@@ -55,35 +55,37 @@
     }
 
     #signatures td {
-      min-height: 3em;
+      display: flex;
+      align-items: center;
+      min-height: 4em;
     }
   </style>
 {% endblock %}
 {% block content %}
   <div class="container">
     <div id="title">
-      <h1>{% translate "Private defence minutes" %}</h1>
+      <h1>{% translate "Private defence assessment" %}</h1>
       <h2>
-        {% translate "To be completed and signed by the jury" %}
+        {% translate "To be completed and signed by the exam board" %}
         <br>
-        {% translate "To be sent to the CDD manager" %}
+        {% translate "To be submitted to the CDD administrator" %}
       </h2>
     </div>
 
     {% if parcours_doctoral.genre_doctorant == "F" %}
-      {% translate "Doctoral student" as student_title context "female gender" %}
+      {% translate "PhD student" as student_title context "female gender" %}
     {% elif parcours_doctoral.genre_doctorant == "H" %}
-      {% translate "Doctoral student" as student_title context "male gender" %}
+      {% translate "PhD student" as student_title context "male gender" %}
     {% else %}
-      {% translate "Doctoral student" as student_title context "gender" %}
+      {% translate "PhD student" as student_title context "gender" %}
     {% endif %}
     {% concat parcours_doctoral.nom_doctorant " " parcours_doctoral.prenom_doctorant as full_name %}
 
     {% field_data student_title full_name inline=True css_class='fw-bold' %}
 
-    {% field_data _("Registration Id") parcours_doctoral.noma_doctorant inline=True css_class='fw-bold' %}
+    {% field_data _("Noma") parcours_doctoral.noma_doctorant inline=True css_class='fw-bold' %}
 
-    {% field_data _("Definitive admission date to doctorate") parcours_doctoral.date_admission_par_cdd|date:'d/m/Y' inline=True css_class='fw-bold' %}
+    {% field_data _("PhD final admission date") parcours_doctoral.date_admission_par_cdd|date:'d/m/Y' inline=True css_class='fw-bold' %}
 
     {% if parcours_doctoral.financement.type == "SEARCH_SCHOLARSHIP" %}
       {% if parcours_doctoral.financement.bourse_recherche %}
@@ -100,14 +102,14 @@
       {% get_superior_institute_name parcours_doctoral.cotutelle.institution as institute_name %}
       <span class="underline-text as-field-data">
         {% blocktranslate trimmed with institute_name=institute_name|default:parcours_doctoral.cotutelle.autre_institution_nom %}
-          Thesis with cotutelle with {{ institute_name }}
+          Thesis completed under joint supervision with {{ institute_name }}
         {% endblocktranslate %}
       </span>
     {% endif %}
 
     <p>
       {% blocktranslate trimmed with training_name=parcours_doctoral.formation.intitule %}
-        We, the undersigned, members of the doctoral thesis jury in {{ training_name }} for the interested party,
+        We, the undersigned members of the PhD Thesis Exam Board in {{ training_name }} for
       {% endblocktranslate %}
     </p>
 
@@ -120,17 +122,22 @@
             {% if jury_member.ville %} - {{ jury_member.ville }}{% endif %}
             {% if jury_member.pays %} - {{ jury_member.pays }}{% endif %}
           {% endif %}
-          - {{ jury_member.role|enum_display:'RoleJury' }}
+          {% if jury_member.role != 'MEMBRE' %}
+          - {{ jury_member.role|enum_display:'RoleJury' }}{% if jury_member.est_promoteur %} {% translate 'and supervisor' %}
+          {% elif jury_member.est_promoteur %}
+          - {% translate 'Supervisor' %}
+          {% endif %}
+          {% endif %}
         </li>
       {% endfor %}
     </ul>
 
     <p>
       {% blocktranslate trimmed with private_defense_date=private_defense.date_heure|date thesis_title=jury.titre_propose %}
-        having attended the {{ private_defense_date }} oral presentation by the candidate of their provisional
+        having attended the student's {{ private_defense_date }} oral presentation of their provisional
         manuscript entitled: <strong>{{ thesis_title }}</strong>
         <br>
-        and having deliberated, we declare that:
+        and having deliberated it, declare the thesis is:
       {% endblocktranslate %}
     </p>
 
@@ -139,13 +146,10 @@
         <input type="checkbox" name="private-defense-success">
         <div>
           <label for="private-defense-success">
-            <strong>{% translate "the thesis is deemed admissible and the manuscript is accepted as is." %}</strong>
+            <strong>{% translate "admissible and accepted as is." %}</strong>
           </label>
-          <div class="complete-after">
-            {% translate "The date and time of the public defence are set for:" %}
-          </div>
           <div>
-            {% translate "(minimum period of one month in formula 1)." %}
+            {% translate "The public defence will take place on __________ at _____ (minimum period of one month in formula 1)." %}
           </div>
         </div>
       </div>
@@ -155,15 +159,15 @@
         <div>
           <label for="private-defense-retaking">
             {% blocktranslate trimmed %}
-              <strong>the thesis is acceptable subject to modifications</strong> achievable within less than three
+              <strong>admissible subject to minor changes</strong> achievable in less than three
               months of full-time work.
-              In this case, the promoter(s) is/are responsible for verifying and approving these changes
-              before the date of the public defence. Please attach a report that <u>explicitly</u> specifies all
-              the requested changes. This report, which allows the domain doctoral committee to note the outcome of the
-              private defence, must be signed by all members of the jury.
+              In this case, the supervisor(s) is/are responsible for checking and approving the changes
+              before the public defence. Please attach a report <u>clearly</u> specifying all requested changes.
+              This report, which informs the PhD Field Committee of the private defence results,
+              must be signed by all PhD Exam Board members.
             {% endblocktranslate %}
-            <div class="complete-after">
-              {% translate "The date and time of the public defence are set for:" %}
+            <div>
+              {% translate "The public defence will take place on __________ at _____." %}
             </div>
           </label>
         </div>
@@ -174,9 +178,10 @@
         <div>
           <label for="private-defense-retaking">
             {% blocktranslate trimmed %}
-              <strong>the thesis is deemed inadmissible</strong> (changes requiring more than three months of full-time
+              <strong>non-admissible</strong> (changes requiring more than three months of full-time
               work).
-              In this case, a new private defence must be organised. Please attach a report justifying the decision.
+              In this case, a new private defence must be held. Please attach a report explaining the reasons for
+              the decision.
             {% endblocktranslate %}
           </label>
         </div>
@@ -184,41 +189,43 @@
     </form>
 
     <p class="complete-after">
-      {% translate 'The final title of the thesis is as follows:' %}
+      {% translate 'The definitive thesis title is:' %}
     </p>
 
     <hr class="dashed-line" />
 
     <p>
       {% blocktranslate trimmed %}
-        The jury shall verify that the candidate has completed their <strong>doctoral training</strong> and obtained
-        the 60 credits required by the decree, validated by the domain doctoral committee.
+        The exam board notes that the student has completed their <strong>PhD course</strong> and obtained
+        the 60 credits required by French Community decree, as validated by the PhD Field Committee.
       {% endblocktranslate %}
     </p>
 
     <p>
-      {% translate 'The training completed to date is attached to these minutes.' %}
+      {% translate 'The course elements completed to date are listed in the appendix to these minutes.' %}
     </p>
 
     {% if has_additional_training %}
       <p>
-        {% translate "The <strong>additional training</strong> credits have been obtained: yes / no." %}<br>
+        {% translate "Credits for <strong>further training</strong> have been obtained: yes / no." %}<br>
       </p>
     {% endif %}
 
-    <p>
-      {% blocktranslate trimmed %}
-        Note: in cases of force majeure, an absent member shall send the chair, prior to the meeting, a written
-        report with their reasoned opinion on the value of the thesis and a list of questions they wish to ask the
-        candidate.
-      {% endblocktranslate %}
+    <p class="fst-italic">
+      <small>
+        {% blocktranslate trimmed %}
+          Note: in cases of force majeure, an absent member shall send the chair
+          a written report prior to the meeting, setting out their reasoned opinion on the value of the thesis and a list
+          of questions they wish to ask the student.
+        {% endblocktranslate %}
+      </small>
     </p>
 
     <div class="avoid-break-inside">
       <div class="d-flex py-2 ps-0">
-        <div>{% translate "Done in" %}</div>
+        <div>{% translate "Concluded in" %}</div>
         <div class="solid-line" style="flex: 2;"></div>
-        <div>{% translate ", on" %}</div>
+        <div>{% translate "on" %}</div>
         <div class="solid-line" style="flex: 1;"></div>
       </div>
 
@@ -229,9 +236,7 @@
         </caption>
         <thead>
         <tr>
-          <th class="col-5">{% translate "The jury members" %}</th>
-          <th class="col-2"></th>
-          <th class="col-5"></th>
+          <th>{% translate "Exam Board Members" %}</th>
         </tr>
         </thead>
         <tbody>
@@ -242,8 +247,6 @@
               {{ jury_member.nom }} {{ jury_member.prenom }} - {{ jury_member.role|enum_display:'RoleJury' }}
             </span>
             </td>
-            <td></td>
-            <td></td>
           </tr>
         {% endfor %}
         </tbody>
@@ -252,11 +255,11 @@
 
     <div style="break-before: page">
       <span class="list-title">
-        {% translate "Attachments:" %}
+        {% translate "Appendices:" %}
       </span>
       <ul>
-        <li>{% translate "Private defence report (if applicable)" %}</li>
-        <li>{% translate "Reasoned opinion and list of questions asked by any jury member(s) who may be absent due to force majeure" %}</li>
+        <li>{% translate "private defence report (if applicable);" %}</li>
+        <li>{% translate "reasoned opinion and list of questions asked by any exam board members who may have been absent due to force majeure." %}</li>
       </ul>
     </div>
   </div>
