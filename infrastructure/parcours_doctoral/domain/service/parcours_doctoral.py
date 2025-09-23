@@ -28,7 +28,7 @@ from typing import Dict, Optional
 from uuid import UUID
 
 from django.db import transaction
-from osis_document.api.utils import documents_remote_duplicate
+from osis_document_components.services import documents_remote_duplicate
 from osis_signature.enums import SignatureState
 from osis_signature.models import Process, StateHistory
 

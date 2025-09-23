@@ -82,8 +82,8 @@
 
 {% block style %}
   {{ block.super }}
-  <link href="{% static 'osis_document/osis-document-editor.css' %}" rel="stylesheet" />
-  <link href="{% static "osis_document/osis-document.css" %}" rel="stylesheet" />
+  <link href="{% static 'osis_document_components/osis-document-editor.css' %}" rel="stylesheet" />
+  <link href="{% static "osis_document_components/osis-document.css" %}" rel="stylesheet" />
 
   <style>
       {# Document list #}
@@ -125,8 +125,8 @@
 
 {% block script %}
   {{ block.super }}
-  <script type='text/javascript' src='{% static 'osis_document/osis-document-editor.umd.min.js' %}'></script>
-  <script src='{% static 'osis_document/osis-document.umd.min.js' %}'></script>
+  <script type='text/javascript' src='{% static 'osis_document_components/osis-document-editor.umd.min.js' %}'></script>
+  <script src='{% static 'osis_document_components/osis-document.umd.min.js' %}'></script>
 
   <script>
       $(function () {

@@ -27,7 +27,7 @@ import uuid
 
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from osis_document.contrib.fields import FileField
+from osis_document_components.fields import FileField
 
 from parcours_doctoral.ddd.domain.model.document import TypeDocument
 

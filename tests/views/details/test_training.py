@@ -537,10 +537,10 @@ class DoctorateTrainingActivityViewTestCase(TestCase):
         response = self.client.get(edit_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    @patch('osis_document.api.utils.get_remote_token')
-    @patch('osis_document.api.utils.get_remote_metadata')
-    @patch('osis_document.api.utils.confirm_remote_upload')
-    @patch('osis_document.contrib.fields.FileField._confirm_multiple_upload')
+    @patch('osis_document_components.services.get_remote_token')
+    @patch('osis_document_components.services.get_remote_metadata')
+    @patch('osis_document_components.services.confirm_remote_upload')
+    @patch('osis_document_components.fields.FileField._confirm_multiple_upload')
     def test_remove_proof_if_not_needed(
         self,
         file_confirm_upload,
@@ -671,10 +671,10 @@ class DoctorateTrainingActivityViewTestCase(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertFormError(response, 'form', None, _("Select at least one activity"))
 
-    @patch('osis_document.api.utils.get_remote_token')
-    @patch('osis_document.api.utils.get_remote_metadata')
-    @patch('osis_document.api.utils.confirm_remote_upload')
-    @patch('osis_document.contrib.fields.FileField._confirm_multiple_upload')
+    @patch('osis_document_components.services.get_remote_token')
+    @patch('osis_document_components.services.get_remote_metadata')
+    @patch('osis_document_components.services.confirm_remote_upload')
+    @patch('osis_document_components.fields.FileField._confirm_multiple_upload')
     def test_submit_parent_seminar(
         self,
         file_confirm_upload,
@@ -693,10 +693,10 @@ class DoctorateTrainingActivityViewTestCase(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(Activity.objects.filter(status='SOUMISE').count(), 2)
 
-    @patch('osis_document.api.utils.get_remote_token')
-    @patch('osis_document.api.utils.get_remote_metadata')
-    @patch('osis_document.api.utils.confirm_remote_upload')
-    @patch('osis_document.contrib.fields.FileField._confirm_multiple_upload')
+    @patch('osis_document_components.services.get_remote_token')
+    @patch('osis_document_components.services.get_remote_metadata')
+    @patch('osis_document_components.services.confirm_remote_upload')
+    @patch('osis_document_components.fields.FileField._confirm_multiple_upload')
     def test_submit_activities_with_error(
         self,
         file_confirm_upload,
@@ -772,23 +772,23 @@ class TrainingPdfRecapViewTestCase(TestCase):
     @classmethod
     def setUpTestData(cls):
         # Mock osis-document
-        cls.confirm_remote_upload_patcher = patch('osis_document.api.utils.confirm_remote_upload')
+        cls.confirm_remote_upload_patcher = patch('osis_document_components.services.confirm_remote_upload')
         patched = cls.confirm_remote_upload_patcher.start()
         patched.return_value = '4bdffb42-552d-415d-9e4c-725f10dce228'
 
-        cls.file_confirm_upload_patcher = patch('osis_document.contrib.fields.FileField._confirm_multiple_upload')
+        cls.file_confirm_upload_patcher = patch('osis_document_components.fields.FileField._confirm_multiple_upload')
         patched = cls.file_confirm_upload_patcher.start()
         patched.side_effect = lambda _, value, __: ['4bdffb42-552d-415d-9e4c-725f10dce228'] if value else []
 
-        cls.get_remote_metadata_patcher = patch('osis_document.api.utils.get_remote_metadata')
+        cls.get_remote_metadata_patcher = patch('osis_document_components.services.get_remote_metadata')
         patched = cls.get_remote_metadata_patcher.start()
         patched.return_value = {"name": "test.pdf", "size": 1}
 
-        cls.get_remote_token_patcher = patch('osis_document.api.utils.get_remote_token')
+        cls.get_remote_token_patcher = patch('osis_document_components.services.get_remote_token')
         patched = cls.get_remote_token_patcher.start()
         patched.return_value = 'b-token'
 
-        cls.save_raw_content_remotely_patcher = patch('osis_document.utils.save_raw_content_remotely')
+        cls.save_raw_content_remotely_patcher = patch('osis_document_components.services.save_raw_content_remotely')
         patched = cls.save_raw_content_remotely_patcher.start()
         patched.return_value = 'a-token'
 

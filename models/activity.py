@@ -33,7 +33,7 @@ from django.db.models.signals import post_delete, post_save
 from django.dispatch import receiver
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import pgettext_lazy
-from osis_document.contrib import FileField
+from osis_document_components.fields import FileField
 
 from base.ddd.utils.business_validator import MultipleBusinessExceptions
 from deliberation.models.enums.numero_session import Session

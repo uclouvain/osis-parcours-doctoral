@@ -34,7 +34,7 @@ from django.utils.translation import gettext_lazy as _
 from django.utils.translation import pgettext_lazy
 from django_json_widget.widgets import JSONEditorWidget
 from hijack.contrib.admin import HijackUserAdminMixin
-from osis_document.contrib.fields import FileField
+from osis_document_components.fields import FileField
 from osis_mail_template.admin import MailTemplateAdmin
 
 from base.models.entity_version import EntityVersion
