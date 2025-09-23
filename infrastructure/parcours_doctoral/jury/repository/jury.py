@@ -49,7 +49,6 @@ from parcours_doctoral.ddd.jury.domain.model.jury import (
     MembreJury,
     SignatureMembre,
 )
-from parcours_doctoral.ddd.jury.domain.validator.exceptions import (
 from django.db import transaction
 from django.db.models import Prefetch, Q
 
@@ -60,7 +59,7 @@ from parcours_doctoral.ddd.jury.domain.model.enums import RoleJury
 from parcours_doctoral.ddd.jury.domain.model.jury import Jury, JuryIdentity, MembreJury
 from parcours_doctoral.ddd.jury.dtos.jury import JuryDTO, MembreJuryDTO
 from parcours_doctoral.ddd.jury.repository.i_jury import IJuryRepository
-from parcours_doctoral.ddd.jury.validator.exceptions import (
+from parcours_doctoral.ddd.jury.domain.validator.exceptions import (
     JuryNonTrouveException,
     MembreNonTrouveDansJuryException,
 )
