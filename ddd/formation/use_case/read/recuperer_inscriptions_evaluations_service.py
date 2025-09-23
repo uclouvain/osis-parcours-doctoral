@@ -23,9 +23,12 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from typing import List
+
 from parcours_doctoral.ddd.formation.commands import (
     RecupererInscriptionsEvaluationsQuery,
 )
+from parcours_doctoral.ddd.formation.dtos.inscription_evaluation import InscriptionEvaluationDTO
 from parcours_doctoral.ddd.formation.repository.i_inscription_evaluation import (
     IInscriptionEvaluationRepository,
 )
@@ -34,7 +37,7 @@ from parcours_doctoral.ddd.formation.repository.i_inscription_evaluation import 
 def recuperer_inscriptions_evaluations(
     cmd: RecupererInscriptionsEvaluationsQuery,
     inscription_evaluation_repository: IInscriptionEvaluationRepository,
-):
+) -> List[InscriptionEvaluationDTO]:
     return inscription_evaluation_repository.search_dto(
         parcours_doctoral_id=cmd.parcours_doctoral_uuid,
         cours_uuid=cmd.cours_uuid,

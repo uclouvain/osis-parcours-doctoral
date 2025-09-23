@@ -61,3 +61,6 @@ class InscriptionEvaluation(interface.RootEntity):
     def desinscrire(self, echeance_encodage_note: Optional[datetime.date]):
         self.statut = StatutInscriptionEvaluation.DESINSCRITE
         self.desinscription_tardive = bool(echeance_encodage_note and datetime.date.today() > echeance_encodage_note)
+
+    def reinscrire(self):
+        self.statut = StatutInscriptionEvaluation.ACCEPTEE
