@@ -3,7 +3,7 @@
 import uuid
 
 import django.db.models.deletion
-import osis_document.contrib.fields
+import osis_document_components.fields
 from django.db import migrations, models
 
 
@@ -99,7 +99,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "minutes",
-                    osis_document.contrib.fields.FileField(
+                    osis_document_components.fields.FileField(
                         base_field=models.UUIDField(),
                         default=list,
                         size=None,
@@ -108,7 +108,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "minutes_canvas",
-                    osis_document.contrib.fields.FileField(
+                    osis_document_components.fields.FileField(
                         base_field=models.UUIDField(),
                         default=list,
                         size=None,
