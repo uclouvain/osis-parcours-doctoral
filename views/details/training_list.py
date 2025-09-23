@@ -59,6 +59,7 @@ from infrastructure.messages_bus import message_bus_instance
 from parcours_doctoral.utils.assessment_enrollment import (
     assessment_enrollment_is_editable,
 )
+from parcours_doctoral.utils.trainings import training_categories_activities
 from parcours_doctoral.views.mixins import ParcoursDoctoralViewMixin
 
 
@@ -187,6 +188,7 @@ class AssessmentEnrollmentListView(ParcoursDoctoralViewMixin, TemplateView):
 
         context_data['assessment_enrollments'] = assessment_enrollments_by_session_and_year
         context_data['editable_assessment_enrollments'] = editable_assessment_enrollments
+        context_data['current_year'] = current_year
 
         return context_data
 
@@ -197,9 +199,10 @@ class TrainingRecapPdfView(ParcoursDoctoralViewMixin, generic.View):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['activities'] = Activity.objects.for_doctoral_training(self.parcours_doctoral_uuid).filter(
+        activities = Activity.objects.for_doctoral_training(self.parcours_doctoral_uuid).filter(
             status=StatutActivite.ACCEPTEE.name
         )
+        context['categories'] = training_categories_activities(activities)
         return context
 
     def get(self, request, *args, **kwargs):

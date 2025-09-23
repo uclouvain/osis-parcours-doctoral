@@ -51,6 +51,7 @@ role.role_manager.register(CommitteeMember)
 
 PROGRAM_MANAGER_RULES = {
     # Doctorats
+    'parcours_doctoral.view_parcours_doctoral_home': always_allow,
     'parcours_doctoral.view_parcours_doctoral': always_allow,
     'parcours_doctoral.view_historyentry': is_part_of_education_group,
     'parcours_doctoral.view_person': is_part_of_education_group,

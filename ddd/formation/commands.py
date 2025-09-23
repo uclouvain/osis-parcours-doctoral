@@ -119,3 +119,8 @@ class EncoderNoteCommand(CommandRequest):
 class ListerInscriptionsUnitesEnseignementQuery(interface.QueryRequest):
     annee: int
     code_unite_enseignement: str
+
+
+@attr.dataclass(frozen=True, slots=True)
+class ReinscrireEvaluationCommand(CommandRequest):
+    inscription_uuid: str

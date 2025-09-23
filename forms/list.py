@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -38,7 +38,7 @@ from admission.ddd.admission.doctorat.preparation.domain.model.enums import (
 from admission.forms import DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS
 from admission.models.enums.actor_type import ActorType
 from base.auth.roles.program_manager import ProgramManager
-from base.forms.utils import autocomplete, FIELD_REQUIRED_MESSAGE, EMPTY_CHOICE
+from base.forms.utils import EMPTY_CHOICE, FIELD_REQUIRED_MESSAGE, autocomplete
 from base.forms.utils.datefield import DatePickerInput
 from base.forms.widgets import Select2MultipleCheckboxesWidget
 from base.models.academic_year import AcademicYear
@@ -68,7 +68,9 @@ from parcours_doctoral.ddd.domain.model.parcours_doctoral import (
 )
 from parcours_doctoral.ddd.jury.domain.model.enums import RoleJury
 from parcours_doctoral.forms.fields import SelectWithDisabledOptions
-from parcours_doctoral.infrastructure.parcours_doctoral.read_view.repository.tableau_bord import TableauBordRepository
+from parcours_doctoral.infrastructure.parcours_doctoral.read_view.repository.tableau_bord import (
+    TableauBordRepository,
+)
 from parcours_doctoral.models import JuryMember, ParcoursDoctoralSupervisionActor
 from parcours_doctoral.models.entity_proxy import EntityProxy
 from reference.models.enums.scholarship_type import ScholarshipType
@@ -154,7 +156,7 @@ class ParcoursDoctorauxFilterForm(forms.Form):
     )
 
     fnrs_fria_fresh = forms.BooleanField(
-        label=_("FNRS, FRIA, FRESH"),
+        label=_("FNRS, FRIA, FRESH, CSC"),
         required=False,
     )
 

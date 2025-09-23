@@ -32,6 +32,9 @@ from parcours_doctoral.ddd.formation.use_case.write.inscrire_evaluation_service 
 from parcours_doctoral.infrastructure.parcours_doctoral.repository.in_memory.groupe_de_supervision import (
     GroupeDeSupervisionInMemoryRepository,
 )
+from parcours_doctoral.ddd.formation.use_case.write.reinscrire_evaluation_service import (
+    reinscrire_evaluation,
+)
 from parcours_doctoral.infrastructure.parcours_doctoral.repository.in_memory.parcours_doctoral import (
     ParcoursDoctoralInMemoryRepository,
 )
@@ -117,5 +120,9 @@ COMMAND_HANDLERS = {
     ListerInscriptionsUnitesEnseignementQuery: lambda msg_bus, cmd: lister_inscriptions_unites_enseignement(
         cmd,
         activite_repository=_activite_repository,
+    ),
+    ReinscrireEvaluationCommand: lambda msg_bus, cmd: reinscrire_evaluation(
+        cmd,
+        inscription_evaluation_repository=_inscription_evaluation_repository,
     ),
 }

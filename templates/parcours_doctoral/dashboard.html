@@ -1,4 +1,4 @@
-{% extends "bootstrap5/layout.html" %}
+{% extends "parcours_doctoral/default_layout.html" %}
 {% load i18n static parcours_doctoral %}
 
 {% comment "License" %}
@@ -26,12 +26,7 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-  <li class="breadcrumb-item">
-    <a href="{% url 'studies' %}" id="lnk_studies">{% translate 'Student path' %}</a>
-  </li>
-  <li class="breadcrumb-item" id="lnk_cohorts_management">
-    <a href="{% url 'cohorts_management' %}">{% translate "Cohorts management" %}</a>
-  </li>
+  {{ block.super }}
   <li class="breadcrumb-item">
     <a href="{% url 'parcours_doctoral:list' %}" id="lnk_parcours_doctorals">
       {% trans 'Doctoral trainings' %}

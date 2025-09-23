@@ -629,3 +629,8 @@ a.no-link {
   border-radius: 50%;
   background: white;
 }
+
+.navigation-dashboard-icon {
+    font-size: clamp(30px, 3vw, 45px);
+    color: #6699FF;
+}

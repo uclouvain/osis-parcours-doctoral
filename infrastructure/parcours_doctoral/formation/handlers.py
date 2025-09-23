@@ -29,6 +29,9 @@ from parcours_doctoral.ddd.formation.use_case.write import *
 from parcours_doctoral.ddd.formation.use_case.write.inscrire_evaluation_service import (
     inscrire_evaluation,
 )
+from parcours_doctoral.ddd.formation.use_case.write.reinscrire_evaluation_service import (
+    reinscrire_evaluation,
+)
 from parcours_doctoral.infrastructure.parcours_doctoral.formation.domain.service.notification import (
     Notification,
 )
@@ -114,5 +117,9 @@ COMMAND_HANDLERS = {
     ListerInscriptionsUnitesEnseignementQuery: lambda msg_bus, cmd: lister_inscriptions_unites_enseignement(
         cmd,
         activite_repository=ActiviteRepository(),
+    ),
+    ReinscrireEvaluationCommand: lambda msg_bus, cmd: reinscrire_evaluation(
+        cmd,
+        inscription_evaluation_repository=InscriptionEvaluationRepository(),
     ),
 }
