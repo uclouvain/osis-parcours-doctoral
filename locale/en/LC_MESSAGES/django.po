@@ -2935,12 +2935,6 @@ msgstr[1] ""
 msgid "The opinion about the extension request is not completed."
 msgstr ""
 
-#, python-brace-format
-msgid ""
-"The option {index} must have an identifier and a translation for each "
-"required language."
-msgstr ""
-
 msgid "The person has not been found."
 msgstr ""
 

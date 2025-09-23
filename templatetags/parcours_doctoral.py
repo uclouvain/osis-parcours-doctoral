@@ -40,10 +40,10 @@ from django_bootstrap5.renderers import FieldRenderer
 from osis_document_components.services import get_remote_metadata, get_remote_token
 from osis_document_components.enums import PostProcessingWanted
 
-from admission.utils import format_school_title, get_superior_institute_queryset
 from base.forms.utils.file_field import PDF_MIME_TYPE
 from base.models.entity_version import EntityVersion
 from base.models.organization import Organization
+from osis_profile.utils.utils import get_superior_institute_queryset, format_school_title
 from parcours_doctoral.auth.constants import READ_ACTIONS_BY_TAB, UPDATE_ACTIONS_BY_TAB
 from parcours_doctoral.constants import CAMPUSES_UUIDS
 from parcours_doctoral.ddd.domain.model.enums import (

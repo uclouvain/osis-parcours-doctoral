@@ -35,7 +35,6 @@ from django.utils.translation import pgettext_lazy
 from admission.ddd.admission.doctorat.preparation.domain.model.enums import (
     ChoixTypeAdmission,
 )
-from admission.forms import DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS
 from admission.models.enums.actor_type import ActorType
 from base.auth.roles.program_manager import ProgramManager
 from base.forms.utils import EMPTY_CHOICE, FIELD_REQUIRED_MESSAGE, autocomplete
@@ -48,6 +47,7 @@ from base.models.enums.entity_type import EntityType
 from base.models.person import Person
 from base.templatetags.pagination_bs5 import DEFAULT_PAGINATOR_SIZE, PAGINATOR_SIZE_LIST
 from education_group.templatetags.education_group_extra import format_to_academic_year
+from osis_profile.forms import DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS
 from parcours_doctoral.ddd.domain.model.enums import (
     STATUTS_ACTIFS,
     STATUTS_INACTIFS,
