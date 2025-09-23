@@ -71,7 +71,7 @@ class CotutelleForm(forms.Form):
         label=pgettext_lazy('parcours_doctoral', 'Institute'),
         required=False,
         widget=ListSelect2(
-            url='admission:autocomplete:superior-institute-uuid',
+            url='superior-institute-autocomplete-uuid',
             forward=[
                 forward.Field('institution_fwb', 'is_belgian'),
             ],

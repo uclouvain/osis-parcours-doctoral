@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -32,7 +32,6 @@ from django.contrib.postgres.forms import SimpleArrayField
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
-
 TRANSLATION_LANGUAGES = [settings.LANGUAGE_CODE_EN, settings.LANGUAGE_CODE_FR]
 
 
@@ -57,7 +56,6 @@ class TranslatedValueWidget(forms.MultiWidget):
 
 
 class TranslatedHiddenInput(forms.HiddenInput):
-
     def format_value(self, value):
         return json.dumps(value)
 
@@ -172,7 +170,8 @@ class IdentifiedTranslatedListsValueField(forms.Field):
             else:
                 errors.append(
                     ValidationError(
-                        _(f'The option {index} must have an identifier and a translation for each required language.')
+                        _('The option %(index)d must have an identifier and a translation for each required language.')
+                        % {'index': index}
                     )
                 )
 
