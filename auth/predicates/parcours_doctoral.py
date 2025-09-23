@@ -101,7 +101,6 @@ def complementary_training_enabled(self, user: User, obj: ParcoursDoctoral):
 
 @predicate(bind=True)
 @predicate_failed_msg(message=_("You must be a member of the doctoral commission to access this doctoral training"))
-@predicate_cache(cache_key_fn=lambda obj: getattr(obj, 'pk', None))
 def is_part_of_doctoral_commission(self, user: User, obj: ParcoursDoctoral):
     return (
         isinstance(obj, ParcoursDoctoral)
