@@ -37,7 +37,10 @@ from base.tests.factories.program_manager import ProgramManagerFactory
 from deliberation.models.enums.numero_session import Session
 from parcours_doctoral.ddd.formation.domain.model.enums import StatutActivite
 from parcours_doctoral.models import AssessmentEnrollment
-from parcours_doctoral.tests.factories.activity import UclCourseFactory
+from parcours_doctoral.tests.factories.activity import (
+    UclCourseFactory,
+    UclCourseWithClassFactory,
+)
 from parcours_doctoral.tests.factories.parcours_doctoral import ParcoursDoctoralFactory
 
 
@@ -57,6 +60,14 @@ class AssessmentEnrollmentCreateViewTestCase(TestCase):
             learning_unit_year__academic_year=cls.academic_years[1],
             parcours_doctoral=cls.doctorate,
             status=StatutActivite.ACCEPTEE.name,
+        )
+        cls.course_for_class = UclCourseWithClassFactory(
+            learning_class_year__learning_component_year__learning_unit_year__academic_year=cls.academic_years[1],
+            parcours_doctoral=cls.doctorate,
+            status=StatutActivite.ACCEPTEE.name,
+        )
+        cls.course_for_class_learning_unit_year = (
+            cls.course_for_class.learning_class_year.learning_component_year.learning_unit_year
         )
         cls.course_not_accepted = UclCourseFactory(
             learning_unit_year__academic_year=cls.academic_years[1],
@@ -96,13 +107,23 @@ class AssessmentEnrollmentCreateViewTestCase(TestCase):
         form = response.context['form']
 
         self.assertFalse(form.fields['course'].disabled)
-        self.assertEqual(len(form.fields['course'].choices), 2)
+        self.assertEqual(len(form.fields['course'].choices), 3)
         self.assertEqual(form.fields['course'].choices[0], EMPTY_CHOICE[0])
         self.assertEqual(
             form.fields['course'].choices[1],
             (
                 str(self.course.uuid),
                 f'{self.course.learning_unit_year.acronym} - {self.course.learning_unit_year.complete_title_i18n}',
+            ),
+        )
+        self.assertEqual(
+            form.fields['course'].choices[2],
+            (
+                str(self.course_for_class.uuid),
+                f'{self.course_for_class_learning_unit_year.acronym}-'
+                f'{self.course_for_class.learning_class_year.acronym} - '
+                f'{self.course_for_class_learning_unit_year.learning_container_year.common_title} - '
+                f'{self.course_for_class.learning_class_year.title_fr}',
             ),
         )
         self.assertFalse(form.fields['session'].disabled)

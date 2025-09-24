@@ -47,8 +47,7 @@
           <strong class="d-block">{% translate "Context" %}</strong>
           {{ activity.get_context_display }}
           <strong class="d-block">{% translate "Learning unit" context "parcours_doctoral" %}</strong>
-          {{ activity.learning_unit_year.complete_title_i18n }} -
-          {{ activity.learning_unit_year.academic_year }}
+          {% include "parcours_doctoral/details/training/description/ucl_course.html" %}
           {% if activity.ects %}
             <p>
               <strong class="d-block">{% translate "ECTS" %}</strong>

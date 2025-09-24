@@ -36,9 +36,13 @@ from base.tests.factories.entity_version import EntityVersionFactory
 from base.tests.factories.program_manager import ProgramManagerFactory
 from deliberation.models.enums.numero_session import Session
 from parcours_doctoral.ddd.formation.domain.model.enums import StatutActivite
-from parcours_doctoral.tests.factories.activity import UclCourseFactory
+from parcours_doctoral.tests.factories.activity import (
+    UclCourseFactory,
+    UclCourseWithClassFactory,
+)
 from parcours_doctoral.tests.factories.assessment_enrollment import (
     AssessmentEnrollmentFactory,
+    AssessmentEnrollmentForClassFactory,
 )
 from parcours_doctoral.tests.factories.parcours_doctoral import ParcoursDoctoralFactory
 
@@ -60,6 +64,14 @@ class AssessmentEnrollmentUpdateViewTestCase(TestCase):
             parcours_doctoral=cls.doctorate,
             status=StatutActivite.ACCEPTEE.name,
         )
+        cls.course_for_class = UclCourseWithClassFactory(
+            learning_class_year__learning_component_year__learning_unit_year__academic_year=cls.academic_years[1],
+            parcours_doctoral=cls.doctorate,
+            status=StatutActivite.ACCEPTEE.name,
+        )
+        cls.course_for_class_learning_unit_year = (
+            cls.course_for_class.learning_class_year.learning_component_year.learning_unit_year
+        )
         cls.not_accepted_course = UclCourseFactory(
             learning_unit_year__academic_year=cls.academic_years[1],
             parcours_doctoral=cls.doctorate,
@@ -72,6 +84,7 @@ class AssessmentEnrollmentUpdateViewTestCase(TestCase):
         )
 
         cls.assessment_enrollment = AssessmentEnrollmentFactory(course=cls.course)
+        cls.assessment_enrollment_for_class = AssessmentEnrollmentForClassFactory(course=cls.course)
         cls.other_year_assessment_enrollment = AssessmentEnrollmentFactory(course=cls.other_year_course)
 
         cls.manager = ProgramManagerFactory(education_group=cls.doctorate.training.education_group).person
@@ -81,6 +94,11 @@ class AssessmentEnrollmentUpdateViewTestCase(TestCase):
             'parcours_doctoral:assessment-enrollment:update',
             uuid=cls.doctorate.uuid,
             enrollment_uuid=cls.assessment_enrollment.uuid,
+        )
+        cls.class_url = resolve_url(
+            'parcours_doctoral:assessment-enrollment:update',
+            uuid=cls.doctorate.uuid,
+            enrollment_uuid=cls.assessment_enrollment_for_class.uuid,
         )
         cls.other_year_url = resolve_url(
             'parcours_doctoral:assessment-enrollment:update',
@@ -110,13 +128,23 @@ class AssessmentEnrollmentUpdateViewTestCase(TestCase):
         form = response.context['form']
 
         self.assertTrue(form.fields['course'].disabled)
-        self.assertEqual(len(form.fields['course'].choices), 2)
+        self.assertEqual(len(form.fields['course'].choices), 3)
         self.assertEqual(form.fields['course'].choices[0], EMPTY_CHOICE[0])
         self.assertEqual(
             form.fields['course'].choices[1],
             (
                 str(self.course.uuid),
                 f'{self.course.learning_unit_year.acronym} - {self.course.learning_unit_year.complete_title_i18n}',
+            ),
+        )
+        self.assertEqual(
+            form.fields['course'].choices[2],
+            (
+                str(self.course_for_class.uuid),
+                f'{self.course_for_class_learning_unit_year.acronym}-'
+                f'{self.course_for_class.learning_class_year.acronym} - '
+                f'{self.course_for_class_learning_unit_year.learning_container_year.common_title} - '
+                f'{self.course_for_class.learning_class_year.title_fr}',
             ),
         )
         self.assertFalse(form.fields['session'].disabled)

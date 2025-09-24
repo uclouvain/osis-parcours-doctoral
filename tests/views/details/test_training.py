@@ -37,10 +37,16 @@ from django.utils.translation import pgettext
 from osis_notification.models import WebNotification
 from rest_framework import status
 
+from base.forms.utils import FIELD_REQUIRED_MESSAGE
 from base.forms.utils.choice_field import BLANK_CHOICE_DISPLAY
 from base.tests.factories.academic_year import AcademicYearFactory
+from base.tests.factories.learning_unit_year import LearningUnitYearFactory
 from base.tests.factories.program_manager import ProgramManagerFactory
 from deliberation.models.enums.numero_session import Session
+from learning_unit.tests.factories.learning_class_year import (
+    LearningClassLecturingFactory,
+    LearningClassYearFactory,
+)
 from parcours_doctoral.ddd.formation.domain.model.enums import (
     CategorieActivite,
     ChoixComiteSelection,
@@ -105,10 +111,6 @@ class DoctorateTrainingActivityViewTestCase(TestCase):
             parcours_doctoral=cls.parcours_doctoral,
             learning_unit_year__academic_year__year=2022,
         )
-        cls.other_ucl_course = UclCourseFactory(
-            parcours_doctoral=cls.parcours_doctoral,
-            learning_unit_year__academic_year__year=2019,
-        )
 
         # A manager that can manage both parcours_doctorals
         manager_person = ProgramManagerFactory(education_group=cls.parcours_doctoral.training.education_group).person
@@ -122,10 +124,23 @@ class DoctorateTrainingActivityViewTestCase(TestCase):
         )
 
         cls.url = resolve_url(cls.namespace, uuid=cls.parcours_doctoral.uuid)
+        cls.complementary_url = resolve_url(
+            'parcours_doctoral:complementary-training',
+            uuid=cls.parcours_doctoral.uuid,
+        )
+        cls.course_enrollment_url = resolve_url(
+            'parcours_doctoral:course-enrollment',
+            uuid=cls.parcours_doctoral.uuid,
+        )
         cls.default_url_args = dict(uuid=cls.parcours_doctoral.uuid, activity_id=cls.conference.uuid)
 
     def setUp(self) -> None:
         self.client.force_login(self.manager)
+        self.other_ucl_course = UclCourseFactory(
+            parcours_doctoral=self.parcours_doctoral,
+            learning_unit_year__academic_year__year=2019,
+            context=ContexteFormation.COMPLEMENTARY_TRAINING.name,
+        )
 
     def test_view(self):
         response = self.client.get(self.url)
@@ -224,7 +239,162 @@ class DoctorateTrainingActivityViewTestCase(TestCase):
             self.assertEqual(response.status_code, status.HTTP_200_OK)
             self.assertEqual(len(response.context['form'].fields['context'].widget.choices), 1)
 
-    def test_complementary_training_course(self):
+    def test_doctoral_training_ucl_course_for_a_class(self):
+        academic_years = AcademicYearFactory.produce(base_year=2022, number_future=1)
+
+        self.client.force_login(self.manager)
+
+        learning_unit_year = LearningUnitYearFactory(academic_year=academic_years[1])
+        learning_class_year = LearningClassLecturingFactory(
+            learning_component_year__learning_unit_year=learning_unit_year,
+            acronym='W',
+        )
+        learning_class_year_bis = LearningClassLecturingFactory(
+            learning_component_year__learning_unit_year=learning_unit_year,
+            acronym='Z',
+        )
+
+        # On create
+        create_url = resolve_url(
+            'parcours_doctoral:course-enrollment:add',
+            uuid=self.parcours_doctoral.uuid,
+            category='ucl_course',
+        )
+
+        # No data
+        response = self.client.post(create_url, data={})
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        form = response.context['form']
+
+        self.assertIn(_('Please choose a correct learning unit.'), form.errors.get('course', []))
+        self.assertIn(_('Please choose a correct academic year.'), form.errors.get('academic_year', []))
+        self.assertIn(FIELD_REQUIRED_MESSAGE, form.errors.get('context', []))
+
+        # No learning unit for this year
+        target_year = learning_unit_year.academic_year.year + 1
+        response = self.client.post(
+            create_url,
+            data={
+                'course': learning_unit_year.acronym,
+                'academic_year': target_year,
+            },
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        form = response.context['form']
+
+        self.assertIn(
+            _('No element has been found for the academic year %(academic_year)s.')
+            % {
+                'academic_year': f'{target_year}-{target_year + 1}',
+            },
+            form.errors.get('course', []),
+        )
+
+        # No learning unit for this acronym
+        target_year = learning_unit_year.academic_year.year
+        response = self.client.post(
+            create_url,
+            data={
+                'course': 'UNKNOWN',
+                'academic_year': target_year,
+            },
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        form = response.context['form']
+
+        self.assertIn(
+            _('No element has been found for the academic year %(academic_year)s.')
+            % {
+                'academic_year': f'{target_year}-{target_year + 1}',
+            },
+            form.errors.get('course', []),
+        )
+
+        # A class exists for the learning unit
+        response = self.client.post(
+            create_url,
+            data={
+                'course': learning_unit_year.acronym,
+                'academic_year': target_year,
+            },
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        form = response.context['form']
+
+        self.assertIn(
+            _('At least one class exists for this learning unit. Please select it instead of the learning unit.'),
+            form.errors.get('course', []),
+        )
+
+        # Valid class
+        response = self.client.post(
+            create_url,
+            data={
+                'context': ContexteFormation.DOCTORAL_TRAINING.name,
+                'course': f'{learning_unit_year.acronym}-{learning_class_year.acronym}',
+                'academic_year': target_year,
+            },
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+
+        just_created_activity = Activity.objects.filter(
+            learning_class_year=learning_class_year,
+            context=ContexteFormation.DOCTORAL_TRAINING.name,
+            learning_unit_year=None,
+        ).first()
+
+        self.assertIsNotNone(just_created_activity)
+
+        # On update
+        update_url = resolve_url(
+            f'parcours_doctoral:course-enrollment:edit',
+            uuid=self.parcours_doctoral.uuid,
+            activity_id=just_created_activity.uuid,
+        )
+
+        valid_acronym = f'{learning_unit_year.acronym}-{learning_class_year_bis.acronym}'
+        response = self.client.post(
+            update_url,
+            {
+                'context': ContexteFormation.DOCTORAL_TRAINING.name,
+                'academic_year': target_year,
+                'course': valid_acronym,
+            },
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+
+        just_created_activity.refresh_from_db()
+
+        self.assertEqual(just_created_activity.learning_class_year, learning_class_year_bis)
+
+        # Check data in doctorat training listing after completion
+        just_created_activity.course_completed = True
+        just_created_activity.save()
+
+        response = self.client.get(self.url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        activity = next((a for a in response.context['activities'] if a == just_created_activity), None)
+        self.assertIsNotNone(activity)
+        self.assertEqual(activity.learning_year_acronym, valid_acronym)
+        self.assertEqual(activity.learning_year_academic_year, learning_unit_year.academic_year.year)
+        self.assertEqual(
+            activity.learning_year_title,
+            f'{learning_unit_year.learning_container_year.common_title} - {learning_class_year_bis.title_fr}',
+        )
+
+    def test_complementary_training_ucl_course(self):
         academic_years = AcademicYearFactory.produce(base_year=2022, number_future=1)
 
         self.client.force_login(self.manager)
@@ -276,12 +446,29 @@ class DoctorateTrainingActivityViewTestCase(TestCase):
         data = {
             'context': ContexteFormation.COMPLEMENTARY_TRAINING.name,
             'academic_year': self.other_ucl_course.learning_unit_year.academic_year.year,
-            'learning_unit_year': self.other_ucl_course.learning_unit_year.acronym,
+            'course': self.other_ucl_course.learning_unit_year.acronym,
         }
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
 
+        # Check data in course enrollment listing
+        self.other_ucl_course.refresh_from_db()
+        response = self.client.get(self.course_enrollment_url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        activity = next((a for a in response.context['activities'] if a == self.other_ucl_course), None)
+        self.assertIsNotNone(activity)
+        self.assertEqual(activity.learning_year_acronym, self.other_ucl_course.learning_unit_year.acronym)
+        self.assertEqual(
+            activity.learning_year_academic_year, self.other_ucl_course.learning_unit_year.academic_year.year
+        )
+        self.assertEqual(activity.learning_year_title, self.other_ucl_course.learning_unit_year.complete_title_i18n)
+
         # On update after completion
+        self.other_ucl_course.course_completed = True
+        self.other_ucl_course.save()
+
         url = resolve_url(
             f'parcours_doctoral:complementary-training:edit',
             uuid=self.parcours_doctoral.uuid,
@@ -296,6 +483,13 @@ class DoctorateTrainingActivityViewTestCase(TestCase):
         self.assertIsInstance(form, UclCompletedCourseForm)
         self.assertIsNone(form.final_assessment)
         self.assertIsNone(form['corrected_mark'].value())
+
+        activity = form.instance
+        self.assertEqual(activity.learning_year_acronym, self.other_ucl_course.learning_unit_year.acronym)
+        self.assertEqual(
+            activity.learning_year_academic_year, self.other_ucl_course.learning_unit_year.academic_year.year
+        )
+        self.assertEqual(activity.learning_year_title, self.other_ucl_course.learning_unit_year.complete_title_i18n)
 
         data = {
             'hour_volume': '1',
@@ -411,6 +605,21 @@ class DoctorateTrainingActivityViewTestCase(TestCase):
 
         september_assessment.refresh_from_db()
         self.assertEqual(september_assessment.corrected_mark, '18')
+
+        # Check data in complementary training listing
+        self.other_ucl_course.refresh_from_db()
+
+        response = self.client.get(self.complementary_url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        activity = next((a for a in response.context['activities'] if a == self.other_ucl_course), None)
+        self.assertIsNotNone(activity)
+        self.assertEqual(activity.learning_year_acronym, self.other_ucl_course.learning_unit_year.acronym)
+        self.assertEqual(
+            activity.learning_year_academic_year, self.other_ucl_course.learning_unit_year.academic_year.year
+        )
+        self.assertEqual(activity.learning_year_title, self.other_ucl_course.learning_unit_year.complete_title_i18n)
 
     def test_ucl_course(self):
         url = resolve_url(
