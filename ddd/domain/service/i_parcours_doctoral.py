@@ -26,12 +26,24 @@
 import datetime
 from typing import Optional
 
+from admission.ddd.admission.doctorat.preparation.domain.model.enums import (
+    ChoixTypeAdmission,
+)
 from admission.ddd.admission.doctorat.preparation.domain.model.proposition import (
     Proposition,
 )
 from osis_common.ddd import interface
+from parcours_doctoral.ddd.defense_privee.builder.defense_privee import (
+    DefensePriveeBuilder,
+)
+from parcours_doctoral.ddd.defense_privee.repository.i_defense_privee import (
+    IDefensePriveeRepository,
+)
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import (
     ParcoursDoctoralIdentity,
+)
+from parcours_doctoral.ddd.epreuve_confirmation.domain.service.epreuve_confirmation import (
+    EpreuveConfirmationService,
 )
 from parcours_doctoral.ddd.epreuve_confirmation.repository.i_epreuve_confirmation import (
     IEpreuveConfirmationRepository,
@@ -44,6 +56,27 @@ class IParcoursDoctoralService(interface.DomainService):
         cls,
         proposition: 'Proposition',
         epreuve_confirmation_repository: 'IEpreuveConfirmationRepository',
+        defense_privee_repository: 'IDefensePriveeRepository',
         date_reference_pour_date_limite_confirmation: Optional[datetime.date] = None,
     ) -> ParcoursDoctoralIdentity:
         raise NotImplementedError
+
+    @classmethod
+    def initier_etapes_doctorat(
+        cls,
+        parcours_doctoral_identity: ParcoursDoctoralIdentity,
+        proposition: 'Proposition',
+        epreuve_confirmation_repository: 'IEpreuveConfirmationRepository',
+        defense_privee_repository: 'IDefensePriveeRepository',
+        date_reference_pour_date_limite_confirmation: Optional[datetime.date] = None,
+    ):
+        if proposition.type_admission == ChoixTypeAdmission.ADMISSION:
+            epreuve_confirmation = EpreuveConfirmationService.initier(
+                parcours_doctoral_id=parcours_doctoral_identity,
+                date_reference_pour_date_limite=date_reference_pour_date_limite_confirmation,
+            )
+            epreuve_confirmation_repository.save(entity=epreuve_confirmation)
+            defense_privee = DefensePriveeBuilder.build_from_parcours_doctoral_id(
+                parcours_doctoral_id=parcours_doctoral_identity,
+            )
+            defense_privee_repository.save(defense_privee)

@@ -32,6 +32,7 @@ from admission.ddd.admission.doctorat.preparation.domain.model.enums import (
 )
 from osis_role.errors import predicate_failed_msg
 from parcours_doctoral.ddd.domain.model.enums import (
+    STATUTS_DOCTORAT_DEFENSE_PRIVEE_EN_COURS,
     STATUTS_DOCTORAT_EPREUVE_CONFIRMATION_EN_COURS,
     ChoixStatutParcoursDoctoral,
 )
@@ -84,9 +85,35 @@ def submitted_confirmation_paper(self, user: User, obj: ParcoursDoctoral):
 
 
 @predicate(bind=True)
+@predicate_failed_msg(
+    message=_("The doctorate must be in the status '%(status)s' to realize this action.")
+    % {
+        'status': ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_SOUMISE.value,
+    }
+)
+def private_defense_is_submitted(self, user: User, obj: ParcoursDoctoral):
+    return obj.status == ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_SOUMISE.name
+
+
+@predicate(bind=True)
+@predicate_failed_msg(
+    message=_("The doctorate must be in the status '%(status)s' to realize this action.")
+    % {'status': ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_AUTORISEE.value}
+)
+def private_defense_is_authorised(self, user: User, obj: ParcoursDoctoral):
+    return obj.status == ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_AUTORISEE.name
+
+
+@predicate(bind=True)
 @predicate_failed_msg(message=_("The confirmation paper is not in progress"))
 def confirmation_paper_in_progress(self, user: User, obj: ParcoursDoctoral):
     return obj.status in STATUTS_DOCTORAT_EPREUVE_CONFIRMATION_EN_COURS
+
+
+@predicate(bind=True)
+@predicate_failed_msg(message=_("The private defense is not in progress"))
+def private_defense_in_progress(self, user: User, obj: ParcoursDoctoral):
+    return obj.status in STATUTS_DOCTORAT_DEFENSE_PRIVEE_EN_COURS
 
 
 @predicate(bind=True)

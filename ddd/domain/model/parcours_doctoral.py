@@ -31,6 +31,11 @@ import attr
 
 from ddd.logic.reference.domain.model.bourse import BourseIdentity
 from osis_common.ddd import interface
+from parcours_doctoral.ddd.defense_privee.validators.validator_by_business_action import (
+    AutoriserDefensePriveeValidatorList,
+    DonnerDecisionDefensePriveeValidatorList,
+    InviterJuryDefensePriveeValidatorList,
+)
 from parcours_doctoral.ddd.domain.model._cotutelle import Cotutelle
 from parcours_doctoral.ddd.domain.model._experience_precedente_recherche import (
     ExperiencePrecedenteRecherche,
@@ -92,6 +97,7 @@ class ParcoursDoctoral(interface.RootEntity):
         ]
     ] = None
     justification: str = ''
+    titre_these_propose: str = ''
 
     def verrouiller_parcours_doctoral_pour_signature(self):
         self.statut = ChoixStatutParcoursDoctoral.EN_ATTENTE_DE_SIGNATURE
@@ -301,3 +307,46 @@ class ParcoursDoctoral(interface.RootEntity):
             convention=convention,
             autres_documents=autres_documents,
         )
+
+    def soumettre_defense_privee(self, titre_these: str):
+        self.statut = ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_SOUMISE
+        self.titre_these_propose = titre_these
+
+    def autoriser_defense_privee(self):
+        AutoriserDefensePriveeValidatorList(
+            statut_parcours_doctoral=self.statut,
+        ).validate()
+
+        self.statut = ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_AUTORISEE
+
+    def inviter_jury_defense_privee(self):
+        InviterJuryDefensePriveeValidatorList(
+            statut_parcours_doctoral=self.statut,
+        ).validate()
+
+    def confirmer_reussite_defense_privee(self, defense_privee: 'DefensePrivee'):
+        DonnerDecisionDefensePriveeValidatorList(
+            defense_privee=defense_privee,
+            statut_parcours_doctoral=self.statut,
+        ).validate()
+
+        self.statut = ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_REUSSIE
+
+    def confirmer_echec_defense_privee(self, defense_privee: 'DefensePrivee'):
+        DonnerDecisionDefensePriveeValidatorList(
+            defense_privee=defense_privee,
+            statut_parcours_doctoral=self.statut,
+        ).validate()
+
+        self.statut = ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_EN_ECHEC
+
+    def confirmer_repetition_defense_privee(self, defense_privee: 'DefensePrivee'):
+        DonnerDecisionDefensePriveeValidatorList(
+            defense_privee=defense_privee,
+            statut_parcours_doctoral=self.statut,
+        ).validate()
+
+        self.statut = ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_A_RECOMMENCER
+
+    def modifier_titre_these(self, titre_these):
+        self.titre_these_propose = titre_these

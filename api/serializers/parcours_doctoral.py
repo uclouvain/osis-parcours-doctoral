@@ -71,6 +71,11 @@ class ParcoursDoctoralDTOSerializer(DTOSerializer):
                 'update_jury_preparation',
                 'list_jury_members',
                 'create_jury_members',
+                # Private defense
+                'retrieve_private_defense',
+                'update_private_defense',
+                'retrieve_private_defense_minutes_canvas',
+                'submit_private_defense_minutes',
             ]
         }
     )
@@ -112,6 +117,9 @@ class ParcoursDoctoralRechercheDTOSerializer(DTOSerializer):
                     'update_jury_preparation',
                     'list_jury_members',
                     'create_jury_members',
+                    # Private defense
+                    'retrieve_private_defense',
+                    'update_private_defense',
                 ]
             },
         }

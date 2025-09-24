@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -23,10 +23,12 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from typing import List, Mapping, Optional, Union, Iterable
+from typing import Iterable, List, Mapping, Optional, Union
 
 from django import forms
 from django.utils.translation import gettext_lazy as _
+
+from base.forms.utils.datefield import DATE_FORMAT, TIME_FORMAT
 
 
 class SelectOrOtherWidget(forms.MultiWidget):
@@ -124,3 +126,31 @@ class SelectWithDisabledOptions(forms.Select):
             created_option['attrs']['disabled'] = 'disabled'
 
         return created_option
+
+
+class DoctorateDateTimeWidget(forms.SplitDateTimeWidget):
+    def __init__(self):
+        super().__init__(
+            date_format=DATE_FORMAT,
+            date_attrs={
+                'placeholder': _("dd/mm/yyyy"),
+                'data-mask': '00/00/0000',
+                'autocomplete': 'off',
+            },
+            time_format=TIME_FORMAT,
+            time_attrs={
+                'placeholder': _("hh:mm"),
+                'data-mask': '00:00',
+                'autocomplete': 'off',
+            },
+        )
+
+    class Media:
+        js = ('jquery.mask.min.js',)
+
+
+class DoctorateDateTimeField(forms.SplitDateTimeField):
+    widget = DoctorateDateTimeWidget
+
+    def __init__(self, **kwargs):
+        super().__init__(input_date_formats=[DATE_FORMAT], input_time_formats=[TIME_FORMAT], **kwargs)

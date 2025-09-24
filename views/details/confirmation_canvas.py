@@ -68,7 +68,6 @@ class ConfirmationCanvasExportView(LastConfirmationMixin, RedirectView):
         from osis_document_components.utils import get_file_url
 
         file_uuid = parcours_doctoral_pdf_confirmation_canvas(
-            parcours_doctoral=self.parcours_doctoral,
             language=self.parcours_doctoral.student.language,
             context=self.get_context_data(),
         )

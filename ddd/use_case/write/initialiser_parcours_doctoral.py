@@ -28,6 +28,9 @@ from admission.ddd.admission.doctorat.preparation.repository.i_proposition impor
 )
 from admission.ddd.admission.shared_kernel.domain.model.proposition import PropositionIdentity
 from parcours_doctoral.ddd.commands import InitialiserParcoursDoctoralCommand
+from parcours_doctoral.ddd.defense_privee.repository.i_defense_privee import (
+    IDefensePriveeRepository,
+)
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import (
     ParcoursDoctoralIdentity,
 )
@@ -46,6 +49,7 @@ def initialiser_parcours_doctoral(
     epreuve_confirmation_repository: 'IEpreuveConfirmationRepository',
     parcours_doctoral_service: 'IParcoursDoctoralService',
     historique: 'IHistorique',
+    defense_privee_repository: 'IDefensePriveeRepository',
 ) -> 'ParcoursDoctoralIdentity':
     proposition_id = PropositionIdentity(uuid=cmd.proposition_uuid)
 
@@ -55,6 +59,7 @@ def initialiser_parcours_doctoral(
     parcours_doctoral_entity_id = parcours_doctoral_service.initier(
         proposition=proposition,
         epreuve_confirmation_repository=epreuve_confirmation_repository,
+        defense_privee_repository=defense_privee_repository,
         date_reference_pour_date_limite_confirmation=proposition.approuvee_par_cdd_le,
     )
 

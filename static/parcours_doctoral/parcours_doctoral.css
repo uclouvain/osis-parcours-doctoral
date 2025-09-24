@@ -96,7 +96,7 @@ textarea {
   flex: 1;
 }
 
-.inline-field-data {
+.inline-field-data > dl {
   display: flex;
   flex-wrap: wrap;
   gap: 5px;

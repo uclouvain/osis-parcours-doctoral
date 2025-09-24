@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -24,11 +24,8 @@
 #
 # ##############################################################################
 import datetime
-from typing import Optional
+from typing import Optional, TypedDict
 
-from admission.utils import get_doctoral_cdd_managers
-from base.forms.utils.datefield import DATE_FORMAT
-from base.models.person import Person
 from django.conf import settings
 from django.utils.functional import Promise, lazy
 from django.utils.translation import get_language, override
@@ -36,7 +33,14 @@ from osis_async.models import AsyncTask
 from osis_notification.contrib.handlers import WebNotificationHandler
 from osis_notification.contrib.notification import WebNotification
 
-from parcours_doctoral.models import ParcoursDoctoral, ParcoursDoctoralSupervisionActor
+from admission.utils import get_doctoral_cdd_managers
+from base.forms.utils.datefield import DATE_FORMAT, DATETIME_FORMAT
+from base.models.person import Person
+from parcours_doctoral.models import (
+    JuryMember,
+    ParcoursDoctoral,
+    ParcoursDoctoralSupervisionActor,
+)
 from parcours_doctoral.models.task import ParcoursDoctoralTask
 
 
@@ -48,6 +52,11 @@ class NotificationMixin:
     def _format_date(cls, date: Optional[datetime.date]) -> str:
         """Format the date to be used in email notifications"""
         return datetime.date.strftime(date, DATE_FORMAT) if date else ''
+
+    @classmethod
+    def _format_datetime(cls, date_time: Optional[datetime.datetime]) -> str:
+        """Format the datetime to be used in email notifications"""
+        return datetime.date.strftime(date_time, DATETIME_FORMAT) if date_time else ''
 
     @classmethod
     def _get_supervision_actor_email_cc(cls, parcours_doctoral: ParcoursDoctoral):
@@ -103,3 +112,51 @@ class NotificationMixin:
             parcours_doctoral=parcours_doctoral,
             type=task_type.name,
         )
+
+    class JuryMemberInfo(TypedDict):
+        person: Optional[Person]
+        first_name: str
+        last_name: str
+        language: str
+        email: str
+
+    @classmethod
+    def get_jury_member_info(cls, jury_member: JuryMember) -> JuryMemberInfo:
+        """
+        From a jury member, return a dictionary containing the related person object, if any, the first name,
+        last name, language and email address.
+
+        :rtype: JuryMemberInfo
+        :param jury_member: The jury member to inspect
+        :return: The dictionary containing the info
+        """
+        info: cls.JuryMemberInfo = {
+            'person': None,
+            'first_name': '',
+            'last_name': '',
+            'language': '',
+            'email': '',
+        }
+
+        if jury_member.promoter_id:
+            if jury_member.promoter.person:
+                info['person'] = jury_member.promoter.person
+
+            info['first_name'] = jury_member.promoter.first_name
+            info['last_name'] = jury_member.promoter.last_name
+            info['email'] = jury_member.promoter.email
+            info['language'] = jury_member.promoter.language
+
+        elif jury_member.person_id:
+            info['person'] = jury_member.person
+            info['first_name'] = jury_member.person.first_name
+            info['last_name'] = jury_member.person.last_name
+            info['email'] = jury_member.person.email
+            info['language'] = jury_member.person.language
+
+        else:
+            info['first_name'] = jury_member.first_name
+            info['last_name'] = jury_member.last_name
+            info['email'] = jury_member.email
+
+        return info

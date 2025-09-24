@@ -515,6 +515,9 @@ msgstr "Attestation"
 msgid "Attestation of the communication"
 msgstr "Attestation de communication"
 
+msgid "Authorise the private defense"
+msgstr "Autoriser la défense privée"
+
 msgid "Authors"
 msgstr "Auteurs et autrices"
 
@@ -648,6 +651,9 @@ msgstr "Peut voir les informations relatives à l'épreuve de confirmation"
 
 msgid "Cancel"
 msgstr "Annuler"
+
+msgid "Canvas of the private defence minutes to download"
+msgstr "Canevas de procès-verbal de la défense privée à télécharger"
 
 msgid "Canvas of the report of the supervisory panel"
 msgstr "Canevas du procès-verbal du comité d'accompagnement"
@@ -902,6 +908,10 @@ msgctxt "confirmation paper"
 msgid "Created at"
 msgstr "Créée le"
 
+msgctxt "private defense"
+msgid "Created at"
+msgstr "Créée le"
+
 msgid "Current funding"
 msgstr "Financement actuel"
 
@@ -919,6 +929,21 @@ msgstr "Décision de recevabilité"
 
 msgid "DEFENSE_PRIVEE"
 msgstr "Défense privée"
+
+msgid "DEFENSE_PRIVEE_AUTORISEE"
+msgstr "Défense privée autorisée"
+
+msgid "DEFENSE_PRIVEE_A_RECOMMENCER"
+msgstr "Défense privée à recommencer"
+
+msgid "DEFENSE_PRIVEE_EN_ECHEC"
+msgstr "Défense privée en échec"
+
+msgid "DEFENSE_PRIVEE_REUSSIE"
+msgstr "Défense privée réussie"
+
+msgid "DEFENSE_PRIVEE_SOUMISE"
+msgstr "Défense privée soumise"
 
 msgid "DESINSCRITE"
 msgstr "Désinscrite"
@@ -939,8 +964,14 @@ msgstr "Date"
 msgid "Date - Filter #%s"
 msgstr "Date - Filtre #%s"
 
+msgid "Date of manuscript submission to the thesis exam board"
+msgstr "Date d'envoi du manuscrit au jury"
+
 msgid "Date of the confirmation paper (DD/MM/YYYY)"
 msgstr "Date de l'épreuve de confirmation (JJ/MM/AAAA)"
+
+msgid "Date of the private defense (DD/MM/YYYY)"
+msgstr "Date de la défense privée (JJ/MM/AAAA)"
 
 msgctxt "dashboard-indicator confirmation"
 msgid "Date postponement"
@@ -1125,6 +1156,9 @@ msgstr "Doctorat"
 msgid "Doctorate thesis field"
 msgstr "Domaine de la thèse de doctorat"
 
+msgid "Doctorate whose this private defense is the active one"
+msgstr "Doctorat dont cette défense privée est la courante"
+
 msgid "Document"
 msgstr "Document"
 
@@ -1284,6 +1318,9 @@ msgstr "FNRS, FRIA, FRESH, CSC"
 msgid "Failure of the confirmation paper"
 msgstr "Échec de l'épreuve de confirmation"
 
+msgid "Failure of the defense"
+msgstr "Défense en échec"
+
 msgid "Failure of the test"
 msgstr "Échec de l'épreuve"
 
@@ -1426,6 +1463,9 @@ msgid "Have you previously enrolled for a PhD?"
 msgstr ""
 "Avez-vous été inscrit antérieurement pour réaliser une thèse de doctorat ?"
 
+msgid "Here is an example message that will be sent to the jury members."
+msgstr "Voici l'exemple d'un message qui sera envoyé aux membres du jury."
+
 msgctxt "tab"
 msgid "History"
 msgstr "Historique"
@@ -1465,6 +1505,11 @@ msgid ""
 msgstr ""
 "Si connu, indiquez ici par exemple le nom du laboratoire, du service "
 "clinique, du centre de recherche, ... où sera réalisée la thèse à l'UCLouvain"
+
+msgid "If necessary, contact your administrator for practical arrangements."
+msgstr ""
+"Si nécessaire, prenez contact avec votre gestionnaire pour les modalités "
+"pratiques."
 
 msgid ""
 "If necessary, please finish inputting doctoral activities and complete the "
@@ -1588,6 +1633,9 @@ msgstr "Publication internationale"
 
 msgid "International scholarship"
 msgstr "Bourse internationale"
+
+msgid "Invite the members of the jury to the private defense"
+msgstr "Inviter les membres du jury à la défense privée"
 
 msgid "Is active"
 msgstr "Est active"
@@ -1844,6 +1892,13 @@ msgstr ""
 "épreuve de confirmation"
 
 msgid ""
+"Mail sent to the doctoral student to inform him of the defavourable opinion "
+"on the private defense"
+msgstr ""
+"E-Mail envoyé au doctorand pour l'informer de l'issue défavorable de sa "
+"défense privée"
+
+msgid ""
 "Mail sent to the doctoral student to inform him of the favourable opinion on "
 "the confirmation paper"
 msgstr ""
@@ -1851,11 +1906,35 @@ msgstr ""
 "épreuve de confirmation"
 
 msgid ""
+"Mail sent to the doctoral student to inform him of the favourable opinion on "
+"the private defense"
+msgstr ""
+"E-Mail envoyé au doctorand pour l'informer de l'issue favorable de sa "
+"défense privée"
+
+msgid ""
+"Mail sent to the doctoral student to inform him of the necessity to repeat "
+"the private defense"
+msgstr ""
+"E-Mail envoyé au doctorand pour l'informer de la nécessité de repasser sa "
+"défense privée"
+
+msgid ""
 "Mail sent to the doctoral student to inform him of the necessity to retake "
 "the confirmation paper"
 msgstr ""
 "E-Mail envoyé au doctorand pour l'informer de la nécessité de repasser son "
 "épreuve de confirmation"
+
+msgid ""
+"Mail sent to the doctoral student to inform of the authorisation of the "
+"private defense"
+msgstr ""
+"E-Mail envoyé au doctorand pour l'informer de l'autorisation de sa défense "
+"privée"
+
+msgid "Mail sent to the jury members to invite them to the private defense"
+msgstr "E-Mail envoyé aux membres du jury pour les inviter à la défense privée"
 
 msgid ""
 "Mail sent to the member of the supervision panel when deleted by the student"
@@ -2017,6 +2096,15 @@ msgstr "Pas encore invité à signer"
 
 msgid "Name"
 msgstr "Nom"
+
+msgid "Name in the language of the manifestation"
+msgstr "Nom dans la langue de la manifestation"
+
+msgid "Name of the management entity"
+msgstr "Nom de l'entité de gestion"
+
+msgid "Name of the manager sending the email"
+msgstr "Nom du gestionnaire qui envoie l'email"
 
 msgid "Name or brief description"
 msgstr "Nom ou description brève"
@@ -2233,11 +2321,22 @@ msgstr "Expérience de recherche doctorale"
 msgid "PhD training"
 msgstr "Formation doctorale"
 
+msgid "Place of the private defense"
+msgstr "Lieu de la défense privée"
+
 msgid "Plain text"
 msgstr "Texte brut"
 
 msgid "Planned duration"
 msgstr "Durée prévue"
+
+msgid ""
+"Please be sure that the date and time of the defence have been filled in and "
+"that the defence minutes have been submitted in the application."
+msgstr ""
+"Veuillez vous assurer que la date et heure de la défense ont bien été "
+"complétés et que le procès verbal de la défense a bien été déposé dans "
+"l'application."
 
 #, python-format
 msgid ""
@@ -2342,6 +2441,24 @@ msgstr "Epreuves de confirmation passées"
 msgid "Previous doctorate"
 msgstr "Doctorat précédent"
 
+msgid "Previous private defenses"
+msgstr "Défenses privées passées"
+
+msgid "Private defence date and time"
+msgstr "Date et heure de la défense privée"
+
+msgid "Private defence location"
+msgstr "Lieu de la défense privée"
+
+msgid "Private defence minutes"
+msgstr "Procès verbal de la défense privée"
+
+msgid "Private defence minutes canvas"
+msgstr "Canevas du procès verbal de la défense privée"
+
+msgid "Private defense"
+msgstr "Défense privée"
+
 msgctxt "dashboard-category"
 msgid "Private defense (formula 1)"
 msgstr "Défense privée (formule 1)"
@@ -2349,6 +2466,15 @@ msgstr "Défense privée (formule 1)"
 msgctxt "dashboard-category"
 msgid "Private defense / Public defense (formula 2)"
 msgstr "Défense privée / Soutenance (formule 2)"
+
+msgid "Private defense not activated."
+msgstr "Défense privée non activée."
+
+msgid "Private defense not completed."
+msgstr "Défense privée non complétée."
+
+msgid "Private defense not found."
+msgstr "Défense privée non trouvée."
 
 msgid "Professor"
 msgstr "Professeur"
@@ -2520,6 +2646,9 @@ msgstr "Retirer"
 msgctxt "jury member"
 msgid "Remove?"
 msgstr "Retirer ?"
+
+msgid "Repeat of the defense"
+msgstr "Défense à recommencer"
 
 msgid "Reporting categories"
 msgstr "Catégories de reporting"
@@ -2925,6 +3054,9 @@ msgctxt "dashboard-indicator formula-1-public-defense"
 msgid "Submitted public defense"
 msgstr "Soutenance soumise"
 
+msgid "Successful defense"
+msgstr "Défense réussie"
+
 msgid "Successful test"
 msgstr "Epreuve réussie"
 
@@ -2950,6 +3082,9 @@ msgstr "Promoteur·trice"
 
 msgid "Supervisor not found."
 msgstr "Promoteur non trouvé."
+
+msgid "Supervisors"
+msgstr "Promoteurs·trices"
 
 msgctxt "gender"
 msgid "Supervisors"
@@ -3111,11 +3246,20 @@ msgstr "Le doctorat n'a pas d'inscription valide"
 msgid "The doctorate is not initialized"
 msgstr "Le doctorat n'est pas initialisé"
 
+#, python-format
+msgid ""
+"The doctorate must be in the status '%(status)s' to realize this action."
+msgstr ""
+"Le doctorat doit être dans le statut '%(status)s' pour réaliser cette action."
+
 msgid "The enrollment has not been found"
 msgstr "L'évaluation n'a pas été trouvée"
 
 msgid "The export has failed"
 msgstr "L'export a échoué"
+
+msgid "The first name of the jury member"
+msgstr "Le prénom du membre du jury"
 
 msgid "The first name of the recipient"
 msgstr "Le prénom du destinataire"
@@ -3137,6 +3281,9 @@ msgstr ""
 msgid "The jury is not in progress"
 msgstr "Le jury n'est pas en cours"
 
+msgid "The last name of the jury member"
+msgstr "Le nom du membre du jury"
+
 msgid "The last name of the recipient"
 msgstr "Le nom du destinataire"
 
@@ -3146,6 +3293,12 @@ msgstr "Le nom du signataire"
 msgid "The last name of the student"
 msgstr "Le nom de l'étudiant"
 
+msgid "The link to the private defense minutes"
+msgstr "Le lien vers le procès verbal de la défense privée"
+
+msgid "The link to the thesis distribution authorisation page"
+msgstr "Le lien vers la page d'autorisation de diffusion de la thèse"
+
 msgid "The member is already in the jury."
 msgstr "Le membre est déjà dans le jury."
 
@@ -3154,6 +3307,15 @@ msgstr "Le membre n'est pas externe."
 
 msgid "The member was not found in the jury."
 msgstr "Le membre n'a pas été trouvé dans le jury."
+
+msgid "The members of the jury have been invited to the private defense."
+msgstr "Les membres du jury ont été invités à la défense privée."
+
+msgid ""
+"The minutes will be uploaded by the thesis exam board secretary or chair."
+msgstr ""
+"Le procès verbal sera téléversé par le·la secrétaire du jury ou le·la "
+"président·e du jury."
 
 #, python-format
 msgid ""
@@ -3182,6 +3344,19 @@ msgstr ""
 
 msgid "The person has not been found."
 msgstr "La personne n'a pas été trouvée."
+
+msgid ""
+"The private defence date is chosen collectively by the jury and in agreement "
+"with the PhD student"
+msgstr ""
+"La date de la défense privée est choisie collégialement par le jury, en "
+"accord avec le doctorant ou la doctorante."
+
+msgid "The private defense has been authorised."
+msgstr "La défense privée a été autorisée."
+
+msgid "The private defense is not in progress"
+msgstr "La défense privée n'est pas en cours"
 
 msgid "The public comment about the approval/refusal"
 msgstr "Le commentaire public de la décision"
@@ -3414,6 +3589,9 @@ msgid ""
 msgstr ""
 "À téléverser dans votre dossier sur la plateforme doctorale dans les plus "
 "brefs délais après l’épreuve de confirmation"
+
+msgid "To complete"
+msgstr "A compléter"
 
 msgid ""
 "To visualize and edit a document, please select it in the list opposite."
@@ -3709,6 +3887,9 @@ msgstr "jj/mm/aaaa"
 #, python-format
 msgid "from %(start)s to %(end)s"
 msgstr "du %(start)s au %(end)s"
+
+msgid "hh:mm"
+msgstr "hh:mm"
 
 msgid "hours"
 msgstr "heures"

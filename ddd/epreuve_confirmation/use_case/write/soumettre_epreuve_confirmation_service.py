@@ -60,6 +60,7 @@ def soumettre_epreuve_confirmation(
     )
 
     parcours_doctoral = parcours_doctoral_repository.get(epreuve_confirmation.parcours_doctoral_id)
+    statut_original_parcours_doctoral = parcours_doctoral.statut
 
     # WHEN
     epreuve_confirmation.modifier(
@@ -74,6 +75,10 @@ def soumettre_epreuve_confirmation(
     notification.notifier_soumission(epreuve_confirmation=epreuve_confirmation)
     parcours_doctoral_repository.save(parcours_doctoral)
     epreuve_confirmation_repository.save(epreuve_confirmation)
-    historique.historiser_soumission_epreuve_confirmation(parcours_doctoral, cmd.matricule_auteur)
+    historique.historiser_soumission_epreuve_confirmation(
+        parcours_doctoral=parcours_doctoral,
+        matricule_auteur=cmd.matricule_auteur,
+        statut_original_parcours_doctoral=statut_original_parcours_doctoral,
+    )
 
     return epreuve_confirmation.parcours_doctoral_id

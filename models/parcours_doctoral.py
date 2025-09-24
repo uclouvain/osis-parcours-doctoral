@@ -131,6 +131,15 @@ class ParcoursDoctoralQuerySet(models.QuerySet):
             )
         )
 
+    def annotate_training_management_entity_title(self):
+        return self.annotate(
+            management_entity_title=models.Subquery(
+                EntityVersion.objects.filter(entity_id=OuterRef("training__management_entity_id"))
+                .order_by('-start_date')
+                .values("title")[:1]
+            ),
+        )
+
     def annotate_last_status_update(self):
         return self.annotate(
             status_updated_at=Subquery(
