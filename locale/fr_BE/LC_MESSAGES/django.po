@@ -3172,6 +3172,14 @@ msgstr[1] ""
 msgid "The opinion about the extension request is not completed."
 msgstr "L'avis relatif à la demande d'une nouvelle échéance n'est pas complet."
 
+#, python-format
+msgid ""
+"The option %(index)d must have an identifier and a translation for each "
+"required language."
+msgstr ""
+"L'option %(index)d doit avoir un identifiant et une traduction pour chaque "
+"langue requise."
+
 msgid "The person has not been found."
 msgstr "La personne n'a pas été trouvée."
 
