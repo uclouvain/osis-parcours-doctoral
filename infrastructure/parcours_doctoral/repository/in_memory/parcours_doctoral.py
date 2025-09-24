@@ -234,6 +234,23 @@ class ParcoursDoctoralInMemoryRepository(InMemoryGenericRepository, IParcoursDoc
             ),
             cree_le=timezone.now(),
             commission_proximite='',
+            titre_these_propose=parcours_doctoral.titre_these_propose,
+            langue_soutenance_publique=(
+                parcours_doctoral.langue_soutenance_publique.name
+                if parcours_doctoral.langue_soutenance_publique
+                else ''
+            ),
+            autre_langue_soutenance_publique=parcours_doctoral.autre_langue_soutenance_publique,
+            date_heure_soutenance_publique=parcours_doctoral.date_heure_soutenance_publique,
+            lieu_soutenance_publique=parcours_doctoral.lieu_soutenance_publique,
+            local_deliberation=parcours_doctoral.local_deliberation,
+            informations_complementaires_soutenance_publique=(
+                parcours_doctoral.informations_complementaires_soutenance_publique
+            ),
+            resume_annonce=parcours_doctoral.resume_annonce,
+            photo_annonce=parcours_doctoral.photo_annonce,
+            proces_verbal_soutenance_publique=parcours_doctoral.proces_verbal_soutenance_publique,
+            date_retrait_diplome=parcours_doctoral.date_retrait_diplome,
         )
 
     @classmethod

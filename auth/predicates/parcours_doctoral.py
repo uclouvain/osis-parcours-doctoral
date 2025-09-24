@@ -35,6 +35,7 @@ from osis_role.errors import predicate_failed_msg
 from parcours_doctoral.ddd.domain.model.enums import (
     STATUTS_DOCTORAT_DEFENSE_PRIVEE_EN_COURS,
     STATUTS_DOCTORAT_EPREUVE_CONFIRMATION_EN_COURS,
+    STATUTS_DOCTORAT_SOUTENANCE_PUBLIQUE_EN_COURS,
     ChoixStatutParcoursDoctoral,
 )
 from parcours_doctoral.models import ActorType
@@ -118,6 +119,12 @@ def private_defense_in_progress(self, user: User, obj: ParcoursDoctoral):
 
 
 @predicate(bind=True)
+@predicate_failed_msg(message=_("The public defense is not in progress"))
+def public_defense_in_progress(self, user: User, obj: ParcoursDoctoral):
+    return obj.status in STATUTS_DOCTORAT_SOUTENANCE_PUBLIQUE_EN_COURS
+
+
+@predicate(bind=True)
 @predicate_failed_msg(message=_("Complementary training not enabled"))
 def complementary_training_enabled(self, user: User, obj: ParcoursDoctoral):
     return (
@@ -185,3 +192,12 @@ def is_part_of_education_group(self, user: User, obj: ParcoursDoctoral):
         setattr(user, cache_key, self.context['role_qs'].get_education_groups_affected())
 
     return obj.training.education_group_id in getattr(user, cache_key)
+
+
+@predicate(bind=True)
+@predicate_failed_msg(
+    message=_("The doctorate must be in the status '%(status)s' to realize this action.")
+    % {'status': ChoixStatutParcoursDoctoral.SOUTENANCE_PUBLIQUE_SOUMISE.value}
+)
+def public_defense_is_submitted(self, user: User, obj: ParcoursDoctoral):
+    return obj.status == ChoixStatutParcoursDoctoral.SOUTENANCE_PUBLIQUE_SOUMISE.name

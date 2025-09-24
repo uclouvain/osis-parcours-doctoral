@@ -32,6 +32,9 @@ from .parcours_doctoral.epreuve_confirmation import (
 )
 from .parcours_doctoral.formation import handlers as formation_handlers
 from .parcours_doctoral.jury import handlers as jury_handlers
+from .parcours_doctoral.soutenance_publique import (
+    handlers as soutenance_publique_handlers,
+)
 
 
 class MessageBusCommands(AbstractMessageBusCommands):
@@ -41,6 +44,7 @@ class MessageBusCommands(AbstractMessageBusCommands):
         **formation_handlers.COMMAND_HANDLERS,
         **jury_handlers.COMMAND_HANDLERS,
         **defense_privee_handlers.COMMAND_HANDLERS,
+        **soutenance_publique_handlers.COMMAND_HANDLERS,
     }
     event_handlers = [
         parcours_doctoral_handlers.EVENT_HANDLERS,

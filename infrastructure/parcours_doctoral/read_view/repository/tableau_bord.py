@@ -97,10 +97,12 @@ class TableauBordRepository(TableauBordRepositoryAdmissionMixin, ITableauBordRep
             status=ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_SOUMISE.name,
             current_private_defense__minutes__len__gt=0,
         ),
+        IndicateurTableauBordEnum.FORMULE_1_SOUTENANCE_PUBLIQUE_SOUMISE.name: Q(
+            status=ChoixStatutParcoursDoctoral.SOUTENANCE_PUBLIQUE_SOUMISE.name,
+        ),
         # IndicateurTableauBordEnum.AUTORISATION_DIFFUSION_THESE_ECHEANCE_15_JOURS.name: Q(),
         # IndicateurTableauBordEnum.AUTORISATION_DIFFUSION_THESE_REJET_ADRE.name: Q(),
         # IndicateurTableauBordEnum.AUTORISATION_DIFFUSION_THESE_REJET_SCEB.name: Q(),
-        # IndicateurTableauBordEnum.SOUTENANCE_PUBLIQUE_SOUMISE.name: Q(),
         # IndicateurTableauBordEnum.SOUTENANCE_PUBLIQUE_PV_TELEVERSE.name: Q(),
     }
 
