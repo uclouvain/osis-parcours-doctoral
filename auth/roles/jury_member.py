@@ -66,5 +66,8 @@ class JuryMember(RoleModel):
             'parcours_doctoral.api_view_private_defense_minutes': is_president_or_secretary_of_jury,
             'parcours_doctoral.api_upload_private_defense_minutes': is_president_or_secretary_of_jury
             & private_defense_is_authorised,
+            # Public defense
+            'parcours_doctoral.api_view_public_defense': is_president_or_secretary_of_jury,
+            'parcours_doctoral.api_view_public_defense_minutes': is_president_or_secretary_of_jury,
         }
         return RuleSet(ruleset)

@@ -133,6 +133,7 @@ class ParcoursDoctoralDTO(interface.DTO):
 
     titre_these_propose: str
     langue_soutenance_publique: str
+    nom_langue_soutenance_publique: str
     date_heure_soutenance_publique: Optional[datetime.datetime]
     lieu_soutenance_publique: str
     local_deliberation: str

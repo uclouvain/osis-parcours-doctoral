@@ -170,7 +170,7 @@ class PublicDefenseAPIViewTestCase(MockOsisDocumentMixin, APITestCase):
 
         # Newer submission with minimal data
         new_data = {
-            'langue': self.language.iso_code,
+            'langue': self.language.code,
             'date_heure': datetime.datetime(2023, 1, 2, 11, 30),
             'lieu': '',
             'local_deliberation': '',

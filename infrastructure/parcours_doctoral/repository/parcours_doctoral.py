@@ -190,7 +190,9 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
                 commentaire=parcours_doctoral.financing_comment,
             ),
             # Public defense
-            langue_soutenance_publique=parcours_doctoral.defense_language.code,
+            langue_soutenance_publique=(
+                parcours_doctoral.defense_language.code if parcours_doctoral.defense_language else ''
+            ),
             date_heure_soutenance_publique=parcours_doctoral.defense_datetime,
             lieu_soutenance_publique=parcours_doctoral.defense_place,
             local_deliberation=parcours_doctoral.defense_deliberation_room,
@@ -454,14 +456,11 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
             ),
             # Public defense
             titre_these_propose=parcours_doctoral.thesis_proposed_title,
-            langue_redaction_these=(
+            langue_soutenance_publique=(
                 parcours_doctoral.defense_language.code if parcours_doctoral.defense_language else ''
             ),
-            nom_langue_redaction_these=(
-                getattr(
-                    parcours_doctoral.defense_language,
-                    i18n_fields_names['language_name']
-                )
+            nom_langue_soutenance_publique=(
+                getattr(parcours_doctoral.defense_language, i18n_fields_names['language_name'])
                 if parcours_doctoral.defense_language
                 else ''
             ),

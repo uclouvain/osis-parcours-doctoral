@@ -28,6 +28,8 @@ import itertools
 from django.conf import settings
 from django.contrib import admin
 from django.db import models
+from django.forms import ModelForm, BooleanField
+from django.forms.widgets import HiddenInput
 from django.shortcuts import resolve_url
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
@@ -235,7 +237,9 @@ class CddMailTemplateAdmin(MailTemplateAdmin):
         return resolve_url(f'parcours_doctoral:config:cdd-mail-template:preview', identifier=obj.identifier, pk=obj.pk)
 
 
-@admin.register(AdreManager, AdreSecretary, JurySecretary, DoctorateReader, Student, JuryMember, SectorAdministrativeDirector)
+@admin.register(
+    AdreManager, AdreSecretary, JurySecretary, DoctorateReader, Student, JuryMember, SectorAdministrativeDirector
+)
 class HijackRoleModelAdmin(HijackUserAdminMixin, RoleModelAdmin):
     list_select_related = ['person__user']
 
@@ -385,8 +389,37 @@ class ConfirmationPaperAdmin(ReadOnlyFilesMixin, admin.ModelAdmin):
         return obj.parcours_doctoral.reference
 
 
+class PrivateDefenseAdminForm(ModelForm):
+    is_active = BooleanField(
+        label=_('Is active'),
+        required=False,
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields['is_active'].initial = (
+            self.instance.current_parcours_doctoral_id == self.instance.parcours_doctoral_id
+        )
+
+    class Meta:
+        model = PrivateDefense
+        exclude = ['current_parcours_doctoral']
+
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+
+        instance.current_parcours_doctoral = instance.parcours_doctoral if self.cleaned_data['is_active'] else None
+
+        if commit:
+            instance.save()
+
+        return instance
+
+
 @admin.register(PrivateDefense)
 class PrivateDefenseAdmin(ReadOnlyFilesMixin, admin.ModelAdmin):
+    form = PrivateDefenseAdminForm
     list_display = [
         'parcours_doctoral_reference',
         'is_active',
