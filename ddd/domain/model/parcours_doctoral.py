@@ -412,7 +412,7 @@ class ParcoursDoctoral(interface.RootEntity):
             statut_parcours_doctoral=self.statut,
         ).validate()
 
-        self.langue_soutenance_publique = ChoixLangueDefense[langue]
+        self.langue_soutenance_publique = langue
         self.date_heure_soutenance_publique = date_heure
         self.lieu_soutenance_publique = lieu
         self.local_deliberation = local_deliberation

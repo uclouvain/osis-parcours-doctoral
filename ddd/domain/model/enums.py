@@ -179,13 +179,27 @@ STATUTS_PAR_ETAPE_PARCOURS_DOCTORAL = {
         ChoixStatutParcoursDoctoral.JURY_REFUSE_ADRE,
     ],
     ChoixEtapeParcoursDoctoral.DECISION_DE_RECEVABILITE: [],
-    ChoixEtapeParcoursDoctoral.DEFENSE_PRIVEE: [],
-    ChoixEtapeParcoursDoctoral.SOUTENANCE_PUBLIQUE: [],
+    ChoixEtapeParcoursDoctoral.DEFENSE_PRIVEE: [
+        ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_SOUMISE,
+        ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_AUTORISEE,
+        ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_REUSSIE,
+        ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_A_RECOMMENCER,
+        ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_EN_ECHEC,
+    ],
+    ChoixEtapeParcoursDoctoral.SOUTENANCE_PUBLIQUE: [
+        ChoixStatutParcoursDoctoral.SOUTENANCE_PUBLIQUE_SOUMISE,
+        ChoixStatutParcoursDoctoral.SOUTENANCE_PUBLIQUE_AUTORISEE,
+        ChoixStatutParcoursDoctoral.PROCLAME,
+    ],
     ChoixEtapeParcoursDoctoral.ABANDON_ECHEC: [
         ChoixStatutParcoursDoctoral.ABANDON,
     ],
 }
 
-STATUTS_INACTIFS = {ChoixStatutParcoursDoctoral.ABANDON.name}
+STATUTS_INACTIFS = {
+    ChoixStatutParcoursDoctoral.NON_AUTORISE_A_POURSUIVRE.name,
+    ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_EN_ECHEC.name,
+    ChoixStatutParcoursDoctoral.ABANDON.name,
+}
 
 STATUTS_ACTIFS = {choix.name for choix in ChoixStatutParcoursDoctoral if choix.name not in STATUTS_INACTIFS}
