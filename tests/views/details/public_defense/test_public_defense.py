@@ -39,6 +39,7 @@ from parcours_doctoral.ddd.domain.model.enums import ChoixLangueDefense
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import ENTITY_CDE
 from parcours_doctoral.tests.factories.parcours_doctoral import ParcoursDoctoralFactory
 from parcours_doctoral.tests.mixins import MockOsisDocumentMixin
+from reference.tests.factories.language import LanguageFactory
 
 
 @override_settings(OSIS_DOCUMENT_BASE_URL='http://dummyurl')
@@ -63,7 +64,7 @@ class PublicDefenseDetailViewTestCase(MockOsisDocumentMixin, TestCase):
         self.doctorate = ParcoursDoctoralFactory(
             training=self.training,
             student=self.student,
-            defense_language=ChoixLangueDefense.FRENCH.name,
+            defense_language=LanguageFactory(),
             defense_datetime=datetime.datetime(2025, 1, 5, 11, 30),
             defense_place='Louvain-La-Neuve',
             defense_deliberation_room='D1',
@@ -88,8 +89,8 @@ class PublicDefenseDetailViewTestCase(MockOsisDocumentMixin, TestCase):
 
         self.doctorate.refresh_from_db()
 
-        self.assertEqual(doctorate.langue_soutenance_publique, self.doctorate.defense_language)
-        self.assertEqual(doctorate.autre_langue_soutenance_publique, self.doctorate.other_defense_language)
+        self.assertEqual(doctorate.langue_soutenance_publique, self.doctorate.defense_language.code)
+        self.assertEqual(doctorate.nom_langue_soutenance_publique, self.doctorate.defense_language.name)
         self.assertEqual(doctorate.date_heure_soutenance_publique, self.doctorate.defense_datetime)
         self.assertEqual(doctorate.lieu_soutenance_publique, self.doctorate.defense_place)
         self.assertEqual(doctorate.local_deliberation, self.doctorate.defense_deliberation_room)

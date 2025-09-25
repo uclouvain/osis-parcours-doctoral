@@ -115,7 +115,6 @@
           {{ jury_member.nom }} {{ jury_member.prenom }}
           {% if not jury_member.membre_ucl %}
             {% if jury_member.institution %}- {{ jury_member.institution }}{% endif %}
-            {% if jury_member.ville %} - {{ jury_member.ville }}{% endif %}
             {% if jury_member.pays %} - {{ jury_member.pays }}{% endif %}
           {% endif %}
           {% if jury_member.role != 'MEMBRE' %}

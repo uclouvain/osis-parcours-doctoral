@@ -23,24 +23,28 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from drf_spectacular.utils import extend_schema
+from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework import status
-from rest_framework.generics import GenericAPIView, RetrieveAPIView, UpdateAPIView
-from rest_framework.mixins import RetrieveModelMixin, UpdateModelMixin
+from rest_framework.generics import RetrieveAPIView
 from rest_framework.response import Response
 
 from infrastructure.messages_bus import message_bus_instance
 from parcours_doctoral.api.permissions import DoctorateAPIPermissionRequiredMixin
 from parcours_doctoral.api.serializers import ParcoursDoctoralIdentityDTOSerializer
 from parcours_doctoral.api.serializers.public_defense import (
+    PublicDefenseMinutesCanvasSerializer,
     SubmitPublicDefenseSerializer,
 )
 from parcours_doctoral.ddd.soutenance_publique.commands import (
     SoumettreSoutenancePubliqueCommand,
 )
+from parcours_doctoral.exports.public_defense_minutes_canvas import (
+    public_defense_minutes_canvas_url,
+)
 
 __all__ = [
     "PublicDefenseAPIView",
+    "PublicDefenseMinutesAPIView",
 ]
 
 
@@ -64,7 +68,7 @@ class PublicDefenseAPIView(DoctorateAPIPermissionRequiredMixin, RetrieveAPIView)
         operation_id='submit_public_defense',
     )
     def put(self, request, *args, **kwargs):
-        """Submit a private defense"""
+        """Submit a public defense"""
         serializer = SubmitPublicDefenseSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
@@ -79,3 +83,28 @@ class PublicDefenseAPIView(DoctorateAPIPermissionRequiredMixin, RetrieveAPIView)
         serializer = ParcoursDoctoralIdentityDTOSerializer(instance=result)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@extend_schema_view(
+    get=extend_schema(
+        responses=PublicDefenseMinutesCanvasSerializer,
+        operation_id='retrieve_public_defense_minutes_canvas',
+    ),
+)
+class PublicDefenseMinutesAPIView(DoctorateAPIPermissionRequiredMixin, RetrieveAPIView):
+    name = "public-defense-minutes"
+    filter_backends = []
+    permission_mapping = {
+        'GET': 'parcours_doctoral.api_view_public_defense_minutes',
+    }
+    serializer_class = PublicDefenseMinutesCanvasSerializer
+
+    def get_object(self):
+        doctorate = self.get_permission_object()
+
+        url = public_defense_minutes_canvas_url(
+            doctorate_uuid=self.doctorate_uuid,
+            language=doctorate.student.language,
+        )
+
+        return {'url': url}

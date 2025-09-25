@@ -67,7 +67,6 @@ class TestSoumettreSoutenancePublique(SimpleTestCase):
             'uuid_parcours_doctoral': self.parcours_doctoral.entity_id.uuid,
             'matricule_auteur': '1234',
             'langue': ChoixLangueDefense.FRENCH.name,
-            'autre_langue': 'Japonais',
             'date_heure': datetime.datetime(2025, 1, 5, 11, 30),
             'lieu': 'UCLouvain',
             'local_deliberation': 'D1',

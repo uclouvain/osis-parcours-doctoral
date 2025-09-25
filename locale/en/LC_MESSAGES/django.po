@@ -413,6 +413,9 @@ msgid ""
 "(Format 2)"
 msgstr ""
 
+msgid "Appendice:"
+msgstr ""
+
 msgid "Appendices:"
 msgstr ""
 
@@ -1597,10 +1600,10 @@ msgstr ""
 msgid "Invite the members of the jury to the private defense"
 msgstr ""
 
-msgid "Is a promoter"
+msgid "Invite the members of the jury to the public defense"
 msgstr ""
 
-msgid "Invite the members of the jury to the public defense"
+msgid "Is a promoter"
 msgstr ""
 
 msgid "Is active"
@@ -2136,6 +2139,12 @@ msgid "Not in order of registration"
 msgstr ""
 
 msgid ""
+"Note: if necessary, an absent person shall send the chair a written report "
+"prior to the meeting, setting out their reasoned opinion on the value of the "
+"thesis and a list of questions they wish to ask the student."
+msgstr ""
+
+msgid ""
 "Note: in cases of force majeure, an absent member shall send the chair a "
 "written report prior to the meeting, setting out their reasoned opinion on "
 "the value of the thesis and a list of questions they wish to ask the student."
@@ -2208,9 +2217,6 @@ msgstr ""
 msgid "Other cotutelle-related documents"
 msgstr ""
 
-msgid "Other defense language"
-msgstr ""
-
 msgid "Other documents relating to joint supervision"
 msgstr ""
 
@@ -2249,7 +2255,7 @@ msgid "PRIVATE_DEFENSE"
 msgstr "Private defence"
 
 msgid "PROCLAME"
-msgstr ""
+msgstr "Proclaimed"
 
 msgctxt "CategorieActivite"
 msgid "PUBLICATION"
@@ -3604,6 +3610,9 @@ msgid ""
 "your PhD Field Committee (CDD))."
 msgstr ""
 
+msgid "To be signed by the exam board"
+msgstr ""
+
 msgid "To be submitted to the CDD administrator"
 msgstr ""
 
@@ -3912,6 +3921,13 @@ msgid ""
 "<br> and having deliberated it, declare the thesis is:"
 msgstr ""
 
+#, python-format
+msgid ""
+"having attended the student's %(public_defense_date)s oral presentation of "
+"the results of their research work that led to the thesis entitled: "
+"<strong>%(thesis_title)s</strong>;"
+msgstr ""
+
 msgid "hh:mm"
 msgstr ""
 
@@ -3932,6 +3948,16 @@ msgid ""
 "may have been absent due to force majeure."
 msgstr ""
 
+msgid ""
+"the 120 credits (writing of a thesis) required for the granting of the PhD "
+"academic degree have been acquired by the person concerned;"
+msgstr ""
+
+msgid ""
+"the 60 credits of \"doctoral training\" (decree of 7 November 2013) have "
+"been acquired by the person concerned;"
+msgstr ""
+
 msgid "the <strong>failure</strong> of the confirmation paper."
 msgstr ""
 
@@ -3941,11 +3967,28 @@ msgstr ""
 msgid "the <strong>successful completion</strong> of the confirmation paper."
 msgstr ""
 
+msgid ""
+"the conditions for admission to the programme have been met and the "
+"candidate has been duly enrolled;"
+msgstr ""
+
+msgid "the conditions of the study programme have been satisfied;"
+msgstr ""
+
+msgid "the credits for additional training have been obtained;"
+msgstr ""
+
 msgid "to"
 msgstr ""
 
 msgid "ucl"
 msgstr "UCLouvain"
+
+msgid ""
+"we hereby certify the successful completion of the doctoral programme and "
+"validate the obtaining of the minimum of 180 credits required for the "
+"granting of the PhD academic degree."
+msgstr ""
 
 #, python-brace-format
 msgid "{items} types out of {total}"

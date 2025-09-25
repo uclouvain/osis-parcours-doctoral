@@ -59,6 +59,8 @@ class ListeParcoursDoctorauxRepository(IListeParcoursDoctorauxRepository):
     DATE_FIELD_BY_DATE_TYPE = {
         ChoixEtapeParcoursDoctoral.ADMISSION.name: 'admission__approved_by_cdd_at__date',
         ChoixEtapeParcoursDoctoral.CONFIRMATION.name: 'confirmationpaper__confirmation_date',
+        ChoixEtapeParcoursDoctoral.DEFENSE_PRIVEE.name: 'current_private_defense__datetime__date',
+        ChoixEtapeParcoursDoctoral.SOUTENANCE_PUBLIQUE.name: 'defense_datetime__date',
     }
     ADDITIONAL_DATE_CONDITION_BY_DATE_TYPE = {
         ChoixEtapeParcoursDoctoral.CONFIRMATION.name: {
