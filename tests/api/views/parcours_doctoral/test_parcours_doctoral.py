@@ -108,7 +108,7 @@ class ParcoursDoctoralAPIViewTestCase(CheckActionLinksMixin, APITestCase):
             is_fnrs_fria_fresh_csc_linked=True,
             financing_comment='Funding comment',
             # Defense information
-            defense_language=ChoixLangueDefense.FRENCH.name,
+            defense_language=LanguageFactory(),
             defense_datetime=datetime.datetime(2025, 1, 5, 11, 30),
             defense_place='Louvain-La-Neuve',
             defense_deliberation_room='D1',
@@ -228,6 +228,7 @@ class ParcoursDoctoralAPIViewTestCase(CheckActionLinksMixin, APITestCase):
                 'retrieve_private_defense_minutes_canvas',
                 'submit_private_defense_minutes',
                 'update_public_defense',
+                'retrieve_public_defense_minutes_canvas',
             ],
         )
 

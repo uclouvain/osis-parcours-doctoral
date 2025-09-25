@@ -85,5 +85,8 @@ class Promoter(AdmissionPromoter):
             'parcours_doctoral.api_view_private_defense_minutes': is_parcours_doctoral_promoter,
             'parcours_doctoral.api_upload_private_defense_minutes': is_parcours_doctoral_promoter
             & private_defense_is_authorised,
+            # Public defense
+            'parcours_doctoral.api_view_public_defense': is_parcours_doctoral_promoter,
+            'parcours_doctoral.api_view_public_defense_minutes': is_parcours_doctoral_promoter,
         }
         return RuleSet(rules)

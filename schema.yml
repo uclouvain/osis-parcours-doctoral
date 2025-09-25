@@ -1551,7 +1551,7 @@ paths:
   /doctorate/{uuid}/public-defense:
     put:
       operationId: submit_public_defense
-      description: Submit a private defense
+      description: Submit a public defense
       parameters:
       - in: path
         name: uuid
@@ -1581,6 +1581,39 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ParcoursDoctoralIdentityDTO'
+          description: ''
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /doctorate/{uuid}/public-defense/minutes:
+    get:
+      operationId: retrieve_public_defense_minutes_canvas
+      parameters:
+      - in: path
+        name: uuid
+        schema:
+          type: string
+          format: uuid
+        required: true
+      - $ref: '#/components/parameters/Accept-Language'
+      - $ref: '#/components/parameters/X-User-FirstName'
+      - $ref: '#/components/parameters/X-User-LastName'
+      - $ref: '#/components/parameters/X-User-Email'
+      - $ref: '#/components/parameters/X-User-GlobalID'
+      tags:
+      - doctorate
+      security:
+      - tokenAuth: []
+      - Token: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicDefenseMinutesCanvas'
           description: ''
         '400':
           $ref: '#/components/responses/BadRequest'
@@ -3834,6 +3867,8 @@ components:
           type: string
         langue_soutenance_publique:
           type: string
+        nom_langue_soutenance_publique:
+          type: string
         date_heure_soutenance_publique:
           type: string
           format: date-time
@@ -3921,6 +3956,8 @@ components:
               $ref: '#/components/schemas/ActionLink'
             update_public_defense:
               $ref: '#/components/schemas/ActionLink'
+            retrieve_public_defense_minutes_canvas:
+              $ref: '#/components/schemas/ActionLink'
           readOnly: true
           default: {}
       required:
@@ -3940,6 +3977,7 @@ components:
       - local_deliberation
       - matricule_doctorant
       - nom_doctorant
+      - nom_langue_soutenance_publique
       - noma_doctorant
       - pays_naissance_doctorant
       - photo_annonce
@@ -4247,6 +4285,14 @@ components:
       - prenom
       - uuid
       - ville
+    PublicDefenseMinutesCanvas:
+      type: object
+      description: Contains the public defense minutes canvas url.
+      properties:
+        url:
+          type: string
+          format: uri
+          readOnly: true
     Publication:
       type: object
       description: |-

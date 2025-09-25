@@ -482,6 +482,9 @@ msgstr ""
 "Date ou période envisagée de la défense privée (formule 1) ou de la "
 "recevabilité (formule 2)"
 
+msgid "Appendice:"
+msgstr "Annexe :"
+
 msgid "Appendices:"
 msgstr "Annexes :"
 
@@ -1728,11 +1731,11 @@ msgstr "Bourse internationale"
 msgid "Invite the members of the jury to the private defense"
 msgstr "Inviter les membres du jury à la défense privée"
 
-msgid "Is a promoter"
-msgstr "Est Promoteur·trice"
-
 msgid "Invite the members of the jury to the public defense"
 msgstr "Inviter les membres du jury à la soutenance publique"
+
+msgid "Is a promoter"
+msgstr "Est Promoteur·trice"
 
 msgid "Is active"
 msgstr "Est active"
@@ -2349,6 +2352,16 @@ msgid "Not in order of registration"
 msgstr "Pas en ordre d'inscription"
 
 msgid ""
+"Note: if necessary, an absent person shall send the chair a written report "
+"prior to the meeting, setting out their reasoned opinion on the value of the "
+"thesis and a list of questions they wish to ask the student."
+msgstr ""
+"Remarque : le cas échéant, une personne absente fait parvenir au président "
+"ou à la présidente, avant la séance, un rapport écrit avec son avis motivé "
+"sur la valeur de la thèse et l'inventaire des questions qu'elle souhaite "
+"poser au candidat ou à la candidate."
+
+msgid ""
 "Note: in cases of force majeure, an absent member shall send the chair a "
 "written report prior to the meeting, setting out their reasoned opinion on "
 "the value of the thesis and a list of questions they wish to ask the student."
@@ -2430,9 +2443,6 @@ msgstr "Autre"
 
 msgid "Other cotutelle-related documents"
 msgstr "Autres documents relatifs à la cotutelle"
-
-msgid "Other defense language"
-msgstr "Autre langue de la soutenance"
 
 msgid "Other documents relating to joint supervision"
 msgstr "Autres documents relatifs à la cotutelle"
@@ -3617,18 +3627,6 @@ msgstr ""
 msgid "The jury signing is not in progress"
 msgstr "Le jury n'est pas en cours de signature"
 
-msgid "The jury members"
-msgstr "Les membres du jury"
-
-msgid ""
-"The jury shall verify that the candidate has completed their "
-"<strong>doctoral training</strong> and obtained the 60 credits required by "
-"the decree, validated by the domain doctoral committee."
-msgstr ""
-"Le jury constate l'achèvement de la <strong>formation doctorale</strong> du "
-"ou de la candidat·e et l'obtention des 60 crédits exigés par le décret, "
-"validés par la commission doctorale du domaine."
-
 msgid "The last name of the jury member"
 msgstr "Le nom du membre du jury"
 
@@ -3977,6 +3975,9 @@ msgstr ""
 "ce formulaire, vous êtes invité.e à prendre connaissance du Règlement "
 "doctoral de l’UCLouvain et des dispositions particulières de votre "
 "Commissions doctorale de domaine (CDD))."
+
+msgid "To be signed by the exam board"
+msgstr "À signer par le jury"
 
 msgid "To be submitted to the CDD administrator"
 msgstr "À transmettre à la ou le gestionnaire CDD"
@@ -4334,6 +4335,16 @@ msgstr ""
 "<strong>%(thesis_title)s</strong> <br> et ayant délibéré, nous déclarons "
 "que :"
 
+#, python-format
+msgid ""
+"having attended the student's %(public_defense_date)s oral presentation of "
+"the results of their research work that led to the thesis entitled: "
+"<strong>%(thesis_title)s</strong>;"
+msgstr ""
+"ayant assisté le %(public_defense_date)s à l'exposé oral de l'intéressé·e "
+"présentant les résultats de ses travaux de recherche qui ont conduit à la "
+"thèse intitulée : <strong>%(thesis_title)s</strong>;"
+
 msgid "hh:mm"
 msgstr "hh:mm"
 
@@ -4356,6 +4367,20 @@ msgstr ""
 "Avis motivé et inventaire des questions posées par un/des membre(s) du jury "
 "éventuellement absent(s) pour cas de force majeure."
 
+msgid ""
+"the 120 credits (writing of a thesis) required for the granting of the PhD "
+"academic degree have been acquired by the person concerned;"
+msgstr ""
+"les 120 crédits (rédaction d’une thèse) exigés pour l'octroi du grade "
+"académique de doctorat ayant été acquis par l'intéressé·e;"
+
+msgid ""
+"the 60 credits of \"doctoral training\" (decree of 7 November 2013) have "
+"been acquired by the person concerned;"
+msgstr ""
+"les 60 crédits \"formation doctorale\" (décret du 07.11.2013) ayant été "
+"acquis par l'intéressé·e;"
+
 msgid "the <strong>failure</strong> of the confirmation paper."
 msgstr "l'<strong>échec</strong> de l'épreuve de confirmation."
 
@@ -4365,11 +4390,33 @@ msgstr "la <strong>non-poursuite</strong> du doctorat."
 msgid "the <strong>successful completion</strong> of the confirmation paper."
 msgstr "la <strong>réussite</strong> de l'épreuve de confirmation."
 
+msgid ""
+"the conditions for admission to the programme have been met and the "
+"candidate has been duly enrolled;"
+msgstr ""
+"les conditions d'accès aux études ayant été satisfaites et l'intéressé·e y "
+"ayant été régulièrement inscrit·e;"
+
+msgid "the conditions of the study programme have been satisfied;"
+msgstr "les conditions du programme d'études ayant été satisfaites;"
+
+msgid "the credits for additional training have been obtained;"
+msgstr "les crédits de la formation complémentaire ayant été obtenus;"
+
 msgid "to"
 msgstr "à"
 
 msgid "ucl"
 msgstr "UCLouvain"
+
+msgid ""
+"we hereby certify the successful completion of the doctoral programme and "
+"validate the obtaining of the minimum of 180 credits required for the "
+"granting of the PhD academic degree."
+msgstr ""
+"constatons l'aboutissement favorable du cursus doctoral et validons "
+"l'obtention du minimum de 180 crédits exigés pour l'octroi du grade "
+"académique de doctorat."
 
 #, python-brace-format
 msgid "{items} types out of {total}"

@@ -37,9 +37,7 @@ from infrastructure.reference.domain.service.in_memory.bourse import (
     BourseInMemoryTranslator,
 )
 from osis_profile.models.enums.person import ChoixGenre
-from parcours_doctoral.ddd.domain.model.parcours_doctoral import (
-    ParcoursDoctoral,
-)
+from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoral
 from parcours_doctoral.ddd.domain.validator.exceptions import (
     ParcoursDoctoralNonTrouveException,
 )
@@ -238,6 +236,7 @@ class ParcoursDoctoralInMemoryRepository(InMemoryGenericRepository, IParcoursDoc
             commission_proximite='',
             titre_these_propose=parcours_doctoral.titre_these_propose,
             langue_soutenance_publique=parcours_doctoral.langue_soutenance_publique,
+            nom_langue_soutenance_publique='',
             date_heure_soutenance_publique=parcours_doctoral.date_heure_soutenance_publique,
             lieu_soutenance_publique=parcours_doctoral.lieu_soutenance_publique,
             local_deliberation=parcours_doctoral.local_deliberation,
