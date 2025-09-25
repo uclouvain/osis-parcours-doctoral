@@ -23,6 +23,7 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from rest_framework import serializers
 
 from base.utils.serializers import DTOSerializer
 from parcours_doctoral.ddd.soutenance_publique.commands import (
@@ -38,3 +39,9 @@ class SubmitPublicDefenseSerializer(DTOSerializer):
 
     class Meta:
         source = SoumettreSoutenancePubliqueCommand
+
+
+class PublicDefenseMinutesCanvasSerializer(serializers.Serializer):
+    """Contains the public defense minutes canvas url."""
+
+    url = serializers.URLField(read_only=True)
