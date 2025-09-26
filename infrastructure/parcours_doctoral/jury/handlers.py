@@ -26,6 +26,8 @@
 from parcours_doctoral.ddd.jury.commands import (
     AjouterMembreCommand,
     ApprouverJuryCommand,
+    ApprouverJuryParAdreCommand,
+    ApprouverJuryParCddCommand,
     ApprouverJuryParPdfCommand,
     DemanderSignaturesCommand,
     ModifierJuryCommand,
@@ -34,6 +36,8 @@ from parcours_doctoral.ddd.jury.commands import (
     RecupererJuryMembreQuery,
     RecupererJuryQuery,
     RefuserJuryCommand,
+    RefuserJuryParAdreCommand,
+    RefuserJuryParCddCommand,
     ReinitialiserSignaturesCommand,
     RenvoyerInvitationSignatureCommand,
     RetirerMembreCommand,
@@ -50,6 +54,12 @@ from parcours_doctoral.ddd.jury.use_case.read.verifier_jury_condition_signature_
 )
 from parcours_doctoral.ddd.jury.use_case.write.ajouter_membre_service import (
     ajouter_membre,
+)
+from parcours_doctoral.ddd.jury.use_case.write.approuver_jury_par_adre_service import (
+    approuver_jury_par_adre,
+)
+from parcours_doctoral.ddd.jury.use_case.write.approuver_jury_par_cdd_service import (
+    approuver_jury_par_cdd,
 )
 from parcours_doctoral.ddd.jury.use_case.write.approuver_jury_par_pdf_service import (
     approuver_jury_par_pdf,
@@ -68,6 +78,12 @@ from parcours_doctoral.ddd.jury.use_case.write.modifier_membre_service import (
 )
 from parcours_doctoral.ddd.jury.use_case.write.modifier_role_membre import (
     modifier_role_membre,
+)
+from parcours_doctoral.ddd.jury.use_case.write.refuser_jury_par_adre_service import (
+    refuser_jury_par_adre,
+)
+from parcours_doctoral.ddd.jury.use_case.write.refuser_jury_par_cdd_service import (
+    refuser_jury_par_cdd,
 )
 from parcours_doctoral.ddd.jury.use_case.write.refuser_jury_service import refuser_jury
 from parcours_doctoral.ddd.jury.use_case.write.reinitialiser_signatures_service import (
@@ -175,6 +191,40 @@ COMMAND_HANDLERS = {
         cmd,
         parcours_doctoral_repository=_parcours_doctoral_repository,
         jury_repository=_jury_repository,
+        historique=_historique,
+        notification=_notification,
+    ),
+    ApprouverJuryParCddCommand: lambda msg_bus, cmd: approuver_jury_par_cdd(
+        cmd,
+        parcours_doctoral_repository=_parcours_doctoral_repository,
+        verifier_modification_role_service=_verifier_modification_role_service,
+        jury_repository=_jury_repository,
+        jury_service=_jury_service,
+        historique=_historique,
+        notification=_notification,
+    ),
+    RefuserJuryParCddCommand: lambda msg_bus, cmd: refuser_jury_par_cdd(
+        cmd,
+        parcours_doctoral_repository=_parcours_doctoral_repository,
+        jury_repository=_jury_repository,
+        jury_service=_jury_service,
+        historique=_historique,
+        notification=_notification,
+    ),
+    ApprouverJuryParAdreCommand: lambda msg_bus, cmd: approuver_jury_par_adre(
+        cmd,
+        parcours_doctoral_repository=_parcours_doctoral_repository,
+        verifier_modification_role_service=_verifier_modification_role_service,
+        jury_repository=_jury_repository,
+        jury_service=_jury_service,
+        historique=_historique,
+        notification=_notification,
+    ),
+    RefuserJuryParAdreCommand: lambda msg_bus, cmd: refuser_jury_par_adre(
+        cmd,
+        parcours_doctoral_repository=_parcours_doctoral_repository,
+        jury_repository=_jury_repository,
+        jury_service=_jury_service,
         historique=_historique,
         notification=_notification,
     ),

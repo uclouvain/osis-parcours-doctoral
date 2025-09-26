@@ -37,8 +37,38 @@ from parcours_doctoral.ddd.jury.domain.validator._should_jury_avoir_assez_de_mem
 from parcours_doctoral.ddd.jury.domain.validator._should_jury_avoir_un_membre_externe import (
     ShouldJuryAvoirUnMembreExterne,
 )
+from parcours_doctoral.ddd.jury.domain.validator._should_matricule_ne_pas_etre_dans_jury import (
+    ShouldMatriculeNePasEtreDansJuryValidator,
+)
+from parcours_doctoral.ddd.jury.domain.validator._should_membre_etre_dans_jury import (
+    ShouldMembreEtreDansJuryValidator,
+)
+from parcours_doctoral.ddd.jury.domain.validator._should_membre_externe_avoir_email import (
+    ShouldMembreExterneAvoirEmail,
+)
+from parcours_doctoral.ddd.jury.domain.validator._should_membre_externe_avoir_genre import (
+    ShouldMembreExterneAvoirGenre,
+)
+from parcours_doctoral.ddd.jury.domain.validator._should_membre_externe_avoir_institution import (
+    ShouldMembreExterneAvoirInstitution,
+)
+from parcours_doctoral.ddd.jury.domain.validator._should_membre_externe_avoir_nom import (
+    ShouldMembreExterneAvoirNom,
+)
+from parcours_doctoral.ddd.jury.domain.validator._should_membre_externe_avoir_pays import (
+    ShouldMembreExterneAvoirPays,
+)
+from parcours_doctoral.ddd.jury.domain.validator._should_membre_externe_avoir_prenom import (
+    ShouldMembreExterneAvoirPrenom,
+)
+from parcours_doctoral.ddd.jury.domain.validator._should_membre_externe_avoir_titre import (
+    ShouldMembreExterneAvoirTitre,
+)
 from parcours_doctoral.ddd.jury.domain.validator._should_methode_de_defense_etre_complete import (
     ShouldMethodeDeDefenseEtreCompletee,
+)
+from parcours_doctoral.ddd.jury.domain.validator._should_non_docteur_avoir_justification import (
+    ShouldNonDocteurAvoirJustification,
 )
 from parcours_doctoral.ddd.jury.domain.validator._should_signataire_etre_dans_jury import (
     ShouldSignataireEtreDansJury,
@@ -94,3 +124,94 @@ class ApprouverValidatorList(TwoStepsMultipleBusinessExceptionListValidator):
             ShouldSignataireEtreDansJury(self.jury, self.signataire_id),
             ShouldSignataireEtreInvite(self.jury, self.signataire_id),
         ]
+
+
+@attr.dataclass(frozen=True, slots=True)
+class JuryValidatorList(TwoStepsMultipleBusinessExceptionListValidator):
+    jury: 'Jury'
+
+    def get_data_contract_validators(self) -> List[BusinessValidator]:
+        return []
+
+    def get_invariants_validators(self) -> List[BusinessValidator]:
+        return []
+
+
+@attr.dataclass(frozen=True, slots=True)
+class AjouterMembreValidatorList(TwoStepsMultipleBusinessExceptionListValidator):
+    jury: 'Jury'
+    membre: 'MembreJury'
+
+    def get_data_contract_validators(self) -> List[BusinessValidator]:
+        return []
+
+    def get_invariants_validators(self) -> List[BusinessValidator]:
+        return [
+            ShouldMatriculeNePasEtreDansJuryValidator(self.membre.matricule, self.jury),
+            ShouldNonDocteurAvoirJustification(self.membre),
+            ShouldMembreExterneAvoirInstitution(self.membre),
+            ShouldMembreExterneAvoirPays(self.membre),
+            ShouldMembreExterneAvoirNom(self.membre),
+            ShouldMembreExterneAvoirPrenom(self.membre),
+            ShouldMembreExterneAvoirTitre(self.membre),
+            ShouldMembreExterneAvoirGenre(self.membre),
+            ShouldMembreExterneAvoirEmail(self.membre),
+        ]
+
+
+@attr.dataclass(frozen=True, slots=True)
+class RecupererMembreValidatorList(TwoStepsMultipleBusinessExceptionListValidator):
+    jury: 'Jury'
+    uuid_membre: str
+
+    def get_data_contract_validators(self) -> List[BusinessValidator]:
+        return []
+
+    def get_invariants_validators(self) -> List[BusinessValidator]:
+        return [ShouldMembreEtreDansJuryValidator(self.uuid_membre, self.jury)]
+
+
+@attr.dataclass(frozen=True, slots=True)
+class ModifierMembreValidatorList(TwoStepsMultipleBusinessExceptionListValidator):
+    jury: 'Jury'
+    membre: 'MembreJury'
+
+    def get_data_contract_validators(self) -> List[BusinessValidator]:
+        return []
+
+    def get_invariants_validators(self) -> List[BusinessValidator]:
+        return [
+            ShouldMembreEtreDansJuryValidator(self.membre.uuid, self.jury),
+            ShouldNonDocteurAvoirJustification(self.membre),
+            ShouldMembreExterneAvoirInstitution(self.membre),
+            ShouldMembreExterneAvoirPays(self.membre),
+            ShouldMembreExterneAvoirNom(self.membre),
+            ShouldMembreExterneAvoirPrenom(self.membre),
+            ShouldMembreExterneAvoirTitre(self.membre),
+            ShouldMembreExterneAvoirGenre(self.membre),
+            ShouldMembreExterneAvoirEmail(self.membre),
+        ]
+
+
+@attr.dataclass(frozen=True, slots=True)
+class RetirerMembreValidatorList(TwoStepsMultipleBusinessExceptionListValidator):
+    jury: 'Jury'
+    uuid_membre: str
+
+    def get_data_contract_validators(self) -> List[BusinessValidator]:
+        return []
+
+    def get_invariants_validators(self) -> List[BusinessValidator]:
+        return [ShouldMembreEtreDansJuryValidator(self.uuid_membre, self.jury)]
+
+
+@attr.dataclass(frozen=True, slots=True)
+class ModifierRoleMembreValidatorList(TwoStepsMultipleBusinessExceptionListValidator):
+    jury: 'Jury'
+    uuid_membre: str
+
+    def get_data_contract_validators(self) -> List[BusinessValidator]:
+        return []
+
+    def get_invariants_validators(self) -> List[BusinessValidator]:
+        return [ShouldMembreEtreDansJuryValidator(self.uuid_membre, self.jury)]

@@ -25,64 +25,40 @@
 # ##############################################################################
 from django.test import SimpleTestCase
 
-from base.ddd.utils.business_validator import MultipleBusinessExceptions
-from parcours_doctoral.ddd.jury.commands import RetirerMembreCommand
-from parcours_doctoral.ddd.jury.domain.validator.exceptions import (
-    JuryNonTrouveException,
-    MembreNonTrouveDansJuryException,
-    PromoteurRetireException,
-)
+from parcours_doctoral.ddd.jury.commands import ApprouverJuryParCddCommand
+from parcours_doctoral.ddd.jury.domain.model.enums import ChoixEtatSignature, RoleJury
+from parcours_doctoral.ddd.jury.domain.model.jury import JuryIdentity
 from parcours_doctoral.infrastructure.message_bus_in_memory import (
     message_bus_in_memory_instance,
 )
 from parcours_doctoral.infrastructure.parcours_doctoral.jury.repository.in_memory.jury import (
     JuryInMemoryRepository,
 )
+from parcours_doctoral.infrastructure.parcours_doctoral.repository.in_memory.parcours_doctoral import (
+    ParcoursDoctoralInMemoryRepository,
+)
 
 
-class TestRetirerMembre(SimpleTestCase):
+class TestApprouverJuryParCdd(SimpleTestCase):
     def setUp(self) -> None:
         self.message_bus = message_bus_in_memory_instance
 
     def tearDown(self) -> None:
         JuryInMemoryRepository.reset()
+        ParcoursDoctoralInMemoryRepository.reset()
 
-    def test_should_retirer_membre(self):
-        jury = JuryInMemoryRepository.entities[0]
-        self.assertEqual(len(jury.membres), 2)
-
+    def test_approuver_jury(self):
         self.message_bus.invoke(
-            RetirerMembreCommand(
-                uuid_jury='uuid-jury',
-                uuid_membre='uuid-membre',
+            ApprouverJuryParCddCommand(
+                uuid_jury='uuid-SC3DP-promoteur-deja-approuve',
+                matricule_auteur='012346789',
+                commentaire_interne='Commentaire interne',
+                commentaire_externe='Commentaire externe',
             )
         )
-        self.assertEqual(len(jury.membres), 1)
 
-    def test_should_pas_trouve_si_retirer_membre_inexistant(self):
-        with self.assertRaises(MultipleBusinessExceptions) as context:
-            self.message_bus.invoke(
-                RetirerMembreCommand(
-                    uuid_jury='uuid-jury',
-                    uuid_membre='uuid-membre-inexistant',
-                )
-            )
-            self.assertIsInstance(context.exception.exceptions.pop(), MembreNonTrouveDansJuryException)
-
-    def test_should_pas_trouve_si_retirer_membre_jury_inexistant(self):
-        with self.assertRaises(JuryNonTrouveException):
-            self.message_bus.invoke(
-                RetirerMembreCommand(
-                    uuid_jury='uuid-jury-inexistant',
-                    uuid_membre='uuid-membre',
-                )
-            )
-
-    def test_should_exception_si_retirer_promoteur(self):
-        with self.assertRaises(PromoteurRetireException):
-            self.message_bus.invoke(
-                RetirerMembreCommand(
-                    uuid_jury='uuid-jury',
-                    uuid_membre='uuid-promoteur',
-                )
-            )
+        jury = JuryInMemoryRepository.get(JuryIdentity(uuid='uuid-SC3DP-promoteur-deja-approuve'))
+        membre = next(m for m in jury.membres if m.role == RoleJury.CDD)
+        self.assertEqual(membre.signature.etat, ChoixEtatSignature.APPROVED)
+        self.assertEqual(membre.signature.commentaire_interne, 'Commentaire interne')
+        self.assertEqual(membre.signature.commentaire_externe, 'Commentaire externe')

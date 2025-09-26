@@ -26,7 +26,6 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-  <li class="breadcrumb-item"><a href="{% url 'parcours_doctoral:config:home' %}">{% trans 'Configuration' %}</a></li>
   <li class="breadcrumb-item active">{% translate "Institutes auditors configuration" %}</li>
 {% endblock %}
 
@@ -53,10 +52,6 @@
             <span class="fa-solid fa-floppy-disk" aria-hidden="true"></span>
             {% trans "Save" context 'parcours_doctoral' %}
           </button>
-          <a href="{% url 'parcours_doctoral:config:home' %}" class="btn btn-default border border-dark-subtle">
-            <span class="fa-solid fa-xmark" aria-hidden="true"></span>
-            {% trans "Cancel" %}
-          </a>
         </form>
       </div>
     </div>

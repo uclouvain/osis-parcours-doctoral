@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -24,17 +24,18 @@
 #
 # ##############################################################################
 import attr
-from base.ddd.utils.business_validator import BusinessValidator
 
-from parcours_doctoral.ddd.jury.validator.exceptions import (
-    MembreExterneSansGenreException,
+from base.ddd.utils.business_validator import BusinessValidator
+from parcours_doctoral.ddd.jury.domain.model.enums import TitreMembre
+from parcours_doctoral.ddd.jury.domain.validator.exceptions import (
+    NonDocteurSansJustificationException,
 )
 
 
 @attr.dataclass(frozen=True, slots=True)
-class ShouldMembreExterneAvoirGenre(BusinessValidator):
+class ShouldNonDocteurAvoirJustification(BusinessValidator):
     membre: 'MembreJury'
 
     def validate(self, *args, **kwargs):
-        if not self.membre.est_promoteur and not self.membre.matricule and not self.membre.genre:
-            raise MembreExterneSansGenreException
+        if self.membre.titre == TitreMembre.NON_DOCTEUR and not self.membre.justification_non_docteur:
+            raise NonDocteurSansJustificationException

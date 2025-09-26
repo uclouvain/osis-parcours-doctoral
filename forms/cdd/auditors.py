@@ -28,12 +28,12 @@ from django.forms import formset_factory
 from django.utils import timezone
 from django.utils.functional import cached_property
 
-from admission.forms import DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS
 from base.forms.utils.autocomplete import ModelSelect2
 from base.models.entity_version import EntityVersion
 from base.models.enums.entity_type import EntityType
 from base.models.enums.organization_type import MAIN
 from base.models.person import Person
+from osis_profile.forms import DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS
 from parcours_doctoral.auth.roles.auditor import Auditor
 
 

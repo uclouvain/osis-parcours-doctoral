@@ -60,3 +60,11 @@
     </ul>
   </li>
 {% endif %}
+{% if perms.parcours_doctoral.change_auditors_configuration %}
+  <li class="nav-item dropdown">
+    <a href="{% url 'parcours_doctoral:config:auditors' %}">
+      <span class="fa fa-tools"></span>
+      {% translate 'Institutes auditors configuration' %}
+    </a>
+  </li>
+{% endif %}

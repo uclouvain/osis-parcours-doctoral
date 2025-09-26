@@ -31,16 +31,18 @@ from parcours_doctoral.auth.roles.auditor import Auditor
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import (
     ParcoursDoctoralIdentity,
 )
-from parcours_doctoral.ddd.domain.validator.exceptions import ParcoursDoctoralNonTrouveException
-from parcours_doctoral.ddd.jury.validator.exceptions import (
-    ModificationRoleImpossibleSSHException,
-    ModificationRoleImpossibleSSSException,
-    ModificationRoleImpossibleSSTException,
-    RolesNonAttribueException,
+from parcours_doctoral.ddd.domain.validator.exceptions import (
+    ParcoursDoctoralNonTrouveException,
 )
 from parcours_doctoral.ddd.jury.domain.model.enums import RoleJury
 from parcours_doctoral.ddd.jury.domain.service.i_verifier_modification_role import (
     IVerifierModificationRoleService,
+)
+from parcours_doctoral.ddd.jury.domain.validator.exceptions import (
+    ModificationRoleImpossibleSSHException,
+    ModificationRoleImpossibleSSSException,
+    ModificationRoleImpossibleSSTException,
+    RolesNonAttribueException,
 )
 from parcours_doctoral.models import ParcoursDoctoral
 

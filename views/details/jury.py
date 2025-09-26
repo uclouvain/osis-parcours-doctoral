@@ -25,11 +25,15 @@
 # ##############################################################################
 from django.urls import reverse
 from django.views.generic import FormView, TemplateView
+from rest_framework.settings import api_settings
 
 from infrastructure.messages_bus import message_bus_instance
-from parcours_doctoral.ddd.jury.commands import AjouterMembreCommand
+from parcours_doctoral.ddd.jury.commands import (
+    AjouterMembreCommand,
+    VerifierJuryConditionSignatureQuery,
+)
 from parcours_doctoral.ddd.jury.domain.model.enums import RoleJury
-from parcours_doctoral.ddd.jury.validator.exceptions import (
+from parcours_doctoral.ddd.jury.domain.validator.exceptions import (
     MembreDejaDansJuryException,
     MembreExterneSansEmailException,
     MembreExterneSansGenreException,
@@ -40,7 +44,9 @@ from parcours_doctoral.ddd.jury.validator.exceptions import (
     MembreExterneSansTitreException,
     NonDocteurSansJustificationException,
 )
-from parcours_doctoral.forms.jury.membre import JuryMembreForm
+from parcours_doctoral.forms.jury.approval import JuryApprovalForm
+from parcours_doctoral.forms.jury.membre import ApprovalByPdfForm, JuryMembreForm
+from parcours_doctoral.utils.ddd import gather_business_exceptions
 from parcours_doctoral.views.mixins import (
     BusinessExceptionFormViewMixin,
     ParcoursDoctoralViewMixin,
@@ -89,6 +95,10 @@ class JuryView(
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['jury'] = self.jury
+
+        data = gather_business_exceptions(VerifierJuryConditionSignatureQuery(uuid_jury=self.parcours_doctoral_uuid))
+        context['signature_conditions'] = data.get(api_settings.NON_FIELD_ERRORS_KEY, [])
+
         context['membre_president'] = [membre for membre in self.jury.membres if membre.role == RoleJury.PRESIDENT.name]
         context['membre_secretaire'] = [
             membre for membre in self.jury.membres if membre.role == RoleJury.SECRETAIRE.name
@@ -96,9 +106,21 @@ class JuryView(
         context['membre_verificateur'] = [
             membre for membre in self.jury.membres if membre.role == RoleJury.VERIFICATEUR.name
         ]
+        context['membre_cdd'] = [membre for membre in self.jury.membres if membre.role == RoleJury.CDD.name]
+        context['membre_adre'] = [membre for membre in self.jury.membres if membre.role == RoleJury.ADRE.name]
         context['membres'] = [membre for membre in self.jury.membres if membre.role == RoleJury.MEMBRE.name]
-        if not self.request.user.has_perm('parcours_doctoral.change_jury', obj=self.parcours_doctoral):
+        if not self.request.user.has_perm('parcours_doctoral.change_jury', obj=self.get_permission_object()):
             del context['form']
+        if self.request.user.has_perm('parcours_doctoral.jury_reset_signatures', obj=self.get_permission_object()):
+            context['approve_by_pdf_form'] = ApprovalByPdfForm()
+        if self.request.user.has_perm('parcours_doctoral.approve_jury', obj=self.get_permission_object()):
+            if 'jury_approval_data' in self.request.session:
+                # Get data and errors from JuryCddDecisionView
+                approval_form = JuryApprovalForm(data=self.request.session.pop('jury_approval_data'))
+                approval_form._errors = self.request.session.pop('jury_approval_errors')
+                context['approval_form'] = approval_form
+            else:
+                context['approval_form'] = JuryApprovalForm()
         return context
 
     def call_command(self, form):

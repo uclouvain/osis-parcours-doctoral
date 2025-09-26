@@ -27,11 +27,15 @@ from django import forms
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import pgettext_lazy
+from osis_document_components.fields import FileUploadField
 
 from base.forms.utils import EMPTY_CHOICE, autocomplete
 from base.models.person import Person
 from base.models.utils.utils import ChoiceEnum
-from osis_profile.forms import ModelCountryChoiceField, DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS
+from osis_profile.forms import (
+    DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS,
+    ModelCountryChoiceField,
+)
 from parcours_doctoral.ddd.jury.domain.model.enums import GenreMembre, TitreMembre
 from reference.models.country import Country
 
@@ -136,3 +140,13 @@ class JuryMembreForm(forms.Form):
         if 'institution_principale' in self.cleaned_data:
             del self.cleaned_data['institution_principale']
         return self.cleaned_data
+
+
+class ApprovalByPdfForm(forms.Form):
+    pdf = FileUploadField(
+        label=_("PDF file"),
+        required=True,
+        min_files=1,
+        max_files=1,
+        mimetypes=['application/pdf'],
+    )

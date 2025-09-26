@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -24,17 +24,17 @@
 #
 # ##############################################################################
 import attr
-from base.ddd.utils.business_validator import BusinessValidator
 
-from parcours_doctoral.ddd.jury.validator.exceptions import (
-    MembreExterneSansEmailException,
+from base.ddd.utils.business_validator import BusinessValidator
+from parcours_doctoral.ddd.jury.domain.validator.exceptions import (
+    MembreExterneSansNomException,
 )
 
 
 @attr.dataclass(frozen=True, slots=True)
-class ShouldMembreExterneAvoirEmail(BusinessValidator):
+class ShouldMembreExterneAvoirNom(BusinessValidator):
     membre: 'MembreJury'
 
     def validate(self, *args, **kwargs):
-        if not self.membre.est_promoteur and not self.membre.matricule and not self.membre.email:
-            raise MembreExterneSansEmailException
+        if not self.membre.est_promoteur and not self.membre.matricule and not self.membre.nom:
+            raise MembreExterneSansNomException

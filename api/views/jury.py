@@ -450,6 +450,10 @@ class JuryExternalApprovalPropositionAPIView(ApprovePropositionMixin, APIView):
                 'parcours_doctoral': parcours_doctoral,
                 'jury': jury,
             },
+            context={
+                'request': self.request,
+                'parcours_doctoral': self.get_permission_object(),
+            },
         )
         return Response(serializer.data, status=status.HTTP_200_OK)
 

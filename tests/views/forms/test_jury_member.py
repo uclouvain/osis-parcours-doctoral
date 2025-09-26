@@ -25,10 +25,14 @@
 # ##############################################################################
 import datetime
 import uuid
+from unittest.mock import patch
 
+from django.contrib.messages import get_messages
 from django.shortcuts import resolve_url
 from django.test import TestCase
 from django.urls import reverse
+from osis_signature.enums import SignatureState
+from osis_signature.models import StateHistory
 from rest_framework.status import HTTP_200_OK, HTTP_302_FOUND, HTTP_404_NOT_FOUND
 
 from base.tests.factories.academic_year import AcademicYearFactory
@@ -280,3 +284,118 @@ class DoctorateAdmissionJuryMemberChangeRoleFormViewTestCase(TestCase):
             uuid=self.membre.uuid,
         )
         self.assertEqual(updated_member.role, RoleJury.PRESIDENT.name)
+
+
+class DoctorateAdmissionJuryMemberResendInviteViewTestCase(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        # Create some academic years
+        academic_years = [AcademicYearFactory(year=year) for year in [2021, 2022]]
+
+        promoter = PromoterFactory()
+        cls.promoter = promoter.person
+
+        # Create parcours_doctorals
+        cls.parcours_doctoral = ParcoursDoctoralFactory(
+            status=ChoixStatutParcoursDoctoral.CONFIRMATION_REUSSIE.name,
+            training__academic_year=academic_years[0],
+        )
+
+        # Create member
+        cls.membre = ExternalJuryMemberFactory(process=cls.parcours_doctoral.jury_group)
+        cls.country = CountryFactory()
+
+        # User with one cdd
+        cls.manager = ProgramManagerFactory(education_group=cls.parcours_doctoral.training.education_group).person.user
+        cls.read_path = 'parcours_doctoral:jury'
+        cls.update_path = 'parcours_doctoral:update:jury-member:resend-invite'
+
+    def setUp(self):
+        self.client.force_login(user=self.manager)
+
+    def test_post_jury_membre_resend_invite_cdd_user(self):
+        url = reverse(self.update_path, args=[self.parcours_doctoral.uuid, self.membre.uuid])
+
+        response = self.client.post(
+            url,
+            data={},
+        )
+
+        self.assertRedirects(response, resolve_url(self.read_path, uuid=self.parcours_doctoral.uuid))
+        messages = list(get_messages(response.wsgi_request))
+        self.assertFalse(messages)
+
+
+class DoctorateAdmissionJuryMemberApproveByPdfViewTestCase(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        # Create some academic years
+        academic_years = [AcademicYearFactory(year=year) for year in [2021, 2022]]
+
+        promoter = PromoterFactory()
+        cls.promoter = promoter.person
+
+        # Create parcours_doctorals
+        cls.parcours_doctoral = ParcoursDoctoralFactory(
+            status=ChoixStatutParcoursDoctoral.CONFIRMATION_REUSSIE.name,
+            training__academic_year=academic_years[0],
+        )
+
+        # Create member
+        cls.membre = ExternalJuryMemberFactory(process=cls.parcours_doctoral.jury_group)
+        cls.country = CountryFactory()
+
+        # User with one cdd
+        cls.manager = ProgramManagerFactory(education_group=cls.parcours_doctoral.training.education_group).person.user
+        cls.read_path = 'parcours_doctoral:jury'
+        cls.update_path = 'parcours_doctoral:update:jury-member:approve-by-pdf'
+
+    def setUp(self):
+        self.client.force_login(user=self.manager)
+
+        # Mock documents
+        patcher = patch("osis_document_components.services.get_remote_token", return_value="foobar")
+        patcher.start()
+        self.addCleanup(patcher.stop)
+
+        patcher = patch(
+            "osis_document_components.services.get_remote_metadata",
+            return_value={"name": "myfile", "mimetype": "application/pdf", "size": 1},
+        )
+        patcher.start()
+        self.addCleanup(patcher.stop)
+
+        patcher = patch(
+            "osis_document_components.services.confirm_remote_upload",
+            side_effect=lambda token, *args, **kwargs: token,
+        )
+        patcher.start()
+        self.addCleanup(patcher.stop)
+        patcher = patch(
+            "osis_document_components.fields.FileField._confirm_multiple_upload",
+            side_effect=lambda _, value, __: value,
+        )
+        patcher.start()
+        self.addCleanup(patcher.stop)
+
+    def test_post_jury_membre_approve_pdf_cdd_user(self):
+        url = reverse(self.update_path, args=[self.parcours_doctoral.uuid, self.membre.uuid])
+        StateHistory.objects.create(
+            actor=self.membre,
+            state=SignatureState.INVITED.name,
+        )
+
+        response = self.client.post(
+            url,
+            data={
+                'pdf_0': '34eab30c-27e3-40db-b92e-0b51546a2448',
+            },
+        )
+
+        self.assertRedirects(response, resolve_url(self.read_path, uuid=self.parcours_doctoral.uuid))
+
+        updated_member = JuryActor.objects.get(
+            uuid=self.membre.uuid,
+        )
+        self.assertTrue(updated_member.pdf_from_candidate)
+        self.assertEqual(updated_member.state, SignatureState.APPROVED.name)

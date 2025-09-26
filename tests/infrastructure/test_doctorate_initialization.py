@@ -263,7 +263,7 @@ class DoctorateInitializationTestCase(TestCase):
         # Mock documents
         patcher = patch('osis_document_components.services.get_remote_tokens')
         patched = patcher.start()
-        patched.side_effect = lambda uuids, **kwargs: {uuid: f'token-{index}' for index, uuid in enumerate(uuids)}
+        patched.side_effect = lambda uuids, **kwargs: {uuid: uuid.uuid4() for index, uuid in enumerate(uuids)}
         self.addCleanup(patcher.stop)
 
         patcher = patch('osis_document_components.services.get_several_remote_metadata')

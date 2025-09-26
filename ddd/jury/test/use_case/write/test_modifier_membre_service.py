@@ -28,7 +28,7 @@ from django.test import SimpleTestCase
 from base.ddd.utils.business_validator import MultipleBusinessExceptions
 from parcours_doctoral.ddd.jury.commands import ModifierMembreCommand
 from parcours_doctoral.ddd.jury.domain.model.jury import JuryIdentity
-from parcours_doctoral.ddd.jury.validator.exceptions import (
+from parcours_doctoral.ddd.jury.domain.validator.exceptions import (
     JuryNonTrouveException,
     MembreNonTrouveDansJuryException,
     PromoteurModifieException,

@@ -26,22 +26,30 @@
 from parcours_doctoral.ddd.builder.parcours_doctoral_identity import (
     ParcoursDoctoralIdentityBuilder,
 )
-from parcours_doctoral.ddd.domain.service.avis import Avis
 from parcours_doctoral.ddd.jury.builder.jury_identity_builder import JuryIdentityBuilder
-from parcours_doctoral.ddd.jury.commands import ApprouverJuryParPdfCommand
+from parcours_doctoral.ddd.jury.commands import ApprouverJuryParCddCommand
 from parcours_doctoral.ddd.jury.domain.model.jury import JuryIdentity
+from parcours_doctoral.ddd.jury.domain.service.avis import Avis
 from parcours_doctoral.ddd.jury.domain.service.i_historique import IHistorique
+from parcours_doctoral.ddd.jury.domain.service.i_jury import IJuryService
+from parcours_doctoral.ddd.jury.domain.service.i_notification import INotification
+from parcours_doctoral.ddd.jury.domain.service.i_verifier_modification_role import (
+    IVerifierModificationRoleService,
+)
 from parcours_doctoral.ddd.jury.repository.i_jury import IJuryRepository
 from parcours_doctoral.ddd.repository.i_parcours_doctoral import (
     IParcoursDoctoralRepository,
 )
 
 
-def approuver_jury_par_pdf(
-    cmd: 'ApprouverJuryParPdfCommand',
+def approuver_jury_par_cdd(
+    cmd: 'ApprouverJuryParCddCommand',
     parcours_doctoral_repository: 'IParcoursDoctoralRepository',
+    verifier_modification_role_service: 'IVerifierModificationRoleService',
     jury_repository: 'IJuryRepository',
+    jury_service: 'IJuryService',
     historique: 'IHistorique',
+    notification: 'INotification',
 ) -> 'JuryIdentity':
     # GIVEN
     entity_id = ParcoursDoctoralIdentityBuilder.build_from_uuid(cmd.uuid_jury)
@@ -49,12 +57,16 @@ def approuver_jury_par_pdf(
     jury = jury_repository.get(JuryIdentityBuilder.build_from_uuid(cmd.uuid_jury))
     statut_original_parcours_doctoral = parcours_doctoral.statut
 
-    signataire = jury.recuperer_membre(cmd.uuid_membre)
-    avis = Avis.construire_avis_pdf(cmd.pdf)
+    signataire = jury_service.recuperer_gestionnaire_cdd(parcours_doctoral.entity_id, cmd.matricule_auteur)
+    avis = Avis.construire_approbation(cmd.commentaire_interne, cmd.commentaire_externe)
 
     # WHEN
-    jury.approuver_par_pdf(signataire, cmd.pdf)
-    parcours_doctoral.changer_statut_si_approbation_jury(jury)
+    verifier_modification_role_service.verifier_tous_les_roles_attribués(
+        parcours_doctoral_identity=ParcoursDoctoralIdentityBuilder.build_from_uuid(cmd.uuid_jury),
+        matricule_auteur=cmd.matricule_auteur,
+    )
+    jury.approuver_par_cdd(signataire, cmd.commentaire_interne, cmd.commentaire_externe)
+    parcours_doctoral.approuver_jury_par_cdd()
 
     # THEN
     parcours_doctoral_repository.save(parcours_doctoral)
@@ -62,5 +74,6 @@ def approuver_jury_par_pdf(
     historique.historiser_avis(
         parcours_doctoral, signataire, avis, statut_original_parcours_doctoral, cmd.matricule_auteur
     )
+    notification.notifier_approbation_cdd(parcours_doctoral, signataire, avis)
 
     return jury.entity_id

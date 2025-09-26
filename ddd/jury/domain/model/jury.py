@@ -38,19 +38,16 @@ from parcours_doctoral.ddd.jury.domain.model.enums import (
     TitreMembre,
 )
 from parcours_doctoral.ddd.jury.domain.validator.exceptions import (
-    SignataireNonTrouveException,
-)
-from parcours_doctoral.ddd.jury.domain.validator.validator_by_business_action import (
-    ApprouverValidatorList,
-    InviterASignerValidatorList,
-)
-from parcours_doctoral.ddd.jury.validator.exceptions import (
+    PasUnMembreException,
     PromoteurModifieException,
     PromoteurPresidentException,
     PromoteurRetireException,
+    SignataireNonTrouveException,
 )
-from parcours_doctoral.ddd.jury.validator.validator_by_business_action import (
+from parcours_doctoral.ddd.jury.domain.validator.validator_by_business_action import (
     AjouterMembreValidatorList,
+    ApprouverValidatorList,
+    InviterASignerValidatorList,
     JuryValidatorList,
     ModifierMembreValidatorList,
     ModifierRoleMembreValidatorList,
@@ -114,6 +111,9 @@ class Jury(interface.RootEntity):
 
     membres: List[MembreJury] = attr.Factory(list)
 
+    def _supprimer_membres_role(self, role: 'RoleJury'):
+        self.membres = [membre for membre in self.membres if membre.role != role]
+
     def validate(self):
         JuryValidatorList(self).validate()
 
@@ -156,6 +156,8 @@ class Jury(interface.RootEntity):
     def modifier_role_membre(self, uuid_membre: str, role: RoleJury):
         ModifierRoleMembreValidatorList(uuid_membre=uuid_membre, jury=self).validate()
         ancien_membre = self.recuperer_membre(uuid_membre)
+        if ancien_membre.role not in {RoleJury.PRESIDENT, RoleJury.SECRETAIRE, RoleJury.MEMBRE}:
+            raise PasUnMembreException()
         if ancien_membre.est_promoteur and role == RoleJury.PRESIDENT:
             raise PromoteurPresidentException()
         # Set the current president / secretary as a member
@@ -168,8 +170,10 @@ class Jury(interface.RootEntity):
         self.membres.append(attr.evolve(ancien_membre, role=role))
 
     def inviter_a_signer(self, verificateur: MembreJury):
-        if not [m for m in self.membres if m.uuid == verificateur.uuid]:
-            self.membres.append(verificateur)
+        self._supprimer_membres_role(RoleJury.VERIFICATEUR)
+        self._supprimer_membres_role(RoleJury.CDD)
+        self._supprimer_membres_role(RoleJury.ADRE)
+        self.membres.append(verificateur)
 
         etats_initiaux = [ChoixEtatSignature.NOT_INVITED, ChoixEtatSignature.DECLINED]
         for membre in filter(lambda m: m.signature.etat in etats_initiaux, self.membres):
@@ -249,6 +253,88 @@ class Jury(interface.RootEntity):
                     commentaire_interne=commentaire_interne or '',
                     commentaire_externe=commentaire_externe or '',
                     motif_refus=motif_refus or '',
+                ),
+            )
+        )
+
+    def refuser_par_cdd(
+        self,
+        signataire: MembreJury,
+        commentaire_interne: Optional[str],
+        commentaire_externe: Optional[str],
+        motif_refus: Optional[str],
+    ) -> None:
+        self._supprimer_membres_role(RoleJury.CDD)
+        self.reinitialiser_signatures()
+        self.membres.append(
+            attr.evolve(
+                signataire,
+                signature=attr.evolve(
+                    signataire.signature,
+                    etat=ChoixEtatSignature.DECLINED,
+                    commentaire_interne=commentaire_interne or '',
+                    commentaire_externe=commentaire_externe or '',
+                    motif_refus=motif_refus or '',
+                ),
+            )
+        )
+
+    def approuver_par_cdd(
+        self,
+        signataire: MembreJury,
+        commentaire_interne: Optional[str],
+        commentaire_externe: Optional[str],
+    ) -> None:
+        self._supprimer_membres_role(RoleJury.CDD)
+        self.membres.append(
+            attr.evolve(
+                signataire,
+                signature=attr.evolve(
+                    signataire.signature,
+                    etat=ChoixEtatSignature.APPROVED,
+                    commentaire_interne=commentaire_interne or '',
+                    commentaire_externe=commentaire_externe or '',
+                ),
+            )
+        )
+
+    def refuser_par_adre(
+        self,
+        signataire: MembreJury,
+        commentaire_interne: Optional[str],
+        commentaire_externe: Optional[str],
+        motif_refus: Optional[str],
+    ) -> None:
+        self._supprimer_membres_role(RoleJury.ADRE)
+        self.reinitialiser_signatures()
+        self.membres.append(
+            attr.evolve(
+                signataire,
+                signature=attr.evolve(
+                    signataire.signature,
+                    etat=ChoixEtatSignature.DECLINED,
+                    commentaire_interne=commentaire_interne or '',
+                    commentaire_externe=commentaire_externe or '',
+                    motif_refus=motif_refus or '',
+                ),
+            )
+        )
+
+    def approuver_par_adre(
+        self,
+        signataire: MembreJury,
+        commentaire_interne: Optional[str],
+        commentaire_externe: Optional[str],
+    ) -> None:
+        self._supprimer_membres_role(RoleJury.ADRE)
+        self.membres.append(
+            attr.evolve(
+                signataire,
+                signature=attr.evolve(
+                    signataire.signature,
+                    etat=ChoixEtatSignature.APPROVED,
+                    commentaire_interne=commentaire_interne or '',
+                    commentaire_externe=commentaire_externe or '',
                 ),
             )
         )

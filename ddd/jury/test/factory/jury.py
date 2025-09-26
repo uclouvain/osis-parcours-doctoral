@@ -28,6 +28,11 @@ import uuid
 
 import factory
 
+from parcours_doctoral.ddd.jury.domain.model.enums import (
+    GenreMembre,
+    RoleJury,
+    TitreMembre,
+)
 from parcours_doctoral.ddd.jury.domain.model.jury import (
     Jury,
     JuryIdentity,
@@ -59,16 +64,16 @@ class MembreJuryFactory(factory.Factory):
     est_promoteur = False
     est_promoteur_de_reference = False
     matricule = None
-    role = 'MEMBRE'
+    role = RoleJury.MEMBRE
     institution = 'AUTRE'
     autre_institution = ''
     pays = 'pays'
     nom = 'nom'
     prenom = 'prenom'
     email = 'email'
-    titre = 'DOCTEUR'
+    titre = TitreMembre.DOCTEUR
     justification_non_docteur = None
-    genre = 'AUTRE'
+    genre = GenreMembre.AUTRE
     langue = 'FR'
     signature = factory.SubFactory(SignatureMembreFactory)
 

@@ -147,3 +147,37 @@ class RenvoyerInvitationSignatureCommand(interface.CommandRequest):
 class ReinitialiserSignaturesCommand(interface.CommandRequest):
     uuid_jury: str
     matricule_auteur: str
+
+
+@attr.dataclass(frozen=True, slots=True)
+class ApprouverJuryParCddCommand(interface.CommandRequest):
+    uuid_jury: str
+    matricule_auteur: str
+    commentaire_interne: Optional[str] = ''
+    commentaire_externe: Optional[str] = ''
+
+
+@attr.dataclass(frozen=True, slots=True)
+class RefuserJuryParCddCommand(interface.CommandRequest):
+    uuid_jury: str
+    matricule_auteur: str
+    motif_refus: str
+    commentaire_interne: Optional[str] = ''
+    commentaire_externe: Optional[str] = ''
+
+
+@attr.dataclass(frozen=True, slots=True)
+class ApprouverJuryParAdreCommand(interface.CommandRequest):
+    uuid_jury: str
+    matricule_auteur: str
+    commentaire_interne: Optional[str] = ''
+    commentaire_externe: Optional[str] = ''
+
+
+@attr.dataclass(frozen=True, slots=True)
+class RefuserJuryParAdreCommand(interface.CommandRequest):
+    uuid_jury: str
+    matricule_auteur: str
+    motif_refus: str
+    commentaire_interne: Optional[str] = ''
+    commentaire_externe: Optional[str] = ''

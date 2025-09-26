@@ -177,6 +177,12 @@ msgstr "Admitted"
 msgid "ADMISSION"
 msgstr "Admission"
 
+msgid "ADRE"
+msgstr ""
+
+msgid "ADRE Manager"
+msgstr ""
+
 msgid "Abstract"
 msgstr ""
 
@@ -351,9 +357,6 @@ msgstr "All supervisory panel members must have approved the proposition."
 msgid "All history"
 msgstr ""
 
-msgid "All roles are not defined."
-msgstr ""
-
 msgid "All supervisors must have approved the proposition."
 msgstr ""
 
@@ -482,6 +485,12 @@ msgstr ""
 msgid "Auditor"
 msgstr ""
 
+msgid "Author of this command is not a rector."
+msgstr ""
+
+msgid "Author of this command is not from the doctorate CDD."
+msgstr ""
+
 msgid "Authors"
 msgstr ""
 
@@ -523,6 +532,9 @@ msgid "CDD Mail template"
 msgstr ""
 
 msgid "CDD Mail templates"
+msgstr ""
+
+msgid "CDD Manager"
 msgstr ""
 
 msgid "CDD configuration"
@@ -679,6 +691,9 @@ msgid "Comment about jury"
 msgstr ""
 
 msgid "Comment for PhD Committee manager"
+msgstr ""
+
+msgid "Comment for the candidate"
 msgstr ""
 
 msgid "Comment to the candidate:"
@@ -922,6 +937,9 @@ msgid "Deadline extended"
 msgstr ""
 
 msgid "Deadline of the confirmation paper (DD/MM/YYYY)"
+msgstr ""
+
+msgid "Decision"
 msgstr ""
 
 msgid "Dedicated time (in EFT)"
@@ -1783,7 +1801,19 @@ msgstr ""
 msgid "Mail sent to the student to update a doctoral training activity"
 msgstr ""
 
+msgid "Mail sent to the student when ADRE approve the jury"
+msgstr ""
+
+msgid "Mail sent to the student when ADRE refuse the jury"
+msgstr ""
+
 msgid "Mail sent to the student when one of the member refuse the jury"
+msgstr ""
+
+msgid "Mail sent to the student when the CDD approve the jury"
+msgstr ""
+
+msgid "Mail sent to the student when the CDD refuse the jury"
 msgstr ""
 
 msgid "Main institute"
@@ -1904,7 +1934,7 @@ msgstr "Not invited to sign"
 msgid "Name"
 msgstr ""
 
-msgid "Name in the language of the manifestation"
+msgid "Name of the ADRE manager"
 msgstr ""
 
 msgid "Name of the doctoral commission"
@@ -2188,6 +2218,11 @@ msgid "Please select at least one date."
 msgstr ""
 
 msgid "Please specify either a hourly volume or a number of participating days"
+msgstr ""
+
+msgid ""
+"Please specify the president and secretary roles before submitting your "
+"approval."
 msgstr ""
 
 msgid "Please specify the title in the language of the manifestation"
@@ -2488,6 +2523,12 @@ msgstr ""
 msgid "Role: ADRE Secretaries"
 msgstr ""
 
+msgid "Role: ADRE manager"
+msgstr ""
+
+msgid "Role: ADRE managers"
+msgstr ""
+
 msgid "Role: ADRE secretary"
 msgstr ""
 
@@ -2760,6 +2801,9 @@ msgstr ""
 msgid ""
 "Submit a proof, for example a letter from the editor, a delivery "
 "attestation, the first page of the publication, ..."
+msgstr ""
+
+msgid "Submit my decision"
 msgstr ""
 
 msgid "Submit selected activities"
@@ -3052,6 +3096,9 @@ msgstr ""
 msgid "The person has not been found."
 msgstr ""
 
+msgid "The person is not a president, a secretary or a member."
+msgstr ""
+
 msgid "The public comment about the approval/refusal"
 msgstr ""
 
@@ -3172,6 +3219,12 @@ msgstr ""
 
 msgid ""
 "This adds a \"Complementary training\" tab on admissions concerning this CDD."
+msgstr ""
+
+msgid "This comment will be visible only to administrators."
+msgstr ""
+
+msgid "This comment will be visible to all users with access to the jury."
 msgstr ""
 
 msgid "This field is required."

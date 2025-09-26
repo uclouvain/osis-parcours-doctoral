@@ -74,13 +74,29 @@ def is_related_to_an_admission(self, user: User, obj: ParcoursDoctoral):
 @predicate(bind=True)
 @predicate_failed_msg(message=_("The jury is not in progress"))
 def is_jury_in_progress(self, user: User, obj: ParcoursDoctoral):
-    return obj.status == ChoixStatutParcoursDoctoral.CONFIRMATION_REUSSIE.name
+    return obj.status in {
+        ChoixStatutParcoursDoctoral.CONFIRMATION_REUSSIE.name,
+        ChoixStatutParcoursDoctoral.JURY_REFUSE_CDD.name,
+        ChoixStatutParcoursDoctoral.JURY_REFUSE_ADRE.name,
+    }
 
 
 @predicate(bind=True)
 @predicate_failed_msg(message=_("The jury signing is not in progress"))
 def is_jury_signing_in_progress(self, user: User, obj: ParcoursDoctoral):
     return obj.status == ChoixStatutParcoursDoctoral.JURY_SOUMIS.name
+
+
+@predicate(bind=True)
+@predicate_failed_msg(message=_("The jury signing is not in progress"))
+def is_jury_approuve_ca(self, user: User, obj: ParcoursDoctoral):
+    return obj.status == ChoixStatutParcoursDoctoral.JURY_APPROUVE_CA.name
+
+
+@predicate(bind=True)
+@predicate_failed_msg(message=_("The jury signing is not in progress"))
+def is_jury_approuve_cdd(self, user: User, obj: ParcoursDoctoral):
+    return obj.status == ChoixStatutParcoursDoctoral.JURY_APPROUVE_CDD.name
 
 
 @predicate(bind=True)

@@ -40,3 +40,21 @@ class IJuryService(interface.DomainService):
         parcours_doctoral_id: ParcoursDoctoralIdentity,
     ) -> MembreJury:
         raise NotImplementedError
+
+    @classmethod
+    @abstractmethod
+    def recuperer_gestionnaire_cdd(
+        cls,
+        parcours_doctoral_id: ParcoursDoctoralIdentity,
+        matricule: str,
+    ) -> MembreJury:
+        raise NotImplementedError
+
+    @classmethod
+    @abstractmethod
+    def recuperer_gestionnaire_adre(
+        cls,
+        parcours_doctoral_id: ParcoursDoctoralIdentity,
+        matricule: str,
+    ) -> MembreJury:
+        raise NotImplementedError

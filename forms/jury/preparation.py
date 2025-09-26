@@ -68,7 +68,7 @@ class JuryPreparationForm(forms.Form):
         label=_("Defense language"),
         required=False,
         widget=autocomplete.ListSelect2(
-            url="admission:autocomplete:language",
+            url="language-autocomplete",
             attrs={
                 **DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS,
             },

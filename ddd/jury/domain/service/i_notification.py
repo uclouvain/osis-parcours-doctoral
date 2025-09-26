@@ -46,3 +46,27 @@ class INotification(interface.DomainService):
     @abstractmethod
     def notifier_refus(cls, parcours_doctoral: ParcoursDoctoral, signataire: MembreJury, avis: AvisDTO) -> None:
         raise NotImplementedError
+
+    @classmethod
+    @abstractmethod
+    def notifier_approbation_cdd(
+        cls, parcours_doctoral: ParcoursDoctoral, signataire: MembreJury, avis: AvisDTO
+    ) -> None:
+        raise NotImplementedError
+
+    @classmethod
+    @abstractmethod
+    def notifier_refus_cdd(cls, parcours_doctoral: ParcoursDoctoral, signataire: MembreJury, avis: AvisDTO) -> None:
+        raise NotImplementedError
+
+    @classmethod
+    @abstractmethod
+    def notifier_approbation_adre(
+        cls, parcours_doctoral: ParcoursDoctoral, signataire: MembreJury, avis: AvisDTO
+    ) -> None:
+        raise NotImplementedError
+
+    @classmethod
+    @abstractmethod
+    def notifier_refus_adre(cls, parcours_doctoral: ParcoursDoctoral, signataire: MembreJury, avis: AvisDTO) -> None:
+        raise NotImplementedError
