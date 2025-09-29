@@ -76,7 +76,7 @@ class ListerInscriptionsUnitesEnseignementTestCase(QueriesAssertionsMixin, TestC
             status=StatutActivite.SOUMISE.name,
         )
 
-        with self.assertNumQueriesLessThan(3, verbose=True):
+        with self.assertNumQueriesLessThan(3):
             activities = message_bus_instance.invoke(
                 ListerInscriptionsUnitesEnseignementQuery(
                     annee=2020,

@@ -26,7 +26,7 @@
 import datetime
 
 from django.contrib import messages
-from django.db.models import QuerySet
+from django.db.models import Q, QuerySet
 from django.http import HttpResponseRedirect
 from django.shortcuts import resolve_url
 from django.utils.functional import cached_property
@@ -43,6 +43,7 @@ from parcours_doctoral.ddd.formation.commands import (
     InscrireEvaluationCommand,
     ModifierInscriptionEvaluationCommand,
     RecupererInscriptionEvaluationQuery,
+    ReinscrireEvaluationCommand,
 )
 from parcours_doctoral.ddd.formation.domain.model.enums import StatutActivite
 from parcours_doctoral.ddd.formation.dtos.inscription_evaluation import (
@@ -64,6 +65,7 @@ __all__ = [
     'AssessmentEnrollmentCreateView',
     'AssessmentEnrollmentDeleteView',
     'AssessmentEnrollmentDetailsView',
+    'AssessmentEnrollmentReenrollView',
     'AssessmentEnrollmentUpdateView',
 ]
 
@@ -98,12 +100,19 @@ class BaseAssessmentEnrollmentViewMixin:
 
     @cached_property
     def related_courses(self) -> QuerySet[Activity]:
-        return (
+        queryset = (
             Activity.objects.filter(status=StatutActivite.ACCEPTEE.name)
             .filter(learning_unit_year__academic_year__year=self.current_year)
             .for_enrollment_courses(self.parcours_doctoral_uuid)
             .order_by('learning_unit_year__acronym')
         )
+        if self.enrollment_uuid:
+            queryset = queryset.exclude(
+                Q(assessmentenrollment__isnull=False) & ~Q(assessmentenrollment__uuid=self.enrollment_uuid)
+            )
+        else:
+            queryset = queryset.exclude(assessmentenrollment__isnull=False)
+        return queryset
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
@@ -199,6 +208,22 @@ class AssessmentEnrollmentDeleteView(BaseAssessmentEnrollmentViewMixin, Parcours
     def delete(self, request, *args, **kwargs):
         message_bus_instance.invoke(
             DesinscrireEvaluationCommand(inscription_uuid=self.kwargs['enrollment_uuid']),
+        )
+        messages.success(request, self.message_on_success)
+        return HttpResponseRedirect(resolve_url('parcours_doctoral:assessment-enrollment', uuid=self.kwargs['uuid']))
+
+
+class AssessmentEnrollmentReenrollView(BaseAssessmentEnrollmentViewMixin, ParcoursDoctoralFormMixin, View):
+    urlpatterns = {'reenroll': '<uuid:enrollment_uuid>/reenroll'}
+    permission_required = 'parcours_doctoral.change_assessment_enrollment'
+    message_on_success = gettext_lazy('The student has been re-enrolled to this assessment.')
+
+    def post(self, request, *args, **kwargs):
+        return self.delete(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        message_bus_instance.invoke(
+            ReinscrireEvaluationCommand(inscription_uuid=self.kwargs['enrollment_uuid']),
         )
         messages.success(request, self.message_on_success)
         return HttpResponseRedirect(resolve_url('parcours_doctoral:assessment-enrollment', uuid=self.kwargs['uuid']))

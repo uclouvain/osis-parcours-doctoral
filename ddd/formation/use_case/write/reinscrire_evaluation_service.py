@@ -23,33 +23,27 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-
-from django.utils.translation import gettext_lazy as _
-from rules import RuleSet, always_allow
-
-from osis_role.contrib.models import RoleModel
-from parcours_doctoral.auth.predicates.parcours_doctoral import (
-    is_related_to_an_admission,
+from parcours_doctoral.ddd.formation.builder.inscription_evaluation_builder import (
+    InscriptionEvaluationIdentityBuilder,
+)
+from parcours_doctoral.ddd.formation.commands import ReinscrireEvaluationCommand
+from parcours_doctoral.ddd.formation.repository.i_inscription_evaluation import (
+    IInscriptionEvaluationRepository,
 )
 
 
-class DoctorateReader(RoleModel):
-    class Meta:
-        verbose_name = _("Role: Doctorate reader")
-        verbose_name_plural = _("Role: Doctorate readers")
-        group_name = "doctorate_reader"
+def reinscrire_evaluation(
+    cmd: ReinscrireEvaluationCommand,
+    inscription_evaluation_repository: IInscriptionEvaluationRepository,
+):
+    # GIVEN
+    entity_id = InscriptionEvaluationIdentityBuilder.build_from_uuid(uuid=cmd.inscription_uuid)
+    entity = inscription_evaluation_repository.get(entity_id=entity_id)
 
-    @classmethod
-    def rule_set(cls):
-        ruleset = {
-            'base.can_access_student_path': always_allow,
-            'parcours_doctoral.view_parcours_doctoral_home': always_allow,
-            'parcours_doctoral.view_project': always_allow,
-            'parcours_doctoral.view_cotutelle': is_related_to_an_admission,
-            'parcours_doctoral.view_supervision': always_allow,
-            'parcours_doctoral.view_jury': always_allow,
-            'parcours_doctoral.view_confirmation': is_related_to_an_admission,
-            'parcours_doctoral.view_dossiers': always_allow,
-            'parcours_doctoral.view_internalnote': always_allow,
-        }
-        return RuleSet(ruleset)
+    # WHEN
+    entity.reinscrire()
+
+    # THEN
+    inscription_evaluation_repository.save(entity)
+
+    return entity_id
