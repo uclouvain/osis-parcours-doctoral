@@ -29,14 +29,20 @@ from osis_role import role
 from parcours_doctoral.auth.predicates.parcours_doctoral import (
     complementary_training_enabled,
     has_valid_enrollment,
+    is_jury_approuve_ca,
     is_jury_in_progress,
+    is_jury_signing_in_progress,
     is_part_of_education_group,
     is_related_to_an_admission,
     submitted_confirmation_paper,
 )
-from parcours_doctoral.auth.roles.adre import AdreSecretary
+from parcours_doctoral.auth.roles.adre_manager import AdreManager
+from parcours_doctoral.auth.roles.adre_secretary import AdreSecretary
+from parcours_doctoral.auth.roles.auditor import Auditor
 from parcours_doctoral.auth.roles.ca_member import CommitteeMember
 from parcours_doctoral.auth.roles.cdd_configurator import CddConfigurator
+from parcours_doctoral.auth.roles.das import SectorAdministrativeDirector
+from parcours_doctoral.auth.roles.jury_member import JuryMember
 from parcours_doctoral.auth.roles.jury_secretary import JurySecretary
 from parcours_doctoral.auth.roles.promoter import Promoter
 from parcours_doctoral.auth.roles.student import Student
@@ -44,9 +50,13 @@ from parcours_doctoral.auth.roles.student import Student
 role.role_manager.register(CddConfigurator)
 role.role_manager.register(JurySecretary)
 role.role_manager.register(AdreSecretary)
+role.role_manager.register(AdreManager)
 role.role_manager.register(Student)
 role.role_manager.register(Promoter)
 role.role_manager.register(CommitteeMember)
+role.role_manager.register(Auditor)
+role.role_manager.register(SectorAdministrativeDirector)
+role.role_manager.register(JuryMember)
 
 
 PROGRAM_MANAGER_RULES = {
@@ -104,8 +114,15 @@ PROGRAM_MANAGER_RULES = {
     'parcours_doctoral.refuse_activity': is_part_of_education_group & has_valid_enrollment,
     'parcours_doctoral.restore_activity': is_part_of_education_group & has_valid_enrollment,
     # -- Jury
-    'parcours_doctoral.view_jury': is_part_of_education_group & is_jury_in_progress,
-    'parcours_doctoral.change_jury': is_part_of_education_group & is_jury_in_progress & has_valid_enrollment,
+    'parcours_doctoral.view_jury': is_part_of_education_group,
+    'parcours_doctoral.change_jury': is_part_of_education_group & has_valid_enrollment,
+    'parcours_doctoral.jury_request_signatures': is_part_of_education_group
+    & is_jury_in_progress
+    & has_valid_enrollment,
+    'parcours_doctoral.jury_reset_signatures': is_part_of_education_group
+    & is_jury_signing_in_progress
+    & has_valid_enrollment,
+    'parcours_doctoral.approve_jury': is_part_of_education_group & is_jury_approuve_ca & has_valid_enrollment,
     # -- Défense
     # -- Soutenance
     # -- Commentaire

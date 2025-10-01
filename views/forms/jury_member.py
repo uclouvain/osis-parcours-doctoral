@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -23,9 +23,9 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from base.ddd.utils.business_validator import MultipleBusinessExceptions
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.forms import Form
 from django.http import Http404
 from django.shortcuts import redirect
 from django.urls import reverse
@@ -34,14 +34,17 @@ from django.utils.translation import gettext_lazy as _
 from django.views import View
 from django.views.generic import FormView
 
+from base.ddd.utils.business_validator import BusinessException, MultipleBusinessExceptions
 from infrastructure.messages_bus import message_bus_instance
 from parcours_doctoral.ddd.jury.commands import (
+    ApprouverJuryParPdfCommand,
     ModifierMembreCommand,
     ModifierRoleMembreCommand,
     RecupererJuryMembreQuery,
+    RenvoyerInvitationSignatureCommand,
     RetirerMembreCommand,
 )
-from parcours_doctoral.ddd.jury.validator.exceptions import (
+from parcours_doctoral.ddd.jury.domain.validator.exceptions import (
     MembreDejaDansJuryException,
     MembreExterneSansEmailException,
     MembreExterneSansGenreException,
@@ -53,7 +56,7 @@ from parcours_doctoral.ddd.jury.validator.exceptions import (
     MembreNonTrouveDansJuryException,
     NonDocteurSansJustificationException,
 )
-from parcours_doctoral.forms.jury.membre import JuryMembreForm
+from parcours_doctoral.forms.jury.membre import ApprovalByPdfForm, JuryMembreForm
 from parcours_doctoral.views.mixins import (
     BusinessExceptionFormViewMixin,
     ParcoursDoctoralViewMixin,
@@ -63,14 +66,15 @@ __all__ = [
     "JuryMemberRemoveView",
     "JuryMembreUpdateFormView",
     "JuryMemberChangeRoleView",
+    "JuryMembreResendInviteFormView",
+    "JuryMembreApproveByPdfFormView",
 ]
 
 __namespace__ = {'jury-member': 'jury-member/<uuid:member_uuid>'}
 
 from osis_role.contrib.views import PermissionRequiredMixin
-from reference.models.country import Country
-
 from parcours_doctoral.forms.jury.membre_role import JuryMembreRoleForm
+from reference.models.country import Country
 
 
 class JuryMemberRemoveView(
@@ -153,6 +157,7 @@ class JuryMembreUpdateFormView(
             'justification_non_docteur': self.membre.justification_non_docteur,
             'genre': self.membre.genre,
             'email': self.membre.email,
+            'langue': self.membre.langue,
         }
 
     def call_command(self, form):
@@ -177,6 +182,9 @@ class JuryMemberChangeRoleView(
     urlpatterns = 'change-role'
     permission_required = 'parcours_doctoral.change_jury'
 
+    def get(self, request, *aegs, **kwargs):
+        return redirect(reverse('parcours_doctoral:jury', args=[str(self.kwargs['uuid'])]))
+
     def post(self, request, *args, **kwargs):
         form = JuryMembreRoleForm(data=request.POST)
         if form.is_valid():
@@ -186,14 +194,72 @@ class JuryMemberChangeRoleView(
                         uuid_jury=str(self.kwargs['uuid']),
                         uuid_membre=str(self.kwargs['member_uuid']),
                         role=form.cleaned_data['role'],
+                        matricule_auteur=self.request.user.person.global_id,
                     )
                 )
             except MultipleBusinessExceptions as multiple_exceptions:
                 messages.error(self.request, _("Some errors have been encountered."))
                 for exception in multiple_exceptions.exceptions:
                     messages.error(self.request, exception.message)
+            except BusinessException as exception:
+                messages.error(self.request, _("Some errors have been encountered."))
+                messages.error(self.request, exception.message)
         else:
             messages.error(self.request, _("Some errors have been encountered."))
             if form.errors:
                 messages.error(self.request, str(form.errors))
         return redirect(reverse('parcours_doctoral:jury', args=[str(self.kwargs['uuid'])]))
+
+
+class JuryMembreResendInviteFormView(
+    ParcoursDoctoralViewMixin,
+    BusinessExceptionFormViewMixin,
+    FormView,
+):
+    urlpatterns = 'resend-invite'
+    permission_required = 'parcours_doctoral.change_jury'
+    form_class = Form
+
+    def call_command(self, form):
+        message_bus_instance.invoke(
+            RenvoyerInvitationSignatureCommand(
+                uuid_jury=self.parcours_doctoral_uuid,
+                uuid_membre=str(self.kwargs['member_uuid']),
+            )
+        )
+
+    def get_success_url(self):
+        return reverse('parcours_doctoral:jury', args=[self.parcours_doctoral_uuid])
+
+    def form_invalid(self, form):
+        for field, errors in form.errors.items():
+            messages.error(self.request, '\n'.join(errors))
+        return redirect(self.get_success_url())
+
+
+class JuryMembreApproveByPdfFormView(
+    ParcoursDoctoralViewMixin,
+    BusinessExceptionFormViewMixin,
+    FormView,
+):
+    urlpatterns = 'approve-by-pdf'
+    permission_required = 'parcours_doctoral.change_jury'
+    form_class = ApprovalByPdfForm
+
+    def call_command(self, form):
+        message_bus_instance.invoke(
+            ApprouverJuryParPdfCommand(
+                uuid_jury=self.parcours_doctoral_uuid,
+                matricule_auteur=self.request.user.person.global_id,
+                uuid_membre=str(self.kwargs['member_uuid']),
+                **form.cleaned_data,
+            )
+        )
+
+    def get_success_url(self):
+        return reverse('parcours_doctoral:jury', args=[self.parcours_doctoral_uuid])
+
+    def form_invalid(self, form):
+        for field, errors in form.errors.items():
+            messages.error(self.request, '\n'.join(errors))
+        return redirect(self.get_success_url())

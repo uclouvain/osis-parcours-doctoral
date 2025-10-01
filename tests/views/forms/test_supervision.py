@@ -37,6 +37,7 @@ from base.tests.factories.academic_year import AcademicYearFactory
 from base.tests.factories.entity import EntityFactory
 from base.tests.factories.entity_version import EntityVersionFactory
 from base.tests.factories.person import ExternalPersonFactory, PersonFactory
+from base.tests.factories.program_manager import ProgramManagerFactory
 from base.tests.factories.tutor import TutorFactory
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import ENTITY_CDE
 from parcours_doctoral.forms.supervision import ACTOR_EXTERNAL, EXTERNAL_FIELDS
@@ -69,7 +70,9 @@ class SupervisionTestCase(TestCase):
         )
 
         # Users
-        cls.program_manager_user = AdreSecretaryRoleFactory().person.user
+        cls.program_manager_user = ProgramManagerFactory(
+            education_group=cls.parcours_doctoral.training.education_group,
+        ).person.user
 
         cls.promoter = PromoterFactory(process=cls.parcours_doctoral.supervision_group)
         cls.ca_member = CaMemberFactory(process=cls.parcours_doctoral.supervision_group)

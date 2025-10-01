@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -24,21 +24,25 @@
 #
 # ##############################################################################
 
-from base.models.utils.utils import ChoiceEnum
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import pgettext_lazy
+
+from base.models.utils.utils import ChoiceEnum
 
 
 class RoleJury(ChoiceEnum):
     PRESIDENT = _('PRESIDENT')
     SECRETAIRE = _('SECRETAIRE')
     MEMBRE = _('MEMBRE')
+    VERIFICATEUR = _('VERIFICATEUR')
+    CDD = _('CDD')
+    ADRE = _('ADRE')
 
 
 class TitreMembre(ChoiceEnum):
     DOCTEUR = _('Doctor')
     PROFESSEUR = _('Professor')
-    NON_DOCTEUR = _('Does not have a doctor title')
+    NON_DOCTEUR = _('Without PhD degree')
 
 
 class GenreMembre(ChoiceEnum):
@@ -60,3 +64,21 @@ class ChoixLangueRedactionThese(ChoiceEnum):
     ENGLISH = _('English')
     OTHER = _('Other')
     UNDECIDED = _('Undecided')
+
+
+class ChoixStatutSignature(ChoiceEnum):
+    IN_PROGRESS = _('IN_PROGRESS')
+    SIGNING_IN_PROGRESS = _('SIGNING_IN_PROGRESS')
+    SIGNED = _('SIGNED')
+
+
+class ChoixEtatSignature(ChoiceEnum):
+    NOT_INVITED = _('NOT_INVITED')  # Pas encore envoyée au signataire
+    INVITED = _('INVITED')  # Envoyée au signataire
+    APPROVED = pgettext_lazy("admission decision", "Approved")  # Approuvée par le signataire
+    DECLINED = pgettext_lazy("admission decision", "Denied")  # Refusée par le signataire
+
+
+class DecisionApprovalEnum(ChoiceEnum):
+    APPROVED = pgettext_lazy("admission decision", "Approved")  # Approuvée par le signataire
+    DECLINED = pgettext_lazy("admission decision", "Denied")  # Refusée par le signataire

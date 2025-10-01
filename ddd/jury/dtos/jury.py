@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -27,7 +27,18 @@ import datetime
 from typing import List, Optional
 
 import attr
+
 from osis_common.ddd import interface
+
+
+@attr.dataclass(frozen=True, slots=True)
+class SignatureMembreJuryDTO(interface.DTO):
+    etat: str
+    date: Optional[datetime.datetime]
+    commentaire_externe: str
+    commentaire_interne: str
+    motif_refus: str
+    pdf: List[str]
 
 
 @attr.dataclass(frozen=True, slots=True)
@@ -35,6 +46,7 @@ class MembreJuryDTO(interface.DTO):
     uuid: str
     role: str
     est_promoteur: bool
+    est_promoteur_de_reference: bool
     matricule: str
     institution: str
     autre_institution: str
@@ -44,7 +56,9 @@ class MembreJuryDTO(interface.DTO):
     titre: str
     justification_non_docteur: str
     genre: str
+    langue: str
     email: str
+    signature: SignatureMembreJuryDTO
 
 
 @attr.dataclass(frozen=True, slots=True)
@@ -55,9 +69,20 @@ class JuryDTO(interface.DTO):
     membres: List[MembreJuryDTO]
 
     formule_defense: str
-    date_indicative: Optional[datetime.date]
+    date_indicative: str
+    nom_langue_redaction: str
     langue_redaction: str
+    nom_langue_soutenance: str
     langue_soutenance: str
     commentaire: str
     situation_comptable: Optional[bool]
     approbation_pdf: List[str]
+
+
+@attr.dataclass(frozen=True, slots=True)
+class AvisDTO(interface.DTO):
+    etat: str
+    commentaire_externe: Optional[str] = ''
+    commentaire_interne: Optional[str] = ''
+    motif_refus: Optional[str] = ''
+    pdf: List[str] = attr.Factory(list)

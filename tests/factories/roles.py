@@ -26,8 +26,13 @@
 
 import factory
 
-from parcours_doctoral.auth.roles.adre import AdreSecretary
+from parcours_doctoral.auth.roles.adre_manager import AdreManager
+from parcours_doctoral.auth.roles.adre_secretary import AdreSecretary
+from parcours_doctoral.auth.roles.auditor import Auditor
+from parcours_doctoral.auth.roles.ca_member import CommitteeMember
 from parcours_doctoral.auth.roles.cdd_configurator import CddConfigurator
+from parcours_doctoral.auth.roles.das import SectorAdministrativeDirector
+from parcours_doctoral.auth.roles.promoter import Promoter
 from parcours_doctoral.auth.roles.student import Student
 
 
@@ -46,6 +51,22 @@ class CddConfiguratorFactory(BaseFactory):
     with_child = False
 
 
+class AuditorFactory(BaseFactory):
+    class Meta:
+        model = Auditor
+
+    entity = factory.SubFactory(
+        'base.tests.factories.entity.EntityWithVersionFactory',
+        organization=None,
+    )
+
+
+class SectorAdministrativeDirectorFactory(BaseFactory):
+    class Meta:
+        model = SectorAdministrativeDirector
+        django_get_or_create = ('person',)
+
+
 class StudentRoleFactory(BaseFactory):
     class Meta:
         model = Student
@@ -55,4 +76,22 @@ class StudentRoleFactory(BaseFactory):
 class AdreSecretaryRoleFactory(BaseFactory):
     class Meta:
         model = AdreSecretary
+        django_get_or_create = ('person',)
+
+
+class AdreManagerRoleFactory(BaseFactory):
+    class Meta:
+        model = AdreManager
+        django_get_or_create = ('person',)
+
+
+class PromoterRoleFactory(BaseFactory):
+    class Meta:
+        model = Promoter
+        django_get_or_create = ('person',)
+
+
+class CaMemberRoleFactory(BaseFactory):
+    class Meta:
+        model = CommitteeMember
         django_get_or_create = ('person',)

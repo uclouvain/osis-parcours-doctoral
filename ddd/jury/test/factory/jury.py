@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -28,7 +28,17 @@ import uuid
 
 import factory
 
-from parcours_doctoral.ddd.jury.domain.model.jury import Jury, JuryIdentity, MembreJury
+from parcours_doctoral.ddd.jury.domain.model.enums import (
+    GenreMembre,
+    RoleJury,
+    TitreMembre,
+)
+from parcours_doctoral.ddd.jury.domain.model.jury import (
+    Jury,
+    JuryIdentity,
+    MembreJury,
+    SignatureMembre,
+)
 
 
 class JuryIdentityFactory(factory.Factory):
@@ -39,6 +49,12 @@ class JuryIdentityFactory(factory.Factory):
     uuid = factory.LazyFunction(lambda: str(uuid.uuid4()))
 
 
+class SignatureMembreFactory(factory.Factory):
+    class Meta:
+        model = SignatureMembre
+        abstract = False
+
+
 class MembreJuryFactory(factory.Factory):
     class Meta:
         model = MembreJury
@@ -46,17 +62,20 @@ class MembreJuryFactory(factory.Factory):
 
     uuid = factory.LazyFunction(lambda: str(uuid.uuid4()))
     est_promoteur = False
+    est_promoteur_de_reference = False
     matricule = None
-    role = 'MEMBRE'
+    role = RoleJury.MEMBRE
     institution = 'AUTRE'
     autre_institution = ''
     pays = 'pays'
     nom = 'nom'
     prenom = 'prenom'
     email = 'email'
-    titre = 'DOCTEUR'
+    titre = TitreMembre.DOCTEUR
     justification_non_docteur = None
-    genre = 'AUTRE'
+    genre = GenreMembre.AUTRE
+    langue = 'FR'
+    signature = factory.SubFactory(SignatureMembreFactory)
 
 
 class JuryFactory(factory.Factory):
@@ -71,9 +90,9 @@ class JuryFactory(factory.Factory):
     membres = factory.LazyFunction(lambda: [])
 
     formule_defense = 'DEUX_TEMPS'
-    date_indicative = datetime.date(2022, 1, 1)
+    date_indicative = '01/01/2022'
     langue_redaction = 'english'
     langue_soutenance = 'english'
     commentaire = ''
     situation_comptable = None
-    approbation_pdf = None
+    approbation_pdf = []

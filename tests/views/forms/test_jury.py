@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -29,22 +29,30 @@ import uuid
 from django.shortcuts import resolve_url
 from django.test import TestCase
 from django.urls import reverse
+from osis_signature.enums import SignatureState
 from rest_framework.status import HTTP_200_OK, HTTP_404_NOT_FOUND
 
+from base.models.enums.mandate_type import MandateTypes
 from base.tests.factories.academic_year import AcademicYearFactory
+from base.tests.factories.mandatary import MandataryFactory
 from base.tests.factories.program_manager import ProgramManagerFactory
-from parcours_doctoral.ddd.domain.model.enums import (
-    ChoixLangueDefense,
-    ChoixStatutParcoursDoctoral,
+from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
+from parcours_doctoral.ddd.jury.domain.model.enums import (
+    DecisionApprovalEnum,
+    FormuleDefense,
 )
-from parcours_doctoral.ddd.jury.domain.model.enums import FormuleDefense
+from parcours_doctoral.models import JuryActor
 from parcours_doctoral.models.parcours_doctoral import ParcoursDoctoral
 from parcours_doctoral.tests.factories.parcours_doctoral import ParcoursDoctoralFactory
+from parcours_doctoral.tests.factories.roles import (
+    AdreManagerRoleFactory,
+    AuditorFactory,
+)
 from parcours_doctoral.tests.factories.supervision import PromoterFactory
-from reference.tests.factories.language import FrenchLanguageFactory
+from reference.tests.factories.language import FrenchLanguageFactory, LanguageFactory
 
 
-class JuryFormViewTestCase(TestCase):
+class JuryPreparationFormViewTestCase(TestCase):
     @classmethod
     def setUpTestData(cls):
         # Create some academic years
@@ -90,15 +98,13 @@ class JuryFormViewTestCase(TestCase):
             {
                 'titre_propose': self.parcours_doctoral.thesis_proposed_title,
                 'formule_defense': self.parcours_doctoral.defense_method,
-                'date_indicative': (
-                    self.parcours_doctoral.defense_indicative_date.isoformat()
-                    if self.parcours_doctoral.defense_indicative_date
-                    else None
-                ),
+                'date_indicative': self.parcours_doctoral.defense_indicative_date,
                 'langue_redaction': (
                     self.parcours_doctoral.thesis_language if self.parcours_doctoral.thesis_language else ''
                 ),
-                'langue_soutenance': self.parcours_doctoral.defense_language,
+                'langue_soutenance': (
+                    self.parcours_doctoral.defense_language if self.parcours_doctoral.defense_language else ''
+                ),
                 'commentaire': self.parcours_doctoral.comment_about_jury,
             },
         )
@@ -114,7 +120,7 @@ class JuryFormViewTestCase(TestCase):
                 'formule_defense': FormuleDefense.FORMULE_2.name,
                 'date_indicative': '01/01/2023',
                 'langue_redaction': language.code,
-                'langue_soutenance': ChoixLangueDefense.ENGLISH.name,
+                'langue_soutenance': language.code,
                 'commentaire': 'Nouveau commentaire',
             },
         )
@@ -126,7 +132,190 @@ class JuryFormViewTestCase(TestCase):
         )
         self.assertEqual(updated_parcours_doctoral.thesis_proposed_title, 'Nouveau titre')
         self.assertEqual(updated_parcours_doctoral.defense_method, FormuleDefense.FORMULE_2.name)
-        self.assertEqual(updated_parcours_doctoral.defense_indicative_date, datetime.date(2023, 1, 1))
+        self.assertEqual(updated_parcours_doctoral.defense_indicative_date, '01/01/2023')
         self.assertEqual(updated_parcours_doctoral.thesis_language, language)
-        self.assertEqual(updated_parcours_doctoral.defense_language, ChoixLangueDefense.ENGLISH.name)
+        self.assertEqual(updated_parcours_doctoral.defense_language, language)
         self.assertEqual(updated_parcours_doctoral.comment_about_jury, 'Nouveau commentaire')
+
+
+class JuryFormViewTestCase(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        # Create some academic years
+        academic_years = [AcademicYearFactory(year=year) for year in [2021, 2022]]
+
+        MandataryFactory(
+            mandate__function=MandateTypes.RECTOR.name,
+            start_date=datetime.date.today(),
+            end_date=datetime.date.today() + datetime.timedelta(days=1),
+        )
+
+        promoter = PromoterFactory()
+        cls.promoter = promoter.person
+
+        # Create parcours_doctorals
+        cls.parcours_doctoral = ParcoursDoctoralFactory(
+            status=ChoixStatutParcoursDoctoral.CONFIRMATION_REUSSIE.name,
+            thesis_proposed_title='title',
+            defense_method=FormuleDefense.FORMULE_2,
+            defense_language=LanguageFactory(),
+            thesis_language=LanguageFactory(),
+            training__academic_year=academic_years[0],
+        )
+
+        # User with one cdd
+        cls.manager = ProgramManagerFactory(education_group=cls.parcours_doctoral.training.education_group).person.user
+
+        cls.adre_manager = AdreManagerRoleFactory()
+
+        cls.read_path = 'parcours_doctoral:jury'
+
+    def setUp(self):
+        self.client.force_login(user=self.manager)
+
+    def test_post_jury_request_signatures_cdd_user(self):
+        url = reverse('parcours_doctoral:update:jury-request-signatures', args=[self.parcours_doctoral.uuid])
+
+        AuditorFactory(entity=self.parcours_doctoral.thesis_institute.entity)
+
+        response = self.client.post(url, data={})
+
+        self.assertRedirects(response, resolve_url(self.read_path, uuid=self.parcours_doctoral.uuid))
+        self.parcours_doctoral.refresh_from_db()
+        self.assertEqual(self.parcours_doctoral.status, ChoixStatutParcoursDoctoral.JURY_SOUMIS.name)
+        self.assertTrue(
+            all(
+                actor.state == SignatureState.INVITED.name
+                for actor in JuryActor.objects.filter(process=self.parcours_doctoral.jury_group)
+            )
+        )
+
+    def test_post_jury_reset_signatures_cdd_user(self):
+        url = reverse('parcours_doctoral:update:jury-reset-signatures', args=[self.parcours_doctoral.uuid])
+
+        for actor in JuryActor.objects.filter(process=self.parcours_doctoral.jury_group):
+            actor.switch_state(SignatureState.INVITED)
+        self.parcours_doctoral.status = ChoixStatutParcoursDoctoral.JURY_SOUMIS.name
+        self.parcours_doctoral.save(update_fields=['status'])
+
+        response = self.client.post(url, data={})
+
+        self.assertRedirects(response, resolve_url(self.read_path, uuid=self.parcours_doctoral.uuid))
+        self.parcours_doctoral.refresh_from_db()
+        self.assertEqual(self.parcours_doctoral.status, ChoixStatutParcoursDoctoral.CONFIRMATION_REUSSIE.name)
+        self.assertTrue(
+            all(
+                actor.state == SignatureState.NOT_INVITED.name
+                for actor in JuryActor.objects.filter(process=self.parcours_doctoral.jury_group)
+            )
+        )
+
+    def test_post_jury_cdd_approbation_cdd_user(self):
+        url = reverse('parcours_doctoral:update:jury-cdd-decision', args=[self.parcours_doctoral.uuid])
+
+        for actor in JuryActor.objects.filter(process=self.parcours_doctoral.jury_group):
+            actor.switch_state(SignatureState.APPROVED)
+        self.parcours_doctoral.status = ChoixStatutParcoursDoctoral.JURY_APPROUVE_CA.name
+        self.parcours_doctoral.save(update_fields=['status'])
+
+        response = self.client.post(
+            url,
+            data={
+                'decision': DecisionApprovalEnum.APPROVED.name,
+                'commentaire_interne': 'foo',
+                'commentaire_externe': 'bar',
+            },
+        )
+
+        self.assertRedirects(response, resolve_url(self.read_path, uuid=self.parcours_doctoral.uuid))
+        self.parcours_doctoral.refresh_from_db()
+        self.assertEqual(self.parcours_doctoral.status, ChoixStatutParcoursDoctoral.JURY_APPROUVE_CDD.name)
+        actor = JuryActor.objects.get(process=self.parcours_doctoral.jury_group, person=self.manager.person)
+        self.assertEqual(actor.state, SignatureState.APPROVED.name)
+        self.assertEqual(actor.internal_comment, 'foo')
+        self.assertEqual(actor.comment, 'bar')
+
+    def test_post_jury_cdd_refus_cdd_user(self):
+        url = reverse('parcours_doctoral:update:jury-cdd-decision', args=[self.parcours_doctoral.uuid])
+
+        for actor in JuryActor.objects.filter(process=self.parcours_doctoral.jury_group):
+            actor.switch_state(SignatureState.APPROVED)
+        self.parcours_doctoral.status = ChoixStatutParcoursDoctoral.JURY_APPROUVE_CA.name
+        self.parcours_doctoral.save(update_fields=['status'])
+
+        response = self.client.post(
+            url,
+            data={
+                'decision': DecisionApprovalEnum.DECLINED.name,
+                'motif_refus': 'motif',
+                'commentaire_interne': 'foo',
+                'commentaire_externe': 'bar',
+            },
+        )
+
+        self.assertRedirects(response, resolve_url(self.read_path, uuid=self.parcours_doctoral.uuid))
+        self.parcours_doctoral.refresh_from_db()
+        self.assertEqual(self.parcours_doctoral.status, ChoixStatutParcoursDoctoral.JURY_REFUSE_CDD.name)
+        actor = JuryActor.objects.get(process=self.parcours_doctoral.jury_group, person=self.manager.person)
+        self.assertEqual(actor.state, SignatureState.DECLINED.name)
+        self.assertEqual(actor.rejection_reason, 'motif')
+        self.assertEqual(actor.internal_comment, 'foo')
+        self.assertEqual(actor.comment, 'bar')
+
+    def test_post_jury_adre_approbation_cdd_user(self):
+        url = reverse('parcours_doctoral:update:jury-adre-decision', args=[self.parcours_doctoral.uuid])
+
+        self.client.force_login(user=self.adre_manager.person.user)
+
+        for actor in JuryActor.objects.filter(process=self.parcours_doctoral.jury_group):
+            actor.switch_state(SignatureState.APPROVED)
+        self.parcours_doctoral.status = ChoixStatutParcoursDoctoral.JURY_APPROUVE_CDD.name
+        self.parcours_doctoral.save(update_fields=['status'])
+
+        response = self.client.post(
+            url,
+            data={
+                'decision': DecisionApprovalEnum.APPROVED.name,
+                'commentaire_interne': 'foo',
+                'commentaire_externe': 'bar',
+            },
+        )
+
+        self.assertRedirects(response, resolve_url(self.read_path, uuid=self.parcours_doctoral.uuid))
+        self.assertNotIn('jury_approval_errors', self.client.session)
+        self.parcours_doctoral.refresh_from_db()
+        self.assertEqual(self.parcours_doctoral.status, ChoixStatutParcoursDoctoral.JURY_APPROUVE_ADRE.name)
+        actor = JuryActor.objects.get(process=self.parcours_doctoral.jury_group, person=self.adre_manager.person)
+        self.assertEqual(actor.state, SignatureState.APPROVED.name)
+        self.assertEqual(actor.internal_comment, 'foo')
+        self.assertEqual(actor.comment, 'bar')
+
+    def test_post_jury_adre_refus_cdd_user(self):
+        url = reverse('parcours_doctoral:update:jury-adre-decision', args=[self.parcours_doctoral.uuid])
+
+        self.client.force_login(user=self.adre_manager.person.user)
+
+        for actor in JuryActor.objects.filter(process=self.parcours_doctoral.jury_group):
+            actor.switch_state(SignatureState.APPROVED)
+        self.parcours_doctoral.status = ChoixStatutParcoursDoctoral.JURY_APPROUVE_CDD.name
+        self.parcours_doctoral.save(update_fields=['status'])
+
+        response = self.client.post(
+            url,
+            data={
+                'decision': DecisionApprovalEnum.DECLINED.name,
+                'motif_refus': 'motif',
+                'commentaire_interne': 'foo',
+                'commentaire_externe': 'bar',
+            },
+        )
+
+        self.assertRedirects(response, resolve_url(self.read_path, uuid=self.parcours_doctoral.uuid))
+        self.assertNotIn('jury_approval_errors', self.client.session)
+        self.parcours_doctoral.refresh_from_db()
+        self.assertEqual(self.parcours_doctoral.status, ChoixStatutParcoursDoctoral.JURY_REFUSE_ADRE.name)
+        actor = JuryActor.objects.get(process=self.parcours_doctoral.jury_group, person=self.adre_manager.person)
+        self.assertEqual(actor.state, SignatureState.DECLINED.name)
+        self.assertEqual(actor.rejection_reason, 'motif')
+        self.assertEqual(actor.internal_comment, 'foo')
+        self.assertEqual(actor.comment, 'bar')

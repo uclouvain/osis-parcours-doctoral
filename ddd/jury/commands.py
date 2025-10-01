@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -27,6 +27,7 @@ import datetime
 from typing import List, Optional
 
 import attr
+
 from osis_common.ddd import interface
 
 
@@ -46,10 +47,10 @@ class ModifierJuryCommand(interface.CommandRequest):
     uuid_parcours_doctoral: str
     titre_propose: str
     formule_defense: str
-    date_indicative: datetime.date
+    date_indicative: str
     langue_redaction: str
     langue_soutenance: str
-    commentaire: str
+    commentaire: Optional[str]
 
 
 @attr.dataclass(frozen=True, slots=True)
@@ -64,6 +65,7 @@ class AjouterMembreCommand(interface.CommandRequest):
     titre: Optional[str]
     justification_non_docteur: Optional[str]
     genre: Optional[str]
+    langue: Optional[str]
     email: Optional[str]
 
 
@@ -80,6 +82,7 @@ class ModifierMembreCommand(interface.CommandRequest):
     titre: Optional[str]
     justification_non_docteur: Optional[str]
     genre: Optional[str]
+    langue: Optional[str]
     email: Optional[str]
 
 
@@ -94,3 +97,87 @@ class ModifierRoleMembreCommand(interface.CommandRequest):
     uuid_jury: str
     uuid_membre: str
     role: str
+    matricule_auteur: str
+
+
+@attr.dataclass(frozen=True, slots=True)
+class DemanderSignaturesCommand(interface.CommandRequest):
+    uuid_parcours_doctoral: str
+    matricule_auteur: str
+
+
+@attr.dataclass(frozen=True, slots=True)
+class VerifierJuryConditionSignatureQuery(interface.QueryRequest):
+    uuid_jury: str
+
+
+@attr.dataclass(frozen=True, slots=True)
+class ApprouverJuryParPdfCommand(interface.CommandRequest):
+    uuid_jury: str
+    matricule_auteur: str
+    uuid_membre: str
+    pdf: List[str] = attr.Factory(list)
+
+
+@attr.dataclass(frozen=True, slots=True)
+class ApprouverJuryCommand(interface.CommandRequest):
+    uuid_jury: str
+    uuid_membre: str
+    matricule_auteur: Optional[str] = ''
+    commentaire_interne: Optional[str] = ''
+    commentaire_externe: Optional[str] = ''
+
+
+@attr.dataclass(frozen=True, slots=True)
+class RefuserJuryCommand(interface.CommandRequest):
+    uuid_jury: str
+    uuid_membre: str
+    motif_refus: str
+    commentaire_interne: Optional[str] = ''
+    commentaire_externe: Optional[str] = ''
+
+
+@attr.dataclass(frozen=True, slots=True)
+class RenvoyerInvitationSignatureCommand(interface.CommandRequest):
+    uuid_jury: str
+    uuid_membre: str
+
+
+@attr.dataclass(frozen=True, slots=True)
+class ReinitialiserSignaturesCommand(interface.CommandRequest):
+    uuid_jury: str
+    matricule_auteur: str
+
+
+@attr.dataclass(frozen=True, slots=True)
+class ApprouverJuryParCddCommand(interface.CommandRequest):
+    uuid_jury: str
+    matricule_auteur: str
+    commentaire_interne: Optional[str] = ''
+    commentaire_externe: Optional[str] = ''
+
+
+@attr.dataclass(frozen=True, slots=True)
+class RefuserJuryParCddCommand(interface.CommandRequest):
+    uuid_jury: str
+    matricule_auteur: str
+    motif_refus: str
+    commentaire_interne: Optional[str] = ''
+    commentaire_externe: Optional[str] = ''
+
+
+@attr.dataclass(frozen=True, slots=True)
+class ApprouverJuryParAdreCommand(interface.CommandRequest):
+    uuid_jury: str
+    matricule_auteur: str
+    commentaire_interne: Optional[str] = ''
+    commentaire_externe: Optional[str] = ''
+
+
+@attr.dataclass(frozen=True, slots=True)
+class RefuserJuryParAdreCommand(interface.CommandRequest):
+    uuid_jury: str
+    matricule_auteur: str
+    motif_refus: str
+    commentaire_interne: Optional[str] = ''
+    commentaire_externe: Optional[str] = ''

@@ -54,10 +54,7 @@ from base.tests.factories.entity_version import EntityVersionFactory
 from base.tests.factories.person import PersonFactory
 from infrastructure.messages_bus import message_bus_instance
 from parcours_doctoral.ddd.commands import InitialiserParcoursDoctoralCommand
-from parcours_doctoral.ddd.domain.model.enums import (
-    ChoixLangueDefense,
-    ChoixStatutParcoursDoctoral,
-)
+from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from parcours_doctoral.ddd.jury.domain.model.enums import FormuleDefense
 from parcours_doctoral.models import (
     ActorType,
@@ -266,7 +263,7 @@ class DoctorateInitializationTestCase(TestCase):
         # Mock documents
         patcher = patch('osis_document_components.services.get_remote_tokens')
         patched = patcher.start()
-        patched.side_effect = lambda uuids, **kwargs: {uuid: f'token-{index}' for index, uuid in enumerate(uuids)}
+        patched.side_effect = lambda uuids, **kwargs: {uuid: uuid.uuid4() for index, uuid in enumerate(uuids)}
         self.addCleanup(patcher.stop)
 
         patcher = patch('osis_document_components.services.get_several_remote_metadata')
@@ -589,8 +586,8 @@ class DoctorateInitializationTestCase(TestCase):
         # Update the doctorate
         original_doctorate.thesis_proposed_title = 'T1'
         original_doctorate.defense_method = FormuleDefense.FORMULE_1.name
-        original_doctorate.defense_indicative_date = datetime.date(2024, 1, 1)
-        original_doctorate.defense_language = ChoixLangueDefense.ENGLISH.name
+        original_doctorate.defense_indicative_date = '2024-01-01'
+        original_doctorate.defense_language = self.other_language
         original_doctorate.comment_about_jury = 'C1'
         original_doctorate.accounting_situation = True
         original_doctorate.status = ChoixStatutParcoursDoctoral.JURY_SOUMIS.name

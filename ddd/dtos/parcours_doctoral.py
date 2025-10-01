@@ -96,12 +96,14 @@ class ParcoursDoctoralDTO(interface.DTO):
     uuid_admission: str
     type_admission: str
     reference: str
+    sigle_entite_gestion: str
     statut: str
     date_changement_statut: Optional[datetime.datetime]
     justification: Optional[str]
     intitule_secteur_formation: str
 
     cree_le: datetime.datetime
+    archive: List[str]
 
     formation: FormationDTO
 
