@@ -449,6 +449,11 @@ msgstr ""
 msgid "Assessment enrollments"
 msgstr ""
 
+msgid ""
+"At least one class exists for this learning unit. Please select it instead "
+"of the learning unit."
+msgstr ""
+
 msgid "Attachment: PhD training"
 msgstr ""
 
@@ -1893,6 +1898,10 @@ msgid "No doctorate found."
 msgstr ""
 
 msgid "No document"
+msgstr ""
+
+#, python-format
+msgid "No element has been found for the academic year %(academic_year)s."
 msgstr ""
 
 msgid "No joint supervision"

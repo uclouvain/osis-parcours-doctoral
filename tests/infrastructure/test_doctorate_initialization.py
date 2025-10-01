@@ -29,7 +29,7 @@ from typing import Dict, List
 from unittest.mock import patch
 
 import freezegun
-from django.test import TestCase
+from django.test import TestCase, override_settings
 
 from admission.ddd.admission.doctorat.preparation.domain.model.enums import (
     ChoixCommissionProximiteCDSS,
@@ -70,6 +70,7 @@ from reference.tests.factories.scholarship import ErasmusMundusScholarshipFactor
 
 
 @freezegun.freeze_time('2023-01-01')
+@override_settings(OSIS_DOCUMENT_BASE_URL='http://dummyurl/')
 class DoctorateInitializationTestCase(TestCase):
     @classmethod
     def setUpTestData(cls):
@@ -210,39 +211,40 @@ class DoctorateInitializationTestCase(TestCase):
             rejection_reason='RC',
         )
 
-        cls.admission = DoctorateAdmissionFactory(
-            candidate=cls.student,
-            training=cls.doctorate,
+    def setUp(self):
+        self.admission = DoctorateAdmissionFactory(
+            candidate=self.student,
+            training=self.doctorate,
             type=ChoixTypeAdmission.ADMISSION.name,
             status=ChoixStatutPropositionDoctorale.INSCRIPTION_AUTORISEE.name,
-            supervision_group=cls.existing_promoter.process,
+            supervision_group=self.existing_promoter.process,
             comment='Comment A',
             proximity_commission=ChoixCommissionProximiteCDSS.BCGIM.name,
             financing_type=ChoixTypeFinancement.SEARCH_SCHOLARSHIP.name,
             financing_work_contract=ChoixTypeContratTravail.OTHER.name,
             financing_eft=20,
-            international_scholarship_id=cls.other_scholarship.pk,
+            international_scholarship_id=self.other_scholarship.pk,
             other_international_scholarship='Other scholarship A',
             scholarship_start_date=datetime.date(2020, 1, 2),
             scholarship_end_date=datetime.date(2021, 1, 2),
-            scholarship_proof=cls.documents_tokens['scholarship_proof'],
+            scholarship_proof=self.documents_tokens['scholarship_proof'],
             planned_duration=20,
             dedicated_time=22,
             is_fnrs_fria_fresh_csc_linked=False,
             financing_comment='Financing comment A',
             project_title='Project title A',
             project_abstract='Project abstract A',
-            thesis_language=cls.other_language,
+            thesis_language=self.other_language,
             thesis_institute=EntityVersionFactory(),
             thesis_location='Thesis location A',
             phd_alread_started=False,
             phd_alread_started_institute='PHD already started institute A',
             work_start_date=datetime.date(2022, 2, 2),
-            project_document=cls.documents_tokens['project_document'],
-            gantt_graph=cls.documents_tokens['gantt_graph'],
-            program_proposition=cls.documents_tokens['program_proposition'],
-            additional_training_project=cls.documents_tokens['additional_training_project'],
-            recommendation_letters=cls.documents_tokens['recommendation_letters'],
+            project_document=self.documents_tokens['project_document'],
+            gantt_graph=self.documents_tokens['gantt_graph'],
+            program_proposition=self.documents_tokens['program_proposition'],
+            additional_training_project=self.documents_tokens['additional_training_project'],
+            recommendation_letters=self.documents_tokens['recommendation_letters'],
             phd_already_done=ChoixDoctoratDejaRealise.NO.name,
             phd_already_done_institution='PhD already done institution A',
             phd_already_done_thesis_domain='PhD already done thesis domain A',
@@ -254,14 +256,10 @@ class DoctorateInitializationTestCase(TestCase):
             cotutelle_institution=uuid.uuid4(),
             cotutelle_other_institution_name='Cotutelle institute name A',
             cotutelle_other_institution_address='Cotutelle institute address A',
-            cotutelle_opening_request=cls.documents_tokens['cotutelle_opening_request'],
-            cotutelle_convention=cls.documents_tokens['cotutelle_convention'],
-            cotutelle_other_documents=cls.documents_tokens['cotutelle_other_documents'],
+            cotutelle_opening_request=self.documents_tokens['cotutelle_opening_request'],
+            cotutelle_convention=self.documents_tokens['cotutelle_convention'],
+            cotutelle_other_documents=self.documents_tokens['cotutelle_other_documents'],
         )
-
-    def setUp(self):
-        self.admission.related_pre_admission = None
-        self.admission.save(update_fields=['related_pre_admission'])
 
         # Mock documents
         patcher = patch('osis_document_components.services.get_remote_tokens')
@@ -285,7 +283,10 @@ class DoctorateInitializationTestCase(TestCase):
         patcher.start()
         self.addCleanup(patcher.stop)
 
-        patcher = patch("osis_document_components.services.get_remote_metadata", return_value={"name": "myfile", "size": 1})
+        patcher = patch(
+            "osis_document_components.services.get_remote_metadata",
+            return_value={"name": "myfile", "size": 1},
+        )
         patcher.start()
         self.addCleanup(patcher.stop)
 

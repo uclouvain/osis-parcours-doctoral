@@ -503,6 +503,13 @@ msgstr "Tel qu’il apparait dans un catalogue officiel de formation"
 msgid "Assessment enrollments"
 msgstr "Inscriptions aux évaluations"
 
+msgid ""
+"At least one class exists for this learning unit. Please select it instead "
+"of the learning unit."
+msgstr ""
+"Au-moins une classe existe pour cet unité d'enseignement. Merci de la "
+"sélectionner à la place de l'unité d'enseignement."
+
 msgid "Attachment: PhD training"
 msgstr "Annexe : Formation doctorale"
 
@@ -2058,6 +2065,11 @@ msgstr "Aucun doctorat trouvé."
 msgid "No document"
 msgstr "Pas de document"
 
+#, python-format
+msgid "No element has been found for the academic year %(academic_year)s."
+msgstr ""
+"Aucun élément n'a été trouvé pour l'année académique %(academic_year)s."
+
 msgid "No joint supervision"
 msgstr "Pas de cotutelle"
 
@@ -2262,10 +2274,10 @@ msgstr ""
 "obligatoires"
 
 msgid "Please choose a correct academic year."
-msgstr "Veuillez choisir une année académique correct."
+msgstr "Veuillez choisir une année académique correcte."
 
 msgid "Please choose a correct learning unit."
-msgstr "Veuillez choisir une formation correct."
+msgstr "Veuillez choisir une formation correcte."
 
 msgid "Please correct the errors below"
 msgstr "Veuillez corriger les erreurs ci-dessous"

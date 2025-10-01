@@ -25,8 +25,6 @@
 # ##############################################################################
 from typing import List, Optional
 
-from django.db.models import Case, When
-
 from deliberation.models.enums.numero_session import Session
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import (
     ParcoursDoctoralIdentity,
@@ -76,9 +74,9 @@ class InscriptionEvaluationRepository(IInscriptionEvaluationRepository):
             session=enrollment.session,
             inscription_tardive=enrollment.late_enrollment,
             desinscription_tardive=enrollment.late_unenrollment,
-            code_unite_enseignement=enrollment.course.learning_unit_year.acronym,
-            intitule_unite_enseignement=enrollment.course.learning_unit_year.complete_title_i18n,
-            annee_unite_enseignement=enrollment.course.learning_unit_year.academic_year.year,
+            code_unite_enseignement=enrollment.learning_year_acronym,
+            intitule_unite_enseignement=enrollment.learning_year_title,
+            annee_unite_enseignement=enrollment.learning_year_academic_year,
             statut=enrollment.status,
         )
 
@@ -90,10 +88,8 @@ class InscriptionEvaluationRepository(IInscriptionEvaluationRepository):
 
     @classmethod
     def _get_dto_qs(cls):
-        return AssessmentEnrollment.objects.select_related(
+        return AssessmentEnrollment.objects.annotate_with_learning_year_info(with_title=True).select_related(
             'course',
-            'course__learning_unit_year__academic_year',
-            'course__learning_unit_year__learning_container_year',
         )
 
     @classmethod
@@ -172,9 +168,9 @@ class InscriptionEvaluationRepository(IInscriptionEvaluationRepository):
         qs = qs.with_session_numero()
 
         qs = qs.order_by(
-            'course__learning_unit_year__academic_year__year',
+            'learning_year_academic_year',
             'session_numero',
-            'course__learning_unit_year__acronym',
+            'learning_year_acronym',
         )
 
         return [cls._get_dto_from_db_object(enrollment=enrollment) for enrollment in qs]

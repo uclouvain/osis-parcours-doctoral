@@ -40,6 +40,7 @@ from parcours_doctoral.ddd.formation.domain.model.enums import (
 )
 from parcours_doctoral.tests.factories.assessment_enrollment import (
     AssessmentEnrollmentFactory,
+    AssessmentEnrollmentForClassFactory,
 )
 
 
@@ -65,7 +66,7 @@ class ListerEvaluationsTestCase(QueriesAssertionsMixin, TestCase):
                 ListerEvaluationsQuery(
                     annee=2020,
                     session=1,
-                    code_unite_enseignement='UE1',
+                    codes_unite_enseignement=['UE1'],
                 )
             )
 
@@ -94,6 +95,18 @@ class ListerEvaluationsTestCase(QueriesAssertionsMixin, TestCase):
             course__status=StatutActivite.ACCEPTEE.name,
             status=StatutInscriptionEvaluation.DESINSCRITE.name,
         )
+        assessment_for_class = AssessmentEnrollmentForClassFactory(
+            session=Session.JANUARY.name,
+            corrected_mark='18',
+            submitted_mark='17',
+            late_enrollment=True,
+            late_unenrollment=False,
+            course__learning_class_year__acronym='A',
+            course__learning_class_year__learning_component_year__learning_unit_year__academic_year__year=2023,
+            course__learning_class_year__learning_component_year__learning_unit_year__acronym='UE1',
+            course__status=StatutActivite.ACCEPTEE.name,
+            status=StatutInscriptionEvaluation.DESINSCRITE.name,
+        )
         other_session_assessment = AssessmentEnrollmentFactory(
             session=Session.SEPTEMBER.name,
             course__learning_unit_year__academic_year__year=2023,
@@ -112,13 +125,19 @@ class ListerEvaluationsTestCase(QueriesAssertionsMixin, TestCase):
             course__learning_unit_year__acronym='UE2',
             course__status=StatutActivite.SOUMISE.name,
         )
+        other_learning_unit_acronym_and_year_assessment = AssessmentEnrollmentFactory(
+            session=Session.JANUARY.name,
+            course__learning_unit_year__academic_year__year=2022,
+            course__learning_unit_year__acronym='UE2',
+            course__status=StatutActivite.SOUMISE.name,
+        )
 
         with self.assertNumQueriesLessThan(4):
             assessments = message_bus_instance.invoke(
                 ListerEvaluationsQuery(
                     annee=2023,
                     session=1,
-                    code_unite_enseignement='UE1',
+                    codes_unite_enseignement=['UE1'],
                 )
             )
 
@@ -160,11 +179,66 @@ class ListerEvaluationsTestCase(QueriesAssertionsMixin, TestCase):
         self.assertEqual(assessments[1].est_desinscrit_tardivement, False)
         self.assertEqual(assessments[1].est_inscrit_tardivement, True)
 
+        with self.assertNumQueriesLessThan(4):
+            assessments = message_bus_instance.invoke(
+                ListerEvaluationsQuery(
+                    annee=2023,
+                    session=1,
+                    codes_unite_enseignement=['UE1-A'],
+                )
+            )
+
+        self.assertEqual(len(assessments), 1)
+
+        self.assertEqual(assessments[0].uuid, str(assessment_for_class.uuid))
+        self.assertEqual(assessments[0].uuid_activite, str(assessment_for_class.course.uuid))
+        self.assertEqual(assessments[0].statut, assessment_for_class.status)
+        self.assertEqual(assessments[0].annee, 2023)
+        self.assertEqual(assessments[0].session, 1)
+        self.assertEqual(
+            assessments[0].noma,
+            assessment_for_class.course.parcours_doctoral.student.student_set.first().registration_id,
+        )
+        self.assertEqual(assessments[0].code_unite_enseignement, 'UE1-A')
+        self.assertEqual(assessments[0].note_soumise, '17')
+        self.assertEqual(assessments[0].note_corrigee, '18')
+        self.assertEqual(assessments[0].note, '18')
+        self.assertEqual(assessments[0].echeance_enseignant, datetime.date(2024, 1, 31))
+        self.assertEqual(assessments[0].est_desinscrit_tardivement, False)
+        self.assertEqual(assessments[0].est_inscrit_tardivement, True)
+
+        with self.assertNumQueriesLessThan(4):
+            assessments = message_bus_instance.invoke(
+                ListerEvaluationsQuery(
+                    annee=2023,
+                    session=1,
+                    codes_unite_enseignement=['UE1-B'],
+                )
+            )
+
+        self.assertEqual(len(assessments), 0)
+
+        with self.assertNumQueriesLessThan(4):
+            assessments = message_bus_instance.invoke(
+                ListerEvaluationsQuery(
+                    annee=2022,
+                    session=1,
+                    codes_unite_enseignement=['UE1', 'UE2'],
+                )
+            )
+
+        self.assertEqual(len(assessments), 2)
+
+        assessments.sort(key=lambda activity: activity.code_unite_enseignement)
+
+        self.assertEqual(assessments[0].uuid, str(other_year_assessment.uuid))
+        self.assertEqual(assessments[1].uuid, str(other_learning_unit_acronym_and_year_assessment.uuid))
+
     def test_encoding_deadline(self):
         cmd = ListerEvaluationsQuery(
             annee=2023,
             session=1,
-            code_unite_enseignement='UE1',
+            codes_unite_enseignement=['UE1'],
         )
 
         assessment = AssessmentEnrollmentFactory(

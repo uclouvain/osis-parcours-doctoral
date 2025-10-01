@@ -32,7 +32,10 @@ from parcours_doctoral.ddd.formation.domain.model.enums import (
     StatutInscriptionEvaluation,
 )
 from parcours_doctoral.models import AssessmentEnrollment
-from parcours_doctoral.tests.factories.activity import UclCourseFactory
+from parcours_doctoral.tests.factories.activity import (
+    UclCourseFactory,
+    UclCourseWithClassFactory,
+)
 
 
 class AssessmentEnrollmentFactory(factory.django.DjangoModelFactory):
@@ -46,3 +49,7 @@ class AssessmentEnrollmentFactory(factory.django.DjangoModelFactory):
     course = factory.SubFactory(UclCourseFactory)
     submitted_mark = factory.LazyAttribute(lambda x: str(random.randrange(10, 20)))
     corrected_mark = factory.LazyAttribute(lambda x: str(random.randrange(10, 20)))
+
+
+class AssessmentEnrollmentForClassFactory(AssessmentEnrollmentFactory):
+    course = factory.SubFactory(UclCourseWithClassFactory)

@@ -101,6 +101,7 @@ class ActivityAdmin(admin.ModelAdmin):
         "publication_status",
         "hour_volume",
         "learning_unit_year",
+        "learning_class_year",
         "can_be_submitted",
     ]
     readonly_fields = [
@@ -132,6 +133,7 @@ class ActivityAdmin(admin.ModelAdmin):
         "publication_status",
         "hour_volume",
         "learning_unit_year",
+        "learning_class_year",
         "can_be_submitted",
     ]
     list_select_related = ['parcours_doctoral', 'parent']
@@ -182,7 +184,7 @@ class AssessmentEnrollmentAdmin(admin.ModelAdmin):
 
     @admin.display(description=_('Academic year'))
     def course_year(self, obj):
-        return obj.course.learning_unit_year.academic_year.year
+        return obj.learning_year_academic_year
 
     @admin.display(description=_('Related doctorate'))
     def related_doctorate(self, obj):
@@ -190,20 +192,20 @@ class AssessmentEnrollmentAdmin(admin.ModelAdmin):
 
     @admin.display(description=_('Learning unit'))
     def course_acronym(self, obj):
-        return obj.course.learning_unit_year.acronym
+        return obj.learning_year_acronym
 
     def get_queryset(self, request):
         return (
             super()
             .get_queryset(request)
+            .annotate_with_learning_year_info()
             .select_related(
-                'course__learning_unit_year__academic_year',
                 'course__parcours_doctoral',
             )
             .order_by(
                 'course__parcours_doctoral__reference',
-                'course__learning_unit_year__academic_year__year',
-                'course__learning_unit_year__acronym',
+                'learning_year_academic_year',
+                'learning_year_acronym',
             )
         )
 

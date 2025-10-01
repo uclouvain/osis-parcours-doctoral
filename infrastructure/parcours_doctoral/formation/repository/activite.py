@@ -53,6 +53,7 @@ from parcours_doctoral.ddd.formation.dtos.inscription_unite_enseignement import 
     InscriptionUniteEnseignementDTO,
 )
 from parcours_doctoral.ddd.formation.repository.i_activite import IActiviteRepository
+from parcours_doctoral.infrastructure.utils import get_doctorate_training_acronym
 from parcours_doctoral.models.activity import Activity
 
 
@@ -81,13 +82,17 @@ class ActiviteRepository(IActiviteRepository):
 
     @classmethod
     def get_dto(cls, entity_id: 'ActiviteIdentity') -> ActiviteDTO:
-        activity = Activity.objects.select_related('parcours_doctoral', 'parent').get(uuid=entity_id.uuid)
+        activity = (
+            Activity.objects.annotate_with_learning_year_info()
+            .select_related('parcours_doctoral', 'parent')
+            .get(uuid=entity_id.uuid)
+        )
         return cls._get_dto(activity)
 
     @classmethod
     def get_dtos(cls, entity_ids: List['ActiviteIdentity']) -> Mapping['ActiviteIdentity', ActiviteDTO]:
         ret = {}
-        for activity in cls._get_queryset(entity_ids):
+        for activity in cls._get_queryset(entity_ids).annotate_with_learning_year_info():
             entity_id = ActiviteIdentityBuilder.build_from_uuid(activity.uuid)
             ret[entity_id] = cls._get_dto(activity)
         if len(entity_ids) != len(ret):  # pragma: no cover
@@ -285,8 +290,8 @@ class ActiviteRepository(IActiviteRepository):
         elif categorie == CategorieActivite.UCL_COURSE:
             return CoursUclDTO(
                 contexte=ContexteFormation[activity.context],
-                annee=activity.learning_unit_year.academic_year.year,
-                code_unite_enseignement=activity.learning_unit_year.acronym,
+                annee=activity.learning_year_academic_year,
+                code_unite_enseignement=activity.learning_year_acronym,
             )
         elif categorie == CategorieActivite.PAPER:  # pragma: no branch
             return EpreuveDTO(
@@ -322,14 +327,16 @@ class ActiviteRepository(IActiviteRepository):
         annee: int,
         code_unite_enseignement: str,
     ) -> List[InscriptionUniteEnseignementDTO]:
-        activities = Activity.objects.filter(
-            learning_unit_year__academic_year__year=annee,
-            learning_unit_year__acronym=code_unite_enseignement,
-            category=CategorieActivite.UCL_COURSE.name,
-            status=StatutActivite.ACCEPTEE.name,
-        ).annotate(
-            student_person_id=F('parcours_doctoral__student_id'),
-            training_acronym=F('parcours_doctoral__training__acronym'),
+        activities = (
+            Activity.objects.filter(
+                category=CategorieActivite.UCL_COURSE.name,
+                status=StatutActivite.ACCEPTEE.name,
+            )
+            .filter_by_learning_year(acronym=code_unite_enseignement, year=annee)
+            .annotate(
+                student_person_id=F('parcours_doctoral__student_id'),
+                training_acronym=F('parcours_doctoral__training__acronym'),
+            )
         )
 
         if not activities:
@@ -346,7 +353,7 @@ class ActiviteRepository(IActiviteRepository):
             InscriptionUniteEnseignementDTO(
                 noma=student_registration_ids.get(activity.student_person_id, ''),
                 annee=annee,
-                sigle_formation=activity.training_acronym,  # From annotation
+                sigle_formation=get_doctorate_training_acronym(activity.training_acronym),  # From annotation
                 code_unite_enseignement=code_unite_enseignement,
             )
             for activity in activities

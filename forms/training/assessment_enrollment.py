@@ -53,8 +53,7 @@ class AssessmentEnrollmentForm(forms.Form):
         super().__init__(*args, **kwargs)
 
         self.fields['course'].choices = EMPTY_CHOICE + tuple(
-            (str(course.uuid), f'{course.learning_unit_year.acronym} - {course.learning_unit_year.complete_title_i18n}')
-            for course in courses
+            (str(course.uuid), f'{course.learning_year_acronym} - {course.learning_year_title}') for course in courses
         )
 
         if self.initial:

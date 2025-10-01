@@ -75,6 +75,7 @@ FORM_SERIALIZER_FIELD_MAPPING = {
 EXCLUDED_FIELDS = {
     'start_date_month',
     'start_date_year',
+    'course',
 }
 
 BOOLEAN_FIELDS = {
@@ -319,9 +320,16 @@ class ValorisationSerializer(ActivitySerializerBase):
 
 
 class CourseSerializer(ActivitySerializerBase):
+    academic_year = RelatedAcademicYearField(
+        write_only=True,
+        allow_null=True,
+        required=False,
+        min_value=1900,
+        max_value=2999,
+    )
+
     class Meta:
         form = activity_forms.CourseForm
-        exclude = ['academic_year']
 
 
 class PaperSerializer(ActivitySerializerBase):
@@ -330,21 +338,40 @@ class PaperSerializer(ActivitySerializerBase):
 
 
 class UclCourseSerializer(ActivitySerializerBase):
-    learning_unit_year = serializers.CharField(source="learning_unit_year.acronym")
-    learning_unit_title = serializers.CharField(source="learning_unit_year.complete_title_i18n", read_only=True)
+    FIELDS_FROM_ANNOTATIONS = [
+        'learning_year_acronym',
+        'learning_year_title',
+        'learning_year_academic_year',
+    ]
+
+    course = serializers.CharField(source=FIELDS_FROM_ANNOTATIONS[0])
+    course_title = serializers.CharField(source=FIELDS_FROM_ANNOTATIONS[1], read_only=True)
     ects = serializers.FloatField(read_only=True)
-    academic_year = serializers.IntegerField(source="learning_unit_year.academic_year.year")
+    academic_year = serializers.IntegerField(source=FIELDS_FROM_ANNOTATIONS[2])
     authors = serializers.CharField(read_only=True)
     hour_volume = serializers.CharField(read_only=True)
     participating_proof = serializers.ListField(read_only=True, child=serializers.CharField())
 
     class Meta:
         form = activity_forms.UclCourseForm
-        exclude = ['academic_year']
+        exclude = ['academic_year', 'learning_class_year', 'learning_unit_year']
 
     def to_internal_value(self, data):
         # Don't let DRF rework the data structure before calling UclCourseForm
         return data
+
+    def to_representation(self, instance):
+        # Update the annotations if necessary
+        if getattr(instance, '_is_updated', False):
+            annotated_fields = (
+                Activity.objects.annotate_with_learning_year_info(with_title=True)
+                .values(*self.FIELDS_FROM_ANNOTATIONS)
+                .get(pk=instance.pk)
+            )
+            for field, field_value in annotated_fields.items():
+                setattr(instance, field, field_value)
+
+        return super().to_representation(instance)
 
 
 class DoctoralTrainingActivitySerializer(serializers.Serializer):
@@ -440,13 +467,16 @@ class DoctoralTrainingActivitySerializer(serializers.Serializer):
         data.pop('academic_year', None)
         for field in EXCLUDED_FIELDS:
             data.pop(field, None)
-        return Activity.objects.create(**data)
+        instance = Activity.objects.create(**data)
+        instance._is_updated = True
+        return instance
 
     def update(self, instance, validated_data):
         """Save an existing activity object (simplified ModelSerializer mechanic)"""
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
         instance.save()
+        instance._is_updated = True
         return instance
 
 
