@@ -48,6 +48,7 @@ from parcours_doctoral.tests.factories.assessment_enrollment import (
     AssessmentEnrollmentFactory,
 )
 from parcours_doctoral.tests.factories.parcours_doctoral import ParcoursDoctoralFactory
+from parcours_doctoral.tests.factories.private_defense import PrivateDefenseFactory
 
 
 @freezegun.freeze_time('2024-01-01')
@@ -115,6 +116,8 @@ class AssessmentEnrollmentDeleteViewTestCase(TestCase):
     def test_delete(self):
         self.client.force_login(self.manager.user)
 
+        private_defense = PrivateDefenseFactory(parcours_doctoral=self.doctorate)
+
         response = self.client.delete(self.url)
 
         self.assertRedirects(response=response, expected_url=self.list_url)
@@ -129,8 +132,8 @@ class AssessmentEnrollmentDeleteViewTestCase(TestCase):
         # Check late unenrollment
 
         # With private defense date before the end of the encoding period
-        self.doctorate.defense_indicative_date = datetime.date(2024, 1, 15)
-        self.doctorate.save(update_fields=['defense_indicative_date'])
+        private_defense.datetime = datetime.datetime(2024, 1, 15)
+        private_defense.save(update_fields=['datetime'])
 
         self.assessment_enrollment.status = StatutInscriptionEvaluation.ACCEPTEE.name
         self.assessment_enrollment.save(update_fields=['status'])
@@ -151,15 +154,15 @@ class AssessmentEnrollmentDeleteViewTestCase(TestCase):
             self.assertTrue(self.assessment_enrollment.late_unenrollment)
 
             # With private defense date not in the encoding period
-            self.doctorate.defense_indicative_date = datetime.date(2023, 12, 31)
-            self.doctorate.save(update_fields=['defense_indicative_date'])
+            private_defense.datetime = datetime.datetime(2023, 12, 31)
+            private_defense.save(update_fields=['datetime'])
 
             self.assessment_enrollment.status = StatutInscriptionEvaluation.ACCEPTEE.name
             self.assessment_enrollment.save(update_fields=['status'])
 
         # With private defense date after the end of the encoding period
-        self.doctorate.defense_indicative_date = datetime.date(2024, 2, 15)
-        self.doctorate.save()
+        private_defense.datetime = datetime.datetime(2024, 2, 15)
+        private_defense.save()
 
         with freezegun.freeze_time('2024-01-31'):
             self.client.force_login(self.manager.user)
@@ -181,8 +184,8 @@ class AssessmentEnrollmentDeleteViewTestCase(TestCase):
             self.assessment_enrollment.save(update_fields=['status'])
 
         # Without private defense date
-        self.doctorate.defense_indicative_date = None
-        self.doctorate.save()
+        private_defense.datetime = None
+        private_defense.save()
 
         with freezegun.freeze_time('2024-01-31'):
             self.client.force_login(self.manager.user)

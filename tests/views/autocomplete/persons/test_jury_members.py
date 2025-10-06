@@ -32,10 +32,10 @@ from django.urls import reverse
 from parcours_doctoral.ddd.jury.domain.model.enums import RoleJury
 from parcours_doctoral.models import JuryActor
 from parcours_doctoral.tests.factories.jury import (
-    ExternalJuryMemberFactory,
-    JuryMemberFactory,
-    JuryMemberWithExternalPromoterFactory,
-    JuryMemberWithInternalPromoterFactory,
+    ExternalJuryActorFactory,
+    JuryActorFactory,
+    JuryActorWithExternalPromoterFactory,
+    JuryActorWithInternalPromoterFactory,
 )
 from parcours_doctoral.views.autocomplete.persons import JuryMembersAutocomplete
 
@@ -59,19 +59,19 @@ class JuryMembersAutocompleteTestCase(TestCase):
             username='jacob',
             password='top_secret',
         )
-        cls.jury_member = JuryMemberFactory(
+        cls.jury_member = JuryActorFactory(
             person__first_name='John',
             person__last_name='Poe',
         )
-        cls.external_jury_member = ExternalJuryMemberFactory(
+        cls.external_jury_member = ExternalJuryActorFactory(
             first_name='Jim',
             last_name='Poe',
         )
-        cls.jury_member_with_internal_promoter = JuryMemberWithInternalPromoterFactory(
+        cls.jury_member_with_internal_promoter = JuryActorWithInternalPromoterFactory(
             person__first_name='Jane',
             person__last_name='Doe',
         )
-        cls.jury_member_with_external_promoter = JuryMemberWithExternalPromoterFactory(
+        cls.jury_member_with_external_promoter = JuryActorWithExternalPromoterFactory(
             first_name='Tom',
             last_name='Doe',
         )

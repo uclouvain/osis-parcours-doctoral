@@ -76,10 +76,10 @@ from parcours_doctoral.tests.factories.confirmation_paper import (
     ConfirmationPaperFactory,
 )
 from parcours_doctoral.tests.factories.jury import (
-    ExternalJuryMemberFactory,
-    JuryMemberFactory,
-    JuryMemberWithExternalPromoterFactory,
-    JuryMemberWithInternalPromoterFactory,
+    ExternalJuryActorFactory,
+    JuryActorFactory,
+    JuryActorWithExternalPromoterFactory,
+    JuryActorWithInternalPromoterFactory,
 )
 from parcours_doctoral.tests.factories.parcours_doctoral import (
     FormationFactory,
@@ -662,7 +662,7 @@ class ParcoursDoctoralListTestView(QueriesAssertionsMixin, TestCase):
     def test_filter_by_jury_president_uuid(self):
         self.client.force_login(user=self.program_manager.user)
 
-        external_jury_member = ExternalJuryMemberFactory()
+        external_jury_member = ExternalJuryActorFactory()
 
         response = self._do_request(allowed_sql_surplus=1, uuid_president_jury=external_jury_member.uuid)
 
@@ -680,7 +680,7 @@ class ParcoursDoctoralListTestView(QueriesAssertionsMixin, TestCase):
             ],
         )
 
-        external_promoter_jury_member = JuryMemberWithExternalPromoterFactory()
+        external_promoter_jury_member = JuryActorWithExternalPromoterFactory()
 
         response = self._do_request(allowed_sql_surplus=1, uuid_president_jury=external_promoter_jury_member.uuid)
 
@@ -698,7 +698,7 @@ class ParcoursDoctoralListTestView(QueriesAssertionsMixin, TestCase):
             ],
         )
 
-        internal_promoter_jury_member = JuryMemberWithInternalPromoterFactory()
+        internal_promoter_jury_member = JuryActorWithInternalPromoterFactory()
 
         response = self._do_request(allowed_sql_surplus=1, uuid_president_jury=internal_promoter_jury_member.uuid)
 
@@ -716,7 +716,7 @@ class ParcoursDoctoralListTestView(QueriesAssertionsMixin, TestCase):
             ],
         )
 
-        internal_jury_member = JuryMemberFactory(process=self.doctorate.jury_group)
+        internal_jury_member = JuryActorFactory(process=self.doctorate.jury_group)
 
         response = self._do_request(allowed_sql_surplus=1, uuid_president_jury=internal_jury_member.uuid)
 

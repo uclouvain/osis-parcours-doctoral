@@ -25,13 +25,15 @@
 # ##############################################################################
 from django.db.models import UniqueConstraint
 from django.utils.translation import gettext_lazy as _
-from rules import RuleSet, always_allow
+from rules import RuleSet
 
 from osis_role.contrib.models import RoleModel
 from parcours_doctoral.auth.predicates.parcours_doctoral import (
     is_jury_signing_in_progress,
     is_part_of_jury,
+    is_president_or_secretary_of_jury,
     is_related_to_an_admission,
+    private_defense_is_authorised,
 )
 
 
@@ -58,5 +60,11 @@ class JuryMember(RoleModel):
             'parcours_doctoral.view_confirmation': is_part_of_jury & is_related_to_an_admission,
             'parcours_doctoral.view_jury': is_part_of_jury,
             'parcours_doctoral.approve_jury': is_part_of_jury & is_jury_signing_in_progress,
+            'parcours_doctoral.api_view_parcours_doctoral': is_part_of_jury,
+            'parcours_doctoral.api_view_jury': is_part_of_jury,
+            'parcours_doctoral.api_view_private_defense': is_president_or_secretary_of_jury,
+            'parcours_doctoral.api_view_private_defense_minutes': is_president_or_secretary_of_jury,
+            'parcours_doctoral.api_upload_private_defense_minutes': is_president_or_secretary_of_jury
+            & private_defense_is_authorised,
         }
         return RuleSet(ruleset)

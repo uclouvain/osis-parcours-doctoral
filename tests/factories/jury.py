@@ -26,7 +26,7 @@
 import factory
 from osis_signature.models import Process
 
-from base.tests.factories.person import PersonFactory
+from parcours_doctoral.auth.roles.jury_member import JuryMember
 from parcours_doctoral.ddd.jury.domain.model.enums import (
     GenreMembre,
     RoleJury,
@@ -35,12 +35,17 @@ from parcours_doctoral.ddd.jury.domain.model.enums import (
 from parcours_doctoral.models.jury import JuryActor
 
 
+class JuryMemberRoleFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = JuryMember
+
+
 class _ProcessFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Process
 
 
-class _JuryMemberFactory(factory.django.DjangoModelFactory):
+class _JuryActorFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = JuryActor
 
@@ -48,12 +53,17 @@ class _JuryMemberFactory(factory.django.DjangoModelFactory):
     role = RoleJury.MEMBRE.name
 
 
-class JuryMemberFactory(_JuryMemberFactory):
+class JuryActorFactory(_JuryActorFactory):
     is_promoter = False
     person = factory.SubFactory('base.tests.factories.person.PersonFactory')
 
+    @factory.post_generation
+    def generate_role(self, create, extracted, **kwargs):
+        if self.person_id:
+            JuryMemberRoleFactory(person=self.person)
 
-class ExternalJuryMemberFactory(_JuryMemberFactory):
+
+class ExternalJuryActorFactory(_JuryActorFactory):
     other_institute = ''
     is_promoter = False
     person = None
@@ -69,9 +79,9 @@ class ExternalJuryMemberFactory(_JuryMemberFactory):
     city = 'x'
 
 
-class JuryMemberWithInternalPromoterFactory(JuryMemberFactory):
+class JuryActorWithInternalPromoterFactory(JuryActorFactory):
     is_promoter = True
 
 
-class JuryMemberWithExternalPromoterFactory(ExternalJuryMemberFactory):
+class JuryActorWithExternalPromoterFactory(ExternalJuryActorFactory):
     is_promoter = True

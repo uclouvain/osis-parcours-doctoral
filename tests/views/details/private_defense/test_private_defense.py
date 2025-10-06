@@ -78,11 +78,11 @@ class PrivateDefenseFormViewTestCase(MockOsisDocumentMixin, TestCase):
 
         current_private_defense = response.context.get('current_private_defense')
         all_private_defenses = response.context.get('all_private_defenses')
-        supervision = response.context.get('supervision')
+        supervisors = response.context.get('supervisors')
 
         self.assertIsNone(current_private_defense)
         self.assertEqual(all_private_defenses, [])
-        self.assertIsNotNone(supervision)
+        self.assertEqual(len(supervisors), 2)
 
     def test_with_one_private_defense(self):
         self.client.force_login(self.manager.user)

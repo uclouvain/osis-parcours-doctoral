@@ -38,8 +38,9 @@ from parcours_doctoral.infrastructure.mixins.notification import NotificationMix
 from parcours_doctoral.mail_templates.private_defense import (
     PARCOURS_DOCTORAL_EMAIL_PRIVATE_DEFENSE_JURY_INVITATION,
 )
-from parcours_doctoral.models import JuryMember
+from parcours_doctoral.models import ActorType, JuryActor
 from parcours_doctoral.models import ParcoursDoctoral as ParcoursDoctoralDBModel
+from parcours_doctoral.models import ParcoursDoctoralSupervisionActor
 from parcours_doctoral.utils.mail_templates import get_email_templates_by_language
 from parcours_doctoral.utils.url import (
     get_parcours_doctoral_link_back,
@@ -104,31 +105,27 @@ class Notification(NotificationMixin, INotification):
             management_entity_id=doctorate.training.management_entity_id,
         )
 
-        jury_members = JuryMember.objects.filter(parcours_doctoral=doctorate).select_related(
-            'promoter__person',
-            'person',
-        )
+        jury_members = JuryActor.objects.filter(process=doctorate.jury_group).select_related('person')
 
         for jury_member in jury_members:
-            jury_member_info = cls.get_jury_member_info(jury_member=jury_member)
-
-            current_language = jury_member_info['language'] or settings.LANGUAGE_CODE
+            current_language = jury_member.language or settings.LANGUAGE_CODE
+            related_person = jury_member.person if jury_member.person_id else None
 
             tokens = {
                 **common_tokens,
-                'jury_member_first_name': jury_member_info['first_name'],
-                'jury_member_last_name': jury_member_info['last_name'],
+                'jury_member_first_name': jury_member.first_name,
+                'jury_member_last_name': jury_member.last_name,
             }
 
             email_template = email_templates[current_language]
 
             with override(current_language):
                 email_notification = EmailNotification(
-                    recipient=jury_member_info['person'] or jury_member_info['email'],
+                    recipient=related_person or jury_member.email,
                     subject=email_template.render_subject(tokens),
                     html_content=email_template.body_as_html(tokens),
                     plain_text_content=email_template.body_as_plain(tokens),
                 )
 
             jury_member_email_message = EmailNotificationHandler.build(email_notification)
-            EmailNotificationHandler.create(jury_member_email_message, person=jury_member_info['person'])
+            EmailNotificationHandler.create(jury_member_email_message, person=related_person)
