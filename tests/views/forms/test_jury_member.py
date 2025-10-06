@@ -45,7 +45,7 @@ from parcours_doctoral.ddd.jury.domain.model.enums import (
 )
 from parcours_doctoral.forms.jury.membre import JuryMembreForm
 from parcours_doctoral.models.jury import JuryActor
-from parcours_doctoral.tests.factories.jury import ExternalJuryMemberFactory
+from parcours_doctoral.tests.factories.jury import ExternalJuryActorFactory
 from parcours_doctoral.tests.factories.parcours_doctoral import ParcoursDoctoralFactory
 from parcours_doctoral.tests.factories.supervision import PromoterFactory
 from reference.tests.factories.country import CountryFactory
@@ -67,7 +67,7 @@ class DoctorateAdmissionJuryMemberUpdateFormViewTestCase(TestCase):
         )
 
         # Create member
-        cls.membre = ExternalJuryMemberFactory(process=cls.parcours_doctoral.jury_group)
+        cls.membre = ExternalJuryActorFactory(process=cls.parcours_doctoral.jury_group)
         cls.country = CountryFactory()
 
         # User with one cdd
@@ -179,7 +179,7 @@ class DoctorateAdmissionJuryMemberDeleteFormViewTestCase(TestCase):
         )
 
         # Create member
-        cls.membre = ExternalJuryMemberFactory(process=cls.parcours_doctoral.jury_group)
+        cls.membre = ExternalJuryActorFactory(process=cls.parcours_doctoral.jury_group)
         cls.country = CountryFactory()
 
         # User with one cdd
@@ -233,7 +233,7 @@ class DoctorateAdmissionJuryMemberChangeRoleFormViewTestCase(TestCase):
         )
 
         # Create member
-        cls.membre = ExternalJuryMemberFactory(process=cls.parcours_doctoral.jury_group)
+        cls.membre = ExternalJuryActorFactory(process=cls.parcours_doctoral.jury_group)
         cls.country = CountryFactory()
 
         # User with one cdd
@@ -302,7 +302,7 @@ class DoctorateAdmissionJuryMemberResendInviteViewTestCase(TestCase):
         )
 
         # Create member
-        cls.membre = ExternalJuryMemberFactory(process=cls.parcours_doctoral.jury_group)
+        cls.membre = ExternalJuryActorFactory(process=cls.parcours_doctoral.jury_group)
         cls.country = CountryFactory()
 
         # User with one cdd
@@ -342,7 +342,7 @@ class DoctorateAdmissionJuryMemberApproveByPdfViewTestCase(TestCase):
         )
 
         # Create member
-        cls.membre = ExternalJuryMemberFactory(process=cls.parcours_doctoral.jury_group)
+        cls.membre = ExternalJuryActorFactory(process=cls.parcours_doctoral.jury_group)
         cls.country = CountryFactory()
 
         # User with one cdd

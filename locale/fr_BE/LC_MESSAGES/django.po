@@ -826,9 +826,6 @@ msgstr "Formation complémentaire non activée"
 msgid "Complementary training proposition"
 msgstr "Proposition de formation complémentaire"
 
-msgid "Configuration"
-msgstr "Configuration"
-
 msgid "Concluded in"
 msgstr "Fait à"
 
@@ -1710,11 +1707,11 @@ msgstr "Publication internationale"
 msgid "International scholarship"
 msgstr "Bourse internationale"
 
-msgid "Is a promoter"
-msgstr "Est Promoteur·trice"
-
 msgid "Invite the members of the jury to the private defense"
 msgstr "Inviter les membres du jury à la défense privée"
+
+msgid "Is a promoter"
+msgstr "Est Promoteur·trice"
 
 msgid "Is active"
 msgstr "Est active"
@@ -2224,9 +2221,6 @@ msgstr "Nom du gestionnaire ADRE"
 
 msgid "Name of the doctoral commission"
 msgstr "Nom de la commission doctorale"
-
-msgid "Name in the language of the manifestation"
-msgstr "Nom dans la langue de la manifestation"
 
 msgid "Name of the management entity"
 msgstr "Nom de l'entité de gestion"
@@ -3542,16 +3536,6 @@ msgstr ""
 msgid "The jury signing is not in progress"
 msgstr "Le jury n'est pas en cours de signature"
 
-msgid "The jury members"
-msgstr "Les membres du jury"
-
-msgid ""
-"The jury shall verify that the candidate has completed their "
-"<strong>doctoral training</strong> and obtained the 60 credits required by "
-"the decree, validated by the domain doctoral committee."
-msgstr ""
-"Le jury constate l'achèvement de la <strong>formation doctorale</strong> du ou de la candidat·e et l'obtention des 60 crédits exigés par le décret, validés par la commission doctorale du domaine."
-
 msgid "The last name of the jury member"
 msgstr "Le nom du membre du jury"
 
@@ -4153,6 +4137,12 @@ msgid "You must be the request supervisor to access this doctoral training"
 msgstr ""
 "Vous devez être le promoteur de la demande pour accéder à cette formation "
 "doctorale"
+
+msgid ""
+"You must be the secretary or the president of the jury to perform this "
+"action."
+msgstr ""
+"Vous devez être secrétaire ou président du jury pour réaliser cette action."
 
 msgid ""
 "You must correct the jury composition before you can request signatures."

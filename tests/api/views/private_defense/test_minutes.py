@@ -35,11 +35,18 @@ from rest_framework.test import APITestCase
 
 from base.tests.factories.academic_year import AcademicYearFactory
 from base.tests.factories.user import UserFactory
+from parcours_doctoral.auth.roles.jury_member import JuryMember
 from parcours_doctoral.ddd.defense_privee.validators.exceptions import (
     DefensePriveeNonActiveeException,
     DefensePriveeNonTrouveeException,
 )
 from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
+from parcours_doctoral.ddd.jury.domain.model.enums import RoleJury
+from parcours_doctoral.models import JuryActor
+from parcours_doctoral.tests.factories.jury import (
+    JuryActorFactory,
+    JuryMemberRoleFactory,
+)
 from parcours_doctoral.tests.factories.parcours_doctoral import ParcoursDoctoralFactory
 from parcours_doctoral.tests.factories.private_defense import PrivateDefenseFactory
 from parcours_doctoral.tests.factories.roles import StudentRoleFactory
@@ -125,6 +132,39 @@ class PrivateDefenseMinutesAPIViewTestCase(MockOsisDocumentMixin, APITestCase):
 
         response = self.client.put(self.url, data=self.data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_access_with_jury_member(self):
+        jury_member = JuryActorFactory(process=self.doctorate.jury_group)
+
+        self.client.force_authenticate(user=jury_member.person.user)
+
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        response = self.client.put(self.url, data=self.data)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_access_with_jury_secretary(self):
+        jury_member = JuryActorFactory(process=self.doctorate.jury_group, role=RoleJury.SECRETAIRE.name)
+
+        self.client.force_authenticate(user=jury_member.person.user)
+
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        response = self.client.put(self.url, data=self.data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_access_with_jury_president(self):
+        jury_member = JuryActorFactory(process=self.doctorate.jury_group, role=RoleJury.PRESIDENT.name)
+
+        self.client.force_authenticate(user=jury_member.person.user)
+
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        response = self.client.put(self.url, data=self.data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_get_with_unknown_private_defense(self):
         self.client.force_authenticate(user=self.promoter.person.user)

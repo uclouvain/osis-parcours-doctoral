@@ -25,7 +25,6 @@
 # ##############################################################################
 
 import uuid
-from typing import Optional
 
 import factory
 
@@ -34,7 +33,6 @@ from base.models.education_group_year import EducationGroupYear
 from base.models.enums.education_group_types import TrainingType
 from base.models.enums.entity_type import EntityType
 from base.tests.factories.academic_year import AcademicYearFactory
-from base.tests.factories.education_group import EducationGroupFactory
 from base.tests.factories.education_group_type import EducationGroupTypeFactory
 from base.tests.factories.education_group_year import EducationGroupYearFactory
 from base.tests.factories.entity import EntityWithVersionFactory
@@ -42,7 +40,6 @@ from base.tests.factories.entity_version import EntityVersionFactory
 from base.tests.factories.person import PersonFactory
 from base.tests.factories.student import StudentFactory
 from epc.models.enums.etat_inscription import EtatInscriptionFormation
-from epc.models.inscription_programme_annuel import InscriptionProgrammeAnnuel
 from epc.tests.factories.inscription_programme_annuel import (
     InscriptionProgrammeAnnuelFactory,
 )
@@ -52,10 +49,10 @@ from parcours_doctoral.ddd.domain.model.enums import (
 )
 from parcours_doctoral.models.parcours_doctoral import ParcoursDoctoral
 from parcours_doctoral.tests.factories.jury import (
-    ExternalJuryMemberFactory,
-    JuryMemberFactory,
-    JuryMemberWithExternalPromoterFactory,
-    JuryMemberWithInternalPromoterFactory,
+    ExternalJuryActorFactory,
+    JuryActorFactory,
+    JuryActorWithExternalPromoterFactory,
+    JuryActorWithInternalPromoterFactory,
 )
 from parcours_doctoral.tests.factories.roles import StudentRoleFactory
 from parcours_doctoral.tests.factories.supervision import (
@@ -165,11 +162,11 @@ class ParcoursDoctoralFactory(factory.django.DjangoModelFactory):
     def create_jury_group(self, create, extracted, **kwargs):
         if create and not extracted and not self.jury_group_id:
             process = _ProcessFactory()
-            JuryMemberWithInternalPromoterFactory(process=process)
-            JuryMemberWithExternalPromoterFactory(process=process)
-            JuryMemberFactory(process=process)
-            JuryMemberFactory(process=process)
-            ExternalJuryMemberFactory(process=process)
+            JuryActorWithInternalPromoterFactory(process=process)
+            JuryActorWithExternalPromoterFactory(process=process)
+            JuryActorFactory(process=process)
+            JuryActorFactory(process=process)
+            ExternalJuryActorFactory(process=process)
             self.jury_group = process
 
     class Params:

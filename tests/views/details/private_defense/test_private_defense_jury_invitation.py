@@ -44,10 +44,10 @@ from parcours_doctoral.mail_templates.private_defense import (
     PARCOURS_DOCTORAL_EMAIL_PRIVATE_DEFENSE_JURY_INVITATION,
 )
 from parcours_doctoral.tests.factories.jury import (
-    ExternalJuryMemberFactory,
-    JuryMemberFactory,
-    JuryMemberWithExternalPromoterFactory,
-    JuryMemberWithInternalPromoterFactory,
+    ExternalJuryActorFactory,
+    JuryActorFactory,
+    JuryActorWithExternalPromoterFactory,
+    JuryActorWithInternalPromoterFactory,
 )
 from parcours_doctoral.tests.factories.mail_template import CddMailTemplateFactory
 from parcours_doctoral.tests.factories.parcours_doctoral import ParcoursDoctoralFactory
@@ -75,37 +75,38 @@ class PrivateDefenseJuryInvitationViewTestCase(MockOsisDocumentMixin, TestCase):
     def setUp(self):
         super().setUp()
 
-        self.doctorate = ParcoursDoctoralFactory(
-            training=self.training,
-            student=self.student,
-            status=ChoixStatutParcoursDoctoral.ADMIS.name,
-        )
-
-        self.jury_member = JuryMemberFactory(
+        self.jury_member = JuryActorFactory(
             person__first_name='John',
             person__last_name='Poe',
             person__email='john.poe@test.be',
             person__language=settings.LANGUAGE_CODE_EN,
-            parcours_doctoral=self.doctorate,
         )
-        self.external_jury_member = ExternalJuryMemberFactory(
+
+        self.doctorate = ParcoursDoctoralFactory(
+            training=self.training,
+            student=self.student,
+            status=ChoixStatutParcoursDoctoral.ADMIS.name,
+            jury_group=self.jury_member.process,
+        )
+
+        self.external_jury_member = ExternalJuryActorFactory(
             first_name='Jim',
             last_name='Poe',
             email='jim.poe@test.be',
-            parcours_doctoral=self.doctorate,
+            process=self.doctorate.jury_group,
         )
-        self.jury_member_with_internal_promoter = JuryMemberWithInternalPromoterFactory(
-            promoter__actor_ptr__person__first_name='Jane',
-            promoter__actor_ptr__person__last_name='Doe',
-            promoter__actor_ptr__person__email='jane.doe@test.be',
-            parcours_doctoral=self.doctorate,
+        self.jury_member_with_internal_promoter = JuryActorWithInternalPromoterFactory(
+            person__first_name='Jane',
+            person__last_name='Doe',
+            person__email='jane.doe@test.be',
+            process=self.doctorate.jury_group,
         )
-        self.jury_member_with_external_promoter = JuryMemberWithExternalPromoterFactory(
-            promoter__first_name='Tom',
-            promoter__last_name='Doe',
-            promoter__language=settings.LANGUAGE_CODE_EN,
-            promoter__email='tom.doe@test.be',
-            parcours_doctoral=self.doctorate,
+        self.jury_member_with_external_promoter = JuryActorWithExternalPromoterFactory(
+            first_name='Tom',
+            last_name='Doe',
+            language=settings.LANGUAGE_CODE_EN,
+            email='tom.doe@test.be',
+            process=self.doctorate.jury_group,
         )
 
         self.private_defense = PrivateDefenseFactory(parcours_doctoral=self.doctorate)
@@ -183,16 +184,16 @@ class PrivateDefenseJuryInvitationViewTestCase(MockOsisDocumentMixin, TestCase):
             notification_by_email_address[to_email_address[0]] = notification
             email_message_by_email_address[to_email_address[0]] = email_message
 
-        internal_promoter_email = self.jury_member_with_internal_promoter.promoter.person.email
+        internal_promoter_email = self.jury_member_with_internal_promoter.person.email
         self.assertIn(internal_promoter_email, notification_by_email_address)
         self.assertEqual(
             notification_by_email_address[internal_promoter_email].person,
-            self.jury_member_with_internal_promoter.promoter.person,
+            self.jury_member_with_internal_promoter.person,
         )
         email_message = email_message_by_email_address[internal_promoter_email]
         self.assertEqual(email_message.get('subject'), 'FR[Jane-Doe]')
 
-        external_promoter_email = self.jury_member_with_external_promoter.promoter.email
+        external_promoter_email = self.jury_member_with_external_promoter.email
         self.assertIn(external_promoter_email, notification_by_email_address)
         self.assertEqual(notification_by_email_address[external_promoter_email].person, None)
         email_message = email_message_by_email_address[external_promoter_email]

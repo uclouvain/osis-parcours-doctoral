@@ -26,7 +26,7 @@
 from typing import List, Optional
 
 from django.conf import settings
-from django.db import IntegrityError, transaction
+from django.db import transaction
 from django.db.models import F, Prefetch, Q
 from django.db.models.functions import Coalesce
 from django.utils.translation import get_language
@@ -35,6 +35,7 @@ from osis_signature.models import Actor, Process, StateHistory
 from base.models.person import Person
 from osis_common.ddd.interface import ApplicationService, EntityIdentity, RootEntity
 from parcours_doctoral.auth.roles.jury_member import JuryMember
+from parcours_doctoral.constants import INSTITUTION_UCL
 from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from parcours_doctoral.ddd.jury.domain.model.enums import (
     ChoixEtatSignature,
@@ -49,16 +50,6 @@ from parcours_doctoral.ddd.jury.domain.model.jury import (
     MembreJury,
     SignatureMembre,
 )
-from django.db import transaction
-from django.db.models import Prefetch, Q
-
-from base.models.person import Person
-from osis_common.ddd.interface import ApplicationService, EntityIdentity, RootEntity
-from parcours_doctoral.constants import INSTITUTION_UCL
-from parcours_doctoral.ddd.jury.domain.model.enums import RoleJury
-from parcours_doctoral.ddd.jury.domain.model.jury import Jury, JuryIdentity, MembreJury
-from parcours_doctoral.ddd.jury.dtos.jury import JuryDTO, MembreJuryDTO
-from parcours_doctoral.ddd.jury.repository.i_jury import IJuryRepository
 from parcours_doctoral.ddd.jury.domain.validator.exceptions import (
     JuryNonTrouveException,
     MembreNonTrouveDansJuryException,
@@ -69,7 +60,7 @@ from parcours_doctoral.ddd.jury.dtos.jury import (
     SignatureMembreJuryDTO,
 )
 from parcours_doctoral.ddd.jury.repository.i_jury import IJuryRepository
-from parcours_doctoral.models import ActorType, ParcoursDoctoralSupervisionActor
+from parcours_doctoral.models import ActorType
 from parcours_doctoral.models.jury import JuryActor
 from parcours_doctoral.models.parcours_doctoral import ParcoursDoctoral
 from reference.models.country import Country
@@ -296,7 +287,6 @@ class JuryRepository(IJuryRepository):
                         motif_refus=membre.signature.motif_refus,
                         pdf=membre.signature.pdf,
                     ),
-                    ville=membre.ville,
                 )
                 for membre in jury.membres
             ],

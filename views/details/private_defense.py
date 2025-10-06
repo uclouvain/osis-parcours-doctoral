@@ -24,13 +24,10 @@
 #
 # ##############################################################################
 
-from typing import List
-
 from django.utils.functional import cached_property
 from django.views.generic import TemplateView
 
 from infrastructure.messages_bus import message_bus_instance
-from parcours_doctoral.ddd.commands import GetGroupeDeSupervisionQuery
 from parcours_doctoral.ddd.defense_privee.commands import RecupererDefensesPriveesQuery
 from parcours_doctoral.ddd.defense_privee.dtos import DefensePriveeDTO
 from parcours_doctoral.views.mixins import ParcoursDoctoralViewMixin
@@ -56,10 +53,7 @@ class PrivateDefenseCommonViewMixin:
 
         context['all_private_defenses'] = self.private_defenses
         context['current_private_defense'] = self.current_private_defense
-
-        context['supervision'] = message_bus_instance.invoke(
-            GetGroupeDeSupervisionQuery(uuid_parcours_doctoral=self.parcours_doctoral_uuid)
-        )
+        context['supervisors'] = [member for member in self.jury.membres if member.est_promoteur]
 
         return context
 

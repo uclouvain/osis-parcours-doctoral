@@ -60,7 +60,6 @@ class MembreJuryDTO(interface.DTO):
     langue: str
     email: str
     signature: SignatureMembreJuryDTO
-    ville: str
 
     def membre_ucl(self):
         return self.institution == INSTITUTION_UCL

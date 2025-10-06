@@ -55,11 +55,7 @@ from parcours_doctoral.ddd.domain.model.enums import (
     ChoixStatutParcoursDoctoral,
 )
 from parcours_doctoral.ddd.dtos import CampusDTO, ParcoursDoctoralDTO
-from parcours_doctoral.ddd.formation.domain.model.enums import (
-    CategorieActivite,
-    ChoixTypeEpreuve,
-    StatutActivite,
-)
+from parcours_doctoral.ddd.formation.domain.model.enums import StatutActivite
 from parcours_doctoral.ddd.jury.dtos.jury import MembreJuryDTO
 from parcours_doctoral.ddd.repository.i_parcours_doctoral import formater_reference
 from parcours_doctoral.forms.supervision import MemberSupervisionForm

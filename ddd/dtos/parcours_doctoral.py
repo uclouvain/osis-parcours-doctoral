@@ -50,6 +50,14 @@ class FinancementDTO(interface.DTO):
     est_lie_fnrs_fria_fresh_csc: Optional[bool]
     commentaire: str
 
+    @property
+    def nom_bourse_recherche(self):
+        if self.bourse_recherche:
+            if self.bourse_recherche.nom_long:
+                return f'{self.bourse_recherche.nom_court} - {self.bourse_recherche.nom_long}'
+            return self.bourse_recherche.nom_court
+        return self.autre_bourse_recherche
+
 
 @attr.dataclass(frozen=True, slots=True)
 class CotutelleDTO(interface.DTO):
