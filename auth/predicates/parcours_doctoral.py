@@ -30,7 +30,6 @@ from rules import predicate
 from admission.ddd.admission.doctorat.preparation.domain.model.enums import (
     ChoixTypeAdmission,
 )
-from osis_role.cache import predicate_cache
 from osis_role.errors import predicate_failed_msg
 from parcours_doctoral.ddd.domain.model.enums import (
     STATUTS_DOCTORAT_EPREUVE_CONFIRMATION_EN_COURS,
@@ -101,7 +100,6 @@ def complementary_training_enabled(self, user: User, obj: ParcoursDoctoral):
 
 @predicate(bind=True)
 @predicate_failed_msg(message=_("You must be a member of the doctoral commission to access this doctoral training"))
-@predicate_cache(cache_key_fn=lambda obj: getattr(obj, 'pk', None))
 def is_part_of_doctoral_commission(self, user: User, obj: ParcoursDoctoral):
     return (
         isinstance(obj, ParcoursDoctoral)

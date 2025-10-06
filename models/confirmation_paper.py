@@ -28,7 +28,7 @@ import uuid
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import pgettext_lazy
-from osis_document.contrib import FileField
+from osis_document_components.fields import FileField
 
 __all__ = [
     'ConfirmationPaper',

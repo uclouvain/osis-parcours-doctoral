@@ -102,9 +102,9 @@ class BaseAssessmentEnrollmentViewMixin:
     def related_courses(self) -> QuerySet[Activity]:
         queryset = (
             Activity.objects.filter(status=StatutActivite.ACCEPTEE.name)
-            .filter(learning_unit_year__academic_year__year=self.current_year)
             .for_enrollment_courses(self.parcours_doctoral_uuid)
-            .order_by('learning_unit_year__acronym')
+            .filter(learning_year_academic_year=self.current_year)
+            .order_by('learning_year_acronym')
         )
         if self.enrollment_uuid:
             queryset = queryset.exclude(

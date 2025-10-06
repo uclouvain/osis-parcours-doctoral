@@ -87,13 +87,12 @@ class DesinscrireEvaluationTestCase(TestCase):
             inscription_uuid=cls.inscription.entity_id.uuid,
         )
         cls.cle_date_defense_privee = cls.evaluation.uuid
-        cls.cle_periode_encodage = cls.evaluation.uuid
 
     def setUp(self):
         super().setUp()
         self.evaluation_repository.set_entities(entities=[self.evaluation])
         self.evaluation_repository.dates_defenses_privees.pop(self.cle_date_defense_privee, None)
-        self.evaluation_repository.periodes_encodage.pop(self.cle_periode_encodage, None)
+        self.evaluation_repository.periodes_encodage.pop(2020, None)
 
     def test_desinscrire_evaluation(self):
         identite_inscription_supprimee = self.message_bus.invoke(self.cmd)
@@ -129,7 +128,7 @@ class DesinscrireEvaluationTestCase(TestCase):
         with freezegun.freeze_time('2021-01-14'):
             identite_inscription_supprimee = self.message_bus.invoke(self.cmd)
             inscription_supprimee = self.inscription_evaluation_repository.get_dto(identite_inscription_supprimee)
-            self.assertTrue(inscription_supprimee.desinscription_tardive)
+            self.assertFalse(inscription_supprimee.desinscription_tardive)
 
             evaluation_dto = self.evaluation_repository.get_dto(identite_inscription_supprimee)
             self.assertEqual(evaluation_dto.echeance_enseignant, datetime.date(2021, 1, 13))
@@ -137,15 +136,17 @@ class DesinscrireEvaluationTestCase(TestCase):
     def test_desinscrire_evaluation_avec_date_defense_privee_dans_periode_encodage(self):
         # -> date limite = date défense privée
         self.evaluation_repository.dates_defenses_privees[self.cle_date_defense_privee] = datetime.date(2021, 1, 15)
-        self.evaluation_repository.periodes_encodage[self.cle_periode_encodage] = (
-            datetime.date(2021, 1, 1),
-            datetime.date(2021, 1, 30),
-        )
+        self.evaluation_repository.periodes_encodage[2020] = {
+            3: (
+                datetime.date(2021, 1, 1),
+                datetime.date(2021, 1, 30),
+            )
+        }
 
         with freezegun.freeze_time('2021-01-13'):
             identite_inscription_supprimee = self.message_bus.invoke(self.cmd)
             inscription_supprimee = self.inscription_evaluation_repository.get_dto(identite_inscription_supprimee)
-            self.assertFalse(inscription_supprimee.desinscription_tardive)
+            self.assertTrue(inscription_supprimee.desinscription_tardive)
 
             evaluation_dto = self.evaluation_repository.get_dto(identite_inscription_supprimee)
             self.assertEqual(evaluation_dto.echeance_enseignant, datetime.date(2021, 1, 13))
@@ -161,15 +162,17 @@ class DesinscrireEvaluationTestCase(TestCase):
     def test_desinscrire_evaluation_avec_date_defense_privee_hors_periode_encodage(self):
         # -> date limite = fin période d'encodage
         self.evaluation_repository.dates_defenses_privees[self.cle_date_defense_privee] = datetime.date(2021, 12, 31)
-        self.evaluation_repository.periodes_encodage[self.cle_periode_encodage] = (
-            datetime.date(2021, 1, 1),
-            datetime.date(2021, 1, 30),
-        )
+        self.evaluation_repository.periodes_encodage[2020] = {
+            3: (
+                datetime.date(2021, 1, 1),
+                datetime.date(2021, 1, 30),
+            )
+        }
 
         with freezegun.freeze_time('2021-01-30'):
             identite_inscription_supprimee = self.message_bus.invoke(self.cmd)
             inscription_supprimee = self.inscription_evaluation_repository.get_dto(identite_inscription_supprimee)
-            self.assertFalse(inscription_supprimee.desinscription_tardive)
+            self.assertTrue(inscription_supprimee.desinscription_tardive)
 
             evaluation_dto = self.evaluation_repository.get_dto(identite_inscription_supprimee)
             self.assertEqual(evaluation_dto.echeance_enseignant, datetime.date(2021, 1, 30))
@@ -183,13 +186,12 @@ class DesinscrireEvaluationTestCase(TestCase):
             self.assertEqual(evaluation_dto.echeance_enseignant, datetime.date(2021, 1, 30))
 
     def test_desinscrire_evaluation_avec_periode_encodage_sans_date_defense_privee(self):
-        # -> date limite = fin période d'encodage
-        self.evaluation_repository.periodes_encodage[self.cle_periode_encodage] = (
-            datetime.date(2021, 1, 1),
-            datetime.date(2021, 1, 30),
-        )
+        # -> date limite = début période d'encodage
+        self.evaluation_repository.periodes_encodage[2020] = {
+            3: (datetime.date(2021, 1, 1), datetime.date(2021, 1, 30)),
+        }
 
-        with freezegun.freeze_time('2021-01-30'):
+        with freezegun.freeze_time('2020-12-31'):
             identite_inscription_supprimee = self.message_bus.invoke(self.cmd)
             inscription_supprimee = self.inscription_evaluation_repository.get_dto(identite_inscription_supprimee)
             self.assertFalse(inscription_supprimee.desinscription_tardive)
@@ -197,7 +199,7 @@ class DesinscrireEvaluationTestCase(TestCase):
             evaluation_dto = self.evaluation_repository.get_dto(identite_inscription_supprimee)
             self.assertEqual(evaluation_dto.echeance_enseignant, datetime.date(2021, 1, 30))
 
-        with freezegun.freeze_time('2021-02-01'):
+        with freezegun.freeze_time('2021-01-01'):
             identite_inscription_supprimee = self.message_bus.invoke(self.cmd)
             inscription_supprimee = self.inscription_evaluation_repository.get_dto(identite_inscription_supprimee)
             self.assertTrue(inscription_supprimee.desinscription_tardive)

@@ -24,46 +24,46 @@
 * see http://www.gnu.org/licenses/.
 {% endcomment %}
 
-{% if perms.parcours_doctoral.change_cddmailtemplate or perms.parcours_doctoral.change_cddconfiguration or perms.parcours_doctoral.view_parcours_doctoral %}
-  <div class="row">
-    {% if perms.parcours_doctoral.view_parcours_doctoral %}
-      <div class="panel-item col-sm-6 col-md-4 row" style="margin-left: 0; border: none;">
-        <div class="col-xs-2 col-2"><i class="fa-thin fa-award navigation-dashboard-icon"></i></div>
-        <div class="col-xs-10 col-10">
-          <h4 class="media-heading">
-            <a href="{% url "parcours_doctoral:list" %}" id="lnk_doctorate_path">
-              {% translate 'Doctoral paths' %}
-            </a>
-          </h4>
-          <p>{% translate 'Management of the path of the doctoral students from their enrolment to their public defence' %}</p>
+<div class="dashboard-grid">
+    {% if perms.parcours_doctoral.change_cddmailtemplate or perms.parcours_doctoral.change_cddconfiguration or perms.parcours_doctoral.view_parcours_doctoral %}
+        {% if perms.parcours_doctoral.view_parcours_doctoral %}
+        <div class="grid-item" style="grid-area: auto/{{ tile.column }}">
+            <i class="icon fa-thin fa-award navigation-dashboard-icon"></i>
+            <h5 class="media-heading">
+                <a href="{% url "parcours_doctoral:list" %}" id="lnk_doctorate_path">
+                    {% translate 'Doctoral paths' %}
+                </a>
+            </h5>
+            <div class="description">
+                <p>{% translate 'Management of the path of the doctoral students from their enrolment to their public defence' %}</p>
+            </div>
         </div>
-      </div>
-    {% endif %}
-    {% if perms.parcours_doctoral.change_cddmailtemplate %}
-      <div class="panel-item col-sm-6 col-md-4 row" style="margin-left: 0; border: none;">
-        <div class="col-xs-2 col-2"><i class="fa fa-tools navigation-dashboard-icon"></i></div>
-        <div class="col-xs-10 col-10">
-          <h4 class="media-heading">
-            <a href="{% url 'parcours_doctoral:config:cdd-mail-template:list' %}">
-              {% translate 'CDD Mail template' %}
-            </a>
-          </h4>
-          <p>{% translate 'Allow you to manage emails sent by CDD managers based on the CDD' %}</p>
+        {% endif %}
+        {% if perms.parcours_doctoral.change_cddmailtemplate %}
+        <div class="grid-item" style="grid-area: auto/{{ tile.column }}">
+            <i class="icon fa fa-tools navigation-dashboard-icon"></i>
+            <h5 class="media-heading">
+                <a href="{% url 'parcours_doctoral:config:cdd-mail-template:list' %}">
+                    {% translate 'CDD Mail template' %}
+                </a>
+            </h5>
+            <div class="description">
+                <p>{% translate 'Allow you to manage emails sent by CDD managers based on the CDD' %}</p>
+            </div>
         </div>
-      </div>
-    {% endif %}
-    {% if perms.parcours_doctoral.change_cddconfiguration %}
-      <div class="panel-item col-sm-6 col-md-4 row" style="margin-left: 0; border: none;">
-        <div class="col-xs-2 col-2"><i class="fa fa-tools navigation-dashboard-icon"></i></div>
-        <div class="col-xs-10 col-10">
-          <h4 class="media-heading">
-            <a href="{% url 'parcours_doctoral:config:cdd-config:list' %}">
-              {% translate 'Doctoral training configuration' %}
-            </a>
-          </h4>
-          <p>{% translate 'Allow you to manage the doctoral training activities' %}</p>
+        {% endif %}
+        {% if perms.parcours_doctoral.change_cddconfiguration %}
+        <div class="grid-item" style="grid-area: auto/{{ tile.column }}">
+            <i class="icon fa fa-tools navigation-dashboard-icon"></i>
+            <h5 class="media-heading">
+                <a href="{% url 'parcours_doctoral:config:cdd-config:list' %}">
+                    {% translate 'Doctoral training configuration' %}
+                </a>
+            </h5>
+            <div class="description">
+                <p>{% translate 'Allow you to manage the doctoral training activities' %}</p>
+            </div>
         </div>
-      </div>
+        {% endif %}
     {% endif %}
-  </div>
-{% endif %}
+</div>

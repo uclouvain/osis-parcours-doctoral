@@ -24,6 +24,7 @@
 #
 # ##############################################################################
 import datetime
+from typing import Optional
 
 import attr
 
@@ -36,6 +37,7 @@ class EvaluationDTO(interface.DTO):
     uuid_activite: str
 
     statut: str
+    sigle_formation: str
     annee: int
     session: int
     noma: str
@@ -48,6 +50,12 @@ class EvaluationDTO(interface.DTO):
     est_desinscrit_tardivement: bool
     est_inscrit_tardivement: bool
 
+    periode_encodage_session: Optional[tuple[datetime.date, datetime.date]]
+
     @property
     def note(self):
         return self.note_corrigee or self.note_soumise
+
+    @property
+    def est_soumise(self):
+        return bool(self.note_soumise)

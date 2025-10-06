@@ -34,11 +34,7 @@
   <div class="page-header">
     <h2>{% translate 'PhD management' %}</h2>
   </div>
-  <div class="card panel panel-default">
-    <div class="card-body panel-body">
-      {% include 'parcours_doctoral/includes/tiles.html' %}
-    </div>
-  </div>
+  {% include 'parcours_doctoral/includes/tiles.html' %}
 {% endblock %}
 
 {% block custom_style %}

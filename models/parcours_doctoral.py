@@ -45,7 +45,7 @@ from django.dispatch import receiver
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import pgettext_lazy
-from osis_document.contrib import FileField
+from osis_document_components.fields import FileField
 from osis_history.models import HistoryEntry
 from osis_signature.contrib.fields import SignatureProcessField
 

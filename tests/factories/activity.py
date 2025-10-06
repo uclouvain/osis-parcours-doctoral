@@ -50,6 +50,7 @@ __all__ = [
     "SeminarFactory",
     "ServiceFactory",
     "UclCourseFactory",
+    "UclCourseWithClassFactory",
     "VaeFactory",
 ]
 
@@ -153,3 +154,10 @@ class PaperFactory(ActivityFactory):
 class UclCourseFactory(ActivityFactory):
     category = CategorieActivite.UCL_COURSE.name
     learning_unit_year = factory.SubFactory("base.tests.factories.learning_unit_year.LearningUnitYearFactory")
+
+
+class UclCourseWithClassFactory(ActivityFactory):
+    category = CategorieActivite.UCL_COURSE.name
+    learning_class_year = factory.SubFactory(
+        "learning_unit.tests.factories.learning_class_year.LearningClassLecturingFactory"
+    )

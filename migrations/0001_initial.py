@@ -4,7 +4,7 @@ import uuid
 
 import django.core.validators
 import django.db.models.deletion
-import osis_document.contrib.fields
+import osis_document_components.fields
 import osis_mail_template.models
 import osis_signature.contrib.fields
 from django.db import migrations, models
@@ -169,7 +169,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "project_document",
-                    osis_document.contrib.fields.FileField(
+                    osis_document_components.fields.FileField(
                         base_field=models.UUIDField(),
                         default=list,
                         size=None,
@@ -178,7 +178,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "gantt_graph",
-                    osis_document.contrib.fields.FileField(
+                    osis_document_components.fields.FileField(
                         base_field=models.UUIDField(),
                         default=list,
                         size=None,
@@ -187,7 +187,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "program_proposition",
-                    osis_document.contrib.fields.FileField(
+                    osis_document_components.fields.FileField(
                         base_field=models.UUIDField(),
                         default=list,
                         size=None,
@@ -196,7 +196,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "additional_training_project",
-                    osis_document.contrib.fields.FileField(
+                    osis_document_components.fields.FileField(
                         base_field=models.UUIDField(),
                         default=list,
                         size=None,
@@ -205,7 +205,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "recommendation_letters",
-                    osis_document.contrib.fields.FileField(
+                    osis_document_components.fields.FileField(
                         base_field=models.UUIDField(),
                         default=list,
                         size=None,
@@ -295,7 +295,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "cotutelle_opening_request",
-                    osis_document.contrib.fields.FileField(
+                    osis_document_components.fields.FileField(
                         base_field=models.UUIDField(),
                         default=list,
                         size=1,
@@ -304,7 +304,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "cotutelle_convention",
-                    osis_document.contrib.fields.FileField(
+                    osis_document_components.fields.FileField(
                         base_field=models.UUIDField(),
                         default=list,
                         size=1,
@@ -313,7 +313,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "cotutelle_other_documents",
-                    osis_document.contrib.fields.FileField(
+                    osis_document_components.fields.FileField(
                         base_field=models.UUIDField(),
                         default=list,
                         size=None,
@@ -374,7 +374,7 @@ class Migration(migrations.Migration):
                 ("accounting_situation", models.BooleanField(blank=True, null=True)),
                 (
                     "jury_approval",
-                    osis_document.contrib.fields.FileField(
+                    osis_document_components.fields.FileField(
                         base_field=models.UUIDField(),
                         default=list,
                         size=None,
@@ -427,7 +427,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "scholarship_proof",
-                    osis_document.contrib.fields.FileField(
+                    osis_document_components.fields.FileField(
                         base_field=models.UUIDField(),
                         default=list,
                         size=None,
@@ -573,7 +573,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "pdf_from_candidate",
-                    osis_document.contrib.fields.FileField(
+                    osis_document_components.fields.FileField(
                         base_field=models.UUIDField(),
                         default=list,
                         size=1,
@@ -899,7 +899,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "research_report",
-                    osis_document.contrib.fields.FileField(
+                    osis_document_components.fields.FileField(
                         base_field=models.UUIDField(),
                         default=list,
                         size=1,
@@ -908,7 +908,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "supervisor_panel_report",
-                    osis_document.contrib.fields.FileField(
+                    osis_document_components.fields.FileField(
                         base_field=models.UUIDField(),
                         default=list,
                         size=1,
@@ -917,7 +917,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "supervisor_panel_report_canvas",
-                    osis_document.contrib.fields.FileField(
+                    osis_document_components.fields.FileField(
                         base_field=models.UUIDField(),
                         default=list,
                         size=1,
@@ -926,7 +926,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "research_mandate_renewal_opinion",
-                    osis_document.contrib.fields.FileField(
+                    osis_document_components.fields.FileField(
                         base_field=models.UUIDField(),
                         default=list,
                         size=1,
@@ -935,7 +935,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "certificate_of_failure",
-                    osis_document.contrib.fields.FileField(
+                    osis_document_components.fields.FileField(
                         base_field=models.UUIDField(),
                         default=list,
                         size=None,
@@ -944,7 +944,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "certificate_of_achievement",
-                    osis_document.contrib.fields.FileField(
+                    osis_document_components.fields.FileField(
                         base_field=models.UUIDField(),
                         default=list,
                         size=None,
@@ -961,7 +961,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "justification_letter",
-                    osis_document.contrib.fields.FileField(
+                    osis_document_components.fields.FileField(
                         base_field=models.UUIDField(),
                         default=list,
                         size=None,
@@ -1333,7 +1333,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "participating_proof",
-                    osis_document.contrib.fields.FileField(
+                    osis_document_components.fields.FileField(
                         base_field=models.UUIDField(),
                         blank=True,
                         default=list,
@@ -1410,7 +1410,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "acceptation_proof",
-                    osis_document.contrib.fields.FileField(
+                    osis_document_components.fields.FileField(
                         base_field=models.UUIDField(),
                         blank=True,
                         default=list,
@@ -1420,7 +1420,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "summary",
-                    osis_document.contrib.fields.FileField(
+                    osis_document_components.fields.FileField(
                         base_field=models.UUIDField(),
                         blank=True,
                         default=list,
