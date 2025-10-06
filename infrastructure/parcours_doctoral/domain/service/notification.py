@@ -33,12 +33,8 @@ from django.utils.translation import get_language
 from django.utils.translation import gettext_lazy as _
 from osis_async.models import AsyncTask
 from osis_mail_template.utils import generate_email, transform_html_to_text
-from osis_notification.contrib.handlers import (
-    EmailNotificationHandler,
-    WebNotificationHandler,
-)
+from osis_notification.contrib.handlers import EmailNotificationHandler
 from osis_notification.contrib.notification import EmailNotification
-from osis_notification.models import WebNotification
 from osis_signature.enums import SignatureState
 from osis_signature.utils import get_signing_token
 
@@ -60,14 +56,13 @@ from parcours_doctoral.mail_templates.signatures import (
 )
 from parcours_doctoral.models import (
     ActorType,
-    JuryMember,
+    JuryActor,
     ParcoursDoctoralSupervisionActor,
 )
 from parcours_doctoral.models.parcours_doctoral import (
     ParcoursDoctoral as ParcoursDoctoralModel,
 )
 from parcours_doctoral.models.task import ParcoursDoctoralTask
-from parcours_doctoral.utils.persons import get_parcours_doctoral_cdd_managers
 from parcours_doctoral.utils.url import (
     get_parcours_doctoral_link_back,
     get_parcours_doctoral_link_front,
@@ -115,14 +110,12 @@ class Notification(NotificationMixin, INotification):
                     cc_list.add(cls._format_email(ca_member))
 
         if cc_jury:
-            jury_members = JuryMember.objects.select_related(
-                'promoter__person',
-                'person',
-            ).filter(parcours_doctoral=parcours_doctoral_instance)
+            jury_members = JuryActor.objects.filter(
+                process_id=parcours_doctoral_instance.jury_group_id,
+            ).select_related('person')
 
             for jury_member in jury_members:
-                jury_member_info = cls.get_jury_member_info(jury_member=jury_member)
-                cc_list.add(cls._format_email_jury_member(jury_member_info=jury_member_info))
+                cc_list.add(cls._format_email(jury_member))
 
         if cc_list:
             email_message['Cc'] = ','.join(cc_list)
@@ -155,12 +148,8 @@ class Notification(NotificationMixin, INotification):
         }
 
     @classmethod
-    def _format_email(cls, actor: ParcoursDoctoralSupervisionActor):
+    def _format_email(cls, actor: ParcoursDoctoralSupervisionActor | JuryActor):
         return "{a.first_name} {a.last_name} <{a.email}>".format(a=actor)
-
-    @classmethod
-    def _format_email_jury_member(cls, jury_member_info: NotificationMixin.JuryMemberInfo):
-        return "%(first_name)s %(last_name)s <%(email)s>" % jury_member_info
 
     @classmethod
     def envoyer_signatures(

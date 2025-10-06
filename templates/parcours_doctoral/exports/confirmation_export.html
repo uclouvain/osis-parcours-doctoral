@@ -130,11 +130,7 @@
     {% field_data _("PhD final admission date") parcours_doctoral.date_admission_par_cdd|date:'d/m/Y' inline=True %}
 
     {% if parcours_doctoral.financement.type == "SEARCH_SCHOLARSHIP" %}
-      {% if parcours_doctoral.financement.bourse_recherche %}
-        {% concat parcours_doctoral.financement.type|enum_display:"ChoixTypeFinancement" " - " parcours_doctoral.financement.bourse_recherche.nom_complet as funding_type_value %}
-      {% else %}
-        {% concat parcours_doctoral.financement.type|enum_display:"ChoixTypeFinancement" " - " parcours_doctoral.financement.autre_bourse_recherche as funding_type_value %}
-      {% endif %}
+      {% concat parcours_doctoral.financement.type|enum_display:"ChoixTypeFinancement" " - " parcours_doctoral.financement.nom_bourse_recherche as funding_type_value %}
       {% field_data _("Funding type") funding_type_value inline=True %}
     {% else %}
       {% field_data _("Funding type") parcours_doctoral.financement.type|enum_display:"ChoixTypeFinancement" inline=True %}

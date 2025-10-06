@@ -36,6 +36,7 @@ from parcours_doctoral.ddd.domain.model.enums import (
     STATUTS_DOCTORAT_EPREUVE_CONFIRMATION_EN_COURS,
     ChoixStatutParcoursDoctoral,
 )
+from parcours_doctoral.ddd.jury.domain.model.enums import RoleJury
 from parcours_doctoral.models import ActorType
 from parcours_doctoral.models.parcours_doctoral import ParcoursDoctoral
 
@@ -201,6 +202,18 @@ def is_part_of_committee(self, user: User, obj: ParcoursDoctoral):
 @predicate_failed_msg(message=_("You must be a member of the jury to access this doctoral training"))
 def is_part_of_jury(self, user: User, obj: ParcoursDoctoral):
     return obj.jury_group is not None and user.person.pk in [actor.person_id for actor in obj.jury_group.actors.all()]
+
+
+@predicate(bind=True)
+@predicate_failed_msg(message=_("You must be the secretary or the president of the jury to perform this action."))
+def is_president_or_secretary_of_jury(self, user: User, obj: ParcoursDoctoral):
+    return (
+        obj.has_valid_enrollment
+        and obj.jury_group.actors.filter(
+            juryactor__role__in=[RoleJury.SECRETAIRE.name, RoleJury.PRESIDENT.name],
+            person_id=user.person.pk,
+        ).exists()
+    )
 
 
 @predicate(bind=True)
