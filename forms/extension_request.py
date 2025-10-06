@@ -27,7 +27,7 @@ from django import forms
 from django.utils.translation import gettext_lazy as _
 
 from base.forms.utils.datefield import CustomDateInput
-from osis_document.contrib import FileUploadField
+from osis_document_components.fields import FileUploadField
 
 
 class ExtensionRequestOpinionForm(forms.Form):

@@ -37,13 +37,13 @@ from django.utils.translation import get_language
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import pgettext_lazy
 from django_bootstrap5.renderers import FieldRenderer
-from osis_document.api.utils import get_remote_metadata, get_remote_token
-from osis_document.enums import PostProcessingWanted
+from osis_document_components.services import get_remote_metadata, get_remote_token
+from osis_document_components.enums import PostProcessingWanted
 
-from admission.utils import format_school_title, get_superior_institute_queryset
 from base.forms.utils.file_field import PDF_MIME_TYPE
 from base.models.entity_version import EntityVersion
 from base.models.organization import Organization
+from osis_profile.utils.utils import get_superior_institute_queryset, format_school_title
 from parcours_doctoral.auth.constants import READ_ACTIONS_BY_TAB, UPDATE_ACTIONS_BY_TAB
 from parcours_doctoral.constants import CAMPUSES_UUIDS
 from parcours_doctoral.ddd.domain.model.enums import (
@@ -374,7 +374,7 @@ def field_data(
         elif context.get('load_files') is False:
             data = _('Specified') if data else _('Incomplete field')
         elif data:
-            template_string = "{% load osis_document %}{% document_visualizer files wanted_post_process='ORIGINAL' %}"
+            template_string = "{% load osis_document_components %}{% document_visualizer files wanted_post_process='ORIGINAL' %}"
             template_context = {'files': data}
             data = template.Template(template_string).render(template.Context(template_context))
         else:
@@ -584,7 +584,7 @@ def document_component(document_write_token, document_metadata, can_edit=True):
             if not can_edit:
                 attrs = {action: False for action in ['comment', 'highlight', 'rotation']}
             return {
-                'template': 'osis_document/editor.html',
+                'template': 'osis_document_components/editor.html',
                 'value': document_write_token,
                 'base_url': settings.OSIS_DOCUMENT_BASE_URL,
                 'attrs': attrs,

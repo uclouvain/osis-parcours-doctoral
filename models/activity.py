@@ -24,19 +24,30 @@
 #
 # ##############################################################################
 import contextlib
+from typing import List
 from uuid import uuid4
 
 from django.core import validators
 from django.db import models
-from django.db.models import Prefetch, Q, Sum, When
+from django.db.models import Q, Sum, When
+from django.db.models.functions import Coalesce, Concat
 from django.db.models.signals import post_delete, post_save
 from django.dispatch import receiver
+from django.utils import translation
+from django.utils.translation import get_language
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import pgettext_lazy
-from osis_document.contrib import FileField
+from osis_document_components.fields import FileField
 
+from backoffice.settings.base import LANGUAGE_CODE_EN
 from base.ddd.utils.business_validator import MultipleBusinessExceptions
+from ddd.logic.shared_kernel.unite_enseignement.domain.service.code_parser import (
+    CodeParser,
+)
 from deliberation.models.enums.numero_session import Session
+from learning_unit.models.learning_class_year import (
+    get_case_when_statement_pour_code_complet,
+)
 from parcours_doctoral.ddd.formation.domain.model.enums import (
     CategorieActivite,
     ChoixComiteSelection,
@@ -64,7 +75,147 @@ def training_activity_directory_path(instance: 'Activity', filename: str):
     )
 
 
+def annotate_queryset_with_activity_learning_info(queryset, activity_field='', with_title=False):
+    """
+    Annotate the queryset with the acronym (learning_year_acronym), the academic year (learning_year_academic_year)
+    and the title (learning_year_title_fr, learning_year_title_en, learning_year_title) of the learning unit
+    year (if any) or of the learning class year (if any) of the activity.
+    :param queryset: The queryset to annotate.
+    :param activity_field: The name of the activity field, if the input queryset is not based on an activity queryset.
+    :param with_title: If True, the activity is annotated with the title of the learning unit/class year.
+    :return: The annotated queryset.
+    """
+    base_field = activity_field + '__' if activity_field else ''
+    qs = queryset.annotate(
+        learning_year_acronym=Coalesce(
+            get_case_when_statement_pour_code_complet(
+                lookup_to_learning_unit_acronym=(
+                    f'{base_field}learning_class_year__learning_component_year__learning_unit_year__acronym'
+                ),
+                lookup_to_component=f'{base_field}learning_class_year__learning_component_year',
+                lookup_to_learning_class_acronym=f'{base_field}learning_class_year__acronym',
+            ),
+            f'{base_field}learning_unit_year__acronym',
+            models.Value(''),
+        ),
+        learning_year_academic_year=Coalesce(
+            f'{base_field}learning_class_year__learning_component_year__learning_unit_year__academic_year__year',
+            f'{base_field}learning_unit_year__academic_year__year',
+        ),
+    )
+
+    if not with_title:
+        return qs
+
+    language = get_language()
+
+    qs = qs.alias(
+        learning_year_base_title_fr=Coalesce(
+            f'{base_field}learning_class_year__learning_component_year__learning_unit_year__'
+            f'learning_container_year__common_title',
+            f'{base_field}learning_unit_year__learning_container_year__common_title',
+            models.Value(''),
+        ),
+        learning_year_base_title_en=Coalesce(
+            f'{base_field}learning_class_year__learning_component_year__learning_unit_year__'
+            f'learning_container_year__common_title_english',
+            f'{base_field}learning_unit_year__learning_container_year__common_title_english',
+            models.Value(''),
+        ),
+        learning_year_sub_title_fr=Coalesce(
+            f'{base_field}learning_class_year__title_fr',
+            f'{base_field}learning_unit_year__specific_title',
+            models.Value(''),
+        ),
+        learning_year_sub_title_en=Coalesce(
+            f'{base_field}learning_class_year__title_en',
+            f'{base_field}learning_unit_year__specific_title_english',
+            models.Value(''),
+        ),
+    )
+
+    qs = qs.annotate(
+        learning_year_title_fr=models.Case(
+            models.When(learning_year_base_title_fr='', then=models.F('learning_year_sub_title_fr')),
+            models.When(learning_year_sub_title_fr='', then=models.F('learning_year_base_title_fr')),
+            default=Concat(
+                models.F('learning_year_base_title_fr'),
+                models.Value(' - '),
+                models.F('learning_year_sub_title_fr'),
+            ),
+        ),
+        learning_year_title_en=models.Case(
+            models.When(learning_year_base_title_en='', then=models.F('learning_year_sub_title_en')),
+            models.When(learning_year_sub_title_en='', then=models.F('learning_year_base_title_en')),
+            default=Concat(
+                models.F('learning_year_base_title_en'),
+                models.Value(' - '),
+                models.F('learning_year_sub_title_en'),
+            ),
+        ),
+    )
+
+    if language == LANGUAGE_CODE_EN:
+        qs = qs.annotate(
+            learning_year_title=models.Case(
+                models.When(learning_year_title_en='', then=models.F('learning_year_title_fr')),
+                default=models.F('learning_year_title_en'),
+            )
+        )
+    else:
+        qs = qs.annotate(learning_year_title=models.F('learning_year_title_fr'))
+
+    return qs
+
+
+def filter_queryset_by_learning_year(queryset, acronyms: List[str], year: int, activity_field=''):
+    """
+    Filter the queryset with the acronyms and the academic year of the learning unit
+    year (if any) or of the learning class year (if any) of the activity.
+    :param queryset: The queryset to filter.
+    :param acronyms: The acronyms of the learning unit/class year.
+    :param year: The academic year of the learning unit/class year.
+    :param activity_field: The name of the activity field, if the input queryset is not based on an activity queryset.
+    :return: The annotated queryset.
+    """
+    base_field = activity_field + '__' if activity_field else ''
+
+    conditions = Q()
+
+    for acronym in acronyms:
+        lc_acronym = CodeParser.get_code_classe(code=acronym)
+        lu_acronym = CodeParser.get_code_unite_enseignement(code=acronym)
+
+        conditions |= Q(
+            **(
+                {
+                    f'{base_field}learning_class_year__learning_component_year__'
+                    f'learning_unit_year__academic_year__year': year,
+                    f'{base_field}learning_class_year__learning_component_year__'
+                    f'learning_unit_year__acronym': lu_acronym,
+                    f'{base_field}learning_class_year__acronym': lc_acronym,
+                }
+                if lc_acronym
+                else {
+                    f'{base_field}learning_unit_year__academic_year__year': year,
+                    f'{base_field}learning_unit_year__acronym': lu_acronym,
+                }
+            )
+        )
+
+    return queryset.filter(conditions)
+
+
 class ActivityQuerySet(models.QuerySet):
+    def filter_by_learning_year(self, acronym: str, year: int):
+        return filter_queryset_by_learning_year(queryset=self, acronyms=[acronym], year=year)
+
+    def annotate_with_learning_year_info(self, with_title=False):
+        return annotate_queryset_with_activity_learning_info(
+            queryset=self,
+            with_title=with_title,
+        )
+
     def prefetch_with_assessment_enrollments(self):
         return self.prefetch_related(
             models.Prefetch(
@@ -84,12 +235,11 @@ class ActivityQuerySet(models.QuerySet):
             self.for_doctoral_training_filter()
             .filter(parcours_doctoral__uuid=parcours_doctoral_uuid)
             .prefetch_related('children')
+            .annotate_with_learning_year_info(with_title=True)
             .prefetch_with_assessment_enrollments()
             .select_related(
                 'country',
                 'parent',
-                'learning_unit_year__learning_container_year',
-                'learning_unit_year__academic_year',
             )
         )
 
@@ -117,12 +267,11 @@ class ActivityQuerySet(models.QuerySet):
         return (
             self.for_complementary_training_filter()
             .filter(parcours_doctoral__uuid=parcours_doctoral_uuid)
+            .annotate_with_learning_year_info(with_title=True)
             .prefetch_with_assessment_enrollments()
             .select_related(
                 'country',
                 'parent',
-                'learning_unit_year__learning_container_year',
-                'learning_unit_year__academic_year',
             )
         )
 
@@ -147,11 +296,10 @@ class ActivityQuerySet(models.QuerySet):
                 parcours_doctoral__uuid=parcours_doctoral_uuid,
                 category=CategorieActivite.UCL_COURSE.name,
             )
+            .annotate_with_learning_year_info(with_title=True)
             .select_related(
                 'country',
                 'parent',
-                'learning_unit_year__learning_container_year',
-                'learning_unit_year__academic_year',
             )
             .order_by('context')
         )
@@ -390,6 +538,12 @@ class Activity(models.Model):
         blank=True,
         on_delete=models.PROTECT,
     )
+    learning_class_year = models.ForeignKey(
+        'learning_unit.LearningClassYear',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+    )
     course_completed = models.BooleanField(
         blank=True,
         default=False,
@@ -496,6 +650,16 @@ class AssessmentEnrollmentQuerySet(models.QuerySet):
 
     def with_session_numero(self):
         return self.annotate(session_numero=models.Case(*self.SESSION_MAPPING))
+
+    def filter_by_learning_year(self, acronyms: List[str], year: int):
+        return filter_queryset_by_learning_year(self, acronyms=acronyms, year=year, activity_field='course')
+
+    def annotate_with_learning_year_info(self, with_title=False):
+        return annotate_queryset_with_activity_learning_info(
+            queryset=self,
+            activity_field='course',
+            with_title=with_title,
+        )
 
 
 class AssessmentEnrollment(models.Model):

@@ -25,7 +25,7 @@
 # ##############################################################################
 
 from django.views.generic import RedirectView
-from osis_document.enums import PostProcessingWanted
+from osis_document_components.enums import PostProcessingWanted
 
 from infrastructure.messages_bus import message_bus_instance
 from parcours_doctoral.ddd.commands import GetGroupeDeSupervisionQuery
@@ -64,8 +64,8 @@ class ConfirmationCanvasExportView(LastConfirmationMixin, RedirectView):
         return context_data
 
     def get(self, request, *args, **kwargs):
-        from osis_document.api.utils import get_remote_token
-        from osis_document.utils import get_file_url
+        from osis_document_components.services import get_remote_token
+        from osis_document_components.utils import get_file_url
 
         file_uuid = parcours_doctoral_pdf_confirmation_canvas(
             parcours_doctoral=self.parcours_doctoral,

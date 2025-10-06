@@ -84,7 +84,7 @@ class RecupererInscriptionEvaluationQuery(CommandRequest):
 class ListerEvaluationsQuery(interface.QueryRequest):
     annee: int
     session: int
-    code_unite_enseignement: str
+    codes_unite_enseignement: List[str]
 
 
 @attr.dataclass(frozen=True, slots=True)

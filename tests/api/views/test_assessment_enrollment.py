@@ -30,6 +30,7 @@ from django.shortcuts import resolve_url
 from rest_framework import status
 from rest_framework.test import APITestCase
 
+from base.tests.factories.learning_unit_year import LearningUnitYearFactory
 from base.tests.factories.person import PersonFactory
 from deliberation.models.enums.numero_session import Session
 from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
@@ -38,6 +39,7 @@ from parcours_doctoral.ddd.formation.domain.validator.exceptions import (
 )
 from parcours_doctoral.tests.factories.assessment_enrollment import (
     AssessmentEnrollmentFactory,
+    AssessmentEnrollmentForClassFactory,
 )
 from parcours_doctoral.tests.factories.parcours_doctoral import ParcoursDoctoralFactory
 from parcours_doctoral.tests.factories.roles import StudentRoleFactory
@@ -128,10 +130,13 @@ class AssessmentEnrollmentListViewTestCase(APITestCase):
             course__parcours_doctoral=self.doctorate,
             course__learning_unit_year__academic_year__year=2020,
         )
-        second_enrollment = AssessmentEnrollmentFactory(
+        second_enrollment = AssessmentEnrollmentForClassFactory(
             session=Session.JUNE.name,
             course__parcours_doctoral=self.doctorate,
-            course__learning_unit_year__academic_year__year=2020,
+            course__learning_class_year__learning_component_year__learning_unit_year__academic_year__year=2020,
+        )
+        second_learning_unit_year = (
+            second_enrollment.course.learning_class_year.learning_component_year.learning_unit_year
         )
         third_enrollment = AssessmentEnrollmentFactory(
             session=Session.SEPTEMBER.name,
@@ -170,6 +175,20 @@ class AssessmentEnrollmentListViewTestCase(APITestCase):
         )
 
         self.assertEqual(json_response[1]['uuid'], str(second_enrollment.uuid))
+        self.assertEqual(
+            json_response[1]['code_unite_enseignement'],
+            second_learning_unit_year.acronym + '-' + second_enrollment.course.learning_class_year.acronym,
+        )
+        self.assertEqual(
+            json_response[1]['intitule_unite_enseignement'],
+            second_learning_unit_year.learning_container_year.common_title
+            + ' - '
+            + second_enrollment.course.learning_class_year.title_fr,
+        )
+        self.assertEqual(
+            json_response[1]['annee_unite_enseignement'],
+            second_learning_unit_year.academic_year.year,
+        )
         self.assertEqual(json_response[2]['uuid'], str(third_enrollment.uuid))
         self.assertEqual(json_response[3]['uuid'], str(fourth_enrollment.uuid))
 
@@ -277,4 +296,37 @@ class AssessmentEnrollmentDetailViewTestCase(APITestCase):
         self.assertEqual(
             json_response['annee_unite_enseignement'],
             self.enrollment.course.learning_unit_year.academic_year.year,
+        )
+
+    def test_get_assessment_enrollment_for_class_with_student(self):
+        self.client.force_authenticate(user=self.student.user)
+
+        class_enrollment = AssessmentEnrollmentForClassFactory(
+            session=Session.JUNE.name,
+            course__parcours_doctoral=self.doctorate,
+            course__learning_class_year__learning_component_year__learning_unit_year__academic_year__year=2020,
+        )
+        second_learning_unit_year = (
+            class_enrollment.course.learning_class_year.learning_component_year.learning_unit_year
+        )
+        url = resolve_url(self.base_namespace, uuid=self.doctorate.uuid, enrollment_uuid=class_enrollment.uuid)
+
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        json_response = response.json()
+
+        self.assertEqual(
+            json_response['code_unite_enseignement'],
+            second_learning_unit_year.acronym + '-' + class_enrollment.course.learning_class_year.acronym,
+        )
+        self.assertEqual(
+            json_response['intitule_unite_enseignement'],
+            second_learning_unit_year.learning_container_year.common_title
+            + ' - '
+            + class_enrollment.course.learning_class_year.title_fr,
+        )
+        self.assertEqual(
+            json_response['annee_unite_enseignement'],
+            second_learning_unit_year.academic_year.year,
         )

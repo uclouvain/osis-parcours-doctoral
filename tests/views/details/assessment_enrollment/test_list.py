@@ -42,6 +42,7 @@ from parcours_doctoral.ddd.formation.dtos.inscription_evaluation import (
 from parcours_doctoral.models import AssessmentEnrollment
 from parcours_doctoral.tests.factories.assessment_enrollment import (
     AssessmentEnrollmentFactory,
+    AssessmentEnrollmentForClassFactory,
 )
 from parcours_doctoral.tests.factories.parcours_doctoral import ParcoursDoctoralFactory
 
@@ -81,10 +82,10 @@ class AssessmentEnrollmentListViewTestCase(TestCase):
             course__parcours_doctoral=self.doctorate,
             course__learning_unit_year__academic_year__year=2020,
         )
-        second_enrollment: AssessmentEnrollment = AssessmentEnrollmentFactory(
+        second_enrollment: AssessmentEnrollment = AssessmentEnrollmentForClassFactory(
             session=Session.JUNE.name,
             course__parcours_doctoral=self.doctorate,
-            course__learning_unit_year__academic_year__year=2020,
+            course__learning_class_year__learning_component_year__learning_unit_year__academic_year__year=2020,
         )
         third_enrollment: AssessmentEnrollment = AssessmentEnrollmentFactory(
             session=Session.JANUARY.name,
@@ -151,6 +152,20 @@ class AssessmentEnrollmentListViewTestCase(TestCase):
         )
 
         self.assertEqual(second_enrollment_dto.uuid, str(second_enrollment.uuid))
+        second_learning_class_year = second_enrollment.course.learning_class_year
+        second_learning_unit_year = second_learning_class_year.learning_component_year.learning_unit_year
+        self.assertEqual(
+            second_enrollment_dto.code_unite_enseignement,
+            f'{second_learning_unit_year.acronym}-{second_learning_class_year.acronym}',
+        )
+        self.assertEqual(
+            second_enrollment_dto.intitule_unite_enseignement,
+            f'{second_learning_unit_year.learning_container_year.common_title} - {second_learning_class_year.title_fr}',
+        )
+        self.assertEqual(
+            second_enrollment_dto.annee_unite_enseignement,
+            second_learning_unit_year.academic_year.year,
+        )
         self.assertEqual(third_enrollment_dto.uuid, str(third_enrollment.uuid))
 
         # Check 2021 enrollments

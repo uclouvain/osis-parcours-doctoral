@@ -58,9 +58,9 @@ class InscriptionEvaluation(interface.RootEntity):
         self.session = session
         self.inscription_tardive = inscription_tardive
 
-    def desinscrire(self, echeance_encodage_note: Optional[datetime.date]):
+    def desinscrire(self, periode_encodage: Optional[tuple[datetime.date, datetime.date]]):
         self.statut = StatutInscriptionEvaluation.DESINSCRITE
-        self.desinscription_tardive = bool(echeance_encodage_note and datetime.date.today() > echeance_encodage_note)
+        self.desinscription_tardive = bool(periode_encodage and datetime.date.today() >= periode_encodage[0])
 
     def reinscrire(self):
         self.statut = StatutInscriptionEvaluation.ACCEPTEE

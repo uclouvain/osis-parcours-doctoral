@@ -23,17 +23,27 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from unittest import TestCase
+from django.test import SimpleTestCase, TestCase
 
+from base.tests import QueriesAssertionsMixin
+from infrastructure.messages_bus import message_bus_instance
 from parcours_doctoral.ddd.formation.commands import (
     ListerInscriptionsUnitesEnseignementQuery,
+)
+from parcours_doctoral.ddd.formation.domain.model.enums import StatutActivite
+from parcours_doctoral.ddd.formation.dtos.inscription_unite_enseignement import (
+    InscriptionUniteEnseignementDTO,
 )
 from parcours_doctoral.infrastructure.message_bus_in_memory import (
     message_bus_in_memory_instance,
 )
+from parcours_doctoral.tests.factories.activity import (
+    UclCourseFactory,
+    UclCourseWithClassFactory,
+)
 
 
-class ListerInscriptionsUnitesEnseignementTestCase(TestCase):
+class ListerInscriptionsUnitesEnseignementTestCase(SimpleTestCase):
     def test_list(self):
         resultats = message_bus_in_memory_instance.invoke(
             ListerInscriptionsUnitesEnseignementQuery(
@@ -42,3 +52,107 @@ class ListerInscriptionsUnitesEnseignementTestCase(TestCase):
             )
         )
         self.assertEqual(resultats, [])
+
+
+class ListerInscriptionsUnitesEnseignementImplementationTestCase(QueriesAssertionsMixin, TestCase):
+    def test_list_with_no_activity(self):
+        with self.assertNumQueriesLessThan(2):
+            activities = message_bus_instance.invoke(
+                ListerInscriptionsUnitesEnseignementQuery(
+                    annee=2020,
+                    code_unite_enseignement='UE1',
+                )
+            )
+
+        self.assertEqual(len(activities), 0)
+
+    def test_list_with_activities(self):
+        first_course = UclCourseFactory(
+            learning_unit_year__academic_year__year=2020,
+            learning_unit_year__acronym='UE1',
+            status=StatutActivite.ACCEPTEE.name,
+            parcours_doctoral__training__acronym='ABCDP',
+        )
+        second_course = UclCourseFactory(
+            learning_unit_year__academic_year__year=2020,
+            learning_unit_year__acronym='UE1',
+            status=StatutActivite.ACCEPTEE.name,
+            parcours_doctoral__training__acronym='XFEDP',
+        )
+        third_course_for_class = UclCourseWithClassFactory(
+            learning_class_year__acronym='A',
+            learning_class_year__learning_component_year__learning_unit_year__academic_year__year=2020,
+            learning_class_year__learning_component_year__learning_unit_year__acronym='UE1',
+            status=StatutActivite.ACCEPTEE.name,
+            parcours_doctoral__training__acronym='EKODP',
+        )
+        other_status_course = UclCourseFactory(
+            learning_unit_year__academic_year__year=2020,
+            learning_unit_year__acronym='UE1',
+            status=StatutActivite.SOUMISE.name,
+        )
+        other_year_course = UclCourseFactory(
+            learning_unit_year__academic_year__year=2019,
+            learning_unit_year__acronym='UE1',
+            status=StatutActivite.SOUMISE.name,
+        )
+        other_learning_unit_acronym_course = UclCourseFactory(
+            learning_unit_year__academic_year__year=2020,
+            learning_unit_year__acronym='UE2',
+            status=StatutActivite.SOUMISE.name,
+        )
+
+        with self.assertNumQueriesLessThan(3):
+            activities = message_bus_instance.invoke(
+                ListerInscriptionsUnitesEnseignementQuery(
+                    annee=2020,
+                    code_unite_enseignement='UE1',
+                )
+            )
+
+        self.assertCountEqual(
+            activities,
+            [
+                InscriptionUniteEnseignementDTO(
+                    noma=first_course.parcours_doctoral.student.student_set.first().registration_id,
+                    annee=2020,
+                    sigle_formation='ABCFP',
+                    code_unite_enseignement='UE1',
+                ),
+                InscriptionUniteEnseignementDTO(
+                    noma=second_course.parcours_doctoral.student.student_set.first().registration_id,
+                    annee=2020,
+                    sigle_formation='XFEFP',
+                    code_unite_enseignement='UE1',
+                ),
+            ],
+        )
+
+        with self.assertNumQueriesLessThan(3, verbose=True):
+            activities = message_bus_instance.invoke(
+                ListerInscriptionsUnitesEnseignementQuery(
+                    annee=2020,
+                    code_unite_enseignement='UE1-A',
+                )
+            )
+
+        self.assertCountEqual(
+            activities,
+            [
+                InscriptionUniteEnseignementDTO(
+                    noma=third_course_for_class.parcours_doctoral.student.student_set.first().registration_id,
+                    annee=2020,
+                    sigle_formation='EKOFP',
+                    code_unite_enseignement='UE1-A',
+                ),
+            ],
+        )
+
+        with self.assertNumQueriesLessThan(3, verbose=True):
+            activities = message_bus_instance.invoke(
+                ListerInscriptionsUnitesEnseignementQuery(
+                    annee=2020,
+                    code_unite_enseignement='UE1-B',
+                )
+            )
+            self.assertEqual(len(activities), 0)

@@ -28,12 +28,12 @@ from django import forms
 from django.db.models import F
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import pgettext_lazy
-from osis_document.contrib import FileUploadField
+from osis_document_components.fields import FileUploadField
 
-from admission.utils import format_school_title
 from base.forms.utils import EMPTY_CHOICE, FIELD_REQUIRED_MESSAGE
 from base.forms.utils.autocomplete import ListSelect2
 from base.models.entity_version import EntityVersion
+from osis_profile.utils.utils import format_school_title
 
 
 class CotutelleForm(forms.Form):
@@ -71,7 +71,7 @@ class CotutelleForm(forms.Form):
         label=pgettext_lazy('parcours_doctoral', 'Institute'),
         required=False,
         widget=ListSelect2(
-            url='admission:autocomplete:superior-institute-uuid',
+            url='superior-institute-autocomplete-uuid',
             forward=[
                 forward.Field('institution_fwb', 'is_belgian'),
             ],
