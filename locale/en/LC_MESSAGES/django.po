@@ -381,9 +381,6 @@ msgstr ""
 msgid "Allow you to manage the doctoral training activities"
 msgstr ""
 
-msgid "Allow you to manage who are auditors for institutes."
-msgstr ""
-
 msgid "Already a member."
 msgstr "Already a member of the supervisory panel."
 
@@ -746,9 +743,6 @@ msgid "Complementary training not enabled"
 msgstr ""
 
 msgid "Complementary training proposition"
-msgstr ""
-
-msgid "Configuration"
 msgstr ""
 
 msgid "Concluded in"
@@ -1582,10 +1576,10 @@ msgstr ""
 msgid "International scholarship"
 msgstr ""
 
-msgid "Is a promoter"
+msgid "Invite the members of the jury to the private defense"
 msgstr ""
 
-msgid "Invite the members of the jury to the private defense"
+msgid "Is a promoter"
 msgstr ""
 
 msgid "Is active"
@@ -2023,9 +2017,6 @@ msgid "Name of the ADRE manager"
 msgstr ""
 
 msgid "Name of the doctoral commission"
-msgstr ""
-
-msgid "Name in the language of the manifestation"
 msgstr ""
 
 msgid "Name of the management entity"
@@ -3237,15 +3228,6 @@ msgstr ""
 msgid "The jury signing is not in progress"
 msgstr ""
 
-msgid "The jury members"
-msgstr ""
-
-msgid ""
-"The jury shall verify that the candidate has completed their "
-"<strong>doctoral training</strong> and obtained the 60 credits required by "
-"the decree, validated by the domain doctoral committee."
-msgstr ""
-
 msgid "The last name of the jury member"
 msgstr ""
 
@@ -3760,6 +3742,11 @@ msgid "You must be the request author to access this doctoral training"
 msgstr ""
 
 msgid "You must be the request supervisor to access this doctoral training"
+msgstr ""
+
+msgid ""
+"You must be the secretary or the president of the jury to perform this "
+"action."
 msgstr ""
 
 msgid ""

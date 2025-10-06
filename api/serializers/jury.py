@@ -31,7 +31,6 @@ from base.utils.serializers import DTOSerializer
 from parcours_doctoral.api.serializers.external import (
     ExternalParcoursDoctoralDTOSerializer,
 )
-from parcours_doctoral.api.serializers.fields import RelatedInstituteField
 from parcours_doctoral.ddd.jury.commands import (
     AjouterMembreCommand,
     ApprouverJuryCommand,
@@ -41,7 +40,6 @@ from parcours_doctoral.ddd.jury.commands import (
     ModifierRoleMembreCommand,
     RefuserJuryCommand,
     RenvoyerInvitationSignatureCommand,
-    RetirerMembreCommand,
 )
 from parcours_doctoral.ddd.jury.dtos.jury import JuryDTO, MembreJuryDTO
 

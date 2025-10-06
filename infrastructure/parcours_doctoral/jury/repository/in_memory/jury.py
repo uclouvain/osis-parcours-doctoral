@@ -163,7 +163,6 @@ class JuryInMemoryRepository(InMemoryGenericRepository, IJuryRepository):
                         motif_refus=membre.signature.motif_refus,
                         pdf=membre.signature.pdf,
                     ),
-                    ville=membre.ville,
                 )
                 for membre in jury.membres
             ],

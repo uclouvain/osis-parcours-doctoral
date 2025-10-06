@@ -30,8 +30,8 @@ from rest_framework.test import APITestCase
 from base.tests.factories.entity import EntityFactory
 from base.tests.factories.person import PersonFactory
 from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
-from parcours_doctoral.models import ParcoursDoctoral, JuryActor
-from parcours_doctoral.tests.factories.jury import ExternalJuryMemberFactory
+from parcours_doctoral.models import JuryActor, ParcoursDoctoral
+from parcours_doctoral.tests.factories.jury import ExternalJuryActorFactory
 from parcours_doctoral.tests.factories.parcours_doctoral import ParcoursDoctoralFactory
 from parcours_doctoral.tests.factories.roles import StudentRoleFactory
 from parcours_doctoral.tests.factories.supervision import (
@@ -338,7 +338,7 @@ class JuryMembersDetailApiTestCase(APITestCase):
             training__management_entity=doctoral_commission,
             thesis_proposed_title='Thesis title',
         )
-        cls.member = ExternalJuryMemberFactory(process=cls.parcours_doctoral.jury_group)
+        cls.member = ExternalJuryActorFactory(process=cls.parcours_doctoral.jury_group)
         cls.udpated_data = {
             'matricule': '',
             'institution': 'institution',

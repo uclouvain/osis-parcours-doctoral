@@ -97,9 +97,7 @@ class EvaluationRepository(IEvaluationRepository):
     @classmethod
     def get_dto_queryset(cls):
         return AssessmentEnrollment.objects.annotate(
-            private_defense_date=F(
-                'course__parcours_doctoral__defense_indicative_date'
-            ),  # TODO to change when private defense is implemented
+            private_defense_date=F('course__parcours_doctoral__current_private_defense__datetime__date'),
             lue_academic_year=F('course__learning_unit_year__academic_year__year'),
             lue_acronym=F('course__learning_unit_year__acronym'),
             course_uuid=F('course__uuid'),
