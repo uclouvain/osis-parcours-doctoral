@@ -56,7 +56,8 @@ class PasDeMembreExterneException(BusinessException):
 
     def __init__(self, **kwargs):
         message = _(
-            "The jury must have at least one member from another institute than the UCLouvain, chosen depending on their particular expertise about the subject of the thesis."
+            "The jury must have at least one member from another institute than the UCLouvain, chosen depending on "
+            "their particular expertise about the subject of the thesis."
         )
         super().__init__(message, **kwargs)
 

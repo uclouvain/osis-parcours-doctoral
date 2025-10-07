@@ -55,8 +55,9 @@ from parcours_doctoral.ddd.repository.i_groupe_de_supervision import (
 )
 from parcours_doctoral.models import (
     ActorType,
+    JuryActor,
     ParcoursDoctoral,
-    ParcoursDoctoralSupervisionActor, JuryActor,
+    ParcoursDoctoralSupervisionActor,
 )
 from reference.models.country import Country
 
@@ -264,7 +265,9 @@ class GroupeDeSupervisionRepository(IGroupeDeSupervisionRepository):
             signataire_id = PromoteurIdentity(str(new_actor.uuid))
             JuryActor.objects.create(
                 role=RoleJury.MEMBRE.name,
-                process_id=ParcoursDoctoral.objects.only('id', 'jury_group_id').get(supervision_group=groupe).jury_group_id,
+                process_id=ParcoursDoctoral.objects.only('id', 'jury_group_id')
+                .get(supervision_group=groupe)
+                .jury_group_id,
                 is_promoter=True,
                 **(
                     {'person_id': new_actor.person_id}

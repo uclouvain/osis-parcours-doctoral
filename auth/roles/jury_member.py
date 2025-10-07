@@ -34,6 +34,7 @@ from parcours_doctoral.auth.predicates.parcours_doctoral import (
     is_president_or_secretary_of_jury,
     is_related_to_an_admission,
     private_defense_is_authorised,
+    public_defense_is_authorised,
 )
 
 
@@ -69,5 +70,7 @@ class JuryMember(RoleModel):
             # Public defense
             'parcours_doctoral.api_view_public_defense': is_president_or_secretary_of_jury,
             'parcours_doctoral.api_view_public_defense_minutes': is_president_or_secretary_of_jury,
+            'parcours_doctoral.api_upload_public_defense_minutes': is_president_or_secretary_of_jury
+            & public_defense_is_authorised,
         }
         return RuleSet(ruleset)
