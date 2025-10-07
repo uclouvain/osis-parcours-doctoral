@@ -49,7 +49,6 @@ from parcours_doctoral.ddd.domain.model.enums import (
     ChoixCommissionProximiteCDEouCLSM,
     ChoixCommissionProximiteCDSS,
     ChoixDoctoratDejaRealise,
-    ChoixLangueDefense,
     ChoixSousDomaineSciences,
     ChoixStatutParcoursDoctoral,
     ChoixTypeFinancement,
@@ -62,6 +61,7 @@ from parcours_doctoral.ddd.jury.domain.model.enums import ChoixEtatSignature
 from parcours_doctoral.ddd.soutenance_publique.validators.validator_by_business_action import (
     AutoriserSoutenancePubliqueValidatorList,
     InviterJurySoutenancePubliqueValidatorList,
+    SoumettreProcesVerbalSoutenancePubliqueValidatorList,
     SoumettreSoutenancePubliqueValidatorList,
 )
 
@@ -432,3 +432,10 @@ class ParcoursDoctoral(interface.RootEntity):
         ).validate()
 
         self.statut = ChoixStatutParcoursDoctoral.SOUTENANCE_PUBLIQUE_AUTORISEE
+
+    def soumettre_proces_verbal_soutenance_publique(self, proces_verbal):
+        SoumettreProcesVerbalSoutenancePubliqueValidatorList(
+            statut_parcours_doctoral=self.statut,
+        ).validate()
+
+        self.proces_verbal_soutenance_publique = proces_verbal

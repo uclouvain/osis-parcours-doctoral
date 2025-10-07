@@ -33,9 +33,11 @@ from parcours_doctoral.api.permissions import DoctorateAPIPermissionRequiredMixi
 from parcours_doctoral.api.serializers import ParcoursDoctoralIdentityDTOSerializer
 from parcours_doctoral.api.serializers.public_defense import (
     PublicDefenseMinutesCanvasSerializer,
+    SubmitPublicDefenseMinutesSerializer,
     SubmitPublicDefenseSerializer,
 )
 from parcours_doctoral.ddd.soutenance_publique.commands import (
+    SoumettreProcesVerbalSoutenancePubliqueCommand,
     SoumettreSoutenancePubliqueCommand,
 )
 from parcours_doctoral.exports.public_defense_minutes_canvas import (
@@ -90,12 +92,18 @@ class PublicDefenseAPIView(DoctorateAPIPermissionRequiredMixin, RetrieveAPIView)
         responses=PublicDefenseMinutesCanvasSerializer,
         operation_id='retrieve_public_defense_minutes_canvas',
     ),
+    put=extend_schema(
+        request=SubmitPublicDefenseMinutesSerializer,
+        responses=ParcoursDoctoralIdentityDTOSerializer,
+        operation_id='submit_public_defense_minutes',
+    ),
 )
 class PublicDefenseMinutesAPIView(DoctorateAPIPermissionRequiredMixin, RetrieveAPIView):
     name = "public-defense-minutes"
     filter_backends = []
     permission_mapping = {
         'GET': 'parcours_doctoral.api_view_public_defense_minutes',
+        'PUT': 'parcours_doctoral.api_upload_public_defense_minutes',
     }
     serializer_class = PublicDefenseMinutesCanvasSerializer
 
@@ -108,3 +116,21 @@ class PublicDefenseMinutesAPIView(DoctorateAPIPermissionRequiredMixin, RetrieveA
         )
 
         return {'url': url}
+
+    def put(self, request, *args, **kwargs):
+        """Submit the minutes of the public defense"""
+        serializer = SubmitPublicDefenseMinutesSerializer(data=request.data)
+
+        serializer.is_valid(raise_exception=True)
+
+        result = message_bus_instance.invoke(
+            SoumettreProcesVerbalSoutenancePubliqueCommand(
+                uuid_parcours_doctoral=self.doctorate_uuid,
+                matricule_auteur=self.request.user.person.global_id,
+                **serializer.validated_data,
+            )
+        )
+
+        serializer = ParcoursDoctoralIdentityDTOSerializer(instance=result)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)

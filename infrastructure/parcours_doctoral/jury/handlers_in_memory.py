@@ -105,7 +105,7 @@ from parcours_doctoral.infrastructure.parcours_doctoral.jury.domain.service.in_m
 from parcours_doctoral.infrastructure.parcours_doctoral.jury.domain.service.in_memory.notification import (
     NotificationInMemory,
 )
-from parcours_doctoral.infrastructure.parcours_doctoral.jury.domain.service.in_memory.verifier_modification_role import (
+from parcours_doctoral.infrastructure.parcours_doctoral.jury.domain.service.in_memory.verifier_modification_role import (  # noqa: E501
     VerifierModificationRoleServiceInMemoryService,
 )
 from parcours_doctoral.infrastructure.parcours_doctoral.jury.repository.in_memory.jury import (

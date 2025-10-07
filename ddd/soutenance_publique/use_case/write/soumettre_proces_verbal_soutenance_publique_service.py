@@ -23,45 +23,32 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-import datetime
-from typing import Optional
-
-import attr
-
-from osis_common.ddd import interface
-
-
-@attr.dataclass(frozen=True, slots=True)
-class SoumettreSoutenancePubliqueCommand(interface.CommandRequest):
-    uuid_parcours_doctoral: str
-    matricule_auteur: str
-
-    langue: Optional[str]
-    date_heure: Optional[datetime.datetime]
-    lieu: Optional[str]
-    local_deliberation: Optional[str]
-    resume_annonce: Optional[str]
-    photo_annonce: list[str]
+from parcours_doctoral.ddd.builder.parcours_doctoral_identity import (
+    ParcoursDoctoralIdentityBuilder,
+)
+from parcours_doctoral.ddd.domain.model.parcours_doctoral import (
+    ParcoursDoctoralIdentity,
+)
+from parcours_doctoral.ddd.repository.i_parcours_doctoral import (
+    IParcoursDoctoralRepository,
+)
+from parcours_doctoral.ddd.soutenance_publique.commands import (
+    SoumettreProcesVerbalSoutenancePubliqueCommand,
+)
 
 
-@attr.dataclass(frozen=True, slots=True)
-class InviterJurySoutenancePubliqueCommand(interface.CommandRequest):
-    parcours_doctoral_uuid: str
-    matricule_auteur: str
+def soumettre_proces_verbal_soutenance_publique(
+    cmd: 'SoumettreProcesVerbalSoutenancePubliqueCommand',
+    parcours_doctoral_repository: 'IParcoursDoctoralRepository',
+) -> ParcoursDoctoralIdentity:
+    # GIVEN
+    parcours_doctoral_id = ParcoursDoctoralIdentityBuilder.build_from_uuid(cmd.uuid_parcours_doctoral)
+    parcours_doctoral = parcours_doctoral_repository.get(parcours_doctoral_id)
 
+    # WHEN
+    parcours_doctoral.soumettre_proces_verbal_soutenance_publique(proces_verbal=cmd.proces_verbal)
 
-@attr.dataclass(frozen=True, slots=True)
-class AutoriserSoutenancePubliqueCommand(interface.CommandRequest):
-    parcours_doctoral_uuid: str
-    matricule_auteur: str
+    # THEN
+    parcours_doctoral_repository.save(parcours_doctoral)
 
-    sujet_message: str
-    corps_message: str
-
-
-@attr.dataclass(frozen=True, slots=True)
-class SoumettreProcesVerbalSoutenancePubliqueCommand(interface.CommandRequest):
-    uuid_parcours_doctoral: str
-    matricule_auteur: str
-
-    proces_verbal: list[str]
+    return parcours_doctoral_id
