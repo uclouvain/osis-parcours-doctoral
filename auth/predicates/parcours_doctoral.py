@@ -147,6 +147,15 @@ def public_defense_in_progress(self, user: User, obj: ParcoursDoctoral):
 
 
 @predicate(bind=True)
+@predicate_failed_msg(
+    message=_("The doctorate must be in the status '%(status)s' to realize this action.")
+    % {'status': ChoixStatutParcoursDoctoral.SOUTENANCE_PUBLIQUE_AUTORISEE.value}
+)
+def public_defense_is_authorised(self, user: User, obj: ParcoursDoctoral):
+    return obj.status == ChoixStatutParcoursDoctoral.SOUTENANCE_PUBLIQUE_AUTORISEE.name
+
+
+@predicate(bind=True)
 @predicate_failed_msg(message=_("Complementary training not enabled"))
 def complementary_training_enabled(self, user: User, obj: ParcoursDoctoral):
     return (
@@ -216,6 +225,7 @@ def is_part_of_jury(self, user: User, obj: ParcoursDoctoral):
 def is_president_or_secretary_of_jury(self, user: User, obj: ParcoursDoctoral):
     return (
         obj.has_valid_enrollment
+        and obj.jury_group_id
         and obj.jury_group.actors.filter(
             juryactor__role__in=[RoleJury.SECRETAIRE.name, RoleJury.PRESIDENT.name],
             person_id=user.person.pk,

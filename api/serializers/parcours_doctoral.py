@@ -83,6 +83,7 @@ class ParcoursDoctoralDTOSerializer(DTOSerializer):
                 'retrieve_public_defense',
                 'update_public_defense',
                 'retrieve_public_defense_minutes_canvas',
+                'submit_public_defense_minutes',
             ]
         }
     )

@@ -59,4 +59,8 @@ COMMAND_HANDLERS = {
         notification=NotificationGenerale(),
         historique=Historique(),
     ),
+    SoumettreProcesVerbalSoutenancePubliqueCommand: lambda msg_bus, cmd: soumettre_proces_verbal_soutenance_publique(
+        cmd,
+        parcours_doctoral_repository=ParcoursDoctoralRepository(),
+    ),
 }

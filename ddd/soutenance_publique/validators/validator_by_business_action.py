@@ -88,3 +88,18 @@ class AutoriserSoutenancePubliqueValidatorList(TwoStepsMultipleBusinessException
                 statut=self.statut_parcours_doctoral,
             ),
         ]
+
+
+@attr.dataclass(frozen=True, slots=True)
+class SoumettreProcesVerbalSoutenancePubliqueValidatorList(TwoStepsMultipleBusinessExceptionListValidator):
+    statut_parcours_doctoral: ChoixStatutParcoursDoctoral
+
+    def get_data_contract_validators(self) -> List[BusinessValidator]:
+        return []
+
+    def get_invariants_validators(self) -> List[BusinessValidator]:
+        return [
+            ShouldStatutDoctoratEtreSoutenancePubliqueAutorisee(
+                statut=self.statut_parcours_doctoral,
+            ),
+        ]

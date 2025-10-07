@@ -27,6 +27,7 @@ from rest_framework import serializers
 
 from base.utils.serializers import DTOSerializer
 from parcours_doctoral.ddd.soutenance_publique.commands import (
+    SoumettreProcesVerbalSoutenancePubliqueCommand,
     SoumettreSoutenancePubliqueCommand,
 )
 
@@ -45,3 +46,13 @@ class PublicDefenseMinutesCanvasSerializer(serializers.Serializer):
     """Contains the public defense minutes canvas url."""
 
     url = serializers.URLField(read_only=True)
+
+
+class SubmitPublicDefenseMinutesSerializer(DTOSerializer):
+    """Contains the submitted data to complete the public defense minutes."""
+
+    uuid_parcours_doctoral = None
+    matricule_auteur = None
+
+    class Meta:
+        source = SoumettreProcesVerbalSoutenancePubliqueCommand
