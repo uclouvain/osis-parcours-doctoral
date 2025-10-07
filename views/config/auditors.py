@@ -54,5 +54,8 @@ class AuditorsConfigView(PermissionRequiredMixin, SuccessMessageMixin, FormView)
         for form in formset:
             # We cannot use bulk_create as RoleModel.save() needs to be called.
             if form.cleaned_data['entity_version'] and form.cleaned_data['auditor']:
-                Auditor.objects.create(entity_id=form.cleaned_data['entity_version'].entity_id, person=form.cleaned_data['auditor'])
+                Auditor.objects.create(
+                    entity_id=form.cleaned_data['entity_version'].entity_id,
+                    person=form.cleaned_data['auditor'],
+                )
         return super().form_valid(formset)

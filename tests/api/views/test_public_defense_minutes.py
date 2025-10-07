@@ -29,26 +29,15 @@ from unittest.mock import patch
 
 from django.shortcuts import resolve_url
 from django.test import override_settings
-from django.utils.translation import gettext
 from rest_framework import status
 from rest_framework.test import APITestCase
 
 from base.tests.factories.academic_year import AcademicYearFactory
 from base.tests.factories.user import UserFactory
-from parcours_doctoral.auth.roles.jury_member import JuryMember
-from parcours_doctoral.ddd.defense_privee.validators.exceptions import (
-    DefensePriveeNonActiveeException,
-    DefensePriveeNonTrouveeException,
-)
 from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from parcours_doctoral.ddd.jury.domain.model.enums import RoleJury
-from parcours_doctoral.models import JuryActor
-from parcours_doctoral.tests.factories.jury import (
-    JuryActorFactory,
-    JuryMemberRoleFactory,
-)
+from parcours_doctoral.tests.factories.jury import JuryActorFactory
 from parcours_doctoral.tests.factories.parcours_doctoral import ParcoursDoctoralFactory
-from parcours_doctoral.tests.factories.private_defense import PrivateDefenseFactory
 from parcours_doctoral.tests.factories.roles import StudentRoleFactory
 from parcours_doctoral.tests.factories.supervision import PromoterFactory
 from parcours_doctoral.tests.mixins import MockOsisDocumentMixin
@@ -64,6 +53,11 @@ class PublicDefenseMinutesAPIViewTestCase(MockOsisDocumentMixin, APITestCase):
         cls.user_with_no_role = UserFactory()
         cls.other_doctorate_student = StudentRoleFactory().person
         cls.promoter = PromoterFactory()
+
+        # Data
+        cls.data = {
+            'proces_verbal': [uuid.uuid4()],
+        }
 
     def setUp(self):
         super().setUp()
@@ -85,7 +79,7 @@ class PublicDefenseMinutesAPIViewTestCase(MockOsisDocumentMixin, APITestCase):
         self.doctorate = ParcoursDoctoralFactory(
             training__academic_year=self.academic_years[0],
             supervision_group=self.promoter.process,
-            status=ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_AUTORISEE.name,
+            status=ChoixStatutParcoursDoctoral.SOUTENANCE_PUBLIQUE_AUTORISEE.name,
         )
 
         # Targeted path
@@ -113,10 +107,16 @@ class PublicDefenseMinutesAPIViewTestCase(MockOsisDocumentMixin, APITestCase):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
+        response = self.client.put(self.url, data=self.data)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
     def test_access_student(self):
         self.client.force_authenticate(self.doctorate.student.user)
 
         response = self.client.get(self.url)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        response = self.client.put(self.url, data=self.data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_access_with_jury_member(self):
@@ -127,12 +127,18 @@ class PublicDefenseMinutesAPIViewTestCase(MockOsisDocumentMixin, APITestCase):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
+        response = self.client.put(self.url, data=self.data)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
     def test_access_with_jury_secretary(self):
         jury_member = JuryActorFactory(process=self.doctorate.jury_group, role=RoleJury.SECRETAIRE.name)
 
         self.client.force_authenticate(user=jury_member.person.user)
 
         response = self.client.get(self.url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        response = self.client.put(self.url, data=self.data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_access_with_jury_president(self):
@@ -143,8 +149,40 @@ class PublicDefenseMinutesAPIViewTestCase(MockOsisDocumentMixin, APITestCase):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
+        response = self.client.put(self.url, data=self.data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
     def test_access_with_promoter(self):
         self.client.force_authenticate(user=self.promoter.person.user)
 
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        response = self.client.put(self.url, data=self.data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_edit_with_invalid_status(self):
+        self.client.force_authenticate(user=self.promoter.person.user)
+
+        self.doctorate.status = ChoixStatutParcoursDoctoral.ADMIS.name
+        self.doctorate.save()
+
+        response = self.client.put(self.url, data=self.data)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        json_response = response.json()
+        self.assertEqual(
+            json_response.get('detail'),
+            "Le doctorat doit être dans le statut 'Soutenance publique autorisée' pour réaliser cette action.",
+        )
+
+    def test_edit_with_valid_data(self):
+        self.client.force_authenticate(user=self.promoter.person.user)
+
+        response = self.client.put(self.url, data=self.data)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        self.doctorate.refresh_from_db()
+
+        self.assertEqual(self.doctorate.defense_minutes, [uuid.UUID('4bdffb42-552d-415d-9e4c-725f10dce228')])

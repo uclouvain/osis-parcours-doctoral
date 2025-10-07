@@ -100,6 +100,10 @@ class TableauBordRepository(TableauBordRepositoryAdmissionMixin, ITableauBordRep
         IndicateurTableauBordEnum.FORMULE_1_SOUTENANCE_PUBLIQUE_SOUMISE.name: Q(
             status=ChoixStatutParcoursDoctoral.SOUTENANCE_PUBLIQUE_SOUMISE.name,
         ),
+        IndicateurTableauBordEnum.FORMULE_1_SOUTENANCE_PUBLIQUE_PV_TELEVERSE.name: Q(
+            status=ChoixStatutParcoursDoctoral.SOUTENANCE_PUBLIQUE_SOUMISE.name,
+            defense_minutes__len__gt=0,
+        ),
         # IndicateurTableauBordEnum.AUTORISATION_DIFFUSION_THESE_ECHEANCE_15_JOURS.name: Q(),
         # IndicateurTableauBordEnum.AUTORISATION_DIFFUSION_THESE_REJET_ADRE.name: Q(),
         # IndicateurTableauBordEnum.AUTORISATION_DIFFUSION_THESE_REJET_SCEB.name: Q(),

@@ -54,3 +54,13 @@ class StatutDoctoratDifferentSoutenancePubliqueSoumiseException(BusinessExceptio
             'status': ChoixStatutParcoursDoctoral.SOUTENANCE_PUBLIQUE_SOUMISE.value,
         }
         super().__init__(message, **kwargs)
+
+
+class StatutDoctoratDifferentSoutenancePubliqueAutoriseeException(BusinessException):
+    status_code = 'SOUTENANCE-PUBLIQUE-4'
+
+    def __init__(self, **kwargs):
+        message = _("The doctorate must be in the status '%(status)s' to realize this action.") % {
+            'status': ChoixStatutParcoursDoctoral.SOUTENANCE_PUBLIQUE_AUTORISEE.value,
+        }
+        super().__init__(message, **kwargs)
