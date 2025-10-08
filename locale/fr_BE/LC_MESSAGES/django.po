@@ -2041,6 +2041,12 @@ msgstr ""
 "épreuve de confirmation"
 
 msgid ""
+"Mail sent to the doctoral student to inform him that the diploma is "
+"available for collection"
+msgstr ""
+"E-Mail envoyé au doctorand pour l'informer que son diplôme est disponible pour retrait"
+
+msgid ""
 "Mail sent to the doctoral student to inform of the authorisation of the "
 "private defense"
 msgstr ""
@@ -3159,6 +3165,9 @@ msgstr "Envoyer un e-mail"
 
 msgid "Send a mail to the student"
 msgstr "Envoyer un e-mail à l'étudiant"
+
+msgid "Send an email for the diploma collection"
+msgstr "Envoyer un e-mail pour le retrait du diplôme"
 
 msgid "Send an information email"
 msgstr "Envoyer un e-mail d'information"
