@@ -74,4 +74,8 @@ COMMAND_HANDLERS = {
         notification=_notification_generale,
         historique=_historique,
     ),
+    ModifierSoutenancePubliqueCommand: lambda msg_bus, cmd: modifier_soutenance_publique(
+        cmd,
+        parcours_doctoral_repository=_parcours_doctoral_repository,
+    ),
 }

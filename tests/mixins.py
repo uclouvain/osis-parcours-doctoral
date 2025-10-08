@@ -23,7 +23,10 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from unittest.mock import patch
+import uuid
+from unittest.mock import patch, ANY
+
+from osis_document_components.utils import is_uuid
 
 
 class CheckActionLinksMixin:
@@ -41,18 +44,20 @@ class MockOsisDocumentMixin:
     def setUp(self):
         super().setUp()
 
+        default_uuid = '4bdffb42-552d-415d-9e4c-725f10dce228'
+
         # Mock osis-document
         self.confirm_remote_upload_patcher = patch('osis_document_components.services.confirm_remote_upload')
         patched = self.confirm_remote_upload_patcher.start()
-        patched.return_value = '4bdffb42-552d-415d-9e4c-725f10dce228'
+        patched.side_effect = lambda token, _1, _2, _3, _4, _5 : str(token) if is_uuid(token) else default_uuid
 
         self.file_confirm_upload_patcher = patch('osis_document_components.fields.FileField._confirm_multiple_upload')
         patched = self.file_confirm_upload_patcher.start()
-        patched.side_effect = lambda _, value, __: ['4bdffb42-552d-415d-9e4c-725f10dce228'] if value else []
+        patched.side_effect = lambda _, value, __: [uuid.UUID(str(v)) if is_uuid(v) else default_uuid for v in value]
 
         self.get_remote_metadata_patcher = patch('osis_document_components.services.get_remote_metadata')
         patched = self.get_remote_metadata_patcher.start()
-        patched.return_value = {"name": "test.pdf", "size": 1}
+        patched.return_value = {"name": "test.pdf", "size": 1, "mimetype": ANY}
 
         self.get_remote_token_patcher = patch('osis_document_components.services.get_remote_token')
         patched = self.get_remote_token_patcher.start()

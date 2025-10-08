@@ -217,4 +217,4 @@ class PrivateDefenseFormViewTestCase(MockOsisDocumentMixin, TestCase):
         self.assertEqual(private_defense.datetime, datetime.datetime(2026, 1, 1, 11))
         self.assertEqual(private_defense.place, data['lieu'])
         self.assertEqual(private_defense.manuscript_submission_date, data['date_envoi_manuscrit'])
-        self.assertEqual(private_defense.minutes, [uuid.UUID('4bdffb42-552d-415d-9e4c-725f10dce228')])
+        self.assertEqual(private_defense.minutes, data['proces_verbal_0'])

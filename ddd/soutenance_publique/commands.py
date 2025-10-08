@@ -45,6 +45,22 @@ class SoumettreSoutenancePubliqueCommand(interface.CommandRequest):
 
 
 @attr.dataclass(frozen=True, slots=True)
+class ModifierSoutenancePubliqueCommand(interface.CommandRequest):
+    uuid_parcours_doctoral: str
+    matricule_auteur: str
+
+    langue: str
+    date_heure: Optional[datetime.datetime]
+    lieu: str
+    local_deliberation: str
+    informations_complementaires: str
+    resume_annonce: str
+    photo_annonce: list[str]
+    proces_verbal: list[str]
+    date_retrait_diplome: Optional[datetime.date]
+
+
+@attr.dataclass(frozen=True, slots=True)
 class InviterJurySoutenancePubliqueCommand(interface.CommandRequest):
     parcours_doctoral_uuid: str
     matricule_auteur: str
