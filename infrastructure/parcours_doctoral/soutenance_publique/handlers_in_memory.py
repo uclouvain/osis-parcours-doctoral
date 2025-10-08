@@ -68,4 +68,10 @@ COMMAND_HANDLERS = {
         cmd,
         parcours_doctoral_repository=_parcours_doctoral_repository,
     ),
+    ConfirmerReussiteSoutenancePubliqueCommand: lambda msg_bus, cmd: confirmer_reussite_soutenance_publique(
+        cmd,
+        parcours_doctoral_repository=_parcours_doctoral_repository,
+        notification=_notification_generale,
+        historique=_historique,
+    ),
 }

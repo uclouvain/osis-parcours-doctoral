@@ -33,6 +33,7 @@ from parcours_doctoral.auth.roles.ca_member import CommitteeMember
 from parcours_doctoral.auth.roles.cdd_configurator import CddConfigurator
 from parcours_doctoral.auth.roles.das import SectorAdministrativeDirector
 from parcours_doctoral.auth.roles.promoter import Promoter
+from parcours_doctoral.auth.roles.sceb_manager import ScebManager
 from parcours_doctoral.auth.roles.student import Student
 
 
@@ -94,4 +95,10 @@ class PromoterRoleFactory(BaseFactory):
 class CaMemberRoleFactory(BaseFactory):
     class Meta:
         model = CommitteeMember
+        django_get_or_create = ('person',)
+
+
+class ScebManagerRoleFactory(BaseFactory):
+    class Meta:
+        model = ScebManager
         django_get_or_create = ('person',)

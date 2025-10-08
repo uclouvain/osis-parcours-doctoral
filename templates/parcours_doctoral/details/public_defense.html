@@ -28,8 +28,9 @@
 {% block actions-group %}
   {% has_perm 'parcours_doctoral.invite_jury_to_public_defense' as can_invite_jury_to_public_defense %}
   {% has_perm 'parcours_doctoral.authorise_public_defense' as can_authorise_public_defense %}
+  {% has_perm 'parcours_doctoral.make_public_defense_decision' as can_make_decision %}
 
-  {% if can_invite_jury_to_public_defense or can_authorise_public_defense %}
+  {% if can_invite_jury_to_public_defense or can_authorise_public_defense or can_make_decision %}
     <div id="public-defense-actions" class="btn-group">
       <button
         type="button"
@@ -55,6 +56,23 @@
               {% translate "Authorise the public defense" %}
             </a>
           </li>
+        {% endif %}
+        {% if can_make_decision %}
+          {% if parcours_doctoral.date_heure_soutenance_publique and parcours_doctoral.proces_verbal_soutenance_publique %}
+            <li>
+              <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#public-defense-success-decision-form-modal">
+                {% translate "Proclaimed" %}
+              </a>
+            </li>
+          {% else %}
+            {% with _("Please be sure that the date and time of the defence have been filled in and that the defence minutes have been submitted in the application.") as error_message %}
+              <li title="{{ error_message }}">
+                <a class="dropdown-item disabled" href="#">
+                  {% translate "Proclaimed" %}
+                </a>
+              </li>
+            {% endwith %}
+          {% endif %}
         {% endif %}
       </ul>
     </div>
@@ -89,6 +107,9 @@
   {% url 'parcours_doctoral:public-defense:authorise' view.kwargs.uuid as authorization_url %}
   {% translate 'Authorise the public defense' as authorization_title %}
   {% include 'parcours_doctoral/modal/form_modal.html' with modal_id='public-defense-authorisation-form-modal' modal_title=authorization_title modal_url=authorization_url %}
+
+  {% url 'parcours_doctoral:public-defense:success' view.kwargs.uuid as success_decision_url %}
+  {% include 'parcours_doctoral/modal/form_modal.html' with modal_id='public-defense-success-decision-form-modal' modal_title=_('Proclaimed') modal_url=success_decision_url %}
 {% endblock %}
 
 {% block style %}

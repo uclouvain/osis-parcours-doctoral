@@ -28,7 +28,7 @@ import itertools
 from django.conf import settings
 from django.contrib import admin
 from django.db import models
-from django.forms import ModelForm, BooleanField
+from django.forms import BooleanField, ModelForm
 from django.forms.widgets import HiddenInput
 from django.shortcuts import resolve_url
 from django.utils.safestring import mark_safe
@@ -50,6 +50,7 @@ from parcours_doctoral.auth.roles.das import SectorAdministrativeDirector
 from parcours_doctoral.auth.roles.doctorate_reader import DoctorateReader
 from parcours_doctoral.auth.roles.jury_member import JuryMember
 from parcours_doctoral.auth.roles.jury_secretary import JurySecretary
+from parcours_doctoral.auth.roles.sceb_manager import ScebManager
 from parcours_doctoral.auth.roles.student import Student
 from parcours_doctoral.ddd.formation.domain.model.enums import (
     CategorieActivite,
@@ -238,7 +239,14 @@ class CddMailTemplateAdmin(MailTemplateAdmin):
 
 
 @admin.register(
-    AdreManager, AdreSecretary, JurySecretary, DoctorateReader, Student, JuryMember, SectorAdministrativeDirector
+    AdreManager,
+    AdreSecretary,
+    DoctorateReader,
+    JuryMember,
+    JurySecretary,
+    ScebManager,
+    SectorAdministrativeDirector,
+    Student,
 )
 class HijackRoleModelAdmin(HijackUserAdminMixin, RoleModelAdmin):
     list_select_related = ['person__user']

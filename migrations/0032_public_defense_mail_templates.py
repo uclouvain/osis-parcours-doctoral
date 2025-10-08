@@ -72,8 +72,8 @@ salutations et reste bien entendu à votre entière disposition.</p>
         MailTemplateMigration(
             PARCOURS_DOCTORAL_EMAIL_PUBLIC_DEFENSE_ON_SUCCESS,
             {
-                'en': 'Obtention du grade de doctorat',
-                'fr-be': 'PhD awarded',
+                'en': 'PhD awarded',
+                'fr-be': 'Obtention du grade de doctorat',
             },
             {
                 'en': '''\

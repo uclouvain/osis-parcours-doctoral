@@ -39,6 +39,7 @@ from osis_signature.enums import SignatureState
 from osis_signature.utils import get_signing_token
 
 from base.models.person import Person
+from parcours_doctoral.auth.roles.sceb_manager import ScebManager
 from parcours_doctoral.ddd.domain.model.groupe_de_supervision import (
     GroupeDeSupervision,
     SignataireIdentity,
@@ -78,9 +79,10 @@ class Notification(NotificationMixin, INotification):
         matricule_doctorant: str,
         sujet: str,
         message: str,
-        cc_promoteurs: bool,
-        cc_membres_ca: bool,
+        cc_promoteurs: bool = False,
+        cc_membres_ca: bool = False,
         cc_jury: bool = False,
+        cc_sceb: bool = False,
     ) -> EmailMessage:
         parcours_doctoral_instance = ParcoursDoctoralModel.objects.get(uuid=parcours_doctoral.entity_id.uuid)
 
@@ -117,6 +119,12 @@ class Notification(NotificationMixin, INotification):
             for jury_member in jury_members:
                 cc_list.add(cls._format_email(jury_member))
 
+        if cc_sceb:
+            sceb_managers = ScebManager.objects.select_related('person')
+
+            for sceb_manager in sceb_managers:
+                cc_list.add(cls._format_email(sceb_manager.person))
+
         if cc_list:
             email_message['Cc'] = ','.join(cc_list)
 
@@ -148,7 +156,7 @@ class Notification(NotificationMixin, INotification):
         }
 
     @classmethod
-    def _format_email(cls, actor: ParcoursDoctoralSupervisionActor | JuryActor):
+    def _format_email(cls, actor: ParcoursDoctoralSupervisionActor | JuryActor | Person):
         return "{a.first_name} {a.last_name} <{a.email}>".format(a=actor)
 
     @classmethod
