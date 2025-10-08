@@ -36,6 +36,7 @@ from parcours_doctoral.auth.predicates.parcours_doctoral import (
     is_related_to_an_admission,
     private_defense_is_authorised,
     private_defense_is_submitted,
+    public_defense_is_authorised,
     public_defense_is_submitted,
     submitted_confirmation_paper,
 )
@@ -48,6 +49,7 @@ from parcours_doctoral.auth.roles.das import SectorAdministrativeDirector
 from parcours_doctoral.auth.roles.jury_member import JuryMember
 from parcours_doctoral.auth.roles.jury_secretary import JurySecretary
 from parcours_doctoral.auth.roles.promoter import Promoter
+from parcours_doctoral.auth.roles.sceb_manager import ScebManager
 from parcours_doctoral.auth.roles.student import Student
 
 role.role_manager.register(CddConfigurator)
@@ -60,6 +62,7 @@ role.role_manager.register(CommitteeMember)
 role.role_manager.register(Auditor)
 role.role_manager.register(SectorAdministrativeDirector)
 role.role_manager.register(JuryMember)
+role.role_manager.register(ScebManager)
 
 
 PROGRAM_MANAGER_RULES = {
@@ -146,6 +149,9 @@ PROGRAM_MANAGER_RULES = {
     'parcours_doctoral.authorise_public_defense': is_part_of_education_group
     & has_valid_enrollment
     & public_defense_is_submitted,
+    'parcours_doctoral.make_public_defense_decision': is_part_of_education_group
+    & has_valid_enrollment
+    & public_defense_is_authorised,
     # -- Commentaire
     'parcours_doctoral.view_comments': is_part_of_education_group,
     'parcours_doctoral.change_comments': is_part_of_education_group,

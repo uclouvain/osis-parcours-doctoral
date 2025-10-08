@@ -103,3 +103,24 @@ class SoumettreProcesVerbalSoutenancePubliqueValidatorList(TwoStepsMultipleBusin
                 statut=self.statut_parcours_doctoral,
             ),
         ]
+
+
+@attr.dataclass(frozen=True, slots=True)
+class DonnerDecisionSoutenancePubliqueValidatorList(TwoStepsMultipleBusinessExceptionListValidator):
+    statut_parcours_doctoral: ChoixStatutParcoursDoctoral
+    proces_verbal_soutenance_publique: list[str]
+    date_heure_soutenance_publique: datetime.datetime | None
+
+    def get_data_contract_validators(self) -> List[BusinessValidator]:
+        return []
+
+    def get_invariants_validators(self) -> List[BusinessValidator]:
+        return [
+            ShouldSoutenancePubliqueEtreCompleteePourDecision(
+                proces_verbal_soutenance_publique=self.proces_verbal_soutenance_publique,
+                date_heure_soutenance_publique=self.date_heure_soutenance_publique,
+            ),
+            ShouldStatutDoctoratEtreSoutenancePubliqueAutorisee(
+                statut=self.statut_parcours_doctoral,
+            ),
+        ]
