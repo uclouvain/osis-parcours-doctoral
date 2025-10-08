@@ -44,9 +44,10 @@ class INotification(interface.DomainService):
         matricule_doctorant: str,
         sujet: str,
         message: str,
-        cc_promoteurs: bool,
-        cc_membres_ca: bool,
+        cc_promoteurs: bool = False,
+        cc_membres_ca: bool = False,
         cc_jury: bool = False,
+        cc_sceb: bool = False,
     ) -> EmailMessage:
         raise NotImplementedError
 

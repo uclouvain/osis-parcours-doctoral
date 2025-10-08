@@ -2728,6 +2728,9 @@ msgstr "Défense privée non complétée."
 msgid "Private defense not found."
 msgstr "Défense privée non trouvée."
 
+msgid "Proclaimed"
+msgstr "Proclamé"
+
 msgid "Professor"
 msgstr "Professeur.e"
 
@@ -3039,6 +3042,12 @@ msgstr "Rôle: Secrétaires de jury"
 
 msgid "Role: Jury secretary"
 msgstr "Rôle: Secrétaire de jury"
+
+msgid "Role: SCEB manager"
+msgstr "Rôle: Gestionnaire SCEB"
+
+msgid "Role: SCEB managers"
+msgstr "Rôle: Gestionnaires SCEB"
 
 msgid "Role: Sector administrative director"
 msgstr "Rôle: Directeur.trice administratif de secteur"

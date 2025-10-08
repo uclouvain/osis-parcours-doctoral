@@ -224,3 +224,11 @@ class HistoriqueInMemory(IHistorique):
         matricule_auteur: str,
     ):
         pass
+
+    @classmethod
+    def historiser_decision_reussie_soutenance_publique(
+        cls,
+        parcours_doctoral: ParcoursDoctoral,
+        matricule_auteur: str,
+    ):
+        pass

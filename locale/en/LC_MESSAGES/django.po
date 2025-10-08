@@ -2491,6 +2491,9 @@ msgstr ""
 msgid "Private defense not found."
 msgstr ""
 
+msgid "Proclaimed"
+msgstr ""
+
 msgid "Professor"
 msgstr ""
 
@@ -2792,6 +2795,12 @@ msgid "Role: Jury secretaries"
 msgstr ""
 
 msgid "Role: Jury secretary"
+msgstr ""
+
+msgid "Role: SCEB manager"
+msgstr ""
+
+msgid "Role: SCEB managers"
 msgstr ""
 
 msgid "Role: Sector administrative director"

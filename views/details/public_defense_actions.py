@@ -27,8 +27,10 @@ from django.shortcuts import resolve_url
 from django.utils.translation import gettext_lazy
 
 from infrastructure.messages_bus import message_bus_instance
+from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from parcours_doctoral.ddd.soutenance_publique.commands import (
     AutoriserSoutenancePubliqueCommand,
+    ConfirmerReussiteSoutenancePubliqueCommand,
     InviterJurySoutenancePubliqueCommand,
 )
 from parcours_doctoral.infrastructure.parcours_doctoral.soutenance_publique.domain.service.notification import (
@@ -37,6 +39,7 @@ from parcours_doctoral.infrastructure.parcours_doctoral.soutenance_publique.doma
 from parcours_doctoral.mail_templates.public_defense import (
     PARCOURS_DOCTORAL_EMAIL_PUBLIC_DEFENSE_AUTHORISATION,
     PARCOURS_DOCTORAL_EMAIL_PUBLIC_DEFENSE_JURY_INVITATION,
+    PARCOURS_DOCTORAL_EMAIL_PUBLIC_DEFENSE_ON_SUCCESS,
 )
 from parcours_doctoral.views.email_mixin import BaseEmailFormView
 
@@ -114,3 +117,22 @@ class PublicDefenseAuthorisationView(BasePublicDefenseActionView):
 
 class PublicDefenseSuccessView(BasePublicDefenseActionView):
     urlpatterns = 'success'
+    permission_required = 'parcours_doctoral.make_public_defense_decision'
+    email_identifier = PARCOURS_DOCTORAL_EMAIL_PUBLIC_DEFENSE_ON_SUCCESS
+    prefix = 'success'
+
+    def call_command(self, form):
+        message_bus_instance.invoke(
+            ConfirmerReussiteSoutenancePubliqueCommand(
+                parcours_doctoral_uuid=self.parcours_doctoral_uuid,
+                matricule_auteur=self.request.user.person.global_id,
+                sujet_message=form.cleaned_data['subject'],
+                corps_message=form.cleaned_data['body'],
+            ),
+        )
+
+        self.message_on_success = gettext_lazy('The status has been changed to %(status)s.') % {
+            'status': ChoixStatutParcoursDoctoral.PROCLAME.value
+        }
+
+        self.htmx_refresh = True

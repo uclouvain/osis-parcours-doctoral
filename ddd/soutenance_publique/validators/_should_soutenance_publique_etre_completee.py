@@ -31,6 +31,7 @@ import attr
 from base.ddd.utils.business_validator import BusinessValidator
 from parcours_doctoral.ddd.soutenance_publique.validators.exceptions import (
     SoutenancePubliqueNonCompleteeException,
+    SoutenancePubliqueNonCompleteePourDecisionException,
 )
 
 
@@ -41,9 +42,15 @@ class ShouldSoutenancePubliqueEtreCompletee(BusinessValidator):
     photo_annonce: list[str]
 
     def validate(self, *args, **kwargs):
-        if (
-            not self.langue_soutenance_publique
-            or not self.date_heure_soutenance_publique
-            or not self.photo_annonce
-        ):
+        if not self.langue_soutenance_publique or not self.date_heure_soutenance_publique or not self.photo_annonce:
             raise SoutenancePubliqueNonCompleteeException
+
+
+@attr.dataclass(frozen=True, slots=True)
+class ShouldSoutenancePubliqueEtreCompleteePourDecision(BusinessValidator):
+    proces_verbal_soutenance_publique: list[str]
+    date_heure_soutenance_publique: datetime.datetime | None
+
+    def validate(self, *args, **kwargs):
+        if not (self.proces_verbal_soutenance_publique and self.date_heure_soutenance_publique):
+            raise SoutenancePubliqueNonCompleteePourDecisionException

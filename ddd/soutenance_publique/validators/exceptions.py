@@ -64,3 +64,14 @@ class StatutDoctoratDifferentSoutenancePubliqueAutoriseeException(BusinessExcept
             'status': ChoixStatutParcoursDoctoral.SOUTENANCE_PUBLIQUE_AUTORISEE.value,
         }
         super().__init__(message, **kwargs)
+
+
+class SoutenancePubliqueNonCompleteePourDecisionException(BusinessException):
+    status_code = 'SOUTENANCE-PUBLIQUE-5'
+
+    def __init__(self, **kwargs):
+        message = _(
+            'Please be sure that the date and time of the defence have been filled in and that '
+            'the defence minutes have been submitted in the application.'
+        )
+        super().__init__(message, **kwargs)
