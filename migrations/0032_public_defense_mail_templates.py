@@ -95,4 +95,26 @@ salutations et reste bien entendu à votre entière disposition.</p>
 <p>{sender_name} - {management_entity_name}</p>''',
             },
         ),
+        MailTemplateMigration(
+            PARCOURS_DOCTORAL_EMAIL_PUBLIC_DEFENSE_DIPLOMA_COLLECTION,
+            {
+                'en': 'Diploma collection',
+                'fr-be': 'Retrait du diplôme',
+            },
+            {
+                'en': '''\
+<p>Dear {student_first_name} {student_last_name},</p>
+<p>We would like to inform you that your diploma is available for collection.</p>
+<p>Please contact us should you require further information.</p>
+<p>Sincerely,</p>
+<p>{sender_name} - {management_entity_name}</p>''',
+                'fr-be': '''\
+<p>Cher, Chère, Cher.ère {student_first_name} {student_last_name},</p>
+<p>Nous tenons à vous informer que votre diplôme est disponible pour retrait.</p>
+<p>Nous restons à votre disposition pour tout autre renseignement complémentaire.</p>
+<p>Bien cordialement.</p>
+<p>---</p>
+<p>{sender_name} - {management_entity_name}</p>''',
+            },
+        ),
     ]

@@ -1871,6 +1871,11 @@ msgid ""
 msgstr ""
 
 msgid ""
+"Mail sent to the doctoral student to inform him that the diploma is "
+"available for collection"
+msgstr ""
+
+msgid ""
 "Mail sent to the doctoral student to inform of the authorisation of the "
 "private defense"
 msgstr ""
@@ -2913,6 +2918,9 @@ msgid "Send a mail"
 msgstr ""
 
 msgid "Send a mail to the student"
+msgstr ""
+
+msgid "Send an email for the diploma collection"
 msgstr ""
 
 msgid "Send an information email"
