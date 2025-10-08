@@ -29,8 +29,11 @@
   {% has_perm 'parcours_doctoral.invite_jury_to_public_defense' as can_invite_jury_to_public_defense %}
   {% has_perm 'parcours_doctoral.authorise_public_defense' as can_authorise_public_defense %}
   {% has_perm 'parcours_doctoral.make_public_defense_decision' as can_make_decision %}
+  {% if parcours_doctoral.status == 'PROCLAME' %}
+    {% has_perm 'parcours_doctoral.send_message' as can_send_email_for_diploma_collection %}
+  {% endif %}
 
-  {% if can_invite_jury_to_public_defense or can_authorise_public_defense or can_make_decision %}
+  {% if can_invite_jury_to_public_defense or can_authorise_public_defense or can_make_decision or can_send_email_for_diploma_collection %}
     <div id="public-defense-actions" class="btn-group">
       <button
         type="button"
@@ -73,6 +76,13 @@
               </li>
             {% endwith %}
           {% endif %}
+        {% endif %}
+        {% if can_send_email_for_diploma_collection %}
+          <li>
+            <a class="dropdown-item" href="{% url 'parcours_doctoral:send-mail' uuid=uuid %}?template={{ DIPLOMA_COLLECTION_EMAIL_TEMPLATE_IDENTIFIER }}&from={{ request.path }}">
+              {% trans "Send an email for the diploma collection" %}
+            </a>
+          </li>
         {% endif %}
       </ul>
     </div>
