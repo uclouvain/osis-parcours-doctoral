@@ -1,6 +1,5 @@
 {% extends "parcours_doctoral/tab_layout.html" %}
-{% load static %}
-{% load django_bootstrap5 i18n parcours_doctoral %}
+{% load i18n parcours_doctoral django_bootstrap5 %}
 
 {% comment "License" %}
 * OSIS stands for Open Student Information System. It's an application
@@ -29,32 +28,39 @@
 {% block form %}
   <div class="card mb-3">
     <div class="card-header">
-      <h4 class="card-title">{% translate "Private defense" %}</h4>
+      <h4 class="card-title">{% translate "Public defense" %}</h4>
     </div>
     <div class="card-body">
       {% bootstrap_form_errors form type='non_fields' %}
 
       {% csrf_token %}
 
-      {% bootstrap_field form.titre_these wrapper_class="mb-3 required_field" %}
+      {% field_data _("Thesis title") doctorate.titre_these_propose inline=True %}
 
-      {% include 'parcours_doctoral/includes/private_defense/supervision_panel.html' %}
+      <div class="row">
+      {% bootstrap_field form.langue wrapper_class='required_field col-md-6 mb-3' %}
+      </div>
 
       <div id="date-hour-field">
-        {% bootstrap_field_with_tooltip form.date_heure classes="required_field" %}
-      </div>
-      {% bootstrap_field_with_tooltip form.lieu %}
-      <div class="row">
-        {% bootstrap_field form.date_envoi_manuscrit classes="col-md-6" %}
+        {% bootstrap_field_with_tooltip form.date_heure classes='required_field' %}
       </div>
 
+      {% bootstrap_field_with_tooltip form.lieu %}
+      {% bootstrap_field_with_tooltip form.local_deliberation %}
+      {% bootstrap_field form.informations_complementaires %}
+      {% bootstrap_field_with_tooltip form.resume_annonce %}
+      {% bootstrap_field form.photo_annonce classes='required_field' %}
       {% bootstrap_field_with_tooltip form.proces_verbal %}
+
+      <div class="row">
+        {% bootstrap_field form.date_retrait_diplome wrapper_class='col-md-6 mb-3' %}
+      </div>
+      {% bootstrap_field_with_tooltip form.proces_verbal %}
+      {% field_data _("DIAL link") '' inline=True %}
     </div>
   </div>
-
-  {% include 'parcours_doctoral/includes/private_defense/previous_private_defenses.html' %}
-
 {% endblock %}
+
 
 {% block style %}
   {{ block.super }}
@@ -67,5 +73,4 @@
       margin-left: 0.5%;
     }
   </style>
-
 {% endblock %}

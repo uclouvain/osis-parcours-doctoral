@@ -449,3 +449,25 @@ class ParcoursDoctoral(interface.RootEntity):
         ).validate()
 
         self.statut = ChoixStatutParcoursDoctoral.PROCLAME
+
+    def modifier_soutenance_publique(
+        self,
+        langue: str,
+        date_heure: Optional[datetime],
+        lieu: str,
+        local_deliberation: str,
+        informations_complementaires: str,
+        resume_annonce: str,
+        photo_annonce: list[str],
+        proces_verbal: list[str],
+        date_retrait_diplome: Optional[date],
+    ):
+        self.langue_soutenance_publique = langue
+        self.date_heure_soutenance_publique = date_heure
+        self.lieu_soutenance_publique = lieu
+        self.local_deliberation = local_deliberation
+        self.informations_complementaires_soutenance_publique = informations_complementaires
+        self.resume_annonce = resume_annonce
+        self.photo_annonce = photo_annonce
+        self.proces_verbal_soutenance_publique = proces_verbal
+        self.date_retrait_diplome = date_retrait_diplome

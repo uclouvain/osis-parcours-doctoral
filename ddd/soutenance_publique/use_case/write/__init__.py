@@ -28,6 +28,7 @@ from .confirmer_reussite_soutenance_publique_service import (
     confirmer_reussite_soutenance_publique,
 )
 from .inviter_jury_soutenance_publique_service import inviter_jury_soutenance_publique
+from .modifier_soutenance_publique_service import modifier_soutenance_publique
 from .soumettre_proces_verbal_soutenance_publique_service import (
     soumettre_proces_verbal_soutenance_publique,
 )
