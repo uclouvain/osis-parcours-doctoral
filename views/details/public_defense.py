@@ -26,6 +26,9 @@
 
 from django.views.generic import TemplateView
 
+from parcours_doctoral.mail_templates.public_defense import (
+    PARCOURS_DOCTORAL_EMAIL_PUBLIC_DEFENSE_DIPLOMA_COLLECTION,
+)
 from parcours_doctoral.views.mixins import ParcoursDoctoralViewMixin
 
 __all__ = [
@@ -36,3 +39,7 @@ __all__ = [
 class PublicDefenseDetailView(ParcoursDoctoralViewMixin, TemplateView):
     template_name = 'parcours_doctoral/details/public_defense.html'
     permission_required = 'parcours_doctoral.view_public_defense'
+
+    extra_context = {
+        'DIPLOMA_COLLECTION_EMAIL_TEMPLATE_IDENTIFIER': PARCOURS_DOCTORAL_EMAIL_PUBLIC_DEFENSE_DIPLOMA_COLLECTION,
+    }

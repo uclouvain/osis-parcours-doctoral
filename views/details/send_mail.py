@@ -28,7 +28,6 @@ from django.forms import BaseForm
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import override
 from django.views.generic import FormView
-from osis_mail_template.models import MailTemplate
 
 from infrastructure.messages_bus import message_bus_instance
 from osis_common.utils.htmx import HtmxMixin
@@ -40,9 +39,15 @@ from parcours_doctoral.infrastructure.parcours_doctoral.domain.service.notificat
 from parcours_doctoral.infrastructure.parcours_doctoral.epreuve_confirmation.domain.service.notification import (
     Notification as NotificationEpreuveConfirmation,
 )
+from parcours_doctoral.infrastructure.parcours_doctoral.soutenance_publique.domain.service.notification import (
+    Notification as NotificationSoutenancePublique,
+)
 from parcours_doctoral.mail_templates import (
     CONFIRMATION_PAPER_TEMPLATES_IDENTIFIERS,
     PARCOURS_DOCTORAL_EMAIL_GENERIC,
+)
+from parcours_doctoral.mail_templates.public_defense import (
+    PUBLIC_DEFENSE_TEMPLATES_IDENTIFIERS,
 )
 from parcours_doctoral.models import CddMailTemplate
 from parcours_doctoral.utils.mail_templates import get_email_template
@@ -72,6 +77,12 @@ class SendMailView(HtmxMixin, ParcoursDoctoralFormMixin, FormView):
             return NotificationEpreuveConfirmation.get_common_tokens(
                 self.parcours_doctoral,
                 self.last_confirmation_paper,
+            )
+        elif identifier in PUBLIC_DEFENSE_TEMPLATES_IDENTIFIERS:
+            return NotificationSoutenancePublique.get_common_tokens(
+                NotificationSoutenancePublique.get_doctorate(self.parcours_doctoral_uuid),
+                sender_first_name=self.request.user.person.first_name,
+                sender_last_name=self.request.user.person.last_name,
             )
         return Notification.get_common_tokens(self.parcours_doctoral)
 
