@@ -113,23 +113,27 @@
 {% endblock %}
 
 {% block tab_content %}
-  <h3>{% translate "Private defense" %}</h3>
-  <div>
-    {% field_data _("Thesis title") current_private_defense.titre_these inline=True %}
+  <div class="card mb-3">
+    <div class="card-header">
+      <h4 class="card-title">{% translate "Private defense" %}</h4>
+    </div>
+    <div class="card-body">
+      {% field_data _("Thesis title") current_private_defense.titre_these inline=True %}
 
-    {% include 'parcours_doctoral/includes/private_defense/supervision_panel.html' %}
+      {% include 'parcours_doctoral/includes/private_defense/supervision_panel.html' %}
 
-    {% field_data _("Private defence date and time") current_private_defense.date_heure inline=True %}
-    {% field_data _("Private defence location") current_private_defense.lieu inline=True %}
-    {% field_data _("Date of manuscript submission to the thesis exam board") current_private_defense.date_envoi_manuscrit inline=True %}
+      {% field_data _("Private defence date and time") current_private_defense.date_heure inline=True %}
+      {% field_data _("Private defence location") current_private_defense.lieu inline=True %}
+      {% field_data _("Date of manuscript submission to the thesis exam board") current_private_defense.date_envoi_manuscrit inline=True %}
 
-    <p>
-      <a href="{% url 'parcours_doctoral:private-defense-minutes-canvas' view.kwargs.uuid %}" target="_blank">
-        {% translate 'Canvas of the private defence minutes to download' %}
-      </a>
-    </p>
+      <p>
+        <a href="{% url 'parcours_doctoral:private-defense-minutes-canvas' view.kwargs.uuid %}" target="_blank">
+          {% translate 'Canvas of the private defence minutes to download' %}
+        </a>
+      </p>
 
-    {% field_data _("Private defence minutes") current_private_defense.proces_verbal %}
+      {% field_data _("Private defence minutes") current_private_defense.proces_verbal %}
+    </div>
   </div>
 
   {% include 'parcours_doctoral/includes/private_defense/previous_private_defenses.html' %}

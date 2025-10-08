@@ -231,4 +231,4 @@ class PrivateDefenseMinutesAPIViewTestCase(MockOsisDocumentMixin, APITestCase):
 
         self.private_defense.refresh_from_db()
 
-        self.assertEqual(self.private_defense.minutes, [uuid.UUID('4bdffb42-552d-415d-9e4c-725f10dce228')])
+        self.assertEqual(self.private_defense.minutes, self.data['proces_verbal'])

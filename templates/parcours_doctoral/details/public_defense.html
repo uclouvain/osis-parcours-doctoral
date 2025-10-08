@@ -26,6 +26,7 @@
 {% endcomment %}
 
 {% block actions-group %}
+  {% has_perm 'parcours_doctoral.change_public_defense' as can_change_public_defense %}
   {% has_perm 'parcours_doctoral.invite_jury_to_public_defense' as can_invite_jury_to_public_defense %}
   {% has_perm 'parcours_doctoral.authorise_public_defense' as can_authorise_public_defense %}
   {% has_perm 'parcours_doctoral.make_public_defense_decision' as can_make_decision %}
@@ -33,7 +34,7 @@
     {% has_perm 'parcours_doctoral.send_message' as can_send_email_for_diploma_collection %}
   {% endif %}
 
-  {% if can_invite_jury_to_public_defense or can_authorise_public_defense or can_make_decision or can_send_email_for_diploma_collection %}
+  {% if can_change_public_defense or can_invite_jury_to_public_defense or can_authorise_public_defense or can_make_decision or can_send_email_for_diploma_collection %}
     <div id="public-defense-actions" class="btn-group">
       <button
         type="button"
@@ -46,6 +47,17 @@
         <i class="fa-solid fa-caret-down"></i>
       </button>
       <ul class="dropdown-menu float-end">
+        {% if can_change_public_defense %}
+          <li>
+            <a
+              class="dropdown-item"
+              href="{% url 'parcours_doctoral:update:public-defense' view.kwargs.uuid %}"
+            >
+              {% translate "Update" context 'verb' %}
+            </a>
+          </li>
+          <li><hr class="dropdown-divider"></li>
+        {% endif %}
         {% if can_invite_jury_to_public_defense %}
           <li>
             <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#public-defense-jury-invitation-form-modal">
@@ -90,23 +102,23 @@
 {% endblock %}
 
 {% block tab_content %}
-  <h3>{% translate "Public defense" %}</h3>
-  <div>
-    {% field_data _("Thesis title") parcours_doctoral.titre_these_propose inline=True %}
-    {% if parcours_doctoral.langue_soutenance_publique == 'OTHER' %}
-      {% field_data _("Public defence language") parcours_doctoral.autre_langue_soutenance_publique inline=True %}
-    {% else %}
-      {% field_data _("Public defence language") parcours_doctoral.langue_soutenance_publique|enum_display:'ChoixLangueDefense' inline=True %}
-    {% endif %}
-    {% field_data _("Public defence date and time") parcours_doctoral.date_heure_soutenance_publique inline=True %}
-    {% field_data _("Public defence location") parcours_doctoral.lieu_soutenance_publique inline=True %}
-    {% field_data _("Deliberation room") parcours_doctoral.local_deliberation inline=True %}
-    {% field_data _("Additional information") parcours_doctoral.informations_complementaires_soutenance_publique html_tag="blockquote" %}
-    {% field_data _("Summary for announcement") parcours_doctoral.resume_annonce html_tag="blockquote" %}
-    {% field_data _("Photo for announcement") parcours_doctoral.photo_annonce %}
-    {% field_data _("Public defence minutes") parcours_doctoral.proces_verbal_soutenance_publique %}
-    {% field_data _("Diploma collection date") parcours_doctoral.date_retrait_diplome inline=True %}
-    {% field_data _("DIAL link") '' inline=True %}
+  <div class="card mb-3">
+    <div class="card-header">
+      <h4 class="card-title">{% translate "Public defense" %}</h4>
+    </div>
+    <div class="card-body">
+      {% field_data _("Thesis title") parcours_doctoral.titre_these_propose inline=True %}
+      {% field_data _("Public defence language") parcours_doctoral.nom_langue_soutenance_publique inline=True %}
+      {% field_data _("Public defence date and time") parcours_doctoral.date_heure_soutenance_publique inline=True %}
+      {% field_data _("Public defence location") parcours_doctoral.lieu_soutenance_publique inline=True %}
+      {% field_data _("Deliberation room") parcours_doctoral.local_deliberation inline=True %}
+      {% field_data _("Additional information") parcours_doctoral.informations_complementaires_soutenance_publique html_tag="blockquote" %}
+      {% field_data _("Summary for announcement") parcours_doctoral.resume_annonce html_tag="blockquote" %}
+      {% field_data _("Photo for announcement") parcours_doctoral.photo_annonce %}
+      {% field_data _("Public defence minutes") parcours_doctoral.proces_verbal_soutenance_publique %}
+      {% field_data _("Diploma collection date") parcours_doctoral.date_retrait_diplome inline=True %}
+      {% field_data _("DIAL link") '' inline=True %}
+    </div>
   </div>
 
   {% url 'parcours_doctoral:public-defense:jury-invitation' view.kwargs.uuid as jury_invitation_url %}
