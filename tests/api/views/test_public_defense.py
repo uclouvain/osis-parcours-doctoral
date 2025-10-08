@@ -134,7 +134,7 @@ class PublicDefenseAPIViewTestCase(MockOsisDocumentMixin, APITestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
-    def test_edit_a_known_private_defense_with_invalid_status(self):
+    def test_edit_with_invalid_status(self):
         self.client.force_authenticate(user=self.doctorate_student.user)
 
         self.doctorate.status = ChoixStatutParcoursDoctoral.ADMIS.name
@@ -147,7 +147,7 @@ class PublicDefenseAPIViewTestCase(MockOsisDocumentMixin, APITestCase):
         json_response = response.json()
         self.assertEqual(json_response.get('detail'), gettext('The public defense is not in progress'))
 
-    def test_edit_a_known_private_defense_with_valid_data(self):
+    def test_edit_with_valid_data(self):
         self.client.force_authenticate(user=self.doctorate_student.user)
 
         # First submission with valid data
@@ -162,7 +162,7 @@ class PublicDefenseAPIViewTestCase(MockOsisDocumentMixin, APITestCase):
         self.assertEqual(self.doctorate.defense_place, self.data['lieu'])
         self.assertEqual(self.doctorate.defense_deliberation_room, self.data['local_deliberation'])
         self.assertEqual(self.doctorate.announcement_summary, self.data['resume_annonce'])
-        self.assertEqual(self.doctorate.announcement_photo, [uuid.UUID('4bdffb42-552d-415d-9e4c-725f10dce228')])
+        self.assertEqual(self.doctorate.announcement_photo, self.data['photo_annonce'])
 
         historic_entries = HistoryEntry.objects.filter(object_uuid=self.doctorate.uuid)
         self.assertEqual(len(historic_entries), 1)
@@ -191,12 +191,12 @@ class PublicDefenseAPIViewTestCase(MockOsisDocumentMixin, APITestCase):
         self.assertEqual(self.doctorate.defense_place, '')
         self.assertEqual(self.doctorate.defense_deliberation_room, '')
         self.assertEqual(self.doctorate.announcement_summary, '')
-        self.assertEqual(self.doctorate.announcement_photo, [uuid.UUID('4bdffb42-552d-415d-9e4c-725f10dce228')])
+        self.assertEqual(self.doctorate.announcement_photo, new_data['photo_annonce'])
 
         historic_entries = HistoryEntry.objects.filter(object_uuid=self.doctorate.uuid)
         self.assertEqual(len(historic_entries), 1)
 
-    def test_edit_a_known_private_defense_with_invalid_data(self):
+    def test_edit_with_invalid_data(self):
         self.client.force_authenticate(user=self.doctorate_student.user)
 
         invalid_message = gettext('Public defense not completed.')

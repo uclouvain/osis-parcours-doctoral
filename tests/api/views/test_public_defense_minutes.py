@@ -185,4 +185,4 @@ class PublicDefenseMinutesAPIViewTestCase(MockOsisDocumentMixin, APITestCase):
 
         self.doctorate.refresh_from_db()
 
-        self.assertEqual(self.doctorate.defense_minutes, [uuid.UUID('4bdffb42-552d-415d-9e4c-725f10dce228')])
+        self.assertEqual(self.doctorate.defense_minutes, self.data['proces_verbal'])

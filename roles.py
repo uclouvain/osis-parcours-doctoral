@@ -143,6 +143,7 @@ PROGRAM_MANAGER_RULES = {
     'parcours_doctoral.change_private_defense': is_part_of_education_group & has_valid_enrollment,
     # -- Soutenance
     'parcours_doctoral.view_public_defense': is_part_of_education_group,
+    'parcours_doctoral.change_public_defense': is_part_of_education_group & has_valid_enrollment,
     'parcours_doctoral.invite_jury_to_public_defense': is_part_of_education_group
     & has_valid_enrollment
     & public_defense_is_submitted,
