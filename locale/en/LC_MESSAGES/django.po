@@ -523,10 +523,10 @@ msgstr ""
 msgid "Author of this command is not from the doctorate CDD."
 msgstr ""
 
-msgid "Authorise the private defense"
+msgid "Authorise the private defence"
 msgstr ""
 
-msgid "Authorise the public defense"
+msgid "Authorise the public defence"
 msgstr ""
 
 msgid "Authors"
@@ -916,7 +916,7 @@ msgctxt "confirmation paper"
 msgid "Created at"
 msgstr ""
 
-msgctxt "private defense"
+msgctxt "private defence"
 msgid "Created at"
 msgstr ""
 
@@ -940,22 +940,22 @@ msgid "DECISION_DE_RECEVABILITE"
 msgstr "Admissibility decision"
 
 msgid "DEFENSE_PRIVEE"
-msgstr "Private defense"
+msgstr "Private defence"
 
 msgid "DEFENSE_PRIVEE_AUTORISEE"
-msgstr "Authorized private defense"
+msgstr "Authorized private defence"
 
 msgid "DEFENSE_PRIVEE_A_RECOMMENCER"
-msgstr "Private defense to be repeated"
+msgstr "Private defence to be repeated"
 
 msgid "DEFENSE_PRIVEE_EN_ECHEC"
-msgstr "Private defense in failure"
+msgstr "Private defence in failure"
 
 msgid "DEFENSE_PRIVEE_REUSSIE"
-msgstr "Passed private defense"
+msgstr "Passed private defence"
 
 msgid "DEFENSE_PRIVEE_SOUMISE"
-msgstr "Submitted private defense"
+msgstr "Submitted private defence"
 
 msgid "DESINSCRITE"
 msgstr "Withdrawn"
@@ -985,10 +985,10 @@ msgstr ""
 msgid "Date of the confirmation paper (DD/MM/YYYY)"
 msgstr ""
 
-msgid "Date of the private defense (DD/MM/YYYY)"
+msgid "Date of the private defence (DD/MM/YYYY)"
 msgstr ""
 
-msgid "Date of the public defense (DD/MM/YYYY)"
+msgid "Date of the public defence (DD/MM/YYYY)"
 msgstr ""
 
 msgctxt "dashboard-indicator confirmation"
@@ -1018,38 +1018,38 @@ msgstr ""
 msgid "Dedicated time (in EFT)"
 msgstr ""
 
-msgid "Defence date"
-msgstr ""
-
-msgid "Defense"
+msgid "Defence"
 msgstr ""
 
 msgctxt "doctorate tab"
-msgid "Defense"
+msgid "Defence"
 msgstr ""
 
-msgid "Defense indicative date"
+msgid "Defence date"
 msgstr ""
 
-msgid "Defense jury composition"
+msgid "Defence indicative date"
 msgstr ""
 
-msgid "Defense language"
+msgid "Defence jury composition"
 msgstr ""
 
-msgid "Defense method"
+msgid "Defence language"
+msgstr ""
+
+msgid "Defence method"
 msgstr ""
 
 msgctxt "admission tab"
-msgid "Defense method"
+msgid "Defence method"
 msgstr ""
 
 msgctxt "parcours_doctoral"
-msgid "Defense method"
+msgid "Defence method"
 msgstr ""
 
 msgctxt "parcours_doctoral tab"
-msgid "Defense method"
+msgid "Defence method"
 msgstr ""
 
 msgid "Definitive admission date:"
@@ -1161,7 +1161,7 @@ msgstr ""
 msgid "Doctorate thesis field"
 msgstr ""
 
-msgid "Doctorate whose this private defense is the active one"
+msgid "Doctorate whose this private defence is the active one"
 msgstr ""
 
 msgid "Document"
@@ -1323,7 +1323,7 @@ msgstr ""
 msgid "Failure of the confirmation paper"
 msgstr ""
 
-msgid "Failure of the defense"
+msgid "Failure of the defence"
 msgstr ""
 
 msgid "Failure of the test"
@@ -1497,12 +1497,9 @@ msgid ""
 "UCLouvain"
 msgstr ""
 
-msgid "If necessary, contact your administrator for practical arrangements."
-msgstr ""
-
 msgid ""
 "If necessary, please finish inputting doctoral activities and complete the "
-"defense preparation below before submitting the jury proposition."
+"defence preparation below before submitting the jury proposition."
 msgstr ""
 
 msgid ""
@@ -1605,10 +1602,10 @@ msgstr ""
 msgid "International scholarship"
 msgstr ""
 
-msgid "Invite the members of the jury to the private defense"
+msgid "Invite the members of the jury to the private defence"
 msgstr ""
 
-msgid "Invite the members of the jury to the public defense"
+msgid "Invite the members of the jury to the public defence"
 msgstr ""
 
 msgid "Is a promoter"
@@ -1850,7 +1847,7 @@ msgstr ""
 
 msgid ""
 "Mail sent to the doctoral student to inform him of the defavourable opinion "
-"on the private defense"
+"on the private defence"
 msgstr ""
 
 msgid ""
@@ -1860,17 +1857,17 @@ msgstr ""
 
 msgid ""
 "Mail sent to the doctoral student to inform him of the favourable opinion on "
-"the private defense"
+"the private defence"
 msgstr ""
 
 msgid ""
 "Mail sent to the doctoral student to inform him of the favourable opinion on "
-"the public defense"
+"the public defence"
 msgstr ""
 
 msgid ""
 "Mail sent to the doctoral student to inform him of the necessity to repeat "
-"the private defense"
+"the private defence"
 msgstr ""
 
 msgid ""
@@ -1885,18 +1882,18 @@ msgstr ""
 
 msgid ""
 "Mail sent to the doctoral student to inform of the authorisation of the "
-"private defense"
+"private defence"
 msgstr ""
 
 msgid ""
 "Mail sent to the doctoral student to inform of the authorisation of the "
-"public defense"
+"public defence"
 msgstr ""
 
-msgid "Mail sent to the jury members to invite them to the private defense"
+msgid "Mail sent to the jury members to invite them to the private defence"
 msgstr ""
 
-msgid "Mail sent to the jury members to invite them to the public defense"
+msgid "Mail sent to the jury members to invite them to the public defence"
 msgstr ""
 
 msgid ""
@@ -2014,12 +2011,12 @@ msgid "Message subject"
 msgstr ""
 
 msgid ""
-"Method 1 (the private defense and the public defense are separated by at "
+"Method 1 (the private defence and the public defence are separated by at "
 "least a month"
 msgstr ""
 
 msgid ""
-"Method 2 (The private defense and the public defense are organised the same "
+"Method 2 (The private defence and the public defence are organised the same "
 "day, and subjected to an admissibility condition)"
 msgstr ""
 
@@ -2108,10 +2105,10 @@ msgstr ""
 msgid "No confirmation paper yet"
 msgstr ""
 
-msgid "No defense"
+msgid "No defence"
 msgstr ""
 
-msgid "No defense reason"
+msgid "No defence reason"
 msgstr ""
 
 msgid "No doctoral training"
@@ -2347,10 +2344,10 @@ msgstr ""
 msgid "Photo for announcement"
 msgstr ""
 
-msgid "Place of the private defense"
+msgid "Place of the private defence"
 msgstr ""
 
-msgid "Place of the public defense"
+msgid "Place of the public defence"
 msgstr ""
 
 msgid "Plain text"
@@ -2389,7 +2386,7 @@ msgid "Please correct the errors below"
 msgstr ""
 
 msgid ""
-"Please input all required information from the \"Defense Method\" tab before "
+"Please input all required information from the \"Defence Method\" tab before "
 "requesting the signatures."
 msgstr ""
 
@@ -2458,7 +2455,18 @@ msgstr ""
 msgid "Previous doctorate"
 msgstr ""
 
-msgid "Previous private defenses"
+msgid "Previous private defences"
+msgstr ""
+
+msgid "Private defence"
+msgstr ""
+
+msgctxt "dashboard-category"
+msgid "Private defence (formula 1)"
+msgstr ""
+
+msgctxt "dashboard-category"
+msgid "Private defence / Public defence (formula 2)"
 msgstr ""
 
 msgid "Private defence assessment"
@@ -2476,24 +2484,13 @@ msgstr ""
 msgid "Private defence minutes canvas"
 msgstr ""
 
-msgid "Private defense"
+msgid "Private defence not activated."
 msgstr ""
 
-msgctxt "dashboard-category"
-msgid "Private defense (formula 1)"
+msgid "Private defence not completed."
 msgstr ""
 
-msgctxt "dashboard-category"
-msgid "Private defense / Public defense (formula 2)"
-msgstr ""
-
-msgid "Private defense not activated."
-msgstr ""
-
-msgid "Private defense not completed."
-msgstr ""
-
-msgid "Private defense not found."
+msgid "Private defence not found."
 msgstr ""
 
 msgid "Proclaimed"
@@ -2576,6 +2573,13 @@ msgstr ""
 msgid "Proximity commission for public health, health and society (SPSS)"
 msgstr ""
 
+msgid "Public defence"
+msgstr ""
+
+msgctxt "dashboard-category"
+msgid "Public defence (formula 1)"
+msgstr ""
+
 msgid "Public defence date and time"
 msgstr ""
 
@@ -2591,14 +2595,7 @@ msgstr ""
 msgid "Public defence minutes canvas"
 msgstr ""
 
-msgid "Public defense"
-msgstr ""
-
-msgctxt "dashboard-category"
-msgid "Public defense (formula 1)"
-msgstr ""
-
-msgid "Public defense not completed."
+msgid "Public defence not completed."
 msgstr ""
 
 msgid "Publication status"
@@ -2686,7 +2683,7 @@ msgctxt "jury member"
 msgid "Remove?"
 msgstr ""
 
-msgid "Repeat of the defense"
+msgid "Repeat of the defence"
 msgstr ""
 
 msgid "Reporting categories"
@@ -2850,13 +2847,13 @@ msgid "SOUMISE"
 msgstr "Submitted"
 
 msgid "SOUTENANCE_PUBLIQUE"
-msgstr "Public defense"
+msgstr "Public defence"
 
 msgid "SOUTENANCE_PUBLIQUE_AUTORISEE"
-msgstr "Authorized public defense"
+msgstr "Authorized public defence"
 
 msgid "SOUTENANCE_PUBLIQUE_SOUMISE"
-msgstr "Submitted public defense"
+msgstr "Submitted public defence"
 
 msgid "STATISTICS"
 msgstr "Statistics"
@@ -3082,11 +3079,11 @@ msgctxt "dashboard-indicator confirmation"
 msgid "Submitted PV"
 msgstr ""
 
-msgctxt "dashboard-indicator formula-1-private-defense"
+msgctxt "dashboard-indicator formula-1-private-defence"
 msgid "Submitted PV"
 msgstr ""
 
-msgctxt "dashboard-indicator formula-1-public-defense"
+msgctxt "dashboard-indicator formula-1-public-defence"
 msgid "Submitted PV"
 msgstr ""
 
@@ -3094,12 +3091,12 @@ msgctxt "dashboard-indicator formula-2-admissibility"
 msgid "Submitted PV"
 msgstr ""
 
-msgctxt "dashboard-indicator formula-2-defense"
-msgid "Submitted PV (private defense)"
+msgctxt "dashboard-indicator formula-2-defence"
+msgid "Submitted PV (private defence)"
 msgstr ""
 
-msgctxt "dashboard-indicator formula-2-defense"
-msgid "Submitted PV (public defense)"
+msgctxt "dashboard-indicator formula-2-defence"
+msgid "Submitted PV (public defence)"
 msgstr ""
 
 msgctxt "dashboard-indicator formula-2-admissibility"
@@ -3113,19 +3110,19 @@ msgstr ""
 msgid "Submitted mark"
 msgstr ""
 
-msgctxt "dashboard-indicator formula-1-private-defense"
-msgid "Submitted private defense"
+msgctxt "dashboard-indicator formula-1-private-defence"
+msgid "Submitted private defence"
 msgstr ""
 
-msgctxt "dashboard-indicator formula-2-defense"
-msgid "Submitted private defense / Submitted public defense"
+msgctxt "dashboard-indicator formula-2-defence"
+msgid "Submitted private defense / Submitted public defence"
 msgstr ""
 
-msgctxt "dashboard-indicator formula-1-public-defense"
-msgid "Submitted public defense"
+msgctxt "dashboard-indicator formula-1-public-defence"
+msgid "Submitted public defence"
 msgstr ""
 
-msgid "Successful defense"
+msgid "Successful defence"
 msgstr ""
 
 msgid "Successful test"
@@ -3183,7 +3180,7 @@ msgid "Temporary / definitive admission date"
 msgstr ""
 
 msgid ""
-"The \"doctoral training\" must be completed before submitting the defense "
+"The \"doctoral training\" must be completed before submitting the defence "
 "preparation and the jury proposition."
 msgstr ""
 
@@ -3357,10 +3354,10 @@ msgstr ""
 msgid "The last name of the student"
 msgstr ""
 
-msgid "The link to the private defense minutes"
+msgid "The link to the private defence minutes"
 msgstr ""
 
-msgid "The link to the public defense minutes"
+msgid "The link to the public defence minutes"
 msgstr ""
 
 msgid "The link to the thesis distribution authorisation page"
@@ -3375,10 +3372,10 @@ msgstr ""
 msgid "The member was not found in the jury."
 msgstr ""
 
-msgid "The members of the jury have been invited to the private defense."
+msgid "The members of the jury have been invited to the private defence."
 msgstr ""
 
-msgid "The members of the jury have been invited to the public defense."
+msgid "The members of the jury have been invited to the public defence."
 msgstr ""
 
 msgid ""
@@ -3415,13 +3412,23 @@ msgid ""
 "with the PhD student"
 msgstr ""
 
-msgid "The private defense has been authorised."
+msgid "The private defence has been authorised."
 msgstr ""
 
-msgid "The private defense is not in progress"
+msgid "The private defence is not in progress"
 msgstr ""
 
 msgid "The public comment about the approval/refusal"
+msgstr ""
+
+msgid "The public defence has been authorised."
+msgstr ""
+
+msgid "The public defence is not in progress"
+msgstr ""
+
+msgid ""
+"The public defence takes place at least one month after the private defence."
 msgstr ""
 
 msgid ""
@@ -3430,12 +3437,6 @@ msgid ""
 msgstr ""
 
 msgid "The public defence will take place on __________ at _____."
-msgstr ""
-
-msgid "The public defense has been authorised."
-msgstr ""
-
-msgid "The public defense is not in progress"
 msgstr ""
 
 msgid "The reason for needing update"
@@ -3457,7 +3458,7 @@ msgstr ""
 msgid "The status has been changed to %(status)s."
 msgstr ""
 
-msgid "The step related to the public defense is not in progress."
+msgid "The step related to the public defence is not in progress."
 msgstr ""
 
 msgid "The student has been re-enrolled to this assessment."
@@ -3486,7 +3487,7 @@ msgstr ""
 msgid "Thesis completed under joint supervision with %(institute_name)s"
 msgstr ""
 
-msgid "Thesis defense"
+msgid "Thesis defence"
 msgstr ""
 
 msgctxt "dashboard-category"

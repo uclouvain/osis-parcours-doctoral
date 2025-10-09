@@ -59,14 +59,14 @@
         {% if can_authorise_private_defense %}
           <li>
             <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#private-defense-authorisation-form-modal">
-              {% translate "Authorise the private defense" %}
+              {% translate "Authorise the private defence" %}
             </a>
           </li>
         {% endif %}
         {% if can_invite_jury_to_private_defense %}
           <li>
             <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#private-defense-jury-invitation-form-modal">
-              {% translate "Invite the members of the jury to the private defense" %}
+              {% translate "Invite the members of the jury to the private defence" %}
             </a>
           </li>
         {% endif %}
@@ -74,34 +74,34 @@
           {% if current_private_defense.est_valide_pour_decision %}
             <li>
               <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#private-defense-success-decision-form-modal">
-                {% translate "Successful defense" %}
+                {% translate "Successful defence" %}
               </a>
             </li>
             <li>
               <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#private-defense-failure-decision-form-modal">
-                {% translate "Failure of the defense" %}
+                {% translate "Failure of the defence" %}
               </a>
             </li>
             <li>
               <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#private-defense-repeat-decision-form-modal">
-                {% translate "Repeat of the defense" %}
+                {% translate "Repeat of the defence" %}
               </a>
             </li>
           {% else %}
             {% with _("Please be sure that the date and time of the defence have been filled in and that the defence minutes have been submitted in the application.") as error_message %}
               <li title="{{ error_message }}">
                 <a class="dropdown-item disabled" href="#">
-                  {% translate "Successful defense" %}
+                  {% translate "Successful defence" %}
                 </a>
               </li>
               <li title="{{ error_message }}">
                 <a class="dropdown-item disabled" href="#">
-                  {% translate "Failure of the defense" %}
+                  {% translate "Failure of the defence" %}
                 </a>
               </li>
               <li title="{{ error_message }}">
                 <a class="dropdown-item disabled" href="#">
-                  {% translate "Repeat of the defense" %}
+                  {% translate "Repeat of the defence" %}
                 </a>
               </li>
             {% endwith %}
@@ -115,7 +115,7 @@
 {% block tab_content %}
   <div class="card mb-3">
     <div class="card-header">
-      <h4 class="card-title">{% translate "Private defense" %}</h4>
+      <h4 class="card-title">{% translate "Private defence" %}</h4>
     </div>
     <div class="card-body">
       {% field_data _("Thesis title") current_private_defense.titre_these inline=True %}
@@ -139,22 +139,22 @@
   {% include 'parcours_doctoral/includes/private_defense/previous_private_defenses.html' %}
 
   {% url 'parcours_doctoral:private-defense:authorise' view.kwargs.uuid as authorization_url %}
-  {% translate 'Authorise the private defense' as authorization_title %}
+  {% translate 'Authorise the private defence' as authorization_title %}
   {% include 'parcours_doctoral/modal/form_modal.html' with modal_id='private-defense-authorisation-form-modal' modal_title=authorization_title modal_url=authorization_url %}
 
   {% url 'parcours_doctoral:private-defense:jury-invitation' view.kwargs.uuid as jury_invitation_url %}
-  {% translate 'Invite the members of the jury to the private defense' as jury_invitation_title %}
+  {% translate 'Invite the members of the jury to the private defence' as jury_invitation_title %}
   {% translate 'Here is an example message that will be sent to the jury members.' as jury_invitation_message %}
   {% include 'parcours_doctoral/modal/form_modal.html' with modal_id='private-defense-jury-invitation-form-modal' modal_title=jury_invitation_title modal_message=jury_invitation_message modal_url=jury_invitation_url %}
 
   {% url 'parcours_doctoral:private-defense:success' view.kwargs.uuid as success_decision_url %}
-  {% include 'parcours_doctoral/modal/form_modal.html' with modal_id='private-defense-success-decision-form-modal' modal_title=_('Successful defense') modal_url=success_decision_url %}
+  {% include 'parcours_doctoral/modal/form_modal.html' with modal_id='private-defense-success-decision-form-modal' modal_title=_('Successful defence') modal_url=success_decision_url %}
 
   {% url 'parcours_doctoral:private-defense:failure' view.kwargs.uuid as failure_decision_url %}
-  {% include 'parcours_doctoral/modal/form_modal.html' with modal_id='private-defense-failure-decision-form-modal' modal_title=_('Failure of the defense') modal_url=failure_decision_url %}
+  {% include 'parcours_doctoral/modal/form_modal.html' with modal_id='private-defense-failure-decision-form-modal' modal_title=_('Failure of the defence') modal_url=failure_decision_url %}
 
   {% url 'parcours_doctoral:private-defense:repeat' view.kwargs.uuid as repeat_decision_url %}
-  {% include 'parcours_doctoral/modal/form_modal.html' with modal_id='private-defense-repeat-decision-form-modal' modal_title=_('Repeat of the defense') modal_url=repeat_decision_url %}
+  {% include 'parcours_doctoral/modal/form_modal.html' with modal_id='private-defense-repeat-decision-form-modal' modal_title=_('Repeat of the defence') modal_url=repeat_decision_url %}
 
 {% endblock %}
 

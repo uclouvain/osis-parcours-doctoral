@@ -33,7 +33,7 @@ from parcours_doctoral.ddd.soutenance_publique.commands import (
 
 
 class SubmitPublicDefenseSerializer(DTOSerializer):
-    """Contains the submitted data to complete a public defense."""
+    """Contains the submitted data to complete a public defence."""
 
     uuid_parcours_doctoral = None
     matricule_auteur = None
@@ -43,13 +43,13 @@ class SubmitPublicDefenseSerializer(DTOSerializer):
 
 
 class PublicDefenseMinutesCanvasSerializer(serializers.Serializer):
-    """Contains the public defense minutes canvas url."""
+    """Contains the public defence minutes canvas url."""
 
     url = serializers.URLField(read_only=True)
 
 
 class SubmitPublicDefenseMinutesSerializer(DTOSerializer):
-    """Contains the submitted data to complete the public defense minutes."""
+    """Contains the submitted data to complete the public defence minutes."""
 
     uuid_parcours_doctoral = None
     matricule_auteur = None

@@ -348,7 +348,7 @@ class Historique(IHistorique):
             add_history_entry(
                 parcours_doctoral.entity_id.uuid,
                 "Le doctorant a renseigné des informations relatives à la défense privée.",
-                "The doctoral student has filled in information relating to the private defense.",
+                "The doctoral student has filled in information relating to the private defence.",
                 "{auteur.prenom} {auteur.nom}".format(auteur=auteur),
                 tags=tags,
             )
@@ -364,7 +364,7 @@ class Historique(IHistorique):
         add_history_entry(
             parcours_doctoral_identity.uuid,
             'Le procès verbal de la défense privée a été modifié.',
-            'The minutes of the private defense have been updated.',
+            'The minutes of the private defence have been updated.',
             '{auteur.prenom} {auteur.nom}'.format(auteur=auteur),
             tags=['parcours_doctoral', 'private-defense'],
         )
@@ -380,7 +380,7 @@ class Historique(IHistorique):
         add_history_entry(
             parcours_doctoral.entity_id.uuid,
             'La défense privée a été autorisée.',
-            'The private defense has been authorised.',
+            'The private defence has been authorised.',
             '{auteur.prenom} {auteur.nom}'.format(auteur=auteur),
             tags=['parcours_doctoral', 'private-defense', 'status-changed'],
         )
@@ -394,7 +394,7 @@ class Historique(IHistorique):
         add_history_entry(
             parcours_doctoral.entity_id.uuid,
             'Les membres du jury ont été invités à la défense privée.',
-            'The jury members have been invited to the private defense.',
+            'The jury members have been invited to the private defence.',
             '{auteur.prenom} {auteur.nom}'.format(auteur=auteur),
             tags=['parcours_doctoral', 'private-defense'],
         )
@@ -409,7 +409,7 @@ class Historique(IHistorique):
         add_history_entry(
             parcours_doctoral.entity_id.uuid,
             'La décision de la défense privée a été donnée : celle-ci a été réussie.',
-            'The decision of the private defense has been made: it has been passed.',
+            'The decision of the private defence has been made: it has been passed.',
             '{auteur.prenom} {auteur.nom}'.format(auteur=auteur),
             tags=['parcours_doctoral', 'private-defense', 'status-changed'],
         )
@@ -424,7 +424,7 @@ class Historique(IHistorique):
         add_history_entry(
             parcours_doctoral.entity_id.uuid,
             'La décision de la défense privée a été donnée : le candidat n\'est pas autorisé à poursuivre.',
-            'The decision of the private defense has been made: the candidate is not authorized to continue.',
+            'The decision of the private defence has been made: the candidate is not authorized to continue.',
             '{auteur.prenom} {auteur.nom}'.format(auteur=auteur),
             tags=['parcours_doctoral', 'private-defense', 'status-changed'],
         )
@@ -439,7 +439,7 @@ class Historique(IHistorique):
         add_history_entry(
             parcours_doctoral.entity_id.uuid,
             'La décision de la défense privée a été donnée : celle-ci doit être repassée.',
-            'The decision of the private defense has been made: it must be repeated.',
+            'The decision of the private defence has been made: it must be repeated.',
             '{auteur.prenom} {auteur.nom}'.format(auteur=auteur),
             tags=['parcours_doctoral', 'private-defense', 'status-changed'],
         )
@@ -454,7 +454,7 @@ class Historique(IHistorique):
         add_history_entry(
             parcours_doctoral.entity_id.uuid,
             'La défense privée a été modifiée.',
-            'The private defense has been updated.',
+            'The private defence has been updated.',
             '{auteur.prenom} {auteur.nom}'.format(auteur=auteur),
             tags=['parcours_doctoral', 'private-defense'],
         )
@@ -473,7 +473,7 @@ class Historique(IHistorique):
             add_history_entry(
                 parcours_doctoral.entity_id.uuid,
                 'Le doctorant a renseigné des informations relatives à la soutenance publique.',
-                'The doctoral student has filled in information relating to the public defense.',
+                'The doctoral student has filled in information relating to the public defence.',
                 '{auteur.prenom} {auteur.nom}'.format(auteur=auteur),
                 tags=tags,
             )
@@ -489,7 +489,7 @@ class Historique(IHistorique):
         add_history_entry(
             parcours_doctoral.entity_id.uuid,
             'La soutenance publique a été autorisée.',
-            'The public defense has been authorised.',
+            'The public defence has been authorised.',
             '{auteur.prenom} {auteur.nom}'.format(auteur=auteur),
             tags=['parcours_doctoral', 'public-defense', 'status-changed'],
         )

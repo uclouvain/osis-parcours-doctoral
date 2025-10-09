@@ -52,9 +52,9 @@ class GenreMembre(ChoiceEnum):
 
 
 class FormuleDefense(ChoiceEnum):
-    FORMULE_1 = _('Method 1 (the private defense and the public defense are separated by at least a month')
+    FORMULE_1 = _('Method 1 (the private defence and the public defence are separated by at least a month')
     FORMULE_2 = _(
-        'Method 2 (The private defense and the public defense are organised the same day, and subjected to '
+        'Method 2 (The private defence and the public defence are organised the same day, and subjected to '
         'an admissibility condition)'
     )
 

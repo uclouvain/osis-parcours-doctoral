@@ -55,12 +55,12 @@ private_defense_tokens = common_tokens + [
 PARCOURS_DOCTORAL_EMAIL_PRIVATE_DEFENSE_AUTHORISATION = 'osis-parcours-doctoral-private-defense-authorisation'
 templates.register(
     PARCOURS_DOCTORAL_EMAIL_PRIVATE_DEFENSE_AUTHORISATION,
-    description=_('Mail sent to the doctoral student to inform of the authorisation of the private defense'),
+    description=_('Mail sent to the doctoral student to inform of the authorisation of the private defence'),
     tokens=private_defense_tokens
     + [
         Token(
             name='private_defense_date',
-            description=_('Date of the private defense (DD/MM/YYYY)'),
+            description=_('Date of the private defence (DD/MM/YYYY)'),
             example='01/04/2022',
         ),
     ],
@@ -70,17 +70,17 @@ templates.register(
 PARCOURS_DOCTORAL_EMAIL_PRIVATE_DEFENSE_JURY_INVITATION = 'osis-parcours-doctoral-private-defense-jury-invitation'
 templates.register(
     PARCOURS_DOCTORAL_EMAIL_PRIVATE_DEFENSE_JURY_INVITATION,
-    description=_('Mail sent to the jury members to invite them to the private defense'),
+    description=_('Mail sent to the jury members to invite them to the private defence'),
     tokens=private_defense_tokens
     + [
         Token(
             name='private_defense_date',
-            description=_('Date of the private defense (DD/MM/YYYY)'),
+            description=_('Date of the private defence (DD/MM/YYYY)'),
             example='01/04/2022',
         ),
         Token(
             name='private_defense_place',
-            description=_('Place of the private defense'),
+            description=_('Place of the private defence'),
             example='B1',
         ),
         Token(
@@ -100,12 +100,12 @@ templates.register(
 PARCOURS_DOCTORAL_EMAIL_PRIVATE_DEFENSE_ON_SUCCESS = 'osis-parcours-doctoral-private-defense-on-success'
 templates.register(
     PARCOURS_DOCTORAL_EMAIL_PRIVATE_DEFENSE_ON_SUCCESS,
-    description=_('Mail sent to the doctoral student to inform him of the favourable opinion on the private defense'),
+    description=_('Mail sent to the doctoral student to inform him of the favourable opinion on the private defence'),
     tokens=private_defense_tokens
     + [
         Token(
             name='parcours_doctoral_link_front_private_defense_minutes',
-            description=_('The link to the private defense minutes'),
+            description=_('The link to the private defence minutes'),
             example='http://dev.studies.uclouvain.be/parcours_doctoral/.../private-defense',
         ),
         Token(
@@ -120,12 +120,12 @@ templates.register(
 PARCOURS_DOCTORAL_EMAIL_PRIVATE_DEFENSE_ON_REPEAT = 'osis-parcours-doctoral-private-defense-on-repeat'
 templates.register(
     PARCOURS_DOCTORAL_EMAIL_PRIVATE_DEFENSE_ON_REPEAT,
-    description=_('Mail sent to the doctoral student to inform him of the necessity to repeat the private defense'),
+    description=_('Mail sent to the doctoral student to inform him of the necessity to repeat the private defence'),
     tokens=private_defense_tokens
     + [
         Token(
             name='parcours_doctoral_link_front_private_defense_minutes',
-            description=_('The link to the private defense minutes'),
+            description=_('The link to the private defence minutes'),
             example='http://dev.studies.uclouvain.be/parcours_doctoral/.../private-defense',
         ),
     ],
@@ -135,12 +135,12 @@ templates.register(
 PARCOURS_DOCTORAL_EMAIL_PRIVATE_DEFENSE_ON_FAILURE = 'osis-parcours-doctoral-private-defense-on-failure'
 templates.register(
     PARCOURS_DOCTORAL_EMAIL_PRIVATE_DEFENSE_ON_FAILURE,
-    description=_('Mail sent to the doctoral student to inform him of the defavourable opinion on the private defense'),
+    description=_('Mail sent to the doctoral student to inform him of the defavourable opinion on the private defence'),
     tokens=private_defense_tokens
     + [
         Token(
             name='parcours_doctoral_link_front_private_defense_minutes',
-            description=_('The link to the private defense minutes'),
+            description=_('The link to the private defence minutes'),
             example='http://dev.studies.uclouvain.be/parcours_doctoral/.../private-defense',
         ),
     ],

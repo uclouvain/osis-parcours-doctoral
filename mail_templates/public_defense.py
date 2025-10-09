@@ -54,12 +54,12 @@ public_defense_tokens = common_tokens + [
 PARCOURS_DOCTORAL_EMAIL_PUBLIC_DEFENSE_AUTHORISATION = 'osis-parcours-doctoral-public-defense-authorisation'
 templates.register(
     PARCOURS_DOCTORAL_EMAIL_PUBLIC_DEFENSE_AUTHORISATION,
-    description=_('Mail sent to the doctoral student to inform of the authorisation of the public defense'),
+    description=_('Mail sent to the doctoral student to inform of the authorisation of the public defence'),
     tokens=public_defense_tokens
     + [
         Token(
             name='public_defense_date',
-            description=_('Date of the public defense (DD/MM/YYYY)'),
+            description=_('Date of the public defence (DD/MM/YYYY)'),
             example='01/04/2022',
         ),
     ],
@@ -69,17 +69,17 @@ templates.register(
 PARCOURS_DOCTORAL_EMAIL_PUBLIC_DEFENSE_JURY_INVITATION = 'osis-parcours-doctoral-public-defense-jury-invitation'
 templates.register(
     PARCOURS_DOCTORAL_EMAIL_PUBLIC_DEFENSE_JURY_INVITATION,
-    description=_('Mail sent to the jury members to invite them to the public defense'),
+    description=_('Mail sent to the jury members to invite them to the public defence'),
     tokens=public_defense_tokens
     + [
         Token(
             name='public_defense_date',
-            description=_('Date of the public defense (DD/MM/YYYY)'),
+            description=_('Date of the public defence (DD/MM/YYYY)'),
             example='01/04/2022',
         ),
         Token(
             name='public_defense_place',
-            description=_('Place of the public defense'),
+            description=_('Place of the public defence'),
             example='B1',
         ),
         Token(
@@ -104,12 +104,12 @@ templates.register(
 PARCOURS_DOCTORAL_EMAIL_PUBLIC_DEFENSE_ON_SUCCESS = 'osis-parcours-doctoral-public-defense-on-success'
 templates.register(
     PARCOURS_DOCTORAL_EMAIL_PUBLIC_DEFENSE_ON_SUCCESS,
-    description=_('Mail sent to the doctoral student to inform him of the favourable opinion on the public defense'),
+    description=_('Mail sent to the doctoral student to inform him of the favourable opinion on the public defence'),
     tokens=public_defense_tokens
     + [
         Token(
             name='parcours_doctoral_link_front_public_defense_minutes',
-            description=_('The link to the public defense minutes'),
+            description=_('The link to the public defence minutes'),
             example='http://dev.studies.uclouvain.be/parcours_doctoral/.../public-defense',
         ),
     ],

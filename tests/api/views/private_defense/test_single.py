@@ -131,7 +131,7 @@ class PrivateDefenseAPIViewTestCase(MockOsisDocumentMixin, APITestCase):
         self.assertIn(
             {
                 'status_code': DefensePriveeNonTrouveeException.status_code,
-                'detail': gettext('Private defense not found.'),
+                'detail': gettext('Private defence not found.'),
             },
             json_response.get('non_field_errors', []),
         )
@@ -167,7 +167,7 @@ class PrivateDefenseAPIViewTestCase(MockOsisDocumentMixin, APITestCase):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
         json_response = response.json()
-        self.assertEqual(json_response.get('detail'), gettext('The private defense is not in progress'))
+        self.assertEqual(json_response.get('detail'), gettext('The private defence is not in progress'))
 
     def test_edit_a_known_private_defense_with_valid_data(self):
         self.client.force_authenticate(user=self.doctorate_student.user)
@@ -242,7 +242,7 @@ class PrivateDefenseAPIViewTestCase(MockOsisDocumentMixin, APITestCase):
         self.assertIn(
             {
                 'status_code': DefensePriveeNonActiveeException.status_code,
-                'detail': gettext('Private defense not activated.'),
+                'detail': gettext('Private defence not activated.'),
             },
             json_response.get('non_field_errors', []),
         )

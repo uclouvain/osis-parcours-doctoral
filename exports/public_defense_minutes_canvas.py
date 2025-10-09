@@ -37,7 +37,7 @@ from parcours_doctoral.models import Activity, ParcoursDoctoral
 
 
 def public_defense_minutes_canvas_url(doctorate_uuid, language):
-    """For a doctorate uuid, create the public defense canvas, save it and return the file url."""
+    """For a doctorate uuid, create the public defence canvas, save it and return the file url."""
     with translation.override(language=language):
         jury_dto, doctorate_dto = message_bus_instance.invoke_multiple(
             [

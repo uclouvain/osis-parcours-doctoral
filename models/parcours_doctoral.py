@@ -379,13 +379,13 @@ class ParcoursDoctoral(models.Model):
         blank=True,
     )
     phd_already_done_defense_date = models.DateField(
-        verbose_name=_("Defense"),
+        verbose_name=_("Defence"),
         null=True,
         blank=True,
     )
     phd_already_done_no_defense_reason = models.CharField(
         max_length=255,
-        verbose_name=_("No defense reason"),
+        verbose_name=_("No defence reason"),
         default='',
         blank=True,
     )
@@ -449,21 +449,21 @@ class ParcoursDoctoral(models.Model):
     )
     defense_method = models.CharField(
         max_length=255,
-        verbose_name=_("Defense method"),
+        verbose_name=_("Defence method"),
         choices=FormuleDefense.choices(),
         default='',
         blank=True,
     )
     defense_indicative_date = models.CharField(
         max_length=255,
-        verbose_name=_("Defense indicative date"),
+        verbose_name=_("Defence indicative date"),
         default='',
         blank=True,
     )
     defense_language = models.ForeignKey(
         'reference.Language',
         on_delete=models.PROTECT,
-        verbose_name=_("Defense language"),
+        verbose_name=_("Defence language"),
         related_name='+',
         null=True,
         blank=True,

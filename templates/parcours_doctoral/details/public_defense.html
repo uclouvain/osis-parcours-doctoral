@@ -61,14 +61,14 @@
         {% if can_invite_jury_to_public_defense %}
           <li>
             <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#public-defense-jury-invitation-form-modal">
-              {% translate "Invite the members of the jury to the public defense" %}
+              {% translate "Invite the members of the jury to the public defence" %}
             </a>
           </li>
         {% endif %}
         {% if can_authorise_public_defense %}
           <li>
             <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#public-defense-authorisation-form-modal">
-              {% translate "Authorise the public defense" %}
+              {% translate "Authorise the public defence" %}
             </a>
           </li>
         {% endif %}
@@ -104,7 +104,7 @@
 {% block tab_content %}
   <div class="card mb-3">
     <div class="card-header">
-      <h4 class="card-title">{% translate "Public defense" %}</h4>
+      <h4 class="card-title">{% translate "Public defence" %}</h4>
     </div>
     <div class="card-body">
       {% field_data _("Thesis title") parcours_doctoral.titre_these_propose inline=True %}
@@ -122,12 +122,12 @@
   </div>
 
   {% url 'parcours_doctoral:public-defense:jury-invitation' view.kwargs.uuid as jury_invitation_url %}
-  {% translate 'Invite the members of the jury to the public defense' as jury_invitation_title %}
+  {% translate 'Invite the members of the jury to the public defence' as jury_invitation_title %}
   {% translate 'Here is an example message that will be sent to the jury members.' as jury_invitation_message %}
   {% include 'parcours_doctoral/modal/form_modal.html' with modal_id='public-defense-jury-invitation-form-modal' modal_title=jury_invitation_title modal_message=jury_invitation_message modal_url=jury_invitation_url %}
 
   {% url 'parcours_doctoral:public-defense:authorise' view.kwargs.uuid as authorization_url %}
-  {% translate 'Authorise the public defense' as authorization_title %}
+  {% translate 'Authorise the public defence' as authorization_title %}
   {% include 'parcours_doctoral/modal/form_modal.html' with modal_id='public-defense-authorisation-form-modal' modal_title=authorization_title modal_url=authorization_url %}
 
   {% url 'parcours_doctoral:public-defense:success' view.kwargs.uuid as success_decision_url %}
