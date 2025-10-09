@@ -26,7 +26,7 @@
 {% endcomment %}
 
 {% block tab_content %}
-  <h3>{% trans "Defense method" context "parcours_doctoral tab" %}</h3>
+  <h3>{% trans "Defence method" context "parcours_doctoral tab" %}</h3>
   {% include 'parcours_doctoral/includes/jury_description.html' %}
 
   {% trans 'This is a temporary title and it will be modifiable later depending on the jury analysis.' as titre_propose_tooltip %}
@@ -42,14 +42,14 @@
     </div>
     {% endif %}
   </div>
-  {% field_data _("Defense method") jury.formule_defense|enum_display:'FormuleDefense' %}
-  {% field_data _("Defense indicative date") jury.date_indicative %}
+  {% field_data _("Defence method") jury.formule_defense|enum_display:'FormuleDefense' %}
+  {% field_data _("Defence indicative date") jury.date_indicative %}
   <div class="row">
     <div class="col-md-4">
       {% field_data _("Thesis language") jury.langue_redaction|osis_language_name %}
     </div>
     <div class="col-md-4">
-      {% field_data _("Defense language") jury.langue_soutenance|osis_language_name %}
+      {% field_data _("Defence language") jury.langue_soutenance|osis_language_name %}
     </div>
   </div>
   {% if jury.commentaire %}{% field_data _("Comment") jury.commentaire|linebreaks %}{% endif %}

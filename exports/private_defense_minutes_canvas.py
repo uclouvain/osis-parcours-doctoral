@@ -41,7 +41,7 @@ from parcours_doctoral.models.private_defense import PrivateDefense
 
 
 def private_defense_minutes_canvas_url(doctorate_uuid, language):
-    """For a doctorate uuid, create the private defense canvas, save it and return the file url."""
+    """For a doctorate uuid, create the private defence canvas, save it and return the file url."""
     with translation.override(language=language):
         has_additional_training = Activity.objects.has_complementary_training(parcours_doctoral_uuid=doctorate_uuid)
 

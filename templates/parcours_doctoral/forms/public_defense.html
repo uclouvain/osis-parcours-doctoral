@@ -28,7 +28,7 @@
 {% block form %}
   <div class="card mb-3">
     <div class="card-header">
-      <h4 class="card-title">{% translate "Public defense" %}</h4>
+      <h4 class="card-title">{% translate "Public defence" %}</h4>
     </div>
     <div class="card-body">
       {% bootstrap_form_errors form type='non_fields' %}
@@ -45,10 +45,10 @@
         {% bootstrap_field_with_tooltip form.date_heure classes='required_field' %}
       </div>
 
-      {% bootstrap_field_with_tooltip form.lieu %}
-      {% bootstrap_field_with_tooltip form.local_deliberation %}
+      {% bootstrap_field form.lieu %}
+      {% bootstrap_field form.local_deliberation %}
       {% bootstrap_field form.informations_complementaires %}
-      {% bootstrap_field_with_tooltip form.resume_annonce %}
+      {% bootstrap_field form.resume_annonce %}
       {% bootstrap_field form.photo_annonce classes='required_field' %}
       {% bootstrap_field_with_tooltip form.proces_verbal %}
 

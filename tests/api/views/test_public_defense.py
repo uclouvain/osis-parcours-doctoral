@@ -145,7 +145,7 @@ class PublicDefenseAPIViewTestCase(MockOsisDocumentMixin, APITestCase):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
         json_response = response.json()
-        self.assertEqual(json_response.get('detail'), gettext('The public defense is not in progress'))
+        self.assertEqual(json_response.get('detail'), gettext('The public defence is not in progress'))
 
     def test_edit_with_valid_data(self):
         self.client.force_authenticate(user=self.doctorate_student.user)
@@ -199,7 +199,7 @@ class PublicDefenseAPIViewTestCase(MockOsisDocumentMixin, APITestCase):
     def test_edit_with_invalid_data(self):
         self.client.force_authenticate(user=self.doctorate_student.user)
 
-        invalid_message = gettext('Public defense not completed.')
+        invalid_message = gettext('Public defence not completed.')
 
         response = self.client.put(
             self.url,

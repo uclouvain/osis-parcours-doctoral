@@ -63,12 +63,13 @@ from parcours_doctoral.models import (
     ParcoursDoctoralSupervisionActor,
 )
 from parcours_doctoral.models.private_defense import PrivateDefense
+from parcours_doctoral.tests.mixins import MockOsisDocumentMixin
 from reference.tests.factories.language import LanguageFactory
 from reference.tests.factories.scholarship import ErasmusMundusScholarshipFactory
 
 
 @freezegun.freeze_time('2023-01-01')
-class DoctorateInitializationTestCase(TestCase):
+class DoctorateInitializationTestCase(MockOsisDocumentMixin, TestCase):
     @classmethod
     def setUpTestData(cls):
         cls.student = PersonFactory()
@@ -260,53 +261,12 @@ class DoctorateInitializationTestCase(TestCase):
         )
 
         # Mock documents
-        patcher = patch('osis_document_components.services.get_remote_tokens')
-        patched = patcher.start()
-        patched.side_effect = lambda uuids, **kwargs: {
-            current_uuid: f'token-{index}' for index, current_uuid in enumerate(uuids)
-        }
-        self.addCleanup(patcher.stop)
-
-        patcher = patch('osis_document_components.services.get_several_remote_metadata')
-        patched = patcher.start()
-        patched.side_effect = lambda tokens: {
-            token: {
-                'name': 'myfile',
-                'mimetype': PDF_MIME_TYPE,
-                'size': 1,
-            }
-            for token in tokens
-        }
-        self.addCleanup(patcher.stop)
-
-        patcher = patch("osis_document_components.services.get_remote_token", return_value="foobar")
-        patcher.start()
-        self.addCleanup(patcher.stop)
-
-        patcher = patch("osis_document_components.services.get_remote_metadata", return_value={"name": "myfile", "size": 1})
-        patcher.start()
-        self.addCleanup(patcher.stop)
-
-        patcher = patch(
-            "osis_document_components.services.confirm_remote_upload",
-            side_effect=lambda token, *args, **kwargs: token,
-        )
-        patcher.start()
-        self.addCleanup(patcher.stop)
-
-        patcher = patch(
-            "osis_document_components.fields.FileField._confirm_multiple_upload",
-            side_effect=lambda _, value, __: value,
-        )
-        patcher.start()
-        self.addCleanup(patcher.stop)
-
         self.documents_remote_duplicate_patcher = patch(
             'parcours_doctoral.infrastructure.parcours_doctoral.domain.service.parcours_doctoral.'
             'documents_remote_duplicate'
         )
         self.documents_remote_duplicate_patched = self.documents_remote_duplicate_patcher.start()
-        self.documents_remote_duplicate_patched.return_value = self.duplicated_documents_tokens_by_uuid
+        self.documents_remote_duplicate_patched.return_value = self.duplicated_documents_tokens_by_uuid.copy()
         self.addCleanup(self.documents_remote_duplicate_patcher.stop)
 
     def test_initialization_with_a_pre_admission(self):

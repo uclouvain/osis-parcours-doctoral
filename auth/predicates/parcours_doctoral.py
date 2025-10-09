@@ -135,13 +135,13 @@ def confirmation_paper_in_progress(self, user: User, obj: ParcoursDoctoral):
 
 
 @predicate(bind=True)
-@predicate_failed_msg(message=_("The private defense is not in progress"))
+@predicate_failed_msg(message=_("The private defence is not in progress"))
 def private_defense_in_progress(self, user: User, obj: ParcoursDoctoral):
     return obj.status in STATUTS_DOCTORAT_DEFENSE_PRIVEE_EN_COURS
 
 
 @predicate(bind=True)
-@predicate_failed_msg(message=_("The public defense is not in progress"))
+@predicate_failed_msg(message=_("The public defence is not in progress"))
 def public_defense_in_progress(self, user: User, obj: ParcoursDoctoral):
     return obj.status in STATUTS_DOCTORAT_SOUTENANCE_PUBLIQUE_EN_COURS
 

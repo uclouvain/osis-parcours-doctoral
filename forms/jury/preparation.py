@@ -40,7 +40,7 @@ class JuryPreparationForm(forms.Form):
         required=False,
     )
     formule_defense = forms.ChoiceField(
-        label=_("Defense method"),
+        label=_("Defence method"),
         help_text=_(
             "Refer to the specific measures of your doctoral commission to know if one of these method is "
             "mandatory to you."
@@ -65,7 +65,7 @@ class JuryPreparationForm(forms.Form):
         ),
     )
     langue_soutenance = forms.CharField(
-        label=_("Defense language"),
+        label=_("Defence language"),
         required=False,
         widget=autocomplete.ListSelect2(
             url="language-autocomplete",

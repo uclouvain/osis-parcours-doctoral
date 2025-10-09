@@ -75,7 +75,7 @@ class BasePrivateDefenseActionView(BaseEmailFormView):
 class PrivateDefenseAuthorisationView(BasePrivateDefenseActionView):
     urlpatterns = 'authorise'
     permission_required = 'parcours_doctoral.authorise_private_defense'
-    message_on_success = gettext_lazy('The private defense has been authorised.')
+    message_on_success = gettext_lazy('The private defence has been authorised.')
     email_identifier = PARCOURS_DOCTORAL_EMAIL_PRIVATE_DEFENSE_AUTHORISATION
     prefix = 'authorise'
 
@@ -95,7 +95,7 @@ class PrivateDefenseAuthorisationView(BasePrivateDefenseActionView):
 class PrivateDefenseJuryInvitationView(BasePrivateDefenseActionView):
     urlpatterns = 'jury-invitation'
     permission_required = 'parcours_doctoral.invite_jury_to_private_defense'
-    message_on_success = gettext_lazy('The members of the jury have been invited to the private defense.')
+    message_on_success = gettext_lazy('The members of the jury have been invited to the private defence.')
     email_identifier = PARCOURS_DOCTORAL_EMAIL_PRIVATE_DEFENSE_JURY_INVITATION
     disabled_form = True
     prefix = 'jury-invitation'

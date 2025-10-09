@@ -46,7 +46,7 @@ class MethodeDeDefenseNonCompleteeException(BusinessException):
 
     def __init__(self, **kwargs):
         message = _(
-            "Please input all required information from the \"Defense Method\" tab before requesting the signatures."
+            "Please input all required information from the \"Defence Method\" tab before requesting the signatures."
         )
         super().__init__(message, **kwargs)
 

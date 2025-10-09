@@ -34,7 +34,7 @@ class SoutenancePubliqueNonCompleteeException(BusinessException):
     status_code = 'SOUTENANCE-PUBLIQUE-1'
 
     def __init__(self, **kwargs):
-        message = _('Public defense not completed.')
+        message = _('Public defence not completed.')
         super().__init__(message, **kwargs)
 
 
@@ -42,7 +42,7 @@ class EtapeSoutenancePubliquePasEnCoursException(BusinessException):
     status_code = 'SOUTENANCE-PUBLIQUE-2'
 
     def __init__(self, **kwargs):
-        message = _('The step related to the public defense is not in progress.')
+        message = _('The step related to the public defence is not in progress.')
         super().__init__(message, **kwargs)
 
 

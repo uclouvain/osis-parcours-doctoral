@@ -182,7 +182,7 @@ class PrivateDefenseMinutesAPIViewTestCase(MockOsisDocumentMixin, APITestCase):
         self.assertIn(
             {
                 'status_code': DefensePriveeNonTrouveeException.status_code,
-                'detail': gettext('Private defense not found.'),
+                'detail': gettext('Private defence not found.'),
             },
             json_response.get('non_field_errors', []),
         )
@@ -201,7 +201,7 @@ class PrivateDefenseMinutesAPIViewTestCase(MockOsisDocumentMixin, APITestCase):
         self.assertIn(
             {
                 'status_code': DefensePriveeNonActiveeException.status_code,
-                'detail': gettext('Private defense not activated.'),
+                'detail': gettext('Private defence not activated.'),
             },
             json_response.get('non_field_errors', []),
         )

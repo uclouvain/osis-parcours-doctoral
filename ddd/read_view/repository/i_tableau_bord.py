@@ -106,31 +106,31 @@ class ITableauBordRepository(ITableauBordRepositoryAdmissionMixin, interface.Rea
         ),
         CategorieTableauBord(
             id=CategorieTableauBordEnum.FORMULE_1_DEFENSE_PRIVEE,
-            libelle=pgettext_lazy('dashboard-category', 'Private defense (formula 1)'),
+            libelle=pgettext_lazy('dashboard-category', 'Private defence (formula 1)'),
             type=TypeCategorieTableauBord.DOCTORAT,
             indicateurs=[
                 IndicateurTableauBord(
                     id=IndicateurTableauBordEnum.FORMULE_1_DEFENSE_PRIVEE_SOUMISE,
-                    libelle=pgettext_lazy('dashboard-indicator formula-1-private-defense', 'Submitted private defense'),
+                    libelle=pgettext_lazy('dashboard-indicator formula-1-private-defence', 'Submitted private defence'),
                 ),
                 IndicateurTableauBord(
                     id=IndicateurTableauBordEnum.FORMULE_1_DEFENSE_PRIVEE_PV_TELEVERSE,
-                    libelle=pgettext_lazy('dashboard-indicator formula-1-private-defense', 'Submitted PV'),
+                    libelle=pgettext_lazy('dashboard-indicator formula-1-private-defence', 'Submitted PV'),
                 ),
             ],
         ),
         CategorieTableauBord(
             id=CategorieTableauBordEnum.FORMULE_1_SOUTENANCE_PUBLIQUE,
-            libelle=pgettext_lazy('dashboard-category', 'Public defense (formula 1)'),
+            libelle=pgettext_lazy('dashboard-category', 'Public defence (formula 1)'),
             type=TypeCategorieTableauBord.DOCTORAT,
             indicateurs=[
                 IndicateurTableauBord(
                     id=IndicateurTableauBordEnum.FORMULE_1_SOUTENANCE_PUBLIQUE_SOUMISE,
-                    libelle=pgettext_lazy('dashboard-indicator formula-1-public-defense', 'Submitted public defense'),
+                    libelle=pgettext_lazy('dashboard-indicator formula-1-public-defence', 'Submitted public defence'),
                 ),
                 IndicateurTableauBord(
                     id=IndicateurTableauBordEnum.FORMULE_1_SOUTENANCE_PUBLIQUE_PV_TELEVERSE,
-                    libelle=pgettext_lazy('dashboard-indicator formula-1-public-defense', 'Submitted PV'),
+                    libelle=pgettext_lazy('dashboard-indicator formula-1-public-defence', 'Submitted PV'),
                 ),
             ],
         ),
@@ -151,23 +151,23 @@ class ITableauBordRepository(ITableauBordRepositoryAdmissionMixin, interface.Rea
         ),
         CategorieTableauBord(
             id=CategorieTableauBordEnum.FORMULE_2_DEFENSE_PRIVEE_SOUTENANCE_PUBLIQUE,
-            libelle=pgettext_lazy('dashboard-category', 'Private defense / Public defense (formula 2)'),
+            libelle=pgettext_lazy('dashboard-category', 'Private defence / Public defence (formula 2)'),
             type=TypeCategorieTableauBord.DOCTORAT,
             indicateurs=[
                 IndicateurTableauBord(
                     id=IndicateurTableauBordEnum.FORMULE_2_DEFENSE_PRIVEE_SOUTENANCE_PUBLIQUE_SOUMISE,
                     libelle=pgettext_lazy(
-                        'dashboard-indicator formula-2-defense',
-                        'Submitted private defense / Submitted public defense',
+                        'dashboard-indicator formula-2-defence',
+                        'Submitted private defense / Submitted public defence',
                     ),
                 ),
                 IndicateurTableauBord(
                     id=IndicateurTableauBordEnum.FORMULE_2_DEFENSE_PRIVEE_PV_TELEVERSE,
-                    libelle=pgettext_lazy('dashboard-indicator formula-2-defense', 'Submitted PV (private defense)'),
+                    libelle=pgettext_lazy('dashboard-indicator formula-2-defence', 'Submitted PV (private defence)'),
                 ),
                 IndicateurTableauBord(
                     id=IndicateurTableauBordEnum.FORMULE_2_SOUTENANCE_PUBLIQUE_PV_TELEVERSE,
-                    libelle=pgettext_lazy('dashboard-indicator formula-2-defense', 'Submitted PV (public defense)'),
+                    libelle=pgettext_lazy('dashboard-indicator formula-2-defence', 'Submitted PV (public defence)'),
                 ),
             ],
         ),

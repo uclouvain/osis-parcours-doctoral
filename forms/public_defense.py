@@ -54,14 +54,12 @@ class PublicDefenseForm(forms.Form):
 
     lieu = forms.CharField(
         label=_('Public defence location'),
-        help_text=_('If necessary, contact your administrator for practical arrangements.'),
         widget=forms.Textarea(attrs={'rows': '2'}),
         required=False,
     )
 
     local_deliberation = forms.CharField(
         label=_('Deliberation room'),
-        help_text=_('If necessary, contact your administrator for practical arrangements.'),
         widget=forms.Textarea(attrs={'rows': '2'}),
         required=False,
     )
@@ -74,7 +72,6 @@ class PublicDefenseForm(forms.Form):
 
     resume_annonce = forms.CharField(
         label=_('Summary for announcement'),
-        help_text=_('Please contact your administrator to draft the announcement.'),
         widget=forms.Textarea(attrs={'rows': '2'}),
         required=False,
     )

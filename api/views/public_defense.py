@@ -70,7 +70,7 @@ class PublicDefenseAPIView(DoctorateAPIPermissionRequiredMixin, RetrieveAPIView)
         operation_id='submit_public_defense',
     )
     def put(self, request, *args, **kwargs):
-        """Submit a public defense"""
+        """Submit a public defence"""
         serializer = SubmitPublicDefenseSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
@@ -118,7 +118,7 @@ class PublicDefenseMinutesAPIView(DoctorateAPIPermissionRequiredMixin, RetrieveA
         return {'url': url}
 
     def put(self, request, *args, **kwargs):
-        """Submit the minutes of the public defense"""
+        """Submit the minutes of the public defence"""
         serializer = SubmitPublicDefenseMinutesSerializer(data=request.data)
 
         serializer.is_valid(raise_exception=True)

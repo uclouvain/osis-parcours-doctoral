@@ -123,7 +123,7 @@ class Migration(migrations.Migration):
                         on_delete=django.db.models.deletion.CASCADE,
                         related_name="current_private_defense",
                         to="parcours_doctoral.parcoursdoctoral",
-                        verbose_name="Doctorate whose this private defense is the active one",
+                        verbose_name="Doctorate whose this private defence is the active one",
                     ),
                 ),
                 (
