@@ -67,13 +67,13 @@ class PrivateDefense(models.Model):
     )
 
     created_at = models.DateTimeField(
-        verbose_name=pgettext_lazy('private defense', 'Created at'),
+        verbose_name=pgettext_lazy('private defence', 'Created at'),
         auto_now_add=True,
     )
 
     current_parcours_doctoral = models.OneToOneField(
         'parcours_doctoral.ParcoursDoctoral',
-        verbose_name=_('Doctorate whose this private defense is the active one'),
+        verbose_name=_('Doctorate whose this private defence is the active one'),
         null=True,
         blank=True,
         related_name='current_private_defense',

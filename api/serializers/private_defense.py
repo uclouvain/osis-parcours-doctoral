@@ -34,14 +34,14 @@ from parcours_doctoral.ddd.defense_privee.dtos import DefensePriveeDTO
 
 
 class PrivateDefenseDTOSerializer(DTOSerializer):
-    """Contains the information related to the private defense."""
+    """Contains the information related to the private defence."""
 
     class Meta:
         source = DefensePriveeDTO
 
 
 class SubmitPrivateDefenseSerializer(DTOSerializer):
-    """Contains the submitted data to complete a private defense."""
+    """Contains the submitted data to complete a private defence."""
 
     uuid = None
     matricule_auteur = None
@@ -51,13 +51,13 @@ class SubmitPrivateDefenseSerializer(DTOSerializer):
 
 
 class PrivateDefenseMinutesCanvasSerializer(serializers.Serializer):
-    """Contains the private defense minutes canvas url."""
+    """Contains the private defence minutes canvas url."""
 
     url = serializers.URLField(read_only=True)
 
 
 class SubmitPrivateDefenseMinutesSerializer(DTOSerializer):
-    """Contains the submitted data to complete the private defense minutes."""
+    """Contains the submitted data to complete the private defence minutes."""
 
     matricule_auteur = None
 

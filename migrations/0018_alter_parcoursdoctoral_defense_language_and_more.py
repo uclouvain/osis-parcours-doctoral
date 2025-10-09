@@ -25,7 +25,7 @@ class Migration(migrations.Migration):
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="+",
                 to="reference.language",
-                verbose_name="Defense language",
+                verbose_name="Defence language",
             ),
         ),
         migrations.AlterField(
@@ -66,7 +66,7 @@ class Migration(migrations.Migration):
                 blank=True,
                 default="",
                 max_length=255,
-                verbose_name="Defense indicative date",
+                verbose_name="Defence indicative date",
             ),
         ),
     ]

@@ -34,7 +34,7 @@ class DefensePriveeNonTrouveeException(BusinessException):
     status_code = 'DEFENSE-PRIVEE-1'
 
     def __init__(self, **kwargs):
-        message = _('Private defense not found.')
+        message = _('Private defence not found.')
         super().__init__(message, **kwargs)
 
 
@@ -42,7 +42,7 @@ class DefensePriveeNonCompleteeException(BusinessException):
     status_code = 'DEFENSE-PRIVEE-2'
 
     def __init__(self, **kwargs):
-        message = _('Private defense not completed.')
+        message = _('Private defence not completed.')
         super().__init__(message, **kwargs)
 
 
@@ -50,7 +50,7 @@ class DefensePriveeNonActiveeException(BusinessException):
     status_code = 'DEFENSE-PRIVEE-3'
 
     def __init__(self, **kwargs):
-        message = _('Private defense not activated.')
+        message = _('Private defence not activated.')
         super().__init__(message, **kwargs)
 
 

@@ -242,7 +242,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "phd_already_done_defense_date",
-                    models.DateField(blank=True, null=True, verbose_name="Defense"),
+                    models.DateField(blank=True, null=True, verbose_name="Defence"),
                 ),
                 (
                     "phd_already_done_no_defense_reason",
@@ -250,7 +250,7 @@ class Migration(migrations.Migration):
                         blank=True,
                         default="",
                         max_length=255,
-                        verbose_name="No defense reason",
+                        verbose_name="No defence reason",
                     ),
                 ),
                 ("cotutelle", models.BooleanField()),
@@ -336,21 +336,21 @@ class Migration(migrations.Migration):
                         choices=[
                             (
                                 "FORMULE_1",
-                                "Method 1 (the private defense and the public defense are separated by at least a month",
+                                "Method 1 (the private defence and the public defence are separated by at least a month",
                             ),
                             (
                                 "FORMULE_2",
-                                "Method 2 (The private defense and the public defense are organised the same day, and subjected to an admissibility condition)",
+                                "Method 2 (The private defence and the public defence are organised the same day, and subjected to an admissibility condition)",
                             ),
                         ],
                         default="",
                         max_length=255,
-                        verbose_name="Defense method",
+                        verbose_name="Defence method",
                     ),
                 ),
                 (
                     "defense_indicative_date",
-                    models.DateField(blank=True, null=True, verbose_name="Defense indicative date"),
+                    models.DateField(blank=True, null=True, verbose_name="Defence indicative date"),
                 ),
                 (
                     "defense_language",
@@ -364,7 +364,7 @@ class Migration(migrations.Migration):
                         ],
                         default="UNDECIDED",
                         max_length=255,
-                        verbose_name="Defense language",
+                        verbose_name="Defence language",
                     ),
                 ),
                 (
