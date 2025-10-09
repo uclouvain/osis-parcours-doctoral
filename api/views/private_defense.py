@@ -69,7 +69,7 @@ class PrivateDefenseListAPIView(DoctorateAPIPermissionRequiredMixin, GenericAPIV
         operation_id='retrieve_private_defenses',
     )
     def get(self, request, *args, **kwargs):
-        """Get the private defenses related to the doctorate"""
+        """Get the private defences related to the doctorate"""
         private_defenses = message_bus_instance.invoke(
             RecupererDefensesPriveesQuery(parcours_doctoral_uuid=kwargs.get('uuid')),
         )
@@ -96,7 +96,7 @@ class PrivateDefenseAPIView(DoctorateAPIPermissionRequiredMixin, mixins.Retrieve
         operation_id='retrieve_private_defense',
     )
     def get(self, request, *args, **kwargs):
-        """Get a single private defense"""
+        """Get a single private defence"""
         private_defense = message_bus_instance.invoke(
             RecupererDefensePriveeQuery(
                 uuid=self.kwargs['private_defense_uuid'],
@@ -111,7 +111,7 @@ class PrivateDefenseAPIView(DoctorateAPIPermissionRequiredMixin, mixins.Retrieve
         operation_id='submit_private_defense',
     )
     def put(self, request, *args, **kwargs):
-        """Submit a private defense"""
+        """Submit a private defence"""
         serializer = SubmitPrivateDefenseSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
@@ -159,7 +159,7 @@ class PrivateDefenseMinutesAPIView(DoctorateAPIPermissionRequiredMixin, Retrieve
         return {'url': url}
 
     def put(self, request, *args, **kwargs):
-        """Submit the minutes of the private defense"""
+        """Submit the minutes of the private defence"""
         serializer = SubmitPrivateDefenseMinutesSerializer(data=request.data)
 
         serializer.is_valid(raise_exception=True)

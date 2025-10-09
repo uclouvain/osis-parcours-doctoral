@@ -50,19 +50,43 @@ class MockOsisDocumentMixin:
         self.confirm_remote_upload_patcher = patch('osis_document_components.services.confirm_remote_upload')
         patched = self.confirm_remote_upload_patcher.start()
         patched.side_effect = lambda token, _1, _2, _3, _4, _5 : str(token) if is_uuid(token) else default_uuid
+        self.addCleanup(self.confirm_remote_upload_patcher.stop)
 
         self.file_confirm_upload_patcher = patch('osis_document_components.fields.FileField._confirm_multiple_upload')
         patched = self.file_confirm_upload_patcher.start()
         patched.side_effect = lambda _, value, __: [uuid.UUID(str(v)) if is_uuid(v) else default_uuid for v in value]
+        self.addCleanup(self.file_confirm_upload_patcher.stop)
 
         self.get_remote_metadata_patcher = patch('osis_document_components.services.get_remote_metadata')
         patched = self.get_remote_metadata_patcher.start()
         patched.return_value = {"name": "test.pdf", "size": 1, "mimetype": ANY}
+        self.addCleanup(self.get_remote_metadata_patcher.stop)
 
         self.get_remote_token_patcher = patch('osis_document_components.services.get_remote_token')
         patched = self.get_remote_token_patcher.start()
         patched.return_value = 'b-token'
+        self.addCleanup(self.get_remote_token_patcher.stop)
 
         self.save_raw_content_remotely_patcher = patch('osis_document_components.services.save_raw_content_remotely')
         patched = self.save_raw_content_remotely_patcher.start()
         patched.return_value = 'a-token'
+        self.addCleanup(self.save_raw_content_remotely_patcher.stop)
+
+        patcher = patch('osis_document_components.services.get_remote_tokens')
+        patched = patcher.start()
+        patched.side_effect = lambda uuids, **kwargs: {
+            current_uuid: f'token-{index}' for index, current_uuid in enumerate(uuids)
+        }
+        self.addCleanup(patcher.stop)
+
+        patcher = patch('osis_document_components.services.get_several_remote_metadata')
+        patched = patcher.start()
+        patched.side_effect = lambda tokens: {
+            token: {
+                'name': 'myfile',
+                'mimetype': ANY,
+                'size': 1,
+            }
+            for token in tokens
+        }
+        self.addCleanup(patcher.stop)

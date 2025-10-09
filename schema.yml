@@ -1327,7 +1327,7 @@ paths:
   /doctorate/{uuid}/private-defense:
     get:
       operationId: retrieve_private_defenses
-      description: Get the private defenses related to the doctorate
+      description: Get the private defences related to the doctorate
       parameters:
       - in: path
         name: uuid
@@ -1363,7 +1363,7 @@ paths:
   /doctorate/{uuid}/private-defense/{private_defense_uuid}:
     get:
       operationId: retrieve_private_defense
-      description: Get a single private defense
+      description: Get a single private defence
       parameters:
       - in: path
         name: private_defense_uuid
@@ -1402,7 +1402,7 @@ paths:
           $ref: '#/components/responses/NotFound'
     put:
       operationId: submit_private_defense
-      description: Submit a private defense
+      description: Submit a private defence
       parameters:
       - in: path
         name: private_defense_uuid
@@ -1480,7 +1480,7 @@ paths:
           $ref: '#/components/responses/NotFound'
     put:
       operationId: submit_private_defense_minutes
-      description: Submit the minutes of the private defense
+      description: Submit the minutes of the private defence
       parameters:
       - in: path
         name: uuid
@@ -1552,7 +1552,7 @@ paths:
   /doctorate/{uuid}/public-defense:
     put:
       operationId: submit_public_defense
-      description: Submit a public defense
+      description: Submit a public defence
       parameters:
       - in: path
         name: uuid
@@ -1624,7 +1624,7 @@ paths:
           $ref: '#/components/responses/NotFound'
     put:
       operationId: submit_public_defense_minutes
-      description: Submit the minutes of the public defense
+      description: Submit the minutes of the public defence
       parameters:
       - in: path
         name: uuid
@@ -4157,7 +4157,7 @@ components:
           maxLength: 10
     PrivateDefenseDTO:
       type: object
-      description: Contains the information related to the private defense.
+      description: Contains the information related to the private defence.
       properties:
         uuid:
           type: string
@@ -4195,7 +4195,7 @@ components:
       - uuid
     PrivateDefenseMinutesCanvas:
       type: object
-      description: Contains the private defense minutes canvas url.
+      description: Contains the private defence minutes canvas url.
       properties:
         url:
           type: string
@@ -4329,7 +4329,7 @@ components:
       - ville
     PublicDefenseMinutesCanvas:
       type: object
-      description: Contains the public defense minutes canvas url.
+      description: Contains the public defence minutes canvas url.
       properties:
         url:
           type: string
@@ -5003,7 +5003,7 @@ components:
       - nouvelle_echeance
     SubmitPrivateDefense:
       type: object
-      description: Contains the submitted data to complete a private defense.
+      description: Contains the submitted data to complete a private defence.
       properties:
         titre_these:
           type: string
@@ -5021,7 +5021,7 @@ components:
       - titre_these
     SubmitPrivateDefenseMinutes:
       type: object
-      description: Contains the submitted data to complete the private defense minutes.
+      description: Contains the submitted data to complete the private defence minutes.
       properties:
         uuid:
           type: string
@@ -5034,7 +5034,7 @@ components:
       - uuid
     SubmitPublicDefense:
       type: object
-      description: Contains the submitted data to complete a public defense.
+      description: Contains the submitted data to complete a public defence.
       properties:
         langue:
           type: string
@@ -5056,7 +5056,7 @@ components:
       - photo_annonce
     SubmitPublicDefenseMinutes:
       type: object
-      description: Contains the submitted data to complete the public defense minutes.
+      description: Contains the submitted data to complete the public defence minutes.
       properties:
         proces_verbal:
           type: array

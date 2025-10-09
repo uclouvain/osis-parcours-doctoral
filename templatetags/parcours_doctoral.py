@@ -118,11 +118,11 @@ TAB_TREE = {
         Tab('course-enrollment', _('Course unit enrolment')),
         Tab('assessment-enrollment', _('Assessment enrollments')),
     ],
-    Tab('defense', pgettext_lazy('doctorate tab', 'Defense'), 'person-chalkboard'): [
-        Tab('jury-preparation', pgettext_lazy('admission tab', 'Defense method')),
+    Tab('defense', pgettext_lazy('doctorate tab', 'Defence'), 'person-chalkboard'): [
+        Tab('jury-preparation', pgettext_lazy('admission tab', 'Defence method')),
         Tab('jury', _('Jury composition')),
-        Tab('private-defense', _('Private defense')),
-        Tab('public-defense', _('Public defense')),
+        Tab('private-defense', _('Private defence')),
+        Tab('public-defense', _('Public defence')),
     ],
     Tab('comments', pgettext_lazy('tab', 'Comments'), 'comments'): [
         Tab('comments', pgettext_lazy('tab', 'Comments'), 'comments')

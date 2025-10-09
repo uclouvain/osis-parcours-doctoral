@@ -48,7 +48,6 @@ class PrivateDefenseForm(forms.Form):
 
     lieu = forms.CharField(
         label=_('Private defence location'),
-        help_text=_('If necessary, contact your administrator for practical arrangements.'),
         widget=forms.Textarea(attrs={'rows': '2'}),
         required=False,
     )

@@ -29,7 +29,7 @@
 {% block form %}
   <div class="card mb-3">
     <div class="card-header">
-      <h4 class="card-title">{% translate "Private defense" %}</h4>
+      <h4 class="card-title">{% translate "Private defence" %}</h4>
     </div>
     <div class="card-body">
       {% bootstrap_form_errors form type='non_fields' %}
@@ -43,7 +43,7 @@
       <div id="date-hour-field">
         {% bootstrap_field_with_tooltip form.date_heure classes="required_field" %}
       </div>
-      {% bootstrap_field_with_tooltip form.lieu %}
+      {% bootstrap_field form.lieu %}
       <div class="row">
         {% bootstrap_field form.date_envoi_manuscrit classes="col-md-6" %}
       </div>
