@@ -47,7 +47,7 @@ def desinscrire_evaluation(
     inscription_evaluation = InscriptionEvaluationBuilder.build_from_evaluation_dto(evaluation_dto)
 
     # WHEN
-    inscription_evaluation.desinscrire(evaluation_dto.echeance_enseignant)
+    inscription_evaluation.desinscrire(evaluation_dto.periode_encodage_session)
 
     # THEN
     inscription_evaluation_repository.save(inscription_evaluation)

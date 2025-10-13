@@ -73,7 +73,7 @@ class ConfirmationAPIViewTestCase(APITestCase):
 
     def setUp(self):
         patcher = mock.patch(
-            "osis_document.contrib.fields.FileField._confirm_multiple_upload",
+            "osis_document_components.fields.FileField._confirm_multiple_upload",
             side_effect=lambda _, value, __: value,
         )
         patcher.start()

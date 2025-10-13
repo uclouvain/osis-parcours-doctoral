@@ -449,6 +449,11 @@ msgstr ""
 msgid "Assessment enrollments"
 msgstr ""
 
+msgid ""
+"At least one class exists for this learning unit. Please select it instead "
+"of the learning unit."
+msgstr ""
+
 msgid "Attachment: PhD training"
 msgstr ""
 
@@ -1895,6 +1900,10 @@ msgstr ""
 msgid "No document"
 msgstr ""
 
+#, python-format
+msgid "No element has been found for the academic year %(academic_year)s."
+msgstr ""
+
 msgid "No joint supervision"
 msgstr ""
 
@@ -2935,9 +2944,9 @@ msgstr[1] ""
 msgid "The opinion about the extension request is not completed."
 msgstr ""
 
-#, python-brace-format
+#, python-format
 msgid ""
-"The option {index} must have an identifier and a translation for each "
+"The option %(index)d must have an identifier and a translation for each "
 "required language."
 msgstr ""
 

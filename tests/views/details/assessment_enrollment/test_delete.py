@@ -127,78 +127,24 @@ class AssessmentEnrollmentDeleteViewTestCase(TestCase):
         self.assertEqual(self.assessment_enrollment.late_enrollment, True)
 
         # Check late unenrollment
+        def reset_assessment():
+            self.assessment_enrollment.status = StatutInscriptionEvaluation.ACCEPTEE.name
+            self.assessment_enrollment.save(update_fields=['status'])
 
-        # With private defense date before the end of the encoding period
-        self.doctorate.defense_indicative_date = datetime.date(2024, 1, 15)
-        self.doctorate.save(update_fields=['defense_indicative_date'])
+        # Just before the start of the encoding period
+        with freezegun.freeze_time('2023-12-31'):
+            reset_assessment()
 
-        self.assessment_enrollment.status = StatutInscriptionEvaluation.ACCEPTEE.name
-        self.assessment_enrollment.save(update_fields=['status'])
-
-        with freezegun.freeze_time('2024-01-13'):
             response = self.client.delete(self.url)
 
             self.assessment_enrollment.refresh_from_db()
             self.assertFalse(self.assessment_enrollment.late_unenrollment)
 
-            self.assessment_enrollment.status = StatutInscriptionEvaluation.ACCEPTEE.name
-            self.assessment_enrollment.save(update_fields=['status'])
+        # Just after the start of the encoding period
+        with freezegun.freeze_time('2024-01-02'):
+            reset_assessment()
 
-        with freezegun.freeze_time('2024-01-14'):
             response = self.client.delete(self.url)
 
             self.assessment_enrollment.refresh_from_db()
             self.assertTrue(self.assessment_enrollment.late_unenrollment)
-
-            # With private defense date not in the encoding period
-            self.doctorate.defense_indicative_date = datetime.date(2023, 12, 31)
-            self.doctorate.save(update_fields=['defense_indicative_date'])
-
-            self.assessment_enrollment.status = StatutInscriptionEvaluation.ACCEPTEE.name
-            self.assessment_enrollment.save(update_fields=['status'])
-
-        # With private defense date after the end of the encoding period
-        self.doctorate.defense_indicative_date = datetime.date(2024, 2, 15)
-        self.doctorate.save()
-
-        with freezegun.freeze_time('2024-01-31'):
-            self.client.force_login(self.manager.user)
-            response = self.client.delete(self.url)
-
-            self.assessment_enrollment.refresh_from_db()
-            self.assertFalse(self.assessment_enrollment.late_unenrollment)
-
-            self.assessment_enrollment.status = StatutInscriptionEvaluation.ACCEPTEE.name
-            self.assessment_enrollment.save(update_fields=['status'])
-
-        with freezegun.freeze_time('2024-02-01'):
-            response = self.client.delete(self.url)
-
-            self.assessment_enrollment.refresh_from_db()
-            self.assertTrue(self.assessment_enrollment.late_unenrollment)
-
-            self.assessment_enrollment.status = StatutInscriptionEvaluation.ACCEPTEE.name
-            self.assessment_enrollment.save(update_fields=['status'])
-
-        # Without private defense date
-        self.doctorate.defense_indicative_date = None
-        self.doctorate.save()
-
-        with freezegun.freeze_time('2024-01-31'):
-            self.client.force_login(self.manager.user)
-            response = self.client.delete(self.url)
-
-            self.assessment_enrollment.refresh_from_db()
-            self.assertFalse(self.assessment_enrollment.late_unenrollment)
-
-            self.assessment_enrollment.status = StatutInscriptionEvaluation.ACCEPTEE.name
-            self.assessment_enrollment.save(update_fields=['status'])
-
-        with freezegun.freeze_time('2024-02-01'):
-            response = self.client.delete(self.url)
-
-            self.assessment_enrollment.refresh_from_db()
-            self.assertTrue(self.assessment_enrollment.late_unenrollment)
-
-            self.assessment_enrollment.status = StatutInscriptionEvaluation.ACCEPTEE.name
-            self.assessment_enrollment.save(update_fields=['status'])

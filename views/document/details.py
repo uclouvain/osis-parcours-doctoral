@@ -24,8 +24,8 @@
 #
 # ##############################################################################
 from django.views.generic import TemplateView
-from osis_document.api.utils import get_remote_metadata, get_remote_token
-from osis_document.enums import PostProcessingWanted
+from osis_document_components.services import get_remote_metadata, get_remote_token
+from osis_document_components.enums import PostProcessingWanted
 
 from parcours_doctoral.ddd.domain.model.document import TypeDocument
 from parcours_doctoral.forms.document import FreeDocumentUploadForm

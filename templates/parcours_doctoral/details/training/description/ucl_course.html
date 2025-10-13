@@ -1,8 +1,3 @@
-<<<<<<< HEAD
-=======
-{% load i18n osis_document parcours_doctoral enums %}
-
->>>>>>> c52d060 (Fix OS-1398: Parcours Doctoral - Retours de tests mars)
 {% comment "License" %}
   * OSIS stands for Open Student Information System. It's an application
   * designed to manage the core business of higher education institutions,
@@ -27,4 +22,4 @@
   * see http://www.gnu.org/licenses/.
 {% endcomment %}
 
-{{ activity.learning_unit_year.acronym }} - {{ activity.learning_unit_year.complete_title_i18n }} - {{ activity.learning_unit_year.academic_year }}
+{{ activity.learning_year_acronym }} - {{ activity.learning_year_title }} - {{ activity.learning_year_academic_year }}
