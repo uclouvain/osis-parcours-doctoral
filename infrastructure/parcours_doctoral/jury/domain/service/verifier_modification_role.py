@@ -140,10 +140,14 @@ class VerifierModificationRoleServiceService(IVerifierModificationRoleService):
         parcours_doctoral = cls._get_parcours_doctoral(parcours_doctoral_identity)
 
         presidents = [
-            actor for actor in parcours_doctoral.jury_group.actors.all() if actor.juryactor.role == RoleJury.PRESIDENT.name
+            actor
+            for actor in parcours_doctoral.jury_group.actors.all()
+            if actor.juryactor.role == RoleJury.PRESIDENT.name
         ]
         secretaries = [
-            actor for actor in parcours_doctoral.jury_group.actors.all() if actor.juryactor.role == RoleJury.SECRETAIRE.name
+            actor
+            for actor in parcours_doctoral.jury_group.actors.all()
+            if actor.juryactor.role == RoleJury.SECRETAIRE.name
         ]
 
         if not presidents or not secretaries:

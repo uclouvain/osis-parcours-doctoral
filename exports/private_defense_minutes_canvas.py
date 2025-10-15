@@ -25,8 +25,8 @@
 # ##############################################################################
 
 from django.utils import translation
-from osis_document_components.services import get_remote_token
 from osis_document_components.enums import PostProcessingWanted
+from osis_document_components.services import get_remote_token
 from osis_document_components.utils import get_file_url
 
 from infrastructure.messages_bus import message_bus_instance

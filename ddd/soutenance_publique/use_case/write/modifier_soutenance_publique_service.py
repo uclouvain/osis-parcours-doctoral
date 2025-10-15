@@ -23,14 +23,18 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from parcours_doctoral.ddd.builder.parcours_doctoral_identity import ParcoursDoctoralIdentityBuilder
+from parcours_doctoral.ddd.builder.parcours_doctoral_identity import (
+    ParcoursDoctoralIdentityBuilder,
+)
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import (
     ParcoursDoctoralIdentity,
 )
 from parcours_doctoral.ddd.repository.i_parcours_doctoral import (
     IParcoursDoctoralRepository,
 )
-from parcours_doctoral.ddd.soutenance_publique.commands import ModifierSoutenancePubliqueCommand
+from parcours_doctoral.ddd.soutenance_publique.commands import (
+    ModifierSoutenancePubliqueCommand,
+)
 
 
 def modifier_soutenance_publique(
