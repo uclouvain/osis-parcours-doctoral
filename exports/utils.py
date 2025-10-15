@@ -99,8 +99,8 @@ def generate_temporary_pdf(
     :param stylesheets: Stylesheets
     :return: URL of the temporary file
     """
+    from osis_document_components.services import save_raw_content_remotely
     from osis_document_components.utils import get_file_url
-    from osis_document_components.services import  save_raw_content_remotely
 
     with override(language or translation.get_language()):
         result = get_pdf_from_template(

@@ -29,7 +29,6 @@ from uuid import uuid4
 import factory
 from factory.fuzzy import FuzzyText
 
-
 __all__ = [
     "PdfUploadFactory",
     "WriteTokenFactory",

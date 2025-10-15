@@ -47,7 +47,9 @@ from parcours_doctoral.ddd.read_view.dto.parcours_doctoral import (
 from parcours_doctoral.ddd.read_view.repository.i_liste_parcours_doctoraux import (
     IListeParcoursDoctorauxRepository,
 )
-from parcours_doctoral.infrastructure.parcours_doctoral.read_view.repository.tableau_bord import TableauBordRepository
+from parcours_doctoral.infrastructure.parcours_doctoral.read_view.repository.tableau_bord import (
+    TableauBordRepository,
+)
 from parcours_doctoral.infrastructure.utils import (
     filter_doctorate_queryset_according_to_roles,
     get_entities_with_descendants_ids,

@@ -27,13 +27,14 @@ from dal import forward
 from django import forms
 from django.conf import settings
 from django.forms import ModelChoiceField
-from django.utils.translation import gettext_lazy as _, get_language
+from django.utils.translation import get_language
+from django.utils.translation import gettext_lazy as _
 from osis_document_components.forms import FileUploadField
 
 from admission.forms.admission.doctorate.languages import LanguageModelChoiceField
 from base.forms.utils import EMPTY_CHOICE
 from base.forms.utils.autocomplete import ListSelect2
-from base.forms.utils.datefield import DatePickerInput, CustomDateInput
+from base.forms.utils.datefield import CustomDateInput, DatePickerInput
 from osis_profile.constants import JPEG_MIME_TYPE, PNG_MIME_TYPE
 from parcours_doctoral.forms.fields import DoctorateDateTimeField
 from reference.models.language import Language

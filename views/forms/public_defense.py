@@ -28,7 +28,9 @@ from django.shortcuts import resolve_url
 from django.views.generic import FormView
 
 from infrastructure.messages_bus import message_bus_instance
-from parcours_doctoral.ddd.soutenance_publique.commands import ModifierSoutenancePubliqueCommand
+from parcours_doctoral.ddd.soutenance_publique.commands import (
+    ModifierSoutenancePubliqueCommand,
+)
 from parcours_doctoral.forms.public_defense import PublicDefenseForm
 from parcours_doctoral.views.mixins import (
     BusinessExceptionFormViewMixin,

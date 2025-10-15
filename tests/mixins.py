@@ -24,7 +24,7 @@
 #
 # ##############################################################################
 import uuid
-from unittest.mock import patch, ANY
+from unittest.mock import ANY, patch
 
 from osis_document_components.utils import is_uuid
 
@@ -49,7 +49,7 @@ class MockOsisDocumentMixin:
         # Mock osis-document
         self.confirm_remote_upload_patcher = patch('osis_document_components.services.confirm_remote_upload')
         patched = self.confirm_remote_upload_patcher.start()
-        patched.side_effect = lambda token, _1, _2, _3, _4, _5 : str(token) if is_uuid(token) else default_uuid
+        patched.side_effect = lambda token, _1, _2, _3, _4, _5: str(token) if is_uuid(token) else default_uuid
         self.addCleanup(self.confirm_remote_upload_patcher.stop)
 
         self.file_confirm_upload_patcher = patch('osis_document_components.fields.FileField._confirm_multiple_upload')

@@ -87,7 +87,9 @@ class DashboardCommandTestCase(TestCase):
         patcher.start()
         self.addCleanup(patcher.stop)
 
-        patcher = patch("osis_document_components.services.get_remote_metadata", return_value={"name": "myfile", "size": 1})
+        patcher = patch(
+            "osis_document_components.services.get_remote_metadata", return_value={"name": "myfile", "size": 1}
+        )
         patcher.start()
         self.addCleanup(patcher.stop)
 
@@ -560,6 +562,7 @@ class DashboardCommandTestCase(TestCase):
 
         self.assert_dashboard_value(category, indicator, 1)
 
+
 @override_settings(OSIS_DOCUMENT_BASE_URL='http://dummyurl/')
 class DashboardViewTestCase(TestCase):
     @classmethod
@@ -660,7 +663,9 @@ class DashboardViewTestCase(TestCase):
         patcher.start()
         self.addCleanup(patcher.stop)
 
-        patcher = patch("osis_document_components.services.get_remote_metadata", return_value={"name": "myfile", "size": 1})
+        patcher = patch(
+            "osis_document_components.services.get_remote_metadata", return_value={"name": "myfile", "size": 1}
+        )
         patcher.start()
         self.addCleanup(patcher.stop)
 
