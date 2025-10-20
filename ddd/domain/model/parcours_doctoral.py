@@ -52,6 +52,7 @@ from parcours_doctoral.ddd.domain.validator.validator_by_business_action import 
     ModifierFinancementValidatorList,
     ProjetDoctoralValidatorList,
 )
+from parcours_doctoral.ddd.jury.domain.model.enums import ChoixEtatSignature
 
 ENTITY_CDE = 'CDE'
 ENTITY_CDSS = 'CDSS'
@@ -310,3 +311,19 @@ class ParcoursDoctoral(interface.RootEntity):
 
     def deverrouiller_jury_apres_reinitialisation(self):
         self.statut = ChoixStatutParcoursDoctoral.CONFIRMATION_REUSSIE
+
+    def approuver_jury_par_cdd(self):
+        self.statut = ChoixStatutParcoursDoctoral.JURY_APPROUVE_CDD
+
+    def refuser_jury_par_cdd(self):
+        self.statut = ChoixStatutParcoursDoctoral.JURY_REFUSE_CDD
+
+    def approuver_jury_par_adre(self):
+        self.statut = ChoixStatutParcoursDoctoral.JURY_APPROUVE_ADRE
+
+    def refuser_jury_par_adre(self):
+        self.statut = ChoixStatutParcoursDoctoral.JURY_REFUSE_ADRE
+
+    def changer_statut_si_approbation_jury(self, jury: 'Jury'):
+        if all(member.signature.etat == ChoixEtatSignature.APPROVED for member in jury.membres):
+            self.statut = ChoixStatutParcoursDoctoral.JURY_APPROUVE_CA

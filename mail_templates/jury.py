@@ -27,9 +27,13 @@ from django.utils.translation import gettext_lazy as _
 from osis_mail_template import Token, templates
 
 __all__ = [
-    # "PARCOURS_DOCTORAL_EMAIL_SIGNATURE_REFUSAL",
     "PARCOURS_DOCTORAL_JURY_EMAIL_SIGNATURE_REQUESTS_PROMOTER",
     "PARCOURS_DOCTORAL_JURY_EMAIL_SIGNATURE_REQUESTS_MEMBER",
+    "PARCOURS_DOCTORAL_JURY_EMAIL_MEMBER_REFUSAL",
+    "PARCOURS_DOCTORAL_JURY_EMAIL_CDD_REFUSAL",
+    "PARCOURS_DOCTORAL_JURY_EMAIL_CDD_APPROVAL",
+    "PARCOURS_DOCTORAL_JURY_EMAIL_ADRE_REFUSAL",
+    "PARCOURS_DOCTORAL_JURY_EMAIL_ADRE_APPROVAL",
 ]
 
 from parcours_doctoral.mail_templates import PARCOURS_DOCTORAL_TAG
@@ -93,6 +97,71 @@ templates.register(
             name='refusal_reason',
             description=_("Refusal reason"),
             example="I don't want this jury.",
+        ),
+    ],
+    tag=PARCOURS_DOCTORAL_TAG,
+)
+
+
+PARCOURS_DOCTORAL_JURY_EMAIL_CDD_REFUSAL = 'osis-parcours-doctoral-jury-cdd-refusal'
+templates.register(
+    PARCOURS_DOCTORAL_JURY_EMAIL_CDD_REFUSAL,
+    description=_("Mail sent to the student when the CDD refuse the jury"),
+    tokens=common_tokens
+    + signataire_tokens
+    + [
+        Token(
+            name='refusal_reason',
+            description=_("Refusal reason"),
+            example="I don't want this jury.",
+        ),
+    ],
+    tag=PARCOURS_DOCTORAL_TAG,
+)
+
+
+PARCOURS_DOCTORAL_JURY_EMAIL_CDD_APPROVAL = 'osis-parcours-doctoral-jury-cdd-approval'
+templates.register(
+    PARCOURS_DOCTORAL_JURY_EMAIL_CDD_APPROVAL,
+    description=_("Mail sent to the student when the CDD approve the jury"),
+    tokens=common_tokens + signataire_tokens,
+    tag=PARCOURS_DOCTORAL_TAG,
+)
+
+
+PARCOURS_DOCTORAL_JURY_EMAIL_ADRE_REFUSAL = 'osis-parcours-doctoral-jury-adre-refusal'
+templates.register(
+    PARCOURS_DOCTORAL_JURY_EMAIL_ADRE_REFUSAL,
+    description=_("Mail sent to the student when ADRE refuse the jury"),
+    tokens=common_tokens
+    + signataire_tokens
+    + [
+        Token(
+            name='refusal_reason',
+            description=_("Refusal reason"),
+            example="I don't want this jury.",
+        ),
+        Token(
+            name='adre_manager_name',
+            description=_("Name of the ADRE manager"),
+            example='John Doe, Jane Doe',
+        ),
+    ],
+    tag=PARCOURS_DOCTORAL_TAG,
+)
+
+
+PARCOURS_DOCTORAL_JURY_EMAIL_ADRE_APPROVAL = 'osis-parcours-doctoral-jury-adre-approval'
+templates.register(
+    PARCOURS_DOCTORAL_JURY_EMAIL_ADRE_APPROVAL,
+    description=_("Mail sent to the student when ADRE approve the jury"),
+    tokens=common_tokens
+    + signataire_tokens
+    + [
+        Token(
+            name='adre_manager_name',
+            description=_("Name of the ADRE manager"),
+            example='John Doe, Jane Doe',
         ),
     ],
     tag=PARCOURS_DOCTORAL_TAG,

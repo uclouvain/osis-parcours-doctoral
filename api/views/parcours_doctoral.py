@@ -65,6 +65,9 @@ class DoctorateAPIView(
         'GET': 'parcours_doctoral.api_view_parcours_doctoral',
     }
 
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
     @extend_schema(
         request=serializers.ParcoursDoctoralDTOSerializer,
         responses=serializers.ParcoursDoctoralDTOSerializer,

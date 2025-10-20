@@ -37,13 +37,16 @@ from django.utils.translation import get_language
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import pgettext_lazy
 from django_bootstrap5.renderers import FieldRenderer
-from osis_document_components.services import get_remote_metadata, get_remote_token
 from osis_document_components.enums import PostProcessingWanted
+from osis_document_components.services import get_remote_metadata, get_remote_token
 
 from base.forms.utils.file_field import PDF_MIME_TYPE
 from base.models.entity_version import EntityVersion
 from base.models.organization import Organization
-from osis_profile.utils.utils import get_superior_institute_queryset, format_school_title
+from osis_profile.utils.utils import (
+    format_school_title,
+    get_superior_institute_queryset,
+)
 from parcours_doctoral.auth.constants import READ_ACTIONS_BY_TAB, UPDATE_ACTIONS_BY_TAB
 from parcours_doctoral.constants import CAMPUSES_UUIDS
 from parcours_doctoral.ddd.domain.model.enums import (
@@ -57,6 +60,7 @@ from parcours_doctoral.ddd.formation.domain.model.enums import (
     ChoixTypeEpreuve,
     StatutActivite,
 )
+from parcours_doctoral.ddd.jury.dtos.jury import MembreJuryDTO
 from parcours_doctoral.ddd.repository.i_parcours_doctoral import formater_reference
 from parcours_doctoral.forms.supervision import MemberSupervisionForm
 from parcours_doctoral.models import Activity, ParcoursDoctoral
@@ -374,7 +378,9 @@ def field_data(
         elif context.get('load_files') is False:
             data = _('Specified') if data else _('Incomplete field')
         elif data:
-            template_string = "{% load osis_document_components %}{% document_visualizer files wanted_post_process='ORIGINAL' %}"
+            template_string = (
+                "{% load osis_document_components %}{% document_visualizer files wanted_post_process='ORIGINAL' %}"
+            )
             template_context = {'files': data}
             data = template.Template(template_string).render(template.Context(template_context))
         else:
@@ -622,3 +628,15 @@ def get_confirmation_status(parcours_doctoral: ParcoursDoctoralDTO):
     ):
         return ChoixStatutParcoursDoctoral[parcours_doctoral.statut].value
     return ChoixStatutParcoursDoctoral.CONFIRMATION_REUSSIE.value
+
+
+@register.simple_tag(takes_context=True)
+def are_jury_member_actions_available(context, membre: MembreJuryDTO):
+    can_reset_signatures = context['request'].user.has_perm(
+        'parcours_doctoral.jury_reset_signatures', context['view'].get_permission_object()
+    )
+    return (
+        (not membre.est_promoteur and membre.role != 'VERIFICATEUR' and membre.role != 'CDD' and membre.role != 'ADRE')
+        or (can_reset_signatures and membre.signature.etat == 'INVITED')
+        or (membre.role == 'PRESIDENT' or membre.role == 'SECRETAIRE' or membre.role == 'MEMBRE')
+    )

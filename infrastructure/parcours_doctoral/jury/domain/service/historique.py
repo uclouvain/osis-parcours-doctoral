@@ -34,6 +34,7 @@ from infrastructure.shared_kernel.personne_connue_ucl.personne_connue_ucl import
 )
 from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoral
+from parcours_doctoral.ddd.jury.domain.model.enums import RoleJury
 from parcours_doctoral.ddd.jury.domain.model.jury import Jury, JuryIdentity, MembreJury
 from parcours_doctoral.ddd.jury.domain.service.i_historique import IHistorique
 from parcours_doctoral.ddd.jury.dtos.jury import AvisDTO
@@ -92,12 +93,20 @@ class Historique(IHistorique):
 
         # Basculer en français pour la traduction de l'état
         with translation.override(settings.LANGUAGE_CODE_FR):
+            if signataire.role == RoleJury.CDD:
+                role = 'gestionnaire CDD'
+            elif signataire.role == RoleJury.CDD:
+                role = 'gestionnaire ADRE'
+            elif signataire.est_promoteur:
+                role = "promoteur"
+            else:
+                role = "membre du jury"
             message_fr = (
                 "{signataire.prenom} {signataire.nom} a {action} la proposition {via_pdf}en tant que {role}".format(
                     signataire=signataire,
                     action="refusé" if avis.motif_refus else "approuvé",
                     via_pdf="via PDF " if avis.pdf else "",
-                    role=("promoteur" if signataire.est_promoteur else "membre du jury"),
+                    role=role,
                 )
             )
             details = []
@@ -111,11 +120,19 @@ class Historique(IHistorique):
 
         # Anglais
         with translation.override(settings.LANGUAGE_CODE_EN):
+            if signataire.role == RoleJury.CDD:
+                role = 'PhD Committee manager'
+            elif signataire.role == RoleJury.CDD:
+                role = 'ADRE manager'
+            elif signataire.est_promoteur:
+                role = "promoter"
+            else:
+                role = "jury member"
             message_en = "{signataire.prenom} {signataire.nom} has {action} the proposition {via_pdf}as {role}".format(
                 signataire=signataire,
                 action="refused" if avis.motif_refus else "approved",
                 via_pdf="via PDF " if avis.pdf else "",
-                role="promoter" if signataire.est_promoteur else "jury member",
+                role=role,
             )
             details = []
             if avis.motif_refus:

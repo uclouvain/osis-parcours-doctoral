@@ -1,4 +1,4 @@
-{% load i18n enums %}
+{% load i18n enums parcours_doctoral %}
 {% comment "License" %}
 * OSIS stands for Open Student Information System. It's an application
 * designed to manage the core business of higher education institutions,
@@ -36,51 +36,153 @@
     {% endif %}
   </em>
 </div>
-{% if form %}
-<div class="btn-group">
-  <button type="button" class="btn btn-default border border-dark-subtle dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    <i class="fa fa-cog"></i> {% trans "Actions" %}
-  </button>
-  <form class="membre-role-form" class="no-prevent-quitting" action="{% url 'parcours_doctoral:update:jury-member:change-role' uuid=jury.uuid member_uuid=membre.uuid %}" method="post">
-    {% csrf_token %}
-    <input type="hidden" name="role">
-  </form>
-  <ul class="dropdown-menu dropdown-menu-end">
-    {% if not membre.est_promoteur and not membre.role == 'PRESIDENT' %}<li><a class="dropdown-item membre-role-submit" href="#" data-role="PRESIDENT">{% trans "Set as president" %}</a></li>{% endif %}
-    {% if not membre.role == 'SECRETAIRE' %}<li><a class="dropdown-item membre-role-submit" href="#" data-role="SECRETAIRE">{% trans "Set as secretary" %}</a></li>{% endif %}
-    {% if not membre.role == 'MEMBRE' %}<li><a class="dropdown-item membre-role-submit" href="#" data-role="MEMBRE">{% trans "Set as member" %}</a></li>{% endif %}
-    {% if not membre.est_promoteur and membre.role != 'VERIFICATEUR' %}
-    <li><a class="dropdown-item" href="{% url 'parcours_doctoral:update:jury-member:update' uuid=jury.uuid member_uuid=membre.uuid %}">{% trans "Update" context 'verb' %}</a></li>
-    <li><a class="dropdown-item" href="#deleteModal-{{ membre.uuid }}" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ membre.uuid }}">{% trans "Remove" context "parcours_doctoral" %}</a></li>
-    {% endif %}
-  </ul>
-</div>
 
-{% if not membre.est_promoteur and membre.role != 'VERIFICATEUR' %}
-<!-- delete modal -->
-<div class="modal fade" id="deleteModal-{{ membre.uuid }}" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel-{{ membre.uuid }}">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <form action="{% url 'parcours_doctoral:update:jury-member:remove' uuid=jury.uuid member_uuid=membre.uuid %}" method="post">
-        {% csrf_token %}
-        <div class="modal-header">
-          <h4 class="modal-title" id="deleteModalLabel-{{ membre.uuid }}">{% trans "Remove?" context "jury member" %}</h4>
-          <button type="button" class="btn-close close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <p>
-            {% blocktrans with prenom=membre.prenom nom=membre.nom trimmed %}
-              Are you sure you want to remove "{{ prenom }} {{ nom }}" from the jury?
-            {% endblocktrans %}
-          </p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default border border-dark-subtle" data-bs-dismiss="modal">{% trans "Close" %}</button>
-          <input type="submit" class="btn btn-danger" value="{% trans 'Confirm' %}">
-        </div>
-      </form>
+{# Action buttons #}
+{% has_perm 'parcours_doctoral.jury_reset_signatures' as can_reset_signatures %}
+{% are_jury_member_actions_available membre as are_actions_available %}
+
+{% if are_actions_available %}
+  <div class="btn-group">
+    <button type="button" class="btn btn-default border border-dark-subtle dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <i class="fa fa-cog"></i> {% trans "Actions" %}
+    </button>
+    <form class="membre-role-form" class="no-prevent-quitting" action="{% url 'parcours_doctoral:update:jury-member:change-role' uuid=jury.uuid member_uuid=membre.uuid %}" method="post">
+      {% csrf_token %}
+      <input type="hidden" name="role">
+    </form>
+    <ul class="dropdown-menu dropdown-menu-end">
+      {% if not membre.est_promoteur and membre.role != 'VERIFICATEUR' and membre.role != 'CDD' and membre.role != 'ADRE' %}
+        <li><a class="dropdown-item" href="{% url 'parcours_doctoral:update:jury-member:update' uuid=jury.uuid member_uuid=membre.uuid %}">
+          <i class="fas fa-pencil"></i> {% trans "Update" context 'verb' %}
+        </a></li>
+        <li><a class="dropdown-item" href="#deleteModal-{{ membre.uuid }}" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ membre.uuid }}">
+          <i class="fas fa-trash"></i> {% trans "Remove" context "parcours_doctoral" %}
+        </a></li>
+
+        {% if can_reset_signatures and membre.signature.etat == 'INVITED' %}
+          <li><hr class="dropdown-divider"></li>
+        {% endif %}
+      {% endif %}
+
+      {% if can_reset_signatures and membre.signature.etat == 'INVITED' %}
+        {% if not membre.est_promoteur or not membre.matricule %}
+          <li>
+            <a class="dropdown-item" href="#" data-bs-toggle="collapse" data-bs-target="#approve-by-pdf-{{ membre.uuid }}">
+              <i class="fas fa-file-circle-check"></i> {% trans "Approve by PDF" %}
+            </a>
+          </li>
+        {% endif %}
+        <li>
+          <a class="dropdown-item" href="#" data-bs-toggle="collapse" data-bs-target="#resend-invite-{{ membre.uuid }}">
+            <i class="fas fa-envelope-open-text"></i> {% trans "Resend invitation" %}
+          </a>
+        </li>
+
+        {% if membre.role == 'PRESIDENT' or membre.role == 'SECRETAIRE' or membre.role == 'MEMBRE' %}
+          <li><hr class="dropdown-divider"></li>
+        {% endif %}
+      {% endif %}
+
+      {% if membre.role == 'PRESIDENT' or membre.role == 'SECRETAIRE' or membre.role == 'MEMBRE' %}
+        {% if not membre.est_promoteur and not membre.role == 'PRESIDENT' %}
+          <li><a class="dropdown-item membre-role-submit" href="#" data-role="PRESIDENT">
+            <i class="fa-solid fa-user-crown"></i> {% trans "Set as president" %}
+          </a></li>
+        {% endif %}
+        {% if not membre.role == 'SECRETAIRE' %}
+          <li><a class="dropdown-item membre-role-submit" href="#" data-role="SECRETAIRE">
+            <i class="fas fa-user-pen"></i> {% trans "Set as secretary" %}
+          </a></li>
+        {% endif %}
+        {% if not membre.role == 'MEMBRE' %}
+          <li><a class="dropdown-item membre-role-submit" href="#" data-role="MEMBRE">
+            <i class="fa-solid fa-user"></i> {% trans "Set as member" %}
+          </a></li>
+        {% endif %}
+      {% endif %}
+    </ul>
+  </div>
+
+  {% if not membre.est_promoteur and membre.role != 'VERIFICATEUR' and membre.role != 'CDD' and membre.role != 'ADRE' %}
+  <!-- delete modal -->
+  <div class="modal fade" id="deleteModal-{{ membre.uuid }}" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel-{{ membre.uuid }}">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <form action="{% url 'parcours_doctoral:update:jury-member:remove' uuid=jury.uuid member_uuid=membre.uuid %}" method="post">
+          {% csrf_token %}
+          <div class="modal-header">
+            <h4 class="modal-title" id="deleteModalLabel-{{ membre.uuid }}">{% trans "Remove?" context "jury member" %}</h4>
+            <button type="button" class="btn-close close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <p>
+              {% blocktrans with prenom=membre.prenom nom=membre.nom trimmed %}
+                Are you sure you want to remove "{{ prenom }} {{ nom }}" from the jury?
+              {% endblocktrans %}
+            </p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default border border-dark-subtle" data-bs-dismiss="modal">{% trans "Close" %}</button>
+            <input type="submit" class="btn btn-danger" value="{% trans 'Confirm' %}">
+          </div>
+        </form>
+      </div>
     </div>
   </div>
-</div>
+  {% endif %}
+
+  {% if can_reset_signatures and membre.signature.etat == 'INVITED' %}
+    <div class="mt-3 panel-group flex-grow-1" style="flex-basis: 100%">
+
+      {% if not membre.est_promoteur or not membre.matricule %}
+        <div class="card collapse" id="approve-by-pdf-{{ membre.uuid }}">
+          <div class="card-body">
+            <h4 class="card-title">{% translate 'Approve by PDF' %}</h4>
+            <form action="{% url 'parcours_doctoral:update:jury-member:approve-by-pdf' uuid=jury.uuid member_uuid=membre.uuid %}" method="post">
+              {% csrf_token %}
+              {{ approve_by_pdf_form.pdf }}
+              <button type="submit" class="btn btn-primary pull-right">
+                {% blocktrans with first_name=membre.prenom last_name=membre.nom trimmed %}
+                  Approve on behalf of {{ first_name }} {{ last_name }}
+                {% endblocktrans %}
+              </button>
+            </form>
+          </div>
+        </div>
+      {% endif %}
+
+      <div class="card collapse" id="resend-invite-{{ membre.uuid }}">
+        <div class="card-body">
+          <h4 class="card-title">{% translate 'Resend invitation' %}</h4>
+          <form action="{% url 'parcours_doctoral:update:jury-member:resend-invite' uuid=jury.uuid member_uuid=membre.uuid %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="uuid_membre" value="{{ membre.uuid }}" />
+            <button type="submit" class="btn btn-primary pull-right">
+              {% trans "Confirm" %}
+            </button>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  {% endif %}
 {% endif %}
+
+{% if membre.signature.motif_refus and membre.signature.etat == 'DECLINED' %}
+  <blockquote><strong>{% trans "Grounds for denied" %}</strong>
+    {{ membre.signature.motif_refus|linebreaks }}</blockquote>
+{% endif %}
+
+{% if membre.signature.commentaire_externe %}
+  <blockquote><strong>{% trans "Comment to the candidate:" %}</strong>
+    {{ membre.signature.commentaire_externe|linebreaks }}</blockquote>
+{% endif %}
+
+{% if membre.signature.commentaire_interne %}
+  <blockquote><strong>{% trans "Internal comment:" %}</strong>
+    {{ membre.signature.commentaire_interne|linebreaks }}</blockquote>
+{% endif %}
+
+{% if membre.signature.pdf and membre.signature.etat == 'APPROVED' %}
+  {% field_data "" membre.signature.pdf %}
 {% endif %}

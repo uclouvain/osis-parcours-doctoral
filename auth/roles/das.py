@@ -47,5 +47,6 @@ class SectorAdministrativeDirector(RoleModel):
     def rule_set(cls):
         ruleset = {
             'parcours_doctoral.change_auditors_configuration': rules.always_allow,
+            'parcours_doctoral.view_parcours_doctoral_home': rules.always_allow,
         }
         return RuleSet(ruleset)

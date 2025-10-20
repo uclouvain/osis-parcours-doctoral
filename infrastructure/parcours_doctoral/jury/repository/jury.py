@@ -49,16 +49,16 @@ from parcours_doctoral.ddd.jury.domain.model.jury import (
     MembreJury,
     SignatureMembre,
 )
+from parcours_doctoral.ddd.jury.domain.validator.exceptions import (
+    JuryNonTrouveException,
+    MembreNonTrouveDansJuryException,
+)
 from parcours_doctoral.ddd.jury.dtos.jury import (
     JuryDTO,
     MembreJuryDTO,
     SignatureMembreJuryDTO,
 )
 from parcours_doctoral.ddd.jury.repository.i_jury import IJuryRepository
-from parcours_doctoral.ddd.jury.validator.exceptions import (
-    JuryNonTrouveException,
-    MembreNonTrouveDansJuryException,
-)
 from parcours_doctoral.models import ActorType, ParcoursDoctoralSupervisionActor
 from parcours_doctoral.models.jury import JuryActor
 from parcours_doctoral.models.parcours_doctoral import ParcoursDoctoral

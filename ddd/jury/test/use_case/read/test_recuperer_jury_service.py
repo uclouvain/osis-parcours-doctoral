@@ -28,8 +28,10 @@ import datetime
 from django.test import SimpleTestCase
 
 from parcours_doctoral.ddd.jury.commands import RecupererJuryQuery
+from parcours_doctoral.ddd.jury.domain.validator.exceptions import (
+    JuryNonTrouveException,
+)
 from parcours_doctoral.ddd.jury.dtos.jury import JuryDTO
-from parcours_doctoral.ddd.jury.validator.exceptions import JuryNonTrouveException
 from parcours_doctoral.infrastructure.message_bus_in_memory import (
     message_bus_in_memory_instance,
 )

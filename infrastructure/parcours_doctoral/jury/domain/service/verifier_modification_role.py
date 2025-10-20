@@ -31,16 +31,19 @@ from parcours_doctoral.auth.roles.auditor import Auditor
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import (
     ParcoursDoctoralIdentity,
 )
-from parcours_doctoral.ddd.domain.validator.exceptions import ParcoursDoctoralNonTrouveException
-from parcours_doctoral.ddd.jury.validator.exceptions import (
-    ModificationRoleImpossibleSSHException,
-    ModificationRoleImpossibleSSSException,
-    ModificationRoleImpossibleSSTException,
-    RolesNonAttribueException,
+from parcours_doctoral.ddd.domain.validator.exceptions import (
+    ParcoursDoctoralNonTrouveException,
 )
 from parcours_doctoral.ddd.jury.domain.model.enums import RoleJury
 from parcours_doctoral.ddd.jury.domain.service.i_verifier_modification_role import (
     IVerifierModificationRoleService,
+)
+from parcours_doctoral.ddd.jury.domain.validator.exceptions import (
+    ModificationRoleImpossibleSSHException,
+    ModificationRoleImpossibleSSSException,
+    ModificationRoleImpossibleSSTException,
+    RolesNonAttribueException,
+    TropDeRolesAttribuesException,
 )
 from parcours_doctoral.models import ParcoursDoctoral
 
@@ -128,3 +131,23 @@ class VerifierModificationRoleServiceService(IVerifierModificationRoleService):
             # The auditor can change the roles
             if Auditor.objects.filter(person__global_id=matricule_auteur).exists():
                 raise RolesNonAttribueException
+
+    @classmethod
+    def verifier_roles_pour_cdd(
+        cls,
+        parcours_doctoral_identity: 'ParcoursDoctoralIdentity',
+    ) -> None:
+        parcours_doctoral = cls._get_parcours_doctoral(parcours_doctoral_identity)
+
+        presidents = [
+            actor for actor in parcours_doctoral.jury_group.actors.all() if actor.juryactor.role == RoleJury.PRESIDENT.name
+        ]
+        secretaries = [
+            actor for actor in parcours_doctoral.jury_group.actors.all() if actor.juryactor.role == RoleJury.SECRETAIRE.name
+        ]
+
+        if not presidents or not secretaries:
+            raise RolesNonAttribueException
+
+        if len(presidents) > 1 or len(secretaries) > 1:
+            raise TropDeRolesAttribuesException

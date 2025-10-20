@@ -146,7 +146,7 @@ class JuryViewTestCase(TestCase):
             data={
                 'institution': 'Nouveau membre',
                 'matricule': '',
-                'institution_principale': JuryMembreForm.InstitutionPrincipaleChoices.UCL.name,
+                'institution_principale': JuryMembreForm.InstitutionPrincipaleChoices.OTHER.name,
                 'autre_institution': 'autre institution',
                 'pays': self.country.id,
                 'nom': 'nom',

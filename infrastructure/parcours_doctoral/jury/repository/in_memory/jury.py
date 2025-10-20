@@ -28,6 +28,10 @@ from typing import List
 from base.ddd.utils.in_memory_repository import InMemoryGenericRepository
 from parcours_doctoral.ddd.jury.domain.model.enums import ChoixEtatSignature
 from parcours_doctoral.ddd.jury.domain.model.jury import Jury, JuryIdentity
+from parcours_doctoral.ddd.jury.domain.validator.exceptions import (
+    JuryNonTrouveException,
+    MembreNonTrouveDansJuryException,
+)
 from parcours_doctoral.ddd.jury.dtos.jury import (
     JuryDTO,
     MembreJuryDTO,
@@ -35,10 +39,6 @@ from parcours_doctoral.ddd.jury.dtos.jury import (
 )
 from parcours_doctoral.ddd.jury.repository.i_jury import IJuryRepository
 from parcours_doctoral.ddd.jury.test.factory.jury import JuryFactory, MembreJuryFactory
-from parcours_doctoral.ddd.jury.validator.exceptions import (
-    JuryNonTrouveException,
-    MembreNonTrouveDansJuryException,
-)
 
 
 class JuryInMemoryRepository(InMemoryGenericRepository, IJuryRepository):
@@ -141,7 +141,7 @@ class JuryInMemoryRepository(InMemoryGenericRepository, IJuryRepository):
             membres=[
                 MembreJuryDTO(
                     uuid=membre.uuid,
-                    role=str(membre.role),
+                    role=membre.role.name,
                     est_promoteur=membre.est_promoteur,
                     est_promoteur_de_reference=membre.est_promoteur_de_reference,
                     matricule=membre.matricule,
@@ -150,9 +150,9 @@ class JuryInMemoryRepository(InMemoryGenericRepository, IJuryRepository):
                     pays=membre.pays,
                     nom=membre.nom,
                     prenom=membre.prenom,
-                    titre=str(membre.titre),
+                    titre=membre.titre.name,
                     justification_non_docteur=membre.justification_non_docteur,
-                    genre=str(membre.genre),
+                    genre=membre.genre.name,
                     email=membre.email,
                     langue=membre.langue,
                     signature=SignatureMembreJuryDTO(

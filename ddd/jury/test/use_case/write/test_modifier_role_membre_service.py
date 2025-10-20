@@ -29,12 +29,12 @@ from base.ddd.utils.business_validator import MultipleBusinessExceptions
 from parcours_doctoral.ddd.jury.commands import ModifierRoleMembreCommand
 from parcours_doctoral.ddd.jury.domain.model.enums import RoleJury
 from parcours_doctoral.ddd.jury.domain.model.jury import JuryIdentity
-from parcours_doctoral.ddd.jury.test.factory.jury import MembreJuryFactory
-from parcours_doctoral.ddd.jury.validator.exceptions import (
+from parcours_doctoral.ddd.jury.domain.validator.exceptions import (
     JuryNonTrouveException,
     MembreNonTrouveDansJuryException,
     PromoteurPresidentException,
 )
+from parcours_doctoral.ddd.jury.test.factory.jury import MembreJuryFactory
 from parcours_doctoral.infrastructure.message_bus_in_memory import (
     message_bus_in_memory_instance,
 )

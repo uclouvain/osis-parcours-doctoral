@@ -43,3 +43,23 @@ class NotificationInMemory(INotification):
     @classmethod
     def notifier_refus(cls, parcours_doctoral: ParcoursDoctoral, signataire: MembreJury, avis: AvisDTO) -> None:
         pass
+
+    @classmethod
+    def notifier_approbation_cdd(
+        cls, parcours_doctoral: ParcoursDoctoral, signataire: MembreJury, avis: AvisDTO
+    ) -> None:
+        pass
+
+    @classmethod
+    def notifier_refus_cdd(cls, parcours_doctoral: ParcoursDoctoral, signataire: MembreJury, avis: AvisDTO) -> None:
+        pass
+
+    @classmethod
+    def notifier_approbation_adre(
+        cls, parcours_doctoral: ParcoursDoctoral, signataire: MembreJury, avis: AvisDTO
+    ) -> None:
+        pass
+
+    @classmethod
+    def notifier_refus_adre(cls, parcours_doctoral: ParcoursDoctoral, signataire: MembreJury, avis: AvisDTO) -> None:
+        pass
