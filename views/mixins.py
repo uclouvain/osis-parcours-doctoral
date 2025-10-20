@@ -73,7 +73,7 @@ class ParcoursDoctoralViewMixin(LoginRequiredMixin, PermissionRequiredMixin, Con
 
     @property
     def parcours_doctoral_uuid(self) -> str:
-        return self.kwargs.get('uuid', '')
+        return str(self.kwargs.get('uuid', ''))
 
     @property
     def parcours_doctoral(self) -> ParcoursDoctoral:

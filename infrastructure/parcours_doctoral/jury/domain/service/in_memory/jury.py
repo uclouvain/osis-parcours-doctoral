@@ -55,3 +55,53 @@ class JuryInMemoryService(IJuryService):
             uuid='uuid-verificateur',
             role=RoleJury.VERIFICATEUR,
         )
+
+    @classmethod
+    def recuperer_gestionnaire_cdd(
+        cls,
+        parcours_doctoral_id: ParcoursDoctoralIdentity,
+        matricule: str,
+    ) -> MembreJury:
+        return MembreJury(
+            est_promoteur=False,
+            est_promoteur_de_reference=False,
+            matricule='123123',
+            institution='',
+            autre_institution='',
+            pays='BE',
+            nom='Doe',
+            prenom='John',
+            titre=None,
+            justification_non_docteur='',
+            genre=GenreMembre.AUTRE,
+            langue='FR',
+            email='email@example.org',
+            signature=SignatureMembre(),
+            uuid='uuid-cdd',
+            role=RoleJury.CDD,
+        )
+
+    @classmethod
+    def recuperer_gestionnaire_adre(
+        cls,
+        parcours_doctoral_id: ParcoursDoctoralIdentity,
+        matricule: str,
+    ) -> MembreJury:
+        return MembreJury(
+            est_promoteur=False,
+            est_promoteur_de_reference=False,
+            matricule='789789',
+            institution='',
+            autre_institution='',
+            pays='BE',
+            nom='Doe',
+            prenom='John',
+            titre=None,
+            justification_non_docteur='',
+            genre=GenreMembre.AUTRE,
+            langue='FR',
+            email='email@example.org',
+            signature=SignatureMembre(),
+            uuid='uuid-adre',
+            role=RoleJury.ADRE,
+        )

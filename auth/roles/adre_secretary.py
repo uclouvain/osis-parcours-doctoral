@@ -65,10 +65,6 @@ class AdreSecretary(RoleModel):
             'parcours_doctoral.view_languages': rules.always_allow,
             'parcours_doctoral.view_confirmation': is_related_to_an_admission,
             'parcours_doctoral.view_supervision': rules.always_allow,
-            'parcours_doctoral.add_supervision_member': has_valid_enrollment,
-            'parcours_doctoral.edit_external_supervision_member': has_valid_enrollment,
-            'parcours_doctoral.remove_supervision_member': has_valid_enrollment,
-            'parcours_doctoral.approve_member_by_pdf': has_valid_enrollment,
             'parcours_doctoral.upload_pdf_confirmation': is_related_to_an_admission & has_valid_enrollment,
             'parcours_doctoral.view_historyentry': rules.always_allow,
             'parcours_doctoral.send_message': rules.always_allow,
@@ -77,9 +73,5 @@ class AdreSecretary(RoleModel):
             'parcours_doctoral.view_doctoral_training': rules.always_allow,
             'parcours_doctoral.view_complementary_training': rules.always_allow,
             'parcours_doctoral.view_course_enrollment': rules.always_allow,
-            'parcours_doctoral.change_activity': has_valid_enrollment,
-            'parcours_doctoral.delete_activity': has_valid_enrollment,
-            'parcours_doctoral.refuse_activity': has_valid_enrollment,
-            'parcours_doctoral.restore_activity': has_valid_enrollment,
         }
         return RuleSet(ruleset)

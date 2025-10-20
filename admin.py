@@ -40,7 +40,8 @@ from osis_mail_template.admin import MailTemplateAdmin
 from base.models.entity_version import EntityVersion
 from education_group.contrib.admin import EducationGroupRoleModelAdmin
 from osis_role.contrib.admin import RoleModelAdmin
-from parcours_doctoral.auth.roles.adre import AdreSecretary
+from parcours_doctoral.auth.roles.adre_manager import AdreManager
+from parcours_doctoral.auth.roles.adre_secretary import AdreSecretary
 from parcours_doctoral.auth.roles.auditor import Auditor
 from parcours_doctoral.auth.roles.cdd_configurator import CddConfigurator
 from parcours_doctoral.auth.roles.das import SectorAdministrativeDirector
@@ -235,7 +236,9 @@ class CddMailTemplateAdmin(MailTemplateAdmin):
         return resolve_url(f'parcours_doctoral:config:cdd-mail-template:preview', identifier=obj.identifier, pk=obj.pk)
 
 
-@admin.register(AdreSecretary, JurySecretary, DoctorateReader, Student, JuryMember, SectorAdministrativeDirector)
+@admin.register(
+    AdreManager, AdreSecretary, JurySecretary, DoctorateReader, Student, JuryMember, SectorAdministrativeDirector
+)
 class HijackRoleModelAdmin(HijackUserAdminMixin, RoleModelAdmin):
     list_select_related = ['person__user']
 

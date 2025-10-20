@@ -50,13 +50,13 @@ class JuryMember(RoleModel):
     def rule_set(cls):
         ruleset = {
             # A jury member can view as long as he belongs to the jury
-            'parcours_doctoral.view_parcours_doctoral': is_part_of_jury,
-            'parcours_doctoral.view_project': is_part_of_jury,
-            'parcours_doctoral.view_cotutelle': is_part_of_jury & is_related_to_an_admission,
-            'parcours_doctoral.view_funding': is_part_of_jury,
-            'parcours_doctoral.view_supervision': is_part_of_jury,
-            'parcours_doctoral.view_confirmation': is_part_of_jury & is_related_to_an_admission,
-            'parcours_doctoral.view_jury': is_part_of_jury,
-            'parcours_doctoral.approve_jury': is_part_of_jury & is_jury_signing_in_progress,
+            'parcours_doctoral.api_view_parcours_doctoral': is_part_of_jury,
+            'parcours_doctoral.api_view_project': is_part_of_jury,
+            'parcours_doctoral.api_view_cotutelle': is_part_of_jury & is_related_to_an_admission,
+            'parcours_doctoral.api_view_funding': is_part_of_jury,
+            'parcours_doctoral.api_view_supervision': is_part_of_jury,
+            'parcours_doctoral.api_view_confirmation': is_part_of_jury & is_related_to_an_admission,
+            'parcours_doctoral.api_view_jury': is_part_of_jury,
+            'parcours_doctoral.api_approve_jury': is_part_of_jury & is_jury_signing_in_progress,
         }
         return RuleSet(ruleset)

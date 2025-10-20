@@ -8,7 +8,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ("reference", "0019_scholarship"),
-        ("parcours_doctoral", "0017_assessmentenrollment_late_unenrollment_and_more"),
+        ("parcours_doctoral", "0018_activity_learning_class_year"),
     ]
 
     operations = [

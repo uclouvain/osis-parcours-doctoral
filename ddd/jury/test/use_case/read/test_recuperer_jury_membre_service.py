@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -26,11 +26,11 @@
 from django.test import SimpleTestCase
 
 from parcours_doctoral.ddd.jury.commands import RecupererJuryMembreQuery
-from parcours_doctoral.ddd.jury.dtos.jury import MembreJuryDTO
-from parcours_doctoral.ddd.jury.validator.exceptions import (
+from parcours_doctoral.ddd.jury.domain.validator.exceptions import (
     JuryNonTrouveException,
     MembreNonTrouveDansJuryException,
 )
+from parcours_doctoral.ddd.jury.dtos.jury import MembreJuryDTO
 from parcours_doctoral.infrastructure.message_bus_in_memory import (
     message_bus_in_memory_instance,
 )

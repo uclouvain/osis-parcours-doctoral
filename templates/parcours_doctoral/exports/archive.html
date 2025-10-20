@@ -146,7 +146,7 @@
       {% if membre.est_promoteur %}{% translate "Supervisor" %}{% else %}{% translate "CA Member" %} : {% endif %}
       {% if membre.titre and membre.titre %}{{ membre.titre|enum_display:'TitreMembre' }} {% endif %}
       {{ membre.nom }} {{ membre.prenom }}
-      {% if membre.role %}{{ membre.role|enum_display:'RoleJury' }} {% endif %}
+      {% if membre.role %}<i>{{ membre.role|enum_display:'RoleJury' }}</i> {% endif %}
       {% if membre.institution %} - {{ membre.institution }}{% endif %}
       {% if membre.ville %} - {{ membre.ville }}{% endif %}
       {% if membre.pays %} - {{ membre.pays }}{% endif %}

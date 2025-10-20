@@ -68,7 +68,7 @@ class JuryPreparationForm(forms.Form):
         label=_("Defense language"),
         required=False,
         widget=autocomplete.ListSelect2(
-            url="admission:autocomplete:language",
+            url="language-autocomplete",
             attrs={
                 **DEFAULT_AUTOCOMPLETE_WIDGET_ATTRS,
             },
@@ -96,4 +96,4 @@ class JuryPreparationForm(forms.Form):
             self.fields[field_name].choices = choices
 
         initialize_lang_field('langue_redaction')
-        initialize_lang_field('langue_redaction')
+        initialize_lang_field('langue_soutenance')

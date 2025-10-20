@@ -26,16 +26,15 @@
 import attr
 
 from base.ddd.utils.business_validator import BusinessValidator
-from parcours_doctoral.ddd.jury.domain.model.enums import TitreMembre
-from parcours_doctoral.ddd.jury.validator.exceptions import (
-    NonDocteurSansJustificationException,
+from parcours_doctoral.ddd.jury.domain.validator.exceptions import (
+    MembreExterneSansPaysException,
 )
 
 
 @attr.dataclass(frozen=True, slots=True)
-class ShouldNonDocteurAvoirJustification(BusinessValidator):
+class ShouldMembreExterneAvoirPays(BusinessValidator):
     membre: 'MembreJury'
 
     def validate(self, *args, **kwargs):
-        if self.membre.titre == TitreMembre.NON_DOCTEUR and not self.membre.justification_non_docteur:
-            raise NonDocteurSansJustificationException
+        if not self.membre.est_promoteur and not self.membre.matricule and not self.membre.pays:
+            raise MembreExterneSansPaysException

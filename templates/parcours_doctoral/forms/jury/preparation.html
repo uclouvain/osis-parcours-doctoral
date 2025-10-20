@@ -37,11 +37,21 @@
   <div class="row">
     <div class="col-md-4">
       {% trans 'Information about a potential cotutelle are to be inputted in the "Research" part.' as cotutelle_tooltip %}
-      {% field_data _("Cotutelle thesis") cotutelle.cotutelle tooltip=cotutelle_tooltip %}
+      {% if cotutelle.cotutelle %}
+        {% field_data _("Cotutelle thesis") cotutelle.cotutelle tooltip=cotutelle_tooltip %}
+      {% else %}
+        {% field_data _("Cotutelle thesis") _("No") tooltip=cotutelle_tooltip %}
+      {% endif %}
     </div>
     {% if cotutelle.cotutelle %}
     <div class="col-md-4">
-      {% field_data _("Partner institution") cotutelle.institution %}
+      {% if cotutelle.autre_institution %}
+        {% field_data _("Partner institution name") cotutelle.autre_institution_nom %}
+        {% field_data _("Partner institution address") cotutelle.autre_institution_adresse %}
+      {% else %}
+        {% get_superior_institute_name cotutelle.institution as institute_name %}
+        {% field_data _("Partner institution") institute_name %}
+      {% endif %}
     </div>
     {% endif %}
   </div>

@@ -23,38 +23,22 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from abc import abstractmethod
+import attr
 
-from osis_common.ddd import interface
-from parcours_doctoral.ddd.domain.model.parcours_doctoral import (
-    ParcoursDoctoralIdentity,
+from base.ddd.utils.business_validator import BusinessValidator
+from parcours_doctoral.ddd.jury.domain.validator.exceptions import (
+    MembreNonTrouveDansJuryException,
 )
-from parcours_doctoral.ddd.jury.domain.model.jury import MembreJury
 
 
-class IJuryService(interface.DomainService):
-    @classmethod
-    @abstractmethod
-    def recuperer_verificateur(
-        cls,
-        parcours_doctoral_id: ParcoursDoctoralIdentity,
-    ) -> MembreJury:
-        raise NotImplementedError
+@attr.dataclass(frozen=True, slots=True)
+class ShouldMembreEtreDansJuryValidator(BusinessValidator):
+    uuid_membre: str
+    jury: 'Jury'
 
-    @classmethod
-    @abstractmethod
-    def recuperer_gestionnaire_cdd(
-        cls,
-        parcours_doctoral_id: ParcoursDoctoralIdentity,
-        matricule: str,
-    ) -> MembreJury:
-        raise NotImplementedError
-
-    @classmethod
-    @abstractmethod
-    def recuperer_gestionnaire_adre(
-        cls,
-        parcours_doctoral_id: ParcoursDoctoralIdentity,
-        matricule: str,
-    ) -> MembreJury:
-        raise NotImplementedError
+    def validate(self):
+        for membre in self.jury.membres:
+            if membre.uuid == self.uuid_membre:
+                break
+        else:
+            raise MembreNonTrouveDansJuryException(self.uuid_membre, self.jury)

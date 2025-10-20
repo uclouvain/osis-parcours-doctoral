@@ -26,6 +26,7 @@
 import attr
 
 from base.ddd.utils.business_validator import BusinessValidator
+from parcours_doctoral.ddd.jury.domain.model.enums import RoleJury
 from parcours_doctoral.ddd.jury.domain.validator.exceptions import (
     NotEnoughMembersException,
 )
@@ -38,5 +39,10 @@ class ShouldJuryAvoirAssezDeMembres(BusinessValidator):
     jury: 'Jury'
 
     def validate(self, *args, **kwargs):  # pragma: no cover
-        if len(self.jury.membres) < NOMBRE_MINIMUM_JURY_MEMBERS:
+        membres = [
+            membre
+            for membre in self.jury.membres
+            if membre.role in {RoleJury.MEMBRE, RoleJury.SECRETAIRE, RoleJury.PRESIDENT}
+        ]
+        if len(membres) < NOMBRE_MINIMUM_JURY_MEMBERS:
             raise NotEnoughMembersException

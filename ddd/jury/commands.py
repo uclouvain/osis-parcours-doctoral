@@ -45,11 +45,11 @@ class RecupererJuryMembreQuery(interface.QueryRequest):
 @attr.dataclass(frozen=True, slots=True)
 class ModifierJuryCommand(interface.CommandRequest):
     uuid_parcours_doctoral: str
-    titre_propose: str
-    formule_defense: str
-    date_indicative: str
-    langue_redaction: str
-    langue_soutenance: str
+    titre_propose: Optional[str]
+    formule_defense: Optional[str]
+    date_indicative: Optional[str]
+    langue_redaction: Optional[str]
+    langue_soutenance: Optional[str]
     commentaire: Optional[str]
 
 
@@ -147,3 +147,37 @@ class RenvoyerInvitationSignatureCommand(interface.CommandRequest):
 class ReinitialiserSignaturesCommand(interface.CommandRequest):
     uuid_jury: str
     matricule_auteur: str
+
+
+@attr.dataclass(frozen=True, slots=True)
+class ApprouverJuryParCddCommand(interface.CommandRequest):
+    uuid_jury: str
+    matricule_auteur: str
+    commentaire_interne: Optional[str] = ''
+    commentaire_externe: Optional[str] = ''
+
+
+@attr.dataclass(frozen=True, slots=True)
+class RefuserJuryParCddCommand(interface.CommandRequest):
+    uuid_jury: str
+    matricule_auteur: str
+    motif_refus: str
+    commentaire_interne: Optional[str] = ''
+    commentaire_externe: Optional[str] = ''
+
+
+@attr.dataclass(frozen=True, slots=True)
+class ApprouverJuryParAdreCommand(interface.CommandRequest):
+    uuid_jury: str
+    matricule_auteur: str
+    commentaire_interne: Optional[str] = ''
+    commentaire_externe: Optional[str] = ''
+
+
+@attr.dataclass(frozen=True, slots=True)
+class RefuserJuryParAdreCommand(interface.CommandRequest):
+    uuid_jury: str
+    matricule_auteur: str
+    motif_refus: str
+    commentaire_interne: Optional[str] = ''
+    commentaire_externe: Optional[str] = ''

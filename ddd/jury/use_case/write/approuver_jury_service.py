@@ -62,6 +62,7 @@ def approuver_jury(
         matricule_auteur=cmd.matricule_auteur,
     )
     jury.approuver(signataire, cmd.commentaire_interne, cmd.commentaire_externe)
+    parcours_doctoral.changer_statut_si_approbation_jury(jury)
 
     # THEN
     parcours_doctoral_repository.save(parcours_doctoral)

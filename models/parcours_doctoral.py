@@ -54,7 +54,7 @@ from base.models.education_group_year import EducationGroupYear
 from base.models.entity_version import EntityVersion
 from base.models.enums.education_group_categories import Categories
 from base.models.enums.education_group_types import TrainingType
-from base.models.enums.entity_type import SECTOR
+from base.models.enums.entity_type import FACULTY, SECTOR
 from base.models.person import Person
 from base.models.student import Student
 from base.utils.cte import CTESubquery
@@ -186,6 +186,20 @@ class ParcoursDoctoralQuerySet(models.QuerySet):
                     output_field=IntegerField(),
                 )
             },
+        )
+
+    def annotate_faculte_formation(self):
+        cte = EntityVersion.objects.with_children(entity_id=OuterRef("training__management_entity_id"))
+        faculty_subqs = (
+            cte.join(EntityVersion, id=cte.col.id)
+            .with_cte(cte)
+            .filter(entity_type=FACULTY)
+            .exclude(end_date__lte=date.today())
+        )
+
+        return self.annotate(
+            intitule_faculte_formation=CTESubquery(faculty_subqs.values("title")[:1]),
+            sigle_faculte_formation=CTESubquery(faculty_subqs.values("acronym")[:1]),
         )
 
     def annotate_secteur_formation(self):

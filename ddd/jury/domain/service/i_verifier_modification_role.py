@@ -49,3 +49,11 @@ class IVerifierModificationRoleService(interface.DomainService):
         matricule_auteur: str,
     ) -> None:
         raise NotImplementedError
+
+    @classmethod
+    @abstractmethod
+    def verifier_roles_pour_cdd(
+        cls,
+        parcours_doctoral_identity: 'ParcoursDoctoralIdentity',
+    ) -> None:
+        raise NotImplementedError
