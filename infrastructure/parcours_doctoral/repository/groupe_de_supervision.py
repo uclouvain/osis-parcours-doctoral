@@ -304,6 +304,7 @@ class GroupeDeSupervisionRepository(IGroupeDeSupervisionRepository):
         if member.type == ActorType.PROMOTER.name:
             # TODO Supprimer le membre lié dans le jury
             # JuryActor.objects.filter().delete()
+            pass
         member.delete()
 
     @classmethod
