@@ -547,12 +547,12 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
                     sigle=management_entity['acronym'],
                     code_secteur=sector_entity['acronym'] if sector_entity else '',
                     intitule_secteur=sector_entity['title'] if sector_entity else '',
-                    lieu=management_entity['entity__location'],
-                    code_postal=management_entity['entity__postal_code'],
-                    ville=management_entity['entity__city'],
+                    lieu=management_entity['entity__location'] if management_entity['entity__location'] else '',
+                    code_postal=management_entity['entity__postal_code'] if management_entity['entity__postal_code'] else '',
+                    ville=management_entity['entity__city'] if management_entity['entity__city'] else '',
                     pays=management_entity['entity__country__iso_code'],
                     nom_pays=management_entity[i18n_fields['country_name']],
-                    numero_telephone=management_entity['entity__phone'],
+                    numero_telephone=management_entity['entity__phone'] if management_entity['entity__phone'] else '',
                 )
                 if management_entity
                 else EntiteGestionDTO()

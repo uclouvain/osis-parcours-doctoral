@@ -213,7 +213,7 @@ class AuditorAutocomplete(LoginRequiredMixin, autocomplete.Select2QuerySetView):
                 ),
             )
             .filter(Q(name=q) | Q(global_id__contains=q))
-            .exclude(student__isnull=False)
+            .exclude(Q(student__isnull=False) | Q(global_id__isnull=True))
             .order_by('last_name', 'first_name')
             .distinct()
         )

@@ -63,7 +63,7 @@ from parcours_doctoral.utils.url import (
     get_parcours_doctoral_link_back,
     get_parcours_doctoral_link_front,
 )
-from reference.services.mandates import MandateFunctionEnum, MandatesService
+from reference.services.mandates import MandateFunctionEnum, MandatesService, MandatesException
 
 SSH_SECTOR_ACRONYM = 'SSH'
 
@@ -314,19 +314,22 @@ class Notification(INotification):
             .get(uuid=parcours_doctoral.entity_id.uuid)
         )
         if parcours_doctoral.sigle_secteur_formation == SSH_SECTOR_ACRONYM:
-            doyens = MandatesService.get(
-                function=MandateFunctionEnum.DOYEN,
-                entity_acronym=parcours_doctoral.sigle_faculte_formation,
-            )
-            today = datetime.date.today()
-            for doyen in doyens:
-                if doyen['date_end'] is not None:
-                    date_parts = doyen['date_end'].split('/')
-                    date_end = datetime.date(int(date_parts[2]), int(date_parts[1]), int(date_parts[0]))
-                    if date_end > today:
+            try:
+                doyens = MandatesService.get(
+                    function=MandateFunctionEnum.DOYEN,
+                    entity_acronym=parcours_doctoral.sigle_faculte_formation,
+                )
+                today = datetime.date.today()
+                for doyen in doyens:
+                    if doyen['date_end'] is not None:
+                        date_parts = doyen['date_end'].split('/')
+                        date_end = datetime.date(int(date_parts[2]), int(date_parts[1]), int(date_parts[0]))
+                        if date_end > today:
+                            cc_recipients.append(doyen['email'])
+                    else:
                         cc_recipients.append(doyen['email'])
-                else:
-                    cc_recipients.append(doyen['email'])
+            except MandatesException:
+                pass
         email_message = generate_email(
             PARCOURS_DOCTORAL_JURY_EMAIL_ADRE_APPROVAL,
             parcours_doctoral_instance.student.language,
