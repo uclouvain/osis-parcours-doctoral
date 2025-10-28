@@ -34,10 +34,11 @@ from osis_role.errors import predicate_failed_msg
 from parcours_doctoral.ddd.domain.model.enums import (
     STATUTS_DOCTORAT_DEFENSE_PRIVEE_EN_COURS,
     STATUTS_DOCTORAT_EPREUVE_CONFIRMATION_EN_COURS,
+    STATUTS_DOCTORAT_RECEVABILITE_EN_COURS,
     STATUTS_DOCTORAT_SOUTENANCE_PUBLIQUE_EN_COURS,
     ChoixStatutParcoursDoctoral,
 )
-from parcours_doctoral.ddd.jury.domain.model.enums import RoleJury
+from parcours_doctoral.ddd.jury.domain.model.enums import FormuleDefense, RoleJury
 from parcours_doctoral.models import ActorType
 from parcours_doctoral.models.parcours_doctoral import ParcoursDoctoral
 
@@ -132,6 +133,24 @@ def private_defense_is_authorised(self, user: User, obj: ParcoursDoctoral):
 @predicate_failed_msg(message=_("The confirmation paper is not in progress"))
 def confirmation_paper_in_progress(self, user: User, obj: ParcoursDoctoral):
     return obj.status in STATUTS_DOCTORAT_EPREUVE_CONFIRMATION_EN_COURS
+
+
+@predicate(bind=True)
+@predicate_failed_msg(message=_("The defense method must be the formula 1."))
+def defense_method_is_formula_1(self, user: User, obj: ParcoursDoctoral):
+    return obj.defense_method == FormuleDefense.FORMULE_1.name
+
+
+@predicate(bind=True)
+@predicate_failed_msg(message=_("The defense method must be the formula 2."))
+def defense_method_is_formula_2(self, user: User, obj: ParcoursDoctoral):
+    return obj.defense_method == FormuleDefense.FORMULE_2.name
+
+
+@predicate(bind=True)
+@predicate_failed_msg(message=_("The admissibility is not in progress"))
+def admissibility_in_progress(self, user: User, obj: ParcoursDoctoral):
+    return obj.status in STATUTS_DOCTORAT_RECEVABILITE_EN_COURS
 
 
 @predicate(bind=True)

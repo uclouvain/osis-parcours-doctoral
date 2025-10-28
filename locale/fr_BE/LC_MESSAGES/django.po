@@ -393,6 +393,25 @@ msgctxt "parcours_doctoral filter"
 msgid "Additional training"
 msgstr "Formation complémentaire"
 
+msgctxt "dashboard-category"
+msgid "Admissibility (formula 2)"
+msgstr "Recevabilité (formule 2)"
+
+msgid "Admissibility minutes"
+msgstr "Procès verbal de recevabilité"
+
+msgid "Admissibility minutes canvas"
+msgstr "Canevas du procès verbal de recevabilité"
+
+msgid "Admissibility not activated."
+msgstr "Recevabilité non activée."
+
+msgid "Admissibility not completed."
+msgstr "Recevabilité non complétée."
+
+msgid "Admissibility not found."
+msgstr "Recevabilité non trouvée."
+
 msgid "Admission"
 msgstr "Admission"
 
@@ -990,6 +1009,10 @@ msgstr ""
 msgid "Created"
 msgstr "Créé"
 
+msgctxt "admissibility"
+msgid "Created at"
+msgstr "Créée le"
+
 msgctxt "admission"
 msgid "Created at"
 msgstr "Créé le"
@@ -1062,11 +1085,17 @@ msgstr "Date"
 msgid "Date - Filter #%s"
 msgstr "Date - Filtre #%s"
 
+msgid "Date of admissibility decision"
+msgstr "Date de décision de recevabilité"
+
 msgid "Date of manuscript submission to the thesis exam board"
 msgstr "Date d'envoi du manuscrit au jury"
 
 msgid "Date of the confirmation paper (DD/MM/YYYY)"
 msgstr "Date de l'épreuve de confirmation (JJ/MM/AAAA)"
+
+msgid "Date of the decision of the admissibility (DD/MM/YYYY)"
+msgstr "Date de la décision de recevabilité (JJ/MM/AAAA)"
 
 msgid "Date of the private defence (DD/MM/YYYY)"
 msgstr "Date de la défense privée (JJ/MM/AAAA)"
@@ -1253,6 +1282,9 @@ msgstr "Doctorat"
 
 msgid "Doctorate thesis field"
 msgstr "Domaine de la thèse de doctorat"
+
+msgid "Doctorate whose this admissibility is the active one"
+msgstr "Doctorat dont cette recevabilité est la courante"
 
 msgid "Doctorate whose this private defence is the active one"
 msgstr "Doctorat dont cette défense privée est la courante"
@@ -2004,6 +2036,13 @@ msgstr ""
 
 msgid ""
 "Mail sent to the doctoral student to inform him of the defavourable opinion "
+"on the admissibility"
+msgstr ""
+"E-Mail envoyé au doctorand pour l'informer de l'issue défavorable de sa "
+"recevabilité"
+
+msgid ""
+"Mail sent to the doctoral student to inform him of the defavourable opinion "
 "on the confirmation paper"
 msgstr ""
 "E-Mail envoyé au doctorand pour l'informer de l'issue défavorable de son "
@@ -2015,6 +2054,13 @@ msgid ""
 msgstr ""
 "E-Mail envoyé au doctorand pour l'informer de l'issue défavorable de sa "
 "défense privée"
+
+msgid ""
+"Mail sent to the doctoral student to inform him of the favourable opinion on "
+"the admissibility"
+msgstr ""
+"E-Mail envoyé au doctorand pour l'informer de l'issue favorable de sa "
+"recevabilité"
 
 msgid ""
 "Mail sent to the doctoral student to inform him of the favourable opinion on "
@@ -2036,6 +2082,13 @@ msgid ""
 msgstr ""
 "E-Mail envoyé au doctorand pour l'informer de l'issue favorable de sa "
 "soutenance publique"
+
+msgid ""
+"Mail sent to the doctoral student to inform him of the necessity to repeat "
+"the admissibility"
+msgstr ""
+"E-Mail envoyé au doctorand pour l'informer de la nécessité de repasser sa "
+"recevabilité"
 
 msgid ""
 "Mail sent to the doctoral student to inform him of the necessity to repeat "
@@ -2071,6 +2124,10 @@ msgid ""
 msgstr ""
 "E-Mail envoyé au doctorand pour l'informer de l'autorisation de sa "
 "soutenance publique"
+
+msgid "Mail sent to the jury members to invite them to the admissibility"
+msgstr ""
+"E-Mail envoyé aux membres du jury pour les inviter à la recevabilité"
 
 msgid "Mail sent to the jury members to invite them to the private defence"
 msgstr "E-Mail envoyé aux membres du jury pour les inviter à la défense privée"
@@ -2863,6 +2920,18 @@ msgctxt "publication-status"
 msgid "Published"
 msgstr "Publiée"
 
+msgid "RECEVABILITE_A_RECOMMENCER"
+msgstr "Recevabilité à recommencer"
+
+msgid "RECEVABILITE_EN_ECHEC"
+msgstr "Recevabilité en échec"
+
+msgid "RECEVABILITE_REUSSIE"
+msgstr "Recevabilité réussie"
+
+msgid "RECEVABILITE_SOUMISE"
+msgstr "Recevabilité soumise"
+
 msgid "REFUSEE"
 msgstr "Refusée"
 
@@ -2886,10 +2955,6 @@ msgid ""
 msgstr ""
 "Avis motivé et inventaire des questions posées par un·e/des membre(s) du "
 "jury éventuellement absent·es."
-
-msgctxt "dashboard-category"
-msgid "Recevability (formula 2)"
-msgstr "Recevabilité (formule 2)"
 
 msgid "Recipient"
 msgstr "Destinataire"
@@ -3488,6 +3553,9 @@ msgstr "L'acronyme de la bourse d'études"
 msgid "The activity title"
 msgstr "Le titre de l'activité"
 
+msgid "The admissibility is not in progress"
+msgstr "La recevabilité n'est pas en cours"
+
 msgid "The assessment enrollment has not been found"
 msgstr "L'inscription à l'évaluation n'a pas été trouvée"
 
@@ -3574,6 +3642,12 @@ msgstr ""
 "aux dispositions particulières de votre domaine. Veuillez consulter ces "
 "dispositions sur la page web de votre Commission Doctorale de Domaine (CDD) "
 "pour plus d’informations."
+
+msgid "The defense method must be the formula 1."
+msgstr "La formule de défense doit être la formule 1."
+
+msgid "The defense method must be the formula 2."
+msgstr "La formule de défense doit être la formule 2."
 
 msgid "The definitive thesis title is:"
 msgstr "Le titre définitif de la thèse est le suivant :"
@@ -3669,6 +3743,9 @@ msgstr "Le nom du signataire"
 msgid "The last name of the student"
 msgstr "Le nom de l'étudiant"
 
+msgid "The link to the admissibility minutes"
+msgstr "Le lien vers le procès verbal de la recevabilité"
+
 msgid "The link to the private defence minutes"
 msgstr "Le lien vers le procès verbal de la défense privée"
 
@@ -3730,6 +3807,9 @@ msgstr "La personne n'a pas été trouvée."
 msgid "The person is not a president, a secretary or a member."
 msgstr "La personne n'est pas président, secrétaire ou membre."
 
+msgid "The personal pronoun to use for the student"
+msgstr "Le pronom personnel à utiliser pour l'étudiant"
+
 msgid ""
 "The private defence date is chosen collectively by the jury and in agreement "
 "with the PhD student"
@@ -3774,6 +3854,9 @@ msgstr "La raison de la demande de mise à jour"
 
 msgid "The reason for refusal"
 msgstr "La raison du refus"
+
+msgid "The reference to use for the student"
+msgstr "La référence à utiliser pour l'étudiant"
 
 msgid "The signature request procedure is already in progress."
 msgstr "La procédure de demande de signature a déjà été lancée."
@@ -3826,6 +3909,9 @@ msgstr "Défense et soutenance"
 msgctxt "dashboard-category"
 msgid "Thesis distribution authorisation"
 msgstr "Autorisation de diffusion de thèse"
+
+msgid "Thesis exam board opinion"
+msgstr "Avis du jury"
 
 msgid "Thesis field"
 msgstr "Domaine de la thèse"

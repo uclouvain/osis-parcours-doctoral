@@ -337,6 +337,25 @@ msgctxt "parcours_doctoral filter"
 msgid "Additional training"
 msgstr ""
 
+msgctxt "dashboard-category"
+msgid "Admissibility (formula 2)"
+msgstr ""
+
+msgid "Admissibility minutes"
+msgstr ""
+
+msgid "Admissibility minutes canvas"
+msgstr ""
+
+msgid "Admissibility not activated."
+msgstr ""
+
+msgid "Admissibility not completed."
+msgstr ""
+
+msgid "Admissibility not found."
+msgstr ""
+
 msgid "Admission"
 msgstr ""
 
@@ -911,6 +930,10 @@ msgstr ""
 msgid "Created"
 msgstr ""
 
+msgctxt "admissibility"
+msgid "Created at"
+msgstr ""
+
 msgctxt "admission"
 msgid "Created at"
 msgstr ""
@@ -982,10 +1005,16 @@ msgstr ""
 msgid "Date - Filter #%s"
 msgstr ""
 
+msgid "Date of admissibility decision"
+msgstr ""
+
 msgid "Date of manuscript submission to the thesis exam board"
 msgstr ""
 
 msgid "Date of the confirmation paper (DD/MM/YYYY)"
+msgstr ""
+
+msgid "Date of the decision of the admissibility (DD/MM/YYYY)"
 msgstr ""
 
 msgid "Date of the private defence (DD/MM/YYYY)"
@@ -1165,6 +1194,9 @@ msgid "Doctorate"
 msgstr ""
 
 msgid "Doctorate thesis field"
+msgstr ""
+
+msgid "Doctorate whose this admissibility is the active one"
 msgstr ""
 
 msgid "Doctorate whose this private defence is the active one"
@@ -1848,12 +1880,22 @@ msgstr ""
 
 msgid ""
 "Mail sent to the doctoral student to inform him of the defavourable opinion "
+"on the admissibility"
+msgstr ""
+
+msgid ""
+"Mail sent to the doctoral student to inform him of the defavourable opinion "
 "on the confirmation paper"
 msgstr ""
 
 msgid ""
 "Mail sent to the doctoral student to inform him of the defavourable opinion "
 "on the private defence"
+msgstr ""
+
+msgid ""
+"Mail sent to the doctoral student to inform him of the favourable opinion on "
+"the admissibility"
 msgstr ""
 
 msgid ""
@@ -1869,6 +1911,11 @@ msgstr ""
 msgid ""
 "Mail sent to the doctoral student to inform him of the favourable opinion on "
 "the public defence"
+msgstr ""
+
+msgid ""
+"Mail sent to the doctoral student to inform him of the necessity to repeat "
+"the admissibility"
 msgstr ""
 
 msgid ""
@@ -1894,6 +1941,9 @@ msgstr ""
 msgid ""
 "Mail sent to the doctoral student to inform of the authorisation of the "
 "public defence"
+msgstr ""
+
+msgid "Mail sent to the jury members to invite them to the admissibility"
 msgstr ""
 
 msgid "Mail sent to the jury members to invite them to the private defence"
@@ -2624,6 +2674,18 @@ msgctxt "publication-status"
 msgid "Published"
 msgstr ""
 
+msgid "RECEVABILITE_A_RECOMMENCER"
+msgstr "Admissibility to be repeated"
+
+msgid "RECEVABILITE_EN_ECHEC"
+msgstr "Admissibility in failure"
+
+msgid "RECEVABILITE_REUSSIE"
+msgstr "Passed admissibility"
+
+msgid "RECEVABILITE_SOUMISE"
+msgstr "Submitted admissibility"
+
 msgid "REFUSEE"
 msgstr "Denied"
 
@@ -2643,10 +2705,6 @@ msgstr ""
 msgid ""
 "Reasoned opinion and list of questions asked by any absent exam board "
 "members."
-msgstr ""
-
-msgctxt "dashboard-category"
-msgid "Recevability (formula 2)"
 msgstr ""
 
 msgid "Recipient"
@@ -3221,6 +3279,9 @@ msgstr ""
 msgid "The activity title"
 msgstr ""
 
+msgid "The admissibility is not in progress"
+msgstr ""
+
 msgid "The assessment enrollment has not been found"
 msgstr ""
 
@@ -3284,6 +3345,12 @@ msgid ""
 "The declaration of you doctoral training activities must be consistent with "
 "the specifics disposition of your domain. Please refer to those on the "
 "website of your Domain Doctoral Commission for more information."
+msgstr ""
+
+msgid "The defense method must be the formula 1."
+msgstr ""
+
+msgid "The defense method must be the formula 2."
 msgstr ""
 
 msgid "The definitive thesis title is:"
@@ -3369,6 +3436,9 @@ msgstr ""
 msgid "The last name of the student"
 msgstr ""
 
+msgid "The link to the admissibility minutes"
+msgstr ""
+
 msgid "The link to the private defence minutes"
 msgstr ""
 
@@ -3422,6 +3492,9 @@ msgstr ""
 msgid "The person is not a president, a secretary or a member."
 msgstr ""
 
+msgid "The personal pronoun to use for the student"
+msgstr ""
+
 msgid ""
 "The private defence date is chosen collectively by the jury and in agreement "
 "with the PhD student"
@@ -3458,6 +3531,9 @@ msgid "The reason for needing update"
 msgstr ""
 
 msgid "The reason for refusal"
+msgstr ""
+
+msgid "The reference to use for the student"
 msgstr ""
 
 msgid "The signature request procedure is already in progress."
@@ -3507,6 +3583,9 @@ msgstr ""
 
 msgctxt "dashboard-category"
 msgid "Thesis distribution authorisation"
+msgstr ""
+
+msgid "Thesis exam board opinion"
 msgstr ""
 
 msgid "Thesis field"

@@ -24,6 +24,7 @@
 #
 # ##############################################################################
 
+from .admissibility import *
 from .autocomplete import *
 from .confirmation import *
 from .cotutelle import *
