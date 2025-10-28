@@ -213,7 +213,9 @@ class ParcoursDoctoralService(IParcoursDoctoralService):
                 file_uuid = str(getattr(admission, field)[0])
             except IndexError:
                 continue
-            setattr(parcours_doctoral, field, [UUID(uploaded_files.get(file_uuid))])
+            new_uuid = uploaded_files.get(file_uuid)
+            if new_uuid:
+                setattr(parcours_doctoral, field, [UUID(new_uuid)])
         parcours_doctoral.save(update_fields=cls.FILES_FIELDS)
 
         parcours_doctoral_identity = ParcoursDoctoralIdentity(uuid=str(parcours_doctoral.uuid))
