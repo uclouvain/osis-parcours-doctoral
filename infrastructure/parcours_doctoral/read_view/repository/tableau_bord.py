@@ -88,8 +88,13 @@ class TableauBordRepository(TableauBordRepositoryAdmissionMixin, ITableauBordRep
         IndicateurTableauBordEnum.JURY_VALIDE_ADRE.name: Q(
             status=ChoixStatutParcoursDoctoral.JURY_APPROUVE_ADRE.name,
         ),
-        # IndicateurTableauBordEnum.RECEVABILITE_SOUMISE.name: Q(),
-        # IndicateurTableauBordEnum.RECEVABILITE_PV_TELEVERSE.name: Q(),
+        IndicateurTableauBordEnum.FORMULE_2_RECEVABILITE_SOUMISE.name: Q(
+            status=ChoixStatutParcoursDoctoral.RECEVABILITE_SOUMISE.name,
+        ),
+        IndicateurTableauBordEnum.FORMULE_2_RECEVABILITE_PV_TELEVERSE.name: Q(
+            status=ChoixStatutParcoursDoctoral.RECEVABILITE_SOUMISE.name,
+            current_admissibility__minutes__len__gt=0,
+        ),
         IndicateurTableauBordEnum.FORMULE_1_DEFENSE_PRIVEE_SOUMISE.name: Q(
             status=ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_SOUMISE.name,
         ),

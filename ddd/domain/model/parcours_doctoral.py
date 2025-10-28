@@ -352,6 +352,11 @@ class ParcoursDoctoral(interface.RootEntity):
         if all(member.signature.etat == ChoixEtatSignature.APPROVED for member in jury.membres):
             self.statut = ChoixStatutParcoursDoctoral.JURY_APPROUVE_CA
 
+    # Recevabilité
+    def soumettre_recevabilite(self, titre_these: str):
+        self.statut = ChoixStatutParcoursDoctoral.RECEVABILITE_SOUMISE
+        self.titre_these_propose = titre_these
+
     # Défense privée
     def soumettre_defense_privee(self, titre_these: str):
         self.statut = ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_SOUMISE

@@ -47,6 +47,7 @@ from parcours_doctoral.ddd.domain.model.enums import (
     ChoixStatutParcoursDoctoral,
     ChoixTypeFinancement,
 )
+from parcours_doctoral.ddd.jury.domain.model.enums import FormuleDefense
 from parcours_doctoral.models.parcours_doctoral import ParcoursDoctoral
 from parcours_doctoral.tests.factories.jury import (
     ExternalJuryActorFactory,
@@ -135,6 +136,7 @@ class ParcoursDoctoralFactory(factory.django.DjangoModelFactory):
     recommendation_letters = factory.LazyFunction(lambda: [uuid.uuid4()])
     reference = factory.LazyAttribute(lambda obj: obj.admission.reference)
     thesis_institute = factory.SubFactory(EntityVersionFactory)
+    defense_method = FormuleDefense.FORMULE_1.name
 
     @factory.post_generation
     def create_student(self, create, extracted, with_valid_enrolment=True, **kwargs):
