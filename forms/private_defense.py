@@ -48,8 +48,8 @@ class PrivateDefenseForm(forms.Form):
 
     lieu = forms.CharField(
         label=_('Private defence location'),
-        widget=forms.Textarea(attrs={'rows': '2'}),
         required=False,
+        max_length=255,
     )
 
     date_envoi_manuscrit = forms.DateField(

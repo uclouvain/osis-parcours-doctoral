@@ -660,7 +660,10 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-msgid "Canvas of the private defence minutes to download"
+msgid "Canvas of the private defence minutes to download."
+msgstr ""
+
+msgid "Canvas of the public defence minutes to download."
 msgstr ""
 
 msgid "Canvas of the report of the supervisory panel"
@@ -1106,6 +1109,9 @@ msgid "Detailed curriculum vitae"
 msgstr ""
 
 msgid "Detailed doctoral training"
+msgstr ""
+
+msgid "Diploma collection"
 msgstr ""
 
 msgid "Diploma collection date"

@@ -30,9 +30,7 @@
   {% has_perm 'parcours_doctoral.invite_jury_to_public_defense' as can_invite_jury_to_public_defense %}
   {% has_perm 'parcours_doctoral.authorise_public_defense' as can_authorise_public_defense %}
   {% has_perm 'parcours_doctoral.make_public_defense_decision' as can_make_decision %}
-  {% if parcours_doctoral.status == 'PROCLAME' %}
-    {% has_perm 'parcours_doctoral.send_message' as can_send_email_for_diploma_collection %}
-  {% endif %}
+  {% has_perm 'parcours_doctoral.send_email_for_diploma_collection' as can_send_email_for_diploma_collection %}
 
   {% if can_change_public_defense or can_invite_jury_to_public_defense or can_authorise_public_defense or can_make_decision or can_send_email_for_diploma_collection %}
     <div id="public-defense-actions" class="btn-group">
@@ -91,7 +89,7 @@
         {% endif %}
         {% if can_send_email_for_diploma_collection %}
           <li>
-            <a class="dropdown-item" href="{% url 'parcours_doctoral:send-mail' uuid=uuid %}?template={{ DIPLOMA_COLLECTION_EMAIL_TEMPLATE_IDENTIFIER }}&from={{ request.path }}">
+            <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#public-defense-diploma-collection-form-modal">
               {% trans "Send an email for the diploma collection" %}
             </a>
           </li>
@@ -110,11 +108,16 @@
       {% field_data _("Thesis title") parcours_doctoral.titre_these_propose inline=True %}
       {% field_data _("Public defence language") parcours_doctoral.nom_langue_soutenance_publique inline=True %}
       {% field_data _("Public defence date and time") parcours_doctoral.date_heure_soutenance_publique inline=True %}
-      {% field_data _("Public defence location") parcours_doctoral.lieu_soutenance_publique inline=True %}
-      {% field_data _("Deliberation room") parcours_doctoral.local_deliberation inline=True %}
+      {% field_data _("Public defence location") parcours_doctoral.lieu_soutenance_publique %}
+      {% field_data _("Deliberation room") parcours_doctoral.local_deliberation %}
       {% field_data _("Additional information") parcours_doctoral.informations_complementaires_soutenance_publique html_tag="blockquote" %}
       {% field_data _("Summary for announcement") parcours_doctoral.resume_annonce html_tag="blockquote" %}
       {% field_data _("Photo for announcement") parcours_doctoral.photo_annonce %}
+      <p>
+        <a href="{% url 'parcours_doctoral:public-defense-minutes-canvas' view.kwargs.uuid %}" target="_blank">
+          {% translate 'Canvas of the public defence minutes to download.' %}
+        </a>
+      </p>
       {% field_data _("Public defence minutes") parcours_doctoral.proces_verbal_soutenance_publique %}
       {% field_data _("Diploma collection date") parcours_doctoral.date_retrait_diplome inline=True %}
       {% field_data _("DIAL link") '' inline=True %}
@@ -132,6 +135,9 @@
 
   {% url 'parcours_doctoral:public-defense:success' view.kwargs.uuid as success_decision_url %}
   {% include 'parcours_doctoral/modal/form_modal.html' with modal_id='public-defense-success-decision-form-modal' modal_title=_('Proclaimed') modal_url=success_decision_url %}
+
+  {% url 'parcours_doctoral:public-defense:diploma-collection' view.kwargs.uuid as diploma_collection_url %}
+  {% include 'parcours_doctoral/modal/form_modal.html' with modal_id='public-defense-diploma-collection-form-modal' modal_title=_('Diploma collection') modal_url=diploma_collection_url %}
 {% endblock %}
 
 {% block style %}

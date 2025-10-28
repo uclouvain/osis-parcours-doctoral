@@ -14,7 +14,7 @@ from parcours_doctoral.mail_templates.jury import (
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("parcours_doctoral", "0023_auditor_with_child_alter_auditor_entity"),
+        ("parcours_doctoral", "0026_auditor_with_child_alter_auditor_entity"),
     ]
 
     operations = [

@@ -32,6 +32,7 @@ from osis_document_components.utils import get_file_url
 from infrastructure.messages_bus import message_bus_instance
 from parcours_doctoral.ddd.commands import RecupererParcoursDoctoralQuery
 from parcours_doctoral.ddd.jury.commands import RecupererJuryQuery
+from parcours_doctoral.ddd.jury.domain.model.enums import ROLES_MEMBRES_JURY
 from parcours_doctoral.exports.utils import parcours_doctoral_generate_pdf
 from parcours_doctoral.models import Activity, ParcoursDoctoral
 
@@ -54,7 +55,7 @@ def public_defense_minutes_canvas_url(doctorate_uuid, language):
             filename=f'public_defense_canvas_{doctorate_dto.reference}.pdf',
             context={
                 'parcours_doctoral': doctorate_dto,
-                'jury': jury_dto,
+                'jury_members': [member for member in jury_dto.membres if member.role in ROLES_MEMBRES_JURY],
                 'has_additional_training': has_additional_training,
             },
         )

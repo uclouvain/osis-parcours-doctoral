@@ -8,7 +8,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ("base", "0711_delete_etatfinancabilite2023"),
-        ("parcours_doctoral", "0018_alter_parcoursdoctoral_defense_language_and_more"),
+        ("parcours_doctoral", "0021_alter_parcoursdoctoral_defense_language_and_more"),
     ]
 
     operations = [

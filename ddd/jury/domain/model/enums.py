@@ -39,6 +39,13 @@ class RoleJury(ChoiceEnum):
     ADRE = _('ADRE')
 
 
+ROLES_MEMBRES_JURY = {
+    RoleJury.PRESIDENT.name,
+    RoleJury.SECRETAIRE.name,
+    RoleJury.MEMBRE.name,
+}
+
+
 class TitreMembre(ChoiceEnum):
     DOCTEUR = _('Doctor')
     PROFESSEUR = _('Professor')

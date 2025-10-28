@@ -8,7 +8,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ("base", "0717_update_dates_calendrier_academique"),
-        ("parcours_doctoral", "0024_mails_jury_cdd_adre"),
+        ("parcours_doctoral", "0027_mails_jury_cdd_adre"),
     ]
 
     operations = [

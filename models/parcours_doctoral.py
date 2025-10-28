@@ -487,15 +487,17 @@ class ParcoursDoctoral(models.Model):
         null=True,
         blank=True,
     )
-    defense_place = models.TextField(
+    defense_place = models.CharField(
         verbose_name=_('Public defence location'),
         blank=True,
         default='',
+        max_length=255,
     )
-    defense_deliberation_room = models.TextField(
+    defense_deliberation_room = models.CharField(
         verbose_name=_('Deliberation room'),
         blank=True,
         default='',
+        max_length=255,
     )
     defense_additional_information = models.TextField(
         verbose_name=_('Additional information'),

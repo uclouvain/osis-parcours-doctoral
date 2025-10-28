@@ -11,7 +11,7 @@ class Migration(migrations.Migration):
     dependencies = [
         (
             "parcours_doctoral",
-            "0026_alter_parcoursdoctoral_status_privatedefense_and_more",
+            "0029_alter_parcoursdoctoral_status_privatedefense_and_more",
         ),
     ]
 

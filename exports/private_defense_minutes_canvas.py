@@ -35,6 +35,7 @@ from parcours_doctoral.ddd.defense_privee.commands import (
     RecupererDerniereDefensePriveeQuery,
 )
 from parcours_doctoral.ddd.jury.commands import RecupererJuryQuery
+from parcours_doctoral.ddd.jury.domain.model.enums import ROLES_MEMBRES_JURY
 from parcours_doctoral.exports.utils import parcours_doctoral_generate_pdf
 from parcours_doctoral.models import Activity
 from parcours_doctoral.models.private_defense import PrivateDefense
@@ -60,7 +61,7 @@ def private_defense_minutes_canvas_url(doctorate_uuid, language):
             context={
                 'parcours_doctoral': doctorate_dto,
                 'has_additional_training': has_additional_training,
-                'jury': jury_dto,
+                'jury_members': [member for member in jury_dto.membres if member.role in ROLES_MEMBRES_JURY],
                 'private_defense': private_defense_dto,
             },
         )

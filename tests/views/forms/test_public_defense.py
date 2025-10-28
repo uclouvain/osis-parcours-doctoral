@@ -27,6 +27,7 @@ import datetime
 import uuid
 from uuid import uuid4
 
+from django.conf import settings
 from django.shortcuts import resolve_url
 from django.test import TestCase, override_settings
 
@@ -40,6 +41,7 @@ from base.tests.factories.program_manager import ProgramManagerFactory
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import ENTITY_CDE
 from parcours_doctoral.tests.factories.parcours_doctoral import ParcoursDoctoralFactory
 from parcours_doctoral.tests.mixins import MockOsisDocumentMixin
+from reference.models.language import Language
 from reference.tests.factories.language import LanguageFactory
 
 
@@ -55,7 +57,10 @@ class PublicDefenseFormViewTestCase(MockOsisDocumentMixin, TestCase):
         cls.training = DoctorateFactory()
 
         cls.student = PersonFactory()
-        cls.manager = ProgramManagerFactory(education_group=cls.training.education_group).person
+        cls.manager = ProgramManagerFactory(
+            education_group=cls.training.education_group,
+            person__language=settings.LANGUAGE_CODE_EN,
+        ).person
 
         cls.a_language = LanguageFactory(name='A')
         cls.b_language = LanguageFactory(name='B')
@@ -107,8 +112,7 @@ class PublicDefenseFormViewTestCase(MockOsisDocumentMixin, TestCase):
             form.fields['langue'].choices,
             [
                 EMPTY_CHOICE[0],
-                (self.a_language.code, self.a_language.name),
-                (self.b_language.code, self.b_language.name),
+                *[(language.code, language.name) for language in Language.objects.all().order_by('name')],
             ],
         )
 

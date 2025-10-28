@@ -55,14 +55,14 @@ class PublicDefenseForm(forms.Form):
 
     lieu = forms.CharField(
         label=_('Public defence location'),
-        widget=forms.Textarea(attrs={'rows': '2'}),
         required=False,
+        max_length=255,
     )
 
     local_deliberation = forms.CharField(
         label=_('Deliberation room'),
-        widget=forms.Textarea(attrs={'rows': '2'}),
         required=False,
+        max_length=255,
     )
 
     informations_complementaires = forms.CharField(

@@ -23,6 +23,7 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from django.utils.timezone import get_default_timezone
 from rest_framework import serializers
 
 from base.utils.serializers import DTOSerializer
@@ -45,6 +46,7 @@ class SubmitPrivateDefenseSerializer(DTOSerializer):
 
     uuid = None
     matricule_auteur = None
+    date_heure = serializers.DateTimeField(default_timezone=get_default_timezone())
 
     class Meta:
         source = SoumettreDefensePriveeCommand

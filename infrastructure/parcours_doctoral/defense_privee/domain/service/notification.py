@@ -34,6 +34,7 @@ from parcours_doctoral.ddd.defense_privee.domain.service.i_notification import (
     INotification,
 )
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoral
+from parcours_doctoral.ddd.jury.domain.model.enums import ROLES_MEMBRES_JURY
 from parcours_doctoral.infrastructure.mixins.notification import NotificationMixin
 from parcours_doctoral.mail_templates.private_defense import (
     PARCOURS_DOCTORAL_EMAIL_PRIVATE_DEFENSE_JURY_INVITATION,
@@ -105,7 +106,10 @@ class Notification(NotificationMixin, INotification):
             management_entity_id=doctorate.training.management_entity_id,
         )
 
-        jury_members = JuryActor.objects.filter(process=doctorate.jury_group).select_related('person')
+        jury_members = JuryActor.objects.filter(
+            process=doctorate.jury_group,
+            role__in=ROLES_MEMBRES_JURY,
+        ).select_related('person')
 
         for jury_member in jury_members:
             current_language = jury_member.language or settings.LANGUAGE_CODE

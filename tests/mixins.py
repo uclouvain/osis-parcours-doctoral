@@ -44,7 +44,7 @@ class MockOsisDocumentMixin:
     def setUp(self):
         super().setUp()
 
-        default_uuid = '4bdffb42-552d-415d-9e4c-725f10dce228'
+        default_uuid = uuid.UUID('4bdffb42-552d-415d-9e4c-725f10dce228')
 
         # Mock osis-document
         self.confirm_remote_upload_patcher = patch('osis_document_components.services.confirm_remote_upload')

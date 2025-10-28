@@ -27,6 +27,7 @@ from django.shortcuts import resolve_url
 from django.utils.translation import gettext_lazy
 
 from infrastructure.messages_bus import message_bus_instance
+from parcours_doctoral.ddd.commands import EnvoyerMessageDoctorantCommand
 from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from parcours_doctoral.ddd.soutenance_publique.commands import (
     AutoriserSoutenancePubliqueCommand,
@@ -38,6 +39,7 @@ from parcours_doctoral.infrastructure.parcours_doctoral.soutenance_publique.doma
 )
 from parcours_doctoral.mail_templates.public_defense import (
     PARCOURS_DOCTORAL_EMAIL_PUBLIC_DEFENSE_AUTHORISATION,
+    PARCOURS_DOCTORAL_EMAIL_PUBLIC_DEFENSE_DIPLOMA_COLLECTION,
     PARCOURS_DOCTORAL_EMAIL_PUBLIC_DEFENSE_JURY_INVITATION,
     PARCOURS_DOCTORAL_EMAIL_PUBLIC_DEFENSE_ON_SUCCESS,
 )
@@ -50,6 +52,7 @@ __all__ = [
     "PublicDefenseAuthorisationView",
     "PublicDefenseJuryInvitationView",
     "PublicDefenseSuccessView",
+    "PublicDefenseDiplomaCollectionView",
 ]
 
 
@@ -136,3 +139,23 @@ class PublicDefenseSuccessView(BasePublicDefenseActionView):
         }
 
         self.htmx_refresh = True
+
+
+class PublicDefenseDiplomaCollectionView(BasePublicDefenseActionView):
+    urlpatterns = 'diploma-collection'
+    permission_required = 'parcours_doctoral.send_email_for_diploma_collection'
+    email_identifier = PARCOURS_DOCTORAL_EMAIL_PUBLIC_DEFENSE_DIPLOMA_COLLECTION
+    prefix = 'diploma-collection'
+
+    def call_command(self, form):
+        message_bus_instance.invoke(
+            EnvoyerMessageDoctorantCommand(
+                matricule_emetteur=self.request.user.person.global_id,
+                parcours_doctoral_uuid=self.parcours_doctoral_uuid,
+                sujet=form.cleaned_data['subject'],
+                message=form.cleaned_data['body'],
+                cc_promoteurs=False,
+                cc_membres_ca=False,
+            )
+        )
+        self.message_on_success = gettext_lazy("Message sent successfully")

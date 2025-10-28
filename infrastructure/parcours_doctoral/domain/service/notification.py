@@ -49,6 +49,7 @@ from parcours_doctoral.ddd.domain.service.i_notification import INotification
 from parcours_doctoral.ddd.domain.validator.exceptions import (
     SignataireNonTrouveException,
 )
+from parcours_doctoral.ddd.jury.domain.model.enums import ROLES_MEMBRES_JURY, RoleJury
 from parcours_doctoral.infrastructure.mixins.notification import NotificationMixin
 from parcours_doctoral.mail_templates.signatures import (
     PARCOURS_DOCTORAL_EMAIL_MEMBER_REMOVED,
@@ -114,6 +115,7 @@ class Notification(NotificationMixin, INotification):
         if cc_jury:
             jury_members = JuryActor.objects.filter(
                 process_id=parcours_doctoral_instance.jury_group_id,
+                role__in=ROLES_MEMBRES_JURY,
             ).select_related('person')
 
             for jury_member in jury_members:

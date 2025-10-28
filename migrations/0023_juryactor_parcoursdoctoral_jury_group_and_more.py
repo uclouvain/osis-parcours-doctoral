@@ -10,7 +10,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ("osis_signature", "0003_external_actor"),
-        ("parcours_doctoral", "0019_auditor"),
+        ("parcours_doctoral", "0022_auditor"),
     ]
 
     operations = [

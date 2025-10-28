@@ -156,6 +156,15 @@ def public_defense_is_authorised(self, user: User, obj: ParcoursDoctoral):
 
 
 @predicate(bind=True)
+@predicate_failed_msg(
+    message=_("The doctorate must be in the status '%(status)s' to realize this action.")
+    % {'status': ChoixStatutParcoursDoctoral.PROCLAME.value}
+)
+def doctorate_is_proclaimed(self, user: User, obj: ParcoursDoctoral):
+    return obj.status == ChoixStatutParcoursDoctoral.PROCLAME.name
+
+
+@predicate(bind=True)
 @predicate_failed_msg(message=_("Complementary training not enabled"))
 def complementary_training_enabled(self, user: User, obj: ParcoursDoctoral):
     return (

@@ -1,4 +1,4 @@
-{% extends "parcours_doctoral/tab_layout.html" %}
+{% extends "parcours_doctoral/forms/tab_layout.html" %}
 {% load i18n parcours_doctoral django_bootstrap5 %}
 
 {% comment "License" %}
@@ -25,7 +25,7 @@
 * see http://www.gnu.org/licenses/.
 {% endcomment %}
 
-{% block form %}
+{% block form_content %}
   <div class="card mb-3">
     <div class="card-header">
       <h4 class="card-title">{% translate "Public defence" %}</h4>
@@ -55,7 +55,6 @@
       <div class="row">
         {% bootstrap_field form.date_retrait_diplome wrapper_class='col-md-6 mb-3' %}
       </div>
-      {% bootstrap_field_with_tooltip form.proces_verbal %}
       {% field_data _("DIAL link") '' inline=True %}
     </div>
   </div>

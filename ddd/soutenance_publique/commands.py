@@ -36,8 +36,8 @@ class SoumettreSoutenancePubliqueCommand(interface.CommandRequest):
     uuid_parcours_doctoral: str
     matricule_auteur: str
 
-    langue: Optional[str]
-    date_heure: Optional[datetime.datetime]
+    langue: str
+    date_heure: datetime.datetime
     lieu: Optional[str]
     local_deliberation: Optional[str]
     resume_annonce: Optional[str]

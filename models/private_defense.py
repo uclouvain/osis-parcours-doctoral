@@ -92,10 +92,11 @@ class PrivateDefense(models.Model):
         blank=True,
     )
 
-    place = models.TextField(
+    place = models.CharField(
         verbose_name=_('Private defence location'),
         blank=True,
         default='',
+        max_length=255,
     )
 
     manuscript_submission_date = models.DateField(

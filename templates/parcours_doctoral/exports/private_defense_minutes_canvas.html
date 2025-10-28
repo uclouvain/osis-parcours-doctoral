@@ -110,7 +110,7 @@
     </p>
 
     <ul class="fw-bold">
-      {% for jury_member in jury.membres %}
+      {% for jury_member in jury_members %}
         <li>
           {{ jury_member.nom }} {{ jury_member.prenom }}
           {% if not jury_member.membre_ucl %}
@@ -128,7 +128,7 @@
     </ul>
 
     <p>
-      {% blocktranslate trimmed with private_defense_date=private_defense.date_heure|date thesis_title=jury.titre_propose %}
+      {% blocktranslate trimmed with private_defense_date=private_defense.date_heure|date thesis_title=parcours_doctoral.titre_these_propose %}
         having attended the student's {{ private_defense_date }} oral presentation of their provisional
         manuscript entitled: <strong>{{ thesis_title }}</strong>
         <br>
@@ -235,7 +235,7 @@
         </tr>
         </thead>
         <tbody>
-        {% for jury_member in jury.membres %}
+        {% for jury_member in jury_members %}
           <tr>
             <td>
             <span>

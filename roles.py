@@ -28,6 +28,7 @@ from rules import always_allow
 from osis_role import role
 from parcours_doctoral.auth.predicates.parcours_doctoral import (
     complementary_training_enabled,
+    doctorate_is_proclaimed,
     has_valid_enrollment,
     is_jury_approuve_ca,
     is_jury_in_progress,
@@ -153,6 +154,9 @@ PROGRAM_MANAGER_RULES = {
     'parcours_doctoral.make_public_defense_decision': is_part_of_education_group
     & has_valid_enrollment
     & public_defense_is_authorised,
+    'parcours_doctoral.send_email_for_diploma_collection': is_part_of_education_group
+    & has_valid_enrollment
+    & doctorate_is_proclaimed,
     # -- Commentaire
     'parcours_doctoral.view_comments': is_part_of_education_group,
     'parcours_doctoral.change_comments': is_part_of_education_group,

@@ -23,38 +23,27 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from django.utils.timezone import get_default_timezone
-from rest_framework import serializers
 
-from base.utils.serializers import DTOSerializer
-from parcours_doctoral.ddd.soutenance_publique.commands import (
-    SoumettreProcesVerbalSoutenancePubliqueCommand,
-    SoumettreSoutenancePubliqueCommand,
+from django.views.generic import RedirectView
+
+from parcours_doctoral.exports.public_defense_minutes_canvas import (
+    public_defense_minutes_canvas_url,
 )
+from parcours_doctoral.views.mixins import ParcoursDoctoralViewMixin
+
+__all__ = [
+    "PublicDefenseMinutesCanvasView",
+]
 
 
-class SubmitPublicDefenseSerializer(DTOSerializer):
-    """Contains the submitted data to complete a public defence."""
+class PublicDefenseMinutesCanvasView(ParcoursDoctoralViewMixin, RedirectView):
+    permission_required = 'parcours_doctoral.view_public_defense'
+    load_doctorate_dto = False
 
-    uuid_parcours_doctoral = None
-    matricule_auteur = None
-    date_heure = serializers.DateTimeField(default_timezone=get_default_timezone())
+    def get(self, request, *args, **kwargs):
+        self.url = public_defense_minutes_canvas_url(
+            doctorate_uuid=self.parcours_doctoral_uuid,
+            language=self.parcours_doctoral.student.language,
+        )
 
-    class Meta:
-        source = SoumettreSoutenancePubliqueCommand
-
-
-class PublicDefenseMinutesCanvasSerializer(serializers.Serializer):
-    """Contains the public defence minutes canvas url."""
-
-    url = serializers.URLField(read_only=True)
-
-
-class SubmitPublicDefenseMinutesSerializer(DTOSerializer):
-    """Contains the submitted data to complete the public defence minutes."""
-
-    uuid_parcours_doctoral = None
-    matricule_auteur = None
-
-    class Meta:
-        source = SoumettreProcesVerbalSoutenancePubliqueCommand
+        return super().get(request, *args, **kwargs)

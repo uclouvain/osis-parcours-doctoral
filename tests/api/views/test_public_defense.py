@@ -212,9 +212,7 @@ class PublicDefenseAPIViewTestCase(MockOsisDocumentMixin, APITestCase):
         json_response = response.json()
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        errors_messages = json_response.get('non_field_errors', [])
-        self.assertEqual(len(errors_messages), 1)
-        self.assertEqual(errors_messages[0]['status_code'], SoutenancePubliqueNonCompleteeException.status_code)
+        self.assertIn('langue', json_response)
 
         response = self.client.put(
             self.url,
@@ -227,9 +225,7 @@ class PublicDefenseAPIViewTestCase(MockOsisDocumentMixin, APITestCase):
         json_response = response.json()
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        errors_messages = json_response.get('non_field_errors', [])
-        self.assertEqual(len(errors_messages), 1)
-        self.assertEqual(errors_messages[0]['status_code'], SoutenancePubliqueNonCompleteeException.status_code)
+        self.assertIn('date_heure', json_response)
 
         response = self.client.put(
             self.url,

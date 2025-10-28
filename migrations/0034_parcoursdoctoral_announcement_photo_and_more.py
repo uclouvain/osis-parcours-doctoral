@@ -7,7 +7,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("parcours_doctoral", "0030_alter_cddmailtemplate_identifier"),
+        ("parcours_doctoral", "0033_alter_cddmailtemplate_identifier"),
     ]
 
     operations = [
@@ -39,7 +39,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="parcoursdoctoral",
             name="defense_deliberation_room",
-            field=models.TextField(blank=True, default="", verbose_name="Deliberation room"),
+            field=models.CharField(blank=True, default="", max_length=255, verbose_name="Deliberation room"),
         ),
         migrations.AddField(
             model_name="parcoursdoctoral",
@@ -64,7 +64,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="parcoursdoctoral",
             name="defense_place",
-            field=models.TextField(blank=True, default="", verbose_name="Public defence location"),
+            field=models.CharField(blank=True, default="", max_length=255, verbose_name="Public defence location"),
         ),
         migrations.AddField(
             model_name="parcoursdoctoral",

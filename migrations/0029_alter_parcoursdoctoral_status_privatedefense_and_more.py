@@ -25,7 +25,7 @@ def initialise_private_defenses(apps, _):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("parcours_doctoral", "0025_adre_manager_role"),
+        ("parcours_doctoral", "0028_adre_manager_role"),
     ]
 
     operations = [
@@ -87,7 +87,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "place",
-                    models.TextField(blank=True, default="", verbose_name="Private defence location"),
+                    models.CharField(blank=True, default="", max_length=255, verbose_name="Private defence location"),
                 ),
                 (
                     "manuscript_submission_date",

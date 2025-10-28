@@ -31,6 +31,7 @@ from osis_notification.contrib.notification import EmailNotification
 
 from ddd.logic.shared_kernel.personne_connue_ucl.dtos import PersonneConnueUclDTO
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoral
+from parcours_doctoral.ddd.jury.domain.model.enums import ROLES_MEMBRES_JURY
 from parcours_doctoral.ddd.soutenance_publique.domain.service.i_notification import (
     INotification,
 )
@@ -100,7 +101,10 @@ class Notification(NotificationMixin, INotification):
             management_entity_id=doctorate.training.management_entity_id,
         )
 
-        jury_members = JuryActor.objects.filter(process=doctorate.jury_group).select_related('person')
+        jury_members = JuryActor.objects.filter(
+            process=doctorate.jury_group,
+            role__in=ROLES_MEMBRES_JURY,
+        ).select_related('person')
 
         for jury_member in jury_members:
             current_language = jury_member.language or settings.LANGUAGE_CODE

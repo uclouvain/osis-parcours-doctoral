@@ -5040,7 +5040,6 @@ components:
         date_heure:
           type: string
           format: date-time
-          nullable: true
         lieu:
           type: string
         local_deliberation:
@@ -5052,6 +5051,8 @@ components:
           items:
             type: string
       required:
+      - date_heure
+      - langue
       - photo_annonce
     SubmitPublicDefenseMinutes:
       type: object
