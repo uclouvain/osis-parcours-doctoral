@@ -34,6 +34,7 @@ from .parcours_doctoral.epreuve_confirmation import (
 )
 from .parcours_doctoral.formation import handlers_in_memory as formation_handlers
 from .parcours_doctoral.jury import handlers_in_memory as jury_handlers
+from .parcours_doctoral.recevabilite import handlers_in_memory as recevabilite_handlers
 from .parcours_doctoral.soutenance_publique import (
     handlers_in_memory as soutenance_publique_handlers,
 )
@@ -47,6 +48,7 @@ class MessageBusInMemoryCommands(AbstractMessageBusCommands):
         **jury_handlers.COMMAND_HANDLERS,
         **defense_privee_handlers.COMMAND_HANDLERS,
         **soutenance_publique_handlers.COMMAND_HANDLERS,
+        **recevabilite_handlers.COMMAND_HANDLERS,
     }
 
 
