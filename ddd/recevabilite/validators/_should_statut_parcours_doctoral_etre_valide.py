@@ -23,16 +23,33 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from ._should_recevabilite_etre_active import ShouldRecevabiliteEtreActive
-from ._should_recevabilite_etre_completee import ShouldRecevabiliteEtreCompletee
-from ._should_statut_parcours_doctoral_etre_valide import (
-    ShouldEtapeRecevabiliteEtreEnCours,
-    ShouldStatutDoctoratEtreRecevabiliteSoumise,
+
+import attr
+
+from base.ddd.utils.business_validator import BusinessValidator
+from parcours_doctoral.ddd.domain.model.enums import (
+    STATUTS_DOCTORAT_RECEVABILITE_EN_COURS,
+    ChoixStatutParcoursDoctoral,
+)
+from parcours_doctoral.ddd.recevabilite.validators.exceptions import (
+    EtapeRecevabilitePasEnCoursException,
+    StatutDoctoratDifferentRecevabiliteSoumiseException,
 )
 
-__all__ = [
-    'ShouldRecevabiliteEtreActive',
-    'ShouldRecevabiliteEtreCompletee',
-    'ShouldEtapeRecevabiliteEtreEnCours',
-    'ShouldStatutDoctoratEtreRecevabiliteSoumise',
-]
+
+@attr.dataclass(frozen=True, slots=True)
+class ShouldEtapeRecevabiliteEtreEnCours(BusinessValidator):
+    statut: ChoixStatutParcoursDoctoral
+
+    def validate(self, *args, **kwargs):
+        if self.statut.name not in STATUTS_DOCTORAT_RECEVABILITE_EN_COURS:
+            raise EtapeRecevabilitePasEnCoursException
+
+
+@attr.dataclass(frozen=True, slots=True)
+class ShouldStatutDoctoratEtreRecevabiliteSoumise(BusinessValidator):
+    statut: ChoixStatutParcoursDoctoral
+
+    def validate(self, *args, **kwargs):
+        if self.statut != ChoixStatutParcoursDoctoral.RECEVABILITE_SOUMISE:
+            raise StatutDoctoratDifferentRecevabiliteSoumiseException
