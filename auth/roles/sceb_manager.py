@@ -30,6 +30,9 @@ from django.utils.translation import gettext_lazy as _
 from rules import RuleSet
 
 from osis_role.contrib.models import RoleModel
+from parcours_doctoral.auth.predicates.parcours_doctoral import (
+    defense_method_is_formula_1,
+)
 
 
 class ScebManager(RoleModel):
@@ -68,8 +71,8 @@ class ScebManager(RoleModel):
             'parcours_doctoral.view_course_enrollment': rules.always_allow,
             'parcours_doctoral.view_assessment_enrollment': rules.always_allow,
             'parcours_doctoral.view_jury': rules.always_allow,
-            'parcours_doctoral.view_private_defense': rules.always_allow,
-            'parcours_doctoral.view_public_defense': rules.always_allow,
+            'parcours_doctoral.view_private_defense': rules.always_allow & defense_method_is_formula_1,
+            'parcours_doctoral.view_public_defense': rules.always_allow & defense_method_is_formula_1,
             'parcours_doctoral.view_comments': rules.always_allow,
         }
         return RuleSet(ruleset)

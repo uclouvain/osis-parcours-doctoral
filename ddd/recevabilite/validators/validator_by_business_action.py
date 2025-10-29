@@ -31,9 +31,12 @@ from base.ddd.utils.business_validator import (
     BusinessValidator,
     TwoStepsMultipleBusinessExceptionListValidator,
 )
+from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from parcours_doctoral.ddd.recevabilite.validators import (
+    ShouldEtapeRecevabiliteEtreEnCours,
     ShouldRecevabiliteEtreActive,
     ShouldRecevabiliteEtreCompletee,
+    ShouldStatutDoctoratEtreRecevabiliteSoumise,
 )
 
 
@@ -41,16 +44,35 @@ from parcours_doctoral.ddd.recevabilite.validators import (
 class SoumettreRecevabiliteValidatorList(TwoStepsMultipleBusinessExceptionListValidator):
     titre_these: str
     est_active: bool
+    statut_parcours_doctoral: ChoixStatutParcoursDoctoral
 
     def get_data_contract_validators(self) -> List[BusinessValidator]:
         return []
 
     def get_invariants_validators(self) -> List[BusinessValidator]:
         return [
+            ShouldEtapeRecevabiliteEtreEnCours(
+                statut=self.statut_parcours_doctoral,
+            ),
             ShouldRecevabiliteEtreCompletee(
                 titre_these=self.titre_these,
             ),
             ShouldRecevabiliteEtreActive(
                 est_active=self.est_active,
+            ),
+        ]
+
+
+@attr.dataclass(frozen=True, slots=True)
+class InviterJuryRecevabiliteValidatorList(TwoStepsMultipleBusinessExceptionListValidator):
+    statut_parcours_doctoral: ChoixStatutParcoursDoctoral
+
+    def get_data_contract_validators(self) -> List[BusinessValidator]:
+        return []
+
+    def get_invariants_validators(self) -> List[BusinessValidator]:
+        return [
+            ShouldStatutDoctoratEtreRecevabiliteSoumise(
+                statut=self.statut_parcours_doctoral,
             ),
         ]

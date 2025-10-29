@@ -34,6 +34,7 @@ from parcours_doctoral.ddd.recevabilite.test.factory.recevabilite import (
     RecevabiliteFactory,
 )
 from parcours_doctoral.ddd.recevabilite.validators.exceptions import (
+    EtapeRecevabilitePasEnCoursException,
     RecevabiliteNonCompleteeException,
 )
 from parcours_doctoral.infrastructure.message_bus_in_memory import (
@@ -62,7 +63,9 @@ class TestSoumettreRecevabilite(SimpleTestCase):
     def setUp(self):
         self.addCleanup(RecevabiliteInMemoryRepository.reset)
         self.addCleanup(ParcoursDoctoralInMemoryRepository.reset)
-        self.parcours_doctoral_identity = self.parcours_doctoral_repository.entities[0].entity_id
+        self.parcours_doctoral = self.parcours_doctoral_repository.entities[0]
+        self.parcours_doctoral_identity = self.parcours_doctoral.entity_id
+        self.parcours_doctoral.statut = ChoixStatutParcoursDoctoral.JURY_APPROUVE_ADRE
         self.parametres_cmd = {
             'parcours_doctoral_uuid': self.parcours_doctoral_identity.uuid,
             'matricule_auteur': '1234',
@@ -77,6 +80,13 @@ class TestSoumettreRecevabilite(SimpleTestCase):
         with self.assertRaises(MultipleBusinessExceptions) as e:
             self.message_bus.invoke(self.cmd(**self.parametres_cmd))
         self.assertIsInstance(e.exception.exceptions.pop(), RecevabiliteNonCompleteeException)
+
+    def test_should_generer_exception_si_statut_parcours_doctoral_incorrect(self):
+        self.parcours_doctoral.statut = ChoixStatutParcoursDoctoral.RECEVABILITE_REUSSIE
+
+        with self.assertRaises(MultipleBusinessExceptions) as e:
+            self.message_bus.invoke(self.cmd(**self.parametres_cmd))
+        self.assertIsInstance(e.exception.exceptions.pop(), EtapeRecevabilitePasEnCoursException)
 
     def test_should_soumettre_recevabilite_si_valide_et_pour_premiere_fois(self):
         parcours_doctoral_id_resultat = self.message_bus.invoke(self.cmd(**self.parametres_cmd))

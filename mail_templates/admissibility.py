@@ -40,14 +40,14 @@ __all__ = [
 
 admissibility_tokens = common_tokens + [
     Token(
-        name='management_entity_name',
-        description=_('Name of the management entity'),
-        example='Faculté des sciences économiques, sociales, politiques et de communication',
+        name='jury_president',
+        description=_('Name of the president of the jury (eventually with the title)'),
+        example='Prof. Jane Poe',
     ),
     Token(
-        name='sender_name',
-        description=_('Name of the manager sending the email'),
-        example="John Doe",
+        name='jury_secretary',
+        description=_('Name of the secretary of the jury (eventually with the title)'),
+        example="Prof. John Doe",
     ),
 ]
 
@@ -58,7 +58,7 @@ templates.register(
     tokens=admissibility_tokens
     + [
         Token(
-            name='admissibility_opinion_date',
+            name='admissibility_decision_date',
             description=_('Date of the decision of the admissibility (DD/MM/YYYY)'),
             example='01/04/2022',
         ),
