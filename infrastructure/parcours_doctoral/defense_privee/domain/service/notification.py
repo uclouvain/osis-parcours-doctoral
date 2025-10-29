@@ -39,9 +39,8 @@ from parcours_doctoral.infrastructure.mixins.notification import NotificationMix
 from parcours_doctoral.mail_templates.private_defense import (
     PARCOURS_DOCTORAL_EMAIL_PRIVATE_DEFENSE_JURY_INVITATION,
 )
-from parcours_doctoral.models import ActorType, JuryActor
+from parcours_doctoral.models import JuryActor
 from parcours_doctoral.models import ParcoursDoctoral as ParcoursDoctoralDBModel
-from parcours_doctoral.models import ParcoursDoctoralSupervisionActor
 from parcours_doctoral.utils.mail_templates import get_email_templates_by_language
 from parcours_doctoral.utils.url import (
     get_parcours_doctoral_link_back,

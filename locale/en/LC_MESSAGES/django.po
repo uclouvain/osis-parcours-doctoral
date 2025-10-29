@@ -337,6 +337,9 @@ msgctxt "parcours_doctoral filter"
 msgid "Additional training"
 msgstr ""
 
+msgid "Admissibility"
+msgstr ""
+
 msgctxt "dashboard-category"
 msgid "Admissibility (formula 2)"
 msgstr ""
@@ -1640,6 +1643,9 @@ msgstr ""
 msgid "International scholarship"
 msgstr ""
 
+msgid "Invite the members of the jury to the admissibility"
+msgstr ""
+
 msgid "Invite the members of the jury to the private defence"
 msgstr ""
 
@@ -2128,6 +2134,12 @@ msgstr ""
 msgid "Name of the manager sending the email"
 msgstr ""
 
+msgid "Name of the president of the jury (eventually with the title)"
+msgstr ""
+
+msgid "Name of the secretary of the jury (eventually with the title)"
+msgstr ""
+
 msgid "Name or brief description"
 msgstr ""
 
@@ -2503,6 +2515,9 @@ msgstr ""
 
 #, python-format
 msgid "Preview <em>%(name)s</em> custom mail template"
+msgstr ""
+
+msgid "Previous admissibilities"
 msgstr ""
 
 msgid "Previous confirmation exams"
@@ -3457,6 +3472,9 @@ msgstr ""
 msgid "The member was not found in the jury."
 msgstr ""
 
+msgid "The members of the jury have been invited to the admissibility."
+msgstr ""
+
 msgid "The members of the jury have been invited to the private defence."
 msgstr ""
 
@@ -3547,6 +3565,9 @@ msgstr ""
 
 #, python-format
 msgid "The status has been changed to %(status)s."
+msgstr ""
+
+msgid "The step related to the admissibility is not in progress."
 msgstr ""
 
 msgid "The step related to the public defence is not in progress."
@@ -4066,6 +4087,9 @@ msgid ""
 "the their leading to the thesis entitled: <strong>%(thesis_title)s</strong>;"
 msgstr ""
 
+msgid "he"
+msgstr ""
+
 msgid "hh:mm"
 msgstr ""
 
@@ -4087,6 +4111,9 @@ msgid ""
 "may have been absent due to force majeure."
 msgstr ""
 
+msgid "she"
+msgstr ""
+
 msgid ""
 "the 120 credits (thesis) required for the award of the academic degree of "
 "PhD having been obtained by the student;"
@@ -4104,6 +4131,18 @@ msgid "the <strong>not pursing</strong> of the doctorate."
 msgstr ""
 
 msgid "the <strong>successful completion</strong> of the confirmation paper."
+msgstr ""
+
+msgctxt "F"
+msgid "the PhD student"
+msgstr ""
+
+msgctxt "H"
+msgid "the PhD student"
+msgstr ""
+
+msgctxt "X"
+msgid "the PhD student"
 msgstr ""
 
 msgid "the credits for additional training having been obtained;"

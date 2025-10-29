@@ -23,8 +23,6 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from ddd.logic.shared_kernel.personne_connue_ucl.dtos import PersonneConnueUclDTO
-from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoral
 from parcours_doctoral.ddd.recevabilite.domain.service.i_notification import (
     INotification,
 )
@@ -32,5 +30,5 @@ from parcours_doctoral.ddd.recevabilite.domain.service.i_notification import (
 
 class NotificationInMemory(INotification):
     @classmethod
-    def inviter_membres_jury(cls, parcours_doctoral: ParcoursDoctoral, auteur: PersonneConnueUclDTO) -> None:
+    def inviter_membres_jury(cls, parcours_doctoral_uuid: str) -> None:
         pass

@@ -1,0 +1,97 @@
+{% extends "parcours_doctoral/details/tab_layout.html" %}
+{% load i18n parcours_doctoral static %}
+
+{% comment "License" %}
+* OSIS stands for Open Student Information System. It's an application
+* designed to manage the core business of higher education institutions,
+* such as universities, faculties, institutes and professional schools.
+* The core business involves the administration of students, teachers,
+* courses, programs and so on.
+*
+* Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* A copy of this license - GNU General Public License - is available
+* at the root of the source code of this program.  If not,
+* see http://www.gnu.org/licenses/.
+{% endcomment %}
+
+{% block actions-group %}
+  {% has_perm 'parcours_doctoral.invite_jury_to_admissibility' as can_invite_jury_to_admissibility %}
+
+  {% if can_invite_jury_to_admissibility %}
+    <div id="admissibility-actions" class="btn-group">
+      <button
+        type="button"
+        class="btn btn-default border border-dark-subtle"
+        data-bs-toggle="dropdown"
+        aria-haspopup="true"
+        aria-expanded="false"
+      >
+        {% translate "Actions" %}
+        <i class="fa-solid fa-caret-down"></i>
+      </button>
+      <ul class="dropdown-menu float-end">
+        {% if can_invite_jury_to_admissibility %}
+          <li>
+            <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#admissibility-jury-invitation-form-modal">
+              {% translate "Invite the members of the jury to the admissibility" %}
+            </a>
+          </li>
+        {% endif %}
+      </ul>
+    </div>
+  {% endif %}
+{% endblock %}
+
+{% block tab_content %}
+  <div class="card mb-3">
+    <div class="card-header">
+      <h4 class="card-title">{% translate "Admissibility" %}</h4>
+    </div>
+    <div class="card-body">
+      {% field_data _("Thesis title") parcours_doctoral.titre_these_propose inline=True %}
+
+      {% include 'parcours_doctoral/includes/private_defense/supervision_panel.html' %}
+
+      <div class="row">
+        {% field_data _("Date of manuscript submission to the thesis exam board") current_admissibility.date_envoi_manuscrit inline=True css_class='col-md-6' %}
+        {% field_data _("Date of admissibility decision") current_admissibility.date_decision inline=True css_class='col-md-6' %}
+      </div>
+      {% field_data _("Thesis exam board opinion") current_admissibility.avis_jury %}
+      {% field_data _("Admissibility minutes") current_admissibility.proces_verbal %}
+    </div>
+  </div>
+
+  {% include 'parcours_doctoral/includes/admissibility/previous_admissibilities.html' %}
+
+  {% url 'parcours_doctoral:admissibility:jury-invitation' view.kwargs.uuid as jury_invitation_url %}
+  {% translate 'Invite the members of the jury to the admissibility' as jury_invitation_title %}
+  {% translate 'Here is an example message that will be sent to the jury members.' as jury_invitation_message %}
+  {% include 'parcours_doctoral/modal/form_modal.html' with modal_id='admissibility-jury-invitation-form-modal' modal_title=jury_invitation_title modal_message=jury_invitation_message modal_url=jury_invitation_url %}
+
+{% endblock %}
+
+{% block style %}
+  {{ block.super }}
+  <style>
+    {# Facilitate the management of the separator display by hiding it if it's the last element #}
+    #admissibility-actions li:last-child:has(.dropdown-divider) {
+      display: none;
+    }
+  </style>
+{% endblock %}
+
+{% block script %}
+  {{ block.super }}
+  <script src="{% static 'parcours_doctoral/js/submit_ckeditor_data.js' %}"></script>
+{% endblock %}

@@ -11,7 +11,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("parcours_doctoral", "0037_admissibility_mail_templates"),
+        ("parcours_doctoral", "0036_scebmanager"),
     ]
 
     operations = [
