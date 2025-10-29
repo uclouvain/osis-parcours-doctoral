@@ -45,16 +45,16 @@ def soumettre_recevabilite(
     # GIVEN
     parcours_doctoral_identity = ParcoursDoctoralIdentity(uuid=cmd.parcours_doctoral_uuid)
     recevabilite = recevabilite_repository.get_active(parcours_doctoral_entity_id=parcours_doctoral_identity)
-
-    recevabilite.verifier_soumission(
-        titre_these=cmd.titre_these,
-        est_active=recevabilite.est_active,
-    )
-
     parcours_doctoral = parcours_doctoral_repository.get(recevabilite.parcours_doctoral_id)
     statut_original_parcours_doctoral = parcours_doctoral.statut
 
     # WHEN
+    recevabilite.verifier_soumission(
+        titre_these=cmd.titre_these,
+        est_active=recevabilite.est_active,
+        statut_parcours_doctoral=statut_original_parcours_doctoral,
+    )
+
     recevabilite.soumettre_formulaire(
         date_decision=cmd.date_decision,
         date_envoi_manuscrit=cmd.date_envoi_manuscrit,

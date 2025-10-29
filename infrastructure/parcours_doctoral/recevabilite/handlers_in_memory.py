@@ -64,4 +64,9 @@ COMMAND_HANDLERS = {
         recevabilite_repository=_recevabilite_repository,
         historique=_historique,
     ),
+    InviterJuryRecevabiliteCommand: lambda msg_bus, cmd: inviter_jury_recevabilite(
+        cmd,
+        parcours_doctoral_repository=_parcours_doctoral_repository,
+        notification=_notification,
+    ),
 }

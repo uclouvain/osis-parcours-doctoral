@@ -29,6 +29,7 @@ from typing import List, Optional
 import attr
 
 from osis_common.ddd import interface
+from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import (
     ParcoursDoctoralIdentity,
 )
@@ -68,10 +69,12 @@ class Recevabilite(interface.RootEntity):
         self,
         titre_these: str,
         est_active: bool,
+        statut_parcours_doctoral: ChoixStatutParcoursDoctoral,
     ):
         SoumettreRecevabiliteValidatorList(
             titre_these=titre_these,
             est_active=est_active,
+            statut_parcours_doctoral=statut_parcours_doctoral,
         ).validate()
 
     def rendre_inactive(self):

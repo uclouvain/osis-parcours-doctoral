@@ -27,6 +27,7 @@
 from django.utils.translation import gettext_lazy as _
 
 from osis_common.ddd.interface import BusinessException
+from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 
 
 class RecevabiliteNonTrouveeException(BusinessException):
@@ -50,4 +51,22 @@ class RecevabiliteNonActiveeException(BusinessException):
 
     def __init__(self, **kwargs):
         message = _('Admissibility not activated.')
+        super().__init__(message, **kwargs)
+
+
+class EtapeRecevabilitePasEnCoursException(BusinessException):
+    status_code = 'RECEVABILITE-4'
+
+    def __init__(self, **kwargs):
+        message = _('The step related to the admissibility is not in progress.')
+        super().__init__(message, **kwargs)
+
+
+class StatutDoctoratDifferentRecevabiliteSoumiseException(BusinessException):
+    status_code = 'RECEVABILITE-5'
+
+    def __init__(self, **kwargs):
+        message = _("The doctorate must be in the status '%(status)s' to realize this action.") % {
+            'status': ChoixStatutParcoursDoctoral.RECEVABILITE_SOUMISE.value,
+        }
         super().__init__(message, **kwargs)

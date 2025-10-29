@@ -25,13 +25,11 @@
 # ##############################################################################
 from abc import abstractmethod
 
-from ddd.logic.shared_kernel.personne_connue_ucl.dtos import PersonneConnueUclDTO
 from osis_common.ddd import interface
-from parcours_doctoral.models import ParcoursDoctoral
 
 
 class INotification(interface.DomainService):
     @classmethod
     @abstractmethod
-    def inviter_membres_jury(cls, parcours_doctoral: ParcoursDoctoral, auteur: PersonneConnueUclDTO) -> None:
+    def inviter_membres_jury(cls, parcours_doctoral_uuid: str) -> None:
         raise NotImplementedError

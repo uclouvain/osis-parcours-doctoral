@@ -23,4 +23,5 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from .inviter_jury_recevabilite_service import inviter_jury_recevabilite
 from .soumettre_recevabilite_service import soumettre_recevabilite

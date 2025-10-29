@@ -29,6 +29,9 @@ from parcours_doctoral.ddd.recevabilite.use_case.write import *
 from parcours_doctoral.infrastructure.parcours_doctoral.domain.service.historique import (
     Historique,
 )
+from parcours_doctoral.infrastructure.parcours_doctoral.recevabilite.domain.service.notification import (
+    Notification,
+)
 from parcours_doctoral.infrastructure.parcours_doctoral.recevabilite.repository.recevabilite import (
     RecevabiliteRepository,
 )
@@ -46,5 +49,10 @@ COMMAND_HANDLERS = {
         parcours_doctoral_repository=ParcoursDoctoralRepository(),
         recevabilite_repository=RecevabiliteRepository(),
         historique=Historique(),
+    ),
+    InviterJuryRecevabiliteCommand: lambda msg_bus, cmd: inviter_jury_recevabilite(
+        cmd,
+        parcours_doctoral_repository=ParcoursDoctoralRepository(),
+        notification=Notification(),
     ),
 }
