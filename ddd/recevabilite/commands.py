@@ -44,3 +44,8 @@ class SoumettreRecevabiliteCommand(interface.CommandRequest):
     titre_these: str
     date_decision: Optional[datetime.date]
     date_envoi_manuscrit: Optional[datetime.date]
+
+
+@attr.dataclass(frozen=True, slots=True)
+class InviterJuryRecevabiliteCommand(interface.CommandRequest):
+    parcours_doctoral_uuid: str

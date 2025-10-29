@@ -23,16 +23,30 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from ._should_recevabilite_etre_active import ShouldRecevabiliteEtreActive
-from ._should_recevabilite_etre_completee import ShouldRecevabiliteEtreCompletee
-from ._should_statut_parcours_doctoral_etre_valide import (
-    ShouldEtapeRecevabiliteEtreEnCours,
-    ShouldStatutDoctoratEtreRecevabiliteSoumise,
+from parcours_doctoral.ddd.domain.model.parcours_doctoral import (
+    ParcoursDoctoralIdentity,
+)
+from parcours_doctoral.ddd.recevabilite.commands import InviterJuryRecevabiliteCommand
+from parcours_doctoral.ddd.recevabilite.domain.service.i_notification import (
+    INotification,
+)
+from parcours_doctoral.ddd.repository.i_parcours_doctoral import (
+    IParcoursDoctoralRepository,
 )
 
-__all__ = [
-    'ShouldRecevabiliteEtreActive',
-    'ShouldRecevabiliteEtreCompletee',
-    'ShouldEtapeRecevabiliteEtreEnCours',
-    'ShouldStatutDoctoratEtreRecevabiliteSoumise',
-]
+
+def inviter_jury_recevabilite(
+    cmd: 'InviterJuryRecevabiliteCommand',
+    parcours_doctoral_repository: 'IParcoursDoctoralRepository',
+    notification: 'INotification',
+) -> ParcoursDoctoralIdentity:
+    # GIVEN
+    parcours_doctoral_identity = ParcoursDoctoralIdentity(uuid=cmd.parcours_doctoral_uuid)
+    parcours_doctoral = parcours_doctoral_repository.get(entity_id=parcours_doctoral_identity)
+
+    parcours_doctoral.verifier_invitation_du_jury_a_recevabilite_est_possible()
+
+    # THEN
+    notification.inviter_membres_jury(parcours_doctoral_uuid=cmd.parcours_doctoral_uuid)
+
+    return parcours_doctoral_identity

@@ -393,6 +393,9 @@ msgctxt "parcours_doctoral filter"
 msgid "Additional training"
 msgstr "Formation complémentaire"
 
+msgid "Admissibility"
+msgstr "Recevabilité"
+
 msgctxt "dashboard-category"
 msgid "Admissibility (formula 2)"
 msgstr "Recevabilité (formule 2)"
@@ -1761,6 +1764,9 @@ msgstr "Publication internationale"
 msgid "International scholarship"
 msgstr "Bourse internationale"
 
+msgid "Invite the members of the jury to the admissibility"
+msgstr "Inviter les membres du jury à la recevabilité"
+
 msgid "Invite the members of the jury to the private defence"
 msgstr "Inviter les membres du jury à la défense privée"
 
@@ -2126,8 +2132,7 @@ msgstr ""
 "soutenance publique"
 
 msgid "Mail sent to the jury members to invite them to the admissibility"
-msgstr ""
-"E-Mail envoyé aux membres du jury pour les inviter à la recevabilité"
+msgstr "E-Mail envoyé aux membres du jury pour les inviter à la recevabilité"
 
 msgid "Mail sent to the jury members to invite them to the private defence"
 msgstr "E-Mail envoyé aux membres du jury pour les inviter à la défense privée"
@@ -2334,6 +2339,12 @@ msgstr "Nom de l'entité de gestion"
 
 msgid "Name of the manager sending the email"
 msgstr "Nom du gestionnaire qui envoie l'email"
+
+msgid "Name of the president of the jury (eventually with the title)"
+msgstr "Nom du président du jury (éventuellement avec le titre)"
+
+msgid "Name of the secretary of the jury (eventually with the title)"
+msgstr "Nom du secrétaire du jury (éventuellement avec le titre)"
 
 msgid "Name or brief description"
 msgstr "Nom ou description brève"
@@ -2748,6 +2759,9 @@ msgstr "Prévisualiser"
 #, python-format
 msgid "Preview <em>%(name)s</em> custom mail template"
 msgstr "Prévisualiser le template d'email personnalisé <em>%(name)s</em>"
+
+msgid "Previous admissibilities"
+msgstr "Recevabilités passées"
 
 msgid "Previous confirmation exams"
 msgstr "Epreuves de confirmation passées"
@@ -3764,6 +3778,9 @@ msgstr "Le membre n'est pas externe."
 msgid "The member was not found in the jury."
 msgstr "Le membre n'a pas été trouvé dans le jury."
 
+msgid "The members of the jury have been invited to the admissibility."
+msgstr "Les membres du jury ont été invités à la recevabilité."
+
 msgid "The members of the jury have been invited to the private defence."
 msgstr "Les membres du jury ont été invités à la défense privée."
 
@@ -3870,6 +3887,9 @@ msgstr "La date de début ne peut être postérieure à la date de fin"
 #, python-format
 msgid "The status has been changed to %(status)s."
 msgstr "Le statut a bien été modifié pour : %(status)s."
+
+msgid "The step related to the admissibility is not in progress."
+msgstr "L'étape relative à la recevabilité n'est pas en cours."
 
 msgid "The step related to the public defence is not in progress."
 msgstr "L'étape relative à la soutenance publique n'est pas en cours."
@@ -4474,6 +4494,9 @@ msgstr ""
 "présentant les résultats de ses travaux de recherche qui ont conduit à la "
 "thèse intitulée : <strong>%(thesis_title)s</strong>;"
 
+msgid "he"
+msgstr "il"
+
 msgid "hh:mm"
 msgstr "hh:mm"
 
@@ -4495,6 +4518,9 @@ msgid ""
 msgstr ""
 "Avis motivé et inventaire des questions posées par un/des membre(s) du jury "
 "éventuellement absent(s) pour cas de force majeure."
+
+msgid "she"
+msgstr "elle"
 
 msgid ""
 "the 120 credits (thesis) required for the award of the academic degree of "
@@ -4518,6 +4544,18 @@ msgstr "la <strong>non-poursuite</strong> du doctorat."
 
 msgid "the <strong>successful completion</strong> of the confirmation paper."
 msgstr "la <strong>réussite</strong> de l'épreuve de confirmation."
+
+msgctxt "F"
+msgid "the PhD student"
+msgstr "la doctorante"
+
+msgctxt "H"
+msgid "the PhD student"
+msgstr "le doctorant"
+
+msgctxt "X"
+msgid "the PhD student"
+msgstr "la·le doctorant·e"
 
 msgid "the credits for additional training having been obtained;"
 msgstr "les crédits de la formation complémentaire ayant été obtenus;"

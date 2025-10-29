@@ -11,7 +11,7 @@ class Migration(migrations.Migration):
     dependencies = [
         (
             "parcours_doctoral",
-            "0036_scebmanager",
+            "0037_alter_cddmailtemplate_identifier_and_more",
         ),
     ]
 
@@ -27,21 +27,21 @@ class Migration(migrations.Migration):
 <p>Dear {jury_member_first_name} {jury_member_last_name},</p>
 <p>{student_first_name} {student_last_name}'s  thesis has just been distributed to you for an admissibility decision
 for {training_title}.</p>
-<p>We remind you that, as a board member, you must give your opinion on the thesis by {admissibility_opinion_date}.</p>
+<p>We remind you that, as a board member, you must give your opinion on the thesis by {admissibility_decision_date}.</p>
 <p>Thank you in advance for your important contribution.</p>
 <p>Please contact me should you require further information.</p>
 <p>Sincerely,</p>
-<p>{sender_name} - {management_entity_name}</p>''',
+<p>{jury_president}<br>Board Chair<br>{jury_secretary}<br>Board Secretary</p>''',
                 'fr-be': '''\
 <p>Cher, Chère, Cher.ère {jury_member_first_name} {jury_member_last_name},</p>
 <p>Le texte de la thèse de {student_first_name} {student_last_name} vient de vous être distribué en vue de la décision
 de recevabilité, pour son {training_title}.</p>
 <p>Nous vous rappelons qu'en tant que membre du jury, vous devez communiquer votre avis sur la thèse pour le
-{admissibility_opinion_date}.</p>
+{admissibility_decision_date}.</p>
 <p>En vous remerciant d'avance pour votre contribution importante, je vous adresse mes plus cordiales
 salutations et reste bien entendu à votre entière disposition.</p>
 <p>---</p>
-<p>{sender_name} - {management_entity_name}</p>''',
+<p>{jury_president}<br>Président.e du jury<br>{jury_secretary}<br>Secrétaire du jury</p>''',
             },
         ),
         MailTemplateMigration(
@@ -61,7 +61,7 @@ made to the text mentioned in the admissibility report <i>(supprimer si pas de m
 <p>We invite the PhD student to submit no later than two weeks before the date set for the public defence the final version of the thesis and its distribution arrangements for signature by the lead supervisor via the application <a href="{parcours_doctoral_link_front_thesis_distribution_authorisation}">{parcours_doctoral_link_front_thesis_distribution_authorisation}</a>.</p>
 <p>Please contact us should you require further information.</p>
 <p>Sincerely,</p>
-<p>{sender_name} - {management_entity_name}</p>''',
+<p>{jury_president}<br>Board Chair<br>{jury_secretary}<br>Board Secretary</p>''',
                 'fr-be': '''\
 <p>Cher, Chère, Cher.ère {student_first_name} {student_last_name},</p>
 <p>Après consultation, nous avons le plaisir de vous informer que le jury a émis un avis favorable et juge la thèse de {student_first_name} {student_last_name} recevable en l'état / moyennant les modifications à apporter au texte mentionnées dans le procès-verbal de recevabilité <i>(supprimer si pas de modifications)</i>.</p>
@@ -70,7 +70,7 @@ made to the text mentioned in the admissibility report <i>(supprimer si pas de m
 <p>Nous restons à votre disposition pour tout autre renseignement complémentaire.</p>
 <p>Bien cordialement.</p>
 <p>---</p>
-<p>{sender_name} - {management_entity_name}</p>''',
+<p>{jury_president}<br>Président.e du jury<br>{jury_secretary}<br>Secrétaire du jury</p>''',
             },
         ),
         MailTemplateMigration(
@@ -86,7 +86,7 @@ made to the text mentioned in the admissibility report <i>(supprimer si pas de m
 <p>To view the minutes, please click on this link <a href="{parcours_doctoral_link_front_admissibility_minutes}">{parcours_doctoral_link_front_admissibility_minutes}</a>.</p>
 <p>Please contact us should you require further information.</p>
 <p>Sincerely,</p>
-<p>{sender_name} - {management_entity_name}</p>''',
+<p>{jury_president}<br>Board Chair<br>{jury_secretary}<br>Board Secretary</p>''',
                 'fr-be': '''\
 <p>Cher, Chère, Cher.ère {student_first_name} {student_last_name},</p>
 <p>Après consultation, nous vous informons que le jury a jugé la thèse de {student_first_name} {student_last_name} non recevable, mais l’autorise à soumettre une version révisée de celle-ci, dans un délai de ...</p>
@@ -94,7 +94,7 @@ made to the text mentioned in the admissibility report <i>(supprimer si pas de m
 <p>Nous restons à votre disposition pour tout autre renseignement complémentaire.</p>
 <p>Bien cordialement.</p>
 <p>---</p>
-<p>{sender_name} - {management_entity_name}</p>''',
+<p>{jury_president}<br>Président.e du jury<br>{jury_secretary}<br>Secrétaire du jury</p>''',
             },
         ),
         MailTemplateMigration(
@@ -110,7 +110,7 @@ made to the text mentioned in the admissibility report <i>(supprimer si pas de m
 <p>To view the admissibility minutes, please click on this link <a href="{parcours_doctoral_link_front_admissibility_minutes}">{parcours_doctoral_link_front_admissibility_minutes}</a></p>
 <p>Please contact us should you require further information.</p>
 <p>Sincerely,</p>
-<p>{sender_name} - {management_entity_name}</p>''',
+<p>{jury_president}<br>Board Chair<br>{jury_secretary}<br>Board Secretary</p>''',
                 'fr-be': '''\
 <p>Cher, Chère, Cher.ère {student_first_name} {student_last_name},</p>
 <p>Après une seconde consultation, nous vous informons que le jury a jugé la thèse de {student_first_name} {student_last_name} non recevable et qu’{student_personal_pronoun} n’est plus dans les conditions de pouvoir la représenter.</p>
@@ -118,7 +118,7 @@ made to the text mentioned in the admissibility report <i>(supprimer si pas de m
 <p>Nous restons à votre disposition pour tout autre renseignement complémentaire.</p>
 <p>Bien cordialement.</p>
 <p>---</p>
-<p>{sender_name} - {management_entity_name}</p>''',
+<p>{jury_president}<br>Président.e du jury<br>{jury_secretary}<br>Secrétaire du jury</p>''',
             },
         ),
     ]
