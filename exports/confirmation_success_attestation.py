@@ -32,7 +32,7 @@ from infrastructure.messages_bus import message_bus_instance
 from parcours_doctoral.ddd.commands import RecupererParcoursDoctoralQuery
 from parcours_doctoral.ddd.dtos import ParcoursDoctoralDTO
 from parcours_doctoral.exports.utils import parcours_doctoral_generate_pdf
-from parcours_doctoral.models import ConfirmationPaper, ParcoursDoctoralTask, Activity
+from parcours_doctoral.models import Activity, ConfirmationPaper, ParcoursDoctoralTask
 from parcours_doctoral.utils.formatting import format_address
 from reference.services.mandates import (
     MandateFunctionEnum,
@@ -104,7 +104,6 @@ def confirmation_success_attestation(task_uuid, language=None):
 
         # Generate the pdf
         save_token = parcours_doctoral_generate_pdf(
-            parcours_doctoral=doctorate_dto,
             template='parcours_doctoral/exports/confirmation_success_attestation.html',
             filename='confirmation_attestation.pdf',
             context={
@@ -112,6 +111,7 @@ def confirmation_success_attestation(task_uuid, language=None):
                 'cdd_president': cdd_president[0] if cdd_president else {},
                 'confirmation_paper': confirmation_paper,
                 'doctoral_training_ects_nb': doctoral_training_ects_nb,
+                'parcours_doctoral': doctorate_dto,
             },
         )
 

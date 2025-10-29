@@ -1,0 +1,192 @@
+{% extends "parcours_doctoral/exports/base_pdf.html" %}
+{% load doctorate_enums i18n parcours_doctoral strings %}
+
+{% comment "License" %}
+  * OSIS stands for Open Student Information System. It's an application
+  * designed to manage the core business of higher education institutions,
+  * such as universities, faculties, institutes and professional schools.
+  * The core business involves the administration of students, teachers,
+  * courses, programs and so on.
+  *
+  * Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
+  *
+  * This program is free software: you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License as published by
+  * the Free Software Foundation, either version 3 of the License, or
+  * (at your option) any later version.
+  *
+  * This program is distributed in the hope that it will be useful,
+  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  * GNU General Public License for more details.
+  *
+  * A copy of this license - GNU General Public License - is available
+  * at the root of the source code of this program.  If not,
+  * see http://www.gnu.org/licenses/.
+{% endcomment %}
+
+{% block extra_head %}
+  <style>
+    #public-defense-result {
+      margin-left: 2em;
+    }
+
+    #public-defense-result > div > div {
+      margin-left: 2em;
+      margin-bottom: 1em;
+    }
+
+    #public-defense-result label {
+      display: inline;
+      font-weight: normal;
+    }
+
+    #public-defense-result input[type="checkbox"] {
+      float: left;
+      height: 1em;
+      width: 1em;
+      display: inline-block;
+      border: #444 1px solid;
+      margin-top: 0.3em;
+    }
+
+    p {
+      margin-top: 1.5em;
+    }
+
+    #signatures td {
+      display: flex;
+      align-items: center;
+      min-height: 4em;
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <div id="title">
+      <h1>{% translate "Public defence assessment" %}</h1>
+      <h2>
+        {% translate "To be signed by the exam board" %}
+        <br>
+        {% translate "To be submitted to the CDD administrator" %}
+      </h2>
+    </div>
+
+    {% if parcours_doctoral.genre_doctorant == "F" %}
+      {% translate "PhD student" as student_title context "female gender" %}
+    {% elif parcours_doctoral.genre_doctorant == "H" %}
+      {% translate "PhD student" as student_title context "male gender" %}
+    {% else %}
+      {% translate "PhD student" as student_title context "gender" %}
+    {% endif %}
+    {% concat parcours_doctoral.nom_doctorant " " parcours_doctoral.prenom_doctorant as full_name %}
+
+    {% field_data student_title full_name inline=True css_class='fw-bold' %}
+
+    {% field_data _("Noma") parcours_doctoral.noma_doctorant inline=True css_class='fw-bold' %}
+
+    {% if parcours_doctoral.cotutelle.cotutelle %}
+      {% get_superior_institute_name parcours_doctoral.cotutelle.institution as institute_name %}
+      <span class="underline-text as-field-data">
+        {% blocktranslate trimmed with institute_name=institute_name|default:parcours_doctoral.cotutelle.autre_institution_nom %}
+          Thesis completed under joint supervision with {{ institute_name }}
+        {% endblocktranslate %}
+      </span>
+    {% endif %}
+
+    <p>
+      {% blocktranslate trimmed with training_name=parcours_doctoral.formation.intitule %}
+        We, the undersigned members of the PhD Thesis Exam Board in {{ training_name }} for
+        the above named PhD student,
+      {% endblocktranslate %}
+    </p>
+
+    <ul class="fw-bold">
+      {% for jury_member in jury_members %}
+        <li>
+          {{ jury_member.nom }} {{ jury_member.prenom }}
+          {% if not jury_member.membre_ucl %}
+            {% if jury_member.institution %}- {{ jury_member.institution }}{% endif %}
+            {% if jury_member.pays %} - {{ jury_member.pays }}{% endif %}
+          {% endif %}
+          {% if jury_member.role != 'MEMBRE' %}
+            -{{ jury_member.role|enum_display:'RoleJury' }}{% if jury_member.est_promoteur %}
+            {% translate 'and supervisor' %}
+          {% elif jury_member.est_promoteur %}
+            - {% translate 'Supervisor' %}
+          {% endif %}
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+
+    <p>
+      {% blocktranslate trimmed with public_defense_date=parcours_doctoral.date_heure_soutenance_publique|date thesis_title=parcours_doctoral.titre_these_propose %}
+        having attended the student's {{ public_defense_date }} oral presentation of the their leading
+        to the thesis entitled: <strong>{{ thesis_title }}</strong>;
+      {% endblocktranslate %}
+    </p>
+
+    <p>
+      {% translate 'the 120 credits (thesis) required for the award of the academic degree of PhD having been obtained by the student;' %}<br>
+      {% translate 'the 60 credits of "PhD training" (decree of 7 November 2013) having been obtained by the student;' %}<br>
+      {% translate 'the study programme requirements having been satisfied;' %}<br>
+      {% translate 'the programme admission requirements having been met and the student having been duly enrolled;' %}
+      {% if has_additional_training %}
+        {% translate 'the credits for additional training having been obtained;' %}
+      {% endif %}
+    </p>
+
+    <p>
+      {% translate 'we hereby confirm the successful completion of the PhD programme and validate the minimum of 180 credits required to award the PhD.' %}
+    </p>
+
+    <div class="d-flex py-2 ps-0">
+      <div>{% translate "Concluded in" %}</div>
+      <div class="solid-line" style="flex: 2;"></div>
+      <div>{% translate "on" %}</div>
+      <div class="solid-line" style="flex: 1;"></div>
+    </div>
+
+    <p class="fst-italic">
+      <small>
+        {% blocktranslate trimmed %}
+          Note: where applicable, an absent member shall send the chair a written report before the meeting, setting
+          out their reasoned opinion on the value of the thesis and a list of questions they wish to ask the student.
+        {% endblocktranslate %}
+      </small>
+    </p>
+
+    <table id="signatures" class="avoid-break-inside table table-bordered caption-top">
+      <caption>
+        <span class="fw-bold text-uppercase text-black">{% translate "Signatures" %}</span>
+      </caption>
+      <thead>
+      <tr>
+        <th>{% translate "Exam Board Members" %}</th>
+      </tr>
+      </thead>
+      <tbody>
+      {% for jury_member in jury_members %}
+        <tr>
+          <td>
+            <span>
+              {{ jury_member.nom }} {{ jury_member.prenom }} - {{ jury_member.role|enum_display:'RoleJury' }}
+            </span>
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div style="break-before: page">
+      <span class="list-title">
+        {% translate "Appendix:" %}
+      </span>
+    <ul>
+      <li>{% translate "Reasoned opinion and list of questions asked by any absent exam board members." %}</li>
+    </ul>
+  </div>
+{% endblock %}

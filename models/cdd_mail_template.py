@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -25,8 +25,6 @@
 # ##############################################################################
 from typing import Dict, List
 
-from admission.mail_templates import ADMISSION_EMAIL_GENERIC_ONCE_ADMITTED
-from base.models.enums.organization_type import MAIN
 from django.conf import settings
 from django.db import models
 from django.db.models import Subquery
@@ -37,10 +35,23 @@ from osis_mail_template.models import (
 )
 from osis_mail_template.utils import MissingTokenDict, transform_html_to_text
 
+from base.models.enums.organization_type import MAIN
+from parcours_doctoral.mail_templates import PARCOURS_DOCTORAL_EMAIL_GENERIC
 from parcours_doctoral.mail_templates.confirmation_paper import (
     PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_INFO_STUDENT,
     PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_ON_FAILURE_STUDENT,
     PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_ON_RETAKING_STUDENT,
+)
+from parcours_doctoral.mail_templates.private_defense import (
+    PARCOURS_DOCTORAL_EMAIL_PRIVATE_DEFENSE_JURY_INVITATION,
+    PARCOURS_DOCTORAL_EMAIL_PRIVATE_DEFENSE_ON_FAILURE,
+    PARCOURS_DOCTORAL_EMAIL_PRIVATE_DEFENSE_ON_REPEAT,
+    PARCOURS_DOCTORAL_EMAIL_PRIVATE_DEFENSE_ON_SUCCESS,
+)
+from parcours_doctoral.mail_templates.public_defense import (
+    PARCOURS_DOCTORAL_EMAIL_PUBLIC_DEFENSE_AUTHORISATION,
+    PARCOURS_DOCTORAL_EMAIL_PUBLIC_DEFENSE_JURY_INVITATION,
+    PARCOURS_DOCTORAL_EMAIL_PUBLIC_DEFENSE_ON_SUCCESS,
 )
 
 __all__ = [
@@ -49,10 +60,17 @@ __all__ = [
 
 
 ALLOWED_CUSTOM_IDENTIFIERS = [
-    ADMISSION_EMAIL_GENERIC_ONCE_ADMITTED,
+    PARCOURS_DOCTORAL_EMAIL_GENERIC,
     PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_INFO_STUDENT,
     PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_ON_FAILURE_STUDENT,
     PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_ON_RETAKING_STUDENT,
+    PARCOURS_DOCTORAL_EMAIL_PRIVATE_DEFENSE_JURY_INVITATION,
+    PARCOURS_DOCTORAL_EMAIL_PRIVATE_DEFENSE_ON_SUCCESS,
+    PARCOURS_DOCTORAL_EMAIL_PRIVATE_DEFENSE_ON_REPEAT,
+    PARCOURS_DOCTORAL_EMAIL_PRIVATE_DEFENSE_ON_FAILURE,
+    PARCOURS_DOCTORAL_EMAIL_PUBLIC_DEFENSE_JURY_INVITATION,
+    PARCOURS_DOCTORAL_EMAIL_PUBLIC_DEFENSE_AUTHORISATION,
+    PARCOURS_DOCTORAL_EMAIL_PUBLIC_DEFENSE_ON_SUCCESS,
 ]
 
 

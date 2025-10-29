@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -28,16 +28,29 @@ from django.forms import BaseForm
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import override
 from django.views.generic import FormView
-from osis_common.utils.htmx import HtmxMixin
-from osis_mail_template.models import MailTemplate
 
 from infrastructure.messages_bus import message_bus_instance
+from osis_common.utils.htmx import HtmxMixin
 from parcours_doctoral.ddd.commands import EnvoyerMessageDoctorantCommand
 from parcours_doctoral.forms.send_mail import SendMailForm
 from parcours_doctoral.infrastructure.parcours_doctoral.domain.service.notification import (
     Notification,
 )
-from parcours_doctoral.mail_templates import PARCOURS_DOCTORAL_EMAIL_GENERIC
+from parcours_doctoral.infrastructure.parcours_doctoral.epreuve_confirmation.domain.service.notification import (
+    Notification as NotificationEpreuveConfirmation,
+)
+from parcours_doctoral.infrastructure.parcours_doctoral.soutenance_publique.domain.service.notification import (
+    Notification as NotificationSoutenancePublique,
+)
+from parcours_doctoral.mail_templates import (
+    CONFIRMATION_PAPER_TEMPLATES_IDENTIFIERS,
+    PARCOURS_DOCTORAL_EMAIL_GENERIC,
+)
+from parcours_doctoral.mail_templates.public_defense import (
+    PUBLIC_DEFENSE_TEMPLATES_IDENTIFIERS,
+)
+from parcours_doctoral.models import CddMailTemplate
+from parcours_doctoral.utils.mail_templates import get_email_template
 from parcours_doctoral.views.mixins import ParcoursDoctoralFormMixin
 
 __all__ = [
@@ -59,19 +72,43 @@ class SendMailView(HtmxMixin, ParcoursDoctoralFormMixin, FormView):
             'parcours_doctoral': self.parcours_doctoral,
         }
 
+    def get_tokens(self, identifier):
+        if identifier in CONFIRMATION_PAPER_TEMPLATES_IDENTIFIERS:
+            return NotificationEpreuveConfirmation.get_common_tokens(
+                self.parcours_doctoral,
+                self.last_confirmation_paper,
+            )
+        elif identifier in PUBLIC_DEFENSE_TEMPLATES_IDENTIFIERS:
+            return NotificationSoutenancePublique.get_common_tokens(
+                NotificationSoutenancePublique.get_doctorate(self.parcours_doctoral_uuid),
+                sender_first_name=self.request.user.person.first_name,
+                sender_last_name=self.request.user.person.last_name,
+            )
+        return Notification.get_common_tokens(self.parcours_doctoral)
+
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs.update(self.get_extra_form_kwargs())
         return kwargs
 
     def get_initial(self):
-        mail_template = MailTemplate.objects.get(
-            identifier=PARCOURS_DOCTORAL_EMAIL_GENERIC,
-            language=self.parcours_doctoral.student.language,
-        )
-        tokens = Notification.get_common_tokens(self.parcours_doctoral)
+        identifier = self.request.GET.get('template') or PARCOURS_DOCTORAL_EMAIL_GENERIC
+
+        if identifier.isnumeric():
+            # Template is a custom one
+            mail_template = CddMailTemplate.objects.get(pk=identifier)
+            identifier = mail_template.identifier
+        else:
+            # Template is a custom one if any, otherwise a generic one
+            mail_template = get_email_template(
+                identifier=identifier,
+                language=self.parcours_doctoral.student.language,
+                management_entity_id=self.parcours_doctoral.training.management_entity_id,
+            )
 
         with override(language=self.parcours_doctoral.student.language):
+            tokens = self.get_tokens(identifier)
+
             return {
                 **self.request.GET,
                 'subject': mail_template.render_subject(tokens),

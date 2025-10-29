@@ -71,7 +71,7 @@ from parcours_doctoral.forms.fields import SelectWithDisabledOptions
 from parcours_doctoral.infrastructure.parcours_doctoral.read_view.repository.tableau_bord import (
     TableauBordRepository,
 )
-from parcours_doctoral.models import JuryMember, ParcoursDoctoralSupervisionActor
+from parcours_doctoral.models import JuryActor, ParcoursDoctoralSupervisionActor
 from parcours_doctoral.models.entity_proxy import EntityProxy
 from reference.models.enums.scholarship_type import ScholarshipType
 from reference.models.scholarship import Scholarship
@@ -321,10 +321,9 @@ class ParcoursDoctorauxFilterForm(forms.Form):
             jury_president_uuid = self.data.get(self.add_prefix('uuid_president_jury'))
             if jury_president_uuid:
                 jury_president = (
-                    JuryMember.objects.filter(uuid=jury_president_uuid)
+                    JuryActor.objects.filter(uuid=jury_president_uuid)
                     .select_related(
                         'person',
-                        'promoter__person',
                     )
                     .first()
                 )

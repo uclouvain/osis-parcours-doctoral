@@ -33,16 +33,13 @@ from django.utils.translation import get_language
 from django.utils.translation import gettext_lazy as _
 from osis_async.models import AsyncTask
 from osis_mail_template.utils import generate_email, transform_html_to_text
-from osis_notification.contrib.handlers import (
-    EmailNotificationHandler,
-    WebNotificationHandler,
-)
+from osis_notification.contrib.handlers import EmailNotificationHandler
 from osis_notification.contrib.notification import EmailNotification
-from osis_notification.models import WebNotification
 from osis_signature.enums import SignatureState
 from osis_signature.utils import get_signing_token
 
 from base.models.person import Person
+from parcours_doctoral.auth.roles.sceb_manager import ScebManager
 from parcours_doctoral.ddd.domain.model.groupe_de_supervision import (
     GroupeDeSupervision,
     SignataireIdentity,
@@ -52,24 +49,29 @@ from parcours_doctoral.ddd.domain.service.i_notification import INotification
 from parcours_doctoral.ddd.domain.validator.exceptions import (
     SignataireNonTrouveException,
 )
+from parcours_doctoral.ddd.jury.domain.model.enums import ROLES_MEMBRES_JURY, RoleJury
+from parcours_doctoral.infrastructure.mixins.notification import NotificationMixin
 from parcours_doctoral.mail_templates.signatures import (
     PARCOURS_DOCTORAL_EMAIL_MEMBER_REMOVED,
     PARCOURS_DOCTORAL_EMAIL_SIGNATURE_REQUESTS_ACTOR,
     PARCOURS_DOCTORAL_EMAIL_SIGNATURE_REQUESTS_STUDENT,
 )
-from parcours_doctoral.models import ActorType, ParcoursDoctoralSupervisionActor
+from parcours_doctoral.models import (
+    ActorType,
+    JuryActor,
+    ParcoursDoctoralSupervisionActor,
+)
 from parcours_doctoral.models.parcours_doctoral import (
     ParcoursDoctoral as ParcoursDoctoralModel,
 )
 from parcours_doctoral.models.task import ParcoursDoctoralTask
-from parcours_doctoral.utils.persons import get_parcours_doctoral_cdd_managers
 from parcours_doctoral.utils.url import (
     get_parcours_doctoral_link_back,
     get_parcours_doctoral_link_front,
 )
 
 
-class Notification(INotification):
+class Notification(NotificationMixin, INotification):
     @classmethod
     def envoyer_message(
         cls,
@@ -78,8 +80,10 @@ class Notification(INotification):
         matricule_doctorant: str,
         sujet: str,
         message: str,
-        cc_promoteurs: bool,
-        cc_membres_ca: bool,
+        cc_promoteurs: bool = False,
+        cc_membres_ca: bool = False,
+        cc_jury: bool = False,
+        cc_sceb: bool = False,
     ) -> EmailMessage:
         parcours_doctoral_instance = ParcoursDoctoralModel.objects.get(uuid=parcours_doctoral.entity_id.uuid)
 
@@ -92,18 +96,40 @@ class Notification(INotification):
                 message,
             )
         )
-        actors = ParcoursDoctoralSupervisionActor.objects.filter(
-            process=parcours_doctoral_instance.supervision_group
-        ).select_related('person')
-        cc_list = []
-        if cc_promoteurs:
-            for promoter in actors.filter(type=ActorType.PROMOTER.name):
-                cc_list.append(cls._format_email(promoter))
-        if cc_membres_ca:
-            for ca_member in actors.filter(type=ActorType.CA_MEMBER.name):
-                cc_list.append(cls._format_email(ca_member))
+
+        cc_list = set()
+
+        if cc_promoteurs or cc_membres_ca:
+            actors = ParcoursDoctoralSupervisionActor.objects.filter(
+                process=parcours_doctoral_instance.supervision_group
+            ).select_related('person')
+
+            if cc_promoteurs:
+                for promoter in actors.filter(type=ActorType.PROMOTER.name):
+                    cc_list.add(cls._format_email(promoter))
+
+            if cc_membres_ca:
+                for ca_member in actors.filter(type=ActorType.CA_MEMBER.name):
+                    cc_list.add(cls._format_email(ca_member))
+
+        if cc_jury:
+            jury_members = JuryActor.objects.filter(
+                process_id=parcours_doctoral_instance.jury_group_id,
+                role__in=ROLES_MEMBRES_JURY,
+            ).select_related('person')
+
+            for jury_member in jury_members:
+                cc_list.add(cls._format_email(jury_member))
+
+        if cc_sceb:
+            sceb_managers = ScebManager.objects.select_related('person')
+
+            for sceb_manager in sceb_managers:
+                cc_list.add(cls._format_email(sceb_manager.person))
+
         if cc_list:
             email_message['Cc'] = ','.join(cc_list)
+
         EmailNotificationHandler.create(email_message, person=parcours_doctoral_instance.student)
 
         return email_message
@@ -132,7 +158,7 @@ class Notification(INotification):
         }
 
     @classmethod
-    def _format_email(cls, actor: ParcoursDoctoralSupervisionActor):
+    def _format_email(cls, actor: ParcoursDoctoralSupervisionActor | JuryActor | Person):
         return "{a.first_name} {a.last_name} <{a.email}>".format(a=actor)
 
     @classmethod

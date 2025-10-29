@@ -41,10 +41,7 @@
             <dt>{% translate "Research scholarship" %}</dt>
             <dd>
               {% if parcours_doctoral.financement.bourse_recherche %}
-                {{ parcours_doctoral.financement.bourse_recherche.nom_court }}
-                {% if parcours_doctoral.financement.bourse_recherche.nom_long %}
-                  - {{ parcours_doctoral.financement.bourse_recherche.nom_long }}
-                {% endif %}
+                {{ parcours_doctoral.financement.nom_bourse_recherche }}
               {% elif parcours_doctoral.financement.autre_bourse_recherche %}
                 {{ parcours_doctoral.financement.autre_bourse_recherche }}
               {% else %}

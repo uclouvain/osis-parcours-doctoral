@@ -67,4 +67,14 @@
     </a>
   {% endif %}
 
+  {% if perms.parcours_doctoral.change_auditors_configuration %}
+    <a
+      class="dropdown-item"
+      href="{% url 'parcours_doctoral:config:auditors' %}"
+    >
+      <i class="fa fa-tools"></i>
+      {% translate 'Institutes auditors configuration' %}
+    </a>
+  {% endif %}
+
 {% endif %}

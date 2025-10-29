@@ -71,6 +71,19 @@ class ParcoursDoctoralDTOSerializer(DTOSerializer):
                 'update_jury_preparation',
                 'list_jury_members',
                 'create_jury_members',
+                'jury_request_signatures',
+                'jury_add_approval',
+                'jury_approve_by_pdf',
+                # Private defense
+                'retrieve_private_defense',
+                'update_private_defense',
+                'retrieve_private_defense_minutes_canvas',
+                'submit_private_defense_minutes',
+                # Public defense
+                'retrieve_public_defense',
+                'update_public_defense',
+                'retrieve_public_defense_minutes_canvas',
+                'submit_public_defense_minutes',
             ]
         }
     )
@@ -112,6 +125,12 @@ class ParcoursDoctoralRechercheDTOSerializer(DTOSerializer):
                     'update_jury_preparation',
                     'list_jury_members',
                     'create_jury_members',
+                    # Private defense
+                    'retrieve_private_defense',
+                    'update_private_defense',
+                    # Public defense
+                    'retrieve_public_defense',
+                    'update_public_defense',
                 ]
             },
         }

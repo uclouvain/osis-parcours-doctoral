@@ -48,6 +48,17 @@ class ChoixStatutParcoursDoctoral(ChoiceEnum):
     JURY_REFUSE_CDD = _('JURY_REFUSE_CDD')
     JURY_APPROUVE_ADRE = _('JURY_APPROUVE_ADRE')
     JURY_REFUSE_ADRE = _('JURY_REFUSE_ADRE')
+    # Défense privée
+    DEFENSE_PRIVEE_SOUMISE = _('DEFENSE_PRIVEE_SOUMISE')
+    DEFENSE_PRIVEE_AUTORISEE = _('DEFENSE_PRIVEE_AUTORISEE')
+    DEFENSE_PRIVEE_A_RECOMMENCER = _('DEFENSE_PRIVEE_A_RECOMMENCER')
+    DEFENSE_PRIVEE_REUSSIE = _('DEFENSE_PRIVEE_REUSSIE')
+    DEFENSE_PRIVEE_EN_ECHEC = _('DEFENSE_PRIVEE_EN_ECHEC')
+    # Soutenance publique
+    SOUTENANCE_PUBLIQUE_SOUMISE = _('SOUTENANCE_PUBLIQUE_SOUMISE')
+    SOUTENANCE_PUBLIQUE_AUTORISEE = _('SOUTENANCE_PUBLIQUE_AUTORISEE')
+    # Autres
+    PROCLAME = _('PROCLAME')
     ABANDON = _('ABANDON')
 
 
@@ -55,6 +66,21 @@ STATUTS_DOCTORAT_EPREUVE_CONFIRMATION_EN_COURS = {
     ChoixStatutParcoursDoctoral.ADMIS.name,
     ChoixStatutParcoursDoctoral.CONFIRMATION_SOUMISE.name,
     ChoixStatutParcoursDoctoral.CONFIRMATION_A_REPRESENTER.name,
+}
+
+
+STATUTS_DOCTORAT_DEFENSE_PRIVEE_EN_COURS = {
+    ChoixStatutParcoursDoctoral.JURY_APPROUVE_ADRE.name,
+    ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_AUTORISEE.name,
+    ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_SOUMISE.name,
+    ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_A_RECOMMENCER.name,
+}
+
+
+STATUTS_DOCTORAT_SOUTENANCE_PUBLIQUE_EN_COURS = {
+    ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_REUSSIE.name,
+    ChoixStatutParcoursDoctoral.SOUTENANCE_PUBLIQUE_SOUMISE.name,
+    ChoixStatutParcoursDoctoral.SOUTENANCE_PUBLIQUE_AUTORISEE.name,
 }
 
 
@@ -153,13 +179,27 @@ STATUTS_PAR_ETAPE_PARCOURS_DOCTORAL = {
         ChoixStatutParcoursDoctoral.JURY_REFUSE_ADRE,
     ],
     ChoixEtapeParcoursDoctoral.DECISION_DE_RECEVABILITE: [],
-    ChoixEtapeParcoursDoctoral.DEFENSE_PRIVEE: [],
-    ChoixEtapeParcoursDoctoral.SOUTENANCE_PUBLIQUE: [],
+    ChoixEtapeParcoursDoctoral.DEFENSE_PRIVEE: [
+        ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_SOUMISE,
+        ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_AUTORISEE,
+        ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_REUSSIE,
+        ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_A_RECOMMENCER,
+        ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_EN_ECHEC,
+    ],
+    ChoixEtapeParcoursDoctoral.SOUTENANCE_PUBLIQUE: [
+        ChoixStatutParcoursDoctoral.SOUTENANCE_PUBLIQUE_SOUMISE,
+        ChoixStatutParcoursDoctoral.SOUTENANCE_PUBLIQUE_AUTORISEE,
+        ChoixStatutParcoursDoctoral.PROCLAME,
+    ],
     ChoixEtapeParcoursDoctoral.ABANDON_ECHEC: [
         ChoixStatutParcoursDoctoral.ABANDON,
     ],
 }
 
-STATUTS_INACTIFS = {ChoixStatutParcoursDoctoral.ABANDON.name}
+STATUTS_INACTIFS = {
+    ChoixStatutParcoursDoctoral.NON_AUTORISE_A_POURSUIVRE.name,
+    ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_EN_ECHEC.name,
+    ChoixStatutParcoursDoctoral.ABANDON.name,
+}
 
 STATUTS_ACTIFS = {choix.name for choix in ChoixStatutParcoursDoctoral if choix.name not in STATUTS_INACTIFS}

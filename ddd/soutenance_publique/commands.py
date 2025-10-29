@@ -1,0 +1,92 @@
+# ##############################################################################
+#
+#    OSIS stands for Open Student Information System. It's an application
+#    designed to manage the core business of higher education institutions,
+#    such as universities, faculties, institutes and professional schools.
+#    The core business involves the administration of students, teachers,
+#    courses, programs and so on.
+#
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    A copy of this license - GNU General Public License - is available
+#    at the root of the source code of this program.  If not,
+#    see http://www.gnu.org/licenses/.
+#
+# ##############################################################################
+import datetime
+from typing import Optional
+
+import attr
+
+from osis_common.ddd import interface
+
+
+@attr.dataclass(frozen=True, slots=True)
+class SoumettreSoutenancePubliqueCommand(interface.CommandRequest):
+    uuid_parcours_doctoral: str
+    matricule_auteur: str
+
+    langue: str
+    date_heure: datetime.datetime
+    lieu: Optional[str]
+    local_deliberation: Optional[str]
+    resume_annonce: Optional[str]
+    photo_annonce: list[str]
+
+
+@attr.dataclass(frozen=True, slots=True)
+class ModifierSoutenancePubliqueCommand(interface.CommandRequest):
+    uuid_parcours_doctoral: str
+    matricule_auteur: str
+
+    langue: str
+    date_heure: Optional[datetime.datetime]
+    lieu: str
+    local_deliberation: str
+    informations_complementaires: str
+    resume_annonce: str
+    photo_annonce: list[str]
+    proces_verbal: list[str]
+    date_retrait_diplome: Optional[datetime.date]
+
+
+@attr.dataclass(frozen=True, slots=True)
+class InviterJurySoutenancePubliqueCommand(interface.CommandRequest):
+    parcours_doctoral_uuid: str
+    matricule_auteur: str
+
+
+@attr.dataclass(frozen=True, slots=True)
+class AutoriserSoutenancePubliqueCommand(interface.CommandRequest):
+    parcours_doctoral_uuid: str
+    matricule_auteur: str
+
+    sujet_message: str
+    corps_message: str
+
+
+@attr.dataclass(frozen=True, slots=True)
+class SoumettreProcesVerbalSoutenancePubliqueCommand(interface.CommandRequest):
+    uuid_parcours_doctoral: str
+    matricule_auteur: str
+
+    proces_verbal: list[str]
+
+
+@attr.dataclass(frozen=True, slots=True)
+class ConfirmerReussiteSoutenancePubliqueCommand(interface.CommandRequest):
+    parcours_doctoral_uuid: str
+
+    matricule_auteur: str
+    sujet_message: str
+    corps_message: str

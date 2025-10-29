@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -43,7 +43,6 @@ def get_pdf_from_template(template_name, stylesheets, context) -> bytes:
 
 
 def parcours_doctoral_generate_pdf(
-    parcours_doctoral,
     template,
     filename,
     context=None,
@@ -71,7 +70,7 @@ def parcours_doctoral_generate_pdf(
         result = get_pdf_from_template(
             template,
             stylesheets or [],
-            {'parcours_doctoral': parcours_doctoral, **(context or {})},
+            context=context or {},
         )
     finally:
         translation.activate(current_language)
@@ -100,8 +99,8 @@ def generate_temporary_pdf(
     :param stylesheets: Stylesheets
     :return: URL of the temporary file
     """
+    from osis_document_components.services import save_raw_content_remotely
     from osis_document_components.utils import get_file_url
-    from osis_document_components.services import  save_raw_content_remotely
 
     with override(language or translation.get_language()):
         result = get_pdf_from_template(

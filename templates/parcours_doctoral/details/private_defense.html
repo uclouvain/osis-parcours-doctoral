@@ -1,0 +1,174 @@
+{% extends "parcours_doctoral/details/tab_layout.html" %}
+{% load doctorate_enums %}
+{% load i18n parcours_doctoral static %}
+
+{% comment "License" %}
+* OSIS stands for Open Student Information System. It's an application
+* designed to manage the core business of higher education institutions,
+* such as universities, faculties, institutes and professional schools.
+* The core business involves the administration of students, teachers,
+* courses, programs and so on.
+*
+* Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* A copy of this license - GNU General Public License - is available
+* at the root of the source code of this program.  If not,
+* see http://www.gnu.org/licenses/.
+{% endcomment %}
+
+{% block actions-group %}
+  {% has_perm 'parcours_doctoral.change_private_defense' as can_change_private_defense %}
+  {% has_perm 'parcours_doctoral.authorise_private_defense' as can_authorise_private_defense %}
+  {% has_perm 'parcours_doctoral.invite_jury_to_private_defense' as can_invite_jury_to_private_defense %}
+  {% has_perm 'parcours_doctoral.make_private_defense_decision' as can_make_decision %}
+
+  {% if can_change_private_defense or can_authorise_private_defense or can_invite_jury_to_private_defense or can_make_decision %}
+    <div id="private-defense-actions" class="btn-group">
+      <button
+        type="button"
+        class="btn btn-default border border-dark-subtle"
+        data-bs-toggle="dropdown"
+        aria-haspopup="true"
+        aria-expanded="false"
+      >
+        {% translate "Actions" %}
+        <i class="fa-solid fa-caret-down"></i>
+      </button>
+      <ul class="dropdown-menu float-end">
+        {% if can_change_private_defense %}
+          <li>
+            <a
+              class="dropdown-item"
+              href="{% url 'parcours_doctoral:update:private-defense' view.kwargs.uuid %}"
+            >
+              {% translate "Update" context 'verb' %}
+            </a>
+          </li>
+          <li><hr class="dropdown-divider"></li>
+        {% endif %}
+        {% if can_authorise_private_defense %}
+          <li>
+            <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#private-defense-authorisation-form-modal">
+              {% translate "Authorise the private defence" %}
+            </a>
+          </li>
+        {% endif %}
+        {% if can_invite_jury_to_private_defense %}
+          <li>
+            <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#private-defense-jury-invitation-form-modal">
+              {% translate "Invite the members of the jury to the private defence" %}
+            </a>
+          </li>
+        {% endif %}
+        {% if can_make_decision %}
+          {% if current_private_defense.est_valide_pour_decision %}
+            <li>
+              <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#private-defense-success-decision-form-modal">
+                {% translate "Successful defence" %}
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#private-defense-failure-decision-form-modal">
+                {% translate "Failure of the defence" %}
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#private-defense-repeat-decision-form-modal">
+                {% translate "Repeat of the defence" %}
+              </a>
+            </li>
+          {% else %}
+            {% with _("Please be sure that the date and time of the defence have been filled in and that the defence minutes have been submitted in the application.") as error_message %}
+              <li title="{{ error_message }}">
+                <a class="dropdown-item disabled" href="#">
+                  {% translate "Successful defence" %}
+                </a>
+              </li>
+              <li title="{{ error_message }}">
+                <a class="dropdown-item disabled" href="#">
+                  {% translate "Failure of the defence" %}
+                </a>
+              </li>
+              <li title="{{ error_message }}">
+                <a class="dropdown-item disabled" href="#">
+                  {% translate "Repeat of the defence" %}
+                </a>
+              </li>
+            {% endwith %}
+          {% endif %}
+        {% endif %}
+      </ul>
+    </div>
+  {% endif %}
+{% endblock %}
+
+{% block tab_content %}
+  <div class="card mb-3">
+    <div class="card-header">
+      <h4 class="card-title">{% translate "Private defence" %}</h4>
+    </div>
+    <div class="card-body">
+      {% field_data _("Thesis title") current_private_defense.titre_these inline=True %}
+
+      {% include 'parcours_doctoral/includes/private_defense/supervision_panel.html' %}
+
+      {% field_data _("Private defence date and time") current_private_defense.date_heure inline=True %}
+      {% field_data _("Private defence location") current_private_defense.lieu inline=True %}
+      {% field_data _("Date of manuscript submission to the thesis exam board") current_private_defense.date_envoi_manuscrit inline=True %}
+
+      <p>
+        <a href="{% url 'parcours_doctoral:private-defense-minutes-canvas' view.kwargs.uuid %}" target="_blank">
+          {% translate 'Canvas of the private defence minutes to download.' %}
+        </a>
+      </p>
+
+      {% field_data _("Private defence minutes") current_private_defense.proces_verbal %}
+    </div>
+  </div>
+
+  {% include 'parcours_doctoral/includes/private_defense/previous_private_defenses.html' %}
+
+  {% url 'parcours_doctoral:private-defense:authorise' view.kwargs.uuid as authorization_url %}
+  {% translate 'Authorise the private defence' as authorization_title %}
+  {% include 'parcours_doctoral/modal/form_modal.html' with modal_id='private-defense-authorisation-form-modal' modal_title=authorization_title modal_url=authorization_url %}
+
+  {% url 'parcours_doctoral:private-defense:jury-invitation' view.kwargs.uuid as jury_invitation_url %}
+  {% translate 'Invite the members of the jury to the private defence' as jury_invitation_title %}
+  {% translate 'Here is an example message that will be sent to the jury members.' as jury_invitation_message %}
+  {% include 'parcours_doctoral/modal/form_modal.html' with modal_id='private-defense-jury-invitation-form-modal' modal_title=jury_invitation_title modal_message=jury_invitation_message modal_url=jury_invitation_url %}
+
+  {% url 'parcours_doctoral:private-defense:success' view.kwargs.uuid as success_decision_url %}
+  {% include 'parcours_doctoral/modal/form_modal.html' with modal_id='private-defense-success-decision-form-modal' modal_title=_('Successful defence') modal_url=success_decision_url %}
+
+  {% url 'parcours_doctoral:private-defense:failure' view.kwargs.uuid as failure_decision_url %}
+  {% include 'parcours_doctoral/modal/form_modal.html' with modal_id='private-defense-failure-decision-form-modal' modal_title=_('Failure of the defence') modal_url=failure_decision_url %}
+
+  {% url 'parcours_doctoral:private-defense:repeat' view.kwargs.uuid as repeat_decision_url %}
+  {% include 'parcours_doctoral/modal/form_modal.html' with modal_id='private-defense-repeat-decision-form-modal' modal_title=_('Repeat of the defence') modal_url=repeat_decision_url %}
+
+{% endblock %}
+
+{% block style %}
+  {{ block.super }}
+  <style>
+    {# Facilitate the management of the separator display by hiding it if it's the last element #}
+    #private-defense-actions li:last-child:has(.dropdown-divider) {
+      display: none;
+    }
+  </style>
+{% endblock %}
+
+{% block script %}
+  {{ block.super }}
+  <script src="{% static 'parcours_doctoral/js/submit_ckeditor_data.js' %}"></script>
+{% endblock %}

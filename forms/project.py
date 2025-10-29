@@ -145,7 +145,7 @@ class ProjectForm(forms.Form):
         max_length=255,
     )
     non_soutenue = forms.BooleanField(
-        label=_('No defense'),
+        label=_('No defence'),
         required=False,
     )
     date_soutenance = forms.DateField(
@@ -154,7 +154,7 @@ class ProjectForm(forms.Form):
         required=False,
     )
     raison_non_soutenue = forms.CharField(
-        label=_('No defense reason'),
+        label=_('No defence reason'),
         widget=forms.Textarea(attrs={'rows': 2}),
         required=False,
         max_length=255,
