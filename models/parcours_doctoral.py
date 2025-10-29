@@ -213,7 +213,6 @@ class ParcoursDoctoral(models.Model):
     admission = models.ForeignKey(
         to="admission.DoctorateAdmission",
         verbose_name=pgettext_lazy("parcours_doctoral", "Admission"),
-        related_name="+",
         on_delete=models.PROTECT,
     )
     reference = models.BigIntegerField(
