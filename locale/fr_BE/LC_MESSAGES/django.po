@@ -400,6 +400,9 @@ msgctxt "dashboard-category"
 msgid "Admissibility (formula 2)"
 msgstr "Recevabilité (formule 2)"
 
+msgid "Admissibility assessment"
+msgstr "Procès verbal de la recevabilité"
+
 msgid "Admissibility minutes"
 msgstr "Procès verbal de recevabilité"
 
