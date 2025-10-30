@@ -69,4 +69,9 @@ COMMAND_HANDLERS = {
         parcours_doctoral_repository=_parcours_doctoral_repository,
         notification=_notification,
     ),
+    SoumettreProcesVerbalEtAvisRecevabiliteCommand: lambda msg_bus, cmd: soumettre_proces_verbal_et_avis_recevabilite(
+        cmd,
+        parcours_doctoral_repository=_parcours_doctoral_repository,
+        recevabilite_repository=_recevabilite_repository,
+    ),
 }

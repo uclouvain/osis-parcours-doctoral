@@ -243,6 +243,45 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '404':
           $ref: '#/components/responses/NotFound'
+    put:
+      operationId: submit_admissibility_minutes_and_opinions
+      description: Submit the minutes and the opinions of the admissibility
+      parameters:
+      - in: path
+        name: uuid
+        schema:
+          type: string
+          format: uuid
+        required: true
+      - $ref: '#/components/parameters/Accept-Language'
+      - $ref: '#/components/parameters/X-User-FirstName'
+      - $ref: '#/components/parameters/X-User-LastName'
+      - $ref: '#/components/parameters/X-User-Email'
+      - $ref: '#/components/parameters/X-User-GlobalID'
+      tags:
+      - doctorate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubmitAdmissibilityMinutesAndOpinions'
+        required: true
+      security:
+      - tokenAuth: []
+      - Token: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParcoursDoctoralIdentityDTO'
+          description: ''
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
   /doctorate/{uuid}/assessment-enrollment:
     get:
       operationId: list_inscription_evaluation_dtos
@@ -4142,6 +4181,8 @@ components:
               $ref: '#/components/schemas/ActionLink'
             retrieve_admissibility_minutes_canvas:
               $ref: '#/components/schemas/ActionLink'
+            submit_admissibility_minutes_and_opinions:
+              $ref: '#/components/schemas/ActionLink'
             retrieve_private_defense:
               $ref: '#/components/schemas/ActionLink'
             update_private_defense:
@@ -4273,6 +4314,8 @@ components:
             retrieve_admissibility:
               $ref: '#/components/schemas/ActionLink'
             update_admissibility:
+              $ref: '#/components/schemas/ActionLink'
+            submit_admissibility_minutes_and_opinions:
               $ref: '#/components/schemas/ActionLink'
             retrieve_private_defense:
               $ref: '#/components/schemas/ActionLink'
@@ -5130,6 +5173,22 @@ components:
           nullable: true
       required:
       - titre_these
+    SubmitAdmissibilityMinutesAndOpinions:
+      type: object
+      description: Contains the submitted minutes and the thesis board exam opinions
+        for an admissibility.
+      properties:
+        proces_verbal:
+          type: array
+          items:
+            type: string
+        avis_jury:
+          type: array
+          items:
+            type: string
+      required:
+      - avis_jury
+      - proces_verbal
     SubmitConfirmationPaperCommand:
       type: object
       description: |-
