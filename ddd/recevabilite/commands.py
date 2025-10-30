@@ -49,3 +49,11 @@ class SoumettreRecevabiliteCommand(interface.CommandRequest):
 @attr.dataclass(frozen=True, slots=True)
 class InviterJuryRecevabiliteCommand(interface.CommandRequest):
     parcours_doctoral_uuid: str
+
+
+@attr.dataclass(frozen=True, slots=True)
+class SoumettreProcesVerbalEtAvisRecevabiliteCommand(interface.CommandRequest):
+    parcours_doctoral_uuid: str
+
+    proces_verbal: list[str]
+    avis_jury: list[str]
