@@ -76,3 +76,22 @@ class InviterJuryRecevabiliteValidatorList(TwoStepsMultipleBusinessExceptionList
                 statut=self.statut_parcours_doctoral,
             ),
         ]
+
+
+@attr.dataclass(frozen=True, slots=True)
+class SoumettreProcesVerbalEtAvisRecevabiliteValidatorList(TwoStepsMultipleBusinessExceptionListValidator):
+    est_active: bool
+    statut_parcours_doctoral: ChoixStatutParcoursDoctoral
+
+    def get_data_contract_validators(self) -> List[BusinessValidator]:
+        return []
+
+    def get_invariants_validators(self) -> List[BusinessValidator]:
+        return [
+            ShouldStatutDoctoratEtreRecevabiliteSoumise(
+                statut=self.statut_parcours_doctoral,
+            ),
+            ShouldRecevabiliteEtreActive(
+                est_active=self.est_active,
+            ),
+        ]
