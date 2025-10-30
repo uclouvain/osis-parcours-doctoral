@@ -27,6 +27,7 @@ from rules import RuleSet, always_allow
 
 from admission.auth.roles.promoter import Promoter as AdmissionPromoter
 from parcours_doctoral.auth.predicates.parcours_doctoral import (
+    admissibility_is_submitted,
     complementary_training_enabled,
     defense_method_is_formula_1,
     defense_method_is_formula_2,
@@ -87,6 +88,9 @@ class Promoter(AdmissionPromoter):
             'parcours_doctoral.api_view_admissibility': is_parcours_doctoral_promoter & defense_method_is_formula_2,
             'parcours_doctoral.api_view_admissibility_minutes': is_parcours_doctoral_promoter
             & defense_method_is_formula_2,
+            'parcours_doctoral.api_upload_admissibility_minutes_and_opinions': is_parcours_doctoral_promoter
+            & defense_method_is_formula_2
+            & admissibility_is_submitted,
             # Private defense
             'parcours_doctoral.api_view_private_defense': is_parcours_doctoral_promoter & defense_method_is_formula_1,
             'parcours_doctoral.api_view_private_defense_minutes': is_parcours_doctoral_promoter

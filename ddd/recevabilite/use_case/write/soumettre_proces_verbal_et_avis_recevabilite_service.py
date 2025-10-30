@@ -23,11 +23,15 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from parcours_doctoral.ddd.builder.parcours_doctoral_identity import (
+    ParcoursDoctoralIdentityBuilder,
+)
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import (
     ParcoursDoctoralIdentity,
 )
-from parcours_doctoral.ddd.domain.service.i_historique import IHistorique
-from parcours_doctoral.ddd.recevabilite.commands import SoumettreRecevabiliteCommand
+from parcours_doctoral.ddd.recevabilite.commands import (
+    SoumettreProcesVerbalEtAvisRecevabiliteCommand,
+)
 from parcours_doctoral.ddd.recevabilite.repository.i_recevabilite import (
     IRecevabiliteRepository,
 )
@@ -36,37 +40,24 @@ from parcours_doctoral.ddd.repository.i_parcours_doctoral import (
 )
 
 
-def soumettre_recevabilite(
-    cmd: 'SoumettreRecevabiliteCommand',
+def soumettre_proces_verbal_et_avis_recevabilite(
+    cmd: 'SoumettreProcesVerbalEtAvisRecevabiliteCommand',
     parcours_doctoral_repository: 'IParcoursDoctoralRepository',
     recevabilite_repository: 'IRecevabiliteRepository',
-    historique: 'IHistorique',
 ) -> ParcoursDoctoralIdentity:
     # GIVEN
-    parcours_doctoral_identity = ParcoursDoctoralIdentity(uuid=cmd.parcours_doctoral_uuid)
-    recevabilite = recevabilite_repository.get_active(parcours_doctoral_entity_id=parcours_doctoral_identity)
-    parcours_doctoral = parcours_doctoral_repository.get(recevabilite.parcours_doctoral_id)
-    statut_original_parcours_doctoral = parcours_doctoral.statut
+    parcours_doctoral_id = ParcoursDoctoralIdentityBuilder.build_from_uuid(uuid=cmd.parcours_doctoral_uuid)
+    parcours_doctoral = parcours_doctoral_repository.get(entity_id=parcours_doctoral_id)
+    recevabilite = recevabilite_repository.get_active(parcours_doctoral_entity_id=parcours_doctoral_id)
 
     # WHEN
-    recevabilite.verifier_soumission(
-        titre_these=cmd.titre_these,
-        statut_parcours_doctoral=statut_original_parcours_doctoral,
+    recevabilite.soumettre_proces_verbal_et_avis(
+        proces_verbal=cmd.proces_verbal,
+        avis_jury=cmd.avis_jury,
+        statut_parcours_doctoral=parcours_doctoral.statut,
     )
-
-    recevabilite.soumettre_formulaire(
-        date_decision=cmd.date_decision,
-        date_envoi_manuscrit=cmd.date_envoi_manuscrit,
-    )
-    parcours_doctoral.soumettre_recevabilite(titre_these=cmd.titre_these)
 
     # THEN
-    parcours_doctoral_repository.save(parcours_doctoral)
     recevabilite_repository.save(recevabilite)
-    historique.historiser_soumission_recevabilite(
-        parcours_doctoral=parcours_doctoral,
-        matricule_auteur=cmd.matricule_auteur,
-        statut_original_parcours_doctoral=statut_original_parcours_doctoral,
-    )
 
     return recevabilite.parcours_doctoral_id

@@ -26,12 +26,16 @@
 from rest_framework import serializers
 
 from base.utils.serializers import DTOSerializer
-from parcours_doctoral.ddd.recevabilite.commands import SoumettreRecevabiliteCommand
+from parcours_doctoral.ddd.recevabilite.commands import (
+    SoumettreProcesVerbalEtAvisRecevabiliteCommand,
+    SoumettreRecevabiliteCommand,
+)
 from parcours_doctoral.ddd.recevabilite.dtos import RecevabiliteDTO
 
 __all__ = [
     'AdmissibilityDTOSerializer',
     'AdmissibilityMinutesCanvasSerializer',
+    'SubmitAdmissibilityMinutesAndOpinionsSerializer',
     'SubmitAdmissibilitySerializer',
 ]
 
@@ -57,3 +61,12 @@ class AdmissibilityMinutesCanvasSerializer(serializers.Serializer):
     """Contains the admissibility minutes canvas url."""
 
     url = serializers.URLField(read_only=True)
+
+
+class SubmitAdmissibilityMinutesAndOpinionsSerializer(DTOSerializer):
+    """Contains the submitted minutes and the thesis board exam opinions for an admissibility."""
+
+    parcours_doctoral_uuid = None
+
+    class Meta:
+        source = SoumettreProcesVerbalEtAvisRecevabiliteCommand
