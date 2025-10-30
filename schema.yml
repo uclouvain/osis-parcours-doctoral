@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Parcours Doctoral API
-  version: 1.1.6
+  version: 1.1.6dev318
   description: This API delivers data for the Parcours Doctoral project.
   contact:
     name: UCLouvain - OSIS
@@ -203,6 +203,39 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ParcoursDoctoralIdentityDTO'
+          description: ''
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /doctorate/{uuid}/admissibility/minutes:
+    get:
+      operationId: retrieve_admissibility_minutes_canvas
+      parameters:
+      - in: path
+        name: uuid
+        schema:
+          type: string
+          format: uuid
+        required: true
+      - $ref: '#/components/parameters/Accept-Language'
+      - $ref: '#/components/parameters/X-User-FirstName'
+      - $ref: '#/components/parameters/X-User-LastName'
+      - $ref: '#/components/parameters/X-User-Email'
+      - $ref: '#/components/parameters/X-User-GlobalID'
+      tags:
+      - doctorate
+      security:
+      - tokenAuth: []
+      - Token: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdmissibilityMinutesCanvas'
           description: ''
         '400':
           $ref: '#/components/responses/BadRequest'
@@ -2278,6 +2311,14 @@ components:
       - parcours_doctoral_uuid
       - proces_verbal
       - uuid
+    AdmissibilityMinutesCanvas:
+      type: object
+      description: Contains the admissibility minutes canvas url.
+      properties:
+        url:
+          type: string
+          format: uri
+          readOnly: true
     AjouterMembreCommand:
       type: object
       description: |-
@@ -4098,6 +4139,8 @@ components:
             retrieve_admissibility:
               $ref: '#/components/schemas/ActionLink'
             update_admissibility:
+              $ref: '#/components/schemas/ActionLink'
+            retrieve_admissibility_minutes_canvas:
               $ref: '#/components/schemas/ActionLink'
             retrieve_private_defense:
               $ref: '#/components/schemas/ActionLink'

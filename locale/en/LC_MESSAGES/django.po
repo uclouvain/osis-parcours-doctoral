@@ -344,6 +344,9 @@ msgctxt "dashboard-category"
 msgid "Admissibility (formula 2)"
 msgstr ""
 
+msgid "Admissibility assessment"
+msgstr ""
+
 msgid "Admissibility minutes"
 msgstr ""
 

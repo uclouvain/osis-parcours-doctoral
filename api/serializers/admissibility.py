@@ -23,12 +23,15 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from rest_framework import serializers
+
 from base.utils.serializers import DTOSerializer
 from parcours_doctoral.ddd.recevabilite.commands import SoumettreRecevabiliteCommand
 from parcours_doctoral.ddd.recevabilite.dtos import RecevabiliteDTO
 
 __all__ = [
     'AdmissibilityDTOSerializer',
+    'AdmissibilityMinutesCanvasSerializer',
     'SubmitAdmissibilitySerializer',
 ]
 
@@ -48,3 +51,9 @@ class SubmitAdmissibilitySerializer(DTOSerializer):
 
     class Meta:
         source = SoumettreRecevabiliteCommand
+
+
+class AdmissibilityMinutesCanvasSerializer(serializers.Serializer):
+    """Contains the admissibility minutes canvas url."""
+
+    url = serializers.URLField(read_only=True)
