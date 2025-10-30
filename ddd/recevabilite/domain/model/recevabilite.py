@@ -34,6 +34,7 @@ from parcours_doctoral.ddd.domain.model.parcours_doctoral import (
     ParcoursDoctoralIdentity,
 )
 from parcours_doctoral.ddd.recevabilite.validators.validator_by_business_action import (
+    SoumettreProcesVerbalEtAvisRecevabiliteValidatorList,
     SoumettreRecevabiliteValidatorList,
 )
 
@@ -68,14 +69,27 @@ class Recevabilite(interface.RootEntity):
     def verifier_soumission(
         self,
         titre_these: str,
-        est_active: bool,
         statut_parcours_doctoral: ChoixStatutParcoursDoctoral,
     ):
         SoumettreRecevabiliteValidatorList(
             titre_these=titre_these,
-            est_active=est_active,
+            est_active=self.est_active,
             statut_parcours_doctoral=statut_parcours_doctoral,
         ).validate()
 
     def rendre_inactive(self):
         self.est_active = False
+
+    def soumettre_proces_verbal_et_avis(
+        self,
+        proces_verbal: list[str],
+        avis_jury: list[str],
+        statut_parcours_doctoral: ChoixStatutParcoursDoctoral,
+    ):
+        SoumettreProcesVerbalEtAvisRecevabiliteValidatorList(
+            est_active=self.est_active,
+            statut_parcours_doctoral=statut_parcours_doctoral,
+        ).validate()
+
+        self.proces_verbal = proces_verbal
+        self.avis_jury = avis_jury
