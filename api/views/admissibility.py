@@ -34,6 +34,7 @@ from parcours_doctoral.api.serializers import ParcoursDoctoralIdentityDTOSeriali
 from parcours_doctoral.api.serializers.admissibility import *
 from parcours_doctoral.ddd.recevabilite.commands import (
     RecupererRecevabilitesQuery,
+    SoumettreProcesVerbalEtAvisRecevabiliteCommand,
     SoumettreRecevabiliteCommand,
 )
 from parcours_doctoral.exports.admissibility_minutes_canvas import (
@@ -96,12 +97,18 @@ class AdmissibilityListAPIView(DoctorateAPIPermissionRequiredMixin, GenericAPIVi
         responses=AdmissibilityMinutesCanvasSerializer,
         operation_id='retrieve_admissibility_minutes_canvas',
     ),
+    put=extend_schema(
+        request=SubmitAdmissibilityMinutesAndOpinionsSerializer,
+        responses=ParcoursDoctoralIdentityDTOSerializer,
+        operation_id='submit_admissibility_minutes_and_opinions',
+    ),
 )
 class AdmissibilityMinutesAPIView(DoctorateAPIPermissionRequiredMixin, RetrieveAPIView):
     name = "admissibility-minutes"
     filter_backends = []
     permission_mapping = {
         'GET': 'parcours_doctoral.api_view_admissibility_minutes',
+        'PUT': 'parcours_doctoral.api_upload_admissibility_minutes_and_opinions',
     }
     serializer_class = AdmissibilityMinutesCanvasSerializer
 
@@ -114,3 +121,19 @@ class AdmissibilityMinutesAPIView(DoctorateAPIPermissionRequiredMixin, RetrieveA
         )
 
         return {'url': url}
+
+    def put(self, request, *args, **kwargs):
+        """Submit the minutes and the opinions of the admissibility"""
+        serializer = SubmitAdmissibilityMinutesAndOpinionsSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        result = message_bus_instance.invoke(
+            SoumettreProcesVerbalEtAvisRecevabiliteCommand(
+                parcours_doctoral_uuid=self.doctorate_uuid,
+                **serializer.validated_data,
+            )
+        )
+
+        serializer = ParcoursDoctoralIdentityDTOSerializer(instance=result)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)

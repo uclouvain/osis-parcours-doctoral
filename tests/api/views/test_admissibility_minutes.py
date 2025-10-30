@@ -82,6 +82,12 @@ class AdmissibilityMinutesAPIViewTestCase(MockOsisDocumentMixin, APITestCase):
         # Data
         self.admissibility = AdmissibilityFactory(parcours_doctoral=self.doctorate)
 
+        self.data = {
+            'proces_verbal': [uuid.uuid4()],
+            'avis_jury': [uuid.uuid4()],
+            'parcours_doctoral_uuid': str(self.doctorate.uuid),
+        }
+
         # Targeted path
         self.url = resolve_url('parcours_doctoral_api_v1:admissibility-minutes', uuid=self.doctorate.uuid)
 
@@ -107,10 +113,16 @@ class AdmissibilityMinutesAPIViewTestCase(MockOsisDocumentMixin, APITestCase):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
+        response = self.client.put(self.url, data=self.data)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
     def test_access_student(self):
         self.client.force_authenticate(self.doctorate.student.user)
 
         response = self.client.get(self.url)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        response = self.client.put(self.url, data=self.data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_access_with_jury_member(self):
@@ -121,12 +133,18 @@ class AdmissibilityMinutesAPIViewTestCase(MockOsisDocumentMixin, APITestCase):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
+        response = self.client.put(self.url, data=self.data)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
     def test_access_with_jury_secretary(self):
         jury_member = JuryActorFactory(process=self.doctorate.jury_group, role=RoleJury.SECRETAIRE.name)
 
         self.client.force_authenticate(user=jury_member.person.user)
 
         response = self.client.get(self.url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        response = self.client.put(self.url, data=self.data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_access_with_jury_president(self):
@@ -136,3 +154,34 @@ class AdmissibilityMinutesAPIViewTestCase(MockOsisDocumentMixin, APITestCase):
 
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        response = self.client.put(self.url, data=self.data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_edit_admissibility_minutes_with_invalid_status(self):
+        self.client.force_authenticate(user=self.promoter.person.user)
+
+        self.doctorate.status = ChoixStatutParcoursDoctoral.ADMIS.name
+        self.doctorate.save()
+
+        # Invalid status
+        response = self.client.put(self.url, data=self.data)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        json_response = response.json()
+        self.assertEqual(
+            json_response.get('detail'),
+            "Le doctorat doit être dans le statut 'Recevabilité soumise' pour réaliser cette action.",
+        )
+
+    def test_edit_admissibility_minutes_with_valid_data(self):
+        self.client.force_authenticate(user=self.promoter.person.user)
+
+        response = self.client.put(self.url, data=self.data)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        self.admissibility.refresh_from_db()
+
+        self.assertEqual(self.admissibility.minutes, self.data['proces_verbal'])
+        self.assertEqual(self.admissibility.thesis_exam_board_opinion, self.data['avis_jury'])

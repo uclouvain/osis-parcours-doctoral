@@ -24,4 +24,7 @@
 #
 # ##############################################################################
 from .inviter_jury_recevabilite_service import inviter_jury_recevabilite
+from .soumettre_proces_verbal_et_avis_recevabilite_service import (
+    soumettre_proces_verbal_et_avis_recevabilite,
+)
 from .soumettre_recevabilite_service import soumettre_recevabilite
