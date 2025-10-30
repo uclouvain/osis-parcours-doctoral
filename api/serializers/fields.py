@@ -169,6 +169,12 @@ PARCOURS_DOCTORAL_ACTION_LINKS = {
         'params': ['uuid'],
     },
     # Admissibility
+    'retrieve_admissibility_minutes_canvas': {
+        'path_name': 'parcours_doctoral_api_v1:admissibility-minutes',
+        'method': 'GET',
+        'params': ['uuid'],
+    },
+    # Admissibility
     'retrieve_admissibility': {
         'path_name': 'parcours_doctoral_api_v1:admissibility-list',
         'method': 'GET',
