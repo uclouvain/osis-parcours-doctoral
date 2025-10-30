@@ -78,6 +78,7 @@ class ParcoursDoctoralDTOSerializer(DTOSerializer):
                 'retrieve_admissibility',
                 'update_admissibility',
                 'retrieve_admissibility_minutes_canvas',
+                'submit_admissibility_minutes_and_opinions',
                 # Private defense
                 'retrieve_private_defense',
                 'update_private_defense',
@@ -132,6 +133,7 @@ class ParcoursDoctoralRechercheDTOSerializer(DTOSerializer):
                     # Admissibility
                     'retrieve_admissibility',
                     'update_admissibility',
+                    'submit_admissibility_minutes_and_opinions',
                     # Private defense
                     'retrieve_private_defense',
                     'update_private_defense',

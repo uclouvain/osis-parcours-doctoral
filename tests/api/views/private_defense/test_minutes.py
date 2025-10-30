@@ -166,7 +166,7 @@ class PrivateDefenseMinutesAPIViewTestCase(MockOsisDocumentMixin, APITestCase):
         response = self.client.put(self.url, data=self.data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    def test_get_with_unknown_private_defense(self):
+    def test_edit_with_unknown_private_defense(self):
         self.client.force_authenticate(user=self.promoter.person.user)
 
         response = self.client.put(
