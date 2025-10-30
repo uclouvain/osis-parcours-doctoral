@@ -77,6 +77,7 @@ class ParcoursDoctoralDTOSerializer(DTOSerializer):
                 # Admissibility
                 'retrieve_admissibility',
                 'update_admissibility',
+                'retrieve_admissibility_minutes_canvas',
                 # Private defense
                 'retrieve_private_defense',
                 'update_private_defense',
