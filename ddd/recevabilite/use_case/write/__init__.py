@@ -23,6 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from .confirmer_reussite_recevabilite_service import confirmer_reussite_recevabilite
 from .inviter_jury_recevabilite_service import inviter_jury_recevabilite
 from .soumettre_proces_verbal_et_avis_recevabilite_service import (
     soumettre_proces_verbal_et_avis_recevabilite,
