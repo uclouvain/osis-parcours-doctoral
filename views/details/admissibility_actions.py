@@ -29,6 +29,7 @@ from django.utils.translation import gettext_lazy
 from infrastructure.messages_bus import message_bus_instance
 from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from parcours_doctoral.ddd.recevabilite.commands import (
+    ConfirmerRecevabiliteARecommencerCommand,
     ConfirmerReussiteRecevabiliteCommand,
     InviterJuryRecevabiliteCommand,
 )
@@ -37,6 +38,7 @@ from parcours_doctoral.infrastructure.parcours_doctoral.recevabilite.domain.serv
 )
 from parcours_doctoral.mail_templates.admissibility import (
     PARCOURS_DOCTORAL_EMAIL_ADMISSIBILITY_JURY_INVITATION,
+    PARCOURS_DOCTORAL_EMAIL_ADMISSIBILITY_ON_REPEAT,
     PARCOURS_DOCTORAL_EMAIL_ADMISSIBILITY_ON_SUCCESS,
 )
 from parcours_doctoral.views.email_mixin import BaseEmailFormView
@@ -46,6 +48,7 @@ __namespace__ = 'admissibility'
 
 __all__ = [
     "AdmissibilityJuryInvitationView",
+    "AdmissibilityRepeatView",
     "AdmissibilitySuccessView",
 ]
 
@@ -104,5 +107,26 @@ class AdmissibilitySuccessView(BaseAdmissibilityActionView):
         )
         self.message_on_success = gettext_lazy('The status has been changed to %(status)s.') % {
             'status': ChoixStatutParcoursDoctoral.RECEVABILITE_REUSSIE.value
+        }
+        self.htmx_refresh = True
+
+
+class AdmissibilityRepeatView(BaseAdmissibilityActionView):
+    urlpatterns = 'repeat'
+    permission_required = 'parcours_doctoral.make_admissibility_decision'
+    email_identifier = PARCOURS_DOCTORAL_EMAIL_ADMISSIBILITY_ON_REPEAT
+    prefix = 'repeat'
+
+    def call_command(self, form):
+        message_bus_instance.invoke(
+            ConfirmerRecevabiliteARecommencerCommand(
+                parcours_doctoral_uuid=self.parcours_doctoral_uuid,
+                matricule_auteur=self.request.user.person.global_id,
+                sujet_message=form.cleaned_data['subject'],
+                corps_message=form.cleaned_data['body'],
+            )
+        )
+        self.message_on_success = gettext_lazy('The status has been changed to %(status)s.') % {
+            'status': ChoixStatutParcoursDoctoral.RECEVABILITE_A_RECOMMENCER.value
         }
         self.htmx_refresh = True
