@@ -128,7 +128,7 @@ salutations et reste bien entendu à votre entière disposition.</p>
 <p>Dear {student_first_name} {student_last_name},</p>
 <p>Following your private defence, the board members have judged your thesis to be inadmissible.</p>
 <p>We remind you that the maximum number of private defences is set at two. A third private defence may only be authorised on the basis of a duly substantiated application submitted to the UCLouvain PhD Committee (CODOL) and if justified by exceptional circumstances.</p>
-<p>To view the private defence minutes, please click on this link <a href="{parcours_doctoral_link_front_private_defense_minutes}">{parcours_doctoral_link_front_private_defense_minutes}</a></p>
+<p>To view the private defence minutes, please click on this link <a href="{parcours_doctoral_link_front_private_defense_minutes}">{parcours_doctoral_link_front_private_defense_minutes}</a>.</p>
 <p>Please contact us should you require further information.</p>
 <p>Sincerely,</p>
 <p>{sender_name} - {management_entity_name}</p>''',
@@ -136,7 +136,7 @@ salutations et reste bien entendu à votre entière disposition.</p>
 <p>Cher, Chère, Cher.ère {student_first_name} {student_last_name},</p>
 <p>À l'issue de votre défense privée, les membres du jury ont jugé votre thèse non recevable.</p>
 <p>Nous vous rappelons que le nombre maximal de défenses privées est fixé à deux. Une troisième défense privée ne pourra être autorisée que sur demande dûment motivée auprès de la Commission doctorale de l'UCLouvain (CODOL) et si des circonstances exceptionnelles le justifient.</p>
-<p>Pour visualiser le procès-verbal de défense privée, merci de cliquer sur ce lien <a href="{parcours_doctoral_link_front_private_defense_minutes}">{parcours_doctoral_link_front_private_defense_minutes}</a></p>
+<p>Pour visualiser le procès-verbal de défense privée, merci de cliquer sur ce lien <a href="{parcours_doctoral_link_front_private_defense_minutes}">{parcours_doctoral_link_front_private_defense_minutes}</a>.</p>
 <p>Nous restons à votre disposition pour tout autre renseignement complémentaire.</p>
 <p>Bien cordialement.</p>
 <p>---</p>

@@ -2739,8 +2739,9 @@ msgstr "Défense privée non trouvée."
 msgid "Proclaimed"
 msgstr "Proclamé"
 
+msgctxt "other gender"
 msgid "Professor"
-msgstr "Professeur.e"
+msgstr "Professeur·e"
 
 msgid "Program proposition"
 msgstr "Proposition de programme"
@@ -2913,7 +2914,7 @@ msgid "Reference DIAL.Pr"
 msgstr "Référence DIAL.Pr"
 
 msgid "Refusal reason"
-msgstr "Raison de refus"
+msgstr "Motif de refus"
 
 msgid "Refuse activity"
 msgstr "Refuser l'activité"
@@ -3469,8 +3470,7 @@ msgstr ""
 
 msgid "The <strong>additional training</strong> has been completed: yes / no."
 msgstr ""
-"Les crédits de la <strong>formation complémentaire</strong> ont été "
-"obtenus : oui / non."
+"La <strong>formation complémentaire</strong> a été réalisée : oui / non."
 
 msgid "The CA members"
 msgstr "Les membres du comité d'accompagnement"
@@ -4397,6 +4397,7 @@ msgstr "heures"
 msgid "items per page"
 msgstr "éléments par page"
 
+msgctxt "parcours_doctoral"
 msgid "on"
 msgstr ", le"
 

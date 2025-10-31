@@ -211,6 +211,8 @@ class DoctorateInitializationTestCase(MockOsisDocumentMixin, TestCase):
         )
 
     def setUp(self):
+        super().setUp()
+
         self.admission = DoctorateAdmissionFactory(
             candidate=self.student,
             training=self.doctorate,
@@ -281,6 +283,7 @@ class DoctorateInitializationTestCase(MockOsisDocumentMixin, TestCase):
         self.assertEqual(ParcoursDoctoral.objects.all().count(), 1)
 
         doctorate = ParcoursDoctoral.objects.filter(admission=self.pre_admission).first()
+        self.pre_admission.refresh_from_db()
 
         self.assertIsNotNone(doctorate)
 
