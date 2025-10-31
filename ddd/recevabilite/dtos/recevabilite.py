@@ -46,5 +46,9 @@ class RecevabiliteDTO(interface.DTO):
     canevas_proces_verbal: List[str]
 
     @property
-    def est_valide_pour_decision(self):
+    def est_valide_pour_decision_reussite(self):
         return bool(self.date_decision and self.proces_verbal)
+
+    @property
+    def est_valide_pour_decision_echec_ou_repetition(self):
+        return bool(self.proces_verbal)

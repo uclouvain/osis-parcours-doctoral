@@ -27,18 +27,21 @@
 from django.test import SimpleTestCase
 
 from base.ddd.utils.business_validator import MultipleBusinessExceptions
+from parcours_doctoral.ddd.defense_privee.validators.exceptions import (
+    DefensePriveeNonCompleteePourDecisionException,
+)
 from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from parcours_doctoral.ddd.domain.validator.exceptions import (
     ParcoursDoctoralNonTrouveException,
 )
 from parcours_doctoral.ddd.recevabilite.commands import (
-    ConfirmerReussiteRecevabiliteCommand,
+    ConfirmerRecevabiliteARecommencerCommand,
 )
 from parcours_doctoral.ddd.recevabilite.test.factory.recevabilite import (
     RecevabiliteFactory,
 )
 from parcours_doctoral.ddd.recevabilite.validators.exceptions import (
-    RecevabiliteNonCompleteePourDecisionReussiteException,
+    RecevabiliteNonCompleteePourDecisionEchecOuRepetitionException,
     StatutDoctoratDifferentRecevabiliteSoumiseException,
 )
 from parcours_doctoral.infrastructure.message_bus_in_memory import (
@@ -52,11 +55,11 @@ from parcours_doctoral.infrastructure.parcours_doctoral.repository.in_memory.par
 )
 
 
-class TestConfirmerReussiteRecevabilite(SimpleTestCase):
+class TestConfirmerRecevabiliteARecommencer(SimpleTestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.cmd = ConfirmerReussiteRecevabiliteCommand
+        cls.cmd = ConfirmerRecevabiliteARecommencerCommand
         cls.message_bus = message_bus_in_memory_instance
         cls.recevabilite_repository = RecevabiliteInMemoryRepository()
         cls.parcours_doctoral_repository = ParcoursDoctoralInMemoryRepository()
@@ -96,19 +99,20 @@ class TestConfirmerReussiteRecevabilite(SimpleTestCase):
         with self.assertRaises(MultipleBusinessExceptions) as e:
             self.message_bus.invoke(self.cmd(**self.parametres_cmd))
 
-        self.assertIsInstance(e.exception.exceptions.pop(), RecevabiliteNonCompleteePourDecisionReussiteException)
+        self.assertIsInstance(
+            e.exception.exceptions.pop(), RecevabiliteNonCompleteePourDecisionEchecOuRepetitionException
+        )
 
-    def test_should_generer_exception_si_date_non_specifiee(self):
-        self.recevabilite.date_decision = None
-        self.recevabilite_repository.save(self.recevabilite)
-
-        with self.assertRaises(MultipleBusinessExceptions) as e:
-            self.message_bus.invoke(self.cmd(**self.parametres_cmd))
-
-        self.assertIsInstance(e.exception.exceptions.pop(), RecevabiliteNonCompleteePourDecisionReussiteException)
-
-    def test_should_changer_statut_parcours_doctoral(self):
+    def test_should_changer_statut_parcours_doctoral_et_remplacer_recevabilite_active(self):
         resultat = self.message_bus.invoke(self.cmd(**self.parametres_cmd))
 
         self.assertEqual(resultat, self.parcours_doctoral.entity_id)
-        self.assertEqual(self.parcours_doctoral.statut, ChoixStatutParcoursDoctoral.RECEVABILITE_REUSSIE)
+
+        recevabilites = self.recevabilite_repository.search_dto(parcours_doctoral_id=self.parcours_doctoral.entity_id)
+        self.assertEqual(len(recevabilites), 2)
+
+        ancienne_defense_privee, nouvelle_defense_privee = (
+            recevabilites if recevabilites[0].uuid == self.recevabilite.entity_id.uuid else recevabilites[::-1]
+        )
+        self.assertFalse(ancienne_defense_privee.est_active)
+        self.assertTrue(nouvelle_defense_privee.est_active)
