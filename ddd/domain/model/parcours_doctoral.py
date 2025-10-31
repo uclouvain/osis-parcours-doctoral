@@ -59,6 +59,7 @@ from parcours_doctoral.ddd.domain.validator.validator_by_business_action import 
 )
 from parcours_doctoral.ddd.jury.domain.model.enums import ChoixEtatSignature
 from parcours_doctoral.ddd.recevabilite.validators.validator_by_business_action import (
+    DonnerDecisionRecevabiliteValidatorList,
     InviterJuryRecevabiliteValidatorList,
 )
 from parcours_doctoral.ddd.soutenance_publique.validators.validator_by_business_action import (
@@ -364,6 +365,14 @@ class ParcoursDoctoral(interface.RootEntity):
         InviterJuryRecevabiliteValidatorList(
             statut_parcours_doctoral=self.statut,
         ).validate()
+
+    def confirmer_reussite_recevabilite(self, recevabilite: 'Recevabilite'):
+        DonnerDecisionRecevabiliteValidatorList(
+            recevabilite=recevabilite,
+            statut_parcours_doctoral=self.statut,
+        ).validate()
+
+        self.statut = ChoixStatutParcoursDoctoral.RECEVABILITE_REUSSIE
 
     # Défense privée
     def soumettre_defense_privee(self, titre_these: str):

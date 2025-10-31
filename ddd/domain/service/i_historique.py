@@ -268,3 +268,8 @@ class IHistorique(interface.DomainService):
         matricule_auteur: str,
     ):
         raise NotImplementedError
+
+    @classmethod
+    @abstractmethod
+    def historiser_decision_reussie_recevabilite(cls, parcours_doctoral: ParcoursDoctoral, matricule_auteur: str):
+        raise NotImplementedError

@@ -44,3 +44,7 @@ class RecevabiliteDTO(interface.DTO):
     avis_jury: List[str]
     proces_verbal: List[str]
     canevas_proces_verbal: List[str]
+
+    @property
+    def est_valide_pour_decision(self):
+        return bool(self.date_decision and self.proces_verbal)

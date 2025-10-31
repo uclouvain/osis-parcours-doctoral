@@ -25,6 +25,7 @@
 # ##############################################################################
 
 from email.message import EmailMessage
+from email.utils import formataddr
 
 from django.conf import settings
 from django.utils import translation
@@ -135,6 +136,38 @@ class Notification(NotificationMixin, INotification):
         return email_message
 
     @classmethod
+    def envoyer_message_au_doctorant_et_au_jury(
+        cls,
+        parcours_doctoral: ParcoursDoctoral,
+        matricule_doctorant: str,
+        sujet: str,
+        message: str,
+    ) -> EmailMessage:
+        parcours_doctoral_instance = ParcoursDoctoralModel.objects.get(uuid=parcours_doctoral.entity_id.uuid)
+
+        jury_members = JuryActor.objects.filter(
+            process_id=parcours_doctoral_instance.jury_group_id,
+            role__in=ROLES_MEMBRES_JURY,
+        ).select_related('person')
+
+        recipients = [cls._format_email(jury_member) for jury_member in jury_members]
+        recipients.insert(0, cls._format_email(parcours_doctoral_instance.student))
+
+        # Notifier le doctorant via mail
+        email_message = EmailNotificationHandler.build(
+            EmailNotification(
+                recipient=', '.join(recipients),
+                subject=sujet,
+                plain_text_content=transform_html_to_text(message),
+                html_content=message,
+            )
+        )
+
+        EmailNotificationHandler.create(email_message, person=parcours_doctoral_instance.student)
+
+        return email_message
+
+    @classmethod
     def _get_parcours_doctoral_title_translation(cls, parcours_doctoral: ParcoursDoctoralModel):
         """Populate the translations of parcours_doctoral title and lazy return them"""
         # Create a dict to cache the translations of the parcours_doctoral title
@@ -159,7 +192,7 @@ class Notification(NotificationMixin, INotification):
 
     @classmethod
     def _format_email(cls, actor: ParcoursDoctoralSupervisionActor | JuryActor | Person):
-        return "{a.first_name} {a.last_name} <{a.email}>".format(a=actor)
+        return formataddr((f'{actor.first_name} {actor.last_name}', actor.email))
 
     @classmethod
     def envoyer_signatures(

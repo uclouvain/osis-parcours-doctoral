@@ -2432,6 +2432,11 @@ msgid ""
 "that the defence minutes have been submitted in the application."
 msgstr ""
 
+msgid ""
+"Please be sure that the date of the admissibility have been filled in and "
+"that the admissibility minutes have been submitted in the application."
+msgstr ""
+
 #, python-format
 msgid ""
 "Please be sure the corrected mark is related to the desired session "
@@ -3211,6 +3216,9 @@ msgstr ""
 
 msgctxt "dashboard-indicator formula-1-public-defence"
 msgid "Submitted public defence"
+msgstr ""
+
+msgid "Successful admissibility"
 msgstr ""
 
 msgid "Successful defence"
