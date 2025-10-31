@@ -139,6 +139,10 @@ PROGRAM_MANAGER_RULES = {
     & has_valid_enrollment
     & admissibility_is_submitted
     & defense_method_is_formula_2,
+    'parcours_doctoral.make_admissibility_decision': is_part_of_education_group
+    & has_valid_enrollment
+    & admissibility_is_submitted
+    & defense_method_is_formula_2,
     # -- Défense
     'parcours_doctoral.view_private_defense': is_part_of_education_group & defense_method_is_formula_1,
     'parcours_doctoral.authorise_private_defense': is_part_of_education_group

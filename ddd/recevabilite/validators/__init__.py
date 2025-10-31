@@ -24,7 +24,10 @@
 #
 # ##############################################################################
 from ._should_recevabilite_etre_active import ShouldRecevabiliteEtreActive
-from ._should_recevabilite_etre_completee import ShouldRecevabiliteEtreCompletee
+from ._should_recevabilite_etre_completee import (
+    ShouldRecevabiliteEtreCompletee,
+    ShouldRecevabiliteEtreCompleteePourDecision,
+)
 from ._should_statut_parcours_doctoral_etre_valide import (
     ShouldEtapeRecevabiliteEtreEnCours,
     ShouldStatutDoctoratEtreRecevabiliteSoumise,
@@ -33,6 +36,7 @@ from ._should_statut_parcours_doctoral_etre_valide import (
 __all__ = [
     'ShouldRecevabiliteEtreActive',
     'ShouldRecevabiliteEtreCompletee',
+    'ShouldRecevabiliteEtreCompleteePourDecision',
     'ShouldEtapeRecevabiliteEtreEnCours',
     'ShouldStatutDoctoratEtreRecevabiliteSoumise',
 ]

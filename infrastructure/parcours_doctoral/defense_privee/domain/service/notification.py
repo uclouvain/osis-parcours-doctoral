@@ -77,7 +77,7 @@ class Notification(NotificationMixin, INotification):
             'parcours_doctoral_link_back': get_parcours_doctoral_link_back(doctorate.uuid),
             'parcours_doctoral_link_front_private_defense_minutes': get_parcours_doctoral_link_front(
                 doctorate.uuid,
-                'private-defense-minutes',
+                f'private-defense-minutes/{doctorate.current_private_defense.uuid}',
             ),
             'parcours_doctoral_link_front_thesis_distribution_authorisation': get_parcours_doctoral_link_front(
                 doctorate.uuid,

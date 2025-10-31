@@ -53,6 +53,17 @@ class INotification(interface.DomainService):
 
     @classmethod
     @abstractmethod
+    def envoyer_message_au_doctorant_et_au_jury(
+        cls,
+        parcours_doctoral: ParcoursDoctoral,
+        matricule_doctorant: str,
+        sujet: str,
+        message: str,
+    ) -> EmailMessage:
+        raise NotImplementedError
+
+    @classmethod
+    @abstractmethod
     def envoyer_signatures(
         cls, parcours_doctoral: ParcoursDoctoral, groupe_de_supervision: GroupeDeSupervision
     ) -> None:

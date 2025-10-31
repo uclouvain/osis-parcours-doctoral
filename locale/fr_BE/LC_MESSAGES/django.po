@@ -2653,7 +2653,15 @@ msgid ""
 "that the defence minutes have been submitted in the application."
 msgstr ""
 "Veuillez vous assurer que la date et heure de la défense ont bien été "
-"complétés et que le procès verbal de la défense a bien été déposé dans "
+"complétées et que le procès verbal de la défense a bien été déposé dans "
+"l'application."
+
+msgid ""
+"Please be sure that the date of the admissibility have been filled in and "
+"that the admissibility minutes have been submitted in the application."
+msgstr ""
+"Veuillez vous assurer que la date de recevabilité a bien été "
+"complétée et que le procès verbal de la recevabilité a bien été déposé dans "
 "l'application."
 
 #, python-format
@@ -3478,6 +3486,9 @@ msgstr "Défense soumise / Soutenance soumise"
 msgctxt "dashboard-indicator formula-1-public-defence"
 msgid "Submitted public defence"
 msgstr "Soutenance soumise"
+
+msgid "Successful admissibility"
+msgstr "Recevabilité réussie"
 
 msgid "Successful defence"
 msgstr "Défense réussie"
