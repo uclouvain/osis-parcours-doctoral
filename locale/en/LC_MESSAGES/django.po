@@ -2428,6 +2428,11 @@ msgid "Planned duration"
 msgstr ""
 
 msgid ""
+"Please be sure that the admissibility minutes have been submitted in the "
+"application."
+msgstr ""
+
+msgid ""
 "Please be sure that the date and time of the defence have been filled in and "
 "that the defence minutes have been submitted in the application."
 msgstr ""
@@ -2776,6 +2781,9 @@ msgstr ""
 
 msgctxt "jury member"
 msgid "Remove?"
+msgstr ""
+
+msgid "Repeat of the admissibility"
 msgstr ""
 
 msgid "Repeat of the defence"
