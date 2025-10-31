@@ -74,6 +74,9 @@ class ParcoursDoctoralDTOSerializer(DTOSerializer):
                 'jury_request_signatures',
                 'jury_add_approval',
                 'jury_approve_by_pdf',
+                # Admissibility
+                'retrieve_admissibility',
+                'update_admissibility',
                 # Private defense
                 'retrieve_private_defense',
                 'update_private_defense',
@@ -125,6 +128,9 @@ class ParcoursDoctoralRechercheDTOSerializer(DTOSerializer):
                     'update_jury_preparation',
                     'list_jury_members',
                     'create_jury_members',
+                    # Admissibility
+                    'retrieve_admissibility',
+                    'update_admissibility',
                     # Private defense
                     'retrieve_private_defense',
                     'update_private_defense',

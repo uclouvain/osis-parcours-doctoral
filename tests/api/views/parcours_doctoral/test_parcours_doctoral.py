@@ -224,6 +224,8 @@ class ParcoursDoctoralAPIViewTestCase(CheckActionLinksMixin, APITestCase):
                 'assent_training',
                 'update_jury_preparation',
                 'create_jury_members',
+                'retrieve_admissibility',
+                'update_admissibility',
                 'update_private_defense',
                 'retrieve_private_defense_minutes_canvas',
                 'submit_private_defense_minutes',

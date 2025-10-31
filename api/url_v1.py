@@ -65,6 +65,8 @@ urlpatterns = [
     path('doctorate/<uuid:uuid>/jury/approve', views.JuryApprovePropositionAPIView),
     path('doctorate/<uuid:uuid>/jury/external/<str:token>', views.JuryExternalApprovalPropositionAPIView),
     path('doctorate/<uuid:uuid>/jury/approve-by-pdf', views.JuryApproveByPdfPropositionAPIView),
+    # Recevability
+    path('doctorate/<uuid:uuid>/admissibility', views.AdmissibilityListAPIView),
     # Private defense
     path('doctorate/<uuid:uuid>/private-defense', views.PrivateDefenseListAPIView),
     path('doctorate/<uuid:uuid>/private-defense/minutes', views.PrivateDefenseMinutesAPIView),

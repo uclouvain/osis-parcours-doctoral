@@ -48,6 +48,11 @@ class ChoixStatutParcoursDoctoral(ChoiceEnum):
     JURY_REFUSE_CDD = _('JURY_REFUSE_CDD')
     JURY_APPROUVE_ADRE = _('JURY_APPROUVE_ADRE')
     JURY_REFUSE_ADRE = _('JURY_REFUSE_ADRE')
+    # Recevabilité
+    RECEVABILITE_SOUMISE = _('RECEVABILITE_SOUMISE')
+    RECEVABILITE_A_RECOMMENCER = _('RECEVABILITE_A_RECOMMENCER')
+    RECEVABILITE_REUSSIE = _('RECEVABILITE_REUSSIE')
+    RECEVABILITE_EN_ECHEC = _('RECEVABILITE_EN_ECHEC')
     # Défense privée
     DEFENSE_PRIVEE_SOUMISE = _('DEFENSE_PRIVEE_SOUMISE')
     DEFENSE_PRIVEE_AUTORISEE = _('DEFENSE_PRIVEE_AUTORISEE')
@@ -66,6 +71,12 @@ STATUTS_DOCTORAT_EPREUVE_CONFIRMATION_EN_COURS = {
     ChoixStatutParcoursDoctoral.ADMIS.name,
     ChoixStatutParcoursDoctoral.CONFIRMATION_SOUMISE.name,
     ChoixStatutParcoursDoctoral.CONFIRMATION_A_REPRESENTER.name,
+}
+
+STATUTS_DOCTORAT_RECEVABILITE_EN_COURS = {
+    ChoixStatutParcoursDoctoral.JURY_APPROUVE_ADRE.name,
+    ChoixStatutParcoursDoctoral.RECEVABILITE_SOUMISE.name,
+    ChoixStatutParcoursDoctoral.RECEVABILITE_A_RECOMMENCER.name,
 }
 
 
@@ -178,7 +189,12 @@ STATUTS_PAR_ETAPE_PARCOURS_DOCTORAL = {
         ChoixStatutParcoursDoctoral.JURY_APPROUVE_ADRE,
         ChoixStatutParcoursDoctoral.JURY_REFUSE_ADRE,
     ],
-    ChoixEtapeParcoursDoctoral.DECISION_DE_RECEVABILITE: [],
+    ChoixEtapeParcoursDoctoral.DECISION_DE_RECEVABILITE: [
+        ChoixStatutParcoursDoctoral.RECEVABILITE_SOUMISE,
+        ChoixStatutParcoursDoctoral.RECEVABILITE_REUSSIE,
+        ChoixStatutParcoursDoctoral.RECEVABILITE_A_RECOMMENCER,
+        ChoixStatutParcoursDoctoral.RECEVABILITE_EN_ECHEC,
+    ],
     ChoixEtapeParcoursDoctoral.DEFENSE_PRIVEE: [
         ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_SOUMISE,
         ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_AUTORISEE,
@@ -199,6 +215,7 @@ STATUTS_PAR_ETAPE_PARCOURS_DOCTORAL = {
 STATUTS_INACTIFS = {
     ChoixStatutParcoursDoctoral.NON_AUTORISE_A_POURSUIVRE.name,
     ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_EN_ECHEC.name,
+    ChoixStatutParcoursDoctoral.RECEVABILITE_EN_ECHEC.name,
     ChoixStatutParcoursDoctoral.ABANDON.name,
 }
 

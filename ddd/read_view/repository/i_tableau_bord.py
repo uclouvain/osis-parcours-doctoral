@@ -136,7 +136,7 @@ class ITableauBordRepository(ITableauBordRepositoryAdmissionMixin, interface.Rea
         ),
         CategorieTableauBord(
             id=CategorieTableauBordEnum.FORMULE_2_RECEVABILITE,
-            libelle=pgettext_lazy('dashboard-category', 'Recevability (formula 2)'),
+            libelle=pgettext_lazy('dashboard-category', 'Admissibility (formula 2)'),
             type=TypeCategorieTableauBord.DOCTORAT,
             indicateurs=[
                 IndicateurTableauBord(
