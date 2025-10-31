@@ -383,6 +383,14 @@ class ParcoursDoctoral(interface.RootEntity):
 
         self.statut = ChoixStatutParcoursDoctoral.RECEVABILITE_A_RECOMMENCER
 
+    def confirmer_echec_recevabilite(self, recevabilite: 'Recevabilite'):
+        DonnerDecisionEchecOuRepetitionRecevabiliteValidatorList(
+            recevabilite=recevabilite,
+            statut_parcours_doctoral=self.statut,
+        ).validate()
+
+        self.statut = ChoixStatutParcoursDoctoral.RECEVABILITE_EN_ECHEC
+
     # Défense privée
     def soumettre_defense_privee(self, titre_these: str):
         self.statut = ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_SOUMISE
