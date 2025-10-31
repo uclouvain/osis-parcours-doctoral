@@ -528,3 +528,19 @@ class Historique(IHistorique):
             '{auteur.prenom} {auteur.nom}'.format(auteur=auteur),
             tags=['parcours_doctoral', 'public-defense', 'status-changed'],
         )
+
+    @classmethod
+    def historiser_decision_reussie_recevabilite(
+        cls,
+        parcours_doctoral: ParcoursDoctoral,
+        matricule_auteur: str,
+    ):
+        auteur = PersonneConnueUclTranslator().get(matricule_auteur)
+
+        add_history_entry(
+            parcours_doctoral.entity_id.uuid,
+            'La décision de la recevabilité a été donnée : celle-ci a été réussie.',
+            'The decision of the admissibility has been made: it has been passed.',
+            '{auteur.prenom} {auteur.nom}'.format(auteur=auteur),
+            tags=['parcours_doctoral', 'admissibility', 'status-changed'],
+        )

@@ -31,6 +31,7 @@ for {training_title}.</p>
 <p>Thank you in advance for your important contribution.</p>
 <p>Please contact me should you require further information.</p>
 <p>Sincerely,</p>
+<p>---</p>
 <p>{jury_president}<br>Board Chair<br>{jury_secretary}<br>Board Secretary</p>''',
                 'fr-be': '''\
 <p>Cher, Chère, Cher.ère {jury_member_first_name} {jury_member_last_name},</p>
@@ -52,7 +53,7 @@ salutations et reste bien entendu à votre entière disposition.</p>
             },
             {
                 'en': '''\
-<p>Dear {student_first_name} {student_last_name},</p>
+<p>Dear board members and {student_first_name} {student_last_name},</p>
 <p>After consultation, we are pleased to inform you that the board has issued a favourable opinion and considers
 {student_first_name} {student_last_name}'s thesis to be admissible as it stands/subject to the modifications to be
 made to the text mentioned in the admissibility report <i>(supprimer si pas de modifications)</i>.</p>
@@ -61,10 +62,13 @@ made to the text mentioned in the admissibility report <i>(supprimer si pas de m
 <p>We invite the PhD student to submit no later than two weeks before the date set for the public defence the final version of the thesis and its distribution arrangements for signature by the lead supervisor via the application <a href="{parcours_doctoral_link_front_thesis_distribution_authorisation}">{parcours_doctoral_link_front_thesis_distribution_authorisation}</a>.</p>
 <p>Please contact us should you require further information.</p>
 <p>Sincerely,</p>
+<p>---</p>
 <p>{jury_president}<br>Board Chair<br>{jury_secretary}<br>Board Secretary</p>''',
                 'fr-be': '''\
-<p>Cher, Chère, Cher.ère {student_first_name} {student_last_name},</p>
+<p>Chers, Chères, Cher.ères membres du jury,</p>
+<p>Cher, Chère, Cher.ère, {student_first_name} {student_last_name},</p>
 <p>Après consultation, nous avons le plaisir de vous informer que le jury a émis un avis favorable et juge la thèse de {student_first_name} {student_last_name} recevable en l'état / moyennant les modifications à apporter au texte mentionnées dans le procès-verbal de recevabilité <i>(supprimer si pas de modifications)</i>.</p>
+<p>La mise en œuvre de ces modifications ne peut excéder trois mois de travail à temps plein <i>(supprimer si pas de modifications)</i>.</p>
 <p>Pour visualiser le procès-verbal de recevabilité, merci de cliquer sur ce lien <a href="{parcours_doctoral_link_front_admissibility_minutes}">{parcours_doctoral_link_front_admissibility_minutes}</a>.</p>
 <p>Nous invitons {student_reference} à soumettre, au plus tard deux semaines avant la date fixée pour la soutenance publique, la version définitive de sa thèse et ses modalités de diffusion à la signature du/de la promoteur.trice de référence, via l'application <a href="{parcours_doctoral_link_front_thesis_distribution_authorisation}">{parcours_doctoral_link_front_thesis_distribution_authorisation}</a>.</p>
 <p>Nous restons à votre disposition pour tout autre renseignement complémentaire.</p>
@@ -81,14 +85,16 @@ made to the text mentioned in the admissibility report <i>(supprimer si pas de m
             },
             {
                 'en': '''\
-<p>Dear {student_first_name} {student_last_name},</p>
+<p>Dear board members and {student_first_name} {student_last_name},</p>
 <p>After consultation, we inform you that the board has judged {student_first_name} {student_last_name}’s thesis to be inadmissible but authorises the submission of a revised version within ...</p>
 <p>To view the minutes, please click on this link <a href="{parcours_doctoral_link_front_admissibility_minutes}">{parcours_doctoral_link_front_admissibility_minutes}</a>.</p>
 <p>Please contact us should you require further information.</p>
 <p>Sincerely,</p>
+<p>---</p>
 <p>{jury_president}<br>Board Chair<br>{jury_secretary}<br>Board Secretary</p>''',
                 'fr-be': '''\
-<p>Cher, Chère, Cher.ère {student_first_name} {student_last_name},</p>
+<p>Chers, Chères, Cher.ères membres du jury,</p>
+<p>Cher, Chère, Cher.ère, {student_first_name} {student_last_name},</p>
 <p>Après consultation, nous vous informons que le jury a jugé la thèse de {student_first_name} {student_last_name} non recevable, mais l’autorise à soumettre une version révisée de celle-ci, dans un délai de ...</p>
 <p>Pour visualiser le procès-verbal de défense privée, merci de cliquer sur ce lien <a href="{parcours_doctoral_link_front_admissibility_minutes}">{parcours_doctoral_link_front_admissibility_minutes}</a>.</p>
 <p>Nous restons à votre disposition pour tout autre renseignement complémentaire.</p>
@@ -105,14 +111,16 @@ made to the text mentioned in the admissibility report <i>(supprimer si pas de m
             },
             {
                 'en': '''\
-<p>Dear {student_first_name} {student_last_name},</p>
+<p>Dear board members and {student_first_name} {student_last_name},</p>
 <p>After a second consultation, we inform you that the board has judged {student_first_name} {student_last_name}'s thesis to be inadmissible and can no longer consider it.</p>
 <p>To view the admissibility minutes, please click on this link <a href="{parcours_doctoral_link_front_admissibility_minutes}">{parcours_doctoral_link_front_admissibility_minutes}</a></p>
 <p>Please contact us should you require further information.</p>
 <p>Sincerely,</p>
+<p>---</p>
 <p>{jury_president}<br>Board Chair<br>{jury_secretary}<br>Board Secretary</p>''',
                 'fr-be': '''\
-<p>Cher, Chère, Cher.ère {student_first_name} {student_last_name},</p>
+<p>Chers, Chères, Cher.ères membres du jury,</p>
+<p>Cher, Chère, Cher.ère, {student_first_name} {student_last_name},</p>
 <p>Après une seconde consultation, nous vous informons que le jury a jugé la thèse de {student_first_name} {student_last_name} non recevable et qu’{student_personal_pronoun} n’est plus dans les conditions de pouvoir la représenter.</p>
 <p>Pour visualiser le procès-verbal de recevabilité, merci de cliquer sur ce lien <a href="{parcours_doctoral_link_front_admissibility_minutes}">{parcours_doctoral_link_front_admissibility_minutes}</a></p>
 <p>Nous restons à votre disposition pour tout autre renseignement complémentaire.</p>

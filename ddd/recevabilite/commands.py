@@ -57,3 +57,12 @@ class SoumettreProcesVerbalEtAvisRecevabiliteCommand(interface.CommandRequest):
 
     proces_verbal: list[str]
     avis_jury: list[str]
+
+
+@attr.dataclass(frozen=True, slots=True)
+class ConfirmerReussiteRecevabiliteCommand(interface.CommandRequest):
+    parcours_doctoral_uuid: str
+
+    matricule_auteur: str
+    sujet_message: str
+    corps_message: str

@@ -89,6 +89,7 @@ class Notification(NotificationMixin, INotification):
             for jury_member in jury_members
             if jury_member.role in {RoleJury.PRESIDENT.name, RoleJury.SECRETAIRE.name}
         }
+        current_admissibility = getattr(doctorate, 'current_admissibility', None)
         return {
             'student_first_name': doctorate.student.first_name,
             'student_last_name': doctorate.student.last_name,
@@ -97,13 +98,15 @@ class Notification(NotificationMixin, INotification):
             'parcours_doctoral_link_back': get_parcours_doctoral_link_back(doctorate.uuid),
             'parcours_doctoral_link_front_admissibility_minutes': get_parcours_doctoral_link_front(
                 doctorate.uuid,
-                'admissibility',
+                f'admissibility-minutes/{current_admissibility.uuid}' if current_admissibility else 'admissibility',
             ),
             'parcours_doctoral_link_front_thesis_distribution_authorisation': get_parcours_doctoral_link_front(
                 doctorate.uuid,
                 'thesis-distribution-authorisation',
             ),
-            'admissibility_decision_date': cls._format_date(doctorate.current_admissibility.decision_date),
+            'admissibility_decision_date': (
+                cls._format_date(current_admissibility.decision_date) if current_admissibility else ''
+            ),
             'reference': doctorate.reference,
             'student_reference': {
                 'F': pgettext_lazy('F', 'the PhD student'),

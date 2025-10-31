@@ -29,6 +29,7 @@ import attr
 from base.ddd.utils.business_validator import BusinessValidator
 from parcours_doctoral.ddd.recevabilite.validators.exceptions import (
     RecevabiliteNonCompleteeException,
+    RecevabiliteNonCompleteePourDecisionException,
 )
 
 
@@ -39,3 +40,12 @@ class ShouldRecevabiliteEtreCompletee(BusinessValidator):
     def validate(self, *args, **kwargs):
         if not self.titre_these:
             raise RecevabiliteNonCompleteeException
+
+
+@attr.dataclass(frozen=True, slots=True)
+class ShouldRecevabiliteEtreCompleteePourDecision(BusinessValidator):
+    recevabilite: 'Recevabilite'
+
+    def validate(self, *args, **kwargs):
+        if not (self.recevabilite.date_decision and self.recevabilite.proces_verbal):
+            raise RecevabiliteNonCompleteePourDecisionException

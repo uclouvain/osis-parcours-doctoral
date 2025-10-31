@@ -70,3 +70,14 @@ class StatutDoctoratDifferentRecevabiliteSoumiseException(BusinessException):
             'status': ChoixStatutParcoursDoctoral.RECEVABILITE_SOUMISE.value,
         }
         super().__init__(message, **kwargs)
+
+
+class RecevabiliteNonCompleteePourDecisionException(BusinessException):
+    status_code = 'RECEVABILITE-6'
+
+    def __init__(self, **kwargs):
+        message = _(
+            'Please be sure that the date of the admissibility have been filled in and that '
+            'the admissibility minutes have been submitted in the application.'
+        )
+        super().__init__(message, **kwargs)

@@ -36,6 +36,7 @@ from parcours_doctoral.ddd.recevabilite.validators import (
     ShouldEtapeRecevabiliteEtreEnCours,
     ShouldRecevabiliteEtreActive,
     ShouldRecevabiliteEtreCompletee,
+    ShouldRecevabiliteEtreCompleteePourDecision,
     ShouldStatutDoctoratEtreRecevabiliteSoumise,
 )
 
@@ -93,5 +94,27 @@ class SoumettreProcesVerbalEtAvisRecevabiliteValidatorList(TwoStepsMultipleBusin
             ),
             ShouldRecevabiliteEtreActive(
                 est_active=self.est_active,
+            ),
+        ]
+
+
+@attr.dataclass(frozen=True, slots=True)
+class DonnerDecisionRecevabiliteValidatorList(TwoStepsMultipleBusinessExceptionListValidator):
+    recevabilite: 'Recevabilite'
+    statut_parcours_doctoral: ChoixStatutParcoursDoctoral
+
+    def get_data_contract_validators(self) -> List[BusinessValidator]:
+        return []
+
+    def get_invariants_validators(self) -> List[BusinessValidator]:
+        return [
+            ShouldRecevabiliteEtreCompleteePourDecision(
+                recevabilite=self.recevabilite,
+            ),
+            ShouldRecevabiliteEtreActive(
+                est_active=self.recevabilite.est_active,
+            ),
+            ShouldStatutDoctoratEtreRecevabiliteSoumise(
+                statut=self.statut_parcours_doctoral,
             ),
         ]
