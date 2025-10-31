@@ -544,3 +544,19 @@ class Historique(IHistorique):
             '{auteur.prenom} {auteur.nom}'.format(auteur=auteur),
             tags=['parcours_doctoral', 'admissibility', 'status-changed'],
         )
+
+    @classmethod
+    def historiser_decision_repetition_recevabilite(
+        cls,
+        parcours_doctoral: ParcoursDoctoral,
+        matricule_auteur: str,
+    ):
+        auteur = PersonneConnueUclTranslator().get(matricule_auteur)
+
+        add_history_entry(
+            parcours_doctoral.entity_id.uuid,
+            'La décision de la recevabilité a été donnée : celle-ci doit être repassée.',
+            'The decision of the admissibility has been made: it must be repeated.',
+            '{auteur.prenom} {auteur.nom}'.format(auteur=auteur),
+            tags=['parcours_doctoral', 'admissibility', 'status-changed'],
+        )

@@ -72,7 +72,7 @@ class StatutDoctoratDifferentRecevabiliteSoumiseException(BusinessException):
         super().__init__(message, **kwargs)
 
 
-class RecevabiliteNonCompleteePourDecisionException(BusinessException):
+class RecevabiliteNonCompleteePourDecisionReussiteException(BusinessException):
     status_code = 'RECEVABILITE-6'
 
     def __init__(self, **kwargs):
@@ -80,4 +80,12 @@ class RecevabiliteNonCompleteePourDecisionException(BusinessException):
             'Please be sure that the date of the admissibility have been filled in and that '
             'the admissibility minutes have been submitted in the application.'
         )
+        super().__init__(message, **kwargs)
+
+
+class RecevabiliteNonCompleteePourDecisionEchecOuRepetitionException(BusinessException):
+    status_code = 'RECEVABILITE-6'
+
+    def __init__(self, **kwargs):
+        message = _('Please be sure that the admissibility minutes have been submitted in the application.')
         super().__init__(message, **kwargs)

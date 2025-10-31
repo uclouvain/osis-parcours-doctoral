@@ -36,7 +36,8 @@ from parcours_doctoral.ddd.recevabilite.validators import (
     ShouldEtapeRecevabiliteEtreEnCours,
     ShouldRecevabiliteEtreActive,
     ShouldRecevabiliteEtreCompletee,
-    ShouldRecevabiliteEtreCompleteePourDecision,
+    ShouldRecevabiliteEtreCompleteePourDecisionEchecOuRepassage,
+    ShouldRecevabiliteEtreCompleteePourDecisionReussite,
     ShouldStatutDoctoratEtreRecevabiliteSoumise,
 )
 
@@ -99,7 +100,7 @@ class SoumettreProcesVerbalEtAvisRecevabiliteValidatorList(TwoStepsMultipleBusin
 
 
 @attr.dataclass(frozen=True, slots=True)
-class DonnerDecisionRecevabiliteValidatorList(TwoStepsMultipleBusinessExceptionListValidator):
+class DonnerDecisionReussiteRecevabiliteValidatorList(TwoStepsMultipleBusinessExceptionListValidator):
     recevabilite: 'Recevabilite'
     statut_parcours_doctoral: ChoixStatutParcoursDoctoral
 
@@ -108,7 +109,29 @@ class DonnerDecisionRecevabiliteValidatorList(TwoStepsMultipleBusinessExceptionL
 
     def get_invariants_validators(self) -> List[BusinessValidator]:
         return [
-            ShouldRecevabiliteEtreCompleteePourDecision(
+            ShouldRecevabiliteEtreCompleteePourDecisionReussite(
+                recevabilite=self.recevabilite,
+            ),
+            ShouldRecevabiliteEtreActive(
+                est_active=self.recevabilite.est_active,
+            ),
+            ShouldStatutDoctoratEtreRecevabiliteSoumise(
+                statut=self.statut_parcours_doctoral,
+            ),
+        ]
+
+
+@attr.dataclass(frozen=True, slots=True)
+class DonnerDecisionEchecOuRepetitionRecevabiliteValidatorList(TwoStepsMultipleBusinessExceptionListValidator):
+    recevabilite: 'Recevabilite'
+    statut_parcours_doctoral: ChoixStatutParcoursDoctoral
+
+    def get_data_contract_validators(self) -> List[BusinessValidator]:
+        return []
+
+    def get_invariants_validators(self) -> List[BusinessValidator]:
+        return [
+            ShouldRecevabiliteEtreCompleteePourDecisionEchecOuRepassage(
                 recevabilite=self.recevabilite,
             ),
             ShouldRecevabiliteEtreActive(
