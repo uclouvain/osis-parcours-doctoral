@@ -69,11 +69,21 @@
                 {% translate "Repeat of the admissibility" %}
               </a>
             </li>
+            <li>
+              <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#admissibility-failure-decision-form-modal">
+                {% translate "Failure of the admissibility" %}
+              </a>
+            </li>
           {% else %}
             {% with _("Please be sure that the admissibility minutes have been submitted in the application.") as error_message %}
               <li title="{{ error_message }}">
                 <a class="dropdown-item disabled" href="#">
                   {% translate "Repeat of the admissibility" %}
+                </a>
+              </li>
+              <li title="{{ error_message }}">
+                <a class="dropdown-item disabled" href="#">
+                  {% translate "Failure of the admissibility" %}
                 </a>
               </li>
             {% endwith %}
@@ -110,6 +120,9 @@
 
   {% url 'parcours_doctoral:admissibility:repeat' view.kwargs.uuid as repeat_decision_url %}
   {% include 'parcours_doctoral/modal/form_modal.html' with modal_id='admissibility-repeat-decision-form-modal' modal_title=_('Repeat of the admissibility') modal_url=repeat_decision_url %}
+
+  {% url 'parcours_doctoral:admissibility:failure' view.kwargs.uuid as failure_decision_url %}
+  {% include 'parcours_doctoral/modal/form_modal.html' with modal_id='admissibility-failure-decision-form-modal' modal_title=_('Failure of the admissibility') modal_url=failure_decision_url %}
 {% endblock %}
 
 {% block style %}

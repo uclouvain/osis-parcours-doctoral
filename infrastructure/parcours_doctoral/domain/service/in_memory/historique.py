@@ -249,3 +249,7 @@ class HistoriqueInMemory(IHistorique):
     @classmethod
     def historiser_decision_repetition_recevabilite(cls, parcours_doctoral: ParcoursDoctoral, matricule_auteur: str):
         pass
+
+    @classmethod
+    def historiser_decision_echec_recevabilite(cls, parcours_doctoral: ParcoursDoctoral, matricule_auteur: str):
+        pass

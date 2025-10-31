@@ -1364,6 +1364,9 @@ msgstr ""
 msgid "FNRS, FRIA, FRESH, CSC"
 msgstr ""
 
+msgid "Failure of the admissibility"
+msgstr ""
+
 msgid "Failure of the confirmation paper"
 msgstr ""
 

@@ -77,4 +77,11 @@ COMMAND_HANDLERS = {
         historique=Historique(),
         notification=NotificationGenerale(),
     ),
+    ConfirmerEchecRecevabiliteCommand: lambda msg_bus, cmd: confirmer_echec_recevabilite(
+        cmd,
+        parcours_doctoral_repository=ParcoursDoctoralRepository(),
+        recevabilite_repository=RecevabiliteRepository(),
+        historique=Historique(),
+        notification=NotificationGenerale(),
+    ),
 }
