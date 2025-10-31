@@ -1451,6 +1451,9 @@ msgstr "Externe"
 msgid "FNRS, FRIA, FRESH, CSC"
 msgstr "FNRS, FRIA, FRESH, CSC"
 
+msgid "Failure of the admissibility"
+msgstr "Échec de la recevabilité"
+
 msgid "Failure of the confirmation paper"
 msgstr "Échec de l'épreuve de confirmation"
 
@@ -2652,7 +2655,8 @@ msgid ""
 "Please be sure that the admissibility minutes have been submitted in the "
 "application."
 msgstr ""
-"Veuillez vous assurer que le procès verbal de recevabilité a bien été déposé dans l'application."
+"Veuillez vous assurer que le procès verbal de recevabilité a bien été déposé "
+"dans l'application."
 
 msgid ""
 "Please be sure that the date and time of the defence have been filled in and "

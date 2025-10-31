@@ -75,3 +75,12 @@ class ConfirmerRecevabiliteARecommencerCommand(interface.CommandRequest):
     matricule_auteur: str
     sujet_message: str
     corps_message: str
+
+
+@attr.dataclass(frozen=True, slots=True)
+class ConfirmerEchecRecevabiliteCommand(interface.CommandRequest):
+    parcours_doctoral_uuid: str
+
+    matricule_auteur: str
+    sujet_message: str
+    corps_message: str
