@@ -50,17 +50,30 @@
           </li>
         {% endif %}
         {% if can_make_decision %}
-          {% if current_admissibility.est_valide_pour_decision %}
+          {% if current_admissibility.est_valide_pour_decision_reussite %}
             <li>
               <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#admissibility-success-decision-form-modal">
-                {% translate "Successful defence" %}
+                {% translate "Successful admissibility" %}
               </a>
             </li>
           {% else %}
-            {% with _("Please be sure that the date of the admissibility have been filled in and that the admissibility minutes have been submitted in the application.") as error_message %}
+            <li title="{% translate "Please be sure that the date of the admissibility have been filled in and that the admissibility minutes have been submitted in the application." %}">
+              <a class="dropdown-item disabled" href="#">
+                {% translate "Successful admissibility" %}
+              </a>
+            </li>
+          {% endif %}
+          {% if current_admissibility.est_valide_pour_decision_echec_ou_repetition %}
+            <li>
+              <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#admissibility-repeat-decision-form-modal">
+                {% translate "Repeat of the admissibility" %}
+              </a>
+            </li>
+          {% else %}
+            {% with _("Please be sure that the admissibility minutes have been submitted in the application.") as error_message %}
               <li title="{{ error_message }}">
                 <a class="dropdown-item disabled" href="#">
-                  {% translate "Successful defence" %}
+                  {% translate "Repeat of the admissibility" %}
                 </a>
               </li>
             {% endwith %}
@@ -94,6 +107,9 @@
 
   {% url 'parcours_doctoral:admissibility:success' view.kwargs.uuid as success_decision_url %}
   {% include 'parcours_doctoral/modal/form_modal.html' with modal_id='admissibility-success-decision-form-modal' modal_title=_('Successful admissibility') modal_url=success_decision_url %}
+
+  {% url 'parcours_doctoral:admissibility:repeat' view.kwargs.uuid as repeat_decision_url %}
+  {% include 'parcours_doctoral/modal/form_modal.html' with modal_id='admissibility-repeat-decision-form-modal' modal_title=_('Repeat of the admissibility') modal_url=repeat_decision_url %}
 {% endblock %}
 
 {% block style %}
