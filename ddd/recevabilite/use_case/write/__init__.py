@@ -23,6 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from .confirmer_echec_recevabilite_service import confirmer_echec_recevabilite
 from .confirmer_recevabilite_a_recommencer_service import (
     confirmer_recevabilite_a_recommencer,
 )
