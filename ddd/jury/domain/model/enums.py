@@ -48,7 +48,7 @@ ROLES_MEMBRES_JURY = {
 
 class TitreMembre(ChoiceEnum):
     DOCTEUR = _('Doctor')
-    PROFESSEUR = _('Professor')
+    PROFESSEUR = pgettext_lazy('other gender', 'Professor')
     NON_DOCTEUR = _('Without PhD degree')
 
 

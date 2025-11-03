@@ -2502,6 +2502,7 @@ msgstr ""
 msgid "Proclaimed"
 msgstr ""
 
+msgctxt "other gender"
 msgid "Professor"
 msgstr ""
 
@@ -3995,6 +3996,7 @@ msgstr ""
 msgid "items per page"
 msgstr ""
 
+msgctxt "parcours_doctoral"
 msgid "on"
 msgstr ""
 
