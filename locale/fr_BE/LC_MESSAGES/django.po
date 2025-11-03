@@ -758,6 +758,9 @@ msgstr "Peut voir les informations relatives à l'épreuve de confirmation"
 msgid "Cancel"
 msgstr "Annuler"
 
+msgid "Canvas of the admissibility minutes to download."
+msgstr "Canevas de procès-verbal de la recevabilité à télécharger."
+
 msgid "Canvas of the private defence minutes to download."
 msgstr "Canevas de procès-verbal de la défense privée à télécharger."
 
