@@ -1,4 +1,6 @@
-{% load i18n parcours_doctoral %}
+{% extends "parcours_doctoral/forms/tab_layout.html" %}
+{% load static %}
+{% load django_bootstrap5 i18n parcours_doctoral %}
 
 {% comment "License" %}
 * OSIS stands for Open Student Information System. It's an application
@@ -24,16 +26,32 @@
 * see http://www.gnu.org/licenses/.
 {% endcomment %}
 
-<div class="row">
-  {% field_data _("Date of manuscript submission to the thesis exam board") admissibility.date_envoi_manuscrit inline=True css_class='col-md-6' %}
-  {% field_data _("Date of admissibility decision") admissibility.date_decision inline=True css_class='col-md-6' %}
-</div>
-{% field_data _("Thesis exam board opinion") admissibility.avis_jury %}
-{% if admissibility.est_active %}
-  <p>
-    <a href="{% url 'parcours_doctoral:admissibility-minutes-canvas' view.kwargs.uuid %}" target="_blank">
-      {% translate 'Canvas of the admissibility minutes to download.' %}
-    </a>
-  </p>
-{% endif %}
-{% field_data _("Admissibility minutes") admissibility.proces_verbal %}
+{% block form_content %}
+  <div class="card mb-3">
+    <div class="card-header">
+      <h4 class="card-title">{% translate "Admissibility" %}</h4>
+    </div>
+    <div class="card-body">
+      <div>
+        {% bootstrap_form_errors form type='non_fields' %}
+
+        {% csrf_token %}
+
+        {% bootstrap_field form.titre_these wrapper_class="mb-3 required_field" %}
+
+        {% include 'parcours_doctoral/includes/private_defense/supervision_panel.html' %}
+
+        <div class="row">
+          {% bootstrap_field form.date_envoi_manuscrit wrapper_class="mb-3 col-md-6" %}
+          {% bootstrap_field form.date_decision wrapper_class="mb-3 col-md-6" %}
+        </div>
+
+        {% bootstrap_field form.avis_jury %}
+        {% bootstrap_field form.proces_verbal %}
+      </div>
+    </div>
+  </div>
+
+  {% include 'parcours_doctoral/includes/admissibility/previous_admissibilities.html' %}
+
+{% endblock %}

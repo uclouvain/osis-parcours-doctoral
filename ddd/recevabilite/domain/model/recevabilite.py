@@ -93,3 +93,15 @@ class Recevabilite(interface.RootEntity):
 
         self.proces_verbal = proces_verbal
         self.avis_jury = avis_jury
+
+    def modifier(
+        self,
+        date_decision: datetime.date,
+        date_envoi_manuscrit: datetime.date,
+        proces_verbal: list[str],
+        avis_jury: list[str],
+    ):
+        self.date_decision = date_decision
+        self.date_envoi_manuscrit = date_envoi_manuscrit
+        self.proces_verbal = proces_verbal
+        self.avis_jury = avis_jury
