@@ -8,7 +8,7 @@
 * The core business involves the administration of students, teachers,
 * courses, programs and so on.
 *
-* Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+* Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 *
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -26,13 +26,36 @@
 {% endcomment %}
 
 {% block tab_content_header %}
-  <h3>{% trans "Defense method" context "parcours_doctoral" %}</h3>
+  <h3>{% trans "Defence method" context "parcours_doctoral" %}</h3>
 {% endblock %}
 
 {% block form_content %}
   {% include 'parcours_doctoral/includes/jury_description.html' %}
 
   {% bootstrap_field_with_tooltip form.titre_propose "required_field" %}
+
+  <div class="row">
+    <div class="col-md-4">
+      {% trans 'Information about a potential cotutelle are to be inputted in the "Research" part.' as cotutelle_tooltip %}
+      {% if cotutelle.cotutelle %}
+        {% field_data _("Cotutelle thesis") cotutelle.cotutelle tooltip=cotutelle_tooltip %}
+      {% else %}
+        {% field_data _("Cotutelle thesis") _("No") tooltip=cotutelle_tooltip %}
+      {% endif %}
+    </div>
+    {% if cotutelle.cotutelle %}
+    <div class="col-md-4">
+      {% if cotutelle.autre_institution %}
+        {% field_data _("Partner institution name") cotutelle.autre_institution_nom %}
+        {% field_data _("Partner institution address") cotutelle.autre_institution_adresse %}
+      {% else %}
+        {% get_superior_institute_name cotutelle.institution as institute_name %}
+        {% field_data _("Partner institution") institute_name %}
+      {% endif %}
+    </div>
+    {% endif %}
+  </div>
+
   {% bootstrap_field_with_tooltip form.formule_defense "required_field" %}
   {% bootstrap_field form.date_indicative %}
   {% bootstrap_field form.langue_redaction wrapper_class="form-group required_field" %}

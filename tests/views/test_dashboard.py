@@ -76,6 +76,7 @@ from parcours_doctoral.tests.factories.parcours_doctoral import (
     FormationFactory,
     ParcoursDoctoralFactory,
 )
+from parcours_doctoral.tests.factories.private_defense import PrivateDefenseFactory
 
 
 @override_settings(OSIS_DOCUMENT_BASE_URL='http://dummyurl/')
@@ -86,7 +87,9 @@ class DashboardCommandTestCase(TestCase):
         patcher.start()
         self.addCleanup(patcher.stop)
 
-        patcher = patch("osis_document_components.services.get_remote_metadata", return_value={"name": "myfile", "size": 1})
+        patcher = patch(
+            "osis_document_components.services.get_remote_metadata", return_value={"name": "myfile", "size": 1}
+        )
         patcher.start()
         self.addCleanup(patcher.stop)
 
@@ -483,6 +486,82 @@ class DashboardCommandTestCase(TestCase):
 
         self.assert_dashboard_value(category, indicator, 1)
 
+    def test_submitted_private_defense_1(self):
+        category = CategorieTableauBordEnum.FORMULE_1_DEFENSE_PRIVEE.name
+        indicator = IndicateurTableauBordEnum.FORMULE_1_DEFENSE_PRIVEE_SOUMISE.name
+
+        self.assert_dashboard_value(category, indicator, 0)
+
+        doctorate = ParcoursDoctoralFactory(status=ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_AUTORISEE.name)
+
+        self.assert_dashboard_value(category, indicator, 0)
+
+        doctorate.status = ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_SOUMISE.name
+        doctorate.save()
+
+        self.assert_dashboard_value(category, indicator, 1)
+
+    def test_submitted_private_defense_1_with_minutes(self):
+        category = CategorieTableauBordEnum.FORMULE_1_DEFENSE_PRIVEE.name
+        indicator = IndicateurTableauBordEnum.FORMULE_1_DEFENSE_PRIVEE_PV_TELEVERSE.name
+
+        self.assert_dashboard_value(category, indicator, 0)
+
+        doctorate = ParcoursDoctoralFactory(status=ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_AUTORISEE.name)
+        private_defense = PrivateDefenseFactory(parcours_doctoral=doctorate)
+
+        self.assert_dashboard_value(category, indicator, 0)
+
+        doctorate.status = ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_SOUMISE.name
+        doctorate.save()
+
+        self.assert_dashboard_value(category, indicator, 1)
+
+        private_defense.current_parcours_doctoral = None
+        private_defense.save()
+
+        new_private_defense = PrivateDefenseFactory(parcours_doctoral=doctorate, minutes=[])
+
+        self.assert_dashboard_value(category, indicator, 0)
+
+    def test_submitted_public_defense_1(self):
+        category = CategorieTableauBordEnum.FORMULE_1_SOUTENANCE_PUBLIQUE.name
+        indicator = IndicateurTableauBordEnum.FORMULE_1_SOUTENANCE_PUBLIQUE_SOUMISE.name
+
+        self.assert_dashboard_value(category, indicator, 0)
+
+        doctorate = ParcoursDoctoralFactory(status=ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_REUSSIE.name)
+
+        self.assert_dashboard_value(category, indicator, 0)
+
+        doctorate.status = ChoixStatutParcoursDoctoral.SOUTENANCE_PUBLIQUE_SOUMISE.name
+        doctorate.save()
+
+        self.assert_dashboard_value(category, indicator, 1)
+
+    def test_submitted_public_defense_1_with_minutes(self):
+        category = CategorieTableauBordEnum.FORMULE_1_SOUTENANCE_PUBLIQUE.name
+        indicator = IndicateurTableauBordEnum.FORMULE_1_SOUTENANCE_PUBLIQUE_PV_TELEVERSE.name
+
+        self.assert_dashboard_value(category, indicator, 0)
+
+        doctorate = ParcoursDoctoralFactory(
+            status=ChoixStatutParcoursDoctoral.SOUTENANCE_PUBLIQUE_AUTORISEE.name,
+            defense_minutes=[],
+        )
+
+        self.assert_dashboard_value(category, indicator, 0)
+
+        doctorate.status = ChoixStatutParcoursDoctoral.SOUTENANCE_PUBLIQUE_SOUMISE.name
+        doctorate.save()
+
+        self.assert_dashboard_value(category, indicator, 0)
+
+        doctorate.defense_minutes = [uuid.uuid4()]
+        doctorate.save()
+
+        self.assert_dashboard_value(category, indicator, 1)
+
 
 @override_settings(OSIS_DOCUMENT_BASE_URL='http://dummyurl/')
 class DashboardViewTestCase(TestCase):
@@ -584,7 +663,9 @@ class DashboardViewTestCase(TestCase):
         patcher.start()
         self.addCleanup(patcher.stop)
 
-        patcher = patch("osis_document_components.services.get_remote_metadata", return_value={"name": "myfile", "size": 1})
+        patcher = patch(
+            "osis_document_components.services.get_remote_metadata", return_value={"name": "myfile", "size": 1}
+        )
         patcher.start()
         self.addCleanup(patcher.stop)
 

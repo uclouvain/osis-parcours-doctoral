@@ -45,6 +45,7 @@ from ddd.logic.shared_kernel.unite_enseignement.domain.service.code_parser impor
 )
 from deliberation.models.enums.numero_session import Session
 from learning_unit.models.learning_class_year import LearningClassYear
+from parcours_doctoral.constants import INSTITUTION_UCL
 from parcours_doctoral.ddd.formation.domain.model.enums import (
     CategorieActivite,
     ChoixComiteSelection,
@@ -79,7 +80,6 @@ __all__ = [
 
 from parcours_doctoral.models.parcours_doctoral import ParcoursDoctoral
 
-INSTITUTION_UCL = "UCLouvain"
 MINIMUM_YEAR = 2000
 
 

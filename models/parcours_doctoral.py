@@ -50,21 +50,22 @@ from osis_history.models import HistoryEntry
 from osis_signature.contrib.fields import SignatureProcessField
 
 from admission.models.functions import ToChar
+from base.forms.utils.file_field import PDF_MIME_TYPE
 from base.models.education_group_year import EducationGroupYear
 from base.models.entity_version import EntityVersion
 from base.models.enums.education_group_categories import Categories
 from base.models.enums.education_group_types import TrainingType
-from base.models.enums.entity_type import SECTOR
+from base.models.enums.entity_type import FACULTY, SECTOR
 from base.models.person import Person
 from base.models.student import Student
 from base.utils.cte import CTESubquery
 from epc.models.enums.etat_inscription import EtatInscriptionFormation
 from epc.models.inscription_programme_annuel import InscriptionProgrammeAnnuel
+from osis_profile.constants import JPEG_MIME_TYPE, PNG_MIME_TYPE
 from parcours_doctoral.ddd.domain.model.enums import (
     ChoixCommissionProximiteCDEouCLSM,
     ChoixCommissionProximiteCDSS,
     ChoixDoctoratDejaRealise,
-    ChoixLangueDefense,
     ChoixSousDomaineSciences,
     ChoixStatutParcoursDoctoral,
     ChoixTypeFinancement,
@@ -131,6 +132,15 @@ class ParcoursDoctoralQuerySet(models.QuerySet):
             )
         )
 
+    def annotate_training_management_entity_title(self):
+        return self.annotate(
+            management_entity_title=models.Subquery(
+                EntityVersion.objects.filter(entity_id=OuterRef("training__management_entity_id"))
+                .order_by('-start_date')
+                .values("title")[:1]
+            ),
+        )
+
     def annotate_last_status_update(self):
         return self.annotate(
             status_updated_at=Subquery(
@@ -189,7 +199,21 @@ class ParcoursDoctoralQuerySet(models.QuerySet):
             },
         )
 
-    def annotate_intitule_secteur_formation(self):
+    def annotate_faculte_formation(self):
+        cte = EntityVersion.objects.with_children(entity_id=OuterRef("training__management_entity_id"))
+        faculty_subqs = (
+            cte.join(EntityVersion, id=cte.col.id)
+            .with_cte(cte)
+            .filter(entity_type=FACULTY)
+            .exclude(end_date__lte=date.today())
+        )
+
+        return self.annotate(
+            intitule_faculte_formation=CTESubquery(faculty_subqs.values("title")[:1]),
+            sigle_faculte_formation=CTESubquery(faculty_subqs.values("acronym")[:1]),
+        )
+
+    def annotate_secteur_formation(self):
         cte = EntityVersion.objects.with_children(entity_id=OuterRef("training__management_entity_id"))
         sector_subqs = (
             cte.join(EntityVersion, id=cte.col.id)
@@ -200,6 +224,7 @@ class ParcoursDoctoralQuerySet(models.QuerySet):
 
         return self.annotate(
             intitule_secteur_formation=CTESubquery(sector_subqs.values("title")[:1]),
+            sigle_secteur_formation=CTESubquery(sector_subqs.values("acronym")[:1]),
         )
 
 
@@ -277,6 +302,7 @@ class ParcoursDoctoral(models.Model):
         'reference.Language',
         on_delete=models.PROTECT,
         verbose_name=_("Thesis language"),
+        related_name='+',
         null=True,
         blank=True,
     )
@@ -352,13 +378,13 @@ class ParcoursDoctoral(models.Model):
         blank=True,
     )
     phd_already_done_defense_date = models.DateField(
-        verbose_name=_("Defense"),
+        verbose_name=_("Defence"),
         null=True,
         blank=True,
     )
     phd_already_done_no_defense_reason = models.CharField(
         max_length=255,
-        verbose_name=_("No defense reason"),
+        verbose_name=_("No defence reason"),
         default='',
         blank=True,
     )
@@ -422,21 +448,23 @@ class ParcoursDoctoral(models.Model):
     )
     defense_method = models.CharField(
         max_length=255,
-        verbose_name=_("Defense method"),
+        verbose_name=_("Defence method"),
         choices=FormuleDefense.choices(),
         default='',
         blank=True,
     )
-    defense_indicative_date = models.DateField(
-        verbose_name=_("Defense indicative date"),
-        null=True,
+    defense_indicative_date = models.CharField(
+        max_length=255,
+        verbose_name=_("Defence indicative date"),
+        default='',
         blank=True,
     )
-    defense_language = models.CharField(
-        max_length=255,
-        verbose_name=_("Defense language"),
-        choices=ChoixLangueDefense.choices(),
-        default=ChoixLangueDefense.UNDECIDED.name,
+    defense_language = models.ForeignKey(
+        'reference.Language',
+        on_delete=models.PROTECT,
+        verbose_name=_("Defence language"),
+        related_name='+',
+        null=True,
         blank=True,
     )
     comment_about_jury = models.TextField(
@@ -451,6 +479,56 @@ class ParcoursDoctoral(models.Model):
     jury_approval = FileField(
         verbose_name=_("Jury approval"),
         upload_to=parcours_doctoral_directory_path,
+    )
+
+    # Defense
+    defense_datetime = models.DateTimeField(
+        verbose_name=_('Public defence date and time'),
+        null=True,
+        blank=True,
+    )
+    defense_place = models.CharField(
+        verbose_name=_('Public defence location'),
+        blank=True,
+        default='',
+        max_length=255,
+    )
+    defense_deliberation_room = models.CharField(
+        verbose_name=_('Deliberation room'),
+        blank=True,
+        default='',
+        max_length=255,
+    )
+    defense_additional_information = models.TextField(
+        verbose_name=_('Additional information'),
+        blank=True,
+        default='',
+    )
+    announcement_summary = models.TextField(
+        verbose_name=_('Summary for announcement'),
+        blank=True,
+        default='',
+    )
+    announcement_photo = FileField(
+        verbose_name=_('Photo for announcement'),
+        upload_to=parcours_doctoral_directory_path,
+        max_files=1,
+        mimetypes=[JPEG_MIME_TYPE, PNG_MIME_TYPE],
+    )
+    defense_minutes = FileField(
+        verbose_name=_('Public defence minutes'),
+        upload_to=parcours_doctoral_directory_path,
+        mimetypes=[PDF_MIME_TYPE],
+    )
+    defense_minutes_canvas = FileField(
+        verbose_name=_('Public defence minutes canvas'),
+        upload_to=parcours_doctoral_directory_path,
+        mimetypes=[PDF_MIME_TYPE],
+    )
+    diploma_collection_date = models.DateField(
+        verbose_name=_('Diploma collection date'),
+        blank=True,
+        null=True,
     )
 
     # Financement
@@ -522,7 +600,8 @@ class ParcoursDoctoral(models.Model):
     )
 
     # Supervision
-    supervision_group = SignatureProcessField()
+    supervision_group = SignatureProcessField(related_name='+')
+    jury_group = SignatureProcessField(related_name='+')
 
     objects = models.Manager.from_queryset(ParcoursDoctoralQuerySet)()
 

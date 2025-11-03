@@ -43,6 +43,9 @@ from admission.models.enums.actor_type import ActorType as AdmissionActorType
 from parcours_doctoral.auth.roles.ca_member import CommitteeMember
 from parcours_doctoral.auth.roles.promoter import Promoter
 from parcours_doctoral.auth.roles.student import Student
+from parcours_doctoral.ddd.defense_privee.repository.i_defense_privee import (
+    IDefensePriveeRepository,
+)
 from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import (
     ParcoursDoctoralIdentity,
@@ -149,6 +152,7 @@ class ParcoursDoctoralService(IParcoursDoctoralService):
         cls,
         proposition: 'Proposition',
         epreuve_confirmation_repository: 'IEpreuveConfirmationRepository',
+        defense_privee_repository: 'IDefensePriveeRepository',
         date_reference_pour_date_limite_confirmation: Optional[datetime.date] = None,
     ) -> ParcoursDoctoralIdentity:
         admission: DoctorateAdmission = DoctorateAdmission.objects.get(uuid=proposition.entity_id.uuid)
@@ -220,11 +224,12 @@ class ParcoursDoctoralService(IParcoursDoctoralService):
 
         parcours_doctoral_identity = ParcoursDoctoralIdentity(uuid=str(parcours_doctoral.uuid))
 
-        if admission.type == ChoixTypeAdmission.ADMISSION.name:
-            epreuve_confirmation = EpreuveConfirmationService.initier(
-                parcours_doctoral_id=parcours_doctoral_identity,
-                date_reference_pour_date_limite=date_reference_pour_date_limite_confirmation,
-            )
-            epreuve_confirmation_repository.save(entity=epreuve_confirmation)
+        cls.initier_etapes_doctorat(
+            parcours_doctoral_identity=parcours_doctoral_identity,
+            proposition=proposition,
+            epreuve_confirmation_repository=epreuve_confirmation_repository,
+            defense_privee_repository=defense_privee_repository,
+            date_reference_pour_date_limite_confirmation=date_reference_pour_date_limite_confirmation,
+        )
 
         return parcours_doctoral_identity

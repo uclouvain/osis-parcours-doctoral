@@ -32,9 +32,12 @@ from admission.ddd.admission.doctorat.preparation.domain.model.enums import (
 )
 from osis_role.errors import predicate_failed_msg
 from parcours_doctoral.ddd.domain.model.enums import (
+    STATUTS_DOCTORAT_DEFENSE_PRIVEE_EN_COURS,
     STATUTS_DOCTORAT_EPREUVE_CONFIRMATION_EN_COURS,
+    STATUTS_DOCTORAT_SOUTENANCE_PUBLIQUE_EN_COURS,
     ChoixStatutParcoursDoctoral,
 )
+from parcours_doctoral.ddd.jury.domain.model.enums import RoleJury
 from parcours_doctoral.models import ActorType
 from parcours_doctoral.models.parcours_doctoral import ParcoursDoctoral
 
@@ -74,7 +77,29 @@ def is_related_to_an_admission(self, user: User, obj: ParcoursDoctoral):
 @predicate(bind=True)
 @predicate_failed_msg(message=_("The jury is not in progress"))
 def is_jury_in_progress(self, user: User, obj: ParcoursDoctoral):
-    return obj.status == ChoixStatutParcoursDoctoral.CONFIRMATION_REUSSIE.name
+    return obj.status in {
+        ChoixStatutParcoursDoctoral.CONFIRMATION_REUSSIE.name,
+        ChoixStatutParcoursDoctoral.JURY_REFUSE_CDD.name,
+        ChoixStatutParcoursDoctoral.JURY_REFUSE_ADRE.name,
+    }
+
+
+@predicate(bind=True)
+@predicate_failed_msg(message=_("The jury signing is not in progress"))
+def is_jury_signing_in_progress(self, user: User, obj: ParcoursDoctoral):
+    return obj.status == ChoixStatutParcoursDoctoral.JURY_SOUMIS.name
+
+
+@predicate(bind=True)
+@predicate_failed_msg(message=_("The jury signing is not in progress"))
+def is_jury_approuve_ca(self, user: User, obj: ParcoursDoctoral):
+    return obj.status == ChoixStatutParcoursDoctoral.JURY_APPROUVE_CA.name
+
+
+@predicate(bind=True)
+@predicate_failed_msg(message=_("The jury signing is not in progress"))
+def is_jury_approuve_cdd(self, user: User, obj: ParcoursDoctoral):
+    return obj.status == ChoixStatutParcoursDoctoral.JURY_APPROUVE_CDD.name
 
 
 @predicate(bind=True)
@@ -84,9 +109,59 @@ def submitted_confirmation_paper(self, user: User, obj: ParcoursDoctoral):
 
 
 @predicate(bind=True)
+@predicate_failed_msg(
+    message=_("The doctorate must be in the status '%(status)s' to realize this action.")
+    % {
+        'status': ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_SOUMISE.value,
+    }
+)
+def private_defense_is_submitted(self, user: User, obj: ParcoursDoctoral):
+    return obj.status == ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_SOUMISE.name
+
+
+@predicate(bind=True)
+@predicate_failed_msg(
+    message=_("The doctorate must be in the status '%(status)s' to realize this action.")
+    % {'status': ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_AUTORISEE.value}
+)
+def private_defense_is_authorised(self, user: User, obj: ParcoursDoctoral):
+    return obj.status == ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_AUTORISEE.name
+
+
+@predicate(bind=True)
 @predicate_failed_msg(message=_("The confirmation paper is not in progress"))
 def confirmation_paper_in_progress(self, user: User, obj: ParcoursDoctoral):
     return obj.status in STATUTS_DOCTORAT_EPREUVE_CONFIRMATION_EN_COURS
+
+
+@predicate(bind=True)
+@predicate_failed_msg(message=_("The private defence is not in progress"))
+def private_defense_in_progress(self, user: User, obj: ParcoursDoctoral):
+    return obj.status in STATUTS_DOCTORAT_DEFENSE_PRIVEE_EN_COURS
+
+
+@predicate(bind=True)
+@predicate_failed_msg(message=_("The public defence is not in progress"))
+def public_defense_in_progress(self, user: User, obj: ParcoursDoctoral):
+    return obj.status in STATUTS_DOCTORAT_SOUTENANCE_PUBLIQUE_EN_COURS
+
+
+@predicate(bind=True)
+@predicate_failed_msg(
+    message=_("The doctorate must be in the status '%(status)s' to realize this action.")
+    % {'status': ChoixStatutParcoursDoctoral.SOUTENANCE_PUBLIQUE_AUTORISEE.value}
+)
+def public_defense_is_authorised(self, user: User, obj: ParcoursDoctoral):
+    return obj.status == ChoixStatutParcoursDoctoral.SOUTENANCE_PUBLIQUE_AUTORISEE.name
+
+
+@predicate(bind=True)
+@predicate_failed_msg(
+    message=_("The doctorate must be in the status '%(status)s' to realize this action.")
+    % {'status': ChoixStatutParcoursDoctoral.PROCLAME.value}
+)
+def doctorate_is_proclaimed(self, user: User, obj: ParcoursDoctoral):
+    return obj.status == ChoixStatutParcoursDoctoral.PROCLAME.name
 
 
 @predicate(bind=True)
@@ -149,6 +224,25 @@ def is_part_of_committee(self, user: User, obj: ParcoursDoctoral):
 
 
 @predicate(bind=True)
+@predicate_failed_msg(message=_("You must be a member of the jury to access this doctoral training"))
+def is_part_of_jury(self, user: User, obj: ParcoursDoctoral):
+    return obj.jury_group is not None and user.person.pk in [actor.person_id for actor in obj.jury_group.actors.all()]
+
+
+@predicate(bind=True)
+@predicate_failed_msg(message=_("You must be the secretary or the president of the jury to perform this action."))
+def is_president_or_secretary_of_jury(self, user: User, obj: ParcoursDoctoral):
+    return (
+        obj.has_valid_enrollment
+        and obj.jury_group_id
+        and obj.jury_group.actors.filter(
+            juryactor__role__in=[RoleJury.SECRETAIRE.name, RoleJury.PRESIDENT.name],
+            person_id=user.person.pk,
+        ).exists()
+    )
+
+
+@predicate(bind=True)
 def is_part_of_education_group(self, user: User, obj: ParcoursDoctoral):
     cache_key = _build_queryset_cache_key_from_role_qs(self.context['role_qs'], 'education_groups_affected')
 
@@ -156,3 +250,12 @@ def is_part_of_education_group(self, user: User, obj: ParcoursDoctoral):
         setattr(user, cache_key, self.context['role_qs'].get_education_groups_affected())
 
     return obj.training.education_group_id in getattr(user, cache_key)
+
+
+@predicate(bind=True)
+@predicate_failed_msg(
+    message=_("The doctorate must be in the status '%(status)s' to realize this action.")
+    % {'status': ChoixStatutParcoursDoctoral.SOUTENANCE_PUBLIQUE_SOUMISE.value}
+)
+def public_defense_is_submitted(self, user: User, obj: ParcoursDoctoral):
+    return obj.status == ChoixStatutParcoursDoctoral.SOUTENANCE_PUBLIQUE_SOUMISE.name

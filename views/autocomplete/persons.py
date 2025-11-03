@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -31,13 +31,14 @@ from django.db.models.functions import Coalesce
 
 from base.models.person import Person
 from parcours_doctoral.auth.roles.student import Student
-from parcours_doctoral.models import JuryMember, ParcoursDoctoralSupervisionActor
+from parcours_doctoral.models import JuryActor, ParcoursDoctoralSupervisionActor
 
 __all__ = [
     'JuryMembersAutocomplete',
     'PersonsAutocomplete',
     'SupervisionActorsAutocomplete',
     'StudentsAutocomplete',
+    'AuditorAutocomplete',
 ]
 
 __namespace__ = False
@@ -170,29 +171,21 @@ class JuryMembersAutocomplete(LoginRequiredMixin, autocomplete.Select2QuerySetVi
         role = self.forwarded.get('role')
 
         qs = (
-            JuryMember.objects.annotate(
+            JuryActor.objects.annotate(
                 current_first_name=Coalesce(
                     F('person__first_name'),
-                    F('promoter__person__first_name'),
-                    F('promoter__first_name'),
                     F('first_name'),
                 ),
                 current_last_name=Coalesce(
                     F('person__last_name'),
-                    F('promoter__person__last_name'),
-                    F('promoter__last_name'),
                     F('last_name'),
-                ),
-                current_global_id=Coalesce(
-                    F('person__global_id'),
-                    F('promoter__person__global_id'),
                 ),
                 name=SearchVector(
                     'current_first_name',
                     'current_last_name',
                 ),
             )
-            .filter(Q(name=self.q) | Q(current_global_id__contains=self.q))
+            .filter(Q(name=self.q) | Q(person__global_id=self.q))
             .order_by('current_last_name', 'current_first_name')
         )
 
@@ -203,4 +196,24 @@ class JuryMembersAutocomplete(LoginRequiredMixin, autocomplete.Select2QuerySetVi
             'uuid',
             'current_first_name',
             'current_last_name',
+        )
+
+
+class AuditorAutocomplete(LoginRequiredMixin, autocomplete.Select2QuerySetView):
+    urlpatterns = 'auditors'
+
+    def get_queryset(self):
+        q = self.request.GET.get('q', '')
+
+        return (
+            Person.objects.annotate(
+                name=SearchVector(
+                    'first_name',
+                    'last_name',
+                ),
+            )
+            .filter(Q(name=q) | Q(global_id__contains=q))
+            .exclude(Q(student__isnull=False) | Q(global_id__isnull=True))
+            .order_by('last_name', 'first_name')
+            .distinct()
         )

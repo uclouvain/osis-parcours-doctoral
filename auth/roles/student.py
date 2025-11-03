@@ -60,6 +60,14 @@ class Student(RoleModel):
             'parcours_doctoral.api_view_jury': parcours_doctoral.is_parcours_doctoral_student,
             'parcours_doctoral.api_change_jury': parcours_doctoral.is_parcours_doctoral_student
             & parcours_doctoral.is_jury_in_progress,
+            'parcours_doctoral.api_change_jury_role': parcours_doctoral.is_parcours_doctoral_student
+            & parcours_doctoral.is_jury_in_progress,
+            'parcours_doctoral.api_request_signatures': parcours_doctoral.is_parcours_doctoral_student
+            & parcours_doctoral.is_jury_in_progress,
+            'parcours_doctoral.api_resend_external_invitation': parcours_doctoral.is_parcours_doctoral_student,
+            'parcours_doctoral.api_approve_jury_by_pdf': parcours_doctoral.is_parcours_doctoral_student
+            & parcours_doctoral.is_jury_signing_in_progress,
+            # Training
             'parcours_doctoral.api_view_complementary_training': parcours_doctoral.is_parcours_doctoral_student
             & parcours_doctoral.complementary_training_enabled,
             'parcours_doctoral.api_view_course_enrollment': parcours_doctoral.is_parcours_doctoral_student,
@@ -77,5 +85,13 @@ class Student(RoleModel):
             'parcours_doctoral.api_change_confirmation_extension': parcours_doctoral.is_parcours_doctoral_student
             & parcours_doctoral.confirmation_paper_in_progress
             & parcours_doctoral.is_related_to_an_admission,
+            # Private defense
+            'parcours_doctoral.api_view_private_defense': parcours_doctoral.is_parcours_doctoral_student,
+            'parcours_doctoral.api_change_private_defense': parcours_doctoral.is_parcours_doctoral_student
+            & parcours_doctoral.private_defense_in_progress,
+            # Public defense
+            'parcours_doctoral.api_view_public_defense': parcours_doctoral.is_parcours_doctoral_student,
+            'parcours_doctoral.api_change_public_defense': parcours_doctoral.is_parcours_doctoral_student
+            & parcours_doctoral.public_defense_in_progress,
         }
         return RuleSet(rules)

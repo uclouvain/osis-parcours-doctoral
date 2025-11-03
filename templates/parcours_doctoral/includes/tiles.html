@@ -25,45 +25,56 @@
 {% endcomment %}
 
 <div class="dashboard-grid">
-    {% if perms.parcours_doctoral.change_cddmailtemplate or perms.parcours_doctoral.change_cddconfiguration or perms.parcours_doctoral.view_parcours_doctoral %}
-        {% if perms.parcours_doctoral.view_parcours_doctoral %}
-        <div class="grid-item" style="grid-area: auto/{{ tile.column }}">
-            <i class="icon fa-thin fa-award navigation-dashboard-icon"></i>
-            <h5 class="media-heading">
-                <a href="{% url "parcours_doctoral:list" %}" id="lnk_doctorate_path">
-                    {% translate 'Doctoral paths' %}
-                </a>
-            </h5>
-            <div class="description">
-                <p>{% translate 'Management of the path of the doctoral students from their enrolment to their public defence' %}</p>
-            </div>
+    {% if perms.parcours_doctoral.view_parcours_doctoral %}
+    <div class="grid-item" style="grid-area: auto/{{ tile.column }}">
+        <i class="icon fa-thin fa-award navigation-dashboard-icon"></i>
+        <h5 class="media-heading">
+            <a href="{% url "parcours_doctoral:list" %}" id="lnk_doctorate_path">
+                {% translate 'Doctoral paths' %}
+            </a>
+        </h5>
+        <div class="description">
+            <p>{% translate 'Management of the path of the doctoral students from their enrolment to their public defence' %}</p>
         </div>
-        {% endif %}
-        {% if perms.parcours_doctoral.change_cddmailtemplate %}
-        <div class="grid-item" style="grid-area: auto/{{ tile.column }}">
-            <i class="icon fa fa-tools navigation-dashboard-icon"></i>
-            <h5 class="media-heading">
-                <a href="{% url 'parcours_doctoral:config:cdd-mail-template:list' %}">
-                    {% translate 'CDD Mail template' %}
-                </a>
-            </h5>
-            <div class="description">
-                <p>{% translate 'Allow you to manage emails sent by CDD managers based on the CDD' %}</p>
-            </div>
+    </div>
+    {% endif %}
+    {% if perms.parcours_doctoral.change_cddmailtemplate %}
+    <div class="grid-item" style="grid-area: auto/{{ tile.column }}">
+        <i class="icon fa fa-tools navigation-dashboard-icon"></i>
+        <h5 class="media-heading">
+            <a href="{% url 'parcours_doctoral:config:cdd-mail-template:list' %}">
+                {% translate 'CDD Mail template' %}
+            </a>
+        </h5>
+        <div class="description">
+            <p>{% translate 'Allow you to manage emails sent by CDD managers based on the CDD' %}</p>
         </div>
-        {% endif %}
-        {% if perms.parcours_doctoral.change_cddconfiguration %}
-        <div class="grid-item" style="grid-area: auto/{{ tile.column }}">
-            <i class="icon fa fa-tools navigation-dashboard-icon"></i>
-            <h5 class="media-heading">
-                <a href="{% url 'parcours_doctoral:config:cdd-config:list' %}">
-                    {% translate 'Doctoral training configuration' %}
-                </a>
-            </h5>
-            <div class="description">
-                <p>{% translate 'Allow you to manage the doctoral training activities' %}</p>
-            </div>
+    </div>
+    {% endif %}
+    {% if perms.parcours_doctoral.change_cddconfiguration %}
+    <div class="grid-item" style="grid-area: auto/{{ tile.column }}">
+        <i class="icon fa fa-tools navigation-dashboard-icon"></i>
+        <h5 class="media-heading">
+            <a href="{% url 'parcours_doctoral:config:cdd-config:list' %}">
+                {% translate 'Doctoral training configuration' %}
+            </a>
+        </h5>
+        <div class="description">
+            <p>{% translate 'Allow you to manage the doctoral training activities' %}</p>
         </div>
-        {% endif %}
+    </div>
+    {% endif %}
+    {% if perms.parcours_doctoral.change_auditors_configuration %}
+    <div class="grid-item" style="grid-area: auto/{{ tile.column }}">
+        <i class="icon fa fa-tools navigation-dashboard-icon"></i>
+        <h5 class="media-heading">
+            <a href="{% url 'parcours_doctoral:config:auditors' %}">
+                {% translate 'Institutes auditors configuration' %}
+            </a>
+        </h5>
+        <div class="description">
+            <p>{% translate 'Allow you to manage the institutes auditors' %}</p>
+        </div>
+    </div>
     {% endif %}
 </div>

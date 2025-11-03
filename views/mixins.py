@@ -68,19 +68,33 @@ from parcours_doctoral.utils.cache import get_cached_parcours_doctoral_perm_obj
 from parcours_doctoral.views.list import ParcoursDoctoralList
 
 
-class ParcoursDoctoralViewMixin(LoginRequiredMixin, PermissionRequiredMixin, ContextMixin):
-    load_doctorate_dto = True
-
+class ParcoursDoctoralBaseViewMixin(LoginRequiredMixin, PermissionRequiredMixin):
     @property
     def parcours_doctoral_uuid(self) -> str:
-        return self.kwargs.get('uuid', '')
+        return str(self.kwargs.get('uuid', ''))
+
+    def get_permission_object(self):
+        return self.parcours_doctoral
 
     @property
     def parcours_doctoral(self) -> ParcoursDoctoral:
         return get_cached_parcours_doctoral_perm_obj(self.parcours_doctoral_uuid)
 
-    def get_permission_object(self):
-        return self.parcours_doctoral
+    @cached_property
+    def last_confirmation_paper(self) -> EpreuveConfirmationDTO:
+        try:
+            last_confirmation_paper = message_bus_instance.invoke(
+                RecupererDerniereEpreuveConfirmationQuery(self.parcours_doctoral_uuid)
+            )
+            if not last_confirmation_paper:
+                raise Http404(_('Confirmation exam not found.'))
+            return last_confirmation_paper
+        except (ParcoursDoctoralNonTrouveException, EpreuveConfirmationNonTrouveeException) as e:
+            raise Http404(e.message)
+
+
+class ParcoursDoctoralViewMixin(ParcoursDoctoralBaseViewMixin, ContextMixin):
+    load_doctorate_dto = True
 
     @cached_property
     def parcours_doctoral_dto(self) -> ParcoursDoctoralDTO:
@@ -186,12 +200,6 @@ class ParcoursDoctoralFormMixin(ParcoursDoctoralViewMixin):
 
         return super().form_valid(form)
 
-    def get_checklist_redirect_url(self):
-        # If specified, return to the correct checklist tab
-        if 'next' in self.request.GET:
-            url = resolve_url(f'parcours_doctoral:{self.current_context}:checklist', uuid=self.parcours_doctoral_uuid)
-            return f"{url}#{self.request.GET['next']}"
-
     def dispatch(self, request, *args, **kwargs):
         response = super().dispatch(request, *args, **kwargs)
         # Add custom headers
@@ -215,18 +223,6 @@ class ParcoursDoctoralFormMixin(ParcoursDoctoralViewMixin):
 
 
 class LastConfirmationMixin(ParcoursDoctoralViewMixin):
-    @cached_property
-    def last_confirmation_paper(self) -> EpreuveConfirmationDTO:
-        try:
-            last_confirmation_paper = message_bus_instance.invoke(
-                RecupererDerniereEpreuveConfirmationQuery(self.parcours_doctoral_uuid)
-            )
-            if not last_confirmation_paper:
-                raise Http404(_('Confirmation exam not found.'))
-            return last_confirmation_paper
-        except (ParcoursDoctoralNonTrouveException, EpreuveConfirmationNonTrouveeException) as e:
-            raise Http404(e.message)
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs) if hasattr(super(), 'get_context_data') else {}
         context['confirmation_paper'] = self.last_confirmation_paper

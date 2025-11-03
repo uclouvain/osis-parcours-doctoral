@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -30,11 +30,10 @@ from parcours_doctoral.exports.utils import parcours_doctoral_generate_pdf
 from parcours_doctoral.models.confirmation_paper import ConfirmationPaper
 
 
-def parcours_doctoral_pdf_confirmation_canvas(parcours_doctoral, language, context):
+def parcours_doctoral_pdf_confirmation_canvas(language, context):
     with translation.override(language=language):
         # Generate the pdf
         save_token = parcours_doctoral_generate_pdf(
-            parcours_doctoral=parcours_doctoral,
             template='parcours_doctoral/exports/confirmation_export.html',
             filename='confirmation.pdf',
             context=context,

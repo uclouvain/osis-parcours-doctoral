@@ -42,6 +42,7 @@ from parcours_doctoral.tests.factories.assessment_enrollment import (
     AssessmentEnrollmentFactory,
     AssessmentEnrollmentForClassFactory,
 )
+from parcours_doctoral.tests.factories.private_defense import PrivateDefenseFactory
 
 
 @freezegun.api.freeze_time('2024-01-01')
@@ -84,6 +85,7 @@ class ListerEvaluationsTestCase(QueriesAssertionsMixin, TestCase):
             course__status=StatutActivite.ACCEPTEE.name,
             status=StatutInscriptionEvaluation.ACCEPTEE.name,
         )
+        PrivateDefenseFactory(datetime=None, parcours_doctoral=first_assessment.course.parcours_doctoral)
         second_assessment = AssessmentEnrollmentFactory(
             session=Session.JANUARY.name,
             corrected_mark='16',
@@ -107,6 +109,7 @@ class ListerEvaluationsTestCase(QueriesAssertionsMixin, TestCase):
             course__status=StatutActivite.ACCEPTEE.name,
             status=StatutInscriptionEvaluation.DESINSCRITE.name,
         )
+        PrivateDefenseFactory(datetime=None, parcours_doctoral=second_assessment.course.parcours_doctoral)
         other_session_assessment = AssessmentEnrollmentFactory(
             session=Session.SEPTEMBER.name,
             course__learning_unit_year__academic_year__year=2023,
@@ -254,26 +257,27 @@ class ListerEvaluationsTestCase(QueriesAssertionsMixin, TestCase):
         )
 
         doctorate = assessment.course.parcours_doctoral
+        private_defense = PrivateDefenseFactory(parcours_doctoral=doctorate)
 
         # With private defense date in the encoding period
-        doctorate.defense_indicative_date = datetime.date(2024, 1, 15)
-        doctorate.save(update_fields=['defense_indicative_date'])
+        private_defense.datetime = datetime.datetime(2024, 1, 15, 11, 30)
+        private_defense.save(update_fields=['datetime'])
 
         assessments = message_bus_instance.invoke(cmd)
         self.assertEqual(len(assessments), 1)
         self.assertEqual(assessments[0].echeance_enseignant, datetime.date(2024, 1, 13))
 
         # With private defense date not in the encoding period
-        doctorate.defense_indicative_date = datetime.date(2023, 12, 31)
-        doctorate.save(update_fields=['defense_indicative_date'])
+        private_defense.datetime = datetime.datetime(2023, 12, 31, 11, 30)
+        private_defense.save(update_fields=['datetime'])
 
         assessments = message_bus_instance.invoke(cmd)
         self.assertEqual(len(assessments), 1)
         self.assertEqual(assessments[0].echeance_enseignant, datetime.date(2023, 12, 29))
 
         # Without private defense date
-        doctorate.defense_indicative_date = None
-        doctorate.save(update_fields=['defense_indicative_date'])
+        private_defense.datetime = None
+        private_defense.save(update_fields=['datetime'])
 
         assessments = message_bus_instance.invoke(cmd)
         self.assertEqual(len(assessments), 1)

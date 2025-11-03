@@ -24,48 +24,48 @@
 #
 # ##############################################################################
 import factory
+from osis_signature.models import Process
 
-from base.tests.factories.person import PersonFactory
+from parcours_doctoral.auth.roles.jury_member import JuryMember
 from parcours_doctoral.ddd.jury.domain.model.enums import (
     GenreMembre,
     RoleJury,
     TitreMembre,
 )
-from parcours_doctoral.models.jury import JuryMember
-from parcours_doctoral.tests.factories.supervision import (
-    ExternalPromoterFactory,
-    PromoterFactory,
-)
+from parcours_doctoral.models.jury import JuryActor
 
 
-class _JuryMemberFactory(factory.django.DjangoModelFactory):
+class JuryMemberRoleFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = JuryMember
 
-    parcours_doctoral = factory.SubFactory(
-        'parcours_doctoral.tests.factories.parcours_doctoral.ParcoursDoctoralFactory',
-    )
+
+class _ProcessFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = Process
+
+
+class _JuryActorFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = JuryActor
+
+    process = factory.SubFactory(_ProcessFactory)
     role = RoleJury.MEMBRE.name
+
+
+class JuryActorFactory(_JuryActorFactory):
+    is_promoter = False
+    person = factory.SubFactory('base.tests.factories.person.PersonFactory')
+
+    @factory.post_generation
+    def generate_role(self, create, extracted, **kwargs):
+        if self.person_id:
+            JuryMemberRoleFactory(person=self.person)
+
+
+class ExternalJuryActorFactory(_JuryActorFactory):
     other_institute = ''
-    promoter = None
-    person = None
-    institute = ''
-    country = None
-    last_name = ''
-    first_name = ''
-    title = ''
-    non_doctor_reason = ''
-    gender = ''
-    email = ''
-
-
-class JuryMemberFactory(_JuryMemberFactory):
-    person = factory.SubFactory(PersonFactory)
-
-
-class ExternalJuryMemberFactory(_JuryMemberFactory):
-    other_institute = ''
-    promoter = None
+    is_promoter = False
     person = None
     institute = 'institute'
     country = factory.SubFactory('reference.tests.factories.country.CountryFactory')
@@ -75,11 +75,13 @@ class ExternalJuryMemberFactory(_JuryMemberFactory):
     non_doctor_reason = ''
     gender = GenreMembre.AUTRE.name
     email = 'email@example.org'
+    language = 'fr-be'
+    city = 'x'
 
 
-class JuryMemberWithInternalPromoterFactory(_JuryMemberFactory):
-    promoter = factory.SubFactory(PromoterFactory)
+class JuryActorWithInternalPromoterFactory(JuryActorFactory):
+    is_promoter = True
 
 
-class JuryMemberWithExternalPromoterFactory(_JuryMemberFactory):
-    promoter = factory.SubFactory(ExternalPromoterFactory)
+class JuryActorWithExternalPromoterFactory(ExternalJuryActorFactory):
+    is_promoter = True

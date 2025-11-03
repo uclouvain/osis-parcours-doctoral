@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -26,11 +26,17 @@
 from infrastructure.utils import AbstractMessageBusCommands, MessageBusInMemory
 
 from .parcours_doctoral import handlers_in_memory as parcours_doctoral_handlers
+from .parcours_doctoral.defense_privee import (
+    handlers_in_memory as defense_privee_handlers,
+)
 from .parcours_doctoral.epreuve_confirmation import (
     handlers_in_memory as epreuve_confirmation_handlers,
 )
 from .parcours_doctoral.formation import handlers_in_memory as formation_handlers
 from .parcours_doctoral.jury import handlers_in_memory as jury_handlers
+from .parcours_doctoral.soutenance_publique import (
+    handlers_in_memory as soutenance_publique_handlers,
+)
 
 
 class MessageBusInMemoryCommands(AbstractMessageBusCommands):
@@ -39,6 +45,8 @@ class MessageBusInMemoryCommands(AbstractMessageBusCommands):
         **epreuve_confirmation_handlers.COMMAND_HANDLERS,
         **formation_handlers.COMMAND_HANDLERS,
         **jury_handlers.COMMAND_HANDLERS,
+        **defense_privee_handlers.COMMAND_HANDLERS,
+        **soutenance_publique_handlers.COMMAND_HANDLERS,
     }
 
 

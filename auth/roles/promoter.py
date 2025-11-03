@@ -29,9 +29,12 @@ from admission.auth.roles.promoter import Promoter as AdmissionPromoter
 from parcours_doctoral.auth.predicates.parcours_doctoral import (
     complementary_training_enabled,
     is_jury_in_progress,
+    is_jury_signing_in_progress,
     is_parcours_doctoral_promoter,
     is_parcours_doctoral_reference_promoter,
     is_related_to_an_admission,
+    private_defense_is_authorised,
+    public_defense_is_authorised,
 )
 
 
@@ -68,12 +71,25 @@ class Promoter(AdmissionPromoter):
             'parcours_doctoral.api_view_jury': is_parcours_doctoral_promoter,
             'parcours_doctoral.api_view_confirmation': is_parcours_doctoral_promoter & is_related_to_an_admission,
             'parcours_doctoral.api_upload_pdf_confirmation': is_parcours_doctoral_promoter & is_related_to_an_admission,
-            'parcours_doctoral.api_change_jury': is_parcours_doctoral_promoter & is_jury_in_progress,
+            'parcours_doctoral.api_change_jury': is_parcours_doctoral_reference_promoter & is_jury_in_progress,
+            'parcours_doctoral.api_change_jury_role': is_parcours_doctoral_reference_promoter
+            & is_jury_signing_in_progress,
+            'parcours_doctoral.api_approve_jury': is_jury_signing_in_progress,
             # PhD training
             'parcours_doctoral.api_view_complementary_training': is_parcours_doctoral_promoter
             & complementary_training_enabled,
             'parcours_doctoral.api_view_course_enrollment': is_parcours_doctoral_promoter,
             'parcours_doctoral.api_view_training': is_parcours_doctoral_promoter,
             'parcours_doctoral.api_assent_training': is_parcours_doctoral_reference_promoter,
+            # Private defense
+            'parcours_doctoral.api_view_private_defense': is_parcours_doctoral_promoter,
+            'parcours_doctoral.api_view_private_defense_minutes': is_parcours_doctoral_promoter,
+            'parcours_doctoral.api_upload_private_defense_minutes': is_parcours_doctoral_promoter
+            & private_defense_is_authorised,
+            # Public defense
+            'parcours_doctoral.api_view_public_defense': is_parcours_doctoral_promoter,
+            'parcours_doctoral.api_view_public_defense_minutes': is_parcours_doctoral_promoter,
+            'parcours_doctoral.api_upload_public_defense_minutes': is_parcours_doctoral_promoter
+            & public_defense_is_authorised,
         }
         return RuleSet(rules)

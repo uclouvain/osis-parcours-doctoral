@@ -87,7 +87,7 @@
           {% if parcours_doctoral.projet.date_soutenance %}
               {% field_data _("Defence date") parcours_doctoral.projet.date_soutenance %}
           {% elif parcours_doctoral.projet.raison_non_soutenue %}
-              {% field_data _("No defense reason") parcours_doctoral.projet.raison_non_soutenue|linebreaks %}
+              {% field_data _("No defence reason") parcours_doctoral.projet.raison_non_soutenue|linebreaks %}
           {% endif %}
       {% endif %}
     </div>
