@@ -26,10 +26,11 @@
 {% endcomment %}
 
 {% block actions-group %}
+  {% has_perm 'parcours_doctoral.change_admissibility' as can_change_admissibility %}
   {% has_perm 'parcours_doctoral.invite_jury_to_admissibility' as can_invite_jury_to_admissibility %}
   {% has_perm 'parcours_doctoral.make_admissibility_decision' as can_make_decision %}
 
-  {% if can_invite_jury_to_admissibility or can_make_decision %}
+  {% if can_change_admissibility or can_invite_jury_to_admissibility or can_make_decision %}
     <div id="admissibility-actions" class="btn-group">
       <button
         type="button"
@@ -42,6 +43,17 @@
         <i class="fa-solid fa-caret-down"></i>
       </button>
       <ul class="dropdown-menu float-end">
+        {% if can_change_admissibility %}
+          <li>
+            <a
+              class="dropdown-item"
+              href="{% url 'parcours_doctoral:update:admissibility' view.kwargs.uuid %}"
+            >
+              {% translate "Update" context 'verb' %}
+            </a>
+          </li>
+          <li><hr class="dropdown-divider"></li>
+        {% endif %}
         {% if can_invite_jury_to_admissibility %}
           <li>
             <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#admissibility-jury-invitation-form-modal">
