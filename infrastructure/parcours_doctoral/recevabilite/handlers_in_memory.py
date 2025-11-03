@@ -35,6 +35,9 @@ from parcours_doctoral.infrastructure.parcours_doctoral.domain.service.in_memory
 from parcours_doctoral.infrastructure.parcours_doctoral.domain.service.in_memory.notification import (
     NotificationInMemory as NotificationGeneraleInMemory,
 )
+from parcours_doctoral.infrastructure.parcours_doctoral.jury.repository.in_memory.jury import (
+    JuryInMemoryRepository,
+)
 from parcours_doctoral.infrastructure.parcours_doctoral.recevabilite.domain.service.in_memory.notification import (
     NotificationInMemory,
 )
@@ -51,6 +54,7 @@ _notification = NotificationInMemory()
 _notification_generale = NotificationGeneraleInMemory()
 _historique = HistoriqueInMemory()
 _personne_connue_ucl_translator = PersonneConnueUclInMemoryTranslator()
+_jury_repository = JuryInMemoryRepository()
 
 
 COMMAND_HANDLERS = {
@@ -80,6 +84,7 @@ COMMAND_HANDLERS = {
         recevabilite_repository=_recevabilite_repository,
         historique=_historique,
         notification=_notification_generale,
+        jury_repository=_jury_repository,
     ),
     ConfirmerRecevabiliteARecommencerCommand: lambda msg_bus, cmd: confirmer_recevabilite_a_recommencer(
         cmd,
@@ -87,6 +92,7 @@ COMMAND_HANDLERS = {
         recevabilite_repository=_recevabilite_repository,
         historique=_historique,
         notification=_notification_generale,
+        jury_repository=_jury_repository,
     ),
     ConfirmerEchecRecevabiliteCommand: lambda msg_bus, cmd: confirmer_echec_recevabilite(
         cmd,
@@ -94,6 +100,7 @@ COMMAND_HANDLERS = {
         recevabilite_repository=_recevabilite_repository,
         historique=_historique,
         notification=_notification_generale,
+        jury_repository=_jury_repository,
     ),
     ModifierRecevabiliteCommand: lambda msg_bus, cmd: modifier_recevabilite(
         cmd,

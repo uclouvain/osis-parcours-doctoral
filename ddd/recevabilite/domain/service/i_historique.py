@@ -24,60 +24,34 @@
 #
 # ##############################################################################
 from abc import abstractmethod
-from email.message import EmailMessage
 
 from osis_common.ddd import interface
-from parcours_doctoral.ddd.domain.model.groupe_de_supervision import (
-    GroupeDeSupervision,
-    SignataireIdentity,
-)
+from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoral
-from parcours_doctoral.ddd.jury.repository.i_jury import IJuryRepository
 
 
-class INotification(interface.DomainService):
+class IHistorique(interface.DomainService):
     @classmethod
     @abstractmethod
-    def envoyer_message(
+    def historiser_soumission_recevabilite(
         cls,
         parcours_doctoral: ParcoursDoctoral,
-        matricule_emetteur: str,
-        matricule_doctorant: str,
-        sujet: str,
-        message: str,
-        cc_promoteurs: bool = False,
-        cc_membres_ca: bool = False,
-        cc_jury: bool = False,
-        cc_sceb: bool = False,
-    ) -> EmailMessage:
+        matricule_auteur: str,
+        statut_original_parcours_doctoral: ChoixStatutParcoursDoctoral,
+    ):
         raise NotImplementedError
 
     @classmethod
     @abstractmethod
-    def envoyer_message_au_doctorant_et_au_jury(
-        cls,
-        jury_repository: IJuryRepository,
-        parcours_doctoral: ParcoursDoctoral,
-        sujet: str,
-        message: str,
-    ) -> EmailMessage:
+    def historiser_decision_reussie_recevabilite(cls, parcours_doctoral: ParcoursDoctoral, matricule_auteur: str):
         raise NotImplementedError
 
     @classmethod
     @abstractmethod
-    def envoyer_signatures(
-        cls, parcours_doctoral: ParcoursDoctoral, groupe_de_supervision: GroupeDeSupervision
-    ) -> None:
+    def historiser_decision_repetition_recevabilite(cls, parcours_doctoral: ParcoursDoctoral, matricule_auteur: str):
         raise NotImplementedError
 
     @classmethod
     @abstractmethod
-    def renvoyer_invitation(cls, parcours_doctoral: ParcoursDoctoral, membre: SignataireIdentity):
-        raise NotImplementedError
-
-    @classmethod
-    @abstractmethod
-    def notifier_suppression_membre(
-        cls, parcours_doctoral: ParcoursDoctoral, signataire_id: SignataireIdentity
-    ) -> None:
+    def historiser_decision_echec_recevabilite(cls, parcours_doctoral: ParcoursDoctoral, matricule_auteur: str):
         raise NotImplementedError

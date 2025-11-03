@@ -26,11 +26,12 @@
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import (
     ParcoursDoctoralIdentity,
 )
-from parcours_doctoral.ddd.domain.service.i_historique import IHistorique
 from parcours_doctoral.ddd.domain.service.i_notification import INotification
+from parcours_doctoral.ddd.jury.repository.i_jury import IJuryRepository
 from parcours_doctoral.ddd.recevabilite.commands import (
     ConfirmerEchecRecevabiliteCommand,
 )
+from parcours_doctoral.ddd.recevabilite.domain.service.i_historique import IHistorique
 from parcours_doctoral.ddd.recevabilite.repository.i_recevabilite import (
     IRecevabiliteRepository,
 )
@@ -45,6 +46,7 @@ def confirmer_echec_recevabilite(
     recevabilite_repository: 'IRecevabiliteRepository',
     historique: 'IHistorique',
     notification: 'INotification',
+    jury_repository: 'IJuryRepository',
 ) -> ParcoursDoctoralIdentity:
     # GIVEN
     parcours_doctoral_identity = ParcoursDoctoralIdentity(uuid=cmd.parcours_doctoral_uuid)
@@ -59,8 +61,8 @@ def confirmer_echec_recevabilite(
     parcours_doctoral_repository.save(parcours_doctoral)
 
     notification.envoyer_message_au_doctorant_et_au_jury(
+        jury_repository=jury_repository,
         parcours_doctoral=parcours_doctoral,
-        matricule_doctorant=parcours_doctoral.matricule_doctorant,
         sujet=cmd.sujet_message,
         message=cmd.corps_message,
     )

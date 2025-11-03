@@ -160,16 +160,6 @@ class IHistorique(interface.DomainService):
 
     @classmethod
     @abstractmethod
-    def historiser_soumission_recevabilite(
-        cls,
-        parcours_doctoral: ParcoursDoctoral,
-        matricule_auteur: str,
-        statut_original_parcours_doctoral: ChoixStatutParcoursDoctoral,
-    ):
-        raise NotImplementedError
-
-    @classmethod
-    @abstractmethod
     def historiser_soumission_defense_privee(
         cls,
         parcours_doctoral: ParcoursDoctoral,
@@ -267,19 +257,4 @@ class IHistorique(interface.DomainService):
         parcours_doctoral: ParcoursDoctoral,
         matricule_auteur: str,
     ):
-        raise NotImplementedError
-
-    @classmethod
-    @abstractmethod
-    def historiser_decision_reussie_recevabilite(cls, parcours_doctoral: ParcoursDoctoral, matricule_auteur: str):
-        raise NotImplementedError
-
-    @classmethod
-    @abstractmethod
-    def historiser_decision_repetition_recevabilite(cls, parcours_doctoral: ParcoursDoctoral, matricule_auteur: str):
-        raise NotImplementedError
-
-    @classmethod
-    @abstractmethod
-    def historiser_decision_echec_recevabilite(cls, parcours_doctoral: ParcoursDoctoral, matricule_auteur: str):
         raise NotImplementedError
