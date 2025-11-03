@@ -26,8 +26,8 @@
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import (
     ParcoursDoctoralIdentity,
 )
-from parcours_doctoral.ddd.domain.service.i_historique import IHistorique
 from parcours_doctoral.ddd.recevabilite.commands import SoumettreRecevabiliteCommand
+from parcours_doctoral.ddd.recevabilite.domain.service.i_historique import IHistorique
 from parcours_doctoral.ddd.recevabilite.repository.i_recevabilite import (
     IRecevabiliteRepository,
 )
