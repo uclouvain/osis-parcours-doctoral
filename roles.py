@@ -135,6 +135,9 @@ PROGRAM_MANAGER_RULES = {
     'parcours_doctoral.approve_jury': is_part_of_education_group & is_jury_approuve_ca & has_valid_enrollment,
     # -- Recevabilité
     'parcours_doctoral.view_admissibility': is_part_of_education_group & defense_method_is_formula_2,
+    'parcours_doctoral.change_admissibility': is_part_of_education_group
+    & has_valid_enrollment
+    & defense_method_is_formula_2,
     'parcours_doctoral.invite_jury_to_admissibility': is_part_of_education_group
     & has_valid_enrollment
     & admissibility_is_submitted

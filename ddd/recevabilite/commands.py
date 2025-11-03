@@ -84,3 +84,16 @@ class ConfirmerEchecRecevabiliteCommand(interface.CommandRequest):
     matricule_auteur: str
     sujet_message: str
     corps_message: str
+
+
+@attr.dataclass(frozen=True, slots=True)
+class ModifierRecevabiliteCommand(interface.CommandRequest):
+    parcours_doctoral_uuid: str
+    matricule_auteur: str
+
+    titre_these: str
+    date_decision: Optional[datetime.date]
+    date_envoi_manuscrit: Optional[datetime.date]
+
+    proces_verbal: list[str]
+    avis_jury: list[str]
