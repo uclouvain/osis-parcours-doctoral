@@ -50,7 +50,9 @@ from parcours_doctoral.ddd.domain.service.i_notification import INotification
 from parcours_doctoral.ddd.domain.validator.exceptions import (
     SignataireNonTrouveException,
 )
+from parcours_doctoral.ddd.jury.builder.jury_identity_builder import JuryIdentityBuilder
 from parcours_doctoral.ddd.jury.domain.model.enums import ROLES_MEMBRES_JURY, RoleJury
+from parcours_doctoral.ddd.jury.repository.i_jury import IJuryRepository
 from parcours_doctoral.infrastructure.mixins.notification import NotificationMixin
 from parcours_doctoral.mail_templates.signatures import (
     PARCOURS_DOCTORAL_EMAIL_MEMBER_REMOVED,
@@ -138,19 +140,20 @@ class Notification(NotificationMixin, INotification):
     @classmethod
     def envoyer_message_au_doctorant_et_au_jury(
         cls,
+        jury_repository: IJuryRepository,
         parcours_doctoral: ParcoursDoctoral,
-        matricule_doctorant: str,
         sujet: str,
         message: str,
     ) -> EmailMessage:
         parcours_doctoral_instance = ParcoursDoctoralModel.objects.get(uuid=parcours_doctoral.entity_id.uuid)
 
-        jury_members = JuryActor.objects.filter(
-            process_id=parcours_doctoral_instance.jury_group_id,
-            role__in=ROLES_MEMBRES_JURY,
-        ).select_related('person')
+        jury = jury_repository.get(JuryIdentityBuilder.build_from_uuid(parcours_doctoral.entity_id.uuid))
 
-        recipients = [cls._format_email(jury_member) for jury_member in jury_members]
+        recipients = [
+            formataddr((f'{jury_member.prenom} {jury_member.nom}', jury_member.email))
+            for jury_member in jury.membres
+            if jury_member.role.name in ROLES_MEMBRES_JURY
+        ]
         recipients.insert(0, cls._format_email(parcours_doctoral_instance.student))
 
         # Notifier le doctorant via mail
