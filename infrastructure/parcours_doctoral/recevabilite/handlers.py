@@ -32,6 +32,9 @@ from parcours_doctoral.infrastructure.parcours_doctoral.domain.service.historiqu
 from parcours_doctoral.infrastructure.parcours_doctoral.domain.service.notification import (
     Notification as NotificationGenerale,
 )
+from parcours_doctoral.infrastructure.parcours_doctoral.jury.repository.jury import (
+    JuryRepository,
+)
 from parcours_doctoral.infrastructure.parcours_doctoral.recevabilite.domain.service.notification import (
     Notification,
 )
@@ -69,6 +72,7 @@ COMMAND_HANDLERS = {
         recevabilite_repository=RecevabiliteRepository(),
         historique=Historique(),
         notification=NotificationGenerale(),
+        jury_repository=JuryRepository(),
     ),
     ConfirmerRecevabiliteARecommencerCommand: lambda msg_bus, cmd: confirmer_recevabilite_a_recommencer(
         cmd,
@@ -76,6 +80,7 @@ COMMAND_HANDLERS = {
         recevabilite_repository=RecevabiliteRepository(),
         historique=Historique(),
         notification=NotificationGenerale(),
+        jury_repository=JuryRepository(),
     ),
     ConfirmerEchecRecevabiliteCommand: lambda msg_bus, cmd: confirmer_echec_recevabilite(
         cmd,
@@ -83,6 +88,7 @@ COMMAND_HANDLERS = {
         recevabilite_repository=RecevabiliteRepository(),
         historique=Historique(),
         notification=NotificationGenerale(),
+        jury_repository=JuryRepository(),
     ),
     ModifierRecevabiliteCommand: lambda msg_bus, cmd: modifier_recevabilite(
         cmd,
