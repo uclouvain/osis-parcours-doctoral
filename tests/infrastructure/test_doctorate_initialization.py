@@ -54,10 +54,7 @@ from base.tests.factories.entity_version import EntityVersionFactory
 from base.tests.factories.person import PersonFactory
 from infrastructure.messages_bus import message_bus_instance
 from parcours_doctoral.ddd.commands import InitialiserParcoursDoctoralCommand
-from parcours_doctoral.ddd.domain.model.enums import (
-    ChoixLangueDefense,
-    ChoixStatutParcoursDoctoral,
-)
+from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from parcours_doctoral.ddd.jury.domain.model.enums import FormuleDefense
 from parcours_doctoral.models import (
     ActorType,
@@ -65,13 +62,15 @@ from parcours_doctoral.models import (
     ParcoursDoctoral,
     ParcoursDoctoralSupervisionActor,
 )
+from parcours_doctoral.models.private_defense import PrivateDefense
+from parcours_doctoral.tests.mixins import MockOsisDocumentMixin
 from reference.tests.factories.language import LanguageFactory
 from reference.tests.factories.scholarship import ErasmusMundusScholarshipFactory
 
 
 @freezegun.freeze_time('2023-01-01')
 @override_settings(OSIS_DOCUMENT_BASE_URL='http://dummyurl/')
-class DoctorateInitializationTestCase(TestCase):
+class DoctorateInitializationTestCase(MockOsisDocumentMixin, TestCase):
     @classmethod
     def setUpTestData(cls):
         cls.student = PersonFactory()
@@ -212,6 +211,8 @@ class DoctorateInitializationTestCase(TestCase):
         )
 
     def setUp(self):
+        super().setUp()
+
         self.admission = DoctorateAdmissionFactory(
             candidate=self.student,
             training=self.doctorate,
@@ -259,56 +260,19 @@ class DoctorateInitializationTestCase(TestCase):
             cotutelle_opening_request=self.documents_tokens['cotutelle_opening_request'],
             cotutelle_convention=self.documents_tokens['cotutelle_convention'],
             cotutelle_other_documents=self.documents_tokens['cotutelle_other_documents'],
+            related_pre_admission=None,
         )
+        self.admission.refresh_from_db()
 
         # Mock documents
-        patcher = patch('osis_document_components.services.get_remote_tokens')
-        patched = patcher.start()
-        patched.side_effect = lambda uuids, **kwargs: {uuid: f'token-{index}' for index, uuid in enumerate(uuids)}
-        self.addCleanup(patcher.stop)
-
-        patcher = patch('osis_document_components.services.get_several_remote_metadata')
-        patched = patcher.start()
-        patched.side_effect = lambda tokens: {
-            token: {
-                'name': 'myfile',
-                'mimetype': PDF_MIME_TYPE,
-                'size': 1,
-            }
-            for token in tokens
-        }
-        self.addCleanup(patcher.stop)
-
-        patcher = patch("osis_document_components.services.get_remote_token", return_value="foobar")
-        patcher.start()
-        self.addCleanup(patcher.stop)
-
-        patcher = patch(
-            "osis_document_components.services.get_remote_metadata",
-            return_value={"name": "myfile", "size": 1},
-        )
-        patcher.start()
-        self.addCleanup(patcher.stop)
-
-        patcher = patch(
-            "osis_document_components.services.confirm_remote_upload",
-            side_effect=lambda token, *args, **kwargs: token,
-        )
-        patcher.start()
-        self.addCleanup(patcher.stop)
-
-        patcher = patch(
-            "osis_document_components.fields.FileField._confirm_multiple_upload",
-            side_effect=lambda _, value, __: value,
-        )
-        patcher.start()
-        self.addCleanup(patcher.stop)
-
         self.documents_remote_duplicate_patcher = patch(
-            'parcours_doctoral.infrastructure.parcours_doctoral.domain.service.parcours_doctoral.documents_remote_duplicate'
+            'parcours_doctoral.infrastructure.parcours_doctoral.domain.service.parcours_doctoral.'
+            'documents_remote_duplicate'
         )
         self.documents_remote_duplicate_patched = self.documents_remote_duplicate_patcher.start()
-        self.documents_remote_duplicate_patched.return_value = self.duplicated_documents_tokens_by_uuid
+        self.documents_remote_duplicate_patched.side_effect = lambda uuids, upload_path_by_uuid: {
+            str(current_uuid): str(current_uuid) for current_uuid in uuids
+        }
         self.addCleanup(self.documents_remote_duplicate_patcher.stop)
 
     def test_initialization_with_a_pre_admission(self):
@@ -319,6 +283,7 @@ class DoctorateInitializationTestCase(TestCase):
         self.assertEqual(ParcoursDoctoral.objects.all().count(), 1)
 
         doctorate = ParcoursDoctoral.objects.filter(admission=self.pre_admission).first()
+        self.pre_admission.refresh_from_db()
 
         self.assertIsNotNone(doctorate)
 
@@ -338,13 +303,11 @@ class DoctorateInitializationTestCase(TestCase):
         self.assertEqual(doctorate.phd_alread_started, self.pre_admission.phd_alread_started)
         self.assertEqual(doctorate.phd_alread_started_institute, self.pre_admission.phd_alread_started_institute)
         self.assertEqual(doctorate.work_start_date, self.pre_admission.work_start_date)
-        self.assertEqual(doctorate.project_document, self.duplicated_documents_tokens['project_document'])
-        self.assertEqual(doctorate.gantt_graph, self.duplicated_documents_tokens['gantt_graph'])
-        self.assertEqual(doctorate.program_proposition, self.duplicated_documents_tokens['program_proposition'])
-        self.assertEqual(
-            doctorate.additional_training_project, self.duplicated_documents_tokens['additional_training_project']
-        )
-        self.assertEqual(doctorate.recommendation_letters, self.duplicated_documents_tokens['recommendation_letters'])
+        self.assertEqual(doctorate.project_document, self.pre_admission.project_document)
+        self.assertEqual(doctorate.gantt_graph, self.pre_admission.gantt_graph)
+        self.assertEqual(doctorate.program_proposition, self.pre_admission.program_proposition)
+        self.assertEqual(doctorate.additional_training_project, self.pre_admission.additional_training_project)
+        self.assertEqual(doctorate.recommendation_letters, self.pre_admission.recommendation_letters)
         self.assertEqual(doctorate.phd_already_done, self.pre_admission.phd_already_done)
         self.assertEqual(doctorate.phd_already_done_institution, self.pre_admission.phd_already_done_institution)
         self.assertEqual(doctorate.phd_already_done_thesis_domain, self.pre_admission.phd_already_done_thesis_domain)
@@ -362,13 +325,9 @@ class DoctorateInitializationTestCase(TestCase):
         self.assertEqual(
             doctorate.cotutelle_other_institution_address, self.pre_admission.cotutelle_other_institution_address
         )
-        self.assertEqual(
-            doctorate.cotutelle_opening_request, self.duplicated_documents_tokens['cotutelle_opening_request']
-        )
-        self.assertEqual(doctorate.cotutelle_convention, self.duplicated_documents_tokens['cotutelle_convention'])
-        self.assertEqual(
-            doctorate.cotutelle_other_documents, self.duplicated_documents_tokens['cotutelle_other_documents']
-        )
+        self.assertEqual(doctorate.cotutelle_opening_request, self.pre_admission.cotutelle_opening_request)
+        self.assertEqual(doctorate.cotutelle_convention, self.pre_admission.cotutelle_convention)
+        self.assertEqual(doctorate.cotutelle_other_documents, self.pre_admission.cotutelle_other_documents)
         self.assertEqual(doctorate.financing_type, self.pre_admission.financing_type)
         self.assertEqual(doctorate.other_international_scholarship, self.pre_admission.other_international_scholarship)
         self.assertEqual(doctorate.international_scholarship, self.pre_admission.international_scholarship)
@@ -376,7 +335,7 @@ class DoctorateInitializationTestCase(TestCase):
         self.assertEqual(doctorate.financing_eft, self.pre_admission.financing_eft)
         self.assertEqual(doctorate.scholarship_start_date, self.pre_admission.scholarship_start_date)
         self.assertEqual(doctorate.scholarship_end_date, self.pre_admission.scholarship_end_date)
-        self.assertEqual(doctorate.scholarship_proof, self.duplicated_documents_tokens['scholarship_proof'])
+        self.assertEqual(doctorate.scholarship_proof, self.pre_admission.scholarship_proof)
         self.assertEqual(doctorate.planned_duration, self.pre_admission.planned_duration)
         self.assertEqual(doctorate.dedicated_time, self.pre_admission.dedicated_time)
         self.assertEqual(doctorate.is_fnrs_fria_fresh_csc_linked, self.pre_admission.is_fnrs_fria_fresh_csc_linked)
@@ -384,6 +343,9 @@ class DoctorateInitializationTestCase(TestCase):
 
         # Check that no confirmation paper has been created
         self.assertFalse(ConfirmationPaper.objects.filter(parcours_doctoral=doctorate).exists())
+
+        # Check that no private defense has been created
+        self.assertFalse(PrivateDefense.objects.filter(parcours_doctoral=doctorate).exists())
 
         # Check the duplication of the supervision group
         self.assertIsNotNone(doctorate.supervision_group)
@@ -468,13 +430,11 @@ class DoctorateInitializationTestCase(TestCase):
         self.assertEqual(doctorate.phd_alread_started, self.admission.phd_alread_started)
         self.assertEqual(doctorate.phd_alread_started_institute, self.admission.phd_alread_started_institute)
         self.assertEqual(doctorate.work_start_date, self.admission.work_start_date)
-        self.assertEqual(doctorate.project_document, self.duplicated_documents_tokens['project_document'])
-        self.assertEqual(doctorate.gantt_graph, self.duplicated_documents_tokens['gantt_graph'])
-        self.assertEqual(doctorate.program_proposition, self.duplicated_documents_tokens['program_proposition'])
-        self.assertEqual(
-            doctorate.additional_training_project, self.duplicated_documents_tokens['additional_training_project']
-        )
-        self.assertEqual(doctorate.recommendation_letters, self.duplicated_documents_tokens['recommendation_letters'])
+        self.assertEqual(doctorate.project_document, self.admission.project_document)
+        self.assertEqual(doctorate.gantt_graph, self.admission.gantt_graph)
+        self.assertEqual(doctorate.program_proposition, self.admission.program_proposition)
+        self.assertEqual(doctorate.additional_training_project, self.admission.additional_training_project)
+        self.assertEqual(doctorate.recommendation_letters, self.admission.recommendation_letters)
         self.assertEqual(doctorate.phd_already_done, self.admission.phd_already_done)
         self.assertEqual(doctorate.phd_already_done_institution, self.admission.phd_already_done_institution)
         self.assertEqual(doctorate.phd_already_done_thesis_domain, self.admission.phd_already_done_thesis_domain)
@@ -490,13 +450,9 @@ class DoctorateInitializationTestCase(TestCase):
         self.assertEqual(
             doctorate.cotutelle_other_institution_address, self.admission.cotutelle_other_institution_address
         )
-        self.assertEqual(
-            doctorate.cotutelle_opening_request, self.duplicated_documents_tokens['cotutelle_opening_request']
-        )
-        self.assertEqual(doctorate.cotutelle_convention, self.duplicated_documents_tokens['cotutelle_convention'])
-        self.assertEqual(
-            doctorate.cotutelle_other_documents, self.duplicated_documents_tokens['cotutelle_other_documents']
-        )
+        self.assertEqual(doctorate.cotutelle_opening_request, self.admission.cotutelle_opening_request)
+        self.assertEqual(doctorate.cotutelle_convention, self.admission.cotutelle_convention)
+        self.assertEqual(doctorate.cotutelle_other_documents, self.admission.cotutelle_other_documents)
         self.assertEqual(doctorate.financing_type, self.admission.financing_type)
         self.assertEqual(doctorate.other_international_scholarship, self.admission.other_international_scholarship)
         self.assertEqual(doctorate.international_scholarship, self.admission.international_scholarship)
@@ -504,7 +460,7 @@ class DoctorateInitializationTestCase(TestCase):
         self.assertEqual(doctorate.financing_eft, self.admission.financing_eft)
         self.assertEqual(doctorate.scholarship_start_date, self.admission.scholarship_start_date)
         self.assertEqual(doctorate.scholarship_end_date, self.admission.scholarship_end_date)
-        self.assertEqual(doctorate.scholarship_proof, self.duplicated_documents_tokens['scholarship_proof'])
+        self.assertEqual(doctorate.scholarship_proof, self.admission.scholarship_proof)
         self.assertEqual(doctorate.planned_duration, self.admission.planned_duration)
         self.assertEqual(doctorate.dedicated_time, self.admission.dedicated_time)
         self.assertEqual(doctorate.is_fnrs_fria_fresh_csc_linked, self.admission.is_fnrs_fria_fresh_csc_linked)
@@ -515,6 +471,9 @@ class DoctorateInitializationTestCase(TestCase):
         self.assertIsNotNone(confirmation_paper)
 
         self.assertEqual(confirmation_paper.confirmation_deadline, datetime.date(2025, 1, 1))
+
+        # Check that a private defense has been created
+        self.assertTrue(PrivateDefense.objects.filter(parcours_doctoral=doctorate).exists())
 
         # Check the duplication of the supervision group
         self.assertIsNotNone(doctorate.supervision_group)
@@ -587,11 +546,14 @@ class DoctorateInitializationTestCase(TestCase):
         # Check that no confirmation paper has been created
         self.assertFalse(ConfirmationPaper.objects.filter(parcours_doctoral=original_doctorate).exists())
 
+        # Check that no private defense has been created
+        self.assertFalse(PrivateDefense.objects.filter(parcours_doctoral=original_doctorate).exists())
+
         # Update the doctorate
         original_doctorate.thesis_proposed_title = 'T1'
         original_doctorate.defense_method = FormuleDefense.FORMULE_1.name
-        original_doctorate.defense_indicative_date = datetime.date(2024, 1, 1)
-        original_doctorate.defense_language = ChoixLangueDefense.ENGLISH.name
+        original_doctorate.defense_indicative_date = '2024-01-01'
+        original_doctorate.defense_language = self.other_language
         original_doctorate.comment_about_jury = 'C1'
         original_doctorate.accounting_situation = True
         original_doctorate.status = ChoixStatutParcoursDoctoral.JURY_SOUMIS.name
@@ -626,13 +588,11 @@ class DoctorateInitializationTestCase(TestCase):
         self.assertEqual(doctorate.phd_alread_started, self.admission.phd_alread_started)
         self.assertEqual(doctorate.phd_alread_started_institute, self.admission.phd_alread_started_institute)
         self.assertEqual(doctorate.work_start_date, self.admission.work_start_date)
-        self.assertEqual(doctorate.project_document, self.duplicated_documents_tokens['project_document'])
-        self.assertEqual(doctorate.gantt_graph, self.duplicated_documents_tokens['gantt_graph'])
-        self.assertEqual(doctorate.program_proposition, self.duplicated_documents_tokens['program_proposition'])
-        self.assertEqual(
-            doctorate.additional_training_project, self.duplicated_documents_tokens['additional_training_project']
-        )
-        self.assertEqual(doctorate.recommendation_letters, self.duplicated_documents_tokens['recommendation_letters'])
+        self.assertEqual(doctorate.project_document, self.admission.project_document)
+        self.assertEqual(doctorate.gantt_graph, self.admission.gantt_graph)
+        self.assertEqual(doctorate.program_proposition, self.admission.program_proposition)
+        self.assertEqual(doctorate.additional_training_project, self.admission.additional_training_project)
+        self.assertEqual(doctorate.recommendation_letters, self.admission.recommendation_letters)
         self.assertEqual(doctorate.phd_already_done, self.admission.phd_already_done)
         self.assertEqual(doctorate.phd_already_done_institution, self.admission.phd_already_done_institution)
         self.assertEqual(doctorate.phd_already_done_thesis_domain, self.admission.phd_already_done_thesis_domain)
@@ -648,13 +608,9 @@ class DoctorateInitializationTestCase(TestCase):
         self.assertEqual(
             doctorate.cotutelle_other_institution_address, self.admission.cotutelle_other_institution_address
         )
-        self.assertEqual(
-            doctorate.cotutelle_opening_request, self.duplicated_documents_tokens['cotutelle_opening_request']
-        )
-        self.assertEqual(doctorate.cotutelle_convention, self.duplicated_documents_tokens['cotutelle_convention'])
-        self.assertEqual(
-            doctorate.cotutelle_other_documents, self.duplicated_documents_tokens['cotutelle_other_documents']
-        )
+        self.assertEqual(doctorate.cotutelle_opening_request, self.admission.cotutelle_opening_request)
+        self.assertEqual(doctorate.cotutelle_convention, self.admission.cotutelle_convention)
+        self.assertEqual(doctorate.cotutelle_other_documents, self.admission.cotutelle_other_documents)
         self.assertEqual(doctorate.financing_type, self.admission.financing_type)
         self.assertEqual(doctorate.other_international_scholarship, self.admission.other_international_scholarship)
         self.assertEqual(doctorate.international_scholarship, self.admission.international_scholarship)
@@ -662,7 +618,7 @@ class DoctorateInitializationTestCase(TestCase):
         self.assertEqual(doctorate.financing_eft, self.admission.financing_eft)
         self.assertEqual(doctorate.scholarship_start_date, self.admission.scholarship_start_date)
         self.assertEqual(doctorate.scholarship_end_date, self.admission.scholarship_end_date)
-        self.assertEqual(doctorate.scholarship_proof, self.duplicated_documents_tokens['scholarship_proof'])
+        self.assertEqual(doctorate.scholarship_proof, self.admission.scholarship_proof)
         self.assertEqual(doctorate.planned_duration, self.admission.planned_duration)
         self.assertEqual(doctorate.dedicated_time, self.admission.dedicated_time)
         self.assertEqual(doctorate.is_fnrs_fria_fresh_csc_linked, self.admission.is_fnrs_fria_fresh_csc_linked)
@@ -673,6 +629,9 @@ class DoctorateInitializationTestCase(TestCase):
         self.assertIsNotNone(confirmation_paper)
 
         self.assertEqual(confirmation_paper.confirmation_deadline, datetime.date(2025, 1, 1))
+
+        # Check that a private defense has been created
+        self.assertTrue(PrivateDefense.objects.filter(parcours_doctoral=original_doctorate).exists())
 
         # Check that the doctorate data has not been updated
         self.assertEqual(original_doctorate.thesis_proposed_title, doctorate.thesis_proposed_title)

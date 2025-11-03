@@ -23,7 +23,6 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from collections import defaultdict
 
 from ckeditor.fields import RichTextFormField
 from django import forms

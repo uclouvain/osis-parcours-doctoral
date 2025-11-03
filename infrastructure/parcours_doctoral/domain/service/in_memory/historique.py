@@ -29,6 +29,8 @@ from typing import Optional
 from admission.ddd.admission.doctorat.preparation.domain.model.enums import (
     ChoixStatutPropositionDoctorale,
 )
+from ddd.logic.shared_kernel.personne_connue_ucl.dtos import PersonneConnueUclDTO
+from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from parcours_doctoral.ddd.domain.model.groupe_de_supervision import (
     GroupeDeSupervision,
     SignataireIdentity,
@@ -133,5 +135,100 @@ class HistoriqueInMemory(IHistorique):
         pass
 
     @classmethod
-    def historiser_soumission_epreuve_confirmation(cls, parcours_doctoral: ParcoursDoctoral, matricule_auteur: str):
+    def historiser_soumission_epreuve_confirmation(
+        cls,
+        parcours_doctoral: ParcoursDoctoral,
+        matricule_auteur: str,
+        statut_original_parcours_doctoral: ChoixStatutParcoursDoctoral,
+    ):
+        pass
+
+    @classmethod
+    def historiser_soumission_defense_privee(
+        cls,
+        parcours_doctoral: ParcoursDoctoral,
+        matricule_auteur: str,
+        statut_original_parcours_doctoral: ChoixStatutParcoursDoctoral,
+    ):
+        pass
+
+    @classmethod
+    def historiser_soumission_proces_verbal_defense_privee(
+        cls,
+        parcours_doctoral_identity: ParcoursDoctoralIdentity,
+        matricule_auteur: str,
+    ):
+        pass
+
+    @classmethod
+    def historiser_autorisation_defense_privee(
+        cls,
+        parcours_doctoral: ParcoursDoctoral,
+        matricule_auteur: str,
+    ):
+        pass
+
+    @classmethod
+    def historiser_invitation_jury_defense_privee(
+        cls,
+        parcours_doctoral: ParcoursDoctoral,
+        auteur: PersonneConnueUclDTO,
+    ):
+        pass
+
+    @classmethod
+    def historiser_decision_reussie_defense_privee(
+        cls,
+        parcours_doctoral: ParcoursDoctoral,
+        matricule_auteur: str,
+    ):
+        pass
+
+    @classmethod
+    def historiser_decision_echec_defense_privee(
+        cls,
+        parcours_doctoral: ParcoursDoctoral,
+        matricule_auteur: str,
+    ):
+        pass
+
+    @classmethod
+    def historiser_decision_repetition_defense_privee(
+        cls,
+        parcours_doctoral: ParcoursDoctoral,
+        matricule_auteur: str,
+    ):
+        pass
+
+    @classmethod
+    def historiser_modification_defense_privee(
+        cls,
+        parcours_doctoral: ParcoursDoctoral,
+        matricule_auteur: str,
+    ):
+        pass
+
+    @classmethod
+    def historiser_soumission_soutenance_publique(
+        cls,
+        parcours_doctoral: ParcoursDoctoral,
+        matricule_auteur: str,
+        statut_original_parcours_doctoral: ChoixStatutParcoursDoctoral,
+    ):
+        pass
+
+    @classmethod
+    def historiser_autorisation_soutenance_publique(
+        cls,
+        parcours_doctoral: ParcoursDoctoral,
+        matricule_auteur: str,
+    ):
+        pass
+
+    @classmethod
+    def historiser_decision_reussie_soutenance_publique(
+        cls,
+        parcours_doctoral: ParcoursDoctoral,
+        matricule_auteur: str,
+    ):
         pass

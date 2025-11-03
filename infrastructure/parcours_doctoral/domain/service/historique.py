@@ -31,6 +31,7 @@ from django.utils import translation
 from osis_history.utilities import add_history_entry
 
 from admission.infrastructure.utils import get_message_to_historize
+from ddd.logic.shared_kernel.personne_connue_ucl.dtos import PersonneConnueUclDTO
 from infrastructure.shared_kernel.personne_connue_ucl.personne_connue_ucl import (
     PersonneConnueUclTranslator,
 )
@@ -313,12 +314,198 @@ class Historique(IHistorique):
         )
 
     @classmethod
-    def historiser_soumission_epreuve_confirmation(cls, parcours_doctoral: ParcoursDoctoral, matricule_auteur: str):
+    def historiser_soumission_epreuve_confirmation(
+        cls,
+        parcours_doctoral: ParcoursDoctoral,
+        matricule_auteur: str,
+        statut_original_parcours_doctoral: ChoixStatutParcoursDoctoral,
+    ):
         auteur = PersonneConnueUclTranslator().get(matricule_auteur)
+        tags = ["parcours_doctoral", "confirmation"]
+
+        if parcours_doctoral.statut != statut_original_parcours_doctoral:
+            tags.append("status-changed")
+
         add_history_entry(
             parcours_doctoral.entity_id.uuid,
             "Le candidat a renseigné des informations relatives à son épreuve de confirmation.",
             "The candidate has filled in information relating to his confirmation paper exam.",
             "{auteur.prenom} {auteur.nom}".format(auteur=auteur),
-            tags=["parcours_doctoral", "confirmation", "status-changed"],
+            tags=tags,
+        )
+
+    @classmethod
+    def historiser_soumission_defense_privee(
+        cls,
+        parcours_doctoral: ParcoursDoctoral,
+        matricule_auteur: str,
+        statut_original_parcours_doctoral: ChoixStatutParcoursDoctoral,
+    ):
+        if parcours_doctoral.statut != statut_original_parcours_doctoral:
+            auteur = PersonneConnueUclTranslator().get(matricule_auteur)
+            tags = ["parcours_doctoral", "private-defense", "status-changed"]
+
+            add_history_entry(
+                parcours_doctoral.entity_id.uuid,
+                "Le doctorant a renseigné des informations relatives à la défense privée.",
+                "The doctoral student has filled in information relating to the private defence.",
+                "{auteur.prenom} {auteur.nom}".format(auteur=auteur),
+                tags=tags,
+            )
+
+    @classmethod
+    def historiser_soumission_proces_verbal_defense_privee(
+        cls,
+        parcours_doctoral_identity: ParcoursDoctoralIdentity,
+        matricule_auteur: str,
+    ):
+        auteur = PersonneConnueUclTranslator().get(matricule_auteur)
+
+        add_history_entry(
+            parcours_doctoral_identity.uuid,
+            'Le procès verbal de la défense privée a été modifié.',
+            'The minutes of the private defence have been updated.',
+            '{auteur.prenom} {auteur.nom}'.format(auteur=auteur),
+            tags=['parcours_doctoral', 'private-defense'],
+        )
+
+    @classmethod
+    def historiser_autorisation_defense_privee(
+        cls,
+        parcours_doctoral: ParcoursDoctoral,
+        matricule_auteur: str,
+    ):
+        auteur = PersonneConnueUclTranslator().get(matricule_auteur)
+
+        add_history_entry(
+            parcours_doctoral.entity_id.uuid,
+            'La défense privée a été autorisée.',
+            'The private defence has been authorised.',
+            '{auteur.prenom} {auteur.nom}'.format(auteur=auteur),
+            tags=['parcours_doctoral', 'private-defense', 'status-changed'],
+        )
+
+    @classmethod
+    def historiser_invitation_jury_defense_privee(
+        cls,
+        parcours_doctoral: ParcoursDoctoral,
+        auteur: PersonneConnueUclDTO,
+    ):
+        add_history_entry(
+            parcours_doctoral.entity_id.uuid,
+            'Les membres du jury ont été invités à la défense privée.',
+            'The jury members have been invited to the private defence.',
+            '{auteur.prenom} {auteur.nom}'.format(auteur=auteur),
+            tags=['parcours_doctoral', 'private-defense'],
+        )
+
+    @classmethod
+    def historiser_decision_reussie_defense_privee(
+        cls,
+        parcours_doctoral: ParcoursDoctoral,
+        matricule_auteur: str,
+    ):
+        auteur = PersonneConnueUclTranslator().get(matricule_auteur)
+        add_history_entry(
+            parcours_doctoral.entity_id.uuid,
+            'La décision de la défense privée a été donnée : celle-ci a été réussie.',
+            'The decision of the private defence has been made: it has been passed.',
+            '{auteur.prenom} {auteur.nom}'.format(auteur=auteur),
+            tags=['parcours_doctoral', 'private-defense', 'status-changed'],
+        )
+
+    @classmethod
+    def historiser_decision_echec_defense_privee(
+        cls,
+        parcours_doctoral: ParcoursDoctoral,
+        matricule_auteur: str,
+    ):
+        auteur = PersonneConnueUclTranslator().get(matricule_auteur)
+        add_history_entry(
+            parcours_doctoral.entity_id.uuid,
+            'La décision de la défense privée a été donnée : le candidat n\'est pas autorisé à poursuivre.',
+            'The decision of the private defence has been made: the candidate is not authorized to continue.',
+            '{auteur.prenom} {auteur.nom}'.format(auteur=auteur),
+            tags=['parcours_doctoral', 'private-defense', 'status-changed'],
+        )
+
+    @classmethod
+    def historiser_decision_repetition_defense_privee(
+        cls,
+        parcours_doctoral: ParcoursDoctoral,
+        matricule_auteur: str,
+    ):
+        auteur = PersonneConnueUclTranslator().get(matricule_auteur)
+        add_history_entry(
+            parcours_doctoral.entity_id.uuid,
+            'La décision de la défense privée a été donnée : celle-ci doit être repassée.',
+            'The decision of the private defence has been made: it must be repeated.',
+            '{auteur.prenom} {auteur.nom}'.format(auteur=auteur),
+            tags=['parcours_doctoral', 'private-defense', 'status-changed'],
+        )
+
+    @classmethod
+    def historiser_modification_defense_privee(
+        cls,
+        parcours_doctoral: ParcoursDoctoral,
+        matricule_auteur: str,
+    ):
+        auteur = PersonneConnueUclTranslator().get(matricule_auteur)
+        add_history_entry(
+            parcours_doctoral.entity_id.uuid,
+            'La défense privée a été modifiée.',
+            'The private defence has been updated.',
+            '{auteur.prenom} {auteur.nom}'.format(auteur=auteur),
+            tags=['parcours_doctoral', 'private-defense'],
+        )
+
+    @classmethod
+    def historiser_soumission_soutenance_publique(
+        cls,
+        parcours_doctoral: ParcoursDoctoral,
+        matricule_auteur: str,
+        statut_original_parcours_doctoral: ChoixStatutParcoursDoctoral,
+    ):
+        if parcours_doctoral.statut != statut_original_parcours_doctoral:
+            auteur = PersonneConnueUclTranslator().get(matricule_auteur)
+            tags = ['parcours_doctoral', 'public-defense', 'status-changed']
+
+            add_history_entry(
+                parcours_doctoral.entity_id.uuid,
+                'Le doctorant a renseigné des informations relatives à la soutenance publique.',
+                'The doctoral student has filled in information relating to the public defence.',
+                '{auteur.prenom} {auteur.nom}'.format(auteur=auteur),
+                tags=tags,
+            )
+
+    @classmethod
+    def historiser_autorisation_soutenance_publique(
+        cls,
+        parcours_doctoral: ParcoursDoctoral,
+        matricule_auteur: str,
+    ):
+        auteur = PersonneConnueUclTranslator().get(matricule_auteur)
+
+        add_history_entry(
+            parcours_doctoral.entity_id.uuid,
+            'La soutenance publique a été autorisée.',
+            'The public defence has been authorised.',
+            '{auteur.prenom} {auteur.nom}'.format(auteur=auteur),
+            tags=['parcours_doctoral', 'public-defense', 'status-changed'],
+        )
+
+    @classmethod
+    def historiser_decision_reussie_soutenance_publique(
+        cls,
+        parcours_doctoral: ParcoursDoctoral,
+        matricule_auteur: str,
+    ):
+        auteur = PersonneConnueUclTranslator().get(matricule_auteur)
+
+        add_history_entry(
+            parcours_doctoral.entity_id.uuid,
+            'La décision de la soutenance publique a été donnée : celle-ci a été réussie.',
+            'The decision of the public defence has been made: it has been passed.',
+            '{auteur.prenom} {auteur.nom}'.format(auteur=auteur),
+            tags=['parcours_doctoral', 'public-defense', 'status-changed'],
         )

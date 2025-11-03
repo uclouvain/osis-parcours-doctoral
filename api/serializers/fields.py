@@ -153,6 +153,63 @@ PARCOURS_DOCTORAL_ACTION_LINKS = {
         'method': 'POST',
         'params': ['uuid'],
     },
+    'jury_add_approval': {
+        'path_name': 'parcours_doctoral_api_v1:jury-approvals',
+        'method': 'POST',
+        'params': ['uuid'],
+    },
+    'jury_request_signatures': {
+        'path_name': 'parcours_doctoral_api_v1:jury-request-signatures',
+        'method': 'POST',
+        'params': ['uuid'],
+    },
+    'jury_approve_by_pdf': {
+        'path_name': 'parcours_doctoral_api_v1:jury-approve-by-pdf',
+        'method': 'POST',
+        'params': ['uuid'],
+    },
+    # Private defense
+    'retrieve_private_defense': {
+        'path_name': 'parcours_doctoral_api_v1:private-defense-list',
+        'method': 'GET',
+        'params': ['uuid'],
+    },
+    'update_private_defense': {
+        'path_name': 'parcours_doctoral_api_v1:private-defense-list',
+        'method': 'PUT',
+        'params': ['uuid'],
+    },
+    'retrieve_private_defense_minutes_canvas': {
+        'path_name': 'parcours_doctoral_api_v1:private-defense-minutes',
+        'method': 'GET',
+        'params': ['uuid'],
+    },
+    'submit_private_defense_minutes': {
+        'path_name': 'parcours_doctoral_api_v1:private-defense-minutes',
+        'method': 'PUT',
+        'params': ['uuid'],
+    },
+    # Public defense
+    'retrieve_public_defense': {
+        'path_name': 'parcours_doctoral_api_v1:public-defense',
+        'method': 'GET',
+        'params': ['uuid'],
+    },
+    'update_public_defense': {
+        'path_name': 'parcours_doctoral_api_v1:public-defense',
+        'method': 'PUT',
+        'params': ['uuid'],
+    },
+    'retrieve_public_defense_minutes_canvas': {
+        'path_name': 'parcours_doctoral_api_v1:public-defense-minutes',
+        'method': 'GET',
+        'params': ['uuid'],
+    },
+    'submit_public_defense_minutes': {
+        'path_name': 'parcours_doctoral_api_v1:public-defense-minutes',
+        'method': 'PUT',
+        'params': ['uuid'],
+    },
 }
 
 

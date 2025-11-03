@@ -45,7 +45,7 @@ def training_categories_activities(activities: List[Activity]):
         _("VAE"): [],
         _("Scientific residencies"): [],
         _("Confirmation exam"): [],
-        _("Thesis defense"): [],
+        _("Thesis defence"): [],
         _("Total"): [],
     }
     for activity in activities:
@@ -83,7 +83,7 @@ def training_categories_activities(activities: List[Activity]):
         ):
             categories[_("Confirmation exam")].append(activity)
         elif activity.category == CategorieActivite.PAPER.name:
-            categories[_("Thesis defense")].append(activity)
+            categories[_("Thesis defence")].append(activity)
     return categories
 
 

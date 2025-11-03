@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -37,10 +37,10 @@ from django.utils.translation import gettext
 from admission.ddd.admission.doctorat.preparation.domain.model.enums import (
     ChoixTypeAdmission,
 )
-from admission.ddd.admission.doctorat.preparation.read_view.domain.enums.tableau_bord import IndicateurTableauBordEnum
-from admission.tests.factories.roles import (
-    SicManagementRoleFactory,
+from admission.ddd.admission.doctorat.preparation.read_view.domain.enums.tableau_bord import (
+    IndicateurTableauBordEnum,
 )
+from admission.tests.factories.roles import SicManagementRoleFactory
 from base.auth.roles.program_manager import ProgramManager
 from base.models.academic_year import AcademicYear
 from base.models.enums.entity_type import EntityType
@@ -76,10 +76,10 @@ from parcours_doctoral.tests.factories.confirmation_paper import (
     ConfirmationPaperFactory,
 )
 from parcours_doctoral.tests.factories.jury import (
-    ExternalJuryMemberFactory,
-    JuryMemberFactory,
-    JuryMemberWithExternalPromoterFactory,
-    JuryMemberWithInternalPromoterFactory,
+    ExternalJuryActorFactory,
+    JuryActorFactory,
+    JuryActorWithExternalPromoterFactory,
+    JuryActorWithInternalPromoterFactory,
 )
 from parcours_doctoral.tests.factories.parcours_doctoral import (
     FormationFactory,
@@ -278,7 +278,7 @@ class ParcoursDoctoralListTestView(QueriesAssertionsMixin, TestCase):
         self.assertEqual(form['annee_academique'].value(), 2022)
         self.assertEqual(
             form.fields['annee_academique'].choices,
-            [ALL_FEMININE_EMPTY_CHOICE[0]] + [(year, f'{year}-{str(year + 1)[2:]}') for year in academic_years]
+            [ALL_FEMININE_EMPTY_CHOICE[0]] + [(year, f'{year}-{str(year + 1)[2:]}') for year in academic_years],
         )
 
         # numero
@@ -662,7 +662,7 @@ class ParcoursDoctoralListTestView(QueriesAssertionsMixin, TestCase):
     def test_filter_by_jury_president_uuid(self):
         self.client.force_login(user=self.program_manager.user)
 
-        external_jury_member = ExternalJuryMemberFactory()
+        external_jury_member = ExternalJuryActorFactory()
 
         response = self._do_request(allowed_sql_surplus=1, uuid_president_jury=external_jury_member.uuid)
 
@@ -680,7 +680,7 @@ class ParcoursDoctoralListTestView(QueriesAssertionsMixin, TestCase):
             ],
         )
 
-        external_promoter_jury_member = JuryMemberWithExternalPromoterFactory()
+        external_promoter_jury_member = JuryActorWithExternalPromoterFactory()
 
         response = self._do_request(allowed_sql_surplus=1, uuid_president_jury=external_promoter_jury_member.uuid)
 
@@ -693,12 +693,12 @@ class ParcoursDoctoralListTestView(QueriesAssertionsMixin, TestCase):
             [
                 [
                     str(external_promoter_jury_member.uuid),
-                    f'{external_promoter_jury_member.promoter.last_name}, {external_promoter_jury_member.promoter.first_name}',
+                    f'{external_promoter_jury_member.last_name}, {external_promoter_jury_member.first_name}',
                 ],
             ],
         )
 
-        internal_promoter_jury_member = JuryMemberWithInternalPromoterFactory()
+        internal_promoter_jury_member = JuryActorWithInternalPromoterFactory()
 
         response = self._do_request(allowed_sql_surplus=1, uuid_president_jury=internal_promoter_jury_member.uuid)
 
@@ -711,12 +711,12 @@ class ParcoursDoctoralListTestView(QueriesAssertionsMixin, TestCase):
             [
                 [
                     str(internal_promoter_jury_member.uuid),
-                    f'{internal_promoter_jury_member.promoter.person.last_name}, {internal_promoter_jury_member.promoter.person.first_name}',
+                    f'{internal_promoter_jury_member.person.last_name}, {internal_promoter_jury_member.person.first_name}',
                 ],
             ],
         )
 
-        internal_jury_member = JuryMemberFactory(parcours_doctoral=self.doctorate)
+        internal_jury_member = JuryActorFactory(process=self.doctorate.jury_group)
 
         response = self._do_request(allowed_sql_surplus=1, uuid_president_jury=internal_jury_member.uuid)
 

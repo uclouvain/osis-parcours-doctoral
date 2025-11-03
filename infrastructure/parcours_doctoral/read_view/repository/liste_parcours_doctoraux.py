@@ -47,7 +47,9 @@ from parcours_doctoral.ddd.read_view.dto.parcours_doctoral import (
 from parcours_doctoral.ddd.read_view.repository.i_liste_parcours_doctoraux import (
     IListeParcoursDoctorauxRepository,
 )
-from parcours_doctoral.infrastructure.parcours_doctoral.read_view.repository.tableau_bord import TableauBordRepository
+from parcours_doctoral.infrastructure.parcours_doctoral.read_view.repository.tableau_bord import (
+    TableauBordRepository,
+)
 from parcours_doctoral.infrastructure.utils import (
     filter_doctorate_queryset_according_to_roles,
     get_entities_with_descendants_ids,
@@ -59,6 +61,8 @@ class ListeParcoursDoctorauxRepository(IListeParcoursDoctorauxRepository):
     DATE_FIELD_BY_DATE_TYPE = {
         ChoixEtapeParcoursDoctoral.ADMISSION.name: 'admission__approved_by_cdd_at__date',
         ChoixEtapeParcoursDoctoral.CONFIRMATION.name: 'confirmationpaper__confirmation_date',
+        ChoixEtapeParcoursDoctoral.DEFENSE_PRIVEE.name: 'current_private_defense__datetime__date',
+        ChoixEtapeParcoursDoctoral.SOUTENANCE_PUBLIQUE.name: 'defense_datetime__date',
     }
     ADDITIONAL_DATE_CONDITION_BY_DATE_TYPE = {
         ChoixEtapeParcoursDoctoral.CONFIRMATION.name: {
@@ -146,7 +150,7 @@ class ListeParcoursDoctorauxRepository(IListeParcoursDoctorauxRepository):
             qs = qs.filter(supervision_group__actors__uuid=uuid_promoteur)
 
         if uuid_president_jury:
-            qs = qs.filter(jury_members__uuid=uuid_president_jury)
+            qs = qs.filter(jury_group__actors__uuid=uuid_president_jury)
 
         if demandeur:
             qs = filter_doctorate_queryset_according_to_roles(qs, demandeur)

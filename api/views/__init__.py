@@ -32,6 +32,8 @@ from .external import *
 from .funding import *
 from .jury import *
 from .parcours_doctoral import *
+from .private_defense import *
 from .project import *
+from .public_defense import *
 from .supervision import *
 from .training import *

@@ -144,7 +144,7 @@
                   {% detail_tab_path_from_update view.kwargs.uuid as read_url %}
                   {% endif %}
                   <li>
-                    <button class="btn btn-primary" type="submit" form="parcours_doctoral-form" style="width: 100%">
+                    <button class="btn btn-primary text-white" type="submit" form="parcours_doctoral-form" style="width: 100%">
                       {% translate 'Save' context 'parcours_doctoral' %}
                     </button>
                   </li>
@@ -237,6 +237,7 @@
   {# Add either form scripts or osis-documents for detail #}
   {{ block.super }}
   <script src="{% static 'parcours_doctoral/popover.js' %}"></script>
+  <script src="{% static 'parcours_doctoral/js/ckeditor.js' %}"></script>
   <script src="{% static 'js/clipboard.js' %}"></script>
   <script>
       $(function () {
