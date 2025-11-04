@@ -213,6 +213,7 @@ class ParcoursDoctoralAPIViewTestCase(CheckActionLinksMixin, APITestCase):
                 'retrieve_assessment_enrollment',
                 'retrieve_private_defense',
                 'retrieve_public_defense',
+                'retrieve_authorization_distribution',
             ],
             forbidden_actions=[
                 'jury_add_approval',
@@ -232,6 +233,7 @@ class ParcoursDoctoralAPIViewTestCase(CheckActionLinksMixin, APITestCase):
                 'update_public_defense',
                 'retrieve_public_defense_minutes_canvas',
                 'submit_public_defense_minutes',
+                'update_authorization_distribution',
             ],
         )
 

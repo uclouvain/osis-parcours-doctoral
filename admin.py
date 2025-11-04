@@ -66,6 +66,9 @@ from parcours_doctoral.models.activity import Activity
 from parcours_doctoral.models.cdd_config import CddConfiguration
 from parcours_doctoral.models.cdd_mail_template import CddMailTemplate
 from parcours_doctoral.models.private_defense import PrivateDefense
+from parcours_doctoral.models.thesis_distribution_authorization import (
+    ThesisDistributionAuthorizationActor,
+)
 
 
 @admin.register(Activity)
@@ -458,3 +461,8 @@ class PrivateDefenseAdmin(ReadOnlyFilesMixin, admin.ModelAdmin):
     @admin.display(description=_('Is active'))
     def is_active(self, obj):
         return bool(obj.current_parcours_doctoral_id)
+
+
+@admin.register(ThesisDistributionAuthorizationActor)
+class ThesisDistributionAuthorizationActorAdmin(admin.ModelAdmin):
+    pass
