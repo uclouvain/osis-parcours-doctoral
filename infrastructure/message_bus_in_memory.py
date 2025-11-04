@@ -26,6 +26,9 @@
 from infrastructure.utils import AbstractMessageBusCommands, MessageBusInMemory
 
 from .parcours_doctoral import handlers_in_memory as parcours_doctoral_handlers
+from .parcours_doctoral.autorisation_diffusion_these import (
+    handlers_in_memory as autorisation_diffusion_these_handlers,
+)
 from .parcours_doctoral.defense_privee import (
     handlers_in_memory as defense_privee_handlers,
 )
@@ -49,6 +52,7 @@ class MessageBusInMemoryCommands(AbstractMessageBusCommands):
         **defense_privee_handlers.COMMAND_HANDLERS,
         **soutenance_publique_handlers.COMMAND_HANDLERS,
         **recevabilite_handlers.COMMAND_HANDLERS,
+        **autorisation_diffusion_these_handlers.COMMAND_HANDLERS,
     }
 
 

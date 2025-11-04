@@ -287,6 +287,8 @@ class DoctorateInitializationTestCase(MockOsisDocumentMixin, TestCase):
 
         self.assertIsNotNone(doctorate)
 
+        self.pre_admission.refresh_from_db()
+
         self.assertEqual(str(doctorate.uuid), result.uuid)
         self.assertEqual(doctorate.admission, self.pre_admission)
         self.assertEqual(doctorate.reference, self.pre_admission.reference)
