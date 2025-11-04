@@ -31,7 +31,12 @@ from admission.ddd.admission.doctorat.preparation.domain.model.enums import (
     ChoixTypeAdmission,
 )
 from osis_role.errors import predicate_failed_msg
+from parcours_doctoral.ddd.autorisation_diffusion_these.domain.model.enums import (
+    ChoixStatutAutorisationDiffusionThese,
+)
 from parcours_doctoral.ddd.domain.model.enums import (
+    STATUTS_DOCTORAT_AUTORISATION_THESE_FORMULE_1,
+    STATUTS_DOCTORAT_AUTORISATION_THESE_FORMULE_2,
     STATUTS_DOCTORAT_DEFENSE_PRIVEE_EN_COURS,
     STATUTS_DOCTORAT_EPREUVE_CONFIRMATION_EN_COURS,
     STATUTS_DOCTORAT_RECEVABILITE_EN_COURS,
@@ -154,6 +159,23 @@ def defense_method_is_formula_1(self, user: User, obj: ParcoursDoctoral):
 @predicate_failed_msg(message=_("The defense method must be the formula 2."))
 def defense_method_is_formula_2(self, user: User, obj: ParcoursDoctoral):
     return obj.defense_method == FormuleDefense.FORMULE_2.name
+
+
+@predicate(bind=True)
+@predicate_failed_msg(message=_("The authorization distribution is not in progress."))
+def authorization_distribution_is_in_progress(self, user: User, obj: ParcoursDoctoral):
+    return obj.status in {
+        FormuleDefense.FORMULE_1.name: STATUTS_DOCTORAT_AUTORISATION_THESE_FORMULE_1,
+        FormuleDefense.FORMULE_2.name: STATUTS_DOCTORAT_AUTORISATION_THESE_FORMULE_2,
+    }.get(obj.defense_method, set())
+
+
+@predicate(bind=True)
+@predicate_failed_msg(message=_("The authorization distribution must not be submitted."))
+def authorization_distribution_is_not_submitted(self, user: User, obj: ParcoursDoctoral):
+    return (
+        obj.thesis_distribution_authorization_status == ChoixStatutAutorisationDiffusionThese.DIFFUSION_NON_SOUMISE.name
+    )
 
 
 @predicate(bind=True)

@@ -417,6 +417,9 @@ msgstr "Ajouter une valorisation des acquis de l'expérience"
 msgid "Additional information"
 msgstr "Informations complémentaires"
 
+msgid "Additional limitation for certain specific chapters"
+msgstr "Limitation additionnelle pour certains chapitres uniquement"
+
 msgctxt "parcours_doctoral"
 msgid "Additional training"
 msgstr "Formation complémentaire"
@@ -638,6 +641,9 @@ msgid ""
 msgstr ""
 "Au-moins une classe existe pour cet unité d'enseignement. Merci de la "
 "sélectionner à la place de l'unité d'enseignement."
+
+msgid "At least one keyword must be specified."
+msgstr "Au-moins un mot-clé doit être spécifié."
 
 msgid "Attachment: PhD training"
 msgstr "Annexe : Formation doctorale"
@@ -1284,6 +1290,24 @@ msgstr "Retrait du diplôme"
 msgid "Diploma collection date"
 msgstr "Date de retrait du diplôme"
 
+msgid "Distribution refused by ADRE"
+msgstr "Diffusion refusée ADRE"
+
+msgid "Distribution refused by SCEB"
+msgstr "Diffusion refusée SCEB"
+
+msgid "Distribution refused by the supervisor"
+msgstr "Diffusion refusée promoteur"
+
+msgid "Distribution validated by ADRE"
+msgstr "Diffusion approuvée ADRE"
+
+msgid "Distribution validated by SCEB"
+msgstr "Diffusion approuvée SCEB"
+
+msgid "Distribution validated by the supervisor"
+msgstr "Diffusion validée promoteur"
+
 msgid "Do not reorder values, and keep the same count"
 msgstr "Ne pas réordonner les valeurs, et garder le même nombre"
 
@@ -1424,6 +1448,9 @@ msgstr "Email"
 
 msgid "Email:"
 msgstr "E-mail :"
+
+msgid "Embargo access"
+msgstr "Accès embargo"
 
 msgid "Enable complementary training tab"
 msgstr "Activer l'onglet Formation complémentaire"
@@ -1583,8 +1610,14 @@ msgstr ""
 "Par exemple, un contrat, une lettre d'un•e promoteur•trice ou tout autre "
 "document indiquant que la bourse vous est octroyée aux dates indiquées."
 
+msgid "Forbidden access"
+msgstr "Accès interdit"
+
 msgid "Free"
 msgstr "Libre"
+
+msgid "Free access (Internet)"
+msgstr "Accès libre (Internet)"
 
 msgid "French"
 msgstr "Français"
@@ -1950,6 +1983,9 @@ msgstr "Quitter la page ?"
 msgid "Letters of recommendation"
 msgstr "Lettres de recommandation"
 
+msgid "Limited access (Intranet)"
+msgstr "Accès restreint (Intranet) "
+
 msgid "Link to the PhD training (back-office)"
 msgstr "Lien vers la formation doctorale (back-office)"
 
@@ -1976,6 +2012,14 @@ msgstr "Lien vers le jury du doctorat (front-office)"
 
 msgid "Link to the doctorate supervisory panel (front-office)"
 msgstr "Lien vers le groupe de supervision du doctorat (front-office)"
+
+msgid "Link to the thesis distribution authorization form (backoffice)"
+msgstr ""
+"Le lien vers la page d'autorisation de diffusion de la thèse (backoffice)"
+
+msgid "Link to the thesis distribution authorization form (frontoffice)"
+msgstr ""
+"Le lien vers la page d'autorisation de diffusion de la thèse (frontoffice)"
 
 msgid "Lookup somebody"
 msgstr "Rechercher une personne"
@@ -2021,6 +2065,13 @@ msgstr ""
 "de confirmation"
 
 msgid ""
+"Mail sent to ADRE to inform that the promoter approved the thesis "
+"distribution authorization"
+msgstr ""
+"E-Mail envoyé à ADRE pour l'informer que le promoteur a approuvé "
+"l'autorisation de diffusion de thèse"
+
+msgid ""
 "Mail sent to ADRI to inform him of the defavourable opinion on one "
 "confirmation paper"
 msgstr ""
@@ -2040,6 +2091,13 @@ msgid ""
 msgstr ""
 "E-Mail envoyé à ADRI pour l'informer de la nécessité de repasser une épreuve "
 "de confirmation"
+
+msgid ""
+"Mail sent to SCEB to inform that ADRE approved the thesis distribution "
+"authorization"
+msgstr ""
+"Mail envoyé à SCEB pour l'informer que ADRE a approuvé l'autorisation de "
+"diffusion de thèse"
 
 msgid ""
 "Mail sent to contact supervisor to inform of the submission of complementary "
@@ -2211,6 +2269,27 @@ msgstr ""
 "E-mail envoyé à l'étudiant pour confirmer l'envoi des demandes de signature"
 
 msgid ""
+"Mail sent to the student to inform him that ADRE refused the thesis "
+"distribution authorization"
+msgstr ""
+"E-mail envoyé à l'étudiant pour l'informer du refus par ADRE de "
+"l'autorisation de diffusion de thèse"
+
+msgid ""
+"Mail sent to the student to inform him that SCEB refused the thesis "
+"distribution authorization"
+msgstr ""
+"E-mail envoyé à l'étudiant pour l'informer du refus par SCEB de "
+"l'autorisation de diffusion de thèse"
+
+msgid ""
+"Mail sent to the student to inform him the promoter refused the thesis "
+"distribution authorization"
+msgstr ""
+"E-mail envoyé à l'étudiant pour l'informer du refus par le promoteur de "
+"l'autorisation de diffusion de thèse"
+
+msgid ""
 "Mail sent to the student to inform of the refusal of complementary training "
 "activity"
 msgstr ""
@@ -2228,6 +2307,13 @@ msgid ""
 msgstr ""
 "E-mail envoyé à l'étudiant pour lui informer du refus d'une activité de "
 "formation doctorale"
+
+msgid ""
+"Mail sent to the student to invite him to upload its thesis after the "
+"supervisor invitation"
+msgstr ""
+"E-Mail envoyé à l'étudiant pour l'inviter à téléverser sa thèse après "
+"l'invitation du promoteur"
 
 msgid "Mail sent to the student to update a complementary training activity"
 msgstr ""
@@ -2259,6 +2345,13 @@ msgstr ""
 
 msgid "Mail sent to the student when the CDD refuse the jury"
 msgstr "E-mail envoyé à l'étudiant pour lui informer du refus de la CDD"
+
+msgid ""
+"Mail sent to the supervisor to invite him to authorize the thesis "
+"distribution"
+msgstr ""
+"E-Mail envoyé au promoteur pour l'inviter à autoriser l'autorisation de "
+"diffusion de thèse"
 
 msgid "Main institute"
 msgstr "Institution principale"
@@ -2388,6 +2481,9 @@ msgstr "Nom"
 msgid "Name of the ADRE manager"
 msgstr "Nom du gestionnaire ADRE"
 
+msgid "Name of the SCEB manager"
+msgstr "Nom du gestionnaire SCEB"
+
 msgid "Name of the doctoral commission"
 msgstr "Nom de la commission doctorale"
 
@@ -2396,6 +2492,9 @@ msgstr "Nom de l'entité de gestion"
 
 msgid "Name of the manager sending the email"
 msgstr "Nom du gestionnaire qui envoie l'email"
+
+msgid "Name of the person sending the email"
+msgstr "Nom de la personne qui envoie l'email"
 
 msgid "Name of the president of the jury (eventually with the title)"
 msgstr "Nom du président du jury (éventuellement avec le titre)"
@@ -2483,6 +2582,9 @@ msgstr "Non libre"
 
 msgid "Not in order of registration"
 msgstr "Pas en ordre d'inscription"
+
+msgid "Not submitted distribution"
+msgstr "Diffusion non soumise"
 
 msgid ""
 "Note: in cases of force majeure, an absent member shall send the chair a "
@@ -3177,6 +3279,9 @@ msgstr "Épreuve de confirmation à représenter"
 msgid "Retaking of the test"
 msgstr "Confirmation à représenter"
 
+msgid "Role"
+msgstr "Rôle"
+
 msgctxt "activity"
 msgid "Role"
 msgstr "Rôle"
@@ -3241,6 +3346,9 @@ msgstr "Rôle: Directeur.trices administratif de secteur"
 
 msgid "Role: Student"
 msgstr "Rôle: Étudiant"
+
+msgid "SCEB"
+msgstr "SCEB"
 
 msgid "SEARCH_SCHOLARSHIP"
 msgstr "Bourse de recherche"
@@ -3414,6 +3522,9 @@ msgstr "Monsieur"
 msgid "Some errors have been encountered."
 msgstr "Des erreurs ont été rencontrées."
 
+msgid "Sources of funding throughout PhD"
+msgstr "Sources de financement durant toute la durée du doctorat"
+
 msgid "Specified"
 msgstr "Renseigné·e"
 
@@ -3468,6 +3579,9 @@ msgstr "État"
 
 msgid "Status changes"
 msgstr "Changements de statut"
+
+msgid "Status of the authorization distribution thesis"
+msgstr "Statut de l'autorisation de diffusion de thèse"
 
 msgid "Status of the doctoral training"
 msgstr "État d’avancement de la formation doctorale"
@@ -3547,6 +3661,9 @@ msgctxt "dashboard-indicator confirmation"
 msgid "Submitted confirmation"
 msgstr "Confirmation soumise"
 
+msgid "Submitted distribution"
+msgstr "Diffusion soumise"
+
 msgid "Submitted mark"
 msgstr "Note soumise"
 
@@ -3577,6 +3694,12 @@ msgstr "Résumé"
 
 msgid "Summary for announcement"
 msgstr "Résumé pour l'annonce"
+
+msgid "Summary in English"
+msgstr "Résumé en anglais"
+
+msgid "Summary in other language"
+msgstr "Résumé dans une autre langue"
 
 msgid "Summary of the communication"
 msgstr "Résumé de la communication"
@@ -3661,6 +3784,12 @@ msgstr "La recevabilité n'est pas en cours"
 
 msgid "The assessment enrollment has not been found"
 msgstr "L'inscription à l'évaluation n'a pas été trouvée"
+
+msgid "The authorization distribution is not in progress."
+msgstr "L'autorisation du diffusion n'est pas en cours."
+
+msgid "The authorization distribution must not be submitted."
+msgstr "L'autorisation du diffusion ne doit pas être soumise."
 
 msgid ""
 "The authorized publications and their valuation in credits are specified on "
@@ -3771,6 +3900,15 @@ msgstr "La formule de défense doit être la formule 2."
 msgid "The definitive thesis title is:"
 msgstr "Le titre définitif de la thèse est le suivant :"
 
+msgid "The distribution authorization has not been found."
+msgstr "L'autorisation de diffusion de thèse n'a pas été trouvée."
+
+msgid "The distribution conditions type must be specified."
+msgstr "Le type des modalités de diffusion doit être spécifié."
+
+msgid "The distributions conditions must be accepted."
+msgstr "Les conditions de diffusion doivent être acceptées."
+
 msgctxt "female gender"
 msgid "The doctoral student"
 msgstr "La doctorante"
@@ -3799,6 +3937,9 @@ msgid ""
 "The doctorate must be in the status '%(status)s' to realize this action."
 msgstr ""
 "Le doctorat doit être dans le statut '%(status)s' pour réaliser cette action."
+
+msgid "The embargo date must be specified."
+msgstr "La date d'embargo doit être spécifiée."
 
 msgid "The enrollment has not been found"
 msgstr "L'évaluation n'a pas été trouvée"
@@ -3898,6 +4039,9 @@ msgstr ""
 "Le procès verbal sera téléversé par le·la secrétaire du jury ou le·la "
 "président·e du jury."
 
+msgid "The name of the signatory"
+msgstr "Le nom du signataire"
+
 #, python-format
 msgid ""
 "The number of acquired <strong>doctoral</strong> credits amounts to "
@@ -3986,6 +4130,9 @@ msgstr "La procédure de demande de signature a déjà été lancée."
 msgid "The signature request procedure isn't in progress."
 msgstr "La procédure de demande de signature n'a pas été lancée."
 
+msgid "The sources of funding must be specified."
+msgstr "Les sources de financement doivent être spécifiées."
+
 msgid "The start date can't be later than the end date"
 msgstr "La date de début ne peut être postérieure à la date de fin"
 
@@ -4007,6 +4154,18 @@ msgstr "L'étudiant·e a été désinscrit·e de cette évaluation."
 
 msgid "The student has been withdrawn lately from this assessment."
 msgstr "L'étudiant·e a été désinscrit·e tardivement de cette évaluation."
+
+msgid "The summary in english must be specified."
+msgstr "Le résumé en anglais doit être spécifié."
+
+msgid "The thesis language must be specified."
+msgstr "La langue de la thèse doit être spécifiée."
+
+msgid "The title of the signatory"
+msgstr "Le titre du signataire"
+
+msgid "The title of the signatory (in lowercase)"
+msgstr "Le titre du signataire (en minuscules)"
 
 msgid "There can be no more CA members in the supervision group."
 msgstr ""
@@ -4031,9 +4190,21 @@ msgstr "Thèse réalisée en cotutelle avec %(institute_name)s"
 msgid "Thesis defence"
 msgstr "Défense et soutenance"
 
+msgid "Thesis distribution acceptation content"
+msgstr "Contenu de l'autorisation de diffusion de thèse"
+
+msgid "Thesis distribution acceptation date"
+msgstr "Date de l'autorisation de diffusion de thèse"
+
 msgctxt "dashboard-category"
 msgid "Thesis distribution authorisation"
 msgstr "Autorisation de diffusion de thèse"
+
+msgid "Thesis distribution conditions"
+msgstr "Modalités de diffusion de thèse"
+
+msgid "Thesis distribution embargo date"
+msgstr "Date de l'embargo de diffusion de thèse"
 
 msgid "Thesis exam board opinion"
 msgstr "Avis du jury"

@@ -26,6 +26,7 @@
 import uuid
 from datetime import date
 
+from django.contrib.postgres.fields import ArrayField
 from django.core.cache import cache
 from django.db import models
 from django.db.models import (
@@ -62,6 +63,10 @@ from base.utils.cte import CTESubquery
 from epc.models.enums.etat_inscription import EtatInscriptionFormation
 from epc.models.inscription_programme_annuel import InscriptionProgrammeAnnuel
 from osis_profile.constants import JPEG_MIME_TYPE, PNG_MIME_TYPE
+from parcours_doctoral.ddd.autorisation_diffusion_these.domain.model.enums import (
+    ChoixStatutAutorisationDiffusionThese,
+    TypeModalitesDiffusionThese,
+)
 from parcours_doctoral.ddd.domain.model.enums import (
     ChoixCommissionProximiteCDEouCLSM,
     ChoixCommissionProximiteCDSS,
@@ -599,9 +604,79 @@ class ParcoursDoctoral(models.Model):
         blank=True,
     )
 
+    # Thesis distribution authorization
+    thesis_distribution_authorization_status = models.CharField(
+        verbose_name=_('Status of the authorization distribution thesis'),
+        choices=ChoixStatutAutorisationDiffusionThese.choices(),
+        default=ChoixStatutAutorisationDiffusionThese.DIFFUSION_NON_SOUMISE.name,
+        max_length=30,
+    )
+
+    funding_sources = models.CharField(
+        verbose_name=_('Sources of funding throughout PhD'),
+        default='',
+        blank=True,
+        max_length=100,
+    )
+
+    thesis_summary_in_english = models.CharField(
+        verbose_name=_('Summary in English'),
+        default='',
+        blank=True,
+        max_length=100,
+    )
+
+    thesis_summary_in_other_language = models.CharField(
+        verbose_name=_('Summary in other language'),
+        default='',
+        blank=True,
+        max_length=100,
+    )
+
+    thesis_keywords = ArrayField(
+        base_field=models.CharField(
+            max_length=50,
+        ),
+        blank=True,
+        default=list,
+    )
+
+    thesis_distribution_conditions = models.CharField(
+        verbose_name=_('Thesis distribution conditions'),
+        choices=TypeModalitesDiffusionThese.choices(),
+        blank=True,
+        default='',
+        max_length=30,
+    )
+
+    thesis_distribution_embargo_date = models.DateField(
+        verbose_name=_('Thesis distribution embargo date'),
+        null=True,
+        blank=True,
+    )
+
+    thesis_distribution_additional_limitation_for_specific_chapters = models.TextField(
+        verbose_name=_('Additional limitation for certain specific chapters'),
+        default='',
+        blank=True,
+    )
+
+    thesis_distribution_accepted_on = models.DateField(
+        verbose_name=_('Thesis distribution acceptation date'),
+        blank=True,
+        null=True,
+    )
+
+    thesis_distribution_acceptation_content = models.TextField(
+        verbose_name=_('Thesis distribution acceptation content'),
+        default='',
+        blank=True,
+    )
+
     # Supervision
     supervision_group = SignatureProcessField(related_name='+')
     jury_group = SignatureProcessField(related_name='+')
+    thesis_distribution_authorization_group = SignatureProcessField(related_name='+')
 
     objects = models.Manager.from_queryset(ParcoursDoctoralQuerySet)()
 

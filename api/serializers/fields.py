@@ -211,6 +211,17 @@ PARCOURS_DOCTORAL_ACTION_LINKS = {
         'method': 'PUT',
         'params': ['uuid'],
     },
+    # Authorization distribution
+    'retrieve_authorization_distribution': {
+        'path_name': 'parcours_doctoral_api_v1:authorization-distribution',
+        'method': 'GET',
+        'params': ['uuid'],
+    },
+    'update_authorization_distribution': {
+        'path_name': 'parcours_doctoral_api_v1:authorization-distribution',
+        'method': 'PUT',
+        'params': ['uuid'],
+    },
     # Public defense
     'retrieve_public_defense': {
         'path_name': 'parcours_doctoral_api_v1:public-defense',

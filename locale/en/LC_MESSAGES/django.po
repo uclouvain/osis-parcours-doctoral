@@ -347,6 +347,9 @@ msgstr ""
 msgid "Additional information"
 msgstr ""
 
+msgid "Additional limitation for certain specific chapters"
+msgstr ""
+
 msgctxt "parcours_doctoral"
 msgid "Additional training"
 msgstr ""
@@ -550,6 +553,9 @@ msgstr ""
 msgid ""
 "At least one class exists for this learning unit. Please select it instead "
 "of the learning unit."
+msgstr ""
+
+msgid "At least one keyword must be specified."
 msgstr ""
 
 msgid "Attachment: PhD training"
@@ -1180,6 +1186,24 @@ msgstr ""
 msgid "Diploma collection date"
 msgstr ""
 
+msgid "Distribution refused by ADRE"
+msgstr ""
+
+msgid "Distribution refused by SCEB"
+msgstr ""
+
+msgid "Distribution refused by the supervisor"
+msgstr ""
+
+msgid "Distribution validated by ADRE"
+msgstr ""
+
+msgid "Distribution validated by SCEB"
+msgstr ""
+
+msgid "Distribution validated by the supervisor"
+msgstr ""
+
 msgid "Do not reorder values, and keep the same count"
 msgstr ""
 
@@ -1319,6 +1343,9 @@ msgid "Email"
 msgstr ""
 
 msgid "Email:"
+msgstr ""
+
+msgid "Embargo access"
 msgstr ""
 
 msgid "Enable complementary training tab"
@@ -1467,7 +1494,13 @@ msgid ""
 "showing that you have been awarded the scholarship on the dates indicated."
 msgstr ""
 
+msgid "Forbidden access"
+msgstr ""
+
 msgid "Free"
+msgstr ""
+
+msgid "Free access (Internet)"
 msgstr ""
 
 msgid "French"
@@ -1808,6 +1841,9 @@ msgstr ""
 msgid "Letters of recommendation"
 msgstr ""
 
+msgid "Limited access (Intranet)"
+msgstr ""
+
 msgid "Link to the PhD training (back-office)"
 msgstr ""
 
@@ -1833,6 +1869,12 @@ msgid "Link to the doctorate jury panel (front-office)"
 msgstr ""
 
 msgid "Link to the doctorate supervisory panel (front-office)"
+msgstr ""
+
+msgid "Link to the thesis distribution authorization form (backoffice)"
+msgstr ""
+
+msgid "Link to the thesis distribution authorization form (frontoffice)"
 msgstr ""
 
 msgid "Lookup somebody"
@@ -1871,6 +1913,11 @@ msgid ""
 msgstr ""
 
 msgid ""
+"Mail sent to ADRE to inform that the promoter approved the thesis "
+"distribution authorization"
+msgstr ""
+
+msgid ""
 "Mail sent to ADRI to inform him of the defavourable opinion on one "
 "confirmation paper"
 msgstr ""
@@ -1883,6 +1930,11 @@ msgstr ""
 msgid ""
 "Mail sent to ADRI to inform him of the necessity to retake one confirmation "
 "paper"
+msgstr ""
+
+msgid ""
+"Mail sent to SCEB to inform that ADRE approved the thesis distribution "
+"authorization"
 msgstr ""
 
 msgid ""
@@ -2008,6 +2060,21 @@ msgid ""
 msgstr ""
 
 msgid ""
+"Mail sent to the student to inform him that ADRE refused the thesis "
+"distribution authorization"
+msgstr ""
+
+msgid ""
+"Mail sent to the student to inform him that SCEB refused the thesis "
+"distribution authorization"
+msgstr ""
+
+msgid ""
+"Mail sent to the student to inform him the promoter refused the thesis "
+"distribution authorization"
+msgstr ""
+
+msgid ""
 "Mail sent to the student to inform of the refusal of complementary training "
 "activity"
 msgstr ""
@@ -2018,6 +2085,11 @@ msgstr ""
 msgid ""
 "Mail sent to the student to inform of the refusal of doctoral training "
 "activity"
+msgstr ""
+
+msgid ""
+"Mail sent to the student to invite him to upload its thesis after the "
+"supervisor invitation"
 msgstr ""
 
 msgid "Mail sent to the student to update a complementary training activity"
@@ -2042,6 +2114,11 @@ msgid "Mail sent to the student when the CDD approve the jury"
 msgstr ""
 
 msgid "Mail sent to the student when the CDD refuse the jury"
+msgstr ""
+
+msgid ""
+"Mail sent to the supervisor to invite him to authorize the thesis "
+"distribution"
 msgstr ""
 
 msgid "Main institute"
@@ -2165,6 +2242,9 @@ msgstr ""
 msgid "Name of the ADRE manager"
 msgstr ""
 
+msgid "Name of the SCEB manager"
+msgstr ""
+
 msgid "Name of the doctoral commission"
 msgstr ""
 
@@ -2172,6 +2252,9 @@ msgid "Name of the management entity"
 msgstr ""
 
 msgid "Name of the manager sending the email"
+msgstr ""
+
+msgid "Name of the person sending the email"
 msgstr ""
 
 msgid "Name of the president of the jury (eventually with the title)"
@@ -2258,6 +2341,9 @@ msgid "Not free"
 msgstr ""
 
 msgid "Not in order of registration"
+msgstr ""
+
+msgid "Not submitted distribution"
 msgstr ""
 
 msgid ""
@@ -2900,6 +2986,9 @@ msgstr ""
 msgid "Retaking of the test"
 msgstr ""
 
+msgid "Role"
+msgstr ""
+
 msgctxt "activity"
 msgid "Role"
 msgstr ""
@@ -2963,6 +3052,9 @@ msgid "Role: Sector administrative directors"
 msgstr ""
 
 msgid "Role: Student"
+msgstr ""
+
+msgid "SCEB"
 msgstr ""
 
 msgid "SEARCH_SCHOLARSHIP"
@@ -3135,6 +3227,9 @@ msgstr ""
 msgid "Some errors have been encountered."
 msgstr ""
 
+msgid "Sources of funding throughout PhD"
+msgstr ""
+
 msgid "Specified"
 msgstr ""
 
@@ -3180,6 +3275,9 @@ msgid "Status"
 msgstr ""
 
 msgid "Status changes"
+msgstr ""
+
+msgid "Status of the authorization distribution thesis"
 msgstr ""
 
 msgid "Status of the doctoral training"
@@ -3258,6 +3356,9 @@ msgctxt "dashboard-indicator confirmation"
 msgid "Submitted confirmation"
 msgstr ""
 
+msgid "Submitted distribution"
+msgstr ""
+
 msgid "Submitted mark"
 msgstr ""
 
@@ -3287,6 +3388,12 @@ msgid "Summary"
 msgstr ""
 
 msgid "Summary for announcement"
+msgstr ""
+
+msgid "Summary in English"
+msgstr ""
+
+msgid "Summary in other language"
 msgstr ""
 
 msgid "Summary of the communication"
@@ -3364,6 +3471,12 @@ msgid "The admissibility is not in progress"
 msgstr ""
 
 msgid "The assessment enrollment has not been found"
+msgstr ""
+
+msgid "The authorization distribution is not in progress."
+msgstr ""
+
+msgid "The authorization distribution must not be submitted."
 msgstr ""
 
 msgid ""
@@ -3448,6 +3561,15 @@ msgstr ""
 msgid "The definitive thesis title is:"
 msgstr ""
 
+msgid "The distribution authorization has not been found."
+msgstr ""
+
+msgid "The distribution conditions type must be specified."
+msgstr ""
+
+msgid "The distributions conditions must be accepted."
+msgstr ""
+
 msgctxt "female gender"
 msgid "The doctoral student"
 msgstr ""
@@ -3473,6 +3595,9 @@ msgstr ""
 #, python-format
 msgid ""
 "The doctorate must be in the status '%(status)s' to realize this action."
+msgstr ""
+
+msgid "The embargo date must be specified."
 msgstr ""
 
 msgid "The enrollment has not been found"
@@ -3562,6 +3687,9 @@ msgid ""
 "The minutes will be uploaded by the thesis exam board secretary or chair."
 msgstr ""
 
+msgid "The name of the signatory"
+msgstr ""
+
 #, python-format
 msgid ""
 "The number of acquired <strong>doctoral</strong> credits amounts to "
@@ -3637,6 +3765,9 @@ msgstr ""
 msgid "The signature request procedure isn't in progress."
 msgstr ""
 
+msgid "The sources of funding must be specified."
+msgstr ""
+
 msgid "The start date can't be later than the end date"
 msgstr ""
 
@@ -3659,6 +3790,18 @@ msgstr ""
 msgid "The student has been withdrawn lately from this assessment."
 msgstr ""
 
+msgid "The summary in english must be specified."
+msgstr ""
+
+msgid "The thesis language must be specified."
+msgstr ""
+
+msgid "The title of the signatory"
+msgstr ""
+
+msgid "The title of the signatory (in lowercase)"
+msgstr ""
+
 msgid "There can be no more CA members in the supervision group."
 msgstr ""
 "There can be no more supervision committee members in the supervision group."
@@ -3679,8 +3822,20 @@ msgstr ""
 msgid "Thesis defence"
 msgstr ""
 
+msgid "Thesis distribution acceptation content"
+msgstr ""
+
+msgid "Thesis distribution acceptation date"
+msgstr ""
+
 msgctxt "dashboard-category"
 msgid "Thesis distribution authorisation"
+msgstr ""
+
+msgid "Thesis distribution conditions"
+msgstr ""
+
+msgid "Thesis distribution embargo date"
 msgstr ""
 
 msgid "Thesis exam board opinion"
