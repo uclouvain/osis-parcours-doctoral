@@ -28,6 +28,10 @@ from rules import RuleSet, always_allow
 
 from osis_role.contrib.models import RoleModel
 from parcours_doctoral.auth.predicates import parcours_doctoral
+from parcours_doctoral.auth.predicates.parcours_doctoral import (
+    authorization_distribution_is_in_progress,
+    authorization_distribution_is_not_submitted,
+)
 
 
 class Student(RoleModel):
@@ -97,6 +101,11 @@ class Student(RoleModel):
             'parcours_doctoral.api_change_private_defense': parcours_doctoral.is_parcours_doctoral_student
             & parcours_doctoral.defense_method_is_formula_1
             & parcours_doctoral.private_defense_in_progress,
+            # Authorization distribution
+            'parcours_doctoral.api_view_authorization_distribution': parcours_doctoral.is_parcours_doctoral_student,
+            'parcours_doctoral.api_change_authorization_distribution': parcours_doctoral.is_parcours_doctoral_student
+            & authorization_distribution_is_not_submitted
+            & authorization_distribution_is_in_progress,
             # Public defense
             'parcours_doctoral.api_view_public_defense': parcours_doctoral.is_parcours_doctoral_student
             & parcours_doctoral.defense_method_is_formula_1,

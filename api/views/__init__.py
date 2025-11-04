@@ -25,6 +25,7 @@
 # ##############################################################################
 
 from .admissibility import *
+from .authorization_distribution import *
 from .autocomplete import *
 from .confirmation import *
 from .cotutelle import *

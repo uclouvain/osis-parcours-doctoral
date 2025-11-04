@@ -84,6 +84,9 @@ class ParcoursDoctoralDTOSerializer(DTOSerializer):
                 'update_private_defense',
                 'retrieve_private_defense_minutes_canvas',
                 'submit_private_defense_minutes',
+                # Authorization distribution
+                'retrieve_authorization_distribution',
+                'update_authorization_distribution',
                 # Public defense
                 'retrieve_public_defense',
                 'update_public_defense',
@@ -137,6 +140,9 @@ class ParcoursDoctoralRechercheDTOSerializer(DTOSerializer):
                     # Private defense
                     'retrieve_private_defense',
                     'update_private_defense',
+                    # Authorization distribution
+                    'retrieve_authorization_distribution',
+                    'update_authorization_distribution',
                     # Public defense
                     'retrieve_public_defense',
                     'update_public_defense',
