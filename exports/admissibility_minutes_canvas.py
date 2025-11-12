@@ -31,6 +31,9 @@ from osis_document_components.utils import get_file_url
 
 from infrastructure.messages_bus import message_bus_instance
 from parcours_doctoral.ddd.commands import RecupererParcoursDoctoralQuery
+from parcours_doctoral.ddd.jury.commands import RecupererJuryQuery
+from parcours_doctoral.ddd.jury.domain.model.enums import ROLES_MEMBRES_JURY, RoleJury
+from parcours_doctoral.ddd.jury.dtos.jury import MembreJuryDTO
 from parcours_doctoral.exports.utils import parcours_doctoral_generate_pdf
 from parcours_doctoral.models.admissibility import Admissibility
 
@@ -38,11 +41,22 @@ from parcours_doctoral.models.admissibility import Admissibility
 def admissibility_minutes_canvas_url(doctorate_uuid, language):
     """For a doctorate uuid, create the admissibility minutes canvas, save it and return the file url."""
     with translation.override(language=language):
-        doctorate_dto = message_bus_instance.invoke_multiple(
+        jury_dto, doctorate_dto = message_bus_instance.invoke_multiple(
             [
+                RecupererJuryQuery(uuid_jury=doctorate_uuid),
                 RecupererParcoursDoctoralQuery(parcours_doctoral_uuid=doctorate_uuid),
             ]
-        )[0]
+        )
+
+        current_admissibility = Admissibility.objects.get(current_parcours_doctoral__uuid=doctorate_uuid)
+
+        jury_members: list[MembreJuryDTO] = []
+        jury_members_by_role: dict[str, MembreJuryDTO] = {}
+
+        for member in jury_dto.membres:
+            jury_members_by_role[member.role] = member
+            if member.role in ROLES_MEMBRES_JURY:
+                jury_members.append(member)
 
         # Generate the pdf
         save_token = parcours_doctoral_generate_pdf(
@@ -50,11 +64,14 @@ def admissibility_minutes_canvas_url(doctorate_uuid, language):
             filename=f'admissibility_minutes_canvas_{doctorate_dto.reference}.pdf',
             context={
                 'parcours_doctoral': doctorate_dto,
+                'jury_members': jury_members,
+                'jury_president': jury_members_by_role.get(RoleJury.PRESIDENT.name),
+                'jury_secretary': jury_members_by_role.get(RoleJury.SECRETAIRE.name),
+                'admissibility_decision_date': current_admissibility.decision_date,
             },
         )
 
         # Attach the file to the object
-        current_admissibility = Admissibility.objects.get(current_parcours_doctoral__uuid=doctorate_uuid)
         current_admissibility.minutes_canvas = [save_token]
         current_admissibility.save(update_fields=['minutes_canvas'])
 

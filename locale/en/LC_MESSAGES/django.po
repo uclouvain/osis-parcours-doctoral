@@ -145,6 +145,24 @@ msgid ""
 msgstr ""
 
 msgid ""
+"<strong>admissible subject to minor changes</strong> which can be completed "
+"within three months of full-time work. In this case, the supervisor(s) is/"
+"are responsible for checking and approving the changes before the date of "
+"the private defence (if applicable) or the public defence. Please attach a "
+"report <u>explicitly</u> specifying all the requested changes."
+msgstr ""
+
+msgid ""
+"<strong>inadmissible</strong> (changes requiring more than three months of "
+"full-time work). The second decision on admissibility will be made on "
+"__________ (at least three months after the date of the first decision). "
+"Please attach a report stating the <u>reasons for the inadmissibility</u> "
+"and <u>explicitly</u> specifying all the changes requested. This report, "
+"which allows the PhD Field Committee to determine inadmissibility, must be "
+"signed by the Exam Board chair and secretary."
+msgstr ""
+
+msgid ""
 "<strong>non-admissible</strong> (changes requiring more than three months of "
 "full-time work). In this case, a new private defence must be held. Please "
 "attach a report explaining the reasons for the decision."
@@ -344,7 +362,7 @@ msgctxt "dashboard-category"
 msgid "Admissibility (formula 2)"
 msgstr ""
 
-msgid "Admissibility assessment"
+msgid "Admissibility decision"
 msgstr ""
 
 msgid "Admissibility minutes"
@@ -384,6 +402,13 @@ msgid ""
 "After considering the opinion of your supervisory panel, which met on "
 "%(confirmation_date)s, the %(cdd_title)s notes that your doctoral "
 "confirmation paper has been successfully completed."
+msgstr ""
+
+#, python-format
+msgid ""
+"After consultation chaired by Professor %(jury_president_last_name)s "
+"%(jury_president_first_name)s (UCLouvain) and based on the opinions "
+"submitted by Exam Board members:"
 msgstr ""
 
 msgctxt "filters"
@@ -1333,7 +1358,13 @@ msgstr ""
 msgid "Event website"
 msgstr ""
 
+msgid "Exam Board Chair"
+msgstr ""
+
 msgid "Exam Board Members"
+msgstr ""
+
+msgid "Exam Board Secretary "
 msgstr ""
 
 msgid "Example"
@@ -2253,6 +2284,9 @@ msgstr ""
 msgid "OTHER"
 msgstr "Other"
 
+msgid "On"
+msgstr ""
+
 msgid "One choice per line, leave the \"Other\" value out"
 msgstr ""
 
@@ -2634,6 +2668,9 @@ msgstr ""
 msgid "Proposed thesis title"
 msgstr ""
 
+msgid "Provisional thesis title"
+msgstr ""
+
 msgid "Proximity Commission for Dental Sciences (DENT)"
 msgstr ""
 
@@ -2793,6 +2830,10 @@ msgid "Repeat of the admissibility"
 msgstr ""
 
 msgid "Repeat of the defence"
+msgstr ""
+
+msgid ""
+"Report specifying the changes and/or justifying the decision (if applicable)."
 msgstr ""
 
 msgid "Reporting categories"
@@ -3371,6 +3412,17 @@ msgstr ""
 msgid "The current training is attached to this document."
 msgstr ""
 
+msgid ""
+"The date and time of the private defence (if applicable) and public defence "
+"are set for: __________ at _____ / __________ at _____."
+msgstr ""
+
+msgid ""
+"The date and time of the private defence (if applicable) and the public "
+"defence are set for: __________ at _____ / __________ at _____ (minimum "
+"delay of one month after admissibility)."
+msgstr ""
+
 msgid "The date cannot be in the future."
 msgstr ""
 
@@ -3782,6 +3834,12 @@ msgstr ""
 msgid "To be completed and signed by the exam board"
 msgstr ""
 
+msgid "To be completed by Exam Board chair and secretary"
+msgstr ""
+
+msgid "To be sent to CDD administrator"
+msgstr ""
+
 msgid ""
 "To be sent to the CDD secretariat <br> (To help you to fill this form, "
 "please read the UCLouvain Doctoral Regulations and the special provisions of "
@@ -4078,6 +4136,9 @@ msgstr ""
 msgid "admissible and accepted as is."
 msgstr ""
 
+msgid "admissible and the manuscript is accepted as is."
+msgstr ""
+
 msgid "and supervisor"
 msgstr ""
 
@@ -4188,6 +4249,12 @@ msgstr "UCLouvain"
 msgid ""
 "we hereby confirm the successful completion of the PhD programme and "
 "validate the minimum of 180 credits required to award the PhD."
+msgstr ""
+
+#, python-format
+msgid ""
+"we, the undersigned, the chair and secretary of the PhD Thesis Exam Board in "
+"%(training_name)s for the above named student, declare the thesis is:"
 msgstr ""
 
 #, python-brace-format
