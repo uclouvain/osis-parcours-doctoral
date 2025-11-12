@@ -193,6 +193,38 @@ msgstr ""
 "l'ensemble des membres du jury."
 
 msgid ""
+"<strong>admissible subject to minor changes</strong> which can be completed "
+"within three months of full-time work. In this case, the supervisor(s) is/"
+"are responsible for checking and approving the changes before the date of "
+"the private defence (if applicable) or the public defence. Please attach a "
+"report <u>explicitly</u> specifying all the requested changes."
+msgstr ""
+"<strong>la thèse est recevable moyennant des modifications mineures</"
+"strong>, réalisables dans un délai inférieur à trois mois de travail à temps "
+"plein. Dans ce cas, la, le ou les promoteur·trices est/sont chargé·es de "
+"vérifier et approuver ces modifications avant la date de la défense privée "
+"(le cas échéant) ou de la soutenance publique. Veuillez joindre un rapport "
+"précisant explicitement toutes les modifications demandées."
+
+msgid ""
+"<strong>inadmissible</strong> (changes requiring more than three months of "
+"full-time work). The second decision on admissibility will be made on "
+"__________ (at least three months after the date of the first decision). "
+"Please attach a report stating the <u>reasons for the inadmissibility</u> "
+"and <u>explicitly</u> specifying all the changes requested. This report, "
+"which allows the PhD Field Committee to determine inadmissibility, must be "
+"signed by the Exam Board chair and secretary."
+msgstr ""
+"<strong>la thèse est jugée non recevable</strong> (modifications nécessitant "
+"plus de trois mois de travail à temps plein). La seconde décision de "
+"recevabilité aura lieu le __________ (minimum dans les trois mois qui "
+"suivent la date de la première décision). Veuillez joindre un rapport "
+"reprenant les <u>motifs du refus</u> et précisant <u>explicitement</u> "
+"toutes les modifications demandées. Ce rapport permettant à la commission "
+"doctorale du domaine de constater la non recevabilité doit être signé par le "
+"ou la président·e et le ou la secrétaire du jury."
+
+msgid ""
 "<strong>non-admissible</strong> (changes requiring more than three months of "
 "full-time work). In this case, a new private defence must be held. Please "
 "attach a report explaining the reasons for the decision."
@@ -400,8 +432,8 @@ msgctxt "dashboard-category"
 msgid "Admissibility (formula 2)"
 msgstr "Recevabilité (formule 2)"
 
-msgid "Admissibility assessment"
-msgstr "Procès verbal de la recevabilité"
+msgid "Admissibility decision"
+msgstr "Décision de recevabilité"
 
 msgid "Admissibility minutes"
 msgstr "Procès verbal de recevabilité"
@@ -444,6 +476,16 @@ msgstr ""
 "Après examen de l’avis de votre comité d’accompagnement réuni le "
 "%(confirmation_date)s, la %(cdd_title)s constate la réussite de votre "
 "épreuve de confirmation au doctorat."
+
+#, python-format
+msgid ""
+"After consultation chaired by Professor %(jury_president_last_name)s "
+"%(jury_president_first_name)s (UCLouvain) and based on the opinions "
+"submitted by Exam Board members:"
+msgstr ""
+"Après consultation menée sous la présidence du ou de la professeur·e "
+"%(jury_president_last_name)s %(jury_president_first_name)s (UCLouvain) et "
+"sur base des avis transmis par les membres du jury composé de :"
 
 msgctxt "filters"
 msgid "All"
@@ -1420,8 +1462,14 @@ msgstr "Nom de l'événement"
 msgid "Event website"
 msgstr "Site web de l'événement"
 
+msgid "Exam Board Chair"
+msgstr "Le/La Président·e du jury"
+
 msgid "Exam Board Members"
 msgstr "Les membres du jury"
+
+msgid "Exam Board Secretary "
+msgstr "Le/La Secrétaire du jury"
 
 msgid "Example"
 msgstr "Exemple"
@@ -2468,6 +2516,9 @@ msgstr "OSIS DOCTORAT"
 msgid "OTHER"
 msgstr "Autre"
 
+msgid "On"
+msgstr "En la date du"
+
 msgid "One choice per line, leave the \"Other\" value out"
 msgstr "Un choix, par ligne, ne pas renseigner la valeur \"Autre\""
 
@@ -2882,6 +2933,9 @@ msgstr "Nouvelle échéance proposée"
 msgid "Proposed thesis title"
 msgstr "Titre proposé pour la thèse"
 
+msgid "Provisional thesis title"
+msgstr "Titre provisoire de la thèse"
+
 msgid "Proximity Commission for Dental Sciences (DENT)"
 msgstr "Commission de proximité de sciences dentaires (DENT)"
 
@@ -3049,6 +3103,12 @@ msgstr "Recevabilité à recommencer"
 
 msgid "Repeat of the defence"
 msgstr "Défense à recommencer"
+
+msgid ""
+"Report specifying the changes and/or justifying the decision (if applicable)."
+msgstr ""
+"Rapport précisant les modifications et/ou motivant la décision (le cas "
+"échéant)."
 
 msgid "Reporting categories"
 msgstr "Catégories de reporting"
@@ -3665,6 +3725,22 @@ msgid "The current training is attached to this document."
 msgstr ""
 "La formation réalisée à ce jour se trouve en annexe à ce procès-verbal."
 
+msgid ""
+"The date and time of the private defence (if applicable) and public defence "
+"are set for: __________ at _____ / __________ at _____."
+msgstr ""
+"La date et l'heure de la défense privée (le cas échéant) et de la soutenance "
+"publique sont fixées aux : __________ à _____ / __________ à _____ ."
+
+msgid ""
+"The date and time of the private defence (if applicable) and the public "
+"defence are set for: __________ at _____ / __________ at _____ (minimum "
+"delay of one month after admissibility)."
+msgstr ""
+"La date et l'heure de la défense privée (le cas échéant) et de la soutenance "
+"publique sont fixées aux : __________ à _____ / __________ à _____ (délai "
+"minimal d’un mois après la recevabilité)."
+
 msgid "The date cannot be in the future."
 msgstr "La date ne peut pas être dans le futur."
 
@@ -4137,6 +4213,14 @@ msgstr "À"
 msgid "To be completed and signed by the exam board"
 msgstr "À compléter et signer par le jury"
 
+msgid "To be completed by Exam Board chair and secretary"
+msgstr "A remplir par le ou la président·e et le ou la secrétaire du jury"
+
+msgid "To be sent to CDD administrator"
+msgstr ""
+"À transmettre à la ou le gestionnaire de commission doctorale de domaine "
+"(CDD)"
+
 msgid ""
 "To be sent to the CDD secretariat <br> (To help you to fill this form, "
 "please read the UCLouvain Doctoral Regulations and the special provisions of "
@@ -4483,6 +4567,9 @@ msgstr "Votre participation à l'événement"
 msgid "admissible and accepted as is."
 msgstr "la thèse est jugée recevable et le manuscrit est accepté tel quel."
 
+msgid "admissible and the manuscript is accepted as is."
+msgstr "la thèse est jugée recevable et le manuscrit est accepté tel quel."
+
 msgid "and supervisor"
 msgstr "et promoteur·trice"
 
@@ -4613,6 +4700,14 @@ msgstr ""
 "constatons l'aboutissement favorable du cursus doctoral et validons "
 "l'obtention du minimum de 180 crédits exigés pour l'octroi du grade "
 "académique de doctorat."
+
+#, python-format
+msgid ""
+"we, the undersigned, the chair and secretary of the PhD Thesis Exam Board in "
+"%(training_name)s for the above named student, declare the thesis is:"
+msgstr ""
+"nous, soussigné·es, président·e et secrétaire du jury de thèse de doctorat "
+"en %(training_name)s de l'intéressé·e, déclarons que :"
 
 #, python-brace-format
 msgid "{items} types out of {total}"
