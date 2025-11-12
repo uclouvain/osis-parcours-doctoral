@@ -84,4 +84,4 @@ class AutorisationDiffusionTheseFactory(factory.Factory):
     limitations_additionnelles_chapitres = 'Limitations pour les chapitres 1 et 2'
     modalites_diffusion_acceptees = 'Modalités acceptées'
     modalites_diffusion_acceptees_le = factory.Faker('date')
-    signataires = factory.List([factory.SubFactory(SignataireAutorisationDiffusionTheseFactory)])
+    signataires = factory.LazyFunction(lambda: {})

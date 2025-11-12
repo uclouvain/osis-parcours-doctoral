@@ -164,7 +164,7 @@ class ParcoursDoctoralFactory(factory.django.DjangoModelFactory):
     def create_jury_group(self, create, extracted, **kwargs):
         if create and not extracted and not self.jury_group_id:
             process = _ProcessFactory()
-            JuryActorWithInternalPromoterFactory(process=process)
+            JuryActorWithInternalPromoterFactory(process=process, is_lead_promoter=True)
             JuryActorWithExternalPromoterFactory(process=process)
             JuryActorFactory(process=process)
             JuryActorFactory(process=process)

@@ -40,21 +40,21 @@ __all__ = [
 ]
 
 
-SIGNATORY_NAME_TOKEN = Token(
-    name='signatory_name',
-    description=_('The name of the signatory'),
+PROMOTER_NAME_TOKEN = Token(
+    name='promoter_name',
+    description=_('The name of the supervisor'),
     example='John Doe',
 )
 
-SIGNATORY_TITLE_TOKEN = Token(
-    name='signatory_title_uppercase',
-    description=_('The title of the signatory'),
+PROMOTER_TITLE_TOKEN = Token(
+    name='promoter_title_uppercase',
+    description=_('The title of the supervisor'),
     example='The professor',
 )
 
-SIGNATORY_TITLE_LOWERCASE_TOKEN = Token(
-    name='signatory_title_lowercase',
-    description=_('The title of the signatory (in lowercase)'),
+PROMOTER_TITLE_LOWERCASE_TOKEN = Token(
+    name='promoter_title_lowercase',
+    description=_('The title of the supervisor (in lowercase)'),
     example='the professor',
 )
 
@@ -70,9 +70,21 @@ DOCTORAL_COMMISSION_TOKEN = Token(
     example='Doctoral Commission',
 )
 
-REFUSAL_REASON_TOKEN = Token(
-    name='refusal_reason',
-    description=_('Refusal reason'),
+PROMOTER_REFUSAL_REASON_TOKEN = Token(
+    name='promoter_refusal_reason',
+    description=_('Refusal reason of the supervisor'),
+    example='There is a problem.',
+)
+
+ADRE_REFUSAL_REASON_TOKEN = Token(
+    name='adre_refusal_reason',
+    description=_('Refusal reason of ADRE'),
+    example='There is a problem.',
+)
+
+SCEB_REFUSAL_REASON_TOKEN = Token(
+    name='sceb_refusal_reason',
+    description=_('Refusal reason of SCEB'),
     example='There is a problem.',
 )
 
@@ -107,11 +119,6 @@ DIAL_LINK_TOKEN = Token(
     example='http://dev.dial.uclouvain.be',
 )
 
-SENDER_NAME_TOKEN = Token(
-    name='sender_name',
-    description=_('Name of the person sending the email'),
-    example="John Doe",
-)
 
 PARCOURS_DOCTORAL_EMAIL_THESIS_DISTRIBUTION_AUTHORIZATION_PROMOTER_INVITATION = (
     'osis-parcours-doctoral-thesis-distribution-authorization-promoter-invitation'
@@ -121,7 +128,7 @@ templates.register(
     description=_('Mail sent to the supervisor to invite him to authorize the thesis distribution'),
     tokens=common_tokens
     + [
-        SIGNATORY_NAME_TOKEN,
+        PROMOTER_NAME_TOKEN,
         THESIS_DISTRIBUTION_AUTHORIZATION_FORM_FRONT_LINK_TOKEN,
         CDD_MANAGERS_NAMES_TOKEN,
         DOCTORAL_COMMISSION_TOKEN,
@@ -152,9 +159,9 @@ templates.register(
     description=_('Mail sent to the student to inform him the promoter refused the thesis distribution authorization'),
     tokens=common_tokens
     + [
-        SIGNATORY_TITLE_TOKEN,
-        SIGNATORY_NAME_TOKEN,
-        REFUSAL_REASON_TOKEN,
+        PROMOTER_TITLE_TOKEN,
+        PROMOTER_NAME_TOKEN,
+        PROMOTER_REFUSAL_REASON_TOKEN,
         CDD_MANAGERS_NAMES_TOKEN,
         DOCTORAL_COMMISSION_TOKEN,
     ],
@@ -169,8 +176,8 @@ templates.register(
     description=_('Mail sent to ADRE to inform that the promoter approved the thesis distribution authorization'),
     tokens=common_tokens
     + [
-        SIGNATORY_TITLE_LOWERCASE_TOKEN,
-        SIGNATORY_NAME_TOKEN,
+        PROMOTER_TITLE_LOWERCASE_TOKEN,
+        PROMOTER_NAME_TOKEN,
         CDD_MANAGERS_NAMES_TOKEN,
         DOCTORAL_COMMISSION_TOKEN,
     ],
@@ -185,8 +192,8 @@ templates.register(
     description=_('Mail sent to the student to inform him that ADRE refused the thesis distribution authorization'),
     tokens=common_tokens
     + [
-        REFUSAL_REASON_TOKEN,
-        SENDER_NAME_TOKEN,
+        ADRE_REFUSAL_REASON_TOKEN,
+        ADRE_MANAGER_NAME_TOKEN,
     ],
     tag=PARCOURS_DOCTORAL_TAG,
 )
@@ -199,7 +206,7 @@ templates.register(
     description=_('Mail sent to SCEB to inform that ADRE approved the thesis distribution authorization'),
     tokens=common_tokens
     + [
-        SENDER_NAME_TOKEN,
+        ADRE_MANAGER_NAME_TOKEN,
     ],
     tag=PARCOURS_DOCTORAL_TAG,
 )
@@ -212,8 +219,8 @@ templates.register(
     description=_('Mail sent to the student to inform him that SCEB refused the thesis distribution authorization'),
     tokens=common_tokens
     + [
-        REFUSAL_REASON_TOKEN,
-        SENDER_NAME_TOKEN,
+        SCEB_REFUSAL_REASON_TOKEN,
+        SCEB_MANAGER_NAME_TOKEN,
     ],
     tag=PARCOURS_DOCTORAL_TAG,
 )
