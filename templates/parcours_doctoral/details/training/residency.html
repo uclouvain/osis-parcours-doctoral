@@ -45,11 +45,11 @@
   </div>
   <div
       id="a-{{ activity.uuid }}"
-      class="card-body panel-collapse collapse"
+      class="card-body panel-collapse collapse py-0"
       role="tabpanel"
       aria-labelledby="h-{{ activity.uuid }}"
   >
-    <div class="panel-body">
+    <div class="panel-body pt-3">
       <strong class="d-block">{% trans "Description" %}</strong>
       {% include "parcours_doctoral/details/training/description/residency.html" %}
       {% if activity.subtitle %}
