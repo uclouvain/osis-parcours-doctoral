@@ -23,10 +23,15 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from parcours_doctoral.ddd.autorisation_diffusion_these.domain.model.autorisation_diffusion_these import (
+    AutorisationDiffusionThese,
+)
+from parcours_doctoral.ddd.autorisation_diffusion_these.domain.service.i_notification import (
+    INotification,
+)
 
-from .encoder_formulaire_autorisation_diffusion_these_service import (
-    encoder_formulaire_autorisation_diffusion_these,
-)
-from .envoyer_formulaire_autorisation_diffusion_these_au_promoteur_reference_service import (
-    envoyer_formulaire_autorisation_diffusion_these_au_promoteur_reference,
-)
+
+class NotificationInMemory(INotification):
+    @classmethod
+    def inviter_promoteur_reference(cls, autorisation_diffusion_these: AutorisationDiffusionThese) -> None:
+        pass

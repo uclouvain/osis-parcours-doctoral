@@ -2493,9 +2493,6 @@ msgstr "Nom de l'entité de gestion"
 msgid "Name of the manager sending the email"
 msgstr "Nom du gestionnaire qui envoie l'email"
 
-msgid "Name of the person sending the email"
-msgstr "Nom de la personne qui envoie l'email"
-
 msgid "Name of the president of the jury (eventually with the title)"
 msgstr "Nom du président du jury (éventuellement avec le titre)"
 
@@ -2526,14 +2523,23 @@ msgstr "Doctorat suivant"
 msgid "No"
 msgstr "Non"
 
+msgid "No ADRE manager has been found."
+msgstr "Aucun gestionnaire ADRE n'a été trouvé."
+
 msgid "No CDD found for this doctorate."
 msgstr "Pas de CDD trouvé pour ce doctorat."
+
+msgid "No SCEB manager has been found."
+msgstr "Aucun gestionnaire SCEB n'a été trouvé."
 
 msgid "No auditor are set for this training."
 msgstr "Aucun vérificateur.trice configuré.e pour cette formation."
 
 msgid "No confirmation paper yet"
 msgstr "Pas encore d'épreuve de confirmation"
+
+msgid "No contact supervisor has been found."
+msgstr "Aucun promoteur de contact n'a été trouvé."
 
 msgid "No defence"
 msgstr "Non soutenue"
@@ -2990,6 +2996,18 @@ msgctxt "other gender"
 msgid "Professor"
 msgstr "Professeur·e"
 
+msgctxt "female gender"
+msgid "Professor"
+msgstr "Professeure"
+
+msgctxt "male gender"
+msgid "Professor"
+msgstr "Professeur"
+
+msgctxt "other gender"
+msgid "Professor"
+msgstr "Professeur·e"
+
 msgid "Program proposition"
 msgstr "Proposition de programme"
 
@@ -3173,6 +3191,15 @@ msgstr "Référence DIAL.Pr"
 
 msgid "Refusal reason"
 msgstr "Motif de refus"
+
+msgid "Refusal reason of ADRE"
+msgstr "Raison de refus d'ADRE"
+
+msgid "Refusal reason of SCEB"
+msgstr "Raison de SCEB"
+
+msgid "Refusal reason of the supervisor"
+msgstr "Raison de refus du promoteur"
 
 msgid "Refuse activity"
 msgstr "Refuser l'activité"
@@ -3903,6 +3930,11 @@ msgstr "Le titre définitif de la thèse est le suivant :"
 msgid "The distribution authorization has not been found."
 msgstr "L'autorisation de diffusion de thèse n'a pas été trouvée."
 
+msgid "The distribution authorization must not be submitted to do this action."
+msgstr ""
+"L'autorisation de diffusion de thèse ne doit pas être soumise pour réaliser "
+"cette action."
+
 msgid "The distribution conditions type must be specified."
 msgstr "Le type des modalités de diffusion doit être spécifié."
 
@@ -4039,8 +4071,8 @@ msgstr ""
 "Le procès verbal sera téléversé par le·la secrétaire du jury ou le·la "
 "président·e du jury."
 
-msgid "The name of the signatory"
-msgstr "Le nom du signataire"
+msgid "The name of the supervisor"
+msgstr "Le nom du promoteur"
 
 #, python-format
 msgid ""
@@ -4161,11 +4193,11 @@ msgstr "Le résumé en anglais doit être spécifié."
 msgid "The thesis language must be specified."
 msgstr "La langue de la thèse doit être spécifiée."
 
-msgid "The title of the signatory"
-msgstr "Le titre du signataire"
+msgid "The title of the supervisor"
+msgstr "Le titre du promoteur"
 
-msgid "The title of the signatory (in lowercase)"
-msgstr "Le titre du signataire (en minuscules)"
+msgid "The title of the supervisor (in lowercase)"
+msgstr "Le titre du promoteur (en minuscules)"
 
 msgid "There can be no more CA members in the supervision group."
 msgstr ""
