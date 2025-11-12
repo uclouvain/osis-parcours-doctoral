@@ -111,11 +111,12 @@
             {% if jury_member.pays %} - {{ jury_member.pays }}{% endif %}
           {% endif %}
           {% if jury_member.role != 'MEMBRE' %}
-            -{{ jury_member.role|enum_display:'RoleJury' }}{% if jury_member.est_promoteur %}
-            {% translate 'and supervisor' %}
+            - {{ jury_member.role|enum_display:'RoleJury' }}
+            {% if jury_member.est_promoteur %}
+              {% translate 'and supervisor' %}
+            {% endif %}
           {% elif jury_member.est_promoteur %}
             - {% translate 'Supervisor' %}
-          {% endif %}
           {% endif %}
         </li>
       {% endfor %}
