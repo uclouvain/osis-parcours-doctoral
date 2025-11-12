@@ -675,8 +675,10 @@ class ParcoursDoctoral(models.Model):
 
     # Supervision
     supervision_group = SignatureProcessField(related_name='+')
-    jury_group = SignatureProcessField(related_name='+')
-    thesis_distribution_authorization_group = SignatureProcessField(related_name='+')
+    jury_group = SignatureProcessField(related_name='doctorate_from_jury_group')
+    thesis_distribution_authorization_group = SignatureProcessField(
+        related_name='doctorate_from_thesis_distribution_authorization_group',
+    )
 
     objects = models.Manager.from_queryset(ParcoursDoctoralQuerySet)()
 

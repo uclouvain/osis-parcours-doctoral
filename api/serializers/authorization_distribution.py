@@ -27,6 +27,7 @@
 from base.utils.serializers import DTOSerializer
 from parcours_doctoral.ddd.autorisation_diffusion_these.commands import (
     EncoderFormulaireAutorisationDiffusionTheseCommand,
+    EnvoyerFormulaireAutorisationDiffusionTheseAuPromoteurReferenceCommand,
 )
 from parcours_doctoral.ddd.autorisation_diffusion_these.dtos.autorisation_diffusion_these import (
     AutorisationDiffusionTheseDTO,
@@ -34,6 +35,7 @@ from parcours_doctoral.ddd.autorisation_diffusion_these.dtos.autorisation_diffus
 
 __all__ = [
     'AuthorizationDistributionDTOSerializer',
+    'SendAuthorizationDistributionToPromoterSerializer',
     'UpdateAuthorizationDistributionSerializer',
 ]
 
@@ -52,3 +54,12 @@ class UpdateAuthorizationDistributionSerializer(DTOSerializer):
 
     class Meta:
         source = EncoderFormulaireAutorisationDiffusionTheseCommand
+
+
+class SendAuthorizationDistributionToPromoterSerializer(DTOSerializer):
+    """Contains the submitted data to update the distribution authorization and send it to the lead supervisor."""
+
+    uuid_parcours_doctoral = None
+
+    class Meta:
+        source = EnvoyerFormulaireAutorisationDiffusionTheseAuPromoteurReferenceCommand

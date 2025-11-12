@@ -194,10 +194,6 @@ class Notification(NotificationMixin, INotification):
         }
 
     @classmethod
-    def _format_email(cls, actor: ParcoursDoctoralSupervisionActor | JuryActor | Person):
-        return formataddr((f'{actor.first_name} {actor.last_name}', actor.email))
-
-    @classmethod
     def envoyer_signatures(
         cls,
         parcours_doctoral: ParcoursDoctoral,

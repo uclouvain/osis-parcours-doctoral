@@ -33,6 +33,7 @@ from base.ddd.utils.business_validator import (
     TwoStepsMultipleBusinessExceptionListValidator,
 )
 from parcours_doctoral.ddd.autorisation_diffusion_these.domain.model.enums import (
+    ChoixStatutAutorisationDiffusionThese,
     TypeModalitesDiffusionThese,
 )
 from parcours_doctoral.ddd.autorisation_diffusion_these.domain.validator import *
@@ -48,6 +49,7 @@ class AutorisationDiffusionTheseValidatorList(TwoStepsMultipleBusinessExceptionL
     date_embargo: datetime.date | None
     modalites_diffusion_acceptees: str
     modalites_diffusion_acceptees_le: datetime.date | None
+    statut: ChoixStatutAutorisationDiffusionThese
 
     def get_data_contract_validators(self) -> List[BusinessValidator]:
         return []
@@ -76,5 +78,23 @@ class AutorisationDiffusionTheseValidatorList(TwoStepsMultipleBusinessExceptionL
             ShouldModalitesDiffusionEtreAcceptees(
                 modalites_diffusion_acceptees=self.modalites_diffusion_acceptees,
                 modalites_diffusion_acceptees_le=self.modalites_diffusion_acceptees_le,
+            ),
+            ShouldStatutAutorisationDiffusionTheseEtreNonSoumis(
+                statut=self.statut,
+            ),
+        ]
+
+
+@attr.dataclass(frozen=True, slots=True)
+class ModifierAutorisationDiffusionTheseValidatorList(TwoStepsMultipleBusinessExceptionListValidator):
+    statut: ChoixStatutAutorisationDiffusionThese
+
+    def get_data_contract_validators(self) -> List[BusinessValidator]:
+        return []
+
+    def get_invariants_validators(self) -> List[BusinessValidator]:
+        return [
+            ShouldStatutAutorisationDiffusionTheseEtreNonSoumis(
+                statut=self.statut,
             ),
         ]

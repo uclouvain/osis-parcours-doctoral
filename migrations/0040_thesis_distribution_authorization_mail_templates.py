@@ -24,7 +24,7 @@ class Migration(migrations.Migration):
             },
             {
                 'en': '''\
-<p>Professor {signatory_name},</p>
+<p>Professor {promoter_name},</p>
 <p>{student_first_name} {student_last_name} has sent you the final version of the thesis for {training_title} and has agreed to the distribution arrangements.</p>
 <p>Please indicate your approval or refusal of the <u>final version</u> of the thesis and its <u>distribution arrangements</u> by clicking on this link <a href="{thesis_distribution_authorization_form_front_link}">{thesis_distribution_authorization_form_front_link}</a>.</p>
 <p>If the thesis has been produced under joint supervision, you are signing in the name of said joint supervision.</p>
@@ -33,7 +33,7 @@ class Migration(migrations.Migration):
 <p>---</p>
 <p>{cdd_manager_names} {doctoral_commission}</p>''',
                 'fr-be': '''\
-<p>Professeur.e, {signatory_name},</p>
+<p>Professeur.e, {promoter_name},</p>
 <p>{student_first_name} {student_last_name} vous a transmis la version définitive de sa thèse pour son {training_title} et a fixé avec vous ses modalités de diffusion.</p>
 <p>Veuillez indiquer votre approbation ou refus sur la <u>version finalisée</u> de la thèse et ses <u>modalités de diffusion</u> en cliquant sur ce lien <a href="{thesis_distribution_authorization_form_front_link}">{thesis_distribution_authorization_form_front_link}</a>.</p>
 <p>Dans le cas où la thèse a été réalisée en copromotion, vous signez pour l'ensemble de la promotion.</p>
@@ -75,7 +75,7 @@ class Migration(migrations.Migration):
             {
                 'en': '''\
 <p>Dear {student_first_name} {student_last_name},</p>
-<p>Professor {signatory_name} (support committee member) has refused the final version of your thesis and/or its distribution arrangements for the following reason: {refusal_reason}.</p>
+<p>Professor {promoter_name} (support committee member) has refused the final version of your thesis and/or its distribution arrangements for the following reason: {promoter_refusal_reason}.</p>
 <p>Please resubmit your file via your virtual office.</p>
 <p>Thank you in advance for your important contribution.</p>
 <p>Please contact us should you require further information.</p>
@@ -84,7 +84,7 @@ class Migration(migrations.Migration):
 <p>{cdd_manager_names} {doctoral_commission}</p>''',
                 'fr-be': '''\
 <p>Cher, Chère, Cher.ère, {student_first_name} {student_last_name},</p>
-<p>{signatory_title_uppercase} {signatory_name} (membre du comité d’accompagnement) a refusé la version finale de votre thèse et/ou ses modalités de diffusion, pour le motif suivant : {refusal_reason}.</p>
+<p>{promoter_title_uppercase} {promoter_name} (membre du comité d’accompagnement) a refusé la version finale de votre thèse et/ou ses modalités de diffusion, pour le motif suivant : {promoter_refusal_reason}.</p>
 <p>Nous vous invitons à resoumettre votre dossier via votre bureau virtuel.</p>
 <p>Nous restons à votre disposition pour tout autre renseignement complémentaire.</p>
 <p>Bien cordialement.</p>
@@ -101,7 +101,7 @@ class Migration(migrations.Migration):
             {
                 'en': '''\
 <p>Dear colleague,</p>
-<p>The final version of {student_first_name} {student_last_name}’s thesis and its distribution arrangements have been approved by Professor {signatory_name}.</p>
+<p>The final version of {student_first_name} {student_last_name}’s thesis and its distribution arrangements have been approved by Professor {promoter_name}.</p>
 <p>Here is the link to the file <a href="{parcours_doctoral_link_back}">{parcours_doctoral_link_back}</a></p>
 <p>Please contact us should you require further information.</p>
 <p>Sincerely,</p>
@@ -109,7 +109,7 @@ class Migration(migrations.Migration):
 <p>{cdd_manager_names} {doctoral_commission}</p>''',
                 'fr-be': '''\
 <p>Cher, Chère, Cher.ère collègue,</p>
-<p>La version finale de thèse de {student_first_name} {student_last_name}, ainsi que ses modalités de diffusion ont été approuvées par {signatory_title_lowercase} {signatory_name}.</p>
+<p>La version finale de thèse de {student_first_name} {student_last_name}, ainsi que ses modalités de diffusion ont été approuvées par {promoter_title_lowercase} {promoter_name}.</p>
 <p>Voici le lien vers le dossier <a href="{parcours_doctoral_link_back}">{parcours_doctoral_link_back}</a></p>
 <p>Nous restons à votre disposition pour tout autre renseignement complémentaire.</p>
 <p>Bien cordialement.</p>
@@ -126,20 +126,20 @@ class Migration(migrations.Migration):
             {
                 'en': '''\
 <p>Dear {student_last_name} {student_last_name},</p>
-<p>The Research Administration Department has refused your thesis distribution arrangements for the following reason: {refusal_reason}.</p>
+<p>The Research Administration Department has refused your thesis distribution arrangements for the following reason: {adre_refusal_reason}.</p>
 <p>Please resubmit your file via your virtual office.</p>
 <p>Please contact us should you require further information.</p>
 <p>Sincerely,</p>
 <p>---</p>
-<p>{sender_name}</p>''',
+<p>{adre_manager_name}</p>''',
                 'fr-be': '''\
 <p>Cher, Chère, Cher.ère {student_last_name} {student_last_name},</p>
-<p>Le Service central des bibliothèques a refusé les modalités de diffusion de votre thèse, pour le motif suivant : {refusal_reason}.</p>
+<p>Le Service central des bibliothèques a refusé les modalités de diffusion de votre thèse, pour le motif suivant : {adre_refusal_reason}.</p>
 <p>Nous vous invitons à resoumettre votre dossier via votre bureau virtuel.</p>
 <p>Nous restons à votre disposition pour tout autre renseignement complémentaire.</p>
 <p>Bien cordialement.</p>
 <p>---</p>
-<p>{sender_name}</p>''',
+<p>{adre_manager_name}</p>''',
             },
         ),
         MailTemplateMigration(
@@ -156,7 +156,7 @@ class Migration(migrations.Migration):
 <p>Please contact us should you require further information.</p>
 <p>Sincerely,</p>
 <p>---</p>
-<p>{sender_name}</p>''',
+<p>{adre_manager_name}</p>''',
                 'fr-be': '''\
 <p>Cher, Chère, Cher.ère collègue,</p>
 <p>Les modalités de diffusion de thèse de {student_first_name} {student_last_name} ont été approuvées par ADRE.</p>
@@ -164,7 +164,7 @@ class Migration(migrations.Migration):
 <p>Nous restons à votre disposition pour tout autre renseignement complémentaire.</p>
 <p>Bien cordialement.</p>
 <p>---</p>
-<p>{sender_name}</p>''',
+<p>{adre_manager_name}</p>''',
             },
         ),
         MailTemplateMigration(
@@ -176,20 +176,20 @@ class Migration(migrations.Migration):
             {
                 'en': '''\
 <p>Dear {student_first_name} {student_last_name},</p>
-<p>The Service Central des Bibliothèques (Central Library Service) has refused your thesis distribution arrangements for the following reason: {refusal_reason}.</p>
+<p>The Service Central des Bibliothèques (Central Library Service) has refused your thesis distribution arrangements for the following reason: {sceb_refusal_reason}.</p>
 <p>Please resubmit your file via your virtual office.</p>
 <p>Please contact us should you require further information.</p>
 <p>Sincerely,</p>
 <p>---</p>
-<p>{sender_name}</p>''',
+<p>{sceb_manager_name}</p>''',
                 'fr-be': '''\
 <p>Cher, Chère, Cher.ère {student_first_name} {student_last_name},</p>
-<p>Le Service central des bibliothèques a refusé les modalités de diffusion de votre thèse, pour le motif suivant : {refusal_reason}.</p>
+<p>Le Service central des bibliothèques a refusé les modalités de diffusion de votre thèse, pour le motif suivant : {sceb_refusal_reason}.</p>
 <p>Nous vous invitons à resoumettre votre dossier via votre bureau virtuel.</p>
 <p>Nous restons à votre disposition pour tout autre renseignement complémentaire.</p>
 <p>Bien cordialement.</p>
 <p>---</p>
-<p>{sender_name}</p>''',
+<p>{sceb_manager_name}</p>''',
             },
         ),
     ]

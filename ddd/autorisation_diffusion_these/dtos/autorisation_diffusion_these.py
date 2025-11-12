@@ -34,7 +34,7 @@ from osis_common.ddd import interface
 @attr.dataclass(frozen=True, slots=True)
 class SignatureAutorisationDiffusionTheseDTO(interface.DTO):
     etat: str
-    date: Optional[datetime.datetime]
+    date_heure: datetime.datetime
     commentaire_externe: str
     commentaire_interne: str
     motif_refus: str
@@ -44,6 +44,11 @@ class SignatureAutorisationDiffusionTheseDTO(interface.DTO):
 class SignataireAutorisationDiffusionTheseDTO(interface.DTO):
     uuid: str
     matricule: str
+    prenom: str
+    nom: str
+    email: str
+    genre: str
+    institution: str
     role: str
     signature: SignatureAutorisationDiffusionTheseDTO
 

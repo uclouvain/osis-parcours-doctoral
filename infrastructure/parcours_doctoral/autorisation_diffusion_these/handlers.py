@@ -23,13 +23,14 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from parcours_doctoral.ddd.autorisation_diffusion_these.commands import (
-    EncoderFormulaireAutorisationDiffusionTheseCommand,
-    RecupererAutorisationDiffusionTheseQuery,
-)
+from parcours_doctoral.ddd.autorisation_diffusion_these.commands import *
 from parcours_doctoral.ddd.autorisation_diffusion_these.use_case.read import *
 from parcours_doctoral.ddd.autorisation_diffusion_these.use_case.write import *
 
+from .domain.service.autorisation_diffusion_these import (
+    AutorisationDiffusionTheseService,
+)
+from .domain.service.notification import Notification
 from .repository.autorisation_diffusion_these import (
     AutorisationDiffusionTheseRepository,
 )
@@ -43,6 +44,14 @@ COMMAND_HANDLERS = {
         lambda msg_bus, cmd: encoder_formulaire_autorisation_diffusion_these(
             cmd,
             autorisation_diffusion_these_repository=AutorisationDiffusionTheseRepository(),
+        )
+    ),
+    EnvoyerFormulaireAutorisationDiffusionTheseAuPromoteurReferenceCommand: (
+        lambda msg_bus, cmd: envoyer_formulaire_autorisation_diffusion_these_au_promoteur_reference(
+            cmd,
+            autorisation_diffusion_these_repository=AutorisationDiffusionTheseRepository(),
+            autorisation_diffusion_these_service=AutorisationDiffusionTheseService(),
+            notification=Notification(),
         )
     ),
 }

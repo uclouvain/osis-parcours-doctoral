@@ -34,6 +34,7 @@ from parcours_doctoral.api.serializers import ParcoursDoctoralIdentityDTOSeriali
 from parcours_doctoral.api.serializers.authorization_distribution import *
 from parcours_doctoral.ddd.autorisation_diffusion_these.commands import (
     EncoderFormulaireAutorisationDiffusionTheseCommand,
+    EnvoyerFormulaireAutorisationDiffusionTheseAuPromoteurReferenceCommand,
     RecupererAutorisationDiffusionTheseQuery,
 )
 
@@ -47,6 +48,7 @@ class AuthorizationDistributionAPIView(DoctorateAPIPermissionRequiredMixin, Gene
     permission_mapping = {
         'GET': 'parcours_doctoral.api_view_authorization_distribution',
         'PUT': 'parcours_doctoral.api_change_authorization_distribution',
+        'POST': 'parcours_doctoral.api_change_authorization_distribution',
     }
     serializer_class = AuthorizationDistributionDTOSerializer
 
@@ -74,6 +76,27 @@ class AuthorizationDistributionAPIView(DoctorateAPIPermissionRequiredMixin, Gene
 
         result = message_bus_instance.invoke(
             EncoderFormulaireAutorisationDiffusionTheseCommand(
+                uuid_parcours_doctoral=str(self.kwargs['uuid']),
+                **serializer.validated_data,
+            )
+        )
+
+        serializer = ParcoursDoctoralIdentityDTOSerializer(instance=result)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @extend_schema(
+        request=SendAuthorizationDistributionToPromoterSerializer,
+        responses=ParcoursDoctoralIdentityDTOSerializer,
+        operation_id='send_authorization_distribution_to_promoter',
+    )
+    def post(self, request, *args, **kwargs):
+        """Update the authorization_distribution and send it to the lead supervisor"""
+        serializer = UpdateAuthorizationDistributionSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        result = message_bus_instance.invoke(
+            EnvoyerFormulaireAutorisationDiffusionTheseAuPromoteurReferenceCommand(
                 uuid_parcours_doctoral=str(self.kwargs['uuid']),
                 **serializer.validated_data,
             )
