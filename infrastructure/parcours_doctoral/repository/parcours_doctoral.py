@@ -44,10 +44,12 @@ from parcours_doctoral.ddd.domain.model._financement import Financement
 from parcours_doctoral.ddd.domain.model._formation import FormationIdentity
 from parcours_doctoral.ddd.domain.model._institut import InstitutIdentity
 from parcours_doctoral.ddd.domain.model._projet import Projet
+from parcours_doctoral.ddd.domain.model.document import TypeDocument
 from parcours_doctoral.ddd.domain.model.enums import (
     ChoixCommissionProximiteCDEouCLSM,
     ChoixCommissionProximiteCDSS,
     ChoixDoctoratDejaRealise,
+    ChoixLangueDefense,
     ChoixSousDomaineSciences,
     ChoixStatutParcoursDoctoral,
     ChoixTypeFinancement,
@@ -74,11 +76,14 @@ from parcours_doctoral.ddd.repository.i_parcours_doctoral import (
     IParcoursDoctoralRepository,
     formater_reference,
 )
+from parcours_doctoral.models import Document
 from parcours_doctoral.models.parcours_doctoral import (
     ParcoursDoctoral as ParcoursDoctoralModel,
 )
 from program_management.models.education_group_version import EducationGroupVersion
 from reference.models.language import Language
+
+DOCUMENT_ARCHIVE_NAME = 'Archive'
 
 
 class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
@@ -98,6 +103,7 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
                 'training__academic_year',
                 'thesis_language',
                 'thesis_institute',
+                'defense_language',
             ).get(uuid=entity_id.uuid)
         except ParcoursDoctoralModel.DoesNotExist:
             raise ParcoursDoctoralNonTrouveException
@@ -120,6 +126,7 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
             ),
             commission_proximite=commission_proximite,
             justification=parcours_doctoral.justification,
+            titre_these_propose=parcours_doctoral.thesis_proposed_title,
             experience_precedente_recherche=ExperiencePrecedenteRecherche(
                 doctorat_deja_realise=ChoixDoctoratDejaRealise[parcours_doctoral.phd_already_done],
                 institution=parcours_doctoral.phd_already_done_institution,
@@ -182,6 +189,18 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
                 est_lie_fnrs_fria_fresh_csc=parcours_doctoral.is_fnrs_fria_fresh_csc_linked,
                 commentaire=parcours_doctoral.financing_comment,
             ),
+            # Public defense
+            langue_soutenance_publique=(
+                parcours_doctoral.defense_language.code if parcours_doctoral.defense_language else ''
+            ),
+            date_heure_soutenance_publique=parcours_doctoral.defense_datetime,
+            lieu_soutenance_publique=parcours_doctoral.defense_place,
+            local_deliberation=parcours_doctoral.defense_deliberation_room,
+            informations_complementaires_soutenance_publique=parcours_doctoral.defense_additional_information,
+            resume_annonce=parcours_doctoral.announcement_summary,
+            photo_annonce=parcours_doctoral.announcement_photo,
+            proces_verbal_soutenance_publique=parcours_doctoral.defense_minutes,
+            date_retrait_diplome=parcours_doctoral.diploma_collection_date,
         )
 
     @classmethod
@@ -199,6 +218,9 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
 
         student = Person.objects.get(global_id=entity.matricule_doctorant)
 
+        codes = list(filter(None, [entity.projet.langue_redaction_these, entity.langue_soutenance_publique]))
+        languages_by_code = {lang.code: lang for lang in Language.objects.filter(code__in=codes)} if codes else {}
+
         ParcoursDoctoralModel.objects.update_or_create(
             uuid=entity.entity_id.uuid,
             defaults={
@@ -208,11 +230,7 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
                 # Project
                 'project_title': entity.projet.titre,
                 'project_abstract': entity.projet.resume,
-                'thesis_language': (
-                    Language.objects.get(code=entity.projet.langue_redaction_these)
-                    if entity.projet.langue_redaction_these
-                    else None
-                ),
+                'thesis_language': languages_by_code.get(entity.projet.langue_redaction_these),
                 'thesis_institute': (
                     EntityVersion.objects.get(uuid=entity.projet.institut_these.uuid)
                     if entity.projet.institut_these
@@ -258,6 +276,18 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
                 'financing_comment': entity.financement.commentaire,
                 'proximity_commission': entity.commission_proximite.name if entity.commission_proximite else '',
                 'justification': entity.justification,
+                # Thesis
+                'thesis_proposed_title': entity.titre_these_propose,
+                # Public defense
+                'defense_language': languages_by_code.get(entity.langue_soutenance_publique),
+                'defense_datetime': entity.date_heure_soutenance_publique,
+                'defense_place': entity.lieu_soutenance_publique,
+                'defense_deliberation_room': entity.local_deliberation,
+                'defense_additional_information': entity.informations_complementaires_soutenance_publique,
+                'announcement_summary': entity.resume_annonce,
+                'announcement_photo': entity.photo_annonce,
+                'defense_minutes': entity.proces_verbal_soutenance_publique,
+                'diploma_collection_date': entity.date_retrait_diplome,
             },
         )
 
@@ -283,6 +313,7 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
                     'training__education_group_type',
                     'thesis_language',
                     'thesis_institute',
+                    'defense_language',
                 )
                 .annotate_training_management_entity()
                 .annotate_with_reference()
@@ -293,7 +324,7 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
                     admission_type=F('admission__type'),
                     admission_date=F('admission__approved_by_cdd_at'),
                 )
-                .annotate_intitule_secteur_formation()
+                .annotate_secteur_formation()
                 .get(search_filter)
             )
         except ParcoursDoctoralModel.DoesNotExist:
@@ -306,6 +337,16 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
         management_entities = cls.get_management_entities_dtos([parcours_doctoral.training.management_entity_id])
         management_entity = management_entities.get(parcours_doctoral.training.management_entity_id)
 
+        last_archive = (
+            Document.objects.filter(
+                related_doctorate=parcours_doctoral,
+                document_type=TypeDocument.SYSTEME.name,
+                name=DOCUMENT_ARCHIVE_NAME,
+            )
+            .order_by('updated_at')
+            .last()
+        )
+
         return ParcoursDoctoralDTO(
             uuid=str(parcours_doctoral.uuid),
             uuid_admission=str(parcours_doctoral.admission_uuid),  # from annotation
@@ -314,7 +355,9 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
             statut=parcours_doctoral.status,
             date_changement_statut=parcours_doctoral.status_updated_at,  # from annotation
             cree_le=parcours_doctoral.created_at,
+            archive=last_archive.file if last_archive else [],
             reference=parcours_doctoral.formatted_reference,
+            sigle_entite_gestion=parcours_doctoral.sigle_entite_gestion,
             noma_doctorant=parcours_doctoral.student_registration_id or '',  # from annotation
             photo_identite_doctorant=parcours_doctoral.student.id_photo,
             matricule_doctorant=parcours_doctoral.student.global_id,
@@ -411,6 +454,24 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
                 est_lie_fnrs_fria_fresh_csc=parcours_doctoral.is_fnrs_fria_fresh_csc_linked,
                 commentaire=parcours_doctoral.financing_comment,
             ),
+            # Public defense
+            titre_these_propose=parcours_doctoral.thesis_proposed_title,
+            langue_soutenance_publique=(
+                parcours_doctoral.defense_language.code if parcours_doctoral.defense_language else ''
+            ),
+            nom_langue_soutenance_publique=(
+                getattr(parcours_doctoral.defense_language, i18n_fields_names['language_name'])
+                if parcours_doctoral.defense_language
+                else ''
+            ),
+            date_heure_soutenance_publique=parcours_doctoral.defense_datetime,
+            lieu_soutenance_publique=parcours_doctoral.defense_place,
+            local_deliberation=parcours_doctoral.defense_deliberation_room,
+            informations_complementaires_soutenance_publique=parcours_doctoral.defense_additional_information,
+            resume_annonce=parcours_doctoral.announcement_summary,
+            photo_annonce=parcours_doctoral.announcement_photo,
+            proces_verbal_soutenance_publique=parcours_doctoral.defense_minutes,
+            date_retrait_diplome=parcours_doctoral.diploma_collection_date,
         )
 
     @classmethod
@@ -486,12 +547,14 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
                     sigle=management_entity['acronym'],
                     code_secteur=sector_entity['acronym'] if sector_entity else '',
                     intitule_secteur=sector_entity['title'] if sector_entity else '',
-                    lieu=management_entity['entity__location'],
-                    code_postal=management_entity['entity__postal_code'],
-                    ville=management_entity['entity__city'],
+                    lieu=management_entity['entity__location'] if management_entity['entity__location'] else '',
+                    code_postal=(
+                        management_entity['entity__postal_code'] if management_entity['entity__postal_code'] else ''
+                    ),
+                    ville=management_entity['entity__city'] if management_entity['entity__city'] else '',
                     pays=management_entity['entity__country__iso_code'],
                     nom_pays=management_entity[i18n_fields['country_name']],
-                    numero_telephone=management_entity['entity__phone'],
+                    numero_telephone=management_entity['entity__phone'] if management_entity['entity__phone'] else '',
                 )
                 if management_entity
                 else EntiteGestionDTO()

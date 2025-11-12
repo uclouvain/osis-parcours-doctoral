@@ -50,6 +50,7 @@ class PDFGeneration(IPDFGeneration):
         except IndexError:
             propriete_pae = None
         context = {
+            'parcours_doctoral': parcours_doctoral,
             'groupe_supervision': groupe_supervision,
             'epreuves_confirmation': epreuves_confirmation,
             'jury': jury,
@@ -59,7 +60,6 @@ class PDFGeneration(IPDFGeneration):
 
         # Generate the pdf
         save_token = parcours_doctoral_generate_pdf(
-            parcours_doctoral=parcours_doctoral,
             template='parcours_doctoral/exports/archive.html',
             filename='parcours_doctoral.pdf',
             context=context,

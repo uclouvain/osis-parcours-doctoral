@@ -50,6 +50,14 @@ class FinancementDTO(interface.DTO):
     est_lie_fnrs_fria_fresh_csc: Optional[bool]
     commentaire: str
 
+    @property
+    def nom_bourse_recherche(self):
+        if self.bourse_recherche:
+            if self.bourse_recherche.nom_long:
+                return f'{self.bourse_recherche.nom_court} - {self.bourse_recherche.nom_long}'
+            return self.bourse_recherche.nom_court
+        return self.autre_bourse_recherche
+
 
 @attr.dataclass(frozen=True, slots=True)
 class CotutelleDTO(interface.DTO):
@@ -96,12 +104,14 @@ class ParcoursDoctoralDTO(interface.DTO):
     uuid_admission: str
     type_admission: str
     reference: str
+    sigle_entite_gestion: str
     statut: str
     date_changement_statut: Optional[datetime.datetime]
     justification: Optional[str]
     intitule_secteur_formation: str
 
     cree_le: datetime.datetime
+    archive: List[str]
 
     formation: FormationDTO
 
@@ -120,6 +130,18 @@ class ParcoursDoctoralDTO(interface.DTO):
     nom_doctorant: str
     commission_proximite: str
     date_admission_par_cdd: Optional[datetime.datetime]
+
+    titre_these_propose: str
+    langue_soutenance_publique: str
+    nom_langue_soutenance_publique: str
+    date_heure_soutenance_publique: Optional[datetime.datetime]
+    lieu_soutenance_publique: str
+    local_deliberation: str
+    informations_complementaires_soutenance_publique: str
+    resume_annonce: str
+    photo_annonce: list[str]
+    proces_verbal_soutenance_publique: list[str]
+    date_retrait_diplome: Optional[datetime.date]
 
     @property
     def commission_proximite_display(self):

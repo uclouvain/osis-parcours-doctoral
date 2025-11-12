@@ -30,22 +30,20 @@ from django.test import RequestFactory, TestCase
 from django.urls import reverse
 
 from parcours_doctoral.ddd.jury.domain.model.enums import RoleJury
-from parcours_doctoral.models import JuryMember
+from parcours_doctoral.models import JuryActor
 from parcours_doctoral.tests.factories.jury import (
-    ExternalJuryMemberFactory,
-    JuryMemberFactory,
-    JuryMemberWithExternalPromoterFactory,
-    JuryMemberWithInternalPromoterFactory,
+    ExternalJuryActorFactory,
+    JuryActorFactory,
+    JuryActorWithExternalPromoterFactory,
+    JuryActorWithInternalPromoterFactory,
 )
 from parcours_doctoral.views.autocomplete.persons import JuryMembersAutocomplete
 
 
 class JuryMembersAutocompleteTestCase(TestCase):
     @classmethod
-    def _formatted_person_result(cls, jury_member: JuryMember):
-        if jury_member.promoter:
-            complete_name = '{}, {}'.format(jury_member.promoter.last_name, jury_member.promoter.first_name)
-        elif jury_member.person:
+    def _formatted_person_result(cls, jury_member: JuryActor):
+        if jury_member.person:
             complete_name = '{}, {}'.format(jury_member.person.last_name, jury_member.person.first_name)
         else:
             complete_name = '{}, {}'.format(jury_member.last_name, jury_member.first_name)
@@ -61,21 +59,21 @@ class JuryMembersAutocompleteTestCase(TestCase):
             username='jacob',
             password='top_secret',
         )
-        cls.jury_member = JuryMemberFactory(
+        cls.jury_member = JuryActorFactory(
             person__first_name='John',
             person__last_name='Poe',
         )
-        cls.external_jury_member = ExternalJuryMemberFactory(
+        cls.external_jury_member = ExternalJuryActorFactory(
             first_name='Jim',
             last_name='Poe',
         )
-        cls.jury_member_with_internal_promoter = JuryMemberWithInternalPromoterFactory(
-            promoter__actor_ptr__person__first_name='Jane',
-            promoter__actor_ptr__person__last_name='Doe',
+        cls.jury_member_with_internal_promoter = JuryActorWithInternalPromoterFactory(
+            person__first_name='Jane',
+            person__last_name='Doe',
         )
-        cls.jury_member_with_external_promoter = JuryMemberWithExternalPromoterFactory(
-            promoter__first_name='Tom',
-            promoter__last_name='Doe',
+        cls.jury_member_with_external_promoter = JuryActorWithExternalPromoterFactory(
+            first_name='Tom',
+            last_name='Doe',
         )
 
         cls.url = reverse('parcours_doctoral:autocomplete:jury-members')
@@ -185,7 +183,7 @@ class JuryMembersAutocompleteTestCase(TestCase):
         request = self.factory.get(
             self.url,
             data={
-                'q': self.jury_member_with_internal_promoter.promoter.person.global_id,
+                'q': self.jury_member_with_internal_promoter.person.global_id,
             },
         )
         request.user = self.user

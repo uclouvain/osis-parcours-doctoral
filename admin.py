@@ -28,6 +28,8 @@ import itertools
 from django.conf import settings
 from django.contrib import admin
 from django.db import models
+from django.forms import BooleanField, ModelForm
+from django.forms.widgets import HiddenInput
 from django.shortcuts import resolve_url
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
@@ -38,11 +40,17 @@ from osis_document_components.fields import FileField
 from osis_mail_template.admin import MailTemplateAdmin
 
 from base.models.entity_version import EntityVersion
+from education_group.contrib.admin import EducationGroupRoleModelAdmin
 from osis_role.contrib.admin import RoleModelAdmin
-from parcours_doctoral.auth.roles.adre import AdreSecretary
+from parcours_doctoral.auth.roles.adre_manager import AdreManager
+from parcours_doctoral.auth.roles.adre_secretary import AdreSecretary
+from parcours_doctoral.auth.roles.auditor import Auditor
 from parcours_doctoral.auth.roles.cdd_configurator import CddConfigurator
+from parcours_doctoral.auth.roles.das import SectorAdministrativeDirector
 from parcours_doctoral.auth.roles.doctorate_reader import DoctorateReader
+from parcours_doctoral.auth.roles.jury_member import JuryMember
 from parcours_doctoral.auth.roles.jury_secretary import JurySecretary
+from parcours_doctoral.auth.roles.sceb_manager import ScebManager
 from parcours_doctoral.auth.roles.student import Student
 from parcours_doctoral.ddd.formation.domain.model.enums import (
     CategorieActivite,
@@ -57,6 +65,7 @@ from parcours_doctoral.models import (
 from parcours_doctoral.models.activity import Activity
 from parcours_doctoral.models.cdd_config import CddConfiguration
 from parcours_doctoral.models.cdd_mail_template import CddMailTemplate
+from parcours_doctoral.models.private_defense import PrivateDefense
 
 
 @admin.register(Activity)
@@ -231,8 +240,26 @@ class CddMailTemplateAdmin(MailTemplateAdmin):
         return resolve_url(f'parcours_doctoral:config:cdd-mail-template:preview', identifier=obj.identifier, pk=obj.pk)
 
 
-@admin.register(AdreSecretary, JurySecretary, DoctorateReader, Student)
+@admin.register(
+    AdreManager,
+    AdreSecretary,
+    DoctorateReader,
+    JuryMember,
+    JurySecretary,
+    ScebManager,
+    SectorAdministrativeDirector,
+    Student,
+)
 class HijackRoleModelAdmin(HijackUserAdminMixin, RoleModelAdmin):
+    list_select_related = ['person__user']
+
+    def get_hijack_user(self, obj):
+        return obj.person.user
+
+
+@admin.register(Auditor)
+class HijackRoleModelAdmin(HijackUserAdminMixin, RoleModelAdmin):
+    list_display = ('person', 'entity', 'with_child')
     list_select_related = ['person__user']
 
     def get_hijack_user(self, obj):
@@ -370,3 +397,64 @@ class ConfirmationPaperAdmin(ReadOnlyFilesMixin, admin.ModelAdmin):
     @admin.display(description=_('Related doctorate'))
     def parcours_doctoral_reference(self, obj):
         return obj.parcours_doctoral.reference
+
+
+class PrivateDefenseAdminForm(ModelForm):
+    is_active = BooleanField(
+        label=_('Is active'),
+        required=False,
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields['is_active'].initial = (
+            self.instance.current_parcours_doctoral_id == self.instance.parcours_doctoral_id
+        )
+
+    class Meta:
+        model = PrivateDefense
+        exclude = ['current_parcours_doctoral']
+
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+
+        instance.current_parcours_doctoral = instance.parcours_doctoral if self.cleaned_data['is_active'] else None
+
+        if commit:
+            instance.save()
+
+        return instance
+
+
+@admin.register(PrivateDefense)
+class PrivateDefenseAdmin(ReadOnlyFilesMixin, admin.ModelAdmin):
+    form = PrivateDefenseAdminForm
+    list_display = [
+        'parcours_doctoral_reference',
+        'is_active',
+        'datetime',
+    ]
+    search_fields = [
+        'parcours_doctoral__reference',
+        'parcours_doctoral__student__last_name',
+        'parcours_doctoral__student__first_name',
+    ]
+    autocomplete_fields = [
+        'parcours_doctoral',
+    ]
+    ordering = [
+        'parcours_doctoral__reference',
+        '-created_at',
+    ]
+    list_select_related = [
+        'parcours_doctoral',
+    ]
+
+    @admin.display(description=_('Related doctorate'))
+    def parcours_doctoral_reference(self, obj):
+        return obj.parcours_doctoral.reference
+
+    @admin.display(description=_('Is active'))
+    def is_active(self, obj):
+        return bool(obj.current_parcours_doctoral_id)

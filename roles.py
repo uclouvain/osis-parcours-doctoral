@@ -28,25 +28,42 @@ from rules import always_allow
 from osis_role import role
 from parcours_doctoral.auth.predicates.parcours_doctoral import (
     complementary_training_enabled,
+    doctorate_is_proclaimed,
     has_valid_enrollment,
+    is_jury_approuve_ca,
     is_jury_in_progress,
+    is_jury_signing_in_progress,
     is_part_of_education_group,
     is_related_to_an_admission,
+    private_defense_is_authorised,
+    private_defense_is_submitted,
+    public_defense_is_authorised,
+    public_defense_is_submitted,
     submitted_confirmation_paper,
 )
-from parcours_doctoral.auth.roles.adre import AdreSecretary
+from parcours_doctoral.auth.roles.adre_manager import AdreManager
+from parcours_doctoral.auth.roles.adre_secretary import AdreSecretary
+from parcours_doctoral.auth.roles.auditor import Auditor
 from parcours_doctoral.auth.roles.ca_member import CommitteeMember
 from parcours_doctoral.auth.roles.cdd_configurator import CddConfigurator
+from parcours_doctoral.auth.roles.das import SectorAdministrativeDirector
+from parcours_doctoral.auth.roles.jury_member import JuryMember
 from parcours_doctoral.auth.roles.jury_secretary import JurySecretary
 from parcours_doctoral.auth.roles.promoter import Promoter
+from parcours_doctoral.auth.roles.sceb_manager import ScebManager
 from parcours_doctoral.auth.roles.student import Student
 
 role.role_manager.register(CddConfigurator)
 role.role_manager.register(JurySecretary)
 role.role_manager.register(AdreSecretary)
+role.role_manager.register(AdreManager)
 role.role_manager.register(Student)
 role.role_manager.register(Promoter)
 role.role_manager.register(CommitteeMember)
+role.role_manager.register(Auditor)
+role.role_manager.register(SectorAdministrativeDirector)
+role.role_manager.register(JuryMember)
+role.role_manager.register(ScebManager)
 
 
 PROGRAM_MANAGER_RULES = {
@@ -104,10 +121,42 @@ PROGRAM_MANAGER_RULES = {
     'parcours_doctoral.refuse_activity': is_part_of_education_group & has_valid_enrollment,
     'parcours_doctoral.restore_activity': is_part_of_education_group & has_valid_enrollment,
     # -- Jury
-    'parcours_doctoral.view_jury': is_part_of_education_group & is_jury_in_progress,
-    'parcours_doctoral.change_jury': is_part_of_education_group & is_jury_in_progress & has_valid_enrollment,
+    'parcours_doctoral.view_jury': is_part_of_education_group,
+    'parcours_doctoral.change_jury': is_part_of_education_group & has_valid_enrollment,
+    'parcours_doctoral.jury_request_signatures': is_part_of_education_group
+    & is_jury_in_progress
+    & has_valid_enrollment,
+    'parcours_doctoral.jury_reset_signatures': is_part_of_education_group
+    & is_jury_signing_in_progress
+    & has_valid_enrollment,
+    'parcours_doctoral.approve_jury': is_part_of_education_group & is_jury_approuve_ca & has_valid_enrollment,
     # -- Défense
+    'parcours_doctoral.view_private_defense': is_part_of_education_group,
+    'parcours_doctoral.authorise_private_defense': is_part_of_education_group
+    & has_valid_enrollment
+    & private_defense_is_submitted,
+    'parcours_doctoral.invite_jury_to_private_defense': is_part_of_education_group
+    & has_valid_enrollment
+    & private_defense_is_authorised,
+    'parcours_doctoral.make_private_defense_decision': is_part_of_education_group
+    & has_valid_enrollment
+    & private_defense_is_authorised,
+    'parcours_doctoral.change_private_defense': is_part_of_education_group & has_valid_enrollment,
     # -- Soutenance
+    'parcours_doctoral.view_public_defense': is_part_of_education_group,
+    'parcours_doctoral.change_public_defense': is_part_of_education_group & has_valid_enrollment,
+    'parcours_doctoral.invite_jury_to_public_defense': is_part_of_education_group
+    & has_valid_enrollment
+    & public_defense_is_submitted,
+    'parcours_doctoral.authorise_public_defense': is_part_of_education_group
+    & has_valid_enrollment
+    & public_defense_is_submitted,
+    'parcours_doctoral.make_public_defense_decision': is_part_of_education_group
+    & has_valid_enrollment
+    & public_defense_is_authorised,
+    'parcours_doctoral.send_email_for_diploma_collection': is_part_of_education_group
+    & has_valid_enrollment
+    & doctorate_is_proclaimed,
     # -- Commentaire
     'parcours_doctoral.view_comments': is_part_of_education_group,
     'parcours_doctoral.change_comments': is_part_of_education_group,
