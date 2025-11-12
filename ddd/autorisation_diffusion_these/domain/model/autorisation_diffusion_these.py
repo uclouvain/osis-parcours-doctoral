@@ -24,7 +24,6 @@
 #
 # ##############################################################################
 import datetime
-from typing import List, Optional
 from uuid import UUID, uuid4
 
 import attr
@@ -38,24 +37,45 @@ from parcours_doctoral.ddd.autorisation_diffusion_these.domain.model.enums impor
 )
 from parcours_doctoral.ddd.autorisation_diffusion_these.domain.validator.validator_by_business_action import (
     AutorisationDiffusionTheseValidatorList,
+    ModifierAutorisationDiffusionTheseValidatorList,
 )
 
 
-@attr.dataclass(frozen=True, slots=True, eq=True, hash=True)
+@attr.dataclass(frozen=True, slots=True)
 class SignatureAutorisationDiffusionThese(interface.ValueObject):
-    etat: ChoixEtatSignature = ChoixEtatSignature.NOT_INVITED
-    date: Optional[datetime.datetime] = None
-    commentaire_externe: str = ''
     commentaire_interne: str = ''
+    etat: ChoixEtatSignature = ChoixEtatSignature.NOT_INVITED
+    commentaire_externe: str = ''
     motif_refus: str = ''
 
 
-@attr.dataclass(frozen=True, slots=True, eq=True, hash=True)
+@attr.dataclass(slots=True)
 class SignataireAutorisationDiffusionThese(interface.ValueObject):
     matricule: str
     role: 'RoleActeur'
     uuid: UUID = attr.Factory(uuid4)
     signature: SignatureAutorisationDiffusionThese = attr.Factory(SignatureAutorisationDiffusionThese)
+
+    def inviter(self):
+        self.signature = SignatureAutorisationDiffusionThese(
+            etat=ChoixEtatSignature.INVITED,
+        )
+
+    def refuser(self, motif_refus):
+        self.signature = SignatureAutorisationDiffusionThese(
+            etat=ChoixEtatSignature.DECLINED,
+            motif_refus=motif_refus,
+        )
+
+    def accepter(self, commentaire_interne, commentaire_externe):
+        self.signature = SignatureAutorisationDiffusionThese(
+            etat=ChoixEtatSignature.APPROVED,
+            commentaire_interne=commentaire_interne,
+            commentaire_externe=commentaire_externe,
+        )
+
+    def reinitialiser_signature(self):
+        self.signature = SignatureAutorisationDiffusionThese()
 
 
 @attr.dataclass(frozen=True, slots=True)
@@ -81,7 +101,25 @@ class AutorisationDiffusionThese(interface.RootEntity):
     modalites_diffusion_acceptees: str = ''
     modalites_diffusion_acceptees_le: datetime.date | None = None
 
-    signataires: List[SignataireAutorisationDiffusionThese] = attr.Factory(list)
+    signataires: dict[RoleActeur, SignataireAutorisationDiffusionThese] = attr.Factory(dict)
+
+    def recuperer_signataire(self, role: RoleActeur, matricule: str) -> SignataireAutorisationDiffusionThese:
+        """
+        Récupérer le signataire de l'autorisation de diffusion de thèse à partir de son rôle (un signataire par rôle).
+        Si aucun signataire n'a le rôle spécifié, alors un nouveau signataire est ajouté aux signataires et renvoyé.
+        Si un signataire a le rôle spécifié :
+            - mais que son matricule a changé, alors un nouveau signataire remplace le précédent et est renvoyé.
+            - sinon le signataire existant est renvoyé.
+        :param role: Le rôle du signataire recherché.
+        :param matricule: Le matricule du signataire recherché.
+        :return: Le signataire recherché.
+        """
+        signataire = self.signataires.get(role)
+
+        if not signataire or signataire.matricule != matricule:
+            self.signataires[role] = SignataireAutorisationDiffusionThese(role=role, matricule=matricule)
+
+        return self.signataires[role]
 
     def encoder_formulaire(
         self,
@@ -95,6 +133,10 @@ class AutorisationDiffusionThese(interface.RootEntity):
         limitations_additionnelles_chapitres: str,
         modalites_diffusion_acceptees: str,
     ):
+        ModifierAutorisationDiffusionTheseValidatorList(
+            statut=self.statut,
+        ).validate()
+
         self.sources_financement = sources_financement
         self.resume_anglais = resume_anglais
         self.resume_autre_langue = resume_autre_langue
@@ -108,9 +150,7 @@ class AutorisationDiffusionThese(interface.RootEntity):
         self.modalites_diffusion_acceptees = modalites_diffusion_acceptees
         self.modalites_diffusion_acceptees_le = datetime.date.today() if modalites_diffusion_acceptees else None
 
-    def envoyer_formulaire_au_promoteur(self):
-        self.statut = ChoixStatutAutorisationDiffusionThese.DIFFUSION_SOUMISE
-
+    def envoyer_formulaire_au_promoteur_reference(self, matricule_promoteur_reference: str):
         AutorisationDiffusionTheseValidatorList(
             sources_financement=self.sources_financement,
             resume_anglais=self.resume_anglais,
@@ -120,4 +160,10 @@ class AutorisationDiffusionThese(interface.RootEntity):
             date_embargo=self.date_embargo,
             modalites_diffusion_acceptees=self.modalites_diffusion_acceptees,
             modalites_diffusion_acceptees_le=self.modalites_diffusion_acceptees_le,
+            statut=self.statut,
         ).validate()
+
+        self.statut = ChoixStatutAutorisationDiffusionThese.DIFFUSION_SOUMISE
+
+        signataire = self.recuperer_signataire(role=RoleActeur.PROMOTEUR, matricule=matricule_promoteur_reference)
+        signataire.inviter()

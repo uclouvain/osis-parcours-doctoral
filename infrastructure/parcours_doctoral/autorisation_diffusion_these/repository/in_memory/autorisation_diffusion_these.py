@@ -23,9 +23,11 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+import datetime
 from typing import List
 
 from base.ddd.utils.in_memory_repository import InMemoryGenericRepository
+from parcours_doctoral.constants import INSTITUTION_UCL
 from parcours_doctoral.ddd.autorisation_diffusion_these.domain.model.autorisation_diffusion_these import (
     AutorisationDiffusionThese,
     AutorisationDiffusionTheseIdentity,
@@ -75,15 +77,20 @@ class AutorisationDiffusionTheseInMemoryRepository(InMemoryGenericRepository, IA
                     uuid=str(signataire.uuid),
                     matricule=signataire.matricule,
                     role=signataire.role.name,
+                    nom='',
+                    prenom='',
+                    email='',
+                    genre='',
+                    institution=INSTITUTION_UCL,
                     signature=SignatureAutorisationDiffusionTheseDTO(
                         etat=signataire.signature.etat.name,
-                        date=signataire.signature.date,
+                        date_heure=datetime.datetime(2025, 1, 1),
                         commentaire_externe=signataire.signature.commentaire_externe,
                         commentaire_interne=signataire.signature.commentaire_interne,
                         motif_refus=signataire.signature.motif_refus,
                     ),
                 )
-                for signataire in entity.signataires
+                for signataire in entity.signataires.values()
             ],
         )
 

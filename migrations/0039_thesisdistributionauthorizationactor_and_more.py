@@ -121,7 +121,7 @@ class Migration(migrations.Migration):
                 editable=False,
                 null=True,
                 on_delete=django.db.models.deletion.CASCADE,
-                related_name="+",
+                related_name="doctorate_from_thesis_distribution_authorization_group",
                 to="osis_signature.process",
             ),
         ),
@@ -174,6 +174,17 @@ class Migration(migrations.Migration):
                 default="",
                 max_length=100,
                 verbose_name="Summary in other language",
+            ),
+        ),
+        migrations.AlterField(
+            model_name="parcoursdoctoral",
+            name="jury_group",
+            field=osis_signature.contrib.fields.SignatureProcessField(
+                editable=False,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="doctorate_from_jury_group",
+                to="osis_signature.process",
             ),
         ),
     ]
