@@ -24,10 +24,15 @@
 #
 # ##############################################################################
 import datetime
+from email import message_from_string
+from email.utils import getaddresses
 
 import freezegun
+from django.db.models import QuerySet
 from django.shortcuts import resolve_url
+from osis_notification.models import EmailNotification
 from osis_signature.enums import SignatureState
+from osis_signature.models import Actor, StateHistory
 from rest_framework import status
 from rest_framework.test import APITestCase
 
@@ -39,7 +44,7 @@ from parcours_doctoral.ddd.autorisation_diffusion_these.domain.model.enums impor
 )
 from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from parcours_doctoral.ddd.jury.domain.model.enums import FormuleDefense
-from parcours_doctoral.models import ParcoursDoctoral
+from parcours_doctoral.models import JuryActor, ParcoursDoctoral
 from parcours_doctoral.models.thesis_distribution_authorization import (
     ThesisDistributionAuthorizationActor,
 )
@@ -47,7 +52,10 @@ from parcours_doctoral.tests.factories.authorization_distribution import (
     PromoterThesisDistributionAuthorizationActorFactory,
 )
 from parcours_doctoral.tests.factories.parcours_doctoral import ParcoursDoctoralFactory
-from parcours_doctoral.tests.factories.roles import StudentRoleFactory
+from parcours_doctoral.tests.factories.roles import (
+    ScebManagerRoleFactory,
+    StudentRoleFactory,
+)
 from reference.tests.factories.language import LanguageFactory
 
 
@@ -57,6 +65,7 @@ class AuthorizationDistributionAPIViewTestCase(APITestCase):
         cls.user_with_no_role = UserFactory()
         cls.doctorate_student = StudentRoleFactory().person
         cls.other_doctorate_student = StudentRoleFactory().person
+        cls.sceb_manager = ScebManagerRoleFactory().person
         cls.language = LanguageFactory()
 
         cls.data = {
@@ -97,7 +106,6 @@ class AuthorizationDistributionAPIViewTestCase(APITestCase):
         methods_not_allowed = [
             'delete',
             'patch',
-            'post',
         ]
 
         for method in methods_not_allowed:
@@ -168,10 +176,15 @@ class AuthorizationDistributionAPIViewTestCase(APITestCase):
                 {
                     'uuid': str(promoter.uuid),
                     'matricule': promoter.person.global_id,
+                    'nom': promoter.person.last_name,
+                    'prenom': promoter.person.first_name,
+                    'genre': promoter.person.gender,
+                    'institution': 'UCLouvain',
+                    'email': promoter.person.email,
                     'role': RoleActeur.PROMOTEUR.name,
                     'signature': {
                         'etat': SignatureState.APPROVED.name,
-                        'date': promoter.last_state_date.isoformat(),
+                        'date_heure': promoter.last_state_date.isoformat(),
                         'commentaire_externe': 'Comment',
                         'commentaire_interne': 'Internal comment',
                         'motif_refus': 'Rejection reason',
@@ -217,6 +230,43 @@ class AuthorizationDistributionAPIViewTestCase(APITestCase):
         response = self.client.put(self.url, data=self.data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
+    def test_post_is_only_available_in_some_statuses(self):
+        self.client.force_authenticate(user=self.doctorate_student.user)
+
+        # First defense method
+        self.doctorate.defense_method = FormuleDefense.FORMULE_1.name
+        self.doctorate.status = ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_SOUMISE.name
+
+        self.doctorate.save()
+
+        # > during the private defense
+        response = self.client.post(self.url, data=self.data)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        # > after the private defense
+        self.doctorate.status = ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_REUSSIE.name
+        self.doctorate.save()
+
+        response = self.client.post(self.url, data=self.data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # Second defense method
+        self.doctorate.defense_method = FormuleDefense.FORMULE_2.name
+        self.doctorate.status = ChoixStatutParcoursDoctoral.RECEVABILITE_SOUMISE.name
+
+        self.doctorate.save()
+
+        # > during the admissibility
+        response = self.client.post(self.url, data=self.data)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        # > after the admissibility
+        self.doctorate.status = ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_SOUMISE.name
+        self.doctorate.save()
+
+        response = self.client.post(self.url, data=self.data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
     @freezegun.freeze_time('2025-01-02')
     def test_put_new_authorization_distribution_data(self):
         self.client.force_authenticate(user=self.doctorate_student.user)
@@ -243,3 +293,83 @@ class AuthorizationDistributionAPIViewTestCase(APITestCase):
             self.data['modalites_diffusion_acceptees'],
         )
         self.assertEqual(self.doctorate.thesis_distribution_accepted_on, datetime.date(2025, 1, 2))
+
+    @freezegun.freeze_time('2025-01-02')
+    def test_post_new_authorization_distribution_data(self):
+        self.client.force_authenticate(user=self.doctorate_student.user)
+
+        response = self.client.post(self.url, data=self.data)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        self.doctorate.refresh_from_db()
+
+        # Check that the data have been updated
+        self.assertEqual(self.doctorate.funding_sources, self.data['sources_financement'])
+        self.assertEqual(self.doctorate.thesis_summary_in_english, self.data['resume_anglais'])
+        self.assertEqual(self.doctorate.thesis_summary_in_other_language, self.data['resume_autre_langue'])
+        self.assertEqual(self.doctorate.thesis_language, self.language)
+        self.assertEqual(self.doctorate.thesis_keywords, self.data['mots_cles'])
+        self.assertEqual(self.doctorate.thesis_distribution_conditions, self.data['type_modalites_diffusion'])
+        self.assertEqual(self.doctorate.thesis_distribution_embargo_date, datetime.date(2025, 1, 16))
+        self.assertEqual(
+            self.doctorate.thesis_distribution_additional_limitation_for_specific_chapters,
+            self.data['limitations_additionnelles_chapitres'],
+        )
+        self.assertEqual(
+            self.doctorate.thesis_distribution_acceptation_content,
+            self.data['modalites_diffusion_acceptees'],
+        )
+        self.assertEqual(self.doctorate.thesis_distribution_accepted_on, datetime.date(2025, 1, 2))
+
+        self.assertEqual(
+            self.doctorate.thesis_distribution_authorization_status,
+            ChoixStatutAutorisationDiffusionThese.DIFFUSION_SOUMISE.name,
+        )
+
+        contact_jury_promoter = JuryActor.objects.filter(
+            process__doctorate_from_jury_group=self.doctorate,
+            is_lead_promoter=True,
+        ).first()
+
+        self.assertIsNotNone(contact_jury_promoter)
+
+        # Check that the contact supervisor is invited
+        group = self.doctorate.thesis_distribution_authorization_group
+        self.assertIsNotNone(group)
+
+        actors: QuerySet[Actor] = group.actors.all()
+        self.assertEqual(len(actors), 1)
+
+        self.assertEqual(actors[0].person, contact_jury_promoter.person)
+        self.assertEqual(actors[0].thesisdistributionauthorizationactor.rejection_reason, '')
+        self.assertEqual(actors[0].thesisdistributionauthorizationactor.internal_comment, '')
+        self.assertEqual(actors[0].thesisdistributionauthorizationactor.role, RoleActeur.PROMOTEUR.name)
+        self.assertEqual(actors[0].comment, '')
+
+        states: QuerySet[StateHistory] = actors[0].states.all()
+        self.assertEqual(len(states), 1)
+
+        self.assertEqual(states[0].state, SignatureState.INVITED.name)
+
+        # Check that notifications have been sent
+        self.assertEqual(EmailNotification.objects.count(), 2)
+
+        notification_to_supervisor = EmailNotification.objects.filter(person=actors[0].person).first()
+        self.assertIsNotNone(notification_to_supervisor)
+
+        email_message = message_from_string(notification_to_supervisor.payload)
+        to_email_addresses = [address for _, address in getaddresses(email_message.get_all('To', [('', '')]))]
+        self.assertEqual(len(to_email_addresses), 1)
+        self.assertEqual(to_email_addresses[0], actors[0].email)
+
+        notification_to_student = EmailNotification.objects.filter(person=self.doctorate.student).first()
+        self.assertIsNotNone(notification_to_student)
+
+        email_message = message_from_string(notification_to_student.payload)
+        to_email_addresses = [address for _, address in getaddresses(email_message.get_all('To', [('', '')]))]
+        cc_email_addresses = [address for _, address in getaddresses(email_message.get_all('Cc', [('', '')]))]
+        self.assertEqual(to_email_addresses[0], self.doctorate.student.email)
+        self.assertEqual(len(to_email_addresses), 1)
+        self.assertEqual(cc_email_addresses[0], self.sceb_manager.email)
+        self.assertEqual(len(cc_email_addresses), 1)

@@ -390,6 +390,45 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '404':
           $ref: '#/components/responses/NotFound'
+    post:
+      operationId: send_authorization_distribution_to_promoter
+      description: Update the authorization_distribution and send it to the lead supervisor
+      parameters:
+      - in: path
+        name: uuid
+        schema:
+          type: string
+          format: uuid
+        required: true
+      - $ref: '#/components/parameters/Accept-Language'
+      - $ref: '#/components/parameters/X-User-FirstName'
+      - $ref: '#/components/parameters/X-User-LastName'
+      - $ref: '#/components/parameters/X-User-Email'
+      - $ref: '#/components/parameters/X-User-GlobalID'
+      tags:
+      - doctorate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SendAuthorizationDistributionToPromoter'
+        required: true
+      security:
+      - tokenAuth: []
+      - Token: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParcoursDoctoralIdentityDTO'
+          description: ''
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
     put:
       operationId: update_authorization_distribution
       description: Update the authorization_distribution
@@ -5162,6 +5201,35 @@ components:
       - start_date
       - title
       - website
+    SendAuthorizationDistributionToPromoter:
+      type: object
+      description: Contains the submitted data to update the distribution authorization
+        and send it to the lead supervisor.
+      properties:
+        sources_financement:
+          type: string
+        resume_anglais:
+          type: string
+        resume_autre_langue:
+          type: string
+        langue_redaction_these:
+          type: string
+        mots_cles:
+          type: array
+          items:
+            type: string
+        type_modalites_diffusion:
+          type: string
+        date_embargo:
+          type: string
+          format: date
+          nullable: true
+        limitations_additionnelles_chapitres:
+          type: string
+        modalites_diffusion_acceptees:
+          type: string
+      required:
+      - mots_cles
     Service:
       type: object
       description: |-
@@ -5252,12 +5320,27 @@ components:
           type: string
         matricule:
           type: string
+        prenom:
+          type: string
+        nom:
+          type: string
+        email:
+          type: string
+        genre:
+          type: string
+        institution:
+          type: string
         role:
           type: string
         signature:
           $ref: '#/components/schemas/SignatureAutorisationDiffusionTheseDTONested'
       required:
+      - email
+      - genre
+      - institution
       - matricule
+      - nom
+      - prenom
       - role
       - signature
       - uuid
@@ -5271,10 +5354,9 @@ components:
       properties:
         etat:
           type: string
-        date:
+        date_heure:
           type: string
           format: date-time
-          nullable: true
         commentaire_externe:
           type: string
         commentaire_interne:
@@ -5284,6 +5366,7 @@ components:
       required:
       - commentaire_externe
       - commentaire_interne
+      - date_heure
       - etat
       - motif_refus
     SignatureMembreJuryDTONested:

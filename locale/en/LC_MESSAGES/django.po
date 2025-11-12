@@ -2254,9 +2254,6 @@ msgstr ""
 msgid "Name of the manager sending the email"
 msgstr ""
 
-msgid "Name of the person sending the email"
-msgstr ""
-
 msgid "Name of the president of the jury (eventually with the title)"
 msgstr ""
 
@@ -2287,13 +2284,22 @@ msgstr ""
 msgid "No"
 msgstr ""
 
+msgid "No ADRE manager has been found."
+msgstr ""
+
 msgid "No CDD found for this doctorate."
+msgstr ""
+
+msgid "No SCEB manager has been found."
 msgstr ""
 
 msgid "No auditor are set for this training."
 msgstr ""
 
 msgid "No confirmation paper yet"
+msgstr ""
+
+msgid "No contact supervisor has been found."
 msgstr ""
 
 msgid "No defence"
@@ -2710,6 +2716,18 @@ msgctxt "other gender"
 msgid "Professor"
 msgstr ""
 
+msgctxt "female gender"
+msgid "Professor"
+msgstr ""
+
+msgctxt "male gender"
+msgid "Professor"
+msgstr ""
+
+msgctxt "other gender"
+msgid "Professor"
+msgstr ""
+
 msgid "Program proposition"
 msgstr ""
 
@@ -2885,6 +2903,15 @@ msgid "Reference DIAL.Pr"
 msgstr "Référence DIAL.Pr"
 
 msgid "Refusal reason"
+msgstr ""
+
+msgid "Refusal reason of ADRE"
+msgstr ""
+
+msgid "Refusal reason of SCEB"
+msgstr ""
+
+msgid "Refusal reason of the supervisor"
 msgstr ""
 
 msgid "Refuse activity"
@@ -3564,6 +3591,9 @@ msgstr ""
 msgid "The distribution authorization has not been found."
 msgstr ""
 
+msgid "The distribution authorization must not be submitted to do this action."
+msgstr ""
+
 msgid "The distribution conditions type must be specified."
 msgstr ""
 
@@ -3687,7 +3717,7 @@ msgid ""
 "The minutes will be uploaded by the thesis exam board secretary or chair."
 msgstr ""
 
-msgid "The name of the signatory"
+msgid "The name of the supervisor"
 msgstr ""
 
 #, python-format
@@ -3796,10 +3826,10 @@ msgstr ""
 msgid "The thesis language must be specified."
 msgstr ""
 
-msgid "The title of the signatory"
+msgid "The title of the supervisor"
 msgstr ""
 
-msgid "The title of the signatory (in lowercase)"
+msgid "The title of the supervisor (in lowercase)"
 msgstr ""
 
 msgid "There can be no more CA members in the supervision group."

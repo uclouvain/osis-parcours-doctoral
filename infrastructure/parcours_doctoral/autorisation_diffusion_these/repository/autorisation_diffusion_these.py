@@ -30,6 +30,7 @@ from django.db.models import Prefetch
 from osis_signature.models import Actor, Process, StateHistory
 
 from base.models.person import Person
+from parcours_doctoral.constants import INSTITUTION_UCL
 from parcours_doctoral.ddd.autorisation_diffusion_these.domain.model.autorisation_diffusion_these import (
     AutorisationDiffusionThese,
     AutorisationDiffusionTheseIdentity,
@@ -39,6 +40,7 @@ from parcours_doctoral.ddd.autorisation_diffusion_these.domain.model.autorisatio
 from parcours_doctoral.ddd.autorisation_diffusion_these.domain.model.enums import (
     ChoixEtatSignature,
     ChoixStatutAutorisationDiffusionThese,
+    RoleActeur,
     TypeModalitesDiffusionThese,
 )
 from parcours_doctoral.ddd.autorisation_diffusion_these.domain.validator.exceptions import (
@@ -116,11 +118,16 @@ class AutorisationDiffusionTheseRepository(IAutorisationDiffusionTheseRepository
                 [
                     SignataireAutorisationDiffusionTheseDTO(
                         matricule=actor.person.global_id,
+                        prenom=actor.person.first_name,
+                        nom=actor.person.last_name,
+                        email=actor.person.email,
+                        genre=actor.person.gender,
                         role=actor.thesisdistributionauthorizationactor.role,
+                        institution=INSTITUTION_UCL,
                         uuid=str(actor.uuid),
                         signature=SignatureAutorisationDiffusionTheseDTO(
                             etat=actor.last_state,
-                            date=actor.last_state_date,
+                            date_heure=actor.last_state_date,
                             commentaire_externe=actor.comment,
                             commentaire_interne=actor.thesisdistributionauthorizationactor.internal_comment,
                             motif_refus=actor.thesisdistributionauthorizationactor.rejection_reason,
@@ -157,23 +164,22 @@ class AutorisationDiffusionTheseRepository(IAutorisationDiffusionTheseRepository
             modalites_diffusion_acceptees=db_object.thesis_distribution_acceptation_content,
             modalites_diffusion_acceptees_le=db_object.thesis_distribution_accepted_on,
             signataires=(
-                [
-                    SignataireAutorisationDiffusionThese(
+                {
+                    RoleActeur[actor.thesisdistributionauthorizationactor.role]: SignataireAutorisationDiffusionThese(
                         matricule=actor.person.global_id,
-                        role=actor.thesisdistributionauthorizationactor.role,
+                        role=RoleActeur[actor.thesisdistributionauthorizationactor.role],
                         uuid=actor.uuid,
                         signature=SignatureAutorisationDiffusionThese(
                             etat=ChoixEtatSignature[actor.last_state],
-                            date=actor.last_state_date,
                             commentaire_externe=actor.comment,
                             commentaire_interne=actor.thesisdistributionauthorizationactor.internal_comment,
                             motif_refus=actor.thesisdistributionauthorizationactor.rejection_reason,
                         ),
                     )
                     for actor in db_object.thesis_distribution_authorization_group.loaded_actors
-                ]
+                }
                 if db_object.thesis_distribution_authorization_group
-                else []
+                else {}
             ),
         )
 
@@ -219,7 +225,7 @@ class AutorisationDiffusionTheseRepository(IAutorisationDiffusionTheseRepository
 
         # Retrieve the persons related to new actors
         persons_to_fetch = [
-            actor.matricule for actor in entity.signataires if actor.matricule not in persons_by_global_id
+            actor.matricule for actor in entity.signataires.values() if actor.matricule not in persons_by_global_id
         ]
 
         if persons_to_fetch:
@@ -228,13 +234,13 @@ class AutorisationDiffusionTheseRepository(IAutorisationDiffusionTheseRepository
 
         state_histories: list[StateHistory] = []
 
-        for actor in entity.signataires:
+        for actor in entity.signataires.values():
             db_actor: ThesisDistributionAuthorizationActor = (
                 db_actors.pop(actor.uuid).thesisdistributionauthorizationactor
                 if actor.uuid in db_actors
                 else ThesisDistributionAuthorizationActor(
                     uuid=actor.uuid,
-                    process=doctorate.thesis_distribution_authorization_group_id,
+                    process=doctorate.thesis_distribution_authorization_group,
                 )
             )
 
@@ -250,14 +256,14 @@ class AutorisationDiffusionTheseRepository(IAutorisationDiffusionTheseRepository
 
             # Create a new state if it has been updated
             if getattr(db_actor, 'last_state', None) != actor.signature.etat.name:
-                state_histories.append(StateHistory(state=actor.signature.etat.name, actor_id=db_actor.id))
+                state_histories.append(StateHistory(state=actor.signature.etat.name, actor=db_actor))
 
             db_actor.save()
 
         # Remove old members
         if db_actors:
             Actor.objects.filter(
-                process_id=doctorate.thesis_distribution_authorization_group_id,
+                process=doctorate.thesis_distribution_authorization_group,
                 uuid__in=db_actors.keys(),
             ).delete()
 

@@ -49,3 +49,18 @@ class EncoderFormulaireAutorisationDiffusionTheseCommand(interface.CommandReques
     date_embargo: Optional[datetime.date]
     limitations_additionnelles_chapitres: Optional[str]
     modalites_diffusion_acceptees: Optional[str]
+
+
+@attr.dataclass(frozen=True, slots=True)
+class EnvoyerFormulaireAutorisationDiffusionTheseAuPromoteurReferenceCommand(interface.CommandRequest):
+    uuid_parcours_doctoral: str
+
+    sources_financement: Optional[str]
+    resume_anglais: Optional[str]
+    resume_autre_langue: Optional[str]
+    langue_redaction_these: Optional[str]
+    mots_cles: List[Optional[str]]
+    type_modalites_diffusion: Optional[str]
+    date_embargo: Optional[datetime.date]
+    limitations_additionnelles_chapitres: Optional[str]
+    modalites_diffusion_acceptees: Optional[str]

@@ -91,3 +91,35 @@ class AutorisationDiffusionTheseNonTrouveException(BusinessException):
     def __init__(self, **kwargs):
         message = _('The distribution authorization has not been found.')
         super().__init__(message=message, **kwargs)
+
+
+class AutorisationDiffusionTheseDejaSoumiseException(BusinessException):
+    status_code = "AUTORISATION-DIFFUSION-THESE-9"
+
+    def __init__(self, **kwargs):
+        message = _('The distribution authorization must not be submitted to do this action.')
+        super().__init__(message=message, **kwargs)
+
+
+class PromoteurReferenceNonTrouveException(BusinessException):
+    status_code = "AUTORISATION-DIFFUSION-THESE-10"
+
+    def __init__(self, **kwargs):
+        message = _('No contact supervisor has been found.')
+        super().__init__(message=message, **kwargs)
+
+
+class GestionnaireADRENonTrouveException(BusinessException):
+    status_code = "AUTORISATION-DIFFUSION-THESE-11"
+
+    def __init__(self, **kwargs):
+        message = _('No ADRE manager has been found.')
+        super().__init__(message=message, **kwargs)
+
+
+class GestionnaireSCEBNonTrouveException(BusinessException):
+    status_code = "AUTORISATION-DIFFUSION-THESE-12"
+
+    def __init__(self, **kwargs):
+        message = _('No SCEB manager has been found.')
+        super().__init__(message=message, **kwargs)

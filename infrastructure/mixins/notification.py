@@ -24,16 +24,21 @@
 #
 # ##############################################################################
 import datetime
+from email.utils import formataddr
 from typing import Optional
 
 from django.conf import settings
+from django.db.models import Value
+from django.db.models.functions import Concat
 from django.utils.functional import Promise, lazy
 from django.utils.translation import get_language, override
 from osis_async.models import AsyncTask
 from osis_notification.contrib.handlers import WebNotificationHandler
 from osis_notification.contrib.notification import WebNotification
+from osis_signature.models import Actor
 
 from admission.utils import get_doctoral_cdd_managers
+from base.auth.roles.program_manager import ProgramManager
 from base.forms.utils.datefield import DATE_FORMAT, DATETIME_FORMAT
 from base.models.person import Person
 from parcours_doctoral.models import ParcoursDoctoral, ParcoursDoctoralSupervisionActor
@@ -45,6 +50,19 @@ class NotificationMixin:
     ADRI_EMAIL = 'adri@uclouvain.be'
 
     @classmethod
+    def _get_program_managers_names(cls, education_group_id):
+        """
+        Return the concatenation of the names of the program managers of the specified education group.
+        :param education_group_id: The id of the education group
+        :return: a string containing the names of the managers
+        """
+        return ', '.join(
+            ProgramManager.objects.filter(education_group_id=education_group_id)
+            .annotate(person_name=Concat('person__first_name', Value(' '), 'person__last_name'))
+            .values_list('person_name', flat=True)
+        )
+
+    @classmethod
     def _format_date(cls, date: Optional[datetime.date]) -> str:
         """Format the date to be used in email notifications"""
         return datetime.date.strftime(date, DATE_FORMAT) if date else ''
@@ -53,6 +71,10 @@ class NotificationMixin:
     def _format_datetime(cls, date_time: Optional[datetime.datetime]) -> str:
         """Format the datetime to be used in email notifications"""
         return datetime.date.strftime(date_time, DATETIME_FORMAT) if date_time else ''
+
+    @classmethod
+    def _format_email(cls, actor: Actor | Person):
+        return formataddr((f'{actor.first_name} {actor.last_name}', actor.email))
 
     @classmethod
     def _get_supervision_actor_email_cc(cls, parcours_doctoral: ParcoursDoctoral):

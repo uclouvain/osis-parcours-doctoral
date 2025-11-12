@@ -1,4 +1,4 @@
-##############################################################################
+# ##############################################################################
 #
 #    OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
@@ -22,17 +22,24 @@
 #    at the root of the source code of this program.  If not,
 #    see http://www.gnu.org/licenses/.
 #
-##############################################################################
-from ._should_autorisation_diffusion_these_etre_completee import *
-from ._should_statut_autorisation_diffusion_these_etre_valide import *
+# ##############################################################################
+from parcours_doctoral.ddd.autorisation_diffusion_these.domain.service.i_autorisation_diffusion_these import (
+    IAutorisationDiffusionTheseService,
+)
+from parcours_doctoral.ddd.domain.model.parcours_doctoral import (
+    ParcoursDoctoralIdentity,
+)
 
-__all__ = [
-    'ShouldSourcesFinancementEtreCompletees',
-    'ShouldResumeAnglaisEtreCompletee',
-    'ShouldLangueRedactionTheseEtreCompletee',
-    'ShouldMotsClesEtreCompletes',
-    'ShouldTypeModalitesDiffusionEtreCompletee',
-    'ShouldDateEmbargoModalitesDiffusionEtreCompletee',
-    'ShouldModalitesDiffusionEtreAcceptees',
-    'ShouldStatutAutorisationDiffusionTheseEtreNonSoumis',
-]
+
+class AutorisationDiffusionTheseInMemoryService(IAutorisationDiffusionTheseService):
+    @classmethod
+    def recuperer_matricule_gestionnaire_sceb(cls) -> str:
+        return '012345'
+
+    @classmethod
+    def recuperer_matricule_gestionnaire_adre(cls) -> str:
+        return '123456'
+
+    @classmethod
+    def recuperer_matricule_promoteur_reference(cls, parcours_doctoral_id: ParcoursDoctoralIdentity) -> str:
+        return '234567'
