@@ -74,6 +74,7 @@ urlpatterns = [
     path('doctorate/<uuid:uuid>/private-defense/<uuid:private_defense_uuid>', views.PrivateDefenseAPIView),
     # Authorization distribution
     path('doctorate/<uuid:uuid>/authorization-distribution', views.AuthorizationDistributionAPIView),
+    path('doctorate/<uuid:uuid>/manuscript-validation', views.ManuscriptValidationApiView),
     # Public defense
     path('doctorate/<uuid:uuid>/public-defense', views.PublicDefenseAPIView),
     path('doctorate/<uuid:uuid>/public-defense/minutes', views.PublicDefenseMinutesAPIView),
