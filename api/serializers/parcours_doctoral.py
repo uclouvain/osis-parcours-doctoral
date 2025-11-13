@@ -87,6 +87,8 @@ class ParcoursDoctoralDTOSerializer(DTOSerializer):
                 # Authorization distribution
                 'retrieve_authorization_distribution',
                 'update_authorization_distribution',
+                # Manuscript validation
+                'validate_manuscript',
                 # Public defense
                 'retrieve_public_defense',
                 'update_public_defense',
@@ -143,6 +145,8 @@ class ParcoursDoctoralRechercheDTOSerializer(DTOSerializer):
                     # Authorization distribution
                     'retrieve_authorization_distribution',
                     'update_authorization_distribution',
+                    # Manuscript validation
+                    'validate_manuscript',
                     # Public defense
                     'retrieve_public_defense',
                     'update_public_defense',

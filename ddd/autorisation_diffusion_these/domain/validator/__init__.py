@@ -24,6 +24,7 @@
 #
 ##############################################################################
 from ._should_autorisation_diffusion_these_etre_completee import *
+from ._should_signature_etre_valide import *
 from ._should_statut_autorisation_diffusion_these_etre_valide import *
 
 __all__ = [
@@ -34,5 +35,9 @@ __all__ = [
     'ShouldTypeModalitesDiffusionEtreCompletee',
     'ShouldDateEmbargoModalitesDiffusionEtreCompletee',
     'ShouldModalitesDiffusionEtreAcceptees',
-    'ShouldStatutAutorisationDiffusionTheseEtreNonSoumis',
+    'ShouldAutorisationDiffusionTheseEtreModifiable',
+    'ShouldStatutAutorisationDiffusionTheseEtreSoumis',
+    'ShouldSignataireEtrePromoteur',
+    'ShouldSignataireEtreInvite',
+    'ShouldMotifRefusEtreSpecifie',
 ]

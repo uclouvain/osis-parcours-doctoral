@@ -222,6 +222,12 @@ PARCOURS_DOCTORAL_ACTION_LINKS = {
         'method': 'PUT',
         'params': ['uuid'],
     },
+    # Manuscript validation
+    'validate_manuscript': {
+        'path_name': 'parcours_doctoral_api_v1:manuscript-validation',
+        'method': 'PUT',
+        'params': ['uuid'],
+    },
     # Public defense
     'retrieve_public_defense': {
         'path_name': 'parcours_doctoral_api_v1:public-defense',

@@ -32,7 +32,10 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 
 from base.models.enums.entity_type import EntityType
-from base.tests.factories.entity_version import EntityVersionFactory, MainEntityVersionFactory
+from base.tests.factories.entity_version import (
+    EntityVersionFactory,
+    MainEntityVersionFactory,
+)
 from base.tests.factories.person import PersonFactory
 from parcours_doctoral.ddd.domain.model.enums import (
     ChoixDoctoratDejaRealise,
@@ -234,6 +237,7 @@ class ParcoursDoctoralAPIViewTestCase(CheckActionLinksMixin, APITestCase):
                 'retrieve_public_defense_minutes_canvas',
                 'submit_public_defense_minutes',
                 'update_authorization_distribution',
+                'validate_manuscript',
             ],
         )
 
