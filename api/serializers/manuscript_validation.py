@@ -24,12 +24,21 @@
 #
 # ##############################################################################
 
-from .encoder_formulaire_autorisation_diffusion_these_service import (
-    encoder_formulaire_autorisation_diffusion_these,
+from base.utils.serializers import DTOSerializer
+from parcours_doctoral.ddd.autorisation_diffusion_these.commands import (
+    RefuserTheseParPromoteurReferenceCommand,
 )
-from .envoyer_formulaire_autorisation_diffusion_these_au_promoteur_reference_service import (
-    envoyer_formulaire_autorisation_diffusion_these_au_promoteur_reference,
-)
-from .refuser_these_par_promoteur_reference_service import (
-    refuser_these_par_promoteur_reference,
-)
+
+__all__ = [
+    'RejectThesisByLeadPromoterSerializer',
+]
+
+
+class RejectThesisByLeadPromoterSerializer(DTOSerializer):
+    """Contains the submitted data to reject the thesis by the lead supervisor."""
+
+    uuid_parcours_doctoral = None
+    matricule_promoteur = None
+
+    class Meta:
+        source = RefuserTheseParPromoteurReferenceCommand

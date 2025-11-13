@@ -36,3 +36,8 @@ class INotification(interface.DomainService):
     @abstractmethod
     def inviter_promoteur_reference(cls, autorisation_diffusion_these: AutorisationDiffusionThese) -> None:
         raise NotImplementedError
+
+    @classmethod
+    @abstractmethod
+    def refuser_these_par_promoteur_reference(cls, autorisation_diffusion_these: AutorisationDiffusionThese) -> None:
+        raise NotImplementedError

@@ -123,3 +123,35 @@ class GestionnaireSCEBNonTrouveException(BusinessException):
     def __init__(self, **kwargs):
         message = _('No SCEB manager has been found.')
         super().__init__(message=message, **kwargs)
+
+
+class AutorisationDiffusionTheseNonSoumiseException(BusinessException):
+    status_code = "AUTORISATION-DIFFUSION-THESE-13"
+
+    def __init__(self, **kwargs):
+        message = _('The distribution authorization must be submitted to do this action.')
+        super().__init__(message=message, **kwargs)
+
+
+class NonPromoteurException(BusinessException):
+    status_code = "AUTORISATION-DIFFUSION-THESE-14"
+
+    def __init__(self, **kwargs):
+        message = _('You must be supervisor to do this action.')
+        super().__init__(message=message, **kwargs)
+
+
+class SignataireNonInviteException(BusinessException):
+    status_code = "AUTORISATION-DIFFUSION-THESE-15"
+
+    def __init__(self, **kwargs):
+        message = _('You must be invited to do this action.')
+        super().__init__(message=message, **kwargs)
+
+
+class MotifRefusNonSpecifieException(BusinessException):
+    status_code = "AUTORISATION-DIFFUSION-THESE-16"
+
+    def __init__(self, **kwargs):
+        message = _('The grounds for denied must be specified.')
+        super().__init__(message=message, **kwargs)

@@ -1582,6 +1582,45 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '404':
           $ref: '#/components/responses/NotFound'
+  /doctorate/{uuid}/manuscript-validation:
+    put:
+      operationId: reject_thesis_by_lead_promoter
+      description: Reject the thesis (lead promoter)
+      parameters:
+      - in: path
+        name: uuid
+        schema:
+          type: string
+          format: uuid
+        required: true
+      - $ref: '#/components/parameters/Accept-Language'
+      - $ref: '#/components/parameters/X-User-FirstName'
+      - $ref: '#/components/parameters/X-User-LastName'
+      - $ref: '#/components/parameters/X-User-Email'
+      - $ref: '#/components/parameters/X-User-GlobalID'
+      tags:
+      - doctorate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RejectThesisByLeadPromoter'
+      security:
+      - tokenAuth: []
+      - Token: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParcoursDoctoralIdentityDTO'
+          description: ''
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
   /doctorate/{uuid}/private-defense:
     get:
       operationId: retrieve_private_defenses
@@ -4351,6 +4390,8 @@ components:
               $ref: '#/components/schemas/ActionLink'
             update_authorization_distribution:
               $ref: '#/components/schemas/ActionLink'
+            validate_manuscript:
+              $ref: '#/components/schemas/ActionLink'
             retrieve_public_defense:
               $ref: '#/components/schemas/ActionLink'
             update_public_defense:
@@ -4484,6 +4525,8 @@ components:
             retrieve_authorization_distribution:
               $ref: '#/components/schemas/ActionLink'
             update_authorization_distribution:
+              $ref: '#/components/schemas/ActionLink'
+            validate_manuscript:
               $ref: '#/components/schemas/ActionLink'
             retrieve_public_defense:
               $ref: '#/components/schemas/ActionLink'
@@ -4840,6 +4883,16 @@ components:
       required:
       - motif_refus
       - uuid_membre
+    RejectThesisByLeadPromoter:
+      type: object
+      description: Contains the submitted data to reject the thesis by the lead supervisor.
+      properties:
+        motif_refus:
+          type: string
+        commentaire_interne:
+          type: string
+        commentaire_externe:
+          type: string
     RenvoyerInvitationSignatureExterne:
       type: object
       description: |-
