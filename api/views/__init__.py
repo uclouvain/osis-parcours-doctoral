@@ -33,6 +33,7 @@ from .dashboard import *
 from .external import *
 from .funding import *
 from .jury import *
+from .manuscript_validation import *
 from .parcours_doctoral import *
 from .private_defense import *
 from .project import *
