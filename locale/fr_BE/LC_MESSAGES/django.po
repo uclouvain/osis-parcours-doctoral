@@ -3818,10 +3818,13 @@ msgid "The assessment enrollment has not been found"
 msgstr "L'inscription à l'évaluation n'a pas été trouvée"
 
 msgid "The authorization distribution is not in progress."
-msgstr "L'autorisation du diffusion n'est pas en cours."
+msgstr "L'autorisation de diffusion n'est pas en cours."
+
+msgid "The authorization distribution must be sent to the promoter."
+msgstr "L'autorisation de diffusion doit avoir été envoyée au promoteur."
 
 msgid "The authorization distribution must not be submitted."
-msgstr "L'autorisation du diffusion ne doit pas être soumise."
+msgstr "L'autorisation de diffusion ne doit pas être soumise."
 
 msgid ""
 "The authorized publications and their valuation in credits are specified on "
@@ -3935,6 +3938,11 @@ msgstr "Le titre définitif de la thèse est le suivant :"
 msgid "The distribution authorization has not been found."
 msgstr "L'autorisation de diffusion de thèse n'a pas été trouvée."
 
+msgid "The distribution authorization must be submitted to do this action."
+msgstr ""
+"L'autorisation de diffusion de thèse doit être soumise pour réaliser "
+"cette action."
+
 msgid "The distribution authorization must not be submitted to do this action."
 msgstr ""
 "L'autorisation de diffusion de thèse ne doit pas être soumise pour réaliser "
@@ -4012,6 +4020,9 @@ msgstr ""
 "Le format des documents à téléverser ci-dessous peut varier d'une commission "
 "doctorale de domaine (CDD) à l'autre. Informez-vous sur le site web de votre "
 "CDD ou auprès de votre gestionnaire de doctorat."
+
+msgid "The grounds for denied must be specified."
+msgstr "Les motifs de refus doivent être spécifiés."
 
 msgid "The jury is not in progress"
 msgstr "Le jury n'est pas en cours"
@@ -4690,6 +4701,12 @@ msgstr ""
 msgid "You must be a member of the jury to access this doctoral training"
 msgstr ""
 "Vous devez être membre du comité pour accéder à cette formation doctorale"
+
+msgid "You must be invited to do this action."
+msgstr "Vous devez être invité pour réaliser cette action."
+
+msgid "You must be supervisor to do this action."
+msgstr "Vous devez être promoteur·trice pour réaliser cette action"
 
 msgid "You must be the contact supervisor to access this doctoral training"
 msgstr ""
