@@ -64,3 +64,13 @@ class EnvoyerFormulaireAutorisationDiffusionTheseAuPromoteurReferenceCommand(int
     date_embargo: Optional[datetime.date]
     limitations_additionnelles_chapitres: Optional[str]
     modalites_diffusion_acceptees: Optional[str]
+
+
+@attr.dataclass(frozen=True, slots=True)
+class RefuserTheseParPromoteurReferenceCommand(interface.CommandRequest):
+    uuid_parcours_doctoral: str
+
+    matricule_promoteur: str
+    motif_refus: Optional[str]
+    commentaire_interne: Optional[str]
+    commentaire_externe: Optional[str]

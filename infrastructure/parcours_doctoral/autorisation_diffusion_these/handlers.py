@@ -54,4 +54,11 @@ COMMAND_HANDLERS = {
             notification=Notification(),
         )
     ),
+    RefuserTheseParPromoteurReferenceCommand: (
+        lambda msg_bus, cmd: refuser_these_par_promoteur_reference(
+            cmd,
+            autorisation_diffusion_these_repository=AutorisationDiffusionTheseRepository(),
+            notification=Notification(),
+        )
+    ),
 }

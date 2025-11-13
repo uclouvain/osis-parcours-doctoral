@@ -79,7 +79,7 @@ class AutorisationDiffusionTheseValidatorList(TwoStepsMultipleBusinessExceptionL
                 modalites_diffusion_acceptees=self.modalites_diffusion_acceptees,
                 modalites_diffusion_acceptees_le=self.modalites_diffusion_acceptees_le,
             ),
-            ShouldStatutAutorisationDiffusionTheseEtreNonSoumis(
+            ShouldAutorisationDiffusionTheseEtreModifiable(
                 statut=self.statut,
             ),
         ]
@@ -94,7 +94,33 @@ class ModifierAutorisationDiffusionTheseValidatorList(TwoStepsMultipleBusinessEx
 
     def get_invariants_validators(self) -> List[BusinessValidator]:
         return [
-            ShouldStatutAutorisationDiffusionTheseEtreNonSoumis(
+            ShouldAutorisationDiffusionTheseEtreModifiable(
                 statut=self.statut,
+            ),
+        ]
+
+
+@attr.dataclass(frozen=True, slots=True)
+class RefuserTheseParPromoteurValidatorList(TwoStepsMultipleBusinessExceptionListValidator):
+    statut: ChoixStatutAutorisationDiffusionThese
+    motifs_refus: str
+    signataire: 'SignataireAutorisationDiffusionThese'
+
+    def get_data_contract_validators(self) -> List[BusinessValidator]:
+        return []
+
+    def get_invariants_validators(self) -> List[BusinessValidator]:
+        return [
+            ShouldStatutAutorisationDiffusionTheseEtreSoumis(
+                statut=self.statut,
+            ),
+            ShouldSignataireEtrePromoteur(
+                signataire=self.signataire,
+            ),
+            ShouldSignataireEtreInvite(
+                signataire=self.signataire,
+            ),
+            ShouldMotifRefusEtreSpecifie(
+                motifs_refus=self.motifs_refus,
             ),
         ]
