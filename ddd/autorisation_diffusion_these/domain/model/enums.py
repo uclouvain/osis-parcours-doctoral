@@ -53,6 +53,14 @@ class ChoixStatutAutorisationDiffusionThese(ChoiceEnum):
     DIFFUSION_REFUSEE_SCEB = _('Distribution refused by SCEB')
 
 
+CHOIX_STATUTS_AUTORISATION_DIFFUSION_THESE_MODIFIABLE_PAR_DOCTORANT = {
+    ChoixStatutAutorisationDiffusionThese.DIFFUSION_NON_SOUMISE.name,
+    ChoixStatutAutorisationDiffusionThese.DIFFUSION_REFUSEE_PROMOTEUR.name,
+    ChoixStatutAutorisationDiffusionThese.DIFFUSION_REFUSEE_ADRE.name,
+    ChoixStatutAutorisationDiffusionThese.DIFFUSION_REFUSEE_SCEB.name,
+}
+
+
 class ChoixEtatSignature(ChoiceEnum):
     NOT_INVITED = _('NOT_INVITED')  # Pas encore envoyée au signataire
     INVITED = _('INVITED')  # Envoyée au signataire

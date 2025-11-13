@@ -28,33 +28,44 @@ import attr
 
 from base.ddd.utils.business_validator import BusinessValidator
 from parcours_doctoral.ddd.autorisation_diffusion_these.domain.model.enums import (
-    CHOIX_STATUTS_AUTORISATION_DIFFUSION_THESE_MODIFIABLE_PAR_DOCTORANT,
-    ChoixStatutAutorisationDiffusionThese,
+    ChoixEtatSignature,
+    RoleActeur,
 )
 from parcours_doctoral.ddd.autorisation_diffusion_these.domain.validator.exceptions import (
-    AutorisationDiffusionTheseDejaSoumiseException,
-    AutorisationDiffusionTheseNonSoumiseException,
+    MotifRefusNonSpecifieException,
+    NonPromoteurException,
+    SignataireNonInviteException,
 )
 
 __all__ = [
-    'ShouldAutorisationDiffusionTheseEtreModifiable',
-    'ShouldStatutAutorisationDiffusionTheseEtreSoumis',
+    'ShouldSignataireEtrePromoteur',
+    'ShouldSignataireEtreInvite',
+    'ShouldMotifRefusEtreSpecifie',
 ]
 
 
 @attr.dataclass(frozen=True, slots=True)
-class ShouldAutorisationDiffusionTheseEtreModifiable(BusinessValidator):
-    statut: ChoixStatutAutorisationDiffusionThese
+class ShouldSignataireEtrePromoteur(BusinessValidator):
+    signataire: 'SignataireAutorisationDiffusionThese'
 
     def validate(self, *args, **kwargs):
-        if self.statut.name not in CHOIX_STATUTS_AUTORISATION_DIFFUSION_THESE_MODIFIABLE_PAR_DOCTORANT:
-            raise AutorisationDiffusionTheseDejaSoumiseException
+        if self.signataire.entity_id.role != RoleActeur.PROMOTEUR:
+            raise NonPromoteurException
 
 
 @attr.dataclass(frozen=True, slots=True)
-class ShouldStatutAutorisationDiffusionTheseEtreSoumis(BusinessValidator):
-    statut: ChoixStatutAutorisationDiffusionThese
+class ShouldSignataireEtreInvite(BusinessValidator):
+    signataire: 'SignataireAutorisationDiffusionThese'
 
     def validate(self, *args, **kwargs):
-        if self.statut != ChoixStatutAutorisationDiffusionThese.DIFFUSION_SOUMISE:
-            raise AutorisationDiffusionTheseNonSoumiseException
+        if self.signataire.signature.etat != ChoixEtatSignature.INVITED:
+            raise SignataireNonInviteException
+
+
+@attr.dataclass(frozen=True, slots=True)
+class ShouldMotifRefusEtreSpecifie(BusinessValidator):
+    motifs_refus: str
+
+    def validate(self, *args, **kwargs):
+        if not self.motifs_refus:
+            raise MotifRefusNonSpecifieException

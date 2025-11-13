@@ -32,6 +32,7 @@ from admission.ddd.admission.doctorat.preparation.domain.model.enums import (
 )
 from osis_role.errors import predicate_failed_msg
 from parcours_doctoral.ddd.autorisation_diffusion_these.domain.model.enums import (
+    CHOIX_STATUTS_AUTORISATION_DIFFUSION_THESE_MODIFIABLE_PAR_DOCTORANT,
     ChoixStatutAutorisationDiffusionThese,
 )
 from parcours_doctoral.ddd.domain.model.enums import (
@@ -176,7 +177,16 @@ def authorization_distribution_is_not_submitted(self, user: User, obj: ParcoursD
     return (
         not hasattr(obj, 'thesis_distribution_authorization')
         or obj.thesis_distribution_authorization.status
-        == ChoixStatutAutorisationDiffusionThese.DIFFUSION_NON_SOUMISE.name
+        in CHOIX_STATUTS_AUTORISATION_DIFFUSION_THESE_MODIFIABLE_PAR_DOCTORANT
+    )
+
+
+@predicate(bind=True)
+@predicate_failed_msg(message=_("The authorization distribution must be sent to the promoter."))
+def authorization_distribution_is_submitted_to_promoter(self, user: User, obj: ParcoursDoctoral):
+    return (
+        hasattr(obj, 'thesis_distribution_authorization')
+        and obj.thesis_distribution_authorization.status == ChoixStatutAutorisationDiffusionThese.DIFFUSION_SOUMISE.name
     )
 
 

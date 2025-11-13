@@ -38,6 +38,7 @@ from parcours_doctoral.ddd.autorisation_diffusion_these.domain.model.enums impor
 from parcours_doctoral.ddd.autorisation_diffusion_these.domain.validator.validator_by_business_action import (
     AutorisationDiffusionTheseValidatorList,
     ModifierAutorisationDiffusionTheseValidatorList,
+    RefuserTheseParPromoteurValidatorList,
 )
 
 
@@ -65,13 +66,15 @@ class SignataireAutorisationDiffusionThese(interface.Entity):
             etat=ChoixEtatSignature.INVITED,
         )
 
-    def refuser(self, motif_refus):
+    def refuser(self, motif_refus: str, commentaire_interne: str, commentaire_externe: str):
         self.signature = SignatureAutorisationDiffusionThese(
             etat=ChoixEtatSignature.DECLINED,
             motif_refus=motif_refus,
+            commentaire_interne=commentaire_interne,
+            commentaire_externe=commentaire_externe,
         )
 
-    def accepter(self, commentaire_interne, commentaire_externe):
+    def accepter(self, commentaire_interne: str, commentaire_externe: str):
         self.signature = SignatureAutorisationDiffusionThese(
             etat=ChoixEtatSignature.APPROVED,
             commentaire_interne=commentaire_interne,
@@ -173,3 +176,26 @@ class AutorisationDiffusionThese(interface.RootEntity):
 
         signataire = self.recuperer_signataire(role=RoleActeur.PROMOTEUR, matricule=matricule_promoteur_reference)
         signataire.inviter()
+
+    def refuser_these_par_promoteur_reference(
+        self,
+        matricule_promoteur: str,
+        motif_refus: str,
+        commentaire_interne: str,
+        commentaire_externe: str,
+    ):
+        signataire = self.recuperer_signataire(role=RoleActeur.PROMOTEUR, matricule=matricule_promoteur)
+
+        RefuserTheseParPromoteurValidatorList(
+            signataire=signataire,
+            motifs_refus=motif_refus,
+            statut=self.statut,
+        ).validate()
+
+        signataire.refuser(
+            motif_refus=motif_refus,
+            commentaire_interne=commentaire_interne,
+            commentaire_externe=commentaire_externe,
+        )
+
+        self.statut = ChoixStatutAutorisationDiffusionThese.DIFFUSION_REFUSEE_PROMOTEUR
