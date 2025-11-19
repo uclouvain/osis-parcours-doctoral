@@ -26,7 +26,6 @@
 
 from django.views.generic import TemplateView
 from osis_history.contrib.mixins import HistoryEntryListAPIMixin
-from rules.contrib.views import LoginRequiredMixin
 
 from osis_role.contrib.views import APIPermissionRequiredMixin
 from parcours_doctoral.utils.cache import get_cached_parcours_doctoral_perm_obj
@@ -40,7 +39,7 @@ __all__ = [
 __namespace__ = False
 
 
-class HistoryAPIView(LoginRequiredMixin, APIPermissionRequiredMixin, HistoryEntryListAPIMixin):
+class HistoryAPIView(APIPermissionRequiredMixin, HistoryEntryListAPIMixin):
     urlpatterns = 'history-api'
     permission_mapping = {
         'GET': 'parcours_doctoral.view_historyentry',

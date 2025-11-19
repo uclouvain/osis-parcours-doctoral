@@ -337,7 +337,7 @@ class ParcoursDoctoralListTestView(QueriesAssertionsMixin, TestCase):
             form.fields['commission_proximite'].choices,
             [
                 ALL_FEMININE_EMPTY_CHOICE[0],
-                ['CDSS', ChoixCommissionProximiteCDSS.choices()],
+                ('CDSS', list(ChoixCommissionProximiteCDSS.choices())),
             ],
         )
 
@@ -586,7 +586,7 @@ class ParcoursDoctoralListTestView(QueriesAssertionsMixin, TestCase):
         form = response.context['form']
         self.assertCountEqual(
             form.fields['matricule_doctorant'].widget.choices,
-            [[self.student.global_id, f'{self.student.last_name}, {self.student.first_name}']],
+            [(self.student.global_id, f'{self.student.last_name}, {self.student.first_name}')],
         )
 
     def test_filter_by_admission_type(self):
@@ -642,7 +642,7 @@ class ParcoursDoctoralListTestView(QueriesAssertionsMixin, TestCase):
         self.assertCountEqual(
             form.fields['uuid_promoteur'].widget.choices,
             [
-                [str(other_promoter.uuid), f'{other_promoter.last_name}, {other_promoter.first_name}'],
+                (str(other_promoter.uuid), f'{other_promoter.last_name}, {other_promoter.first_name}'),
             ],
         )
 
@@ -655,7 +655,7 @@ class ParcoursDoctoralListTestView(QueriesAssertionsMixin, TestCase):
         self.assertCountEqual(
             form.fields['uuid_promoteur'].widget.choices,
             [
-                [str(self.promoter.uuid), f'{self.promoter.person.last_name}, {self.promoter.person.first_name}'],
+                (str(self.promoter.uuid), f'{self.promoter.person.last_name}, {self.promoter.person.first_name}'),
             ],
         )
 
@@ -673,10 +673,10 @@ class ParcoursDoctoralListTestView(QueriesAssertionsMixin, TestCase):
         self.assertCountEqual(
             form.fields['uuid_president_jury'].widget.choices,
             [
-                [
+                (
                     str(external_jury_member.uuid),
                     f'{external_jury_member.last_name}, {external_jury_member.first_name}',
-                ],
+                ),
             ],
         )
 
@@ -691,10 +691,10 @@ class ParcoursDoctoralListTestView(QueriesAssertionsMixin, TestCase):
         self.assertCountEqual(
             form.fields['uuid_president_jury'].widget.choices,
             [
-                [
+                (
                     str(external_promoter_jury_member.uuid),
                     f'{external_promoter_jury_member.last_name}, {external_promoter_jury_member.first_name}',
-                ],
+                ),
             ],
         )
 
@@ -709,10 +709,10 @@ class ParcoursDoctoralListTestView(QueriesAssertionsMixin, TestCase):
         self.assertCountEqual(
             form.fields['uuid_president_jury'].widget.choices,
             [
-                [
+                (
                     str(internal_promoter_jury_member.uuid),
                     f'{internal_promoter_jury_member.person.last_name}, {internal_promoter_jury_member.person.first_name}',
-                ],
+                ),
             ],
         )
 
@@ -727,10 +727,10 @@ class ParcoursDoctoralListTestView(QueriesAssertionsMixin, TestCase):
         self.assertCountEqual(
             form.fields['uuid_president_jury'].widget.choices,
             [
-                [
+                (
                     str(internal_jury_member.uuid),
                     f'{internal_jury_member.person.last_name}, {internal_jury_member.person.first_name}',
-                ],
+                ),
             ],
         )
 

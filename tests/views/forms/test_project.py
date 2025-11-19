@@ -36,7 +36,6 @@ from admission.ddd.admission.doctorat.preparation.domain.model.doctorat_formatio
 )
 from admission.ddd.admission.doctorat.preparation.domain.model.enums import (
     ChoixTypeAdmission,
-    ChoixTypeContratTravail,
 )
 from admission.tests.factories import DoctorateAdmissionFactory
 from base.forms.utils import EMPTY_CHOICE, FIELD_REQUIRED_MESSAGE
@@ -47,14 +46,13 @@ from base.tests.factories.entity_version import EntityVersionFactory
 from base.tests.factories.program_manager import ProgramManagerFactory
 from parcours_doctoral.ddd.domain.model.enums import (
     ChoixDoctoratDejaRealise,
-    ChoixTypeFinancement,
 )
 from parcours_doctoral.models import ParcoursDoctoral
 from parcours_doctoral.tests.factories.parcours_doctoral import (
     FormationFactory,
     ParcoursDoctoralFactory,
 )
-from reference.tests.factories.language import LanguageFactory
+from reference.tests.factories.language import EnglishLanguageFactory, FrenchLanguageFactory
 from reference.tests.factories.scholarship import DoctorateScholarshipFactory
 
 
@@ -95,8 +93,8 @@ class ProjectFormViewTestCase(TestCase):
             training=cls.training, type=ChoixTypeAdmission.PRE_ADMISSION.name, candidate=cls.admission.candidate
         )
 
-        cls.language = LanguageFactory()
-        cls.other_language = LanguageFactory()
+        cls.language = FrenchLanguageFactory()
+        cls.other_language = EnglishLanguageFactory()
 
     def setUp(self):
         # Mock documents
