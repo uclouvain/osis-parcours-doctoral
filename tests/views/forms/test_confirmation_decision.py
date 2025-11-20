@@ -355,8 +355,7 @@ class DoctorateConfirmationDecisionViewTestCase(TestCase):
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertFormError(
-            response,
-            'form',
+            response.context['form'],
             None,
             [
                 "L'épreuve de confirmation n'est pas complète : veuillez vous assurer que la date "
@@ -374,7 +373,7 @@ class DoctorateConfirmationDecisionViewTestCase(TestCase):
 
         response = self.client.post(url, {'subject': 'The subject of the message'})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertFormError(response, 'form', 'body', ['Ce champ est obligatoire.'])
+        self.assertFormError(response.context['form'], 'body', ['Ce champ est obligatoire.'])
 
     def test_get_confirmation_retaking_decision_without_confirmation_paper(self):
         url = reverse(self.retaking_path, args=[self.parcours_doctoral_without_confirmation_paper.uuid])
@@ -488,8 +487,7 @@ class DoctorateConfirmationDecisionViewTestCase(TestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertFormError(
-            response,
-            'form',
+            response.context['form'],
             None,
             [
                 "L'épreuve de confirmation n'est pas complète : veuillez vous assurer que la date "
@@ -516,4 +514,4 @@ class DoctorateConfirmationDecisionViewTestCase(TestCase):
         }
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertFormError(response, 'form', 'date_limite', ['Ce champ est obligatoire.'])
+        self.assertFormError(response.context['form'], 'date_limite', ['Ce champ est obligatoire.'])

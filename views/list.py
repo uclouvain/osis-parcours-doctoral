@@ -25,7 +25,7 @@
 # ##############################################################################
 import datetime
 
-from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.core.cache import cache
 from django.core.exceptions import NON_FIELD_ERRORS
 from django.utils.functional import cached_property
@@ -50,7 +50,7 @@ __all__ = [
 ]
 
 
-class ParcoursDoctoralList(LoginRequiredMixin, PermissionRequiredMixin, HtmxMixin, FormMixin, ListView):
+class ParcoursDoctoralList(PermissionRequiredMixin, HtmxMixin, FormMixin, ListView):
     template_name = 'parcours_doctoral/list/list.html'
     htmx_template_name = 'parcours_doctoral/list/list_block.html'
     permission_required = 'parcours_doctoral.view_parcours_doctoral'

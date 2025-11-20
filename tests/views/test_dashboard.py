@@ -738,7 +738,7 @@ class DashboardViewTestCase(TestCase):
         form = response.context['form']
 
         proximity_commission_expected_choices.append(
-            [f'{ENTITY_CDE} / {ENTITY_CLSM}', ChoixCommissionProximiteCDEouCLSM.choices()]
+            (f'{ENTITY_CDE} / {ENTITY_CLSM}', list(ChoixCommissionProximiteCDEouCLSM.choices()))
         )
         self.assertEqual(form.fields['commission_proximite'].choices, proximity_commission_expected_choices)
 
@@ -785,7 +785,7 @@ class DashboardViewTestCase(TestCase):
         # Check form
         form = response.context['form']
 
-        proximity_commission_expected_choices.append([ENTITY_CDSS, ChoixCommissionProximiteCDSS.choices()])
+        proximity_commission_expected_choices.append((ENTITY_CDSS, list(ChoixCommissionProximiteCDSS.choices())))
         self.assertEqual(form.fields['commission_proximite'].choices, proximity_commission_expected_choices)
 
         cdds_commission_expected_choices.append(('CDSS', 'CDSS'))
@@ -804,7 +804,7 @@ class DashboardViewTestCase(TestCase):
         # Check form
         form = response.context['form']
 
-        proximity_commission_expected_choices.append([ENTITY_SCIENCES, ChoixSousDomaineSciences.choices()])
+        proximity_commission_expected_choices.append((ENTITY_SCIENCES, list(ChoixSousDomaineSciences.choices())))
         self.assertEqual(form.fields['commission_proximite'].choices, proximity_commission_expected_choices)
 
         cdds_commission_expected_choices.append(('SC3DP', 'SC3DP'))
