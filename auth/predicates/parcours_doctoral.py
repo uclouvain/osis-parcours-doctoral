@@ -249,7 +249,7 @@ def is_part_of_education_group(self, user: User, obj: ParcoursDoctoral):
     if not hasattr(user, cache_key):
         setattr(user, cache_key, self.context['role_qs'].get_education_groups_affected())
 
-    return obj.training.education_group_id in getattr(user, cache_key)
+    return obj is not None and obj.training.education_group_id in getattr(user, cache_key)
 
 
 @predicate(bind=True)

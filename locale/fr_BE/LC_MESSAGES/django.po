@@ -659,11 +659,10 @@ msgstr "Chimie"
 
 msgctxt "CategorieActivite"
 msgid "COMMUNICATION"
-msgstr "Communications orale (hors conférence)"
+msgstr "Communications orale"
 
 msgid "COMMUNICATION types"
-msgstr ""
-"Types d'activité pour la catégorie Communication orale (hors conférence)"
+msgstr "Types d'activité pour la catégorie Communication orale"
 
 msgid "COMPLEMENTARY_TRAINING"
 msgstr "Formation complémentaire"
@@ -935,10 +934,6 @@ msgstr "Pays"
 
 msgid "Course"
 msgstr "Cours"
-
-msgctxt "admission"
-msgid "Course"
-msgstr "Formation"
 
 msgctxt "parcours_doctoral"
 msgid "Course"
@@ -4043,6 +4038,13 @@ msgstr "Total"
 
 msgid "Total hourly volume"
 msgstr "Volume horaire total"
+
+msgid "Total volume"
+msgstr "Volume total"
+
+msgctxt "admission"
+msgid "Training"
+msgstr "Formation"
 
 msgid "Training activities"
 msgstr "Activités de formation"

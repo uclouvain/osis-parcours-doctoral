@@ -88,6 +88,7 @@ class TrainingListMixin(ParcoursDoctoralViewMixin, FormMixin):
         context = super().get_context_data(**kwargs)
         context['activities'] = self.get_queryset()
         context['categories'] = get_category_labels(self.parcours_doctoral.training.management_entity_id)
+        context['categories_dict'] = dict(context['categories'])
         context['statuses'] = StatutActivite.choices
         return context
 
