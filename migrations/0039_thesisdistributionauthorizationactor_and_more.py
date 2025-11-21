@@ -52,129 +52,138 @@ class Migration(migrations.Migration):
             ],
             bases=("osis_signature.actor",),
         ),
-        migrations.AddField(
-            model_name="parcoursdoctoral",
-            name="thesis_distribution_authorization_status",
-            field=models.CharField(
-                choices=[
-                    ("DIFFUSION_NON_SOUMISE", "Not submitted distribution"),
-                    ("DIFFUSION_SOUMISE", "Submitted distribution"),
-                    (
-                        "DIFFUSION_VALIDEE_PROMOTEUR",
-                        "Distribution validated by the supervisor",
+        migrations.CreateModel(
+            name="ThesisDistributionAuthorization",
+            fields=[
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
                     ),
-                    (
-                        "DIFFUSION_REFUSEE_PROMOTEUR",
-                        "Distribution refused by the supervisor",
+                ),
+                (
+                    "status",
+                    models.CharField(
+                        choices=[
+                            ("DIFFUSION_NON_SOUMISE", "Not submitted distribution"),
+                            ("DIFFUSION_SOUMISE", "Submitted distribution"),
+                            (
+                                "DIFFUSION_VALIDEE_PROMOTEUR",
+                                "Distribution validated by the supervisor",
+                            ),
+                            (
+                                "DIFFUSION_REFUSEE_PROMOTEUR",
+                                "Distribution refused by the supervisor",
+                            ),
+                            (
+                                "DIFFUSION_VALIDEE_ADRE",
+                                "Distribution validated by ADRE",
+                            ),
+                            ("DIFFUSION_REFUSEE_ADRE", "Distribution refused by ADRE"),
+                            (
+                                "DIFFUSION_VALIDEE_SCEB",
+                                "Distribution validated by SCEB",
+                            ),
+                            ("DIFFUSION_REFUSEE_SCEB", "Distribution refused by SCEB"),
+                        ],
+                        default="DIFFUSION_NON_SOUMISE",
+                        max_length=30,
+                        verbose_name="Status",
                     ),
-                    ("DIFFUSION_VALIDEE_ADRE", "Distribution validated by ADRE"),
-                    ("DIFFUSION_REFUSEE_ADRE", "Distribution refused by ADRE"),
-                    ("DIFFUSION_VALIDEE_SCEB", "Distribution validated by SCEB"),
-                    ("DIFFUSION_REFUSEE_SCEB", "Distribution refused by SCEB"),
-                ],
-                default="DIFFUSION_NON_SOUMISE",
-                max_length=30,
-                verbose_name="Status of the authorization distribution thesis",
-            ),
-        ),
-        migrations.AddField(
-            model_name="parcoursdoctoral",
-            name="funding_sources",
-            field=models.CharField(
-                blank=True,
-                default="",
-                max_length=100,
-                verbose_name="Sources of funding throughout PhD",
-            ),
-        ),
-        migrations.AddField(
-            model_name="parcoursdoctoral",
-            name="thesis_distribution_accepted_on",
-            field=models.DateField(
-                blank=True,
-                null=True,
-                verbose_name="Thesis distribution acceptation date",
-            ),
-        ),
-        migrations.AddField(
-            model_name="parcoursdoctoral",
-            name="thesis_distribution_acceptation_content",
-            field=models.TextField(
-                blank=True,
-                default='',
-                verbose_name="Thesis distribution acceptation content",
-            ),
-        ),
-        migrations.AddField(
-            model_name="parcoursdoctoral",
-            name="thesis_distribution_additional_limitation_for_specific_chapters",
-            field=models.TextField(
-                blank=True,
-                default="",
-                verbose_name="Additional limitation for certain specific chapters",
-            ),
-        ),
-        migrations.AddField(
-            model_name="parcoursdoctoral",
-            name="thesis_distribution_authorization_group",
-            field=osis_signature.contrib.fields.SignatureProcessField(
-                editable=False,
-                null=True,
-                on_delete=django.db.models.deletion.CASCADE,
-                related_name="doctorate_from_thesis_distribution_authorization_group",
-                to="osis_signature.process",
-            ),
-        ),
-        migrations.AddField(
-            model_name="parcoursdoctoral",
-            name="thesis_distribution_conditions",
-            field=models.CharField(
-                blank=True,
-                choices=[
-                    ("ACCES_LIBRE", "Free access (Internet)"),
-                    ("ACCES_RESTREINT", "Limited access (Intranet)"),
-                    ("ACCES_INTERDIT", "Forbidden access"),
-                    ("ACCES_EMBARGO", "Embargo access"),
-                ],
-                default="",
-                max_length=30,
-                verbose_name="Thesis distribution conditions",
-            ),
-        ),
-        migrations.AddField(
-            model_name="parcoursdoctoral",
-            name="thesis_distribution_embargo_date",
-            field=models.DateField(blank=True, null=True, verbose_name="Thesis distribution embargo date"),
-        ),
-        migrations.AddField(
-            model_name="parcoursdoctoral",
-            name="thesis_keywords",
-            field=django.contrib.postgres.fields.ArrayField(
-                base_field=models.CharField(max_length=50),
-                blank=True,
-                default=list,
-                size=None,
-            ),
-        ),
-        migrations.AddField(
-            model_name="parcoursdoctoral",
-            name="thesis_summary_in_english",
-            field=models.CharField(
-                blank=True,
-                default="",
-                max_length=100,
-                verbose_name="Summary in English",
-            ),
-        ),
-        migrations.AddField(
-            model_name="parcoursdoctoral",
-            name="thesis_summary_in_other_language",
-            field=models.CharField(
-                blank=True,
-                default="",
-                max_length=100,
-                verbose_name="Summary in other language",
-            ),
+                ),
+                (
+                    "funding_sources",
+                    models.CharField(
+                        blank=True,
+                        default="",
+                        max_length=100,
+                        verbose_name="Sources of funding throughout PhD",
+                    ),
+                ),
+                (
+                    "thesis_summary_in_english",
+                    models.CharField(
+                        blank=True,
+                        default="",
+                        max_length=100,
+                        verbose_name="Summary in English",
+                    ),
+                ),
+                (
+                    "thesis_summary_in_other_language",
+                    models.CharField(
+                        blank=True,
+                        default="",
+                        max_length=100,
+                        verbose_name="Summary in other language",
+                    ),
+                ),
+                (
+                    "thesis_keywords",
+                    django.contrib.postgres.fields.ArrayField(
+                        base_field=models.CharField(max_length=50),
+                        blank=True,
+                        default=list,
+                        size=None,
+                    ),
+                ),
+                (
+                    "conditions",
+                    models.CharField(
+                        blank=True,
+                        choices=[
+                            ("ACCES_LIBRE", "Free access (Internet)"),
+                            ("ACCES_RESTREINT", "Limited access (Intranet)"),
+                            ("ACCES_INTERDIT", "Forbidden access"),
+                            ("ACCES_EMBARGO", "Embargo access"),
+                        ],
+                        default="",
+                        max_length=30,
+                        verbose_name="Conditions",
+                    ),
+                ),
+                (
+                    "embargo_date",
+                    models.DateField(blank=True, null=True, verbose_name="Embargo date"),
+                ),
+                (
+                    "additional_limitation_for_specific_chapters",
+                    models.TextField(
+                        blank=True,
+                        default="",
+                        verbose_name="Additional limitation for certain specific chapters",
+                    ),
+                ),
+                (
+                    "accepted_on",
+                    models.DateField(blank=True, null=True, verbose_name="Acceptation date"),
+                ),
+                (
+                    "acceptation_content",
+                    models.TextField(blank=True, default="", verbose_name="Acceptation content"),
+                ),
+                (
+                    "signature_group",
+                    osis_signature.contrib.fields.SignatureProcessField(
+                        editable=False,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="osis_signature.process",
+                    ),
+                ),
+                (
+                    "parcours_doctoral",
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="parcours_doctoral.parcoursdoctoral",
+                        verbose_name="Doctorate",
+                        related_name='thesis_distribution_authorization',
+                    ),
+                ),
+            ],
         ),
         migrations.AlterField(
             model_name="parcoursdoctoral",

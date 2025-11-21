@@ -26,8 +26,8 @@
 
 from parcours_doctoral.auth.roles.adre_manager import AdreManager
 from parcours_doctoral.auth.roles.sceb_manager import ScebManager
-from parcours_doctoral.ddd.autorisation_diffusion_these.domain.service.i_autorisation_diffusion_these import (
-    IAutorisationDiffusionTheseService,
+from parcours_doctoral.ddd.autorisation_diffusion_these.domain.service.i_signataires_initiaux_autorisation_diffusion_these_service import (  # noqa: E501
+    ISignatairesInitiauxAutorisationDiffusionTheseService,
 )
 from parcours_doctoral.ddd.autorisation_diffusion_these.domain.validator.exceptions import (
     GestionnaireADRENonTrouveException,
@@ -40,9 +40,9 @@ from parcours_doctoral.ddd.domain.model.parcours_doctoral import (
 from parcours_doctoral.models import JuryActor
 
 
-class AutorisationDiffusionTheseService(IAutorisationDiffusionTheseService):
+class SignatairesInitiauxAutorisationDiffusionTheseService(ISignatairesInitiauxAutorisationDiffusionTheseService):
     @classmethod
-    def recuperer_matricule_gestionnaire_sceb(cls) -> str:
+    def recuperer_fgs_gestionnaire_sceb(cls) -> str:
         global_id = ScebManager.objects.values_list('person__global_id', flat=True).first()
 
         if not global_id:
@@ -51,7 +51,7 @@ class AutorisationDiffusionTheseService(IAutorisationDiffusionTheseService):
         return global_id
 
     @classmethod
-    def recuperer_matricule_gestionnaire_adre(cls) -> str:
+    def recuperer_fgs_gestionnaire_adre(cls) -> str:
         global_id = AdreManager.objects.values_list('person__global_id', flat=True).first()
 
         if not global_id:
@@ -60,7 +60,7 @@ class AutorisationDiffusionTheseService(IAutorisationDiffusionTheseService):
         return global_id
 
     @classmethod
-    def recuperer_matricule_promoteur_reference(cls, parcours_doctoral_id: ParcoursDoctoralIdentity) -> str:
+    def recuperer_fgs_promoteur_reference(cls, parcours_doctoral_id: ParcoursDoctoralIdentity) -> str:
         global_id = (
             JuryActor.objects.filter(
                 is_promoter=True,

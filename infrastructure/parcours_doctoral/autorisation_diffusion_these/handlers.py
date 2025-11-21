@@ -27,10 +27,10 @@ from parcours_doctoral.ddd.autorisation_diffusion_these.commands import *
 from parcours_doctoral.ddd.autorisation_diffusion_these.use_case.read import *
 from parcours_doctoral.ddd.autorisation_diffusion_these.use_case.write import *
 
-from .domain.service.autorisation_diffusion_these import (
-    AutorisationDiffusionTheseService,
-)
 from .domain.service.notification import Notification
+from .domain.service.signataires_initiaux_autorisation_diffusion_these_service import (
+    SignatairesInitiauxAutorisationDiffusionTheseService,
+)
 from .repository.autorisation_diffusion_these import (
     AutorisationDiffusionTheseRepository,
 )
@@ -50,7 +50,7 @@ COMMAND_HANDLERS = {
         lambda msg_bus, cmd: envoyer_formulaire_autorisation_diffusion_these_au_promoteur_reference(
             cmd,
             autorisation_diffusion_these_repository=AutorisationDiffusionTheseRepository(),
-            autorisation_diffusion_these_service=AutorisationDiffusionTheseService(),
+            signataires_initiaux_autorisation_diffusion_these_service=SignatairesInitiauxAutorisationDiffusionTheseService(),  # noqa: E501
             notification=Notification(),
         )
     ),

@@ -33,7 +33,9 @@ from parcours_doctoral.ddd.autorisation_diffusion_these.commands import (
 from parcours_doctoral.ddd.autorisation_diffusion_these.domain.model.autorisation_diffusion_these import (
     AutorisationDiffusionThese,
 )
-from parcours_doctoral.ddd.autorisation_diffusion_these.domain.model.enums import RoleActeur
+from parcours_doctoral.ddd.autorisation_diffusion_these.domain.model.enums import (
+    RoleActeur,
+)
 from parcours_doctoral.ddd.autorisation_diffusion_these.domain.validator.exceptions import (
     AutorisationDiffusionTheseNonTrouveException,
 )
@@ -41,7 +43,8 @@ from parcours_doctoral.ddd.autorisation_diffusion_these.dtos.autorisation_diffus
     AutorisationDiffusionTheseDTO,
 )
 from parcours_doctoral.ddd.autorisation_diffusion_these.test.factory.autorisation_diffusion_these import (
-    AutorisationDiffusionTheseFactory, SignataireAutorisationDiffusionTheseFactory,
+    AutorisationDiffusionTheseFactory,
+    SignataireAutorisationDiffusionTheseFactory,
 )
 from parcours_doctoral.infrastructure.message_bus_in_memory import (
     message_bus_in_memory_instance,
@@ -68,9 +71,7 @@ class TestRecupererAutorisationDiffusionThese(SimpleTestCase):
         self.addCleanup(self.authorisation_diffusion_these_repository.reset)
         self.parcours_doctoral = ParcoursDoctoralInMemoryRepository.entities[0]
         self.autorisation_diffusion_these: AutorisationDiffusionThese = AutorisationDiffusionTheseFactory(
-            signataires={
-                RoleActeur.PROMOTEUR: SignataireAutorisationDiffusionTheseFactory()
-            }
+            signataires={RoleActeur.PROMOTEUR: SignataireAutorisationDiffusionTheseFactory()}
         )
         self.authorisation_diffusion_these_repository.save(self.autorisation_diffusion_these)
         self.parametres_cmd = {
@@ -107,9 +108,9 @@ class TestRecupererAutorisationDiffusionThese(SimpleTestCase):
         self.assertEqual(len(resultat.signataires), 1)
         signataire_original = self.autorisation_diffusion_these.signataires[RoleActeur.PROMOTEUR]
         signataire_recupere = resultat.signataires[0]
-        self.assertEqual(signataire_recupere.uuid, str(signataire_original.uuid))
-        self.assertEqual(signataire_recupere.matricule, signataire_original.matricule)
-        self.assertEqual(signataire_recupere.role, signataire_original.role.name)
+        self.assertEqual(signataire_recupere.uuid, '')
+        self.assertEqual(signataire_recupere.matricule, signataire_original.entity_id.matricule)
+        self.assertEqual(signataire_recupere.role, signataire_original.entity_id.role.name)
         self.assertEqual(signataire_recupere.signature.etat, signataire_original.signature.etat.name)
         self.assertEqual(
             signataire_recupere.signature.commentaire_externe,
