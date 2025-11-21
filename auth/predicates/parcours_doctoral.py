@@ -174,7 +174,9 @@ def authorization_distribution_is_in_progress(self, user: User, obj: ParcoursDoc
 @predicate_failed_msg(message=_("The authorization distribution must not be submitted."))
 def authorization_distribution_is_not_submitted(self, user: User, obj: ParcoursDoctoral):
     return (
-        obj.thesis_distribution_authorization_status == ChoixStatutAutorisationDiffusionThese.DIFFUSION_NON_SOUMISE.name
+        not hasattr(obj, 'thesis_distribution_authorization')
+        or obj.thesis_distribution_authorization.status
+        == ChoixStatutAutorisationDiffusionThese.DIFFUSION_NON_SOUMISE.name
     )
 
 

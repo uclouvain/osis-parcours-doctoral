@@ -32,6 +32,7 @@ from parcours_doctoral.ddd.autorisation_diffusion_these.domain.model.autorisatio
     AutorisationDiffusionThese,
     AutorisationDiffusionTheseIdentity,
     SignataireAutorisationDiffusionThese,
+    SignataireAutorisationDiffusionTheseIdentity,
     SignatureAutorisationDiffusionThese,
 )
 from parcours_doctoral.ddd.autorisation_diffusion_these.domain.model.enums import (
@@ -55,14 +56,21 @@ class SignatureAutorisationDiffusionTheseFactory(factory.Factory):
         abstract = False
 
 
+class SignataireAutorisationDiffusionTheseIdentityFactory(factory.Factory):
+    class Meta:
+        model = SignataireAutorisationDiffusionTheseIdentity
+        abstract = False
+
+    matricule = factory.LazyFunction(generate_global_id)
+    role = RoleActeur.PROMOTEUR
+
+
 class SignataireAutorisationDiffusionTheseFactory(factory.Factory):
     class Meta:
         model = SignataireAutorisationDiffusionThese
         abstract = False
 
-    matricule = factory.LazyFunction(generate_global_id)
-    role = RoleActeur.PROMOTEUR
-    uuid = factory.LazyFunction(lambda: uuid.uuid4())
+    entity_id = factory.SubFactory(SignataireAutorisationDiffusionTheseIdentityFactory)
     signature = factory.SubFactory(SignatureAutorisationDiffusionTheseFactory)
 
 

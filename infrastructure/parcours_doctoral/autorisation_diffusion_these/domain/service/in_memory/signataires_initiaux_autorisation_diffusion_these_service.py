@@ -23,26 +23,25 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from abc import abstractmethod
-
-from osis_common.ddd import interface
+from parcours_doctoral.ddd.autorisation_diffusion_these.domain.service.i_signataires_initiaux_autorisation_diffusion_these_service import (  # noqa: E501
+    ISignatairesInitiauxAutorisationDiffusionTheseService,
+)
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import (
     ParcoursDoctoralIdentity,
 )
 
 
-class IAutorisationDiffusionTheseService(interface.DomainService):
+class SignatairesInitiauxAutorisationDiffusionTheseInMemoryService(
+    ISignatairesInitiauxAutorisationDiffusionTheseService,
+):
     @classmethod
-    @abstractmethod
-    def recuperer_matricule_gestionnaire_sceb(cls) -> str:
-        raise NotImplementedError
+    def recuperer_fgs_gestionnaire_sceb(cls) -> str:
+        return '012345'
 
     @classmethod
-    @abstractmethod
-    def recuperer_matricule_gestionnaire_adre(cls) -> str:
-        raise NotImplementedError
+    def recuperer_fgs_gestionnaire_adre(cls) -> str:
+        return '123456'
 
     @classmethod
-    @abstractmethod
-    def recuperer_matricule_promoteur_reference(cls, parcours_doctoral_id: ParcoursDoctoralIdentity) -> str:
-        raise NotImplementedError
+    def recuperer_fgs_promoteur_reference(cls, parcours_doctoral_id: ParcoursDoctoralIdentity) -> str:
+        return '234567'

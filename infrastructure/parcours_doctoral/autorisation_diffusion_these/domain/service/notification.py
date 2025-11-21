@@ -46,6 +46,9 @@ from parcours_doctoral.mail_templates.thesis_distribution_authorization import (
     PARCOURS_DOCTORAL_EMAIL_THESIS_DISTRIBUTION_AUTHORIZATION_PROMOTER_INVITATION_CONFIRMATION,
 )
 from parcours_doctoral.models import ParcoursDoctoral
+from parcours_doctoral.models.thesis_distribution_authorization import (
+    ThesisDistributionAuthorizationActor,
+)
 from parcours_doctoral.utils.url import (
     get_parcours_doctoral_link_back,
     get_parcours_doctoral_link_front,
@@ -56,32 +59,21 @@ class Notification(NotificationMixin, INotification):
     @classmethod
     def get_doctorate(cls, doctorate_uuid) -> ParcoursDoctoral:
         """Return the doctorate"""
-        doctorate = (
+        doctorate: ParcoursDoctoral = (
             ParcoursDoctoral.objects.select_related(
                 'student',
                 'training',
-                'thesis_distribution_authorization_group',
+                'thesis_distribution_authorization',
             )
             .annotate_training_management_entity_title()
-            .prefetch_related(
-                Prefetch(
-                    'thesis_distribution_authorization_group__actors',
-                    queryset=Actor.objects.select_related('thesisdistributionauthorizationactor', 'person'),
-                    to_attr='loaded_actors',
-                )
-            )
             .get(uuid=doctorate_uuid)
         )
 
-        if doctorate.thesis_distribution_authorization_group:
-            loaded_actors_by_role = {
-                actor.thesisdistributionauthorizationactor.role: actor.thesisdistributionauthorizationactor
-                for actor in doctorate.thesis_distribution_authorization_group.loaded_actors
-            }
-        else:
-            loaded_actors_by_role = {}
+        signature_actors = ThesisDistributionAuthorizationActor.objects.filter(
+            process_id=doctorate.thesis_distribution_authorization.signature_group_id,
+        ).select_related('person')
 
-        setattr(doctorate, 'loaded_actors_by_role', loaded_actors_by_role)
+        setattr(doctorate, 'loaded_actors_by_role', {actor.role: actor for actor in signature_actors})
 
         return doctorate
 
