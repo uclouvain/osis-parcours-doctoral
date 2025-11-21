@@ -234,6 +234,12 @@ msgstr ""
 msgid "Accept selected courses"
 msgstr ""
 
+msgid "Acceptation content"
+msgstr ""
+
+msgid "Acceptation date"
+msgstr ""
+
 msgctxt "publication-status"
 msgid "Accepted"
 msgstr ""
@@ -827,6 +833,9 @@ msgstr ""
 msgid "Concluded in"
 msgstr ""
 
+msgid "Conditions"
+msgstr ""
+
 msgid "Configuration saved."
 msgstr ""
 
@@ -1346,6 +1355,9 @@ msgid "Email:"
 msgstr ""
 
 msgid "Embargo access"
+msgstr ""
+
+msgid "Embargo date"
 msgstr ""
 
 msgid "Enable complementary training tab"
@@ -2712,10 +2724,6 @@ msgstr ""
 msgid "Proclaimed"
 msgstr ""
 
-msgctxt "other gender"
-msgid "Professor"
-msgstr ""
-
 msgctxt "female gender"
 msgid "Professor"
 msgstr ""
@@ -3304,9 +3312,6 @@ msgstr ""
 msgid "Status changes"
 msgstr ""
 
-msgid "Status of the authorization distribution thesis"
-msgstr ""
-
 msgid "Status of the doctoral training"
 msgstr ""
 
@@ -3852,20 +3857,8 @@ msgstr ""
 msgid "Thesis defence"
 msgstr ""
 
-msgid "Thesis distribution acceptation content"
-msgstr ""
-
-msgid "Thesis distribution acceptation date"
-msgstr ""
-
 msgctxt "dashboard-category"
 msgid "Thesis distribution authorisation"
-msgstr ""
-
-msgid "Thesis distribution conditions"
-msgstr ""
-
-msgid "Thesis distribution embargo date"
 msgstr ""
 
 msgid "Thesis exam board opinion"

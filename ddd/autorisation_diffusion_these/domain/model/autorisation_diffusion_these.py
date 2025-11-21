@@ -49,11 +49,15 @@ class SignatureAutorisationDiffusionThese(interface.ValueObject):
     motif_refus: str = ''
 
 
-@attr.dataclass(slots=True)
-class SignataireAutorisationDiffusionThese(interface.ValueObject):
+@attr.dataclass(frozen=True, slots=True)
+class SignataireAutorisationDiffusionTheseIdentity(interface.EntityIdentity):
     matricule: str
     role: 'RoleActeur'
-    uuid: UUID = attr.Factory(uuid4)
+
+
+@attr.dataclass(slots=True)
+class SignataireAutorisationDiffusionThese(interface.Entity):
+    entity_id: SignataireAutorisationDiffusionTheseIdentity
     signature: SignatureAutorisationDiffusionThese = attr.Factory(SignatureAutorisationDiffusionThese)
 
     def inviter(self):
@@ -116,8 +120,10 @@ class AutorisationDiffusionThese(interface.RootEntity):
         """
         signataire = self.signataires.get(role)
 
-        if not signataire or signataire.matricule != matricule:
-            self.signataires[role] = SignataireAutorisationDiffusionThese(role=role, matricule=matricule)
+        if not signataire or signataire.entity_id.matricule != matricule:
+            self.signataires[role] = SignataireAutorisationDiffusionThese(
+                entity_id=SignataireAutorisationDiffusionTheseIdentity(role=role, matricule=matricule),
+            )
 
         return self.signataires[role]
 

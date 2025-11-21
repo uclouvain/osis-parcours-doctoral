@@ -56,6 +56,7 @@ from parcours_doctoral.ddd.autorisation_diffusion_these.domain.validator.excepti
 from parcours_doctoral.ddd.autorisation_diffusion_these.test.factory.autorisation_diffusion_these import (
     AutorisationDiffusionTheseFactory,
     SignataireAutorisationDiffusionTheseFactory,
+    SignataireAutorisationDiffusionTheseIdentityFactory,
     SignatureAutorisationDiffusionTheseFactory,
 )
 from parcours_doctoral.infrastructure.message_bus_in_memory import (
@@ -185,8 +186,8 @@ class TestEnvoyerFormulaireAutorisationDiffusionTheseAuPromoteurReference(Simple
         self.assertIsNone(autorisation.signataires.get(RoleActeur.ADRE))
 
         promoteur = autorisation.signataires.get(RoleActeur.PROMOTEUR)
-        self.assertEqual(promoteur.matricule, '234567')
-        self.assertEqual(promoteur.role, RoleActeur.PROMOTEUR)
+        self.assertEqual(promoteur.entity_id.matricule, '234567')
+        self.assertEqual(promoteur.entity_id.role, RoleActeur.PROMOTEUR)
         self.assertEqual(promoteur.signature.commentaire_interne, '')
         self.assertEqual(promoteur.signature.etat, ChoixEtatSignature.INVITED)
         self.assertEqual(promoteur.signature.commentaire_externe, '')
@@ -195,8 +196,10 @@ class TestEnvoyerFormulaireAutorisationDiffusionTheseAuPromoteurReference(Simple
     def test_should_modifier_promoteur_existant(self):
         self.autorisation_diffusion_these.signataires[RoleActeur.PROMOTEUR] = (
             SignataireAutorisationDiffusionTheseFactory(
-                role=RoleActeur.PROMOTEUR,
-                matricule='234567',
+                entity_id=SignataireAutorisationDiffusionTheseIdentityFactory(
+                    role=RoleActeur.PROMOTEUR,
+                    matricule='234567',
+                ),
                 signature=SignatureAutorisationDiffusionTheseFactory(
                     commentaire_interne='Commentaire interne',
                     commentaire_externe='Commentaire externe',
@@ -220,8 +223,8 @@ class TestEnvoyerFormulaireAutorisationDiffusionTheseAuPromoteurReference(Simple
         self.assertIsNone(autorisation.signataires.get(RoleActeur.ADRE))
 
         promoteur = autorisation.signataires.get(RoleActeur.PROMOTEUR)
-        self.assertEqual(promoteur.matricule, '234567')
-        self.assertEqual(promoteur.role, RoleActeur.PROMOTEUR)
+        self.assertEqual(promoteur.entity_id.matricule, '234567')
+        self.assertEqual(promoteur.entity_id.role, RoleActeur.PROMOTEUR)
         self.assertEqual(promoteur.signature.commentaire_interne, '')
         self.assertEqual(promoteur.signature.etat, ChoixEtatSignature.INVITED)
         self.assertEqual(promoteur.signature.commentaire_externe, '')

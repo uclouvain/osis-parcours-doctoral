@@ -32,11 +32,11 @@ from parcours_doctoral.ddd.autorisation_diffusion_these.domain.builder.identity_
 from parcours_doctoral.ddd.autorisation_diffusion_these.domain.model.autorisation_diffusion_these import (
     AutorisationDiffusionTheseIdentity,
 )
-from parcours_doctoral.ddd.autorisation_diffusion_these.domain.service.i_autorisation_diffusion_these import (
-    IAutorisationDiffusionTheseService,
-)
 from parcours_doctoral.ddd.autorisation_diffusion_these.domain.service.i_notification import (
     INotification,
+)
+from parcours_doctoral.ddd.autorisation_diffusion_these.domain.service.i_signataires_initiaux_autorisation_diffusion_these_service import (  # noqa: E501
+    ISignatairesInitiauxAutorisationDiffusionTheseService,
 )
 from parcours_doctoral.ddd.autorisation_diffusion_these.repository.i_autorisation_diffusion_these import (
     IAutorisationDiffusionTheseRepository,
@@ -49,14 +49,16 @@ from parcours_doctoral.ddd.builder.parcours_doctoral_identity import (
 def envoyer_formulaire_autorisation_diffusion_these_au_promoteur_reference(
     cmd: EnvoyerFormulaireAutorisationDiffusionTheseAuPromoteurReferenceCommand,
     autorisation_diffusion_these_repository: IAutorisationDiffusionTheseRepository,
-    autorisation_diffusion_these_service: IAutorisationDiffusionTheseService,
+    signataires_initiaux_autorisation_diffusion_these_service: ISignatairesInitiauxAutorisationDiffusionTheseService,
     notification: INotification,
 ) -> AutorisationDiffusionTheseIdentity:
     identity = AutorisationDiffusionTheseIdentityBuilder.build_from_uuid(uuid=cmd.uuid_parcours_doctoral)
     parcours_doctoral_identity = ParcoursDoctoralIdentityBuilder.build_from_uuid(uuid=cmd.uuid_parcours_doctoral)
     entity = autorisation_diffusion_these_repository.get(identity)
-    matricule_promoteur_reference = autorisation_diffusion_these_service.recuperer_matricule_promoteur_reference(
-        parcours_doctoral_id=parcours_doctoral_identity,
+    matricule_promoteur_reference = (
+        signataires_initiaux_autorisation_diffusion_these_service.recuperer_fgs_promoteur_reference(
+            parcours_doctoral_id=parcours_doctoral_identity,
+        )
     )
 
     entity.encoder_formulaire(
