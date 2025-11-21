@@ -27,16 +27,18 @@ from parcours_doctoral.ddd.autorisation_diffusion_these.commands import *
 from parcours_doctoral.ddd.autorisation_diffusion_these.use_case.read import *
 from parcours_doctoral.ddd.autorisation_diffusion_these.use_case.write import *
 
-from .domain.service.in_memory.autorisation_diffusion_these import (
-    AutorisationDiffusionTheseInMemoryService,
-)
 from .domain.service.in_memory.notification import NotificationInMemory
+from .domain.service.in_memory.signataires_initiaux_autorisation_diffusion_these_service import (
+    SignatairesInitiauxAutorisationDiffusionTheseInMemoryService,
+)
 from .repository.in_memory.autorisation_diffusion_these import (
     AutorisationDiffusionTheseInMemoryRepository,
 )
 
 _autorisation_diffusion_these_repository = AutorisationDiffusionTheseInMemoryRepository()
-_autorisation_diffusion_these_service = AutorisationDiffusionTheseInMemoryService()
+_fgs_signataires_initiaux_autorisation_difussion_these_service = (
+    SignatairesInitiauxAutorisationDiffusionTheseInMemoryService()
+)
 _notification = NotificationInMemory()
 
 
@@ -55,7 +57,7 @@ COMMAND_HANDLERS = {
         lambda msg_bus, cmd: envoyer_formulaire_autorisation_diffusion_these_au_promoteur_reference(
             cmd,
             autorisation_diffusion_these_repository=_autorisation_diffusion_these_repository,
-            autorisation_diffusion_these_service=_autorisation_diffusion_these_service,
+            signataires_initiaux_autorisation_diffusion_these_service=_fgs_signataires_initiaux_autorisation_difussion_these_service,  # noqa: E501
             notification=_notification,
         )
     ),

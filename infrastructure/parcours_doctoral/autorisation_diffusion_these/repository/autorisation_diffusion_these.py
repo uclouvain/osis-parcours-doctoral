@@ -23,10 +23,9 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-import uuid
 
 from django.db import transaction
-from django.db.models import Prefetch
+from django.db.models import QuerySet
 from osis_signature.models import Actor, Process, StateHistory
 
 from base.models.person import Person
@@ -35,6 +34,7 @@ from parcours_doctoral.ddd.autorisation_diffusion_these.domain.model.autorisatio
     AutorisationDiffusionThese,
     AutorisationDiffusionTheseIdentity,
     SignataireAutorisationDiffusionThese,
+    SignataireAutorisationDiffusionTheseIdentity,
     SignatureAutorisationDiffusionThese,
 )
 from parcours_doctoral.ddd.autorisation_diffusion_these.domain.model.enums import (
@@ -56,6 +56,7 @@ from parcours_doctoral.ddd.autorisation_diffusion_these.repository.i_autorisatio
 )
 from parcours_doctoral.models import ParcoursDoctoral
 from parcours_doctoral.models.thesis_distribution_authorization import (
+    ThesisDistributionAuthorization,
     ThesisDistributionAuthorizationActor,
 )
 from reference.models.language import Language
@@ -63,57 +64,42 @@ from reference.models.language import Language
 
 class AutorisationDiffusionTheseRepository(IAutorisationDiffusionTheseRepository):
     @classmethod
-    def _get(cls, entity_id: AutorisationDiffusionTheseIdentity) -> ParcoursDoctoral:
+    def _get(cls, entity_id: AutorisationDiffusionTheseIdentity) -> ThesisDistributionAuthorization:
         try:
-            return (
-                ParcoursDoctoral.objects.only(
-                    'uuid',
-                    'thesis_language',
-                    'thesis_proposed_title',
-                    'thesis_distribution_authorization_status',
-                    'funding_sources',
-                    'thesis_summary_in_english',
-                    'thesis_summary_in_other_language',
-                    'thesis_keywords',
-                    'thesis_distribution_conditions',
-                    'thesis_distribution_embargo_date',
-                    'thesis_distribution_additional_limitation_for_specific_chapters',
-                    'thesis_distribution_accepted_on',
-                    'thesis_distribution_acceptation_content',
-                    'thesis_distribution_authorization_group',
-                )
-                .select_related(
-                    'thesis_language',
-                    'thesis_distribution_authorization_group',
-                )
-                .prefetch_related(
-                    Prefetch(
-                        'thesis_distribution_authorization_group__actors',
-                        queryset=Actor.objects.select_related('thesisdistributionauthorizationactor', 'person'),
-                        to_attr='loaded_actors',
-                    )
-                )
-                .get(uuid=entity_id.uuid)
-            )
+            doctorate = ParcoursDoctoral.objects.select_related(
+                'thesis_distribution_authorization',
+                'thesis_language',
+            ).get(uuid=entity_id.uuid)
         except ParcoursDoctoral.DoesNotExist:
             raise AutorisationDiffusionTheseNonTrouveException
+
+        if hasattr(doctorate, 'thesis_distribution_authorization'):
+            return doctorate.thesis_distribution_authorization
+
+        return ThesisDistributionAuthorization(parcours_doctoral=doctorate)
+
+    @classmethod
+    def _get_actors(cls, process_id) -> QuerySet[ThesisDistributionAuthorizationActor]:
+        if not process_id:
+            return ThesisDistributionAuthorizationActor.objects.none()
+        return ThesisDistributionAuthorizationActor.objects.filter(process_id=process_id).select_related('person')
 
     @classmethod
     def get_dto(cls, entity_id: 'AutorisationDiffusionTheseIdentity') -> 'AutorisationDiffusionTheseDTO':
         db_object = cls._get(entity_id=entity_id)
+        db_actors_objects = cls._get_actors(process_id=db_object.signature_group_id)
+
         return AutorisationDiffusionTheseDTO(
-            uuid=str(db_object.uuid),
-            statut=db_object.thesis_distribution_authorization_status,
+            uuid=str(entity_id.uuid),
+            statut=db_object.status,
             sources_financement=db_object.funding_sources,
             resume_anglais=db_object.thesis_summary_in_english,
             resume_autre_langue=db_object.thesis_summary_in_other_language,
             mots_cles=db_object.thesis_keywords,
-            type_modalites_diffusion=db_object.thesis_distribution_conditions,
-            date_embargo=db_object.thesis_distribution_embargo_date,
-            limitations_additionnelles_chapitres=(
-                db_object.thesis_distribution_additional_limitation_for_specific_chapters
-            ),
-            modalites_diffusion_acceptees_le=db_object.thesis_distribution_accepted_on,
+            type_modalites_diffusion=db_object.conditions,
+            date_embargo=db_object.embargo_date,
+            limitations_additionnelles_chapitres=db_object.additional_limitation_for_specific_chapters,
+            modalites_diffusion_acceptees_le=db_object.accepted_on,
             signataires=(
                 [
                     SignataireAutorisationDiffusionTheseDTO(
@@ -122,126 +108,130 @@ class AutorisationDiffusionTheseRepository(IAutorisationDiffusionTheseRepository
                         nom=actor.person.last_name,
                         email=actor.person.email,
                         genre=actor.person.gender,
-                        role=actor.thesisdistributionauthorizationactor.role,
+                        role=actor.role,
                         institution=INSTITUTION_UCL,
                         uuid=str(actor.uuid),
                         signature=SignatureAutorisationDiffusionTheseDTO(
                             etat=actor.last_state,
                             date_heure=actor.last_state_date,
                             commentaire_externe=actor.comment,
-                            commentaire_interne=actor.thesisdistributionauthorizationactor.internal_comment,
-                            motif_refus=actor.thesisdistributionauthorizationactor.rejection_reason,
+                            commentaire_interne=actor.internal_comment,
+                            motif_refus=actor.rejection_reason,
                         ),
                     )
-                    for actor in db_object.thesis_distribution_authorization_group.loaded_actors
+                    for actor in db_actors_objects
                 ]
-                if db_object.thesis_distribution_authorization_group
-                else []
             ),
         )
 
     @classmethod
     def get(cls, entity_id: 'AutorisationDiffusionTheseIdentity') -> 'AutorisationDiffusionThese':
         db_object = cls._get(entity_id=entity_id)
+        db_actors_objects = cls._get_actors(process_id=db_object.signature_group_id)
 
         return AutorisationDiffusionThese(
-            entity_id=AutorisationDiffusionTheseIdentity(uuid=db_object.uuid),
-            statut=ChoixStatutAutorisationDiffusionThese[db_object.thesis_distribution_authorization_status],
+            entity_id=entity_id,
+            statut=ChoixStatutAutorisationDiffusionThese[db_object.status],
             sources_financement=db_object.funding_sources,
             resume_anglais=db_object.thesis_summary_in_english,
             resume_autre_langue=db_object.thesis_summary_in_other_language,
-            langue_redaction_these=db_object.thesis_language.code if db_object.thesis_language else '',
+            langue_redaction_these=(
+                db_object.parcours_doctoral.thesis_language.code if db_object.parcours_doctoral.thesis_language else ''
+            ),
             mots_cles=db_object.thesis_keywords,
             type_modalites_diffusion=(
-                TypeModalitesDiffusionThese[db_object.thesis_distribution_conditions]
-                if db_object.thesis_distribution_conditions
-                else None
+                TypeModalitesDiffusionThese[db_object.conditions] if db_object.conditions else None
             ),
-            date_embargo=db_object.thesis_distribution_embargo_date,
-            limitations_additionnelles_chapitres=(
-                db_object.thesis_distribution_additional_limitation_for_specific_chapters
-            ),
-            modalites_diffusion_acceptees=db_object.thesis_distribution_acceptation_content,
-            modalites_diffusion_acceptees_le=db_object.thesis_distribution_accepted_on,
+            date_embargo=db_object.embargo_date,
+            limitations_additionnelles_chapitres=db_object.additional_limitation_for_specific_chapters,
+            modalites_diffusion_acceptees=db_object.acceptation_content,
+            modalites_diffusion_acceptees_le=db_object.accepted_on,
             signataires=(
                 {
-                    RoleActeur[actor.thesisdistributionauthorizationactor.role]: SignataireAutorisationDiffusionThese(
-                        matricule=actor.person.global_id,
-                        role=RoleActeur[actor.thesisdistributionauthorizationactor.role],
-                        uuid=actor.uuid,
+                    RoleActeur[actor.role]: SignataireAutorisationDiffusionThese(
+                        SignataireAutorisationDiffusionTheseIdentity(
+                            matricule=actor.person.global_id,
+                            role=RoleActeur[actor.role],
+                        ),
                         signature=SignatureAutorisationDiffusionThese(
                             etat=ChoixEtatSignature[actor.last_state],
                             commentaire_externe=actor.comment,
-                            commentaire_interne=actor.thesisdistributionauthorizationactor.internal_comment,
-                            motif_refus=actor.thesisdistributionauthorizationactor.rejection_reason,
+                            commentaire_interne=actor.internal_comment,
+                            motif_refus=actor.rejection_reason,
                         ),
                     )
-                    for actor in db_object.thesis_distribution_authorization_group.loaded_actors
+                    for actor in db_actors_objects
                 }
-                if db_object.thesis_distribution_authorization_group
-                else {}
             ),
         )
 
     @classmethod
     @transaction.atomic
     def save(cls, entity: 'AutorisationDiffusionThese') -> 'AutorisationDiffusionTheseIdentity':
-        doctorate = cls._get(entity.entity_id)
+        db_object = cls._get(entity.entity_id)
 
-        # Update authorization distribution thesis data
-        language_id = None
+        # Update doctorate data
+        language_id: int | None = None
         if entity.langue_redaction_these:
             language_id = Language.objects.values_list('pk', flat=True).get(code=entity.langue_redaction_these)
 
-        doctorate.thesis_distribution_authorization_status = entity.statut.name
-        doctorate.funding_sources = entity.sources_financement
-        doctorate.thesis_summary_in_english = entity.resume_anglais
-        doctorate.thesis_summary_in_other_language = entity.resume_autre_langue
-        doctorate.thesis_language_id = language_id
-        doctorate.thesis_keywords = entity.mots_cles
-        doctorate.thesis_distribution_conditions = (
-            entity.type_modalites_diffusion.name if entity.type_modalites_diffusion else ''
-        )
-        doctorate.thesis_distribution_embargo_date = entity.date_embargo
-        doctorate.thesis_distribution_additional_limitation_for_specific_chapters = (
-            entity.limitations_additionnelles_chapitres
-        )
-        doctorate.thesis_distribution_accepted_on = entity.modalites_diffusion_acceptees_le
-        doctorate.thesis_distribution_acceptation_content = entity.modalites_diffusion_acceptees
+        db_object.parcours_doctoral.thesis_language_id = language_id
+        db_object.parcours_doctoral.save(update_fields=['thesis_language'])
+
+        # Update authorization distribution thesis data
+        db_object.status = entity.statut.name
+        db_object.funding_sources = entity.sources_financement
+        db_object.thesis_summary_in_english = entity.resume_anglais
+        db_object.thesis_summary_in_other_language = entity.resume_autre_langue
+        db_object.thesis_keywords = entity.mots_cles
+        db_object.conditions = entity.type_modalites_diffusion.name if entity.type_modalites_diffusion else ''
+        db_object.embargo_date = entity.date_embargo
+        db_object.additional_limitation_for_specific_chapters = entity.limitations_additionnelles_chapitres
+        db_object.accepted_on = entity.modalites_diffusion_acceptees_le
+        db_object.acceptation_content = entity.modalites_diffusion_acceptees
 
         # Update the signatures
-        db_actors: dict[uuid.UUID, Actor] = {}
+        existing_db_actors: dict[
+            SignataireAutorisationDiffusionTheseIdentity,
+            ThesisDistributionAuthorizationActor,
+        ] = {}
         persons_by_global_id: dict[str, Person] = {}
 
-        if doctorate.thesis_distribution_authorization_group:
-            for db_actor in doctorate.thesis_distribution_authorization_group.loaded_actors:
-                db_actors[db_actor.uuid] = db_actor
+        if db_object.signature_group_id:
+            db_actors_objects = cls._get_actors(process_id=db_object.signature_group_id)
+            for db_actor in db_actors_objects:
+                existing_db_actors[
+                    SignataireAutorisationDiffusionTheseIdentity(
+                        matricule=db_actor.person.global_id,
+                        role=RoleActeur[db_actor.role],
+                    )
+                ] = db_actor
                 persons_by_global_id[db_actor.person.global_id] = db_actor.person
+
         else:
             # Initialize group if needed
-            doctorate.thesis_distribution_authorization_group = Process.objects.create()
+            db_object.signature_group = Process.objects.create()
 
-        doctorate.save()
+        db_object.save()
 
-        # Retrieve the persons related to new actors
-        persons_to_fetch = [
-            actor.matricule for actor in entity.signataires.values() if actor.matricule not in persons_by_global_id
+        # Retrieve the new persons related to new actors
+        new_persons_to_fetch = [
+            actor.entity_id.matricule
+            for actor in entity.signataires.values()
+            if actor.entity_id.matricule not in persons_by_global_id
         ]
-
-        if persons_to_fetch:
-            for person in Person.objects.filter(global_id__in=persons_to_fetch):
+        if new_persons_to_fetch:
+            for person in Person.objects.filter(global_id__in=new_persons_to_fetch):
                 persons_by_global_id[person.global_id] = person
 
         state_histories: list[StateHistory] = []
 
+        # Create or update the existing actors
         for actor in entity.signataires.values():
-            db_actor: ThesisDistributionAuthorizationActor = (
-                db_actors.pop(actor.uuid).thesisdistributionauthorizationactor
-                if actor.uuid in db_actors
-                else ThesisDistributionAuthorizationActor(
-                    uuid=actor.uuid,
-                    process=doctorate.thesis_distribution_authorization_group,
-                )
+            db_actor = existing_db_actors.pop(actor.entity_id, None) or ThesisDistributionAuthorizationActor(
+                process_id=db_object.signature_group_id,
+                role=actor.entity_id.role.name,
+                person=persons_by_global_id[actor.entity_id.matricule],
             )
 
             # Only update the decision fields if it's a decision state
@@ -250,21 +240,17 @@ class AutorisationDiffusionTheseRepository(IAutorisationDiffusionTheseRepository
                 db_actor.internal_comment = actor.signature.commentaire_interne
                 db_actor.rejection_reason = actor.signature.motif_refus
 
-            # Update new fields
-            db_actor.role = actor.role.name
-            db_actor.person = persons_by_global_id[actor.matricule]
-
             # Create a new state if it has been updated
             if getattr(db_actor, 'last_state', None) != actor.signature.etat.name:
                 state_histories.append(StateHistory(state=actor.signature.etat.name, actor=db_actor))
 
             db_actor.save()
 
-        # Remove old members
-        if db_actors:
+        # Remove old members that are not used anymore
+        if existing_db_actors:
             Actor.objects.filter(
-                process=doctorate.thesis_distribution_authorization_group,
-                uuid__in=db_actors.keys(),
+                process_id=db_object.signature_group_id,
+                uuid__in=[actor.uuid for actor in existing_db_actors.values()],
             ).delete()
 
         # Historize new states

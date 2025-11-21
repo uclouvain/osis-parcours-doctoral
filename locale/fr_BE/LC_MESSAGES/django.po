@@ -304,6 +304,12 @@ msgstr "Accepter les activités sélectionnées"
 msgid "Accept selected courses"
 msgstr "Accepter les cours sélectionnées"
 
+msgid "Acceptation content"
+msgstr "Contenu de l'acceptation"
+
+msgid "Acceptation date"
+msgstr "Date de l'acceptation"
+
 msgctxt "publication-status"
 msgid "Accepted"
 msgstr "Acceptée"
@@ -917,6 +923,9 @@ msgstr "Proposition de formation complémentaire"
 msgid "Concluded in"
 msgstr "Fait à"
 
+msgid "Conditions"
+msgstr "Conditions"
+
 msgid "Configuration saved."
 msgstr "Configuration enregistrée."
 
@@ -1451,6 +1460,9 @@ msgstr "E-mail :"
 
 msgid "Embargo access"
 msgstr "Accès embargo"
+
+msgid "Embargo date"
+msgstr "Date de l'embargo"
 
 msgid "Enable complementary training tab"
 msgstr "Activer l'onglet Formation complémentaire"
@@ -2992,10 +3004,6 @@ msgstr "Défense privée non trouvée."
 msgid "Proclaimed"
 msgstr "Proclamé"
 
-msgctxt "other gender"
-msgid "Professor"
-msgstr "Professeur·e"
-
 msgctxt "female gender"
 msgid "Professor"
 msgstr "Professeure"
@@ -3606,9 +3614,6 @@ msgstr "État"
 
 msgid "Status changes"
 msgstr "Changements de statut"
-
-msgid "Status of the authorization distribution thesis"
-msgstr "Statut de l'autorisation de diffusion de thèse"
 
 msgid "Status of the doctoral training"
 msgstr "État d’avancement de la formation doctorale"
@@ -4222,21 +4227,9 @@ msgstr "Thèse réalisée en cotutelle avec %(institute_name)s"
 msgid "Thesis defence"
 msgstr "Défense et soutenance"
 
-msgid "Thesis distribution acceptation content"
-msgstr "Contenu de l'autorisation de diffusion de thèse"
-
-msgid "Thesis distribution acceptation date"
-msgstr "Date de l'autorisation de diffusion de thèse"
-
 msgctxt "dashboard-category"
 msgid "Thesis distribution authorisation"
 msgstr "Autorisation de diffusion de thèse"
-
-msgid "Thesis distribution conditions"
-msgstr "Modalités de diffusion de thèse"
-
-msgid "Thesis distribution embargo date"
-msgstr "Date de l'embargo de diffusion de thèse"
 
 msgid "Thesis exam board opinion"
 msgstr "Avis du jury"

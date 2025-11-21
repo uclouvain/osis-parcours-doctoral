@@ -46,10 +46,12 @@ from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from parcours_doctoral.ddd.jury.domain.model.enums import FormuleDefense
 from parcours_doctoral.models import JuryActor, ParcoursDoctoral
 from parcours_doctoral.models.thesis_distribution_authorization import (
+    ThesisDistributionAuthorization,
     ThesisDistributionAuthorizationActor,
 )
 from parcours_doctoral.tests.factories.authorization_distribution import (
     PromoterThesisDistributionAuthorizationActorFactory,
+    ThesisDistributionAuthorizationFactory,
 )
 from parcours_doctoral.tests.factories.parcours_doctoral import ParcoursDoctoralFactory
 from parcours_doctoral.tests.factories.roles import (
@@ -83,18 +85,23 @@ class AuthorizationDistributionAPIViewTestCase(APITestCase):
     def setUp(self):
         self.doctorate: ParcoursDoctoral = ParcoursDoctoralFactory(
             student=self.doctorate_student,
-            thesis_distribution_authorization_status=ChoixStatutAutorisationDiffusionThese.DIFFUSION_NON_SOUMISE.name,
-            funding_sources='Funding sources',
-            thesis_summary_in_english='Summary in english',
-            thesis_summary_in_other_language='Summary in other language',
-            thesis_keywords=['word1', 'word2'],
-            thesis_distribution_conditions=TypeModalitesDiffusionThese.ACCES_EMBARGO.name,
-            thesis_distribution_embargo_date=datetime.date(2025, 1, 15),
-            thesis_distribution_additional_limitation_for_specific_chapters='Additional limitation',
-            thesis_distribution_accepted_on=datetime.date(2026, 2, 3),
-            thesis_distribution_acceptation_content='Accepted content',
-            defense_method=FormuleDefense.FORMULE_1.name,
             status=ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_REUSSIE.name,
+            defense_method=FormuleDefense.FORMULE_1.name,
+        )
+        self.thesis_distribution_authorization: ThesisDistributionAuthorization = (
+            ThesisDistributionAuthorizationFactory(
+                parcours_doctoral=self.doctorate,
+                status=ChoixStatutAutorisationDiffusionThese.DIFFUSION_NON_SOUMISE.name,
+                funding_sources='Funding sources',
+                thesis_summary_in_english='Summary in english',
+                thesis_summary_in_other_language='Summary in other language',
+                thesis_keywords=['word1', 'word2'],
+                conditions=TypeModalitesDiffusionThese.ACCES_EMBARGO.name,
+                embargo_date=datetime.date(2025, 1, 15),
+                additional_limitation_for_specific_chapters='Additional limitation',
+                accepted_on=datetime.date(2026, 2, 3),
+                acceptation_content='Accepted content',
+            )
         )
 
         self.base_namespace = 'parcours_doctoral_api_v1:authorization-distribution'
@@ -162,8 +169,8 @@ class AuthorizationDistributionAPIViewTestCase(APITestCase):
 
         promoter = ThesisDistributionAuthorizationActor.objects.get(uuid=promoter.uuid)
 
-        self.doctorate.thesis_distribution_authorization_group = promoter.process
-        self.doctorate.save()
+        self.thesis_distribution_authorization.signature_group = promoter.process
+        self.thesis_distribution_authorization.save()
 
         response = self.client.get(self.url, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -192,6 +199,25 @@ class AuthorizationDistributionAPIViewTestCase(APITestCase):
                 }
             ],
         )
+
+        # With no authorization distribution data
+        self.thesis_distribution_authorization.delete()
+
+        response = self.client.get(self.url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        json_response = response.json()
+
+        self.assertEqual(json_response.get('statut'), ChoixStatutAutorisationDiffusionThese.DIFFUSION_NON_SOUMISE.name)
+        self.assertEqual(json_response.get('sources_financement'), '')
+        self.assertEqual(json_response.get('resume_anglais'), '')
+        self.assertEqual(json_response.get('resume_autre_langue'), '')
+        self.assertEqual(json_response.get('mots_cles'), [])
+        self.assertEqual(json_response.get('type_modalites_diffusion'), '')
+        self.assertEqual(json_response.get('date_embargo'), None)
+        self.assertEqual(json_response.get('limitations_additionnelles_chapitres'), '')
+        self.assertEqual(json_response.get('modalites_diffusion_acceptees_le'), None)
+        self.assertEqual(json_response.get('signataires'), [])
 
     def test_put_is_only_available_in_some_statuses(self):
         self.client.force_authenticate(user=self.doctorate_student.user)
@@ -230,10 +256,9 @@ class AuthorizationDistributionAPIViewTestCase(APITestCase):
         response = self.client.put(self.url, data=self.data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    def test_post_is_only_available_in_some_statuses(self):
+    def test_post_is_only_available_in_some_statuses_for_the_first_defense_method(self):
         self.client.force_authenticate(user=self.doctorate_student.user)
 
-        # First defense method
         self.doctorate.defense_method = FormuleDefense.FORMULE_1.name
         self.doctorate.status = ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_SOUMISE.name
 
@@ -249,6 +274,9 @@ class AuthorizationDistributionAPIViewTestCase(APITestCase):
 
         response = self.client.post(self.url, data=self.data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_post_is_only_available_in_some_statuses_for_the_second_defense_method(self):
+        self.client.force_authenticate(user=self.doctorate_student.user)
 
         # Second defense method
         self.doctorate.defense_method = FormuleDefense.FORMULE_2.name
@@ -276,23 +304,26 @@ class AuthorizationDistributionAPIViewTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         self.doctorate.refresh_from_db()
+        self.thesis_distribution_authorization.refresh_from_db()
 
-        self.assertEqual(self.doctorate.funding_sources, self.data['sources_financement'])
-        self.assertEqual(self.doctorate.thesis_summary_in_english, self.data['resume_anglais'])
-        self.assertEqual(self.doctorate.thesis_summary_in_other_language, self.data['resume_autre_langue'])
         self.assertEqual(self.doctorate.thesis_language, self.language)
-        self.assertEqual(self.doctorate.thesis_keywords, self.data['mots_cles'])
-        self.assertEqual(self.doctorate.thesis_distribution_conditions, self.data['type_modalites_diffusion'])
-        self.assertEqual(self.doctorate.thesis_distribution_embargo_date, datetime.date(2025, 1, 16))
+        self.assertEqual(self.thesis_distribution_authorization.funding_sources, self.data['sources_financement'])
+        self.assertEqual(self.thesis_distribution_authorization.thesis_summary_in_english, self.data['resume_anglais'])
         self.assertEqual(
-            self.doctorate.thesis_distribution_additional_limitation_for_specific_chapters,
+            self.thesis_distribution_authorization.thesis_summary_in_other_language, self.data['resume_autre_langue']
+        )
+        self.assertEqual(self.thesis_distribution_authorization.thesis_keywords, self.data['mots_cles'])
+        self.assertEqual(self.thesis_distribution_authorization.conditions, self.data['type_modalites_diffusion'])
+        self.assertEqual(self.thesis_distribution_authorization.embargo_date, datetime.date(2025, 1, 16))
+        self.assertEqual(
+            self.thesis_distribution_authorization.additional_limitation_for_specific_chapters,
             self.data['limitations_additionnelles_chapitres'],
         )
         self.assertEqual(
-            self.doctorate.thesis_distribution_acceptation_content,
+            self.thesis_distribution_authorization.acceptation_content,
             self.data['modalites_diffusion_acceptees'],
         )
-        self.assertEqual(self.doctorate.thesis_distribution_accepted_on, datetime.date(2025, 1, 2))
+        self.assertEqual(self.thesis_distribution_authorization.accepted_on, datetime.date(2025, 1, 2))
 
     @freezegun.freeze_time('2025-01-02')
     def test_post_new_authorization_distribution_data(self):
@@ -303,27 +334,30 @@ class AuthorizationDistributionAPIViewTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         self.doctorate.refresh_from_db()
+        self.thesis_distribution_authorization.refresh_from_db()
 
         # Check that the data have been updated
-        self.assertEqual(self.doctorate.funding_sources, self.data['sources_financement'])
-        self.assertEqual(self.doctorate.thesis_summary_in_english, self.data['resume_anglais'])
-        self.assertEqual(self.doctorate.thesis_summary_in_other_language, self.data['resume_autre_langue'])
         self.assertEqual(self.doctorate.thesis_language, self.language)
-        self.assertEqual(self.doctorate.thesis_keywords, self.data['mots_cles'])
-        self.assertEqual(self.doctorate.thesis_distribution_conditions, self.data['type_modalites_diffusion'])
-        self.assertEqual(self.doctorate.thesis_distribution_embargo_date, datetime.date(2025, 1, 16))
+        self.assertEqual(self.thesis_distribution_authorization.funding_sources, self.data['sources_financement'])
+        self.assertEqual(self.thesis_distribution_authorization.thesis_summary_in_english, self.data['resume_anglais'])
         self.assertEqual(
-            self.doctorate.thesis_distribution_additional_limitation_for_specific_chapters,
+            self.thesis_distribution_authorization.thesis_summary_in_other_language, self.data['resume_autre_langue']
+        )
+        self.assertEqual(self.thesis_distribution_authorization.thesis_keywords, self.data['mots_cles'])
+        self.assertEqual(self.thesis_distribution_authorization.conditions, self.data['type_modalites_diffusion'])
+        self.assertEqual(self.thesis_distribution_authorization.embargo_date, datetime.date(2025, 1, 16))
+        self.assertEqual(
+            self.thesis_distribution_authorization.additional_limitation_for_specific_chapters,
             self.data['limitations_additionnelles_chapitres'],
         )
         self.assertEqual(
-            self.doctorate.thesis_distribution_acceptation_content,
+            self.thesis_distribution_authorization.acceptation_content,
             self.data['modalites_diffusion_acceptees'],
         )
-        self.assertEqual(self.doctorate.thesis_distribution_accepted_on, datetime.date(2025, 1, 2))
+        self.assertEqual(self.thesis_distribution_authorization.accepted_on, datetime.date(2025, 1, 2))
 
         self.assertEqual(
-            self.doctorate.thesis_distribution_authorization_status,
+            self.thesis_distribution_authorization.status,
             ChoixStatutAutorisationDiffusionThese.DIFFUSION_SOUMISE.name,
         )
 
@@ -335,7 +369,7 @@ class AuthorizationDistributionAPIViewTestCase(APITestCase):
         self.assertIsNotNone(contact_jury_promoter)
 
         # Check that the contact supervisor is invited
-        group = self.doctorate.thesis_distribution_authorization_group
+        group = self.thesis_distribution_authorization.signature_group
         self.assertIsNotNone(group)
 
         actors: QuerySet[Actor] = group.actors.all()
