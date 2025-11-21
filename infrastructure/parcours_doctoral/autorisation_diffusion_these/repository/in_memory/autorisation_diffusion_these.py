@@ -24,6 +24,7 @@
 #
 # ##############################################################################
 import datetime
+import uuid
 from typing import List
 
 from base.ddd.utils.in_memory_repository import InMemoryGenericRepository
@@ -74,9 +75,9 @@ class AutorisationDiffusionTheseInMemoryRepository(InMemoryGenericRepository, IA
             modalites_diffusion_acceptees_le=entity.modalites_diffusion_acceptees_le,
             signataires=[
                 SignataireAutorisationDiffusionTheseDTO(
-                    uuid=str(signataire.uuid),
-                    matricule=signataire.matricule,
-                    role=signataire.role.name,
+                    uuid='',
+                    matricule=signataire.entity_id.matricule,
+                    role=signataire.entity_id.role.name,
                     nom='',
                     prenom='',
                     email='',

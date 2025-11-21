@@ -31,6 +31,7 @@ from parcours_doctoral.ddd.autorisation_diffusion_these.domain.model.enums impor
     RoleActeur,
 )
 from parcours_doctoral.models.thesis_distribution_authorization import (
+    ThesisDistributionAuthorization,
     ThesisDistributionAuthorizationActor,
 )
 
@@ -58,3 +59,8 @@ class AdreThesisDistributionAuthorizationActorFactory(_ThesisDistributionAuthori
 
 class ScebThesisDistributionAuthorizationActorFactory(_ThesisDistributionAuthorizationActorFactory):
     role = RoleActeur.SCEB.name
+
+
+class ThesisDistributionAuthorizationFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = ThesisDistributionAuthorization
