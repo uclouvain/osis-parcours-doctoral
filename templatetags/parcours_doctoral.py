@@ -109,7 +109,7 @@ TAB_TREE = {
         Tab('confirmation', _('Confirmation exam')),
         Tab('extension-request', _('New deadline')),
     ],
-    Tab('training', pgettext_lazy('admission', 'Course'), 'book-open-reader'): [
+    Tab('training', pgettext_lazy('admission', 'Training'), 'book-open-reader'): [
         Tab('doctoral-training', _('PhD training')),
         Tab('complementary-training', _('Complementary training')),
     ],
