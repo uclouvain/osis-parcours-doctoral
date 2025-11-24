@@ -42,6 +42,7 @@ from parcours_doctoral.ddd.autorisation_diffusion_these.domain.service.i_notific
 )
 from parcours_doctoral.infrastructure.mixins.notification import NotificationMixin
 from parcours_doctoral.mail_templates.thesis_distribution_authorization import (
+    PARCOURS_DOCTORAL_EMAIL_THESIS_DISTRIBUTION_AUTHORIZATION_PROMOTER_APPROVAL,
     PARCOURS_DOCTORAL_EMAIL_THESIS_DISTRIBUTION_AUTHORIZATION_PROMOTER_INVITATION,
     PARCOURS_DOCTORAL_EMAIL_THESIS_DISTRIBUTION_AUTHORIZATION_PROMOTER_INVITATION_CONFIRMATION,
     PARCOURS_DOCTORAL_EMAIL_THESIS_DISTRIBUTION_AUTHORIZATION_PROMOTER_REFUSAL,
@@ -160,7 +161,7 @@ class Notification(NotificationMixin, INotification):
         EmailNotificationHandler.create(email_message, person=promoter.person)
 
         # Mail sent to the student
-        sceb_managers = ScebManager.objects.select_related('person')
+        sceb_managers = ScebManager.objects.all().select_related('person')
         cc_list = [cls._format_email(sceb_manager.person) for sceb_manager in sceb_managers]
 
         email_message = generate_email(
@@ -188,3 +189,20 @@ class Notification(NotificationMixin, INotification):
         )
 
         EmailNotificationHandler.create(email_message, person=doctorate.student)
+
+    @classmethod
+    def accepter_these_par_promoteur_reference(cls, autorisation_diffusion_these: AutorisationDiffusionThese) -> None:
+        doctorate = cls.get_doctorate(doctorate_uuid=autorisation_diffusion_these.entity_id.uuid)
+
+        tokens = cls.get_common_tokens(doctorate=doctorate)
+        adre_manager = doctorate.loaded_actors_by_role.get(RoleActeur.ADRE.name)
+
+        # Mail sent to the student
+        email_message = generate_email(
+            PARCOURS_DOCTORAL_EMAIL_THESIS_DISTRIBUTION_AUTHORIZATION_PROMOTER_APPROVAL,
+            adre_manager.person.language or settings.LANGUAGE_CODE,
+            tokens,
+            recipients=[adre_manager.person.email],
+        )
+
+        EmailNotificationHandler.create(email_message, person=adre_manager.person)
