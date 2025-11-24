@@ -1583,6 +1583,44 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
   /doctorate/{uuid}/manuscript-validation:
+    post:
+      operationId: accept_thesis_by_lead_promoter
+      description: Accept the thesis (lead promoter)
+      parameters:
+      - in: path
+        name: uuid
+        schema:
+          type: string
+          format: uuid
+        required: true
+      - $ref: '#/components/parameters/Accept-Language'
+      - $ref: '#/components/parameters/X-User-FirstName'
+      - $ref: '#/components/parameters/X-User-LastName'
+      - $ref: '#/components/parameters/X-User-Email'
+      - $ref: '#/components/parameters/X-User-GlobalID'
+      tags:
+      - doctorate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AcceptThesisByLeadPromoter'
+      security:
+      - tokenAuth: []
+      - Token: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParcoursDoctoralIdentityDTO'
+          description: ''
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
     put:
       operationId: reject_thesis_by_lead_promoter
       description: Reject the thesis (lead promoter)
@@ -2464,6 +2502,14 @@ paths:
       - $ref: '#/components/parameters/X-User-GlobalID'
 components:
   schemas:
+    AcceptThesisByLeadPromoter:
+      type: object
+      description: Contains the submitted data to accept the thesis by the lead supervisor.
+      properties:
+        commentaire_interne:
+          type: string
+        commentaire_externe:
+          type: string
     AdmissibilityDTO:
       type: object
       description: Contains the information related to the admissibility.

@@ -68,4 +68,12 @@ COMMAND_HANDLERS = {
             notification=_notification,
         )
     ),
+    AccepterTheseParPromoteurReferenceCommand: (
+        lambda msg_bus, cmd: accepter_these_par_promoteur_reference(
+            cmd,
+            autorisation_diffusion_these_repository=_autorisation_diffusion_these_repository,
+            signataires_initiaux_autorisation_diffusion_these_service=_fgs_signataires_initiaux_autorisation_difussion_these_service,  # noqa: E501
+            notification=_notification,
+        )
+    ),
 }

@@ -24,6 +24,9 @@
 #
 # ##############################################################################
 
+from .accepter_these_par_promoteur_reference_service import (
+    accepter_these_par_promoteur_reference,
+)
 from .encoder_formulaire_autorisation_diffusion_these_service import (
     encoder_formulaire_autorisation_diffusion_these,
 )
