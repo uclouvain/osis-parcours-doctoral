@@ -39,7 +39,7 @@ class SignatairesInitiauxAutorisationDiffusionTheseInMemoryService(
         return '012345'
 
     @classmethod
-    def recuperer_fgs_gestionnaire_adre(cls) -> str:
+    def recuperer_fgs_gestionnaire_adre(cls, parcours_doctoral_id: ParcoursDoctoralIdentity) -> str:
         return '123456'
 
     @classmethod
