@@ -33,6 +33,7 @@ from parcours_doctoral.api.permissions import DoctorateAPIPermissionRequiredMixi
 from parcours_doctoral.api.serializers import ParcoursDoctoralIdentityDTOSerializer
 from parcours_doctoral.api.serializers.manuscript_validation import *
 from parcours_doctoral.ddd.autorisation_diffusion_these.commands import (
+    AccepterTheseParPromoteurReferenceCommand,
     RefuserTheseParPromoteurReferenceCommand,
 )
 
@@ -45,6 +46,7 @@ class ManuscriptValidationApiView(DoctorateAPIPermissionRequiredMixin, GenericAP
     name = "manuscript-validation"
     permission_mapping = {
         'PUT': 'parcours_doctoral.api_validate_manuscript',
+        'POST': 'parcours_doctoral.api_validate_manuscript',
     }
     serializer_class = RejectThesisByLeadPromoterSerializer
 
@@ -60,6 +62,28 @@ class ManuscriptValidationApiView(DoctorateAPIPermissionRequiredMixin, GenericAP
 
         result = message_bus_instance.invoke(
             RefuserTheseParPromoteurReferenceCommand(
+                uuid_parcours_doctoral=str(self.kwargs['uuid']),
+                matricule_promoteur=self.request.user.person.global_id,
+                **serializer.validated_data,
+            )
+        )
+
+        serializer = ParcoursDoctoralIdentityDTOSerializer(instance=result)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @extend_schema(
+        request=AcceptThesisByLeadPromoterSerializer,
+        responses=ParcoursDoctoralIdentityDTOSerializer,
+        operation_id='accept_thesis_by_lead_promoter',
+    )
+    def post(self, request, *args, **kwargs):
+        """Accept the thesis (lead promoter)"""
+        serializer = AcceptThesisByLeadPromoterSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        result = message_bus_instance.invoke(
+            AccepterTheseParPromoteurReferenceCommand(
                 uuid_parcours_doctoral=str(self.kwargs['uuid']),
                 matricule_promoteur=self.request.user.person.global_id,
                 **serializer.validated_data,

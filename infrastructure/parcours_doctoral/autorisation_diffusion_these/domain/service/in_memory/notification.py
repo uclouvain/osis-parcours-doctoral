@@ -39,3 +39,7 @@ class NotificationInMemory(INotification):
     @classmethod
     def refuser_these_par_promoteur_reference(cls, autorisation_diffusion_these: AutorisationDiffusionThese) -> None:
         pass
+
+    @classmethod
+    def accepter_these_par_promoteur_reference(cls, autorisation_diffusion_these: AutorisationDiffusionThese) -> None:
+        pass
