@@ -39,7 +39,7 @@ class ISignatairesInitiauxAutorisationDiffusionTheseService(interface.DomainServ
 
     @classmethod
     @abstractmethod
-    def recuperer_fgs_gestionnaire_adre(cls) -> str:
+    def recuperer_fgs_gestionnaire_adre(cls, parcours_doctoral_id: ParcoursDoctoralIdentity) -> str:
         raise NotImplementedError
 
     @classmethod

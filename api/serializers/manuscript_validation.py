@@ -26,10 +26,12 @@
 
 from base.utils.serializers import DTOSerializer
 from parcours_doctoral.ddd.autorisation_diffusion_these.commands import (
+    AccepterTheseParPromoteurReferenceCommand,
     RefuserTheseParPromoteurReferenceCommand,
 )
 
 __all__ = [
+    'AcceptThesisByLeadPromoterSerializer',
     'RejectThesisByLeadPromoterSerializer',
 ]
 
@@ -42,3 +44,13 @@ class RejectThesisByLeadPromoterSerializer(DTOSerializer):
 
     class Meta:
         source = RefuserTheseParPromoteurReferenceCommand
+
+
+class AcceptThesisByLeadPromoterSerializer(DTOSerializer):
+    """Contains the submitted data to accept the thesis by the lead supervisor."""
+
+    uuid_parcours_doctoral = None
+    matricule_promoteur = None
+
+    class Meta:
+        source = AccepterTheseParPromoteurReferenceCommand
