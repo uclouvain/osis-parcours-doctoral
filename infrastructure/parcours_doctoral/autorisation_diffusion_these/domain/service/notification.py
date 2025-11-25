@@ -42,6 +42,7 @@ from parcours_doctoral.ddd.autorisation_diffusion_these.domain.service.i_notific
 )
 from parcours_doctoral.infrastructure.mixins.notification import NotificationMixin
 from parcours_doctoral.mail_templates.thesis_distribution_authorization import (
+    PARCOURS_DOCTORAL_EMAIL_THESIS_DISTRIBUTION_AUTHORIZATION_ADRE_APPROVAL,
     PARCOURS_DOCTORAL_EMAIL_THESIS_DISTRIBUTION_AUTHORIZATION_ADRE_REFUSAL,
     PARCOURS_DOCTORAL_EMAIL_THESIS_DISTRIBUTION_AUTHORIZATION_PROMOTER_APPROVAL,
     PARCOURS_DOCTORAL_EMAIL_THESIS_DISTRIBUTION_AUTHORIZATION_PROMOTER_INVITATION,
@@ -94,13 +95,12 @@ class Notification(NotificationMixin, INotification):
             'student_last_name': doctorate.student.last_name,
             'thesis_distribution_authorization_form_front_link': get_parcours_doctoral_link_front(
                 doctorate.uuid,
-                'thesis-distribution-authorisation',
+                'authorization-distribution',
             ),
-            'thesis_distribution_authorization_form_back_link': '',
-            # 'thesis_distribution_authorization_form_back_link': get_parcours_doctoral_link_back(
-            #     doctorate.uuid,
-            #     'thesis-distribution-authorisation',
-            # ),
+            'thesis_distribution_authorization_form_back_link': get_parcours_doctoral_link_back(
+                doctorate.uuid,
+                'authorization-distribution',
+            ),
             'promoter_name': '',
             'promoter_title_uppercase': '',
             'promoter_title_lowercase': '',
@@ -198,7 +198,7 @@ class Notification(NotificationMixin, INotification):
         tokens = cls.get_common_tokens(doctorate=doctorate)
         adre_manager = doctorate.loaded_actors_by_role.get(RoleActeur.ADRE.name)
 
-        # Mail sent to the student
+        # Mail sent to the adre manager
         email_message = generate_email(
             PARCOURS_DOCTORAL_EMAIL_THESIS_DISTRIBUTION_AUTHORIZATION_PROMOTER_APPROVAL,
             adre_manager.person.language or settings.LANGUAGE_CODE,
@@ -226,3 +226,20 @@ class Notification(NotificationMixin, INotification):
         )
 
         EmailNotificationHandler.create(email_message, person=doctorate.student)
+
+    @classmethod
+    def accepter_these_par_adre(cls, autorisation_diffusion_these: AutorisationDiffusionThese) -> None:
+        doctorate = cls.get_doctorate(doctorate_uuid=autorisation_diffusion_these.entity_id.uuid)
+
+        tokens = cls.get_common_tokens(doctorate=doctorate)
+        sceb_manager = doctorate.loaded_actors_by_role.get(RoleActeur.SCEB.name)
+
+        # Mail sent to the sceb manager
+        email_message = generate_email(
+            PARCOURS_DOCTORAL_EMAIL_THESIS_DISTRIBUTION_AUTHORIZATION_ADRE_APPROVAL,
+            sceb_manager.person.language or settings.LANGUAGE_CODE,
+            tokens,
+            recipients=[sceb_manager.person.email],
+        )
+
+        EmailNotificationHandler.create(email_message, person=sceb_manager.person)
