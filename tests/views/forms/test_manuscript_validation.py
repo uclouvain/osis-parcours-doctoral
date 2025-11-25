@@ -70,7 +70,10 @@ from parcours_doctoral.tests.factories.authorization_distribution import (
 )
 from parcours_doctoral.tests.factories.jury import JuryActorFactory
 from parcours_doctoral.tests.factories.parcours_doctoral import ParcoursDoctoralFactory
-from parcours_doctoral.tests.factories.roles import AdreManagerRoleFactory
+from parcours_doctoral.tests.factories.roles import (
+    AdreManagerRoleFactory,
+    ScebManagerRoleFactory,
+)
 from parcours_doctoral.tests.mixins import MockOsisDocumentMixin
 
 
@@ -88,6 +91,7 @@ class ManuscriptValidationFormViewWithAdreManagerTestCase(MockOsisDocumentMixin,
         cls.student = PersonFactory()
         cls.manager = ProgramManagerFactory(education_group=cls.training.education_group).person
         cls.adre_manager_role = AdreManagerRoleFactory()
+        cls.sceb_manager = ScebManagerRoleFactory().person
 
         cls.reject_data = {
             'decision': ChoixEtatSignature.DECLINED.name,
@@ -329,3 +333,87 @@ class ManuscriptValidationFormViewWithAdreManagerTestCase(MockOsisDocumentMixin,
         self.assertEqual(to_email_addresses[0], self.doctorate.student.email)
         self.assertEqual(len(cc_email_addresses), 1)
         self.assertEqual(cc_email_addresses[0], self.promoter.person.email)
+
+    def test_accept_the_thesis_with_no_invited_adre_manager(self):
+        self.client.force_login(user=self.adre_manager_role.person.user)
+
+        self.adre_manager_invited_state.delete()
+
+        response = self.client.post(self.url, data=self.accept_data)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        form = response.context.get('form')
+
+        self.assertFalse(form.is_valid())
+
+        self.assertIn(
+            gettext('You must be invited to do this action.'),
+            form.errors.get('__all__', []),
+        )
+
+    def test_accept_the_thesis(self):
+        self.client.force_login(user=self.adre_manager_role.person.user)
+
+        response = self.client.post(self.url, data=self.accept_data)
+
+        self.assertRedirects(response, self.details_url)
+
+        self.doctorate.refresh_from_db()
+        self.thesis_distribution_authorization.refresh_from_db()
+
+        # Check that the data have been updated
+        self.assertEqual(
+            self.thesis_distribution_authorization.status,
+            ChoixStatutAutorisationDiffusionThese.DIFFUSION_VALIDEE_ADRE.name,
+        )
+
+        # Check that the approval data have been saved
+        group = self.thesis_distribution_authorization.signature_group
+        self.assertIsNotNone(group)
+
+        adre_managers: QuerySet[Actor] = group.actors.filter(
+            thesisdistributionauthorizationactor__role=RoleActeur.ADRE.name,
+        )
+        self.assertEqual(len(adre_managers), 1)
+
+        self.assertEqual(adre_managers[0].person, self.adre_manager.person)
+        self.assertEqual(adre_managers[0].thesisdistributionauthorizationactor.rejection_reason, '')
+        self.assertEqual(
+            adre_managers[0].thesisdistributionauthorizationactor.internal_comment,
+            self.accept_data['commentaire_interne'],
+        )
+        self.assertEqual(adre_managers[0].thesisdistributionauthorizationactor.role, RoleActeur.ADRE.name)
+        self.assertEqual(adre_managers[0].comment, self.accept_data['commentaire_externe'])
+
+        states: QuerySet[StateHistory] = adre_managers[0].states.all()
+        self.assertEqual(len(states), 2)
+
+        self.assertEqual(states[1].state, SignatureState.APPROVED.name)
+
+        # Check that the sceb manager has been invited
+        sceb_managers: QuerySet[Actor] = group.actors.filter(
+            thesisdistributionauthorizationactor__role=RoleActeur.SCEB.name,
+        )
+        self.assertEqual(len(sceb_managers), 1)
+
+        self.assertEqual(sceb_managers[0].person, self.sceb_manager)
+
+        states: QuerySet[StateHistory] = sceb_managers[0].states.all()
+        self.assertEqual(len(states), 1)
+
+        self.assertEqual(states[0].state, SignatureState.INVITED.name)
+
+        # Check that the notification has been sent
+        self.assertEqual(EmailNotification.objects.count(), 1)
+
+        notification_to_student = EmailNotification.objects.filter(person=self.sceb_manager).first()
+        self.assertIsNotNone(notification_to_student)
+
+        email_message = message_from_string(notification_to_student.payload)
+        to_email_addresses = [address for _, address in getaddresses(email_message.get_all('To', [('', '')]))]
+        cc_email_addresses = [address for _, address in getaddresses(email_message.get_all('Cc', [('', '')]))]
+        self.assertEqual(len(to_email_addresses), 1)
+        self.assertEqual(to_email_addresses[0], self.sceb_manager.email)
+        self.assertEqual(len(cc_email_addresses), 1)
+        self.assertEqual(cc_email_addresses[0], '')
