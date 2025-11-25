@@ -30,10 +30,13 @@ from django.views.generic import FormView
 from infrastructure.messages_bus import message_bus_instance
 from parcours_doctoral.ddd.autorisation_diffusion_these.commands import (
     AccepterTheseParAdreCommand,
+    AccepterTheseParScebCommand,
     RefuserTheseParAdreCommand,
     RefuserTheseParScebCommand,
 )
 from parcours_doctoral.ddd.autorisation_diffusion_these.domain.model.enums import (
+    CHOIX_STATUTS_AUTORISATION_DIFFUSION_THESE_MODIFIABLE_PAR_ADRE,
+    CHOIX_STATUTS_AUTORISATION_DIFFUSION_THESE_MODIFIABLE_PAR_SCEB,
     ChoixEtatSignature,
     ChoixStatutAutorisationDiffusionThese,
 )
@@ -72,7 +75,7 @@ class ManuscriptValidationApprovalFormView(
 
         authorization_distribution = self.authorization_distribution
 
-        if authorization_distribution.statut == ChoixStatutAutorisationDiffusionThese.DIFFUSION_VALIDEE_PROMOTEUR.name:
+        if authorization_distribution.statut in CHOIX_STATUTS_AUTORISATION_DIFFUSION_THESE_MODIFIABLE_PAR_ADRE:
             if decision == ChoixEtatSignature.DECLINED.name:
                 message_bus_instance.invoke(
                     RefuserTheseParAdreCommand(
@@ -93,13 +96,22 @@ class ManuscriptValidationApprovalFormView(
                     )
                 )
 
-        elif authorization_distribution.statut == ChoixStatutAutorisationDiffusionThese.DIFFUSION_VALIDEE_ADRE.name:
+        elif authorization_distribution.statut in CHOIX_STATUTS_AUTORISATION_DIFFUSION_THESE_MODIFIABLE_PAR_SCEB:
             if decision == ChoixEtatSignature.DECLINED.name:
                 message_bus_instance.invoke(
                     RefuserTheseParScebCommand(
                         uuid_parcours_doctoral=self.parcours_doctoral_uuid,
                         matricule_sceb=self.request.user.person.global_id,
                         motif_refus=form.cleaned_data['motif_refus'],
+                        commentaire_interne=form.cleaned_data['commentaire_interne'],
+                        commentaire_externe=form.cleaned_data['commentaire_externe'],
+                    )
+                )
+            elif decision == ChoixEtatSignature.APPROVED.name:
+                message_bus_instance.invoke(
+                    AccepterTheseParScebCommand(
+                        uuid_parcours_doctoral=self.parcours_doctoral_uuid,
+                        matricule_sceb=self.request.user.person.global_id,
                         commentaire_interne=form.cleaned_data['commentaire_interne'],
                         commentaire_externe=form.cleaned_data['commentaire_externe'],
                     )

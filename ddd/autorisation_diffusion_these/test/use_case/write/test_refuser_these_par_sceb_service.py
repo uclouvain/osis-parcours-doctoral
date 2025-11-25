@@ -41,8 +41,8 @@ from parcours_doctoral.ddd.autorisation_diffusion_these.domain.model.enums impor
     RoleActeur,
 )
 from parcours_doctoral.ddd.autorisation_diffusion_these.domain.validator.exceptions import (
+    AutorisationDiffusionTheseNonModifiableParScebException,
     AutorisationDiffusionTheseNonTrouveException,
-    AutorisationDiffusionTheseNonValideAdreException,
     MotifRefusNonSpecifieException,
     SignataireNonInviteException,
 )
@@ -102,7 +102,7 @@ class TestRefuserTheseParSceb(SimpleTestCase):
         self.authorisation_diffusion_these_repository.save(self.autorisation_diffusion_these)
         with self.assertRaises(MultipleBusinessExceptions) as e:
             self.message_bus.invoke(self.cmd(**self.parametres_cmd))
-        self.assertIsInstance(e.exception.exceptions.pop(), AutorisationDiffusionTheseNonValideAdreException)
+        self.assertIsInstance(e.exception.exceptions.pop(), AutorisationDiffusionTheseNonModifiableParScebException)
 
     def test_doit_generer_exception_si_acteur_non_invite(self):
         self.autorisation_diffusion_these.signataires = {

@@ -147,6 +147,10 @@ PROGRAM_MANAGER_RULES = {
     & has_valid_enrollment
     & admissibility_is_submitted
     & defense_method_is_formula_2,
+    # -- Autorisation de diffusion de thèse
+    'parcours_doctoral.view_authorization_distribution': is_part_of_education_group,
+    # -- Validation du manuscript
+    'parcours_doctoral.view_manuscript_validation': is_part_of_education_group,
     # -- Défense
     'parcours_doctoral.view_private_defense': is_part_of_education_group & defense_method_is_formula_1,
     'parcours_doctoral.authorise_private_defense': is_part_of_education_group

@@ -28,6 +28,7 @@ from .accepter_these_par_adre_service import accepter_these_par_adre
 from .accepter_these_par_promoteur_reference_service import (
     accepter_these_par_promoteur_reference,
 )
+from .accepter_these_par_sceb_service import accepter_these_par_sceb
 from .encoder_formulaire_autorisation_diffusion_these_service import (
     encoder_formulaire_autorisation_diffusion_these,
 )
