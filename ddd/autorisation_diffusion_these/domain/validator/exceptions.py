@@ -93,11 +93,11 @@ class AutorisationDiffusionTheseNonTrouveException(BusinessException):
         super().__init__(message=message, **kwargs)
 
 
-class AutorisationDiffusionTheseDejaSoumiseException(BusinessException):
+class AutorisationDiffusionTheseNonModifiableParEtudiantException(BusinessException):
     status_code = "AUTORISATION-DIFFUSION-THESE-9"
 
     def __init__(self, **kwargs):
-        message = _('The distribution authorization must not be submitted to do this action.')
+        message = _('The distribution authorization cannot currently be changed by the student.')
         super().__init__(message=message, **kwargs)
 
 
@@ -125,11 +125,11 @@ class GestionnaireSCEBNonTrouveException(BusinessException):
         super().__init__(message=message, **kwargs)
 
 
-class AutorisationDiffusionTheseNonSoumiseException(BusinessException):
+class AutorisationDiffusionTheseNonModifiableParPromoteurReferenceException(BusinessException):
     status_code = "AUTORISATION-DIFFUSION-THESE-13"
 
     def __init__(self, **kwargs):
-        message = _('The distribution authorization must be submitted to do this action.')
+        message = _('The distribution authorization cannot currently be changed by the contact supervisor.')
         super().__init__(message=message, **kwargs)
 
 
@@ -165,11 +165,11 @@ class NonAdreException(BusinessException):
         super().__init__(message=message, **kwargs)
 
 
-class AutorisationDiffusionTheseNonValidePromoteurException(BusinessException):
+class AutorisationDiffusionTheseNonModifiableParAdreException(BusinessException):
     status_code = "AUTORISATION-DIFFUSION-THESE-17"
 
     def __init__(self, **kwargs):
-        message = _('The distribution authorization must be validated by the promoter to do this action.')
+        message = _('The distribution authorization cannot currently be changed by the ADRE manager.')
         super().__init__(message=message, **kwargs)
 
 
@@ -181,9 +181,9 @@ class NonScebException(BusinessException):
         super().__init__(message=message, **kwargs)
 
 
-class AutorisationDiffusionTheseNonValideAdreException(BusinessException):
+class AutorisationDiffusionTheseNonModifiableParScebException(BusinessException):
     status_code = "AUTORISATION-DIFFUSION-THESE-19"
 
     def __init__(self, **kwargs):
-        message = _('The distribution authorization must be validated by the ADRE manager to do this action.')
+        message = _('The distribution authorization cannot currently be changed by the SCEB manager.')
         super().__init__(message=message, **kwargs)

@@ -24,7 +24,7 @@
 #
 # ##############################################################################
 from parcours_doctoral.ddd.autorisation_diffusion_these.commands import (
-    RefuserTheseParScebCommand,
+    AccepterTheseParScebCommand,
 )
 from parcours_doctoral.ddd.autorisation_diffusion_these.domain.builder.identity_builder import (
     AutorisationDiffusionTheseIdentityBuilder,
@@ -32,31 +32,24 @@ from parcours_doctoral.ddd.autorisation_diffusion_these.domain.builder.identity_
 from parcours_doctoral.ddd.autorisation_diffusion_these.domain.model.autorisation_diffusion_these import (
     AutorisationDiffusionTheseIdentity,
 )
-from parcours_doctoral.ddd.autorisation_diffusion_these.domain.service.i_notification import (
-    INotification,
-)
 from parcours_doctoral.ddd.autorisation_diffusion_these.repository.i_autorisation_diffusion_these import (
     IAutorisationDiffusionTheseRepository,
 )
 
 
-def refuser_these_par_sceb(
-    cmd: RefuserTheseParScebCommand,
+def accepter_these_par_sceb(
+    cmd: AccepterTheseParScebCommand,
     autorisation_diffusion_these_repository: IAutorisationDiffusionTheseRepository,
-    notification: INotification,
 ) -> AutorisationDiffusionTheseIdentity:
     identity = AutorisationDiffusionTheseIdentityBuilder.build_from_uuid(uuid=cmd.uuid_parcours_doctoral)
     entity = autorisation_diffusion_these_repository.get(identity)
 
-    entity.refuser_these_par_sceb(
+    entity.accepter_these_par_sceb(
         matricule_sceb=cmd.matricule_sceb,
-        motif_refus=cmd.motif_refus,
         commentaire_interne=cmd.commentaire_interne,
         commentaire_externe=cmd.commentaire_externe,
     )
 
     autorisation_diffusion_these_repository.save(entity)
-
-    notification.refuser_these_par_sceb(autorisation_diffusion_these=entity)
 
     return identity

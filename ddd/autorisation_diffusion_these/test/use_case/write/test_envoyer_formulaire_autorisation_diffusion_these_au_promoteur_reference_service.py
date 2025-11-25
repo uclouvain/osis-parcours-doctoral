@@ -43,7 +43,7 @@ from parcours_doctoral.ddd.autorisation_diffusion_these.domain.model.enums impor
     TypeModalitesDiffusionThese,
 )
 from parcours_doctoral.ddd.autorisation_diffusion_these.domain.validator.exceptions import (
-    AutorisationDiffusionTheseDejaSoumiseException,
+    AutorisationDiffusionTheseNonModifiableParEtudiantException,
     AutorisationDiffusionTheseNonTrouveException,
     DateEmbargoModalitesDiffusionNonCompleteeException,
     LangueRedactionTheseNonCompleteeException,
@@ -108,7 +108,7 @@ class TestEnvoyerFormulaireAutorisationDiffusionTheseAuPromoteurReference(Simple
         self.authorisation_diffusion_these_repository.save(self.autorisation_diffusion_these)
         with self.assertRaises(MultipleBusinessExceptions) as e:
             self.message_bus.invoke(self.cmd(**self.parametres_cmd))
-        self.assertIsInstance(e.exception.exceptions.pop(), AutorisationDiffusionTheseDejaSoumiseException)
+        self.assertIsInstance(e.exception.exceptions.pop(), AutorisationDiffusionTheseNonModifiableParEtudiantException)
 
     def test_doit_generer_exception_si_sources_financement_non_completees(self):
         self.parametres_cmd['sources_financement'] = ''
