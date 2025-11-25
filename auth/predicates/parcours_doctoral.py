@@ -32,7 +32,10 @@ from admission.ddd.admission.doctorat.preparation.domain.model.enums import (
 )
 from osis_role.errors import predicate_failed_msg
 from parcours_doctoral.ddd.autorisation_diffusion_these.domain.model.enums import (
+    CHOIX_STATUTS_AUTORISATION_DIFFUSION_THESE_MODIFIABLE_PAR_ADRE,
     CHOIX_STATUTS_AUTORISATION_DIFFUSION_THESE_MODIFIABLE_PAR_DOCTORANT,
+    CHOIX_STATUTS_AUTORISATION_DIFFUSION_THESE_MODIFIABLE_PAR_PROMOTEUR_REFERENCE,
+    CHOIX_STATUTS_AUTORISATION_DIFFUSION_THESE_MODIFIABLE_PAR_SCEB,
     ChoixStatutAutorisationDiffusionThese,
 )
 from parcours_doctoral.ddd.domain.model.enums import (
@@ -172,8 +175,8 @@ def authorization_distribution_is_in_progress(self, user: User, obj: ParcoursDoc
 
 
 @predicate(bind=True)
-@predicate_failed_msg(message=_("The authorization distribution must not be submitted."))
-def authorization_distribution_is_not_submitted(self, user: User, obj: ParcoursDoctoral):
+@predicate_failed_msg(message=_("The distribution authorization cannot currently be changed by the student."))
+def authorization_distribution_can_be_changed_by_student(self, user: User, obj: ParcoursDoctoral):
     return (
         not hasattr(obj, 'thesis_distribution_authorization')
         or obj.thesis_distribution_authorization.status
@@ -182,31 +185,34 @@ def authorization_distribution_is_not_submitted(self, user: User, obj: ParcoursD
 
 
 @predicate(bind=True)
-@predicate_failed_msg(message=_("The authorization distribution must be sent to the promoter."))
-def authorization_distribution_is_submitted_to_promoter(self, user: User, obj: ParcoursDoctoral):
+@predicate_failed_msg(
+    message=_("The distribution authorization cannot currently be changed by the contact supervisor.")
+)
+def authorization_distribution_can_be_changed_by_lead_promoter(self, user: User, obj: ParcoursDoctoral):
     return (
         hasattr(obj, 'thesis_distribution_authorization')
-        and obj.thesis_distribution_authorization.status == ChoixStatutAutorisationDiffusionThese.DIFFUSION_SOUMISE.name
+        and obj.thesis_distribution_authorization.status
+        in CHOIX_STATUTS_AUTORISATION_DIFFUSION_THESE_MODIFIABLE_PAR_PROMOTEUR_REFERENCE
     )
 
 
 @predicate(bind=True)
-@predicate_failed_msg(message=_("The authorization distribution must be sent to the ADRE manager."))
-def authorization_distribution_is_submitted_to_adre(self, user: User, obj: ParcoursDoctoral):
+@predicate_failed_msg(message=_("The distribution authorization cannot currently be changed by the ADRE manager."))
+def authorization_distribution_can_be_changed_by_adre(self, user: User, obj: ParcoursDoctoral):
     return (
         hasattr(obj, 'thesis_distribution_authorization')
         and obj.thesis_distribution_authorization.status
-        == ChoixStatutAutorisationDiffusionThese.DIFFUSION_VALIDEE_PROMOTEUR.name
+        in CHOIX_STATUTS_AUTORISATION_DIFFUSION_THESE_MODIFIABLE_PAR_ADRE
     )
 
 
 @predicate(bind=True)
-@predicate_failed_msg(message=_("The authorization distribution must be sent to the SCEB manager."))
-def authorization_distribution_is_submitted_to_sceb(self, user: User, obj: ParcoursDoctoral):
+@predicate_failed_msg(message=_("The distribution authorization cannot currently be changed by the SCEB manager."))
+def authorization_distribution_can_be_changed_by_sceb(self, user: User, obj: ParcoursDoctoral):
     return (
         hasattr(obj, 'thesis_distribution_authorization')
         and obj.thesis_distribution_authorization.status
-        == ChoixStatutAutorisationDiffusionThese.DIFFUSION_VALIDEE_ADRE.name
+        in CHOIX_STATUTS_AUTORISATION_DIFFUSION_THESE_MODIFIABLE_PAR_SCEB
     )
 
 
