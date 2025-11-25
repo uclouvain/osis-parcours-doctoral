@@ -47,3 +47,7 @@ class NotificationInMemory(INotification):
     @classmethod
     def refuser_these_par_adre(cls, autorisation_diffusion_these: AutorisationDiffusionThese) -> None:
         pass
+
+    @classmethod
+    def accepter_these_par_adre(cls, autorisation_diffusion_these: AutorisationDiffusionThese) -> None:
+        pass
