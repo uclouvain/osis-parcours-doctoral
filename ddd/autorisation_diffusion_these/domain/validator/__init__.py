@@ -40,4 +40,6 @@ __all__ = [
     'ShouldSignataireEtrePromoteur',
     'ShouldSignataireEtreInvite',
     'ShouldMotifRefusEtreSpecifie',
+    'ShouldSignataireEtreAdre',
+    'ShouldStatutAutorisationDiffusionTheseEtreValidePromoteur',
 ]
