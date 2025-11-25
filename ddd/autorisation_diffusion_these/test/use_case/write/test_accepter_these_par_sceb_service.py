@@ -30,7 +30,7 @@ from django.test import SimpleTestCase
 
 from base.ddd.utils.business_validator import MultipleBusinessExceptions
 from parcours_doctoral.ddd.autorisation_diffusion_these.commands import (
-    RefuserTheseParPromoteurReferenceCommand,
+    AccepterTheseParScebCommand,
 )
 from parcours_doctoral.ddd.autorisation_diffusion_these.domain.model.autorisation_diffusion_these import (
     AutorisationDiffusionThese,
@@ -41,9 +41,8 @@ from parcours_doctoral.ddd.autorisation_diffusion_these.domain.model.enums impor
     RoleActeur,
 )
 from parcours_doctoral.ddd.autorisation_diffusion_these.domain.validator.exceptions import (
-    AutorisationDiffusionTheseNonModifiableParPromoteurReferenceException,
+    AutorisationDiffusionTheseNonModifiableParScebException,
     AutorisationDiffusionTheseNonTrouveException,
-    MotifRefusNonSpecifieException,
     SignataireNonInviteException,
 )
 from parcours_doctoral.ddd.autorisation_diffusion_these.test.factory.autorisation_diffusion_these import (
@@ -61,11 +60,11 @@ from parcours_doctoral.infrastructure.parcours_doctoral.repository.in_memory.par
 )
 
 
-class TestRefuserTheseParPromoteurReference(SimpleTestCase):
+class TestAccepterTheseParSceb(SimpleTestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.cmd = RefuserTheseParPromoteurReferenceCommand
+        cls.cmd = AccepterTheseParScebCommand
         cls.message_bus = message_bus_in_memory_instance
         cls.parcours_doctoral_repository = ParcoursDoctoralInMemoryRepository()
         cls.authorisation_diffusion_these_repository = AutorisationDiffusionTheseInMemoryRepository()
@@ -74,20 +73,19 @@ class TestRefuserTheseParPromoteurReference(SimpleTestCase):
         self.addCleanup(self.parcours_doctoral_repository.reset)
         self.addCleanup(self.authorisation_diffusion_these_repository.reset)
         self.parcours_doctoral = ParcoursDoctoralInMemoryRepository.entities[0]
-        self.promoteur = SignataireAutorisationDiffusionTheseFactory(
-            entity_id__role=RoleActeur.PROMOTEUR,
-            entity_id__matricule='234567',
+        self.sceb = SignataireAutorisationDiffusionTheseFactory(
+            entity_id__role=RoleActeur.SCEB,
+            entity_id__matricule='012345',
             signature__etat=ChoixEtatSignature.INVITED,
         )
         self.autorisation_diffusion_these: AutorisationDiffusionThese = AutorisationDiffusionTheseFactory(
-            statut=ChoixStatutAutorisationDiffusionThese.DIFFUSION_SOUMISE,
-            signataires={RoleActeur.PROMOTEUR: self.promoteur},
+            statut=ChoixStatutAutorisationDiffusionThese.DIFFUSION_VALIDEE_ADRE,
+            signataires={RoleActeur.SCEB: self.sceb},
         )
         self.authorisation_diffusion_these_repository.save(self.autorisation_diffusion_these)
         self.parametres_cmd = {
             'uuid_parcours_doctoral': str(self.autorisation_diffusion_these.entity_id.uuid),
-            'matricule_promoteur': '234567',
-            'motif_refus': 'Motif',
+            'matricule_sceb': '012345',
             'commentaire_interne': 'Commentaire interne',
             'commentaire_externe': 'Commentaire externe',
         }
@@ -98,19 +96,17 @@ class TestRefuserTheseParPromoteurReference(SimpleTestCase):
             self.message_bus.invoke(self.cmd(**self.parametres_cmd))
 
     def test_doit_generer_exception_si_statut_incorrect(self):
-        self.autorisation_diffusion_these.statut = ChoixStatutAutorisationDiffusionThese.DIFFUSION_NON_SOUMISE
+        self.autorisation_diffusion_these.statut = ChoixStatutAutorisationDiffusionThese.DIFFUSION_SOUMISE
         self.authorisation_diffusion_these_repository.save(self.autorisation_diffusion_these)
         with self.assertRaises(MultipleBusinessExceptions) as e:
             self.message_bus.invoke(self.cmd(**self.parametres_cmd))
-        self.assertIsInstance(
-            e.exception.exceptions.pop(), AutorisationDiffusionTheseNonModifiableParPromoteurReferenceException
-        )
+        self.assertIsInstance(e.exception.exceptions.pop(), AutorisationDiffusionTheseNonModifiableParScebException)
 
     def test_doit_generer_exception_si_acteur_non_invite(self):
         self.autorisation_diffusion_these.signataires = {
-            RoleActeur.PROMOTEUR: SignataireAutorisationDiffusionTheseFactory(
-                entity_id__role=RoleActeur.PROMOTEUR,
-                entity_id__matricule='234567',
+            RoleActeur.SCEB: SignataireAutorisationDiffusionTheseFactory(
+                entity_id__role=RoleActeur.SCEB,
+                entity_id__matricule='012345',
                 signature__etat=ChoixEtatSignature.NOT_INVITED,
             )
         }
@@ -118,12 +114,6 @@ class TestRefuserTheseParPromoteurReference(SimpleTestCase):
         with self.assertRaises(MultipleBusinessExceptions) as e:
             self.message_bus.invoke(self.cmd(**self.parametres_cmd))
         self.assertIsInstance(e.exception.exceptions.pop(), SignataireNonInviteException)
-
-    def test_doit_generer_exception_si_motif_refus_non_specifie(self):
-        self.parametres_cmd['motif_refus'] = ''
-        with self.assertRaises(MultipleBusinessExceptions) as e:
-            self.message_bus.invoke(self.cmd(**self.parametres_cmd))
-        self.assertIsInstance(e.exception.exceptions.pop(), MotifRefusNonSpecifieException)
 
     @freezegun.freeze_time('2025-01-01')
     def test_doit_modifier_statut_et_enregistrer_informations_refus(self):
@@ -133,16 +123,16 @@ class TestRefuserTheseParPromoteurReference(SimpleTestCase):
 
         self.assertEqual(resultat, self.autorisation_diffusion_these.entity_id)
 
-        self.assertEqual(autorisation.statut, ChoixStatutAutorisationDiffusionThese.DIFFUSION_REFUSEE_PROMOTEUR)
+        self.assertEqual(autorisation.statut, ChoixStatutAutorisationDiffusionThese.DIFFUSION_VALIDEE_SCEB)
 
-        self.assertIsNotNone(autorisation.signataires.get(RoleActeur.PROMOTEUR))
-        self.assertIsNone(autorisation.signataires.get(RoleActeur.SCEB))
+        self.assertIsNone(autorisation.signataires.get(RoleActeur.PROMOTEUR))
         self.assertIsNone(autorisation.signataires.get(RoleActeur.ADRE))
+        self.assertIsNotNone(autorisation.signataires.get(RoleActeur.SCEB))
 
-        promoteur = autorisation.signataires.get(RoleActeur.PROMOTEUR)
-        self.assertEqual(promoteur.entity_id.matricule, '234567')
-        self.assertEqual(promoteur.entity_id.role, RoleActeur.PROMOTEUR)
-        self.assertEqual(promoteur.signature.commentaire_interne, self.parametres_cmd['commentaire_interne'])
-        self.assertEqual(promoteur.signature.etat, ChoixEtatSignature.DECLINED)
-        self.assertEqual(promoteur.signature.commentaire_externe, self.parametres_cmd['commentaire_externe'])
-        self.assertEqual(promoteur.signature.motif_refus, self.parametres_cmd['motif_refus'])
+        sceb = autorisation.signataires.get(RoleActeur.SCEB)
+        self.assertEqual(sceb.entity_id.matricule, '012345')
+        self.assertEqual(sceb.entity_id.role, RoleActeur.SCEB)
+        self.assertEqual(sceb.signature.commentaire_interne, self.parametres_cmd['commentaire_interne'])
+        self.assertEqual(sceb.signature.etat, ChoixEtatSignature.APPROVED)
+        self.assertEqual(sceb.signature.commentaire_externe, self.parametres_cmd['commentaire_externe'])
+        self.assertEqual(sceb.signature.motif_refus, '')

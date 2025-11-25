@@ -3921,20 +3921,6 @@ msgstr "L'inscription à l'évaluation n'a pas été trouvée"
 msgid "The authorization distribution is not in progress."
 msgstr "L'autorisation de diffusion n'est pas en cours."
 
-msgid "The authorization distribution must be sent to the ADRE manager."
-msgstr ""
-"L'autorisation de diffusion doit avoir été envoyée au gestionnaire ADRE."
-
-msgid "The authorization distribution must be sent to the SCEB manager."
-msgstr ""
-"L'autorisation de diffusion doit avoir été envoyée au gestionnaire SCEB."
-
-msgid "The authorization distribution must be sent to the promoter."
-msgstr "L'autorisation de diffusion doit avoir été envoyée au promoteur."
-
-msgid "The authorization distribution must not be submitted."
-msgstr "L'autorisation de diffusion ne doit pas être soumise."
-
 msgid ""
 "The authorized publications and their valuation in credits are specified on "
 "the website of you domain doctoral commission. If the publication must be "
@@ -4044,32 +4030,35 @@ msgstr "La formule de défense doit être la formule 2."
 msgid "The definitive thesis title is:"
 msgstr "Le titre définitif de la thèse est le suivant :"
 
+msgid ""
+"The distribution authorization cannot currently be changed by the ADRE "
+"manager."
+msgstr ""
+"L'autorisation de diffusion de thèse n'est actuellement pas modifiable par "
+"le gestionnaire ADRE."
+
+msgid ""
+"The distribution authorization cannot currently be changed by the SCEB "
+"manager."
+msgstr ""
+"L'autorisation de diffusion de thèse n'est actuellement pas modifiable par "
+"le gestionnaire SCEB."
+
+msgid ""
+"The distribution authorization cannot currently be changed by the contact "
+"supervisor."
+msgstr ""
+"L'autorisation de diffusion de thèse n'est actuellement pas modifiable par "
+"le·la promoteur·trice de contact."
+
+msgid ""
+"The distribution authorization cannot currently be changed by the student."
+msgstr ""
+"L'autorisation de diffusion de thèse n'est actuellement pas modifiable par "
+"l'étudiant."
+
 msgid "The distribution authorization has not been found."
 msgstr "L'autorisation de diffusion de thèse n'a pas été trouvée."
-
-msgid "The distribution authorization must be submitted to do this action."
-msgstr ""
-"L'autorisation de diffusion de thèse doit être soumise pour réaliser cette "
-"action."
-
-msgid ""
-"The distribution authorization must be validated by the ADRE manager to do "
-"this action."
-msgstr ""
-"L'autorisation de diffusion de thèse doit être validée par le gestionnaire ADRE pour "
-"réaliser cette action."
-
-msgid ""
-"The distribution authorization must be validated by the promoter to do this "
-"action."
-msgstr ""
-"L'autorisation de diffusion de thèse doit être validée par le promoteur pour "
-"réaliser cette action."
-
-msgid "The distribution authorization must not be submitted to do this action."
-msgstr ""
-"L'autorisation de diffusion de thèse ne doit pas être soumise pour réaliser "
-"cette action."
 
 msgid "The distribution conditions type must be specified."
 msgstr "Le type des modalités de diffusion doit être spécifié."
@@ -4309,6 +4298,9 @@ msgstr "La procédure de demande de signature a déjà été lancée."
 
 msgid "The signature request procedure isn't in progress."
 msgstr "La procédure de demande de signature n'a pas été lancée."
+
+msgid "The signing process has not yet started."
+msgstr "Le processus de signature n'a pas encore commencé."
 
 msgid "The sources of funding must be specified."
 msgstr "Les sources de financement doivent être spécifiées."

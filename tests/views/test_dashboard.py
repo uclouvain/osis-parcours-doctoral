@@ -52,6 +52,9 @@ from base.tests.factories.entity_version import (
 )
 from base.tests.factories.program_manager import ProgramManagerFactory
 from infrastructure.messages_bus import message_bus_instance
+from parcours_doctoral.ddd.autorisation_diffusion_these.domain.model.enums import (
+    ChoixStatutAutorisationDiffusionThese,
+)
 from parcours_doctoral.ddd.domain.model.enums import (
     ChoixCommissionProximiteCDEouCLSM,
     ChoixCommissionProximiteCDSS,
@@ -68,6 +71,9 @@ from parcours_doctoral.ddd.domain.model.parcours_doctoral import (
 from parcours_doctoral.ddd.read_view.dto.tableau_bord import TableauBordDTO
 from parcours_doctoral.ddd.read_view.queries import (
     RecupererInformationsTableauBordQuery,
+)
+from parcours_doctoral.tests.factories.authorization_distribution import (
+    ThesisDistributionAuthorizationFactory,
 )
 from parcours_doctoral.tests.factories.confirmation_paper import (
     ConfirmationPaperFactory,
@@ -560,6 +566,60 @@ class DashboardCommandTestCase(TestCase):
         doctorate.defense_minutes = [uuid.uuid4()]
         doctorate.save()
 
+        self.assert_dashboard_value(category, indicator, 1)
+
+    @mock.patch('django.db.models.functions.datetime.Now.resolve_expression')
+    def test_authorization_distribution_not_submitted_and_15_days_to_public_defense(self, mock_resolve):
+        category = CategorieTableauBordEnum.AUTORISATION_DIFFUSION_THESE.name
+        indicator = IndicateurTableauBordEnum.AUTORISATION_DIFFUSION_THESE_ECHEANCE_15_JOURS.name
+
+        # Today date: 2024/01/01
+        with freezegun.freeze_time(datetime.date(2024, 1, 1)):
+            current_date = Value(datetime.date(2024, 1, 1))
+            mock_resolve.side_effect = current_date.resolve_expression
+
+            # Public defense date: 2024/01/15
+            doctorate = ParcoursDoctoralFactory(defense_datetime=datetime.datetime(2024, 1, 15))
+            self.assert_dashboard_value(category, indicator, 1)
+
+            authorization_distribution = ThesisDistributionAuthorizationFactory(parcours_doctoral=doctorate)
+            self.assert_dashboard_value(category, indicator, 1)
+
+            authorization_distribution.status = ChoixStatutAutorisationDiffusionThese.DIFFUSION_SOUMISE.name
+            authorization_distribution.save()
+
+            self.assert_dashboard_value(category, indicator, 0)
+
+            authorization_distribution.delete()
+
+            # Public defense date: 2024/01/15 - 00:00:01
+            doctorate.defense_datetime = datetime.datetime(2024, 1, 15, 0, 0, 1)
+            doctorate.save()
+
+            self.assert_dashboard_value(category, indicator, 0)
+
+    def test_authorization_distribution_rejected_by_adre(self):
+        category = CategorieTableauBordEnum.AUTORISATION_DIFFUSION_THESE.name
+        indicator = IndicateurTableauBordEnum.AUTORISATION_DIFFUSION_THESE_REJET_ADRE.name
+
+        doctorate = ParcoursDoctoralFactory(defense_datetime=datetime.datetime(2024, 1, 15))
+        authorization_distribution = ThesisDistributionAuthorizationFactory(parcours_doctoral=doctorate)
+        self.assert_dashboard_value(category, indicator, 0)
+
+        authorization_distribution.status = ChoixStatutAutorisationDiffusionThese.DIFFUSION_REFUSEE_ADRE.name
+        authorization_distribution.save()
+        self.assert_dashboard_value(category, indicator, 1)
+
+    def test_authorization_distribution_rejected_by_sceb(self):
+        category = CategorieTableauBordEnum.AUTORISATION_DIFFUSION_THESE.name
+        indicator = IndicateurTableauBordEnum.AUTORISATION_DIFFUSION_THESE_REJET_SCEB.name
+
+        doctorate = ParcoursDoctoralFactory(defense_datetime=datetime.datetime(2024, 1, 15))
+        authorization_distribution = ThesisDistributionAuthorizationFactory(parcours_doctoral=doctorate)
+        self.assert_dashboard_value(category, indicator, 0)
+
+        authorization_distribution.status = ChoixStatutAutorisationDiffusionThese.DIFFUSION_REFUSEE_SCEB.name
+        authorization_distribution.save()
         self.assert_dashboard_value(category, indicator, 1)
 
 
