@@ -23,13 +23,14 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+import datetime
 from typing import Dict, List, Optional
 
 from django.db.models.aggregates import Count
 from django.db.models.expressions import ExpressionWrapper, F
 from django.db.models.fields import DateField
 from django.db.models.functions.datetime import Now
-from django.db.models.lookups import GreaterThanOrEqual
+from django.db.models.lookups import GreaterThanOrEqual, LessThanOrEqual
 from django.db.models.query_utils import Q
 
 from admission.ddd.admission.doctorat.preparation.read_view.domain.enums.tableau_bord import (
@@ -39,6 +40,9 @@ from admission.infrastructure.admission.doctorat.preparation.read_view.repositor
     TableauBordRepositoryAdmissionMixin,
 )
 from admission.models import DoctorateAdmission
+from parcours_doctoral.ddd.autorisation_diffusion_these.domain.model.enums import (
+    ChoixStatutAutorisationDiffusionThese,
+)
 from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from parcours_doctoral.ddd.read_view.repository.i_tableau_bord import (
     ITableauBordRepository,
@@ -109,9 +113,23 @@ class TableauBordRepository(TableauBordRepositoryAdmissionMixin, ITableauBordRep
             status=ChoixStatutParcoursDoctoral.SOUTENANCE_PUBLIQUE_SOUMISE.name,
             defense_minutes__len__gt=0,
         ),
-        # IndicateurTableauBordEnum.AUTORISATION_DIFFUSION_THESE_ECHEANCE_15_JOURS.name: Q(),
-        # IndicateurTableauBordEnum.AUTORISATION_DIFFUSION_THESE_REJET_ADRE.name: Q(),
-        # IndicateurTableauBordEnum.AUTORISATION_DIFFUSION_THESE_REJET_SCEB.name: Q(),
+        IndicateurTableauBordEnum.AUTORISATION_DIFFUSION_THESE_ECHEANCE_15_JOURS.name: Q(
+            Q(
+                Q(thesis_distribution_authorization__isnull=True)
+                | Q(
+                    thesis_distribution_authorization__status=(
+                        ChoixStatutAutorisationDiffusionThese.DIFFUSION_NON_SOUMISE.name
+                    )
+                )
+            )
+            & Q(defense_datetime__lte=Now() + datetime.timedelta(days=14))
+        ),
+        IndicateurTableauBordEnum.AUTORISATION_DIFFUSION_THESE_REJET_ADRE.name: Q(
+            thesis_distribution_authorization__status=ChoixStatutAutorisationDiffusionThese.DIFFUSION_REFUSEE_ADRE.name,
+        ),
+        IndicateurTableauBordEnum.AUTORISATION_DIFFUSION_THESE_REJET_SCEB.name: Q(
+            thesis_distribution_authorization__status=ChoixStatutAutorisationDiffusionThese.DIFFUSION_REFUSEE_SCEB.name,
+        ),
         # IndicateurTableauBordEnum.SOUTENANCE_PUBLIQUE_PV_TELEVERSE.name: Q(),
     }
 
