@@ -679,3 +679,60 @@ class ManuscriptValidationFormViewWithScebManagerTestCase(MockOsisDocumentMixin,
         self.assertEqual(to_email_addresses[0], self.doctorate.student.email)
         self.assertEqual(len(cc_email_addresses), 2)
         self.assertCountEqual(cc_email_addresses, [self.promoter.person.email, self.adre_manager.person.email])
+
+    def test_accept_the_thesis_with_no_invited_adre_manager(self):
+        self.client.force_login(user=self.sceb_manager_role.person.user)
+
+        self.sceb_manager_invited_state.delete()
+
+        response = self.client.post(self.url, data=self.accept_data)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        form = response.context.get('form')
+
+        self.assertFalse(form.is_valid())
+
+        self.assertIn(
+            gettext('You must be invited to do this action.'),
+            form.errors.get('__all__', []),
+        )
+
+    def test_accept_the_thesis(self):
+        self.client.force_login(user=self.sceb_manager_role.person.user)
+
+        response = self.client.post(self.url, data=self.accept_data)
+
+        self.assertRedirects(response, self.details_url)
+
+        self.doctorate.refresh_from_db()
+        self.thesis_distribution_authorization.refresh_from_db()
+
+        # Check that the data have been updated
+        self.assertEqual(
+            self.thesis_distribution_authorization.status,
+            ChoixStatutAutorisationDiffusionThese.DIFFUSION_VALIDEE_SCEB.name,
+        )
+
+        # Check that the approval data have been saved
+        group = self.thesis_distribution_authorization.signature_group
+        self.assertIsNotNone(group)
+
+        sceb_managers: QuerySet[Actor] = group.actors.filter(
+            thesisdistributionauthorizationactor__role=RoleActeur.SCEB.name,
+        )
+        self.assertEqual(len(sceb_managers), 1)
+
+        self.assertEqual(sceb_managers[0].person, self.sceb_manager.person)
+        self.assertEqual(sceb_managers[0].thesisdistributionauthorizationactor.rejection_reason, '')
+        self.assertEqual(
+            sceb_managers[0].thesisdistributionauthorizationactor.internal_comment,
+            self.accept_data['commentaire_interne'],
+        )
+        self.assertEqual(sceb_managers[0].thesisdistributionauthorizationactor.role, RoleActeur.SCEB.name)
+        self.assertEqual(sceb_managers[0].comment, self.accept_data['commentaire_externe'])
+
+        states: QuerySet[StateHistory] = sceb_managers[0].states.all()
+        self.assertEqual(len(states), 2)
+
+        self.assertEqual(states[1].state, SignatureState.APPROVED.name)
