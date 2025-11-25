@@ -172,3 +172,25 @@ class RefuserTheseParAdreValidatorList(TwoStepsMultipleBusinessExceptionListVali
                 motifs_refus=self.motifs_refus,
             ),
         ]
+
+
+@attr.dataclass(frozen=True, slots=True)
+class AccepterTheseParAdreValidatorList(TwoStepsMultipleBusinessExceptionListValidator):
+    statut: ChoixStatutAutorisationDiffusionThese
+    signataire: 'SignataireAutorisationDiffusionThese'
+
+    def get_data_contract_validators(self) -> List[BusinessValidator]:
+        return []
+
+    def get_invariants_validators(self) -> List[BusinessValidator]:
+        return [
+            ShouldStatutAutorisationDiffusionTheseEtreValidePromoteur(
+                statut=self.statut,
+            ),
+            ShouldSignataireEtreAdre(
+                signataire=self.signataire,
+            ),
+            ShouldSignataireEtreInvite(
+                signataire=self.signataire,
+            ),
+        ]

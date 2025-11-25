@@ -36,6 +36,7 @@ from parcours_doctoral.ddd.autorisation_diffusion_these.domain.model.enums impor
     TypeModalitesDiffusionThese,
 )
 from parcours_doctoral.ddd.autorisation_diffusion_these.domain.validator.validator_by_business_action import (
+    AccepterTheseParAdreValidatorList,
     AccepterTheseParPromoteurValidatorList,
     AutorisationDiffusionTheseValidatorList,
     ModifierAutorisationDiffusionTheseValidatorList,
@@ -248,3 +249,27 @@ class AutorisationDiffusionThese(interface.RootEntity):
         )
 
         self.statut = ChoixStatutAutorisationDiffusionThese.DIFFUSION_REFUSEE_ADRE
+
+    def accepter_these_par_adre(
+        self,
+        matricule_adre: str,
+        commentaire_interne: str,
+        commentaire_externe: str,
+        matricule_sceb: str,
+    ):
+        adre = self.recuperer_signataire(role=RoleActeur.ADRE, matricule=matricule_adre)
+
+        AccepterTheseParAdreValidatorList(
+            signataire=adre,
+            statut=self.statut,
+        ).validate()
+
+        self.statut = ChoixStatutAutorisationDiffusionThese.DIFFUSION_VALIDEE_ADRE
+
+        adre.accepter(
+            commentaire_interne=commentaire_interne,
+            commentaire_externe=commentaire_externe,
+        )
+
+        sceb = self.recuperer_signataire(role=RoleActeur.SCEB, matricule=matricule_sceb)
+        sceb.inviter()
