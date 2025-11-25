@@ -3579,6 +3579,9 @@ msgstr ""
 msgid "The authorization distribution must be sent to the ADRE manager."
 msgstr ""
 
+msgid "The authorization distribution must be sent to the SCEB manager."
+msgstr ""
+
 msgid "The authorization distribution must be sent to the promoter."
 msgstr ""
 
@@ -3671,6 +3674,11 @@ msgid "The distribution authorization has not been found."
 msgstr ""
 
 msgid "The distribution authorization must be submitted to do this action."
+msgstr ""
+
+msgid ""
+"The distribution authorization must be validated by the ADRE manager to do "
+"this action."
 msgstr ""
 
 msgid ""
@@ -4343,6 +4351,9 @@ msgid "You must add at least two CA members in order to request signatures."
 msgstr ""
 "You must add at least two supervision committee members in order to request "
 "signatures."
+
+msgid "You must be a SCEB manager to do this action."
+msgstr ""
 
 msgid "You must be a member of the committee to access this doctoral training"
 msgstr ""

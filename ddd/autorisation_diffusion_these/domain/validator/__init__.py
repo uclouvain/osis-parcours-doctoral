@@ -42,4 +42,6 @@ __all__ = [
     'ShouldMotifRefusEtreSpecifie',
     'ShouldSignataireEtreAdre',
     'ShouldStatutAutorisationDiffusionTheseEtreValidePromoteur',
+    'ShouldSignataireEtreSceb',
+    'ShouldStatutAutorisationDiffusionTheseEtreValideAdre',
 ]

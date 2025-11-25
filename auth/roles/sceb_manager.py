@@ -31,6 +31,8 @@ from rules import RuleSet
 
 from osis_role.contrib.models import RoleModel
 from parcours_doctoral.auth.predicates.parcours_doctoral import (
+    authorization_distribution_is_in_progress,
+    authorization_distribution_is_submitted_to_sceb,
     defense_method_is_formula_1,
 )
 
@@ -74,5 +76,8 @@ class ScebManager(RoleModel):
             'parcours_doctoral.view_private_defense': rules.always_allow & defense_method_is_formula_1,
             'parcours_doctoral.view_public_defense': rules.always_allow & defense_method_is_formula_1,
             'parcours_doctoral.view_comments': rules.always_allow,
+            'parcours_doctoral.view_manuscript_validation': rules.always_allow,
+            'parcours_doctoral.validate_manuscript': authorization_distribution_is_submitted_to_sceb
+            & authorization_distribution_is_in_progress,
         }
         return RuleSet(ruleset)
