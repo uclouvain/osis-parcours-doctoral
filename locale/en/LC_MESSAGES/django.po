@@ -244,6 +244,10 @@ msgctxt "publication-status"
 msgid "Accepted"
 msgstr ""
 
+#, python-format
+msgid "Accepted by %(first_name)s %(last_name)s on"
+msgstr ""
+
 msgid "Achieved additional training"
 msgstr ""
 
@@ -591,6 +595,9 @@ msgstr ""
 msgid "Authorise the public defence"
 msgstr ""
 
+msgid "Authorization and distribution"
+msgstr ""
+
 msgid "Authors"
 msgstr ""
 
@@ -611,6 +618,19 @@ msgstr ""
 msgid ""
 "Be careful, some doctorales commissions require an activity proof in their "
 "specifics dispositions. Refer to your commission specifics dispositions."
+msgstr ""
+
+#, python-format
+msgid ""
+"Before your defence, you must submit your thesis electronically to the DIAL "
+"electronic thesis repository (<a href=\"%(url)s\" target=\"_blank\">%(url)s</"
+"a>). Before you do so, please enter the metadata using the form below. "
+"Please also indicate your chosen distribution conditions (open or restricted "
+"access, blocking for a certain period, etc.), after discussing these with "
+"your supervisors. You will then receive an email confirming that your "
+"supervisor has approved the distribution, followed by an email from the "
+"library team regarding the deposit formalities to be completed in their DIAL "
+"application."
 msgstr ""
 
 msgid "Body"
@@ -1195,6 +1215,9 @@ msgstr ""
 msgid "Diploma collection date"
 msgstr ""
 
+msgid "Distribution conditions"
+msgstr ""
+
 msgid "Distribution refused by ADRE"
 msgstr ""
 
@@ -1364,6 +1387,9 @@ msgid "Enable complementary training tab"
 msgstr ""
 
 msgid "End date"
+msgstr ""
+
+msgid "End of the embargo period"
 msgstr ""
 
 msgid "English"
@@ -1600,6 +1626,37 @@ msgstr ""
 msgid "Hourly volume type"
 msgstr ""
 
+msgid ""
+"I accept that the text of this thesis may be published in UCLouvain's "
+"digital thesis collection."
+msgstr ""
+
+msgid ""
+"I also certify that I have obtained, in accordance with copyright "
+"legislation and the requirements of image rights, all the necessary "
+"authorisations for the reproduction in the thesis of images, texts and/or "
+"any other works protected by copyright, and that I have obtained the "
+"necessary authorisations for their transmission to third parties."
+msgstr ""
+
+msgid "I am aware that the thesis summary will be available to the public."
+msgstr ""
+
+msgid ""
+"I hereby certify that the digital version of the thesis submitted to "
+"UCLouvain for the purposes of the distribution authorised herein conforms to "
+"the official version approved by the thesis exam board."
+msgstr ""
+
+msgid ""
+"I retain all other rights regarding reproduction of and communications "
+"pertaining to the thesis, as well as the right to use the thesis in future "
+"works. I undertake, however, not to grant to third parties any rights which "
+"would in any way interfere with this authorisation and will reserve in any "
+"subsequent contract with third parties the rights and obligations arising "
+"from this authorisation."
+msgstr ""
+
 msgid "INVITED"
 msgstr "Invited to sign"
 
@@ -1667,6 +1724,14 @@ msgid "In person"
 msgstr ""
 
 msgid "In the context of a course, specify the name of the professor"
+msgstr ""
+
+msgid ""
+"In the event that a third party benefits from a right to review the "
+"publication and/or is the holder of a property right to all or part of the "
+"results described in the thesis, I certify that I have obtained their "
+"written authorisation for dissemination. This has been verified in "
+"collaboration with the Research Administration Department."
 msgstr ""
 
 msgid "Incomplete field"
@@ -2153,6 +2218,9 @@ msgid "Mandatory fields are missing in the cotutelle."
 msgstr ""
 
 msgid "Mandatory fields are missing in the project details of the proposition."
+msgstr ""
+
+msgid "Manuscript validation"
 msgstr ""
 
 msgid "Mark or honours obtained"
@@ -3508,6 +3576,9 @@ msgstr ""
 msgid "The authorization distribution is not in progress."
 msgstr ""
 
+msgid "The authorization distribution must be sent to the ADRE manager."
+msgstr ""
+
 msgid "The authorization distribution must be sent to the promoter."
 msgstr ""
 
@@ -3600,6 +3671,11 @@ msgid "The distribution authorization has not been found."
 msgstr ""
 
 msgid "The distribution authorization must be submitted to do this action."
+msgstr ""
+
+msgid ""
+"The distribution authorization must be validated by the promoter to do this "
+"action."
 msgstr ""
 
 msgid "The distribution authorization must not be submitted to do this action."
@@ -3695,6 +3771,12 @@ msgid "The last name of the signing actor"
 msgstr ""
 
 msgid "The last name of the student"
+msgstr ""
+
+msgid ""
+"The licence, which is free of charge and non-exclusive, is valid for the "
+"entire duration of the copyright, including any extensions, and for the "
+"entire world."
 msgstr ""
 
 msgid "The link to the admissibility minutes"
@@ -3953,6 +4035,11 @@ msgstr ""
 msgid "This comment will be visible to all users with access to the jury."
 msgstr ""
 
+msgid ""
+"This comment will be visible to all users with access to the manuscript "
+"validation."
+msgstr ""
+
 msgid "This field is required."
 msgstr ""
 
@@ -4043,6 +4130,9 @@ msgstr ""
 msgid ""
 "To be uploaded in your dossier on the doctoral platform as soon as possible "
 "after the confirmation test"
+msgstr ""
+
+msgid "To this end, I license to UCLouvain the right to:"
 msgstr ""
 
 msgid ""
@@ -4265,6 +4355,9 @@ msgstr ""
 msgid "You must be a member of the jury to access this doctoral training"
 msgstr ""
 
+msgid "You must be an ADRE manager to do this action."
+msgstr ""
+
 msgid "You must be invited to do this action."
 msgstr ""
 
@@ -4375,6 +4468,11 @@ msgstr ""
 msgid "hours"
 msgstr ""
 
+msgid ""
+"impart the thesis to the public according to the procedures established "
+"below."
+msgstr ""
+
 msgid "items per page"
 msgstr ""
 
@@ -4388,6 +4486,9 @@ msgstr ""
 msgid ""
 "reasoned opinion and list of questions asked by any exam board members who "
 "may have been absent due to force majeure."
+msgstr ""
+
+msgid "set and reproduce the thesis on a digital medium;"
 msgstr ""
 
 msgid "she"
