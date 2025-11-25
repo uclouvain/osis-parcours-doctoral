@@ -171,3 +171,19 @@ class AutorisationDiffusionTheseNonValidePromoteurException(BusinessException):
     def __init__(self, **kwargs):
         message = _('The distribution authorization must be validated by the promoter to do this action.')
         super().__init__(message=message, **kwargs)
+
+
+class NonScebException(BusinessException):
+    status_code = "AUTORISATION-DIFFUSION-THESE-18"
+
+    def __init__(self, **kwargs):
+        message = _('You must be a SCEB manager to do this action.')
+        super().__init__(message=message, **kwargs)
+
+
+class AutorisationDiffusionTheseNonValideAdreException(BusinessException):
+    status_code = "AUTORISATION-DIFFUSION-THESE-19"
+
+    def __init__(self, **kwargs):
+        message = _('The distribution authorization must be validated by the ADRE manager to do this action.')
+        super().__init__(message=message, **kwargs)
