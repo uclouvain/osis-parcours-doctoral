@@ -201,6 +201,16 @@ def authorization_distribution_is_submitted_to_adre(self, user: User, obj: Parco
 
 
 @predicate(bind=True)
+@predicate_failed_msg(message=_("The authorization distribution must be sent to the SCEB manager."))
+def authorization_distribution_is_submitted_to_sceb(self, user: User, obj: ParcoursDoctoral):
+    return (
+        hasattr(obj, 'thesis_distribution_authorization')
+        and obj.thesis_distribution_authorization.status
+        == ChoixStatutAutorisationDiffusionThese.DIFFUSION_VALIDEE_ADRE.name
+    )
+
+
+@predicate(bind=True)
 @predicate_failed_msg(message=_("The admissibility is not in progress"))
 def admissibility_in_progress(self, user: User, obj: ParcoursDoctoral):
     return obj.status in STATUTS_DOCTORAT_RECEVABILITE_EN_COURS

@@ -66,6 +66,7 @@ from parcours_doctoral.models.thesis_distribution_authorization import (
 from parcours_doctoral.tests.factories.authorization_distribution import (
     AdreThesisDistributionAuthorizationActorFactory,
     PromoterThesisDistributionAuthorizationActorFactory,
+    ScebThesisDistributionAuthorizationActorFactory,
     ThesisDistributionAuthorizationFactory,
 )
 from parcours_doctoral.tests.factories.jury import JuryActorFactory
@@ -417,3 +418,264 @@ class ManuscriptValidationFormViewWithAdreManagerTestCase(MockOsisDocumentMixin,
         self.assertEqual(to_email_addresses[0], self.sceb_manager.email)
         self.assertEqual(len(cc_email_addresses), 1)
         self.assertEqual(cc_email_addresses[0], '')
+
+
+@override_settings(OSIS_DOCUMENT_BASE_URL='http://dummyurl')
+class ManuscriptValidationFormViewWithScebManagerTestCase(MockOsisDocumentMixin, TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.academic_years = [AcademicYearFactory(year=year) for year in [2021, 2022]]
+
+        cls.doctoral_commission = EntityFactory()
+        EntityVersionFactory(entity=cls.doctoral_commission, acronym=ENTITY_CDE)
+
+        cls.training = DoctorateFactory()
+
+        cls.student = PersonFactory()
+        cls.manager = ProgramManagerFactory(education_group=cls.training.education_group).person
+        cls.adre_manager_role = AdreManagerRoleFactory()
+        cls.sceb_manager_role = ScebManagerRoleFactory()
+
+        cls.reject_data = {
+            'decision': ChoixEtatSignature.DECLINED.name,
+            'motif_refus': 'Reason',
+            'commentaire_interne': 'Internal comment 0',
+            'commentaire_externe': 'External comment 0',
+        }
+        cls.accept_data = {
+            'decision': ChoixEtatSignature.APPROVED.name,
+            'commentaire_interne': 'Internal comment 1',
+            'commentaire_externe': 'External comment 1',
+        }
+
+        cls.namespace = 'parcours_doctoral:update:manuscript-validation'
+        cls.detail_namespace = 'parcours_doctoral:manuscript-validation'
+
+    def setUp(self):
+        super().setUp()
+
+        self.doctorate: ParcoursDoctoral = ParcoursDoctoralFactory(
+            student=self.student,
+            status=ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_REUSSIE.name,
+            defense_method=FormuleDefense.FORMULE_1.name,
+        )
+
+        # Promoter
+        jury_promoter = self.doctorate.jury_group.actors.filter(juryactor__is_lead_promoter=True).first()
+        jury_promoter.save()
+        self.promoter: ThesisDistributionAuthorizationActor = PromoterThesisDistributionAuthorizationActorFactory(
+            person=jury_promoter.person,
+        )
+
+        # Adre
+        self.jury_adre = JuryActorFactory(
+            process=self.doctorate.jury_group,
+            role=RoleJury.ADRE.name,
+            person=self.adre_manager_role.person,
+        )
+        self.adre_manager: ThesisDistributionAuthorizationActor = AdreThesisDistributionAuthorizationActorFactory(
+            person=self.jury_adre.person,
+            process=self.promoter.process,
+        )
+        self.adre_manager_invited_state = StateHistory.objects.create(
+            actor=self.adre_manager,
+            state=SignatureState.INVITED.name,
+        )
+
+        # Sceb
+        self.sceb_manager: ThesisDistributionAuthorizationActor = ScebThesisDistributionAuthorizationActorFactory(
+            person=self.sceb_manager_role.person,
+            process=self.promoter.process,
+        )
+        self.sceb_manager_invited_state = StateHistory.objects.create(
+            actor=self.sceb_manager,
+            state=SignatureState.INVITED.name,
+        )
+
+        self.thesis_distribution_authorization: ThesisDistributionAuthorization = (
+            ThesisDistributionAuthorizationFactory(
+                parcours_doctoral=self.doctorate,
+                status=ChoixStatutAutorisationDiffusionThese.DIFFUSION_VALIDEE_ADRE.name,
+                signature_group=self.adre_manager.process,
+            )
+        )
+
+        self.url = resolve_url(self.namespace, uuid=self.doctorate.uuid)
+        self.details_url = resolve_url(self.detail_namespace, uuid=self.doctorate.uuid)
+
+    def test_access_depending_on_some_statuses(self):
+        self.client.force_login(user=self.sceb_manager_role.person.user)
+
+        # First defense method
+        self.doctorate.defense_method = FormuleDefense.FORMULE_1.name
+        self.doctorate.status = ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_SOUMISE.name
+
+        self.doctorate.save()
+
+        # > during the private defense
+        response = self.client.post(self.url, data=self.reject_data)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        # Second defense method
+        self.doctorate.defense_method = FormuleDefense.FORMULE_2.name
+        self.doctorate.status = ChoixStatutParcoursDoctoral.RECEVABILITE_SOUMISE.name
+
+        self.doctorate.save()
+
+        # > during the admissibility
+        response = self.client.post(self.url, data=self.reject_data)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        # > after the admissibility but the authorization is not validated by the promoter
+        self.doctorate.status = ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_SOUMISE.name
+        self.doctorate.save()
+
+        self.thesis_distribution_authorization.status = (
+            ChoixStatutAutorisationDiffusionThese.DIFFUSION_VALIDEE_PROMOTEUR.name
+        )
+        self.thesis_distribution_authorization.save()
+
+        response = self.client.post(self.url, data=self.reject_data)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_with_valid_access(self):
+        self.client.force_login(self.sceb_manager_role.person.user)
+
+        response = self.client.get(self.url)
+
+        self.assertEqual(response.status_code, 200)
+
+        authorization_distribution: AutorisationDiffusionTheseDTO = response.context.get('authorization_distribution')
+
+        self.thesis_distribution_authorization.refresh_from_db()
+
+        self.assertEqual(
+            authorization_distribution.statut,
+            ChoixStatutAutorisationDiffusionThese.DIFFUSION_VALIDEE_ADRE.name,
+        )
+
+        signatories = response.context.get('signatories')
+
+        self.assertEqual(len(signatories), 3)
+
+        sceb_manager_dto = signatories.get(RoleActeur.SCEB.name)
+
+        self.assertIsNotNone(sceb_manager_dto)
+        self.assertEqual(sceb_manager_dto.uuid, str(self.sceb_manager.uuid))
+        self.assertEqual(sceb_manager_dto.signature.etat, self.sceb_manager_invited_state.state)
+
+        self.assertIn(sceb_manager_dto, authorization_distribution.signataires)
+
+        form = response.context.get('form')
+        self.assertIsInstance(form, ManuscriptValidationApprovalForm)
+
+    def test_refuse_the_thesis_with_missing_data(self):
+        self.client.force_login(user=self.sceb_manager_role.person.user)
+
+        # The decision is missing
+        data = self.reject_data.copy()
+        data['decision'] = ''
+
+        response = self.client.post(self.url, data=data)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        form = response.context.get('form')
+
+        self.assertFalse(form.is_valid())
+
+        self.assertIn(
+            FIELD_REQUIRED_MESSAGE,
+            form.errors.get('decision', []),
+        )
+
+        # The refusal reason is missing
+        data = self.reject_data.copy()
+        data['motif_refus'] = ''
+
+        response = self.client.post(self.url, data=data)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        form = response.context.get('form')
+
+        self.assertFalse(form.is_valid())
+
+        self.assertIn(
+            FIELD_REQUIRED_MESSAGE,
+            form.errors.get('motif_refus', []),
+        )
+
+    def test_refuse_the_thesis_with_no_invited_sceb_manager(self):
+        self.client.force_login(user=self.sceb_manager_role.person.user)
+
+        self.sceb_manager_invited_state.delete()
+
+        response = self.client.post(self.url, data=self.reject_data)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        form = response.context.get('form')
+
+        self.assertFalse(form.is_valid())
+
+        self.assertIn(
+            gettext('You must be invited to do this action.'),
+            form.errors.get('__all__', []),
+        )
+
+    def test_refuse_the_thesis(self):
+        self.client.force_login(user=self.sceb_manager_role.person.user)
+
+        response = self.client.post(self.url, data=self.reject_data)
+
+        self.assertRedirects(response, self.details_url)
+
+        self.doctorate.refresh_from_db()
+        self.thesis_distribution_authorization.refresh_from_db()
+
+        # Check that the data have been updated
+        self.assertEqual(
+            self.thesis_distribution_authorization.status,
+            ChoixStatutAutorisationDiffusionThese.DIFFUSION_REFUSEE_SCEB.name,
+        )
+
+        # Check that the approval data have been saved
+        group = self.thesis_distribution_authorization.signature_group
+        self.assertIsNotNone(group)
+
+        sceb_managers: QuerySet[Actor] = group.actors.filter(
+            thesisdistributionauthorizationactor__role=RoleActeur.SCEB.name,
+        )
+        self.assertEqual(len(sceb_managers), 1)
+
+        self.assertEqual(sceb_managers[0].person, self.sceb_manager.person)
+        self.assertEqual(
+            sceb_managers[0].thesisdistributionauthorizationactor.rejection_reason,
+            self.reject_data['motif_refus'],
+        )
+        self.assertEqual(
+            sceb_managers[0].thesisdistributionauthorizationactor.internal_comment,
+            self.reject_data['commentaire_interne'],
+        )
+        self.assertEqual(sceb_managers[0].thesisdistributionauthorizationactor.role, RoleActeur.SCEB.name)
+        self.assertEqual(sceb_managers[0].comment, self.reject_data['commentaire_externe'])
+
+        states: QuerySet[StateHistory] = sceb_managers[0].states.all()
+        self.assertEqual(len(states), 2)
+
+        self.assertEqual(states[1].state, SignatureState.DECLINED.name)
+
+        # Check that the notification has been sent
+        self.assertEqual(EmailNotification.objects.count(), 1)
+
+        notification_to_student = EmailNotification.objects.filter(person=self.doctorate.student).first()
+        self.assertIsNotNone(notification_to_student)
+
+        email_message = message_from_string(notification_to_student.payload)
+        to_email_addresses = [address for _, address in getaddresses(email_message.get_all('To', [('', '')]))]
+        cc_email_addresses = [address for _, address in getaddresses(email_message.get_all('Cc', [('', '')]))]
+        self.assertEqual(len(to_email_addresses), 1)
+        self.assertEqual(to_email_addresses[0], self.doctorate.student.email)
+        self.assertEqual(len(cc_email_addresses), 2)
+        self.assertCountEqual(cc_email_addresses, [self.promoter.person.email, self.adre_manager.person.email])

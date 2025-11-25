@@ -38,3 +38,4 @@ from .refuser_these_par_adre_service import refuser_these_par_adre
 from .refuser_these_par_promoteur_reference_service import (
     refuser_these_par_promoteur_reference,
 )
+from .refuser_these_par_sceb_service import refuser_these_par_sceb

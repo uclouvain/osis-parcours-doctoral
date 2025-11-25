@@ -84,4 +84,11 @@ COMMAND_HANDLERS = {
             notification=Notification(),
         )
     ),
+    RefuserTheseParScebCommand: (
+        lambda msg_bus, cmd: refuser_these_par_sceb(
+            cmd,
+            autorisation_diffusion_these_repository=AutorisationDiffusionTheseRepository(),
+            notification=Notification(),
+        )
+    ),
 }

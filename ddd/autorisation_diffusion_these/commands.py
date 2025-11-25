@@ -102,3 +102,13 @@ class AccepterTheseParAdreCommand(interface.CommandRequest):
     matricule_adre: str
     commentaire_interne: Optional[str]
     commentaire_externe: Optional[str]
+
+
+@attr.dataclass(frozen=True, slots=True)
+class RefuserTheseParScebCommand(interface.CommandRequest):
+    uuid_parcours_doctoral: str
+
+    matricule_sceb: str
+    motif_refus: Optional[str]
+    commentaire_interne: Optional[str]
+    commentaire_externe: Optional[str]
