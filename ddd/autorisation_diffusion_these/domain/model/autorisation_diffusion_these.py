@@ -39,6 +39,7 @@ from parcours_doctoral.ddd.autorisation_diffusion_these.domain.validator.validat
     AccepterTheseParPromoteurValidatorList,
     AutorisationDiffusionTheseValidatorList,
     ModifierAutorisationDiffusionTheseValidatorList,
+    RefuserTheseParAdreValidatorList,
     RefuserTheseParPromoteurValidatorList,
 )
 
@@ -224,3 +225,26 @@ class AutorisationDiffusionThese(interface.RootEntity):
 
         adre = self.recuperer_signataire(role=RoleActeur.ADRE, matricule=matricule_gestionnaire_adre)
         adre.inviter()
+
+    def refuser_these_par_adre(
+        self,
+        matricule_adre: str,
+        motif_refus: str,
+        commentaire_interne: str,
+        commentaire_externe: str,
+    ):
+        signataire = self.recuperer_signataire(role=RoleActeur.ADRE, matricule=matricule_adre)
+
+        RefuserTheseParAdreValidatorList(
+            signataire=signataire,
+            motifs_refus=motif_refus,
+            statut=self.statut,
+        ).validate()
+
+        signataire.refuser(
+            motif_refus=motif_refus,
+            commentaire_interne=commentaire_interne,
+            commentaire_externe=commentaire_externe,
+        )
+
+        self.statut = ChoixStatutAutorisationDiffusionThese.DIFFUSION_REFUSEE_ADRE

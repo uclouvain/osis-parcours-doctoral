@@ -76,4 +76,11 @@ COMMAND_HANDLERS = {
             notification=_notification,
         )
     ),
+    RefuserTheseParAdreCommand: (
+        lambda msg_bus, cmd: refuser_these_par_adre(
+            cmd,
+            autorisation_diffusion_these_repository=_autorisation_diffusion_these_repository,
+            notification=_notification,
+        )
+    ),
 }

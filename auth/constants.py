@@ -66,6 +66,10 @@ READ_ACTIONS_BY_TAB = {
     'admissibility': 'parcours_doctoral.view_admissibility',
     # Private defense
     'private-defense': 'parcours_doctoral.view_private_defense',
+    # Thesis distribution authorization
+    'authorization-distribution': 'parcours_doctoral.view_authorization_distribution',
+    # Manuscript validation
+    'manuscript-validation': 'parcours_doctoral.view_manuscript_validation',
     # Public defense
     'public-defense': 'parcours_doctoral.view_public_defense',
     # Management
@@ -120,6 +124,10 @@ UPDATE_ACTIONS_BY_TAB = {
     'admissibility': 'parcours_doctoral.change_admissibility',
     # Private defense
     'private-defense': 'parcours_doctoral.change_private_defense',
+    # Thesis distribution authorization
+    'authorization-distribution': 'parcours_doctoral.change_authorization_distribution',
+    # Manuscript validation
+    'manuscript-validation': 'parcours_doctoral.validate_manuscript',
     # Public defense
     'public-defense': 'parcours_doctoral.change_public_defense',
 }
