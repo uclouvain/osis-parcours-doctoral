@@ -46,9 +46,7 @@
 
       {% if signataire.signature.etat == 'APPROVED' or signataire.signature.etat == 'DECLINED' %}
         {% field_data _('Comment for the candidate') signataire.signature.commentaire_externe html_tag='blockquote' %}
-        {% if signataire.matricule == user.person.global_id %}
-          {% field_data _('Internal comment') signataire.signature.commentaire_interne html_tag='blockquote' %}
-        {% endif %}
+        {% field_data _('Internal comment') signataire.signature.commentaire_interne html_tag='blockquote' %}
       {% endif %}
     </div>
   </div>
