@@ -123,6 +123,8 @@ TAB_TREE = {
         Tab('jury', _('Jury composition')),
         Tab('admissibility', _('Admissibility')),
         Tab('private-defense', _('Private defence')),
+        Tab('authorization-distribution', _('Authorization and distribution')),
+        Tab('manuscript-validation', _('Manuscript validation')),
         Tab('public-defense', _('Public defence')),
     ],
     Tab('comments', pgettext_lazy('tab', 'Comments'), 'comments'): [

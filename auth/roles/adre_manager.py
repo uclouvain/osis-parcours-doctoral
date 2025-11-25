@@ -30,6 +30,8 @@ from rules import RuleSet
 
 from osis_role.contrib.models import RoleModel
 from parcours_doctoral.auth.predicates.parcours_doctoral import (
+    authorization_distribution_is_in_progress,
+    authorization_distribution_is_submitted_to_adre,
     has_valid_enrollment,
     is_jury_approuve_cdd,
     is_related_to_an_admission,
@@ -67,6 +69,10 @@ class AdreManager(RoleModel):
             'parcours_doctoral.view_doctoral_training': rules.always_allow,
             'parcours_doctoral.view_complementary_training': rules.always_allow,
             'parcours_doctoral.view_course_enrollment': rules.always_allow,
+            'parcours_doctoral.view_authorization_distribution': rules.always_allow,
+            'parcours_doctoral.view_manuscript_validation': rules.always_allow,
+            'parcours_doctoral.validate_manuscript': authorization_distribution_is_submitted_to_adre
+            & authorization_distribution_is_in_progress,
             'parcours_doctoral.approve_jury': is_jury_approuve_cdd,
         }
         return RuleSet(ruleset)

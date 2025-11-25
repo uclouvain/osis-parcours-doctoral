@@ -34,10 +34,11 @@ from parcours_doctoral.ddd.autorisation_diffusion_these.domain.model.enums impor
 from parcours_doctoral.ddd.autorisation_diffusion_these.domain.validator.exceptions import (
     MotifRefusNonSpecifieException,
     NonPromoteurException,
-    SignataireNonInviteException,
+    SignataireNonInviteException, NonAdreException,
 )
 
 __all__ = [
+    'ShouldSignataireEtreAdre',
     'ShouldSignataireEtrePromoteur',
     'ShouldSignataireEtreInvite',
     'ShouldMotifRefusEtreSpecifie',
@@ -51,6 +52,15 @@ class ShouldSignataireEtrePromoteur(BusinessValidator):
     def validate(self, *args, **kwargs):
         if self.signataire.entity_id.role != RoleActeur.PROMOTEUR:
             raise NonPromoteurException
+
+
+@attr.dataclass(frozen=True, slots=True)
+class ShouldSignataireEtreAdre(BusinessValidator):
+    signataire: 'SignataireAutorisationDiffusionThese'
+
+    def validate(self, *args, **kwargs):
+        if self.signataire.entity_id.role != RoleActeur.ADRE:
+            raise NonAdreException
 
 
 @attr.dataclass(frozen=True, slots=True)
