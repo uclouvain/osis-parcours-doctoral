@@ -76,4 +76,12 @@ COMMAND_HANDLERS = {
             notification=Notification(),
         )
     ),
+    AccepterTheseParAdreCommand: (
+        lambda msg_bus, cmd: accepter_these_par_adre(
+            cmd,
+            autorisation_diffusion_these_repository=AutorisationDiffusionTheseRepository(),
+            signataires_initiaux_autorisation_diffusion_these_service=SignatairesInitiauxAutorisationDiffusionTheseService(),  # noqa: E501
+            notification=Notification(),
+        )
+    ),
 }

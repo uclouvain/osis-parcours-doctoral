@@ -51,3 +51,8 @@ class INotification(interface.DomainService):
     @abstractmethod
     def refuser_these_par_adre(cls, autorisation_diffusion_these: AutorisationDiffusionThese) -> None:
         raise NotImplementedError
+
+    @classmethod
+    @abstractmethod
+    def accepter_these_par_adre(cls, autorisation_diffusion_these: AutorisationDiffusionThese) -> None:
+        raise NotImplementedError
