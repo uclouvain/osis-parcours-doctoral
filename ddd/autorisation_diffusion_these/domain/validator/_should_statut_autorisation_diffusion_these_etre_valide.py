@@ -28,55 +28,58 @@ import attr
 
 from base.ddd.utils.business_validator import BusinessValidator
 from parcours_doctoral.ddd.autorisation_diffusion_these.domain.model.enums import (
+    CHOIX_STATUTS_AUTORISATION_DIFFUSION_THESE_MODIFIABLE_PAR_ADRE,
     CHOIX_STATUTS_AUTORISATION_DIFFUSION_THESE_MODIFIABLE_PAR_DOCTORANT,
+    CHOIX_STATUTS_AUTORISATION_DIFFUSION_THESE_MODIFIABLE_PAR_PROMOTEUR_REFERENCE,
+    CHOIX_STATUTS_AUTORISATION_DIFFUSION_THESE_MODIFIABLE_PAR_SCEB,
     ChoixStatutAutorisationDiffusionThese,
 )
 from parcours_doctoral.ddd.autorisation_diffusion_these.domain.validator.exceptions import (
-    AutorisationDiffusionTheseDejaSoumiseException,
-    AutorisationDiffusionTheseNonSoumiseException,
-    AutorisationDiffusionTheseNonValideAdreException,
-    AutorisationDiffusionTheseNonValidePromoteurException,
+    AutorisationDiffusionTheseNonModifiableParAdreException,
+    AutorisationDiffusionTheseNonModifiableParEtudiantException,
+    AutorisationDiffusionTheseNonModifiableParPromoteurReferenceException,
+    AutorisationDiffusionTheseNonModifiableParScebException,
 )
 
 __all__ = [
-    'ShouldAutorisationDiffusionTheseEtreModifiable',
-    'ShouldStatutAutorisationDiffusionTheseEtreSoumis',
-    'ShouldStatutAutorisationDiffusionTheseEtreValidePromoteur',
-    'ShouldStatutAutorisationDiffusionTheseEtreValideAdre',
+    'ShouldAutorisationDiffusionTheseEtreModifiableParCandidat',
+    'ShouldAutorisationDiffusionTheseEtreModifiableParPromoteurReference',
+    'ShouldAutorisationDiffusionTheseEtreModifiableParAdre',
+    'ShouldAutorisationDiffusionTheseEtreModifiableParSceb',
 ]
 
 
 @attr.dataclass(frozen=True, slots=True)
-class ShouldAutorisationDiffusionTheseEtreModifiable(BusinessValidator):
+class ShouldAutorisationDiffusionTheseEtreModifiableParCandidat(BusinessValidator):
     statut: ChoixStatutAutorisationDiffusionThese
 
     def validate(self, *args, **kwargs):
         if self.statut.name not in CHOIX_STATUTS_AUTORISATION_DIFFUSION_THESE_MODIFIABLE_PAR_DOCTORANT:
-            raise AutorisationDiffusionTheseDejaSoumiseException
+            raise AutorisationDiffusionTheseNonModifiableParEtudiantException
 
 
 @attr.dataclass(frozen=True, slots=True)
-class ShouldStatutAutorisationDiffusionTheseEtreSoumis(BusinessValidator):
+class ShouldAutorisationDiffusionTheseEtreModifiableParPromoteurReference(BusinessValidator):
     statut: ChoixStatutAutorisationDiffusionThese
 
     def validate(self, *args, **kwargs):
-        if self.statut != ChoixStatutAutorisationDiffusionThese.DIFFUSION_SOUMISE:
-            raise AutorisationDiffusionTheseNonSoumiseException
+        if self.statut.name not in CHOIX_STATUTS_AUTORISATION_DIFFUSION_THESE_MODIFIABLE_PAR_PROMOTEUR_REFERENCE:
+            raise AutorisationDiffusionTheseNonModifiableParPromoteurReferenceException
 
 
 @attr.dataclass(frozen=True, slots=True)
-class ShouldStatutAutorisationDiffusionTheseEtreValidePromoteur(BusinessValidator):
+class ShouldAutorisationDiffusionTheseEtreModifiableParAdre(BusinessValidator):
     statut: ChoixStatutAutorisationDiffusionThese
 
     def validate(self, *args, **kwargs):
-        if self.statut != ChoixStatutAutorisationDiffusionThese.DIFFUSION_VALIDEE_PROMOTEUR:
-            raise AutorisationDiffusionTheseNonValidePromoteurException
+        if self.statut.name not in CHOIX_STATUTS_AUTORISATION_DIFFUSION_THESE_MODIFIABLE_PAR_ADRE:
+            raise AutorisationDiffusionTheseNonModifiableParAdreException
 
 
 @attr.dataclass(frozen=True, slots=True)
-class ShouldStatutAutorisationDiffusionTheseEtreValideAdre(BusinessValidator):
+class ShouldAutorisationDiffusionTheseEtreModifiableParSceb(BusinessValidator):
     statut: ChoixStatutAutorisationDiffusionThese
 
     def validate(self, *args, **kwargs):
-        if self.statut != ChoixStatutAutorisationDiffusionThese.DIFFUSION_VALIDEE_ADRE:
-            raise AutorisationDiffusionTheseNonValideAdreException
+        if self.statut.name not in CHOIX_STATUTS_AUTORISATION_DIFFUSION_THESE_MODIFIABLE_PAR_SCEB:
+            raise AutorisationDiffusionTheseNonModifiableParScebException

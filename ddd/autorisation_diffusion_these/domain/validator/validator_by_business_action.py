@@ -79,7 +79,7 @@ class AutorisationDiffusionTheseValidatorList(TwoStepsMultipleBusinessExceptionL
                 modalites_diffusion_acceptees=self.modalites_diffusion_acceptees,
                 modalites_diffusion_acceptees_le=self.modalites_diffusion_acceptees_le,
             ),
-            ShouldAutorisationDiffusionTheseEtreModifiable(
+            ShouldAutorisationDiffusionTheseEtreModifiableParCandidat(
                 statut=self.statut,
             ),
         ]
@@ -94,7 +94,7 @@ class ModifierAutorisationDiffusionTheseValidatorList(TwoStepsMultipleBusinessEx
 
     def get_invariants_validators(self) -> List[BusinessValidator]:
         return [
-            ShouldAutorisationDiffusionTheseEtreModifiable(
+            ShouldAutorisationDiffusionTheseEtreModifiableParCandidat(
                 statut=self.statut,
             ),
         ]
@@ -111,7 +111,7 @@ class RefuserTheseParPromoteurValidatorList(TwoStepsMultipleBusinessExceptionLis
 
     def get_invariants_validators(self) -> List[BusinessValidator]:
         return [
-            ShouldStatutAutorisationDiffusionTheseEtreSoumis(
+            ShouldAutorisationDiffusionTheseEtreModifiableParPromoteurReference(
                 statut=self.statut,
             ),
             ShouldSignataireEtrePromoteur(
@@ -136,7 +136,7 @@ class AccepterTheseParPromoteurValidatorList(TwoStepsMultipleBusinessExceptionLi
 
     def get_invariants_validators(self) -> List[BusinessValidator]:
         return [
-            ShouldStatutAutorisationDiffusionTheseEtreSoumis(
+            ShouldAutorisationDiffusionTheseEtreModifiableParPromoteurReference(
                 statut=self.statut,
             ),
             ShouldSignataireEtrePromoteur(
@@ -159,7 +159,7 @@ class RefuserTheseParAdreValidatorList(TwoStepsMultipleBusinessExceptionListVali
 
     def get_invariants_validators(self) -> List[BusinessValidator]:
         return [
-            ShouldStatutAutorisationDiffusionTheseEtreValidePromoteur(
+            ShouldAutorisationDiffusionTheseEtreModifiableParAdre(
                 statut=self.statut,
             ),
             ShouldSignataireEtreAdre(
@@ -184,7 +184,7 @@ class AccepterTheseParAdreValidatorList(TwoStepsMultipleBusinessExceptionListVal
 
     def get_invariants_validators(self) -> List[BusinessValidator]:
         return [
-            ShouldStatutAutorisationDiffusionTheseEtreValidePromoteur(
+            ShouldAutorisationDiffusionTheseEtreModifiableParAdre(
                 statut=self.statut,
             ),
             ShouldSignataireEtreAdre(
@@ -207,7 +207,7 @@ class RefuserTheseParScebValidatorList(TwoStepsMultipleBusinessExceptionListVali
 
     def get_invariants_validators(self) -> List[BusinessValidator]:
         return [
-            ShouldStatutAutorisationDiffusionTheseEtreValideAdre(
+            ShouldAutorisationDiffusionTheseEtreModifiableParSceb(
                 statut=self.statut,
             ),
             ShouldSignataireEtreSceb(
@@ -218,5 +218,27 @@ class RefuserTheseParScebValidatorList(TwoStepsMultipleBusinessExceptionListVali
             ),
             ShouldMotifRefusEtreSpecifie(
                 motifs_refus=self.motifs_refus,
+            ),
+        ]
+
+
+@attr.dataclass(frozen=True, slots=True)
+class AccepterTheseParScebValidatorList(TwoStepsMultipleBusinessExceptionListValidator):
+    statut: ChoixStatutAutorisationDiffusionThese
+    signataire: 'SignataireAutorisationDiffusionThese'
+
+    def get_data_contract_validators(self) -> List[BusinessValidator]:
+        return []
+
+    def get_invariants_validators(self) -> List[BusinessValidator]:
+        return [
+            ShouldAutorisationDiffusionTheseEtreModifiableParSceb(
+                statut=self.statut,
+            ),
+            ShouldSignataireEtreSceb(
+                signataire=self.signataire,
+            ),
+            ShouldSignataireEtreInvite(
+                signataire=self.signataire,
             ),
         ]

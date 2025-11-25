@@ -3576,18 +3576,6 @@ msgstr ""
 msgid "The authorization distribution is not in progress."
 msgstr ""
 
-msgid "The authorization distribution must be sent to the ADRE manager."
-msgstr ""
-
-msgid "The authorization distribution must be sent to the SCEB manager."
-msgstr ""
-
-msgid "The authorization distribution must be sent to the promoter."
-msgstr ""
-
-msgid "The authorization distribution must not be submitted."
-msgstr ""
-
 msgid ""
 "The authorized publications and their valuation in credits are specified on "
 "the website of you domain doctoral commission. If the publication must be "
@@ -3670,23 +3658,26 @@ msgstr ""
 msgid "The definitive thesis title is:"
 msgstr ""
 
+msgid ""
+"The distribution authorization cannot currently be changed by the ADRE "
+"manager."
+msgstr ""
+
+msgid ""
+"The distribution authorization cannot currently be changed by the SCEB "
+"manager."
+msgstr ""
+
+msgid ""
+"The distribution authorization cannot currently be changed by the contact "
+"supervisor."
+msgstr ""
+
+msgid ""
+"The distribution authorization cannot currently be changed by the student."
+msgstr ""
+
 msgid "The distribution authorization has not been found."
-msgstr ""
-
-msgid "The distribution authorization must be submitted to do this action."
-msgstr ""
-
-msgid ""
-"The distribution authorization must be validated by the ADRE manager to do "
-"this action."
-msgstr ""
-
-msgid ""
-"The distribution authorization must be validated by the promoter to do this "
-"action."
-msgstr ""
-
-msgid "The distribution authorization must not be submitted to do this action."
 msgstr ""
 
 msgid "The distribution conditions type must be specified."
@@ -3897,6 +3888,9 @@ msgid "The signature request procedure is already in progress."
 msgstr ""
 
 msgid "The signature request procedure isn't in progress."
+msgstr ""
+
+msgid "The signing process has not yet started."
 msgstr ""
 
 msgid "The sources of funding must be specified."
