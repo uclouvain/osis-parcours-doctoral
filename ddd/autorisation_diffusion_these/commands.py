@@ -112,3 +112,12 @@ class RefuserTheseParScebCommand(interface.CommandRequest):
     motif_refus: Optional[str]
     commentaire_interne: Optional[str]
     commentaire_externe: Optional[str]
+
+
+@attr.dataclass(frozen=True, slots=True)
+class AccepterTheseParScebCommand(interface.CommandRequest):
+    uuid_parcours_doctoral: str
+
+    matricule_sceb: str
+    commentaire_interne: Optional[str]
+    commentaire_externe: Optional[str]

@@ -100,7 +100,7 @@ class Student(RoleModel):
             # Authorization distribution
             'parcours_doctoral.api_view_authorization_distribution': parcours_doctoral.is_parcours_doctoral_student,
             'parcours_doctoral.api_change_authorization_distribution': parcours_doctoral.is_parcours_doctoral_student
-            & parcours_doctoral.authorization_distribution_is_not_submitted
+            & parcours_doctoral.authorization_distribution_can_be_changed_by_student
             & parcours_doctoral.authorization_distribution_is_in_progress,
             # Public defense
             'parcours_doctoral.api_view_public_defense': parcours_doctoral.is_parcours_doctoral_student
