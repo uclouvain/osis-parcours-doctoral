@@ -83,3 +83,13 @@ class AccepterTheseParPromoteurReferenceCommand(interface.CommandRequest):
     matricule_promoteur: str
     commentaire_interne: Optional[str]
     commentaire_externe: Optional[str]
+
+
+@attr.dataclass(frozen=True, slots=True)
+class RefuserTheseParAdreCommand(interface.CommandRequest):
+    uuid_parcours_doctoral: str
+
+    matricule_adre: str
+    motif_refus: Optional[str]
+    commentaire_interne: Optional[str]
+    commentaire_externe: Optional[str]
