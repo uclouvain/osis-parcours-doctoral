@@ -48,6 +48,7 @@ from parcours_doctoral.mail_templates.thesis_distribution_authorization import (
     PARCOURS_DOCTORAL_EMAIL_THESIS_DISTRIBUTION_AUTHORIZATION_PROMOTER_INVITATION,
     PARCOURS_DOCTORAL_EMAIL_THESIS_DISTRIBUTION_AUTHORIZATION_PROMOTER_INVITATION_CONFIRMATION,
     PARCOURS_DOCTORAL_EMAIL_THESIS_DISTRIBUTION_AUTHORIZATION_PROMOTER_REFUSAL,
+    PARCOURS_DOCTORAL_EMAIL_THESIS_DISTRIBUTION_AUTHORIZATION_SCEB_REFUSAL,
 )
 from parcours_doctoral.models import ParcoursDoctoral
 from parcours_doctoral.models.thesis_distribution_authorization import (
@@ -243,3 +244,23 @@ class Notification(NotificationMixin, INotification):
         )
 
         EmailNotificationHandler.create(email_message, person=sceb_manager.person)
+
+    @classmethod
+    def refuser_these_par_sceb(cls, autorisation_diffusion_these: AutorisationDiffusionThese) -> None:
+        doctorate = cls.get_doctorate(doctorate_uuid=autorisation_diffusion_these.entity_id.uuid)
+
+        promoter = doctorate.loaded_actors_by_role.get(RoleActeur.PROMOTEUR.name)
+        adre_manager = doctorate.loaded_actors_by_role.get(RoleActeur.ADRE.name)
+
+        tokens = cls.get_common_tokens(doctorate=doctorate)
+
+        # Mail sent to the student
+        email_message = generate_email(
+            PARCOURS_DOCTORAL_EMAIL_THESIS_DISTRIBUTION_AUTHORIZATION_SCEB_REFUSAL,
+            doctorate.student.language or settings.LANGUAGE_CODE,
+            tokens,
+            recipients=[doctorate.student.email],
+            cc_recipients=[promoter.person.email, adre_manager.person.email],
+        )
+
+        EmailNotificationHandler.create(email_message, person=doctorate.student)

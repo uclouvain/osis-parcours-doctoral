@@ -31,6 +31,7 @@ from infrastructure.messages_bus import message_bus_instance
 from parcours_doctoral.ddd.autorisation_diffusion_these.commands import (
     AccepterTheseParAdreCommand,
     RefuserTheseParAdreCommand,
+    RefuserTheseParScebCommand,
 )
 from parcours_doctoral.ddd.autorisation_diffusion_these.domain.model.enums import (
     ChoixEtatSignature,
@@ -87,6 +88,18 @@ class ManuscriptValidationApprovalFormView(
                     AccepterTheseParAdreCommand(
                         uuid_parcours_doctoral=self.parcours_doctoral_uuid,
                         matricule_adre=self.request.user.person.global_id,
+                        commentaire_interne=form.cleaned_data['commentaire_interne'],
+                        commentaire_externe=form.cleaned_data['commentaire_externe'],
+                    )
+                )
+
+        elif authorization_distribution.statut == ChoixStatutAutorisationDiffusionThese.DIFFUSION_VALIDEE_ADRE.name:
+            if decision == ChoixEtatSignature.DECLINED.name:
+                message_bus_instance.invoke(
+                    RefuserTheseParScebCommand(
+                        uuid_parcours_doctoral=self.parcours_doctoral_uuid,
+                        matricule_sceb=self.request.user.person.global_id,
+                        motif_refus=form.cleaned_data['motif_refus'],
                         commentaire_interne=form.cleaned_data['commentaire_interne'],
                         commentaire_externe=form.cleaned_data['commentaire_externe'],
                     )
