@@ -28,8 +28,8 @@ from rules import RuleSet, always_allow
 from admission.auth.roles.promoter import Promoter as AdmissionPromoter
 from parcours_doctoral.auth.predicates.parcours_doctoral import (
     admissibility_is_submitted,
+    authorization_distribution_can_be_changed_by_lead_promoter,
     authorization_distribution_is_in_progress,
-    authorization_distribution_is_submitted_to_promoter,
     complementary_training_enabled,
     defense_method_is_formula_1,
     defense_method_is_formula_2,
@@ -103,7 +103,7 @@ class Promoter(AdmissionPromoter):
             # Authorization distribution
             'parcours_doctoral.api_view_authorization_distribution': is_parcours_doctoral_reference_promoter,
             'parcours_doctoral.api_validate_manuscript': is_parcours_doctoral_reference_promoter
-            & authorization_distribution_is_submitted_to_promoter
+            & authorization_distribution_can_be_changed_by_lead_promoter
             & authorization_distribution_is_in_progress,
             # Public defense
             'parcours_doctoral.api_view_public_defense': is_parcours_doctoral_promoter & defense_method_is_formula_1,
