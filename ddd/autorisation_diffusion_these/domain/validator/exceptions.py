@@ -155,3 +155,19 @@ class MotifRefusNonSpecifieException(BusinessException):
     def __init__(self, **kwargs):
         message = _('The grounds for denied must be specified.')
         super().__init__(message=message, **kwargs)
+
+
+class NonAdreException(BusinessException):
+    status_code = "AUTORISATION-DIFFUSION-THESE-16"
+
+    def __init__(self, **kwargs):
+        message = _('You must be an ADRE manager to do this action.')
+        super().__init__(message=message, **kwargs)
+
+
+class AutorisationDiffusionTheseNonValidePromoteurException(BusinessException):
+    status_code = "AUTORISATION-DIFFUSION-THESE-17"
+
+    def __init__(self, **kwargs):
+        message = _('The distribution authorization must be validated by the promoter to do this action.')
+        super().__init__(message=message, **kwargs)

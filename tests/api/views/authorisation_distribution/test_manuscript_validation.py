@@ -354,7 +354,7 @@ class ManuscriptValidationAPIViewTestCase(APITestCase):
         # Check that the notification has been sent
         self.assertEqual(EmailNotification.objects.count(), 1)
 
-        notification_to_student = EmailNotification.objects.filter(person=self.doctorate.student).first()
+        notification_to_student = EmailNotification.objects.filter(person=self.jury_adre.person).first()
         self.assertIsNotNone(notification_to_student)
 
         email_message = message_from_string(notification_to_student.payload)
