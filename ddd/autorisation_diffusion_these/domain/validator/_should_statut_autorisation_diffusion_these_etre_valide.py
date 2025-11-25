@@ -34,11 +34,13 @@ from parcours_doctoral.ddd.autorisation_diffusion_these.domain.model.enums impor
 from parcours_doctoral.ddd.autorisation_diffusion_these.domain.validator.exceptions import (
     AutorisationDiffusionTheseDejaSoumiseException,
     AutorisationDiffusionTheseNonSoumiseException,
+    AutorisationDiffusionTheseNonValidePromoteurException,
 )
 
 __all__ = [
     'ShouldAutorisationDiffusionTheseEtreModifiable',
     'ShouldStatutAutorisationDiffusionTheseEtreSoumis',
+    'ShouldStatutAutorisationDiffusionTheseEtreValidePromoteur',
 ]
 
 
@@ -58,3 +60,12 @@ class ShouldStatutAutorisationDiffusionTheseEtreSoumis(BusinessValidator):
     def validate(self, *args, **kwargs):
         if self.statut != ChoixStatutAutorisationDiffusionThese.DIFFUSION_SOUMISE:
             raise AutorisationDiffusionTheseNonSoumiseException
+
+
+@attr.dataclass(frozen=True, slots=True)
+class ShouldStatutAutorisationDiffusionTheseEtreValidePromoteur(BusinessValidator):
+    statut: ChoixStatutAutorisationDiffusionThese
+
+    def validate(self, *args, **kwargs):
+        if self.statut != ChoixStatutAutorisationDiffusionThese.DIFFUSION_VALIDEE_PROMOTEUR:
+            raise AutorisationDiffusionTheseNonValidePromoteurException

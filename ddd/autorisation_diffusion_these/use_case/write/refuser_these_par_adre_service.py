@@ -23,27 +23,40 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from parcours_doctoral.ddd.autorisation_diffusion_these.commands import (
+    RefuserTheseParAdreCommand,
+)
+from parcours_doctoral.ddd.autorisation_diffusion_these.domain.builder.identity_builder import (
+    AutorisationDiffusionTheseIdentityBuilder,
+)
 from parcours_doctoral.ddd.autorisation_diffusion_these.domain.model.autorisation_diffusion_these import (
-    AutorisationDiffusionThese,
+    AutorisationDiffusionTheseIdentity,
 )
 from parcours_doctoral.ddd.autorisation_diffusion_these.domain.service.i_notification import (
     INotification,
 )
+from parcours_doctoral.ddd.autorisation_diffusion_these.repository.i_autorisation_diffusion_these import (
+    IAutorisationDiffusionTheseRepository,
+)
 
 
-class NotificationInMemory(INotification):
-    @classmethod
-    def inviter_promoteur_reference(cls, autorisation_diffusion_these: AutorisationDiffusionThese) -> None:
-        pass
+def refuser_these_par_adre(
+    cmd: RefuserTheseParAdreCommand,
+    autorisation_diffusion_these_repository: IAutorisationDiffusionTheseRepository,
+    notification: INotification,
+) -> AutorisationDiffusionTheseIdentity:
+    identity = AutorisationDiffusionTheseIdentityBuilder.build_from_uuid(uuid=cmd.uuid_parcours_doctoral)
+    entity = autorisation_diffusion_these_repository.get(identity)
 
-    @classmethod
-    def refuser_these_par_promoteur_reference(cls, autorisation_diffusion_these: AutorisationDiffusionThese) -> None:
-        pass
+    entity.refuser_these_par_adre(
+        matricule_adre=cmd.matricule_adre,
+        motif_refus=cmd.motif_refus,
+        commentaire_interne=cmd.commentaire_interne,
+        commentaire_externe=cmd.commentaire_externe,
+    )
 
-    @classmethod
-    def accepter_these_par_promoteur_reference(cls, autorisation_diffusion_these: AutorisationDiffusionThese) -> None:
-        pass
+    autorisation_diffusion_these_repository.save(entity)
 
-    @classmethod
-    def refuser_these_par_adre(cls, autorisation_diffusion_these: AutorisationDiffusionThese) -> None:
-        pass
+    notification.refuser_these_par_adre(autorisation_diffusion_these=entity)
+
+    return identity
