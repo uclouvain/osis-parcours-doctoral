@@ -4436,6 +4436,8 @@ components:
               $ref: '#/components/schemas/ActionLink'
             update_authorization_distribution:
               $ref: '#/components/schemas/ActionLink'
+            retrieve_manuscript_validation:
+              $ref: '#/components/schemas/ActionLink'
             validate_manuscript:
               $ref: '#/components/schemas/ActionLink'
             retrieve_public_defense:
@@ -4571,6 +4573,8 @@ components:
             retrieve_authorization_distribution:
               $ref: '#/components/schemas/ActionLink'
             update_authorization_distribution:
+              $ref: '#/components/schemas/ActionLink'
+            retrieve_manuscript_validation:
               $ref: '#/components/schemas/ActionLink'
             validate_manuscript:
               $ref: '#/components/schemas/ActionLink'

@@ -56,9 +56,9 @@ from parcours_doctoral.tests.factories.authorization_distribution import (
     PromoterThesisDistributionAuthorizationActorFactory,
     ThesisDistributionAuthorizationFactory,
 )
-from parcours_doctoral.tests.factories.jury import JuryActorFactory
 from parcours_doctoral.tests.factories.parcours_doctoral import ParcoursDoctoralFactory
 from parcours_doctoral.tests.factories.roles import (
+    AdreManagerRoleFactory,
     ScebManagerRoleFactory,
     StudentRoleFactory,
 )
@@ -108,7 +108,7 @@ class ManuscriptValidationAPIViewTestCase(APITestCase):
         )
 
         # Adre
-        self.jury_adre = JuryActorFactory(process=jury_promoter.process, role=RoleJury.ADRE.name)
+        self.adre_manager_role = AdreManagerRoleFactory()
 
         self.thesis_distribution_authorization: ThesisDistributionAuthorization = (
             ThesisDistributionAuthorizationFactory(
@@ -263,7 +263,7 @@ class ManuscriptValidationAPIViewTestCase(APITestCase):
         self.assertEqual(len(to_email_addresses), 1)
         self.assertEqual(to_email_addresses[0], self.doctorate.student.email)
         self.assertEqual(len(cc_email_addresses), 1)
-        self.assertEqual(cc_email_addresses, [''])
+        self.assertEqual(cc_email_addresses, [self.promoter.person.email])
 
     def test_accept_the_thesis_by_the_lead_promoter_with_no_invited_promoter(self):
         self.client.force_authenticate(user=self.promoter.person.user)
@@ -283,7 +283,7 @@ class ManuscriptValidationAPIViewTestCase(APITestCase):
     def test_accept_the_thesis_by_the_lead_promoter_with_no_adre_user(self):
         self.client.force_authenticate(user=self.promoter.person.user)
 
-        self.jury_adre.delete()
+        self.adre_manager_role.delete()
 
         response = self.client.post(self.url, data=self.accept_data)
 
@@ -340,7 +340,7 @@ class ManuscriptValidationAPIViewTestCase(APITestCase):
         )
         self.assertEqual(len(adre_managers), 1)
 
-        self.assertEqual(adre_managers[0].person, self.jury_adre.person)
+        self.assertEqual(adre_managers[0].person, self.adre_manager_role.person)
         self.assertEqual(adre_managers[0].comment, '')
         self.assertEqual(adre_managers[0].thesisdistributionauthorizationactor.rejection_reason, '')
         self.assertEqual(adre_managers[0].thesisdistributionauthorizationactor.internal_comment, '')
@@ -354,13 +354,13 @@ class ManuscriptValidationAPIViewTestCase(APITestCase):
         # Check that the notification has been sent
         self.assertEqual(EmailNotification.objects.count(), 1)
 
-        notification_to_student = EmailNotification.objects.filter(person=self.jury_adre.person).first()
+        notification_to_student = EmailNotification.objects.filter(person=self.adre_manager_role.person).first()
         self.assertIsNotNone(notification_to_student)
 
         email_message = message_from_string(notification_to_student.payload)
         to_email_addresses = [address for _, address in getaddresses(email_message.get_all('To', [('', '')]))]
         cc_email_addresses = [address for _, address in getaddresses(email_message.get_all('Cc', [('', '')]))]
         self.assertEqual(len(to_email_addresses), 1)
-        self.assertEqual(to_email_addresses[0], self.jury_adre.person.email)
+        self.assertEqual(to_email_addresses[0], self.adre_manager_role.person.email)
         self.assertEqual(len(cc_email_addresses), 1)
         self.assertEqual(cc_email_addresses, [''])
