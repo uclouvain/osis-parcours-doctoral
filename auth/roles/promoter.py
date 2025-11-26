@@ -102,6 +102,8 @@ class Promoter(AdmissionPromoter):
             & private_defense_is_authorised,
             # Authorization distribution
             'parcours_doctoral.api_view_authorization_distribution': is_parcours_doctoral_reference_promoter,
+            # Manuscript validation
+            'parcours_doctoral.api_view_manuscript_validation': is_parcours_doctoral_reference_promoter,
             'parcours_doctoral.api_validate_manuscript': is_parcours_doctoral_reference_promoter
             & authorization_distribution_can_be_changed_by_lead_promoter
             & authorization_distribution_is_in_progress,
