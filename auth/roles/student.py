@@ -102,6 +102,8 @@ class Student(RoleModel):
             'parcours_doctoral.api_change_authorization_distribution': parcours_doctoral.is_parcours_doctoral_student
             & parcours_doctoral.authorization_distribution_can_be_changed_by_student
             & parcours_doctoral.authorization_distribution_is_in_progress,
+            # Manuscript validation
+            'parcours_doctoral.api_view_manuscript_validation': parcours_doctoral.is_parcours_doctoral_student,
             # Public defense
             'parcours_doctoral.api_view_public_defense': parcours_doctoral.is_parcours_doctoral_student
             & parcours_doctoral.defense_method_is_formula_1,
