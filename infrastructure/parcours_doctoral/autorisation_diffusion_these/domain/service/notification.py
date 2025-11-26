@@ -182,12 +182,15 @@ class Notification(NotificationMixin, INotification):
 
         tokens = cls.get_common_tokens(doctorate=doctorate)
 
+        promoter = doctorate.loaded_actors_by_role.get(RoleActeur.PROMOTEUR.name)
+
         # Mail sent to the student
         email_message = generate_email(
             PARCOURS_DOCTORAL_EMAIL_THESIS_DISTRIBUTION_AUTHORIZATION_PROMOTER_REFUSAL,
             doctorate.student.language or settings.LANGUAGE_CODE,
             tokens,
             recipients=[doctorate.student.email],
+            cc_recipients=[promoter.person.email],
         )
 
         EmailNotificationHandler.create(email_message, person=doctorate.student)
@@ -214,6 +217,7 @@ class Notification(NotificationMixin, INotification):
         doctorate = cls.get_doctorate(doctorate_uuid=autorisation_diffusion_these.entity_id.uuid)
 
         promoter = doctorate.loaded_actors_by_role.get(RoleActeur.PROMOTEUR.name)
+        adre_manager = doctorate.loaded_actors_by_role.get(RoleActeur.ADRE.name)
 
         tokens = cls.get_common_tokens(doctorate=doctorate)
 
@@ -223,7 +227,7 @@ class Notification(NotificationMixin, INotification):
             doctorate.student.language or settings.LANGUAGE_CODE,
             tokens,
             recipients=[doctorate.student.email],
-            cc_recipients=[promoter.person.email],
+            cc_recipients=[promoter.person.email, adre_manager.person.email],
         )
 
         EmailNotificationHandler.create(email_message, person=doctorate.student)
@@ -251,6 +255,7 @@ class Notification(NotificationMixin, INotification):
 
         promoter = doctorate.loaded_actors_by_role.get(RoleActeur.PROMOTEUR.name)
         adre_manager = doctorate.loaded_actors_by_role.get(RoleActeur.ADRE.name)
+        sceb_manager = doctorate.loaded_actors_by_role.get(RoleActeur.SCEB.name)
 
         tokens = cls.get_common_tokens(doctorate=doctorate)
 
@@ -260,7 +265,7 @@ class Notification(NotificationMixin, INotification):
             doctorate.student.language or settings.LANGUAGE_CODE,
             tokens,
             recipients=[doctorate.student.email],
-            cc_recipients=[promoter.person.email, adre_manager.person.email],
+            cc_recipients=[promoter.person.email, adre_manager.person.email, sceb_manager.person.email],
         )
 
         EmailNotificationHandler.create(email_message, person=doctorate.student)
