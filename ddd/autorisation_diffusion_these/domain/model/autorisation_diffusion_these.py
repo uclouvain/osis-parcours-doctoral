@@ -179,6 +179,10 @@ class AutorisationDiffusionThese(interface.RootEntity):
 
         self.statut = ChoixStatutAutorisationDiffusionThese.DIFFUSION_SOUMISE
 
+        # Réinitialiser les signatures si besoin
+        self.signataires = {}
+
+        # Inviter le promoteur
         signataire = self.recuperer_signataire(role=RoleActeur.PROMOTEUR, matricule=matricule_promoteur_reference)
         signataire.inviter()
 

@@ -217,6 +217,7 @@ class ParcoursDoctoralAPIViewTestCase(CheckActionLinksMixin, APITestCase):
                 'retrieve_private_defense',
                 'retrieve_public_defense',
                 'retrieve_authorization_distribution',
+                'retrieve_manuscript_validation',
             ],
             forbidden_actions=[
                 'jury_add_approval',
