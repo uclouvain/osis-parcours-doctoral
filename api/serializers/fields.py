@@ -223,6 +223,11 @@ PARCOURS_DOCTORAL_ACTION_LINKS = {
         'params': ['uuid'],
     },
     # Manuscript validation
+    'retrieve_manuscript_validation': {
+        'path_name': 'parcours_doctoral_api_v1:manuscript-validation',
+        'method': 'GET',
+        'params': ['uuid'],
+    },
     'validate_manuscript': {
         'path_name': 'parcours_doctoral_api_v1:manuscript-validation',
         'method': 'PUT',
