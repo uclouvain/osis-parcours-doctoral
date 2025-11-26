@@ -37,7 +37,6 @@ from parcours_doctoral.ddd.autorisation_diffusion_these.domain.validator.excepti
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import (
     ParcoursDoctoralIdentity,
 )
-from parcours_doctoral.ddd.jury.domain.model.enums import RoleJury
 from parcours_doctoral.models import JuryActor
 
 
@@ -53,14 +52,7 @@ class SignatairesInitiauxAutorisationDiffusionTheseService(ISignatairesInitiauxA
 
     @classmethod
     def recuperer_fgs_gestionnaire_adre(cls, parcours_doctoral_id: ParcoursDoctoralIdentity) -> str:
-        global_id = (
-            JuryActor.objects.filter(
-                role=RoleJury.ADRE.name,
-                process__doctorate_from_jury_group__uuid=parcours_doctoral_id.uuid,
-            )
-            .values_list('person__global_id', flat=True)
-            .first()
-        )
+        global_id = AdreManager.objects.values_list('person__global_id', flat=True).first()
 
         if not global_id:
             raise GestionnaireADRENonTrouveException

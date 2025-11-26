@@ -238,7 +238,7 @@ def detail_tab_path_from_update(context, parcours_doctoral_uuid):
     if len(match.namespaces) > 1 and match.namespaces[1] != 'update':
         current_tab_name = match.namespaces[1]
     return reverse(
-        '{}:{}'.format(':'.join(match.namespaces[:-1]), current_tab_name),
+        '{}:{}'.format(':'.join(match.namespaces[:-1]) or 'parcours_doctoral', current_tab_name),
         args=[parcours_doctoral_uuid],
     )
 
