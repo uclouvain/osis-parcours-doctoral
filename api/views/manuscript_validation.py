@@ -45,10 +45,16 @@ __all__ = [
 class ManuscriptValidationApiView(DoctorateAPIPermissionRequiredMixin, GenericAPIView):
     name = "manuscript-validation"
     permission_mapping = {
+        'GET': 'parcours_doctoral.api_view_manuscript_validation',
         'PUT': 'parcours_doctoral.api_validate_manuscript',
         'POST': 'parcours_doctoral.api_validate_manuscript',
     }
     serializer_class = RejectThesisByLeadPromoterSerializer
+
+    @extend_schema(exclude=True)
+    def get(self):
+        """Only used for permissions"""
+        return Response()
 
     @extend_schema(
         request=RejectThesisByLeadPromoterSerializer,
