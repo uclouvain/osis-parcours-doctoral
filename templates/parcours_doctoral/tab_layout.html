@@ -204,7 +204,7 @@
               <p>{% trans "This page is currently under construction." %}</p>
             {% endblock %}
           </form>
-          <div class="text-end">
+          <div class="text-end mb-3">
             {% if not next_url %}
             {% can_read_tab tab_context.active_tab as can_read_tab %}
             {% detail_tab_path_from_update view.kwargs.uuid as read_url %}
@@ -219,10 +219,12 @@
             </a>
             <button class="btn btn-primary" type="submit" form="parcours_doctoral-form">
               <span class="fa-solid fa-floppy-disk" aria-hidden="true"></span>
-              {% translate 'Save' context 'parcours_doctoral' %}
+              {% translate 'Save' context 'parcours_doctoral' as save_label %}
+              {{ submit_label|default:save_label }}
             </button>
           </div>
         {% endif %}
+        {% block after_form %}{% endblock %}
       {% endblock %}
       {% if children|length > 1 %}
         </div>
