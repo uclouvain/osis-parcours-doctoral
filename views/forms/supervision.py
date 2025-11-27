@@ -213,7 +213,7 @@ class EditExternalMemberFormView(PermissionRequiredMixin, BusinessExceptionFormV
 class SetReferencePromoterFormView(PermissionRequiredMixin, BusinessExceptionFormViewMixin, FormView):
     urlpatterns = {'set-reference-promoter': 'set-reference-promoter/<uuid_promoteur>'}
     form_class = forms.Form
-    permission_required = 'parcours_doctoral.add_supervision_member'
+    permission_required = 'parcours_doctoral.set_reference_promoter'
 
     def get_permission_object(self):
         return get_cached_parcours_doctoral_perm_obj(self.kwargs.get('uuid'))
