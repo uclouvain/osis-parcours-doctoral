@@ -38,9 +38,9 @@ from parcours_doctoral.api.serializers.private_defense import (
     SubmitPrivateDefenseSerializer,
 )
 from parcours_doctoral.ddd.defense_privee.commands import (
-    RecupererDefensePriveeQuery,
     RecupererDefensesPriveesQuery,
     SoumettreDefensePriveeCommand,
+    RecupererDerniereDefensePriveeQuery,
     SoumettreProcesVerbalDefensePriveeCommand,
 )
 from parcours_doctoral.exports.private_defense_minutes_canvas import (
@@ -59,8 +59,7 @@ class PrivateDefenseListAPIView(DoctorateAPIPermissionRequiredMixin, GenericAPIV
     pagination_class = None
     filter_backends = []
     permission_mapping = {
-        'GET': 'parcours_doctoral.api_view_private_defense',
-        'PUT': 'parcours_doctoral.api_change_private_defense',
+        'GET': 'parcours_doctoral.api_retrieve_private_defenses',
     }
     serializer_class = PrivateDefenseDTOSerializer
 
@@ -75,11 +74,6 @@ class PrivateDefenseListAPIView(DoctorateAPIPermissionRequiredMixin, GenericAPIV
         )
         serializer = PrivateDefenseDTOSerializer(instance=private_defenses, many=True)
         return Response(serializer.data)
-
-    @extend_schema(exclude=True)
-    def put(self, request, *args, **kwargs):
-        """Only used for permissions"""
-        return Response()
 
 
 class PrivateDefenseAPIView(DoctorateAPIPermissionRequiredMixin, mixins.RetrieveModelMixin, GenericAPIView):
@@ -96,10 +90,10 @@ class PrivateDefenseAPIView(DoctorateAPIPermissionRequiredMixin, mixins.Retrieve
         operation_id='retrieve_private_defense',
     )
     def get(self, request, *args, **kwargs):
-        """Get a single private defence"""
+        """Get the last private defence"""
         private_defense = message_bus_instance.invoke(
-            RecupererDefensePriveeQuery(
-                uuid=self.kwargs['private_defense_uuid'],
+            RecupererDerniereDefensePriveeQuery(
+                parcours_doctoral_uuid=self.doctorate_uuid,
             )
         )
         serializer = PrivateDefenseDTOSerializer(instance=private_defense)
@@ -117,7 +111,7 @@ class PrivateDefenseAPIView(DoctorateAPIPermissionRequiredMixin, mixins.Retrieve
 
         result = message_bus_instance.invoke(
             SoumettreDefensePriveeCommand(
-                uuid=self.kwargs['private_defense_uuid'],
+                parcours_doctoral_uuid=self.doctorate_uuid,
                 matricule_auteur=self.request.user.person.global_id,
                 **serializer.validated_data,
             )

@@ -41,14 +41,14 @@
       {% include 'parcours_doctoral/includes/private_defense/supervision_panel.html' %}
 
       <div id="date-hour-field">
-        {% bootstrap_field_with_tooltip form.date_heure classes="required_field" %}
+        {% bootstrap_field_with_tooltip form.date_heure_defense_privee classes="required_field" %}
       </div>
-      {% bootstrap_field form.lieu %}
+      {% bootstrap_field form.lieu_defense_privee %}
       <div class="row">
         {% bootstrap_field form.date_envoi_manuscrit classes="col-md-6" %}
       </div>
 
-      {% bootstrap_field_with_tooltip form.proces_verbal %}
+      {% bootstrap_field_with_tooltip form.proces_verbal_defense_privee %}
     </div>
   </div>
 

@@ -53,14 +53,14 @@ class PublicDefenseFormView(
 
     def get_initial(self):
         return {
-            'langue': self.parcours_doctoral_dto.langue_soutenance_publique,
-            'date_heure': self.parcours_doctoral_dto.date_heure_soutenance_publique,
-            'lieu': self.parcours_doctoral_dto.lieu_soutenance_publique,
+            'langue_soutenance_publique': self.parcours_doctoral_dto.langue_soutenance_publique,
+            'date_heure_soutenance_publique': self.parcours_doctoral_dto.date_heure_soutenance_publique,
+            'lieu_soutenance_publique': self.parcours_doctoral_dto.lieu_soutenance_publique,
             'local_deliberation': self.parcours_doctoral_dto.local_deliberation,
             'informations_complementaires': self.parcours_doctoral_dto.informations_complementaires_soutenance_publique,
             'resume_annonce': self.parcours_doctoral_dto.resume_annonce,
             'photo_annonce': self.parcours_doctoral_dto.photo_annonce,
-            'proces_verbal': self.parcours_doctoral_dto.proces_verbal_soutenance_publique,
+            'proces_verbal_soutenance_publique': self.parcours_doctoral_dto.proces_verbal_soutenance_publique,
             'date_retrait_diplome': self.parcours_doctoral_dto.date_retrait_diplome,
         }
 
@@ -69,7 +69,15 @@ class PublicDefenseFormView(
             ModifierSoutenancePubliqueCommand(
                 uuid_parcours_doctoral=self.parcours_doctoral_uuid,
                 matricule_auteur=self.request.user.person.global_id,
-                **form.cleaned_data,
+                langue=form.cleaned_data['langue_soutenance_publique'],
+                date_heure=form.cleaned_data['date_heure_soutenance_publique'],
+                lieu=form.cleaned_data['lieu_soutenance_publique'],
+                local_deliberation=form.cleaned_data['local_deliberation'],
+                informations_complementaires=form.cleaned_data['informations_complementaires'],
+                resume_annonce=form.cleaned_data['resume_annonce'],
+                photo_annonce=form.cleaned_data['photo_annonce'],
+                proces_verbal=form.cleaned_data['proces_verbal_soutenance_publique'],
+                date_retrait_diplome=form.cleaned_data['date_retrait_diplome'],
             )
         )
 

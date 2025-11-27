@@ -112,7 +112,7 @@
       <h4 class="card-title">{% translate "Admissibility" %}</h4>
     </div>
     <div class="card-body">
-      {% field_data _("Thesis title") parcours_doctoral.titre_these_propose inline=True %}
+      {% field_data _("Thesis title") parcours_doctoral.titre_these_propose %}
 
       {% include 'parcours_doctoral/includes/private_defense/supervision_panel.html' %}
 

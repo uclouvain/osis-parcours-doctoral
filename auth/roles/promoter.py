@@ -94,6 +94,7 @@ class Promoter(AdmissionPromoter):
             & defense_method_is_formula_2
             & admissibility_is_submitted,
             # Private defense
+            'parcours_doctoral.api_retrieve_private_defenses': is_parcours_doctoral_promoter,
             'parcours_doctoral.api_view_private_defense': is_parcours_doctoral_promoter & defense_method_is_formula_1,
             'parcours_doctoral.api_view_private_defense_minutes': is_parcours_doctoral_promoter
             & defense_method_is_formula_1,

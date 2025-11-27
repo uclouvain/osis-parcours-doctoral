@@ -62,12 +62,11 @@ class TestSoumettreDefensePrivee(SimpleTestCase):
     def setUp(self):
         self.addCleanup(DefensePriveeInMemoryRepository.reset)
         self.addCleanup(ParcoursDoctoralInMemoryRepository.reset)
-        self.defense_privee = DefensePriveeFactory(
-            parcours_doctoral_id=self.parcours_doctoral_repository.entities[0].entity_id,
-        )
+        self.parcours_doctoral_entity_id = self.parcours_doctoral_repository.entities[0].entity_id
+        self.defense_privee = DefensePriveeFactory(parcours_doctoral_id=self.parcours_doctoral_entity_id)
         self.defense_privee_repository.save(self.defense_privee)
         self.parametres_cmd = {
-            'uuid': self.defense_privee.entity_id.uuid,
+            'parcours_doctoral_uuid': self.parcours_doctoral_entity_id.uuid,
             'matricule_auteur': '1234',
             'titre_these': 'Titre',
             'date_heure': datetime.datetime(2022, 1, 1),
