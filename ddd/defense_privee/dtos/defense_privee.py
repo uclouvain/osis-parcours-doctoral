@@ -39,7 +39,6 @@ class DefensePriveeDTO(interface.DTO):
 
     est_active: bool
 
-    titre_these: str
     date_heure: Optional[datetime.datetime]
     lieu: str
     date_envoi_manuscrit: Optional[datetime.date]

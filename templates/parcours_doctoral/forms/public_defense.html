@@ -38,19 +38,19 @@
       {% field_data _("Thesis title") doctorate.titre_these_propose inline=True %}
 
       <div class="row">
-      {% bootstrap_field form.langue wrapper_class='required_field col-md-6 mb-3' %}
+      {% bootstrap_field form.langue_soutenance_publique wrapper_class='required_field col-md-6 mb-3' %}
       </div>
 
       <div id="date-hour-field">
-        {% bootstrap_field_with_tooltip form.date_heure classes='required_field' %}
+        {% bootstrap_field_with_tooltip form.date_heure_soutenance_publique classes='required_field' %}
       </div>
 
-      {% bootstrap_field form.lieu %}
+      {% bootstrap_field form.lieu_soutenance_publique %}
       {% bootstrap_field form.local_deliberation %}
       {% bootstrap_field form.informations_complementaires %}
       {% bootstrap_field form.resume_annonce %}
       {% bootstrap_field form.photo_annonce classes='required_field' %}
-      {% bootstrap_field_with_tooltip form.proces_verbal %}
+      {% bootstrap_field_with_tooltip form.proces_verbal_soutenance_publique %}
 
       <div class="row">
         {% bootstrap_field form.date_retrait_diplome wrapper_class='col-md-6 mb-3' %}

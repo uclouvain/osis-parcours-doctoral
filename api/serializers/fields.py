@@ -192,12 +192,12 @@ PARCOURS_DOCTORAL_ACTION_LINKS = {
     },
     # Private defense
     'retrieve_private_defense': {
-        'path_name': 'parcours_doctoral_api_v1:private-defense-list',
+        'path_name': 'parcours_doctoral_api_v1:private-defense',
         'method': 'GET',
         'params': ['uuid'],
     },
     'update_private_defense': {
-        'path_name': 'parcours_doctoral_api_v1:private-defense-list',
+        'path_name': 'parcours_doctoral_api_v1:private-defense',
         'method': 'PUT',
         'params': ['uuid'],
     },
@@ -251,6 +251,17 @@ PARCOURS_DOCTORAL_ACTION_LINKS = {
     },
     'submit_public_defense_minutes': {
         'path_name': 'parcours_doctoral_api_v1:public-defense-minutes',
+        'method': 'PUT',
+        'params': ['uuid'],
+    },
+    # Private & public defenses
+    'retrieve_private_public_defenses': {
+        'path_name': 'parcours_doctoral_api_v1:private-public-defenses',
+        'method': 'GET',
+        'params': ['uuid'],
+    },
+    'update_private_public_defenses': {
+        'path_name': 'parcours_doctoral_api_v1:private-public-defenses',
         'method': 'PUT',
         'params': ['uuid'],
     },

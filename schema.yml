@@ -1661,51 +1661,9 @@ paths:
           $ref: '#/components/responses/NotFound'
   /doctorate/{uuid}/private-defense:
     get:
-      operationId: retrieve_private_defenses
-      description: Get the private defences related to the doctorate
-      parameters:
-      - in: path
-        name: uuid
-        schema:
-          type: string
-          format: uuid
-        required: true
-      - $ref: '#/components/parameters/Accept-Language'
-      - $ref: '#/components/parameters/X-User-FirstName'
-      - $ref: '#/components/parameters/X-User-LastName'
-      - $ref: '#/components/parameters/X-User-Email'
-      - $ref: '#/components/parameters/X-User-GlobalID'
-      tags:
-      - doctorate
-      security:
-      - tokenAuth: []
-      - Token: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/PrivateDefenseDTO'
-          description: ''
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '404':
-          $ref: '#/components/responses/NotFound'
-  /doctorate/{uuid}/private-defense/{private_defense_uuid}:
-    get:
       operationId: retrieve_private_defense
-      description: Get a single private defence
+      description: Get the last private defence
       parameters:
-      - in: path
-        name: private_defense_uuid
-        schema:
-          type: string
-          format: uuid
-        required: true
       - in: path
         name: uuid
         schema:
@@ -1740,12 +1698,6 @@ paths:
       description: Submit a private defence
       parameters:
       - in: path
-        name: private_defense_uuid
-        schema:
-          type: string
-          format: uuid
-        required: true
-      - in: path
         name: uuid
         schema:
           type: string
@@ -1773,6 +1725,42 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ParcoursDoctoralIdentityDTO'
+          description: ''
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /doctorate/{uuid}/private-defense/list:
+    get:
+      operationId: retrieve_private_defenses
+      description: Get the private defences related to the doctorate
+      parameters:
+      - in: path
+        name: uuid
+        schema:
+          type: string
+          format: uuid
+        required: true
+      - $ref: '#/components/parameters/Accept-Language'
+      - $ref: '#/components/parameters/X-User-FirstName'
+      - $ref: '#/components/parameters/X-User-LastName'
+      - $ref: '#/components/parameters/X-User-Email'
+      - $ref: '#/components/parameters/X-User-GlobalID'
+      tags:
+      - doctorate
+      security:
+      - tokenAuth: []
+      - Token: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PrivateDefenseDTO'
           description: ''
         '400':
           $ref: '#/components/responses/BadRequest'
@@ -1835,6 +1823,46 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/SubmitPrivateDefenseMinutes'
+        required: true
+      security:
+      - tokenAuth: []
+      - Token: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParcoursDoctoralIdentityDTO'
+          description: ''
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /doctorate/{uuid}/private-public-defenses:
+    put:
+      operationId: submit_private_public_defenses
+      description: Submit the private and public defences
+      parameters:
+      - in: path
+        name: uuid
+        schema:
+          type: string
+          format: uuid
+        required: true
+      - $ref: '#/components/parameters/Accept-Language'
+      - $ref: '#/components/parameters/X-User-FirstName'
+      - $ref: '#/components/parameters/X-User-LastName'
+      - $ref: '#/components/parameters/X-User-Email'
+      - $ref: '#/components/parameters/X-User-GlobalID'
+      tags:
+      - doctorate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubmitPrivatePublicDefenses'
         required: true
       security:
       - tokenAuth: []
@@ -4448,6 +4476,10 @@ components:
               $ref: '#/components/schemas/ActionLink'
             submit_public_defense_minutes:
               $ref: '#/components/schemas/ActionLink'
+            retrieve_private_public_defenses:
+              $ref: '#/components/schemas/ActionLink'
+            update_private_public_defenses:
+              $ref: '#/components/schemas/ActionLink'
           readOnly: true
           default: {}
       required:
@@ -4627,8 +4659,6 @@ components:
           type: string
         est_active:
           type: boolean
-        titre_these:
-          type: string
         date_heure:
           type: string
           format: date-time
@@ -4653,7 +4683,6 @@ components:
       - lieu
       - parcours_doctoral_uuid
       - proces_verbal
-      - titre_these
       - uuid
     PrivateDefenseMinutesCanvas:
       type: object
@@ -5626,6 +5655,43 @@ components:
       required:
       - proces_verbal
       - uuid
+    SubmitPrivatePublicDefenses:
+      type: object
+      description: Contains the submitted data to complete the private and public
+        defences.
+      properties:
+        titre_these:
+          type: string
+        langue_soutenance_publique:
+          type: string
+        date_heure_defense_privee:
+          type: string
+          format: date-time
+        lieu_defense_privee:
+          type: string
+        date_envoi_manuscrit:
+          type: string
+          format: date
+          nullable: true
+        date_heure_soutenance_publique:
+          type: string
+          format: date-time
+        lieu_soutenance_publique:
+          type: string
+        local_deliberation:
+          type: string
+        resume_annonce:
+          type: string
+        photo_annonce:
+          type: array
+          items:
+            type: string
+      required:
+      - date_heure_defense_privee
+      - date_heure_soutenance_publique
+      - langue_soutenance_publique
+      - photo_annonce
+      - titre_these
     SubmitPublicDefense:
       type: object
       description: Contains the submitted data to complete a public defence.

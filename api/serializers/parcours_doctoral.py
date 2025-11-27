@@ -95,6 +95,9 @@ class ParcoursDoctoralDTOSerializer(DTOSerializer):
                 'update_public_defense',
                 'retrieve_public_defense_minutes_canvas',
                 'submit_public_defense_minutes',
+                # Private and public defenses
+                'retrieve_private_public_defenses',
+                'update_private_public_defenses',
             ]
         }
     )

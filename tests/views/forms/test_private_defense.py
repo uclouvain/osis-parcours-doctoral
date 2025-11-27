@@ -107,7 +107,6 @@ class PrivateDefenseFormViewTestCase(MockOsisDocumentMixin, TestCase):
         self.assertEqual(current_private_defense.uuid, str(private_defense.uuid))
         self.assertEqual(current_private_defense.parcours_doctoral_uuid, (str(self.doctorate.uuid)))
         self.assertEqual(current_private_defense.est_active, True)
-        self.assertEqual(current_private_defense.titre_these, self.doctorate.thesis_proposed_title)
         self.assertEqual(current_private_defense.date_heure, private_defense.datetime)
         self.assertEqual(current_private_defense.lieu, private_defense.place)
         self.assertEqual(current_private_defense.date_envoi_manuscrit, private_defense.manuscript_submission_date)
@@ -119,11 +118,11 @@ class PrivateDefenseFormViewTestCase(MockOsisDocumentMixin, TestCase):
         self.assertEqual(
             form.initial,
             {
-                'titre_these': current_private_defense.titre_these,
-                'date_heure': current_private_defense.date_heure,
-                'lieu': current_private_defense.lieu,
+                'titre_these': self.doctorate.thesis_proposed_title,
+                'date_heure_defense_privee': current_private_defense.date_heure,
+                'lieu_defense_privee': current_private_defense.lieu,
                 'date_envoi_manuscrit': current_private_defense.date_envoi_manuscrit,
-                'proces_verbal': current_private_defense.proces_verbal,
+                'proces_verbal_defense_privee': current_private_defense.proces_verbal,
             },
         )
 
@@ -154,7 +153,6 @@ class PrivateDefenseFormViewTestCase(MockOsisDocumentMixin, TestCase):
         self.assertEqual(current_private_defense.uuid, str(private_defense.uuid))
         self.assertEqual(current_private_defense.parcours_doctoral_uuid, (str(self.doctorate.uuid)))
         self.assertEqual(current_private_defense.est_active, True)
-        self.assertEqual(current_private_defense.titre_these, self.doctorate.thesis_proposed_title)
         self.assertEqual(current_private_defense.date_heure, private_defense.datetime)
         self.assertEqual(current_private_defense.lieu, private_defense.place)
         self.assertEqual(current_private_defense.date_envoi_manuscrit, private_defense.manuscript_submission_date)
@@ -168,7 +166,6 @@ class PrivateDefenseFormViewTestCase(MockOsisDocumentMixin, TestCase):
         self.assertEqual(other_private_defense.uuid, str(old_private_defense.uuid))
         self.assertEqual(other_private_defense.parcours_doctoral_uuid, (str(self.doctorate.uuid)))
         self.assertEqual(other_private_defense.est_active, False)
-        self.assertEqual(other_private_defense.titre_these, self.doctorate.thesis_proposed_title)
         self.assertEqual(other_private_defense.date_heure, old_private_defense.datetime)
         self.assertEqual(other_private_defense.lieu, old_private_defense.place)
         self.assertEqual(other_private_defense.date_envoi_manuscrit, old_private_defense.manuscript_submission_date)
@@ -180,11 +177,11 @@ class PrivateDefenseFormViewTestCase(MockOsisDocumentMixin, TestCase):
         self.assertEqual(
             form.initial,
             {
-                'titre_these': current_private_defense.titre_these,
-                'date_heure': current_private_defense.date_heure,
-                'lieu': current_private_defense.lieu,
+                'titre_these': self.doctorate.thesis_proposed_title,
+                'date_heure_defense_privee': current_private_defense.date_heure,
+                'lieu_defense_privee': current_private_defense.lieu,
                 'date_envoi_manuscrit': current_private_defense.date_envoi_manuscrit,
-                'proces_verbal': current_private_defense.proces_verbal,
+                'proces_verbal_defense_privee': current_private_defense.proces_verbal,
             },
         )
 
@@ -192,16 +189,16 @@ class PrivateDefenseFormViewTestCase(MockOsisDocumentMixin, TestCase):
         self.client.force_login(self.manager.user)
 
         private_defense = PrivateDefenseFactory(
-            parcours_doctoral=self.doctorate,
+            parcours_doctoral=self.doctorate
         )
 
         data = {
             'titre_these': 'Title 2',
-            'date_heure_0': '01/01/2026',
-            'date_heure_1': '11:00',
-            'lieu': 'L2',
+            'date_heure_defense_privee_0': '01/01/2026',
+            'date_heure_defense_privee_1': '11:00',
+            'lieu_defense_privee': 'L2',
             'date_envoi_manuscrit': datetime.date(2025, 2, 2),
-            'proces_verbal_0': [uuid.uuid4()],
+            'proces_verbal_defense_privee_0': [uuid.uuid4()],
         }
 
         response = self.client.post(self.update_url, data=data)
@@ -215,6 +212,6 @@ class PrivateDefenseFormViewTestCase(MockOsisDocumentMixin, TestCase):
         private_defense.refresh_from_db()
 
         self.assertEqual(private_defense.datetime, datetime.datetime(2026, 1, 1, 11))
-        self.assertEqual(private_defense.place, data['lieu'])
+        self.assertEqual(private_defense.place, data['lieu_defense_privee'])
         self.assertEqual(private_defense.manuscript_submission_date, data['date_envoi_manuscrit'])
-        self.assertEqual(private_defense.minutes, data['proces_verbal_0'])
+        self.assertEqual(private_defense.minutes, data['proces_verbal_defense_privee_0'])
