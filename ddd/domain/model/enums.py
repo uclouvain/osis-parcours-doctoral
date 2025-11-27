@@ -90,6 +90,7 @@ STATUTS_DOCTORAT_DEFENSE_PRIVEE_EN_COURS = {
 
 
 STATUTS_DOCTORAT_SOUTENANCE_PUBLIQUE_EN_COURS = {
+    ChoixStatutParcoursDoctoral.RECEVABILITE_REUSSIE.name,
     ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_REUSSIE.name,
     ChoixStatutParcoursDoctoral.SOUTENANCE_PUBLIQUE_SOUMISE.name,
     ChoixStatutParcoursDoctoral.SOUTENANCE_PUBLIQUE_AUTORISEE.name,

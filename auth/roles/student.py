@@ -92,6 +92,7 @@ class Student(RoleModel):
             & parcours_doctoral.defense_method_is_formula_2
             & parcours_doctoral.admissibility_in_progress,
             # Private defense
+            'parcours_doctoral.api_retrieve_private_defenses': parcours_doctoral.is_parcours_doctoral_student,
             'parcours_doctoral.api_view_private_defense': parcours_doctoral.is_parcours_doctoral_student
             & parcours_doctoral.defense_method_is_formula_1,
             'parcours_doctoral.api_change_private_defense': parcours_doctoral.is_parcours_doctoral_student
@@ -109,6 +110,12 @@ class Student(RoleModel):
             & parcours_doctoral.defense_method_is_formula_1,
             'parcours_doctoral.api_change_public_defense': parcours_doctoral.is_parcours_doctoral_student
             & parcours_doctoral.defense_method_is_formula_1
+            & parcours_doctoral.public_defense_in_progress,
+            # Private and public defenses
+            'parcours_doctoral.api_view_private_public_defenses': parcours_doctoral.is_parcours_doctoral_student
+            & parcours_doctoral.defense_method_is_formula_2,
+            'parcours_doctoral.api_change_private_public_defenses': parcours_doctoral.is_parcours_doctoral_student
+            & parcours_doctoral.defense_method_is_formula_2
             & parcours_doctoral.public_defense_in_progress,
         }
         return RuleSet(rules)

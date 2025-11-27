@@ -52,7 +52,6 @@ class DefensePriveeRepository(IDefensePriveeRepository):
     ) -> List['DefensePriveeDTO']:
         qs = PrivateDefense.objects.annotate(
             doctorate_uuid=F('parcours_doctoral__uuid'),
-            thesis_title=F('parcours_doctoral__thesis_proposed_title'),
         )
 
         if parcours_doctoral_id:
@@ -71,7 +70,6 @@ class DefensePriveeRepository(IDefensePriveeRepository):
             DefensePriveeDTO(
                 uuid=str(private_defense.uuid),
                 parcours_doctoral_uuid=str(private_defense.doctorate_uuid),  # From annotation
-                titre_these=private_defense.thesis_title,  # From annotation
                 est_active=bool(private_defense.current_parcours_doctoral_id),
                 date_heure=private_defense.datetime,
                 lieu=private_defense.place,

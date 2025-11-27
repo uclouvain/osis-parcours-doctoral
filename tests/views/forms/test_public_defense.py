@@ -98,18 +98,18 @@ class PublicDefenseFormViewTestCase(MockOsisDocumentMixin, TestCase):
 
         form = response.context['form']
 
-        self.assertEqual(form.initial['langue'], self.doctorate.defense_language.code)
-        self.assertEqual(form.initial['date_heure'], self.doctorate.defense_datetime)
-        self.assertEqual(form.initial['lieu'], self.doctorate.defense_place)
+        self.assertEqual(form.initial['langue_soutenance_publique'], self.doctorate.defense_language.code)
+        self.assertEqual(form.initial['date_heure_soutenance_publique'], self.doctorate.defense_datetime)
+        self.assertEqual(form.initial['lieu_soutenance_publique'], self.doctorate.defense_place)
         self.assertEqual(form.initial['local_deliberation'], self.doctorate.defense_deliberation_room)
         self.assertEqual(form.initial['informations_complementaires'], self.doctorate.defense_additional_information)
         self.assertEqual(form.initial['resume_annonce'], self.doctorate.announcement_summary)
         self.assertEqual(form.initial['photo_annonce'], self.doctorate.announcement_photo)
-        self.assertEqual(form.initial['proces_verbal'], self.doctorate.defense_minutes)
+        self.assertEqual(form.initial['proces_verbal_soutenance_publique'], self.doctorate.defense_minutes)
         self.assertEqual(form.initial['date_retrait_diplome'], self.doctorate.diploma_collection_date)
 
         self.assertEqual(
-            form.fields['langue'].choices,
+            form.fields['langue_soutenance_publique'].choices,
             [
                 EMPTY_CHOICE[0],
                 *[(language.code, language.name) for language in Language.objects.all().order_by('name')],
@@ -120,15 +120,15 @@ class PublicDefenseFormViewTestCase(MockOsisDocumentMixin, TestCase):
         self.client.force_login(self.manager.user)
 
         new_data = {
-            'langue': self.b_language.code,
-            'date_heure_0': '01/01/2026',
-            'date_heure_1': '11:00',
-            'lieu': 'Mons',
+            'langue_soutenance_publique': self.b_language.code,
+            'date_heure_soutenance_publique_0': '01/01/2026',
+            'date_heure_soutenance_publique_1': '11:00',
+            'lieu_soutenance_publique': 'Mons',
             'local_deliberation': 'D2',
             'informations_complementaires': 'New information',
             'resume_annonce': 'New summary',
             'photo_annonce_0': [uuid.uuid4()],
-            'proces_verbal_0': [uuid.uuid4()],
+            'proces_verbal_soutenance_publique_0': [uuid.uuid4()],
             'date_retrait_diplome': datetime.date(2027, 2, 1),
         }
 
@@ -142,12 +142,12 @@ class PublicDefenseFormViewTestCase(MockOsisDocumentMixin, TestCase):
 
         self.doctorate.refresh_from_db()
 
-        self.assertEqual(new_data['langue'], self.doctorate.defense_language.code)
+        self.assertEqual(new_data['langue_soutenance_publique'], self.doctorate.defense_language.code)
         self.assertEqual(datetime.datetime(2026, 1, 1, 11), self.doctorate.defense_datetime)
-        self.assertEqual(new_data['lieu'], self.doctorate.defense_place)
+        self.assertEqual(new_data['lieu_soutenance_publique'], self.doctorate.defense_place)
         self.assertEqual(new_data['local_deliberation'], self.doctorate.defense_deliberation_room)
         self.assertEqual(new_data['informations_complementaires'], self.doctorate.defense_additional_information)
         self.assertEqual(new_data['resume_annonce'], self.doctorate.announcement_summary)
         self.assertEqual(new_data['photo_annonce_0'], self.doctorate.announcement_photo)
-        self.assertEqual(new_data['proces_verbal_0'], self.doctorate.defense_minutes)
+        self.assertEqual(new_data['proces_verbal_soutenance_publique_0'], self.doctorate.defense_minutes)
         self.assertEqual(new_data['date_retrait_diplome'], self.doctorate.diploma_collection_date)

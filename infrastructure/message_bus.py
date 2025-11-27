@@ -24,12 +24,14 @@
 #
 ##############################################################################
 from infrastructure.utils import AbstractMessageBusCommands
-
 from .parcours_doctoral import handlers as parcours_doctoral_handlers
 from .parcours_doctoral.autorisation_diffusion_these import (
     handlers as autorisation_diffusion_these_handlers,
 )
 from .parcours_doctoral.defense_privee import handlers as defense_privee_handlers
+from .parcours_doctoral.defense_privee_soutenance_publique import (
+    handlers as defense_privee_soutenance_publique_handlers,
+)
 from .parcours_doctoral.epreuve_confirmation import (
     handlers as epreuve_confirmation_handlers,
 )
@@ -51,6 +53,7 @@ class MessageBusCommands(AbstractMessageBusCommands):
         **soutenance_publique_handlers.COMMAND_HANDLERS,
         **recevabilite_handlers.COMMAND_HANDLERS,
         **autorisation_diffusion_these_handlers.COMMAND_HANDLERS,
+        **defense_privee_soutenance_publique_handlers.COMMAND_HANDLERS,
     }
     event_handlers = [
         parcours_doctoral_handlers.EVENT_HANDLERS,

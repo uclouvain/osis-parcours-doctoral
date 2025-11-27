@@ -24,13 +24,15 @@
 #
 # ##############################################################################
 from infrastructure.utils import AbstractMessageBusCommands, MessageBusInMemory
-
 from .parcours_doctoral import handlers_in_memory as parcours_doctoral_handlers
 from .parcours_doctoral.autorisation_diffusion_these import (
     handlers_in_memory as autorisation_diffusion_these_handlers,
 )
 from .parcours_doctoral.defense_privee import (
     handlers_in_memory as defense_privee_handlers,
+)
+from .parcours_doctoral.defense_privee_soutenance_publique import (
+    handlers_in_memory as defense_privee_soutenance_publique_handlers,
 )
 from .parcours_doctoral.epreuve_confirmation import (
     handlers_in_memory as epreuve_confirmation_handlers,
@@ -53,6 +55,7 @@ class MessageBusInMemoryCommands(AbstractMessageBusCommands):
         **soutenance_publique_handlers.COMMAND_HANDLERS,
         **recevabilite_handlers.COMMAND_HANDLERS,
         **autorisation_diffusion_these_handlers.COMMAND_HANDLERS,
+        **defense_privee_soutenance_publique_handlers.COMMAND_HANDLERS,
     }
 
 

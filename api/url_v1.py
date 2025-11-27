@@ -69,15 +69,17 @@ urlpatterns = [
     path('doctorate/<uuid:uuid>/admissibility', views.AdmissibilityListAPIView),
     path('doctorate/<uuid:uuid>/admissibility/minutes', views.AdmissibilityMinutesAPIView),
     # Private defense
-    path('doctorate/<uuid:uuid>/private-defense', views.PrivateDefenseListAPIView),
+    path('doctorate/<uuid:uuid>/private-defense', views.PrivateDefenseAPIView),
+    path('doctorate/<uuid:uuid>/private-defense/list', views.PrivateDefenseListAPIView),
     path('doctorate/<uuid:uuid>/private-defense/minutes', views.PrivateDefenseMinutesAPIView),
-    path('doctorate/<uuid:uuid>/private-defense/<uuid:private_defense_uuid>', views.PrivateDefenseAPIView),
     # Authorization distribution
     path('doctorate/<uuid:uuid>/authorization-distribution', views.AuthorizationDistributionAPIView),
     path('doctorate/<uuid:uuid>/manuscript-validation', views.ManuscriptValidationApiView),
     # Public defense
     path('doctorate/<uuid:uuid>/public-defense', views.PublicDefenseAPIView),
     path('doctorate/<uuid:uuid>/public-defense/minutes', views.PublicDefenseMinutesAPIView),
+    # Private & public defenses
+    path('doctorate/<uuid:uuid>/private-public-defenses', views.PrivatePublicDefensesAPIView),
     # Training
     path('doctorate/<uuid:uuid>/training/config', views.TrainingConfigView),
     path('doctorate/<uuid:uuid>/doctoral-training', views.DoctoralTrainingListView),

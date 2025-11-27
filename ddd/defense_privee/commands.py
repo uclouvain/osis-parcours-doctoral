@@ -48,7 +48,7 @@ class RecupererDefensePriveeQuery(interface.QueryRequest):
 
 @attr.dataclass(frozen=True, slots=True)
 class SoumettreDefensePriveeCommand(interface.CommandRequest):
-    uuid: str
+    parcours_doctoral_uuid: str
     matricule_auteur: str
 
     titre_these: str

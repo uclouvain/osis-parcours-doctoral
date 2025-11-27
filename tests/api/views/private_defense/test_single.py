@@ -80,7 +80,6 @@ class PrivateDefenseAPIViewTestCase(MockOsisDocumentMixin, APITestCase):
         self.url = resolve_url(
             self.base_namespace,
             uuid=self.doctorate.uuid,
-            private_defense_uuid=self.private_defense.uuid,
         )
 
     def test_assert_methods_not_allowed(self):
@@ -114,28 +113,6 @@ class PrivateDefenseAPIViewTestCase(MockOsisDocumentMixin, APITestCase):
         response = self.client.put(self.url)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-    def test_get_with_unknown_private_defense(self):
-        self.client.force_authenticate(user=self.doctorate_student.user)
-
-        response = self.client.get(
-            resolve_url(
-                self.base_namespace,
-                uuid=self.doctorate.uuid,
-                private_defense_uuid=uuid.uuid4(),
-            ),
-            format='json',
-        )
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-
-        json_response = response.json()
-        self.assertIn(
-            {
-                'status_code': DefensePriveeNonTrouveeException.status_code,
-                'detail': gettext('Private defence not found.'),
-            },
-            json_response.get('non_field_errors', []),
-        )
-
     def test_get_a_known_private_defenses(self):
         self.client.force_authenticate(user=self.doctorate_student.user)
 
@@ -146,7 +123,6 @@ class PrivateDefenseAPIViewTestCase(MockOsisDocumentMixin, APITestCase):
 
         self.assertEqual(private_defense.get('uuid'), str(self.private_defense.uuid))
         self.assertTrue(private_defense.get('est_active'))
-        self.assertEqual(private_defense.get('titre_these'), self.doctorate.thesis_proposed_title)
         self.assertEqual(private_defense.get('date_heure'), self.private_defense.datetime.isoformat())
         self.assertEqual(private_defense.get('lieu'), self.private_defense.place)
         self.assertEqual(
@@ -227,22 +203,3 @@ class PrivateDefenseAPIViewTestCase(MockOsisDocumentMixin, APITestCase):
             },
         )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-
-    def test_edit_a_known_but_old_private_defense(self):
-        self.client.force_authenticate(user=self.doctorate_student.user)
-
-        self.private_defense.current_parcours_doctoral = None
-        self.private_defense.save()
-
-        # Update of an old private defense
-        response = self.client.put(self.url, data=self.data)
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-
-        json_response = response.json()
-        self.assertIn(
-            {
-                'status_code': DefensePriveeNonActiveeException.status_code,
-                'detail': gettext('Private defence not activated.'),
-            },
-            json_response.get('non_field_errors', []),
-        )

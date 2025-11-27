@@ -23,37 +23,34 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from dal import forward
 from django import forms
 from django.conf import settings
-from django.forms import ModelChoiceField
 from django.utils.translation import get_language
 from django.utils.translation import gettext_lazy as _
 from osis_document_components.forms import FileUploadField
 
-from admission.forms.admission.doctorate.languages import LanguageModelChoiceField
 from base.forms.utils import EMPTY_CHOICE
 from base.forms.utils.autocomplete import ListSelect2
-from base.forms.utils.datefield import CustomDateInput, DatePickerInput
+from base.forms.utils.datefield import CustomDateInput
 from osis_profile.constants import JPEG_MIME_TYPE, PNG_MIME_TYPE
 from parcours_doctoral.forms.fields import DoctorateDateTimeField
 from reference.models.language import Language
 
 
 class PublicDefenseForm(forms.Form):
-    langue = forms.ChoiceField(
+    langue_soutenance_publique = forms.ChoiceField(
         label=_('Public defence language'),
         widget=ListSelect2,
         required=False,
     )
 
-    date_heure = DoctorateDateTimeField(
+    date_heure_soutenance_publique = DoctorateDateTimeField(
         label=_('Public defence date and time'),
         help_text=_('The public defence takes place at least one month after the private defence.'),
         required=False,
     )
 
-    lieu = forms.CharField(
+    lieu_soutenance_publique = forms.CharField(
         label=_('Public defence location'),
         required=False,
         max_length=255,
@@ -84,7 +81,7 @@ class PublicDefenseForm(forms.Form):
         required=False,
     )
 
-    proces_verbal = FileUploadField(
+    proces_verbal_soutenance_publique = FileUploadField(
         label=_('Public defence minutes'),
         help_text=_('The minutes will be uploaded by the thesis exam board secretary or chair.'),
         required=False,
@@ -104,4 +101,4 @@ class PublicDefenseForm(forms.Form):
         choices = [EMPTY_CHOICE[0]]
         qs = Language.objects.order_by(language_name_field).values_list('code', language_name_field)
         choices.extend(qs)
-        self.fields['langue'].choices = choices
+        self.fields['langue_soutenance_publique'].choices = choices
