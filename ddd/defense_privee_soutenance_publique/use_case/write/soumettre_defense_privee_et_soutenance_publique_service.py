@@ -23,14 +23,18 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from parcours_doctoral.ddd.builder.parcours_doctoral_identity import ParcoursDoctoralIdentityBuilder
+from parcours_doctoral.ddd.builder.parcours_doctoral_identity import (
+    ParcoursDoctoralIdentityBuilder,
+)
 from parcours_doctoral.ddd.defense_privee.repository.i_defense_privee import (
     IDefensePriveeRepository,
 )
 from parcours_doctoral.ddd.defense_privee_soutenance_publique.commands import (
     SoumettreDefensePriveeEtSoutenancePubliqueCommand,
 )
-from parcours_doctoral.ddd.defense_privee_soutenance_publique.domain.service.i_historique import IHistorique
+from parcours_doctoral.ddd.defense_privee_soutenance_publique.domain.service.i_historique import (
+    IHistorique,
+)
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import (
     ParcoursDoctoralIdentity,
 )
@@ -51,28 +55,23 @@ def soumettre_defense_privee_et_soutenance_publique(
     parcours_doctoral = parcours_doctoral_repository.get(parcours_doctoral_entity_id)
     defense_privee = defense_privee_repository.get_active(parcours_doctoral_entity_id=parcours_doctoral_entity_id)
 
-    defense_privee.verifier_soumission(
-        date_heure=cmd.date_heure_defense_privee,
-        titre_these=cmd.titre_these,
-    )
-
     statut_original_parcours_doctoral = parcours_doctoral.statut
 
     # WHEN
-    defense_privee.soumettre_formulaire(
-        date_heure=cmd.date_heure_defense_privee,
-        lieu=cmd.lieu_defense_privee,
-        date_envoi_manuscrit=cmd.date_envoi_manuscrit,
-    )
-    parcours_doctoral.modifier_titre_these(titre_these=cmd.titre_these)
-
-    parcours_doctoral.soumettre_soutenance_publique(
+    parcours_doctoral.soumettre_defense_privee_et_soutenance_publique_formule_2(
+        titre_these=cmd.titre_these,
+        date_heure_defense_privee=cmd.date_heure_defense_privee,
         langue=cmd.langue_soutenance_publique,
-        date_heure=cmd.date_heure_soutenance_publique,
+        date_heure_soutenance_publique=cmd.date_heure_soutenance_publique,
         lieu=cmd.lieu_soutenance_publique,
         local_deliberation=cmd.local_deliberation,
         resume_annonce=cmd.resume_annonce,
         photo_annonce=cmd.photo_annonce,
+    )
+    defense_privee.soumettre_formulaire(
+        date_heure=cmd.date_heure_defense_privee,
+        lieu=cmd.lieu_defense_privee,
+        date_envoi_manuscrit=cmd.date_envoi_manuscrit,
     )
 
     # THEN

@@ -69,7 +69,7 @@ class PublicDefenseForm(forms.Form):
     )
 
     resume_annonce = forms.CharField(
-        label=_('Summary for announcement'),
+        label=_('Text for the poster'),
         widget=forms.Textarea(attrs={'rows': '2'}),
         required=False,
     )

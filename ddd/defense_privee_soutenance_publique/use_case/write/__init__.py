@@ -24,4 +24,21 @@
 #
 # ##############################################################################
 
-from .soumettre_defense_privee_et_soutenance_publique_service import soumettre_defense_privee_et_soutenance_publique
+from .autoriser_defense_privee_et_soutenance_publique_service import (
+    autoriser_defense_privee_et_soutenance_publique,
+)
+from .confirmer_reussite_defense_privee_et_soutenance_publique_service import (
+    confirmer_reussite_defense_privee_et_soutenance_publique,
+)
+from .inviter_jury_defense_privee_et_soutenance_publique_service import (
+    inviter_jury_defense_privee_et_soutenance_publique,
+)
+from .modifier_defense_privee_et_soutenance_publique_service import (
+    modifier_defense_privee_et_soutenance_publique,
+)
+from .soumettre_defense_privee_et_soutenance_publique_service import (
+    soumettre_defense_privee_et_soutenance_publique,
+)
+from .soumettre_proces_verbaux_defense_privee_et_soutenance_publique_service import (
+    soumettre_proces_verbaux_defense_privee_et_soutenance_publique,
+)

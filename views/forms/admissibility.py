@@ -52,18 +52,17 @@ class AdmissibilityFormView(
     form_class = AdmissibilityForm
 
     def get_initial(self):
+        initial_data: dict = {'titre_these': self.parcours_doctoral_dto.titre_these_propose}
+
         current_admissibility = self.current_admissibility
-        return (
-            {
-                'titre_these': self.parcours_doctoral_dto.titre_these_propose,
-                'date_envoi_manuscrit': current_admissibility.date_envoi_manuscrit,
-                'date_decision': current_admissibility.date_decision,
-                'proces_verbal': current_admissibility.proces_verbal,
-                'avis_jury': current_admissibility.avis_jury,
-            }
-            if current_admissibility
-            else {}
-        )
+
+        if current_admissibility:
+            initial_data['date_envoi_manuscrit'] = current_admissibility.date_envoi_manuscrit
+            initial_data['date_decision'] = current_admissibility.date_decision
+            initial_data['proces_verbal'] = current_admissibility.proces_verbal
+            initial_data['avis_jury'] = current_admissibility.avis_jury
+
+        return initial_data
 
     def call_command(self, form):
         message_bus_instance.invoke(

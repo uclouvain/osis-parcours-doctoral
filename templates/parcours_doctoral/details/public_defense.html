@@ -111,7 +111,7 @@
       {% field_data _("Public defence location") parcours_doctoral.lieu_soutenance_publique %}
       {% field_data _("Deliberation room") parcours_doctoral.local_deliberation %}
       {% field_data _("Additional information") parcours_doctoral.informations_complementaires_soutenance_publique html_tag="blockquote" %}
-      {% field_data _("Summary for announcement") parcours_doctoral.resume_annonce html_tag="blockquote" %}
+      {% field_data _("Text for the poster") parcours_doctoral.resume_annonce html_tag="blockquote" %}
       {% field_data _("Photo for announcement") parcours_doctoral.photo_annonce %}
       <p>
         <a href="{% url 'parcours_doctoral:public-defense-minutes-canvas' view.kwargs.uuid %}" target="_blank">

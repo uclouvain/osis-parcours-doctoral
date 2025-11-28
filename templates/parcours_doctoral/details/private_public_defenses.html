@@ -1,0 +1,188 @@
+{% extends "parcours_doctoral/details/tab_layout.html" %}
+{% load doctorate_enums %}
+{% load i18n parcours_doctoral static %}
+
+{% comment "License" %}
+* OSIS stands for Open Student Information System. It's an application
+* designed to manage the core business of higher education institutions,
+* such as universities, faculties, institutes and professional schools.
+* The core business involves the administration of students, teachers,
+* courses, programs and so on.
+*
+* Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* A copy of this license - GNU General Public License - is available
+* at the root of the source code of this program.  If not,
+* see http://www.gnu.org/licenses/.
+{% endcomment %}
+
+{% block actions-group %}
+  {% has_perm 'parcours_doctoral.change_private_public_defenses' as can_change_defenses %}
+  {% has_perm 'parcours_doctoral.authorise_private_public_defenses' as can_authorise_defenses %}
+  {% has_perm 'parcours_doctoral.invite_jury_to_private_public_defenses' as can_invite_jury_to_defenses %}
+  {% has_perm 'parcours_doctoral.make_private_public_defenses_decision' as can_make_decision %}
+  {% has_perm 'parcours_doctoral.send_email_for_diploma_collection' as can_send_email_for_diploma_collection %}
+
+  {% if can_change_defenses or can_authorise_defenses or can_invite_jury_to_defenses or can_make_decision or can_send_email_for_diploma_collection %}
+    <div id="defenses-actions" class="btn-group">
+      <button
+        type="button"
+        class="btn btn-default border border-dark-subtle"
+        data-bs-toggle="dropdown"
+        aria-haspopup="true"
+        aria-expanded="false"
+      >
+        {% translate "Actions" %}
+        <i class="fa-solid fa-caret-down"></i>
+      </button>
+      <ul class="dropdown-menu float-end">
+        {% if can_change_defenses %}
+          <li>
+            <a
+              class="dropdown-item"
+              href="{% url 'parcours_doctoral:update:private-public-defenses' view.kwargs.uuid %}"
+            >
+              {% translate "Update" context 'verb' %}
+            </a>
+          </li>
+          <li><hr class="dropdown-divider"></li>
+        {% endif %}
+        {% if can_authorise_defenses %}
+          <li>
+            <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#defenses-authorisation-form-modal">
+              {% translate "Authorise the private defence" %}
+            </a>
+          </li>
+        {% endif %}
+        {% if can_invite_jury_to_defenses %}
+          <li>
+            <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#defenses-jury-invitation-form-modal">
+              {% translate "Invite the members of the jury to the defences" %}
+            </a>
+          </li>
+        {% endif %}
+        {% if can_make_decision %}
+          {% if current_private_defense.est_valide_pour_decision and parcours_doctoral.date_heure_soutenance_publique and parcours_doctoral.proces_verbal_soutenance_publique %}
+            <li>
+              <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#defenses-success-decision-form-modal">
+                {% translate "Proclaimed" %}
+              </a>
+            </li>
+          {% else %}
+            {% with _("Please be sure that the date and time of the defences have been filled in and that the defences minutes have been submitted in the application.") as error_message %}
+              <li title="{{ error_message }}">
+                <a class="dropdown-item disabled" href="#">
+                  {% translate "Proclaimed" %}
+                </a>
+              </li>
+            {% endwith %}
+          {% endif %}
+        {% endif %}
+        {% if can_send_email_for_diploma_collection %}
+          <li>
+            <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#public-defense-diploma-collection-form-modal">
+              {% trans "Send an email for the diploma collection" %}
+            </a>
+          </li>
+        {% endif %}
+      </ul>
+    </div>
+  {% endif %}
+{% endblock %}
+
+{% block tab_content %}
+  <div class="card mb-3">
+    <div class="card-header">
+      <h4 class="card-title">{% translate "Private defence / Public defence" %}</h4>
+    </div>
+    <div class="card-body">
+      {% field_data _("Thesis title") current_private_defense.titre_these %}
+      {% field_data _("Public defence language") parcours_doctoral.nom_langue_soutenance_publique %}
+
+      {% include 'parcours_doctoral/includes/private_defense/supervision_panel.html' %}
+
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title">{% translate "Private defence" %}</h5>
+        </div>
+        <div class="card-body">
+          {% field_data _("Private defence date and time") current_private_defense.date_heure %}
+          {% field_data _("Private defence location") current_private_defense.lieu %}
+          {% field_data _("Date of manuscript submission to the thesis exam board") current_private_defense.date_envoi_manuscrit %}
+          <p>
+            <a href="{% url 'parcours_doctoral:private-defense-minutes-canvas' view.kwargs.uuid %}" target="_blank">
+              {% translate 'Canvas of the private defence minutes to download.' %}
+            </a>
+          </p>
+          {% field_data _("Private defence minutes") current_private_defense.proces_verbal %}
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title">{% translate "Public defence" %}</h5>
+        </div>
+        <div class="card-body">
+          {% field_data _("Public defence date and time") parcours_doctoral.date_heure_soutenance_publique %}
+          {% field_data _("Public defence location") parcours_doctoral.lieu_soutenance_publique %}
+          {% field_data _("Deliberation room") parcours_doctoral.local_deliberation %}
+          {% field_data _("Additional information") parcours_doctoral.informations_complementaires_soutenance_publique html_tag="blockquote" %}
+          {% field_data _("Text for the poster") parcours_doctoral.resume_annonce html_tag="blockquote" %}
+          {% field_data _("Photo for announcement") parcours_doctoral.photo_annonce %}
+          <p>
+            <a href="{% url 'parcours_doctoral:public-defense-minutes-canvas' view.kwargs.uuid %}" target="_blank">
+              {% translate 'Canvas of the public defence minutes to download.' %}
+            </a>
+          </p>
+          {% field_data _("Public defence minutes") parcours_doctoral.proces_verbal_soutenance_publique %}
+          {% field_data _("Diploma collection date") parcours_doctoral.date_retrait_diplome %}
+          {% field_data _("DIAL link") '' %}
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  {% include 'parcours_doctoral/includes/private_defense/previous_private_defenses.html' %}
+
+  {% url 'parcours_doctoral:private-public-defenses:authorise' view.kwargs.uuid as authorization_url %}
+  {% translate 'Authorise the defences' as authorization_title %}
+  {% include 'parcours_doctoral/modal/form_modal.html' with modal_id='defenses-authorisation-form-modal' modal_title=authorization_title modal_url=authorization_url %}
+
+  {% url 'parcours_doctoral:private-public-defenses:jury-invitation' view.kwargs.uuid as jury_invitation_url %}
+  {% translate 'Invite the members of the jury to the defences' as jury_invitation_title %}
+  {% translate 'Here is an example message that will be sent to the jury members.' as jury_invitation_message %}
+  {% include 'parcours_doctoral/modal/form_modal.html' with modal_id='defenses-jury-invitation-form-modal' modal_title=jury_invitation_title modal_message=jury_invitation_message modal_url=jury_invitation_url %}
+
+  {% url 'parcours_doctoral:private-public-defenses:success' view.kwargs.uuid as success_decision_url %}
+  {% include 'parcours_doctoral/modal/form_modal.html' with modal_id='defenses-success-decision-form-modal' modal_title=_('Proclaimed') modal_url=success_decision_url %}
+
+  {% url 'parcours_doctoral:public-defense:diploma-collection' view.kwargs.uuid as diploma_collection_url %}
+  {% include 'parcours_doctoral/modal/form_modal.html' with modal_id='public-defense-diploma-collection-form-modal' modal_title=_('Diploma collection') modal_url=diploma_collection_url %}
+
+{% endblock %}
+
+{% block style %}
+  {{ block.super }}
+  <style>
+    {# Facilitate the management of the separator display by hiding it if it's the last element #}
+    #defenses-actions li:last-child:has(.dropdown-divider) {
+        display: none;
+    }
+  </style>
+{% endblock %}
+
+{% block script %}
+  {{ block.super }}
+  <script src="{% static 'parcours_doctoral/js/submit_ckeditor_data.js' %}"></script>
+{% endblock %}

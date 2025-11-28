@@ -39,6 +39,7 @@ from parcours_doctoral.auth.predicates.parcours_doctoral import (
     is_parcours_doctoral_reference_promoter,
     is_related_to_an_admission,
     private_defense_is_authorised,
+    private_public_defenses_are_authorised_formula_2,
     public_defense_is_authorised,
 )
 
@@ -96,8 +97,7 @@ class Promoter(AdmissionPromoter):
             # Private defense
             'parcours_doctoral.api_retrieve_private_defenses': is_parcours_doctoral_promoter,
             'parcours_doctoral.api_view_private_defense': is_parcours_doctoral_promoter & defense_method_is_formula_1,
-            'parcours_doctoral.api_view_private_defense_minutes': is_parcours_doctoral_promoter
-            & defense_method_is_formula_1,
+            'parcours_doctoral.api_view_private_defense_minutes': is_parcours_doctoral_promoter,
             'parcours_doctoral.api_upload_private_defense_minutes': is_parcours_doctoral_promoter
             & defense_method_is_formula_1
             & private_defense_is_authorised,
@@ -110,10 +110,15 @@ class Promoter(AdmissionPromoter):
             & authorization_distribution_is_in_progress,
             # Public defense
             'parcours_doctoral.api_view_public_defense': is_parcours_doctoral_promoter & defense_method_is_formula_1,
-            'parcours_doctoral.api_view_public_defense_minutes': is_parcours_doctoral_promoter
-            & defense_method_is_formula_1,
+            'parcours_doctoral.api_view_public_defense_minutes': is_parcours_doctoral_promoter,
             'parcours_doctoral.api_upload_public_defense_minutes': is_parcours_doctoral_promoter
             & defense_method_is_formula_1
             & public_defense_is_authorised,
+            # Private & public defenses
+            'parcours_doctoral.api_view_private_public_defenses': is_parcours_doctoral_promoter
+            & defense_method_is_formula_2,
+            'parcours_doctoral.api_upload_private_public_defense_minutes': is_parcours_doctoral_promoter
+            & defense_method_is_formula_2
+            & private_public_defenses_are_authorised_formula_2,
         }
         return RuleSet(rules)

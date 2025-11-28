@@ -23,23 +23,73 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from parcours_doctoral.ddd.defense_privee_soutenance_publique.commands import \
-    SoumettreDefensePriveeEtSoutenancePubliqueCommand
+from infrastructure.shared_kernel.personne_connue_ucl.personne_connue_ucl import (
+    PersonneConnueUclTranslator,
+)
+from parcours_doctoral.ddd.defense_privee_soutenance_publique.commands import *
 from parcours_doctoral.ddd.defense_privee_soutenance_publique.use_case.write import *
-from parcours_doctoral.infrastructure.parcours_doctoral.defense_privee.repository.defense_privee import \
-    DefensePriveeRepository
-from parcours_doctoral.infrastructure.parcours_doctoral.defense_privee_soutenance_publique.domain.service.historique import (
+from parcours_doctoral.infrastructure.parcours_doctoral.defense_privee.repository.defense_privee import (
+    DefensePriveeRepository,
+)
+from parcours_doctoral.infrastructure.parcours_doctoral.defense_privee_soutenance_publique.domain.service.historique import (  # noqa: E501
     Historique,
+)
+from parcours_doctoral.infrastructure.parcours_doctoral.defense_privee_soutenance_publique.domain.service.notification import (  # noqa: E501
+    Notification,
+)
+from parcours_doctoral.infrastructure.parcours_doctoral.domain.service.notification import (
+    Notification as NotificationGenerale,
 )
 from parcours_doctoral.infrastructure.parcours_doctoral.repository.parcours_doctoral import (
     ParcoursDoctoralRepository,
 )
 
 COMMAND_HANDLERS = {
-    SoumettreDefensePriveeEtSoutenancePubliqueCommand: lambda msg_bus, cmd: soumettre_defense_privee_et_soutenance_publique(
-        cmd,
-        parcours_doctoral_repository=ParcoursDoctoralRepository(),
-        defense_privee_repository=DefensePriveeRepository(),
-        historique=Historique(),
+    SoumettreDefensePriveeEtSoutenancePubliqueCommand: lambda msg_bus, cmd: (
+        soumettre_defense_privee_et_soutenance_publique(
+            cmd,
+            parcours_doctoral_repository=ParcoursDoctoralRepository(),
+            defense_privee_repository=DefensePriveeRepository(),
+            historique=Historique(),
+        )
+    ),
+    AutoriserDefensePriveeEtSoutenancePubliqueCommand: lambda msg_bus, cmd: (
+        autoriser_defense_privee_et_soutenance_publique(
+            cmd,
+            parcours_doctoral_repository=ParcoursDoctoralRepository(),
+            historique=Historique(),
+            notification=NotificationGenerale(),
+        )
+    ),
+    InviterJuryDefensePriveeEtSoutenancePubliqueCommand: lambda msg_bus, cmd: (
+        inviter_jury_defense_privee_et_soutenance_publique(
+            cmd,
+            parcours_doctoral_repository=ParcoursDoctoralRepository(),
+            notification=Notification(),
+            personne_connue_ucl_translator=PersonneConnueUclTranslator(),
+        )
+    ),
+    ConfirmerReussiteDefensePriveeEtSoutenancePubliqueCommand: lambda msg_bus, cmd: (
+        confirmer_reussite_defense_privee_et_soutenance_publique(
+            cmd,
+            parcours_doctoral_repository=ParcoursDoctoralRepository(),
+            defense_privee_repository=DefensePriveeRepository(),
+            historique=Historique(),
+            notification=NotificationGenerale(),
+        )
+    ),
+    SoumettreProcesVerbauxDefensePriveeEtSoutenancePubliqueCommand: lambda msg_bus, cmd: (
+        soumettre_proces_verbaux_defense_privee_et_soutenance_publique(
+            cmd,
+            parcours_doctoral_repository=ParcoursDoctoralRepository(),
+            defense_privee_repository=DefensePriveeRepository(),
+        )
+    ),
+    ModifierDefensePriveeEtSoutenancePubliqueCommand: lambda msg_bus, cmd: (
+        modifier_defense_privee_et_soutenance_publique(
+            cmd,
+            parcours_doctoral_repository=ParcoursDoctoralRepository(),
+            defense_privee_repository=DefensePriveeRepository(),
+        )
     ),
 }

@@ -103,14 +103,25 @@ class TableauBordRepository(TableauBordRepositoryAdmissionMixin, ITableauBordRep
             status=ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_SOUMISE.name,
         ),
         IndicateurTableauBordEnum.FORMULE_1_DEFENSE_PRIVEE_PV_TELEVERSE.name: Q(
-            status=ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_SOUMISE.name,
+            status=ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_AUTORISEE.name,
             current_private_defense__minutes__len__gt=0,
         ),
         IndicateurTableauBordEnum.FORMULE_1_SOUTENANCE_PUBLIQUE_SOUMISE.name: Q(
             status=ChoixStatutParcoursDoctoral.SOUTENANCE_PUBLIQUE_SOUMISE.name,
         ),
         IndicateurTableauBordEnum.FORMULE_1_SOUTENANCE_PUBLIQUE_PV_TELEVERSE.name: Q(
-            status=ChoixStatutParcoursDoctoral.SOUTENANCE_PUBLIQUE_SOUMISE.name,
+            status=ChoixStatutParcoursDoctoral.SOUTENANCE_PUBLIQUE_AUTORISEE.name,
+            defense_minutes__len__gt=0,
+        ),
+        IndicateurTableauBordEnum.FORMULE_2_DEFENSE_PRIVEE_SOUTENANCE_PUBLIQUE_SOUMISE.name: Q(
+            status=ChoixStatutParcoursDoctoral.DEFENSE_ET_SOUTENANCE_SOUMISES.name,
+        ),
+        IndicateurTableauBordEnum.FORMULE_2_DEFENSE_PRIVEE_PV_TELEVERSE.name: Q(
+            status=ChoixStatutParcoursDoctoral.DEFENSE_ET_SOUTENANCE_AUTORISEES.name,
+            current_private_defense__minutes__len__gt=0,
+        ),
+        IndicateurTableauBordEnum.FORMULE_2_SOUTENANCE_PUBLIQUE_PV_TELEVERSE.name: Q(
+            status=ChoixStatutParcoursDoctoral.DEFENSE_ET_SOUTENANCE_AUTORISEES.name,
             defense_minutes__len__gt=0,
         ),
         IndicateurTableauBordEnum.AUTORISATION_DIFFUSION_THESE_ECHEANCE_15_JOURS.name: Q(
@@ -130,7 +141,6 @@ class TableauBordRepository(TableauBordRepositoryAdmissionMixin, ITableauBordRep
         IndicateurTableauBordEnum.AUTORISATION_DIFFUSION_THESE_REJET_SCEB.name: Q(
             thesis_distribution_authorization__status=ChoixStatutAutorisationDiffusionThese.DIFFUSION_REFUSEE_SCEB.name,
         ),
-        # IndicateurTableauBordEnum.SOUTENANCE_PUBLIQUE_PV_TELEVERSE.name: Q(),
     }
 
     @classmethod

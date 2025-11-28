@@ -456,7 +456,12 @@ class ParcoursDoctorauxFilterForm(forms.Form):
 
 class IntervalDateForm(forms.Form):
     type_date = forms.ChoiceField(
-        choices=ChoixEtapeParcoursDoctoral.choices_except(ChoixEtapeParcoursDoctoral.JURY),
+        choices=ChoixEtapeParcoursDoctoral.choices_except(
+            ChoixEtapeParcoursDoctoral.JURY,
+            ChoixEtapeParcoursDoctoral.DEFENSE_SOUTENANCE_FORMULE_2,
+            ChoixEtapeParcoursDoctoral.PROCLAMATION,
+            ChoixEtapeParcoursDoctoral.ABANDON_ECHEC,
+        ),
         label=_('Date type'),
     )
 

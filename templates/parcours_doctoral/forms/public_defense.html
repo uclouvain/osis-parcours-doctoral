@@ -31,11 +31,7 @@
       <h4 class="card-title">{% translate "Public defence" %}</h4>
     </div>
     <div class="card-body">
-      {% bootstrap_form_errors form type='non_fields' %}
-
-      {% csrf_token %}
-
-      {% field_data _("Thesis title") doctorate.titre_these_propose inline=True %}
+      {% field_data _("Thesis title") doctorate.titre_these_propose %}
 
       <div class="row">
       {% bootstrap_field form.langue_soutenance_publique wrapper_class='required_field col-md-6 mb-3' %}
@@ -55,21 +51,7 @@
       <div class="row">
         {% bootstrap_field form.date_retrait_diplome wrapper_class='col-md-6 mb-3' %}
       </div>
-      {% field_data _("DIAL link") '' inline=True %}
+      {% field_data _("DIAL link") '' %}
     </div>
   </div>
-{% endblock %}
-
-
-{% block style %}
-  {{ block.super }}
-  <style>
-    #date-hour-field input {
-      display: inline-block;
-      width: 49.75%;
-    }
-    #date-hour-field input:last-child {
-      margin-left: 0.5%;
-    }
-  </style>
 {% endblock %}

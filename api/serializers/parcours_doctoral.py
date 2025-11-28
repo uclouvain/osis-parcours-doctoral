@@ -98,6 +98,7 @@ class ParcoursDoctoralDTOSerializer(DTOSerializer):
                 # Private and public defenses
                 'retrieve_private_public_defenses',
                 'update_private_public_defenses',
+                'submit_private_public_defenses_minutes',
             ]
         }
     )
@@ -155,6 +156,10 @@ class ParcoursDoctoralRechercheDTOSerializer(DTOSerializer):
                     # Public defense
                     'retrieve_public_defense',
                     'update_public_defense',
+                    # Private and public defenses
+                    'retrieve_private_public_defenses',
+                    'update_private_public_defenses',
+                    'submit_private_public_defenses_minutes',
                 ]
             },
         }
