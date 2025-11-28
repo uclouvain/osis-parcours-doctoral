@@ -1841,6 +1841,45 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
   /doctorate/{uuid}/private-public-defenses:
+    post:
+      operationId: submit_private_public_defenses_minutes
+      description: Submit the minutes of the private and public defences
+      parameters:
+      - in: path
+        name: uuid
+        schema:
+          type: string
+          format: uuid
+        required: true
+      - $ref: '#/components/parameters/Accept-Language'
+      - $ref: '#/components/parameters/X-User-FirstName'
+      - $ref: '#/components/parameters/X-User-LastName'
+      - $ref: '#/components/parameters/X-User-Email'
+      - $ref: '#/components/parameters/X-User-GlobalID'
+      tags:
+      - doctorate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubmitPrivatePublicDefensesMinutes'
+        required: true
+      security:
+      - tokenAuth: []
+      - Token: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParcoursDoctoralIdentityDTO'
+          description: ''
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
     put:
       operationId: submit_private_public_defenses
       description: Submit the private and public defences
@@ -4480,6 +4519,8 @@ components:
               $ref: '#/components/schemas/ActionLink'
             update_private_public_defenses:
               $ref: '#/components/schemas/ActionLink'
+            submit_private_public_defenses_minutes:
+              $ref: '#/components/schemas/ActionLink'
           readOnly: true
           default: {}
       required:
@@ -4613,6 +4654,12 @@ components:
             retrieve_public_defense:
               $ref: '#/components/schemas/ActionLink'
             update_public_defense:
+              $ref: '#/components/schemas/ActionLink'
+            retrieve_private_public_defenses:
+              $ref: '#/components/schemas/ActionLink'
+            update_private_public_defenses:
+              $ref: '#/components/schemas/ActionLink'
+            submit_private_public_defenses_minutes:
               $ref: '#/components/schemas/ActionLink'
           readOnly: true
           default: {}
@@ -5692,6 +5739,22 @@ components:
       - langue_soutenance_publique
       - photo_annonce
       - titre_these
+    SubmitPrivatePublicDefensesMinutes:
+      type: object
+      description: Contains the submitted data to complete the minutes of the private
+        and public defences.
+      properties:
+        proces_verbal_defense_privee:
+          type: array
+          items:
+            type: string
+        proces_verbal_soutenance_publique:
+          type: array
+          items:
+            type: string
+      required:
+      - proces_verbal_defense_privee
+      - proces_verbal_soutenance_publique
     SubmitPublicDefense:
       type: object
       description: Contains the submitted data to complete a public defence.

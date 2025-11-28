@@ -31,11 +31,13 @@ from rest_framework.response import Response
 from infrastructure.messages_bus import message_bus_instance
 from parcours_doctoral.api.permissions import DoctorateAPIPermissionRequiredMixin
 from parcours_doctoral.api.serializers import ParcoursDoctoralIdentityDTOSerializer
-from parcours_doctoral.api.serializers.private_defense import PrivateDefenseDTOSerializer
-from parcours_doctoral.api.serializers.private_public_defenses import SubmitPrivatePublicDefensesSerializer
-from parcours_doctoral.ddd.defense_privee.commands import RecupererDefensesPriveesQuery
+from parcours_doctoral.api.serializers.private_public_defenses import (
+    SubmitPrivatePublicDefensesMinutesSerializer,
+    SubmitPrivatePublicDefensesSerializer,
+)
 from parcours_doctoral.ddd.defense_privee_soutenance_publique.commands import (
     SoumettreDefensePriveeEtSoutenancePubliqueCommand,
+    SoumettreProcesVerbauxDefensePriveeEtSoutenancePubliqueCommand,
 )
 
 __all__ = [
@@ -49,6 +51,7 @@ class PrivatePublicDefensesAPIView(DoctorateAPIPermissionRequiredMixin, Retrieve
     permission_mapping = {
         'GET': 'parcours_doctoral.api_view_private_public_defenses',
         'PUT': 'parcours_doctoral.api_change_private_public_defenses',
+        'POST': 'parcours_doctoral.api_upload_private_public_defense_minutes',
     }
     serializer_class = ParcoursDoctoralIdentityDTOSerializer
 
@@ -69,6 +72,28 @@ class PrivatePublicDefensesAPIView(DoctorateAPIPermissionRequiredMixin, Retrieve
 
         result = message_bus_instance.invoke(
             SoumettreDefensePriveeEtSoutenancePubliqueCommand(
+                uuid_parcours_doctoral=self.doctorate_uuid,
+                matricule_auteur=self.request.user.person.global_id,
+                **serializer.validated_data,
+            )
+        )
+
+        serializer = ParcoursDoctoralIdentityDTOSerializer(instance=result)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @extend_schema(
+        request=SubmitPrivatePublicDefensesMinutesSerializer,
+        responses=ParcoursDoctoralIdentityDTOSerializer,
+        operation_id='submit_private_public_defenses_minutes',
+    )
+    def post(self, request, *args, **kwargs):
+        """Submit the minutes of the private and public defences"""
+        serializer = SubmitPrivatePublicDefensesMinutesSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        result = message_bus_instance.invoke(
+            SoumettreProcesVerbauxDefensePriveeEtSoutenancePubliqueCommand(
                 uuid_parcours_doctoral=self.doctorate_uuid,
                 matricule_auteur=self.request.user.person.global_id,
                 **serializer.validated_data,

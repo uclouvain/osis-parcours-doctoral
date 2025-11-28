@@ -116,6 +116,6 @@ class Student(RoleModel):
             & parcours_doctoral.defense_method_is_formula_2,
             'parcours_doctoral.api_change_private_public_defenses': parcours_doctoral.is_parcours_doctoral_student
             & parcours_doctoral.defense_method_is_formula_2
-            & parcours_doctoral.public_defense_in_progress,
+            & parcours_doctoral.private_public_defenses_are_in_progress_formula_2,
         }
         return RuleSet(rules)

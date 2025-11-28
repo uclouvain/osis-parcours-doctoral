@@ -676,6 +676,9 @@ msgstr "L'auteur de cette commande n'est pas le recteur."
 msgid "Author of this command is not from the doctorate CDD."
 msgstr "L'auteur de cette commande n'est pas de la CDD du doctorat."
 
+msgid "Authorise the defences"
+msgstr "Autoriser les défenses"
+
 msgid "Authorise the private defence"
 msgstr "Autoriser la défense privée"
 
@@ -1141,6 +1144,12 @@ msgstr "Template d'email personnalisé enregistré avec succès."
 msgid "DECISION_DE_RECEVABILITE"
 msgstr "Décision de recevabilité"
 
+msgid "DEFENSE_ET_SOUTENANCE_AUTORISEES"
+msgstr "Défense/Soutenance autorisées"
+
+msgid "DEFENSE_ET_SOUTENANCE_SOUMISES"
+msgstr "Défense/Soutenance soumises"
+
 msgid "DEFENSE_PRIVEE"
 msgstr "Défense privée"
 
@@ -1158,6 +1167,9 @@ msgstr "Défense privée réussie"
 
 msgid "DEFENSE_PRIVEE_SOUMISE"
 msgstr "Défense privée soumise"
+
+msgid "DEFENSE_SOUTENANCE_FORMULE_2"
+msgstr "Défense/Soutenance (formule 2)"
 
 msgid "DESINSCRITE"
 msgstr "Désinscrite"
@@ -1967,6 +1979,9 @@ msgstr "Bourse internationale"
 msgid "Invite the members of the jury to the admissibility"
 msgstr "Inviter les membres du jury à la recevabilité"
 
+msgid "Invite the members of the jury to the defences"
+msgstr "Inviter les membres du jury aux défenses"
+
 msgid "Invite the members of the jury to the private defence"
 msgstr "Inviter les membres du jury à la défense privée"
 
@@ -2302,6 +2317,13 @@ msgstr ""
 
 msgid ""
 "Mail sent to the doctoral student to inform him of the favourable opinion on "
+"the private and public defences"
+msgstr ""
+"E-Mail envoyé au doctorand pour l'informer de l'issue favorable de sa "
+"défense privée et de sa soutenance publique"
+
+msgid ""
+"Mail sent to the doctoral student to inform him of the favourable opinion on "
 "the private defence"
 msgstr ""
 "E-Mail envoyé au doctorand pour l'informer de l'issue favorable de sa "
@@ -2344,6 +2366,13 @@ msgstr ""
 
 msgid ""
 "Mail sent to the doctoral student to inform of the authorisation of the "
+"private and the public defences"
+msgstr ""
+"E-Mail envoyé au doctorand pour l'informer de l'autorisation de sa défense "
+"privée et de sa soutenance publique"
+
+msgid ""
+"Mail sent to the doctoral student to inform of the authorisation of the "
 "private defence"
 msgstr ""
 "E-Mail envoyé au doctorand pour l'informer de l'autorisation de sa défense "
@@ -2358,6 +2387,13 @@ msgstr ""
 
 msgid "Mail sent to the jury members to invite them to the admissibility"
 msgstr "E-Mail envoyé aux membres du jury pour les inviter à la recevabilité"
+
+msgid ""
+"Mail sent to the jury members to invite them to the private and the public "
+"defences"
+msgstr ""
+"E-Mail envoyé aux membres du jury pour les inviter à la défense privée et à "
+"la soutenance publique"
 
 msgid "Mail sent to the jury members to invite them to the private defence"
 msgstr "E-Mail envoyé aux membres du jury pour les inviter à la défense privée"
@@ -2838,6 +2874,9 @@ msgstr "Président"
 msgid "PRIVATE_DEFENSE"
 msgstr "Défense privée"
 
+msgid "PROCLAMATION"
+msgstr "Proclamation"
+
 msgid "PROCLAME"
 msgstr "Proclamé"
 
@@ -2939,6 +2978,14 @@ msgid ""
 msgstr ""
 "Veuillez vous assurer que la date et heure de la défense ont bien été "
 "complétées et que le procès verbal de la défense a bien été déposé dans "
+"l'application."
+
+msgid ""
+"Please be sure that the date and time of the defences have been filled in "
+"and that the defences minutes have been submitted in the application."
+msgstr ""
+"Veuillez vous assurer que la date et heure des défenses ont bien été "
+"complétées et que les procès verbaux des défenses ont bien été déposés dans "
 "l'application."
 
 msgid ""
@@ -3074,9 +3121,12 @@ msgctxt "dashboard-category"
 msgid "Private defence (formula 1)"
 msgstr "Défense privée (formule 1)"
 
+msgid "Private defence / Public defence"
+msgstr "Défense privée / Soutenance publique"
+
 msgctxt "dashboard-category"
 msgid "Private defence / Public defence (formula 2)"
-msgstr "Défense privée / Soutenance (formule 2)"
+msgstr "Défense privée / Soutenance publique (formule 2)"
 
 msgid "Private defence assessment"
 msgstr "Procès verbal de la défense privée"
@@ -3794,6 +3844,10 @@ msgctxt "dashboard-indicator confirmation"
 msgid "Submitted confirmation"
 msgstr "Confirmation soumise"
 
+msgctxt "dashboard-indicator formula-2-defence"
+msgid "Submitted defences"
+msgstr "Défense/Soutenance soumises"
+
 msgid "Submitted distribution"
 msgstr "Diffusion soumise"
 
@@ -3803,10 +3857,6 @@ msgstr "Note soumise"
 msgctxt "dashboard-indicator formula-1-private-defence"
 msgid "Submitted private defence"
 msgstr "Défense soumise"
-
-msgctxt "dashboard-indicator formula-2-defence"
-msgid "Submitted private defense / Submitted public defence"
-msgstr "Défense soumise / Soutenance soumise"
 
 msgctxt "dashboard-indicator formula-1-public-defence"
 msgid "Submitted public defence"
@@ -3877,6 +3927,9 @@ msgstr "Intitulé du template"
 
 msgid "Temporary / definitive admission date"
 msgstr "Date de l’admission provisoire / définitive"
+
+msgid "Text for the poster"
+msgstr "Texte pour l'affiche"
 
 msgid ""
 "The \"doctoral training\" must be completed before submitting the defence "
@@ -4020,6 +4073,9 @@ msgstr ""
 "aux dispositions particulières de votre domaine. Veuillez consulter ces "
 "dispositions sur la page web de votre Commission Doctorale de Domaine (CDD) "
 "pour plus d’informations."
+
+msgid "The defences have been authorised."
+msgstr "Les défenses ont été autorisées."
 
 msgid "The defense method must be the formula 1."
 msgstr "La formule de défense doit être la formule 1."
@@ -4195,6 +4251,9 @@ msgstr "Le membre n'a pas été trouvé dans le jury."
 
 msgid "The members of the jury have been invited to the admissibility."
 msgstr "Les membres du jury ont été invités à la recevabilité."
+
+msgid "The members of the jury have been invited to the defences."
+msgstr "Les membres du jury ont été invités aux défenses."
 
 msgid "The members of the jury have been invited to the private defence."
 msgstr "Les membres du jury ont été invités à la défense privée."

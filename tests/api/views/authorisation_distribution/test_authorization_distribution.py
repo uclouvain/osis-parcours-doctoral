@@ -250,7 +250,7 @@ class AuthorizationDistributionAPIViewTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
         # > after the admissibility
-        self.doctorate.status = ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_SOUMISE.name
+        self.doctorate.status = ChoixStatutParcoursDoctoral.DEFENSE_ET_SOUTENANCE_SOUMISES.name
         self.doctorate.save()
 
         response = self.client.put(self.url, data=self.data)
@@ -289,7 +289,7 @@ class AuthorizationDistributionAPIViewTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
         # > after the admissibility
-        self.doctorate.status = ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_SOUMISE.name
+        self.doctorate.status = ChoixStatutParcoursDoctoral.DEFENSE_ET_SOUTENANCE_SOUMISES.name
         self.doctorate.save()
 
         response = self.client.post(self.url, data=self.data)
