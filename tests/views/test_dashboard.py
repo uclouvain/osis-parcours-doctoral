@@ -513,12 +513,12 @@ class DashboardCommandTestCase(TestCase):
 
         self.assert_dashboard_value(category, indicator, 0)
 
-        doctorate = ParcoursDoctoralFactory(status=ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_AUTORISEE.name)
+        doctorate = ParcoursDoctoralFactory(status=ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_SOUMISE.name)
         private_defense = PrivateDefenseFactory(parcours_doctoral=doctorate)
 
         self.assert_dashboard_value(category, indicator, 0)
 
-        doctorate.status = ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_SOUMISE.name
+        doctorate.status = ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_AUTORISEE.name
         doctorate.save()
 
         self.assert_dashboard_value(category, indicator, 1)
@@ -552,13 +552,78 @@ class DashboardCommandTestCase(TestCase):
         self.assert_dashboard_value(category, indicator, 0)
 
         doctorate = ParcoursDoctoralFactory(
-            status=ChoixStatutParcoursDoctoral.SOUTENANCE_PUBLIQUE_AUTORISEE.name,
+            status=ChoixStatutParcoursDoctoral.SOUTENANCE_PUBLIQUE_SOUMISE.name,
             defense_minutes=[],
         )
 
         self.assert_dashboard_value(category, indicator, 0)
 
-        doctorate.status = ChoixStatutParcoursDoctoral.SOUTENANCE_PUBLIQUE_SOUMISE.name
+        doctorate.status = ChoixStatutParcoursDoctoral.SOUTENANCE_PUBLIQUE_AUTORISEE.name
+        doctorate.save()
+
+        self.assert_dashboard_value(category, indicator, 0)
+
+        doctorate.defense_minutes = [uuid.uuid4()]
+        doctorate.save()
+
+        self.assert_dashboard_value(category, indicator, 1)
+
+    def test_submitted_private_and_public_defenses_2(self):
+        category = CategorieTableauBordEnum.FORMULE_2_DEFENSE_PRIVEE_SOUTENANCE_PUBLIQUE.name
+        indicator = IndicateurTableauBordEnum.FORMULE_2_DEFENSE_PRIVEE_SOUTENANCE_PUBLIQUE_SOUMISE.name
+
+        self.assert_dashboard_value(category, indicator, 0)
+
+        doctorate = ParcoursDoctoralFactory(
+            status=ChoixStatutParcoursDoctoral.DEFENSE_ET_SOUTENANCE_AUTORISEES.name,
+        )
+
+        self.assert_dashboard_value(category, indicator, 0)
+
+        doctorate.status = ChoixStatutParcoursDoctoral.DEFENSE_ET_SOUTENANCE_SOUMISES.name
+        doctorate.save()
+
+        self.assert_dashboard_value(category, indicator, 1)
+
+    def test_submitted_private_and_public_defenses_2_with_private_defense_minutes(self):
+        category = CategorieTableauBordEnum.FORMULE_2_DEFENSE_PRIVEE_SOUTENANCE_PUBLIQUE.name
+        indicator = IndicateurTableauBordEnum.FORMULE_2_DEFENSE_PRIVEE_PV_TELEVERSE.name
+
+        self.assert_dashboard_value(category, indicator, 0)
+
+        doctorate = ParcoursDoctoralFactory(
+            status=ChoixStatutParcoursDoctoral.DEFENSE_ET_SOUTENANCE_SOUMISES.name,
+        )
+        private_defense = PrivateDefenseFactory(parcours_doctoral=doctorate)
+
+        self.assert_dashboard_value(category, indicator, 0)
+
+        doctorate.status = ChoixStatutParcoursDoctoral.DEFENSE_ET_SOUTENANCE_AUTORISEES.name
+        doctorate.save()
+
+        self.assert_dashboard_value(category, indicator, 1)
+
+        private_defense.current_parcours_doctoral = None
+        private_defense.save()
+
+        new_private_defense = PrivateDefenseFactory(parcours_doctoral=doctorate, minutes=[])
+
+        self.assert_dashboard_value(category, indicator, 0)
+
+    def test_submitted_private_public_defenses_2_with_public_defense_minutes(self):
+        category = CategorieTableauBordEnum.FORMULE_2_DEFENSE_PRIVEE_SOUTENANCE_PUBLIQUE.name
+        indicator = IndicateurTableauBordEnum.FORMULE_2_SOUTENANCE_PUBLIQUE_PV_TELEVERSE.name
+
+        self.assert_dashboard_value(category, indicator, 0)
+
+        doctorate = ParcoursDoctoralFactory(
+            status=ChoixStatutParcoursDoctoral.DEFENSE_ET_SOUTENANCE_SOUMISES.name,
+            defense_minutes=[],
+        )
+
+        self.assert_dashboard_value(category, indicator, 0)
+
+        doctorate.status = ChoixStatutParcoursDoctoral.DEFENSE_ET_SOUTENANCE_AUTORISEES.name
         doctorate.save()
 
         self.assert_dashboard_value(category, indicator, 0)

@@ -75,18 +75,22 @@ class JuryMember(RoleModel):
             'parcours_doctoral.api_retrieve_private_defenses': is_president_or_secretary_of_jury,
             'parcours_doctoral.api_view_private_defense': is_president_or_secretary_of_jury
             & defense_method_is_formula_1,
-            'parcours_doctoral.api_view_private_defense_minutes': is_president_or_secretary_of_jury
-            & defense_method_is_formula_1,
+            'parcours_doctoral.api_view_private_defense_minutes': is_president_or_secretary_of_jury,
             'parcours_doctoral.api_upload_private_defense_minutes': is_president_or_secretary_of_jury
             & defense_method_is_formula_1
             & private_defense_is_authorised,
             # Public defense
             'parcours_doctoral.api_view_public_defense': is_president_or_secretary_of_jury
             & defense_method_is_formula_1,
-            'parcours_doctoral.api_view_public_defense_minutes': is_president_or_secretary_of_jury
-            & defense_method_is_formula_1,
+            'parcours_doctoral.api_view_public_defense_minutes': is_president_or_secretary_of_jury,
             'parcours_doctoral.api_upload_public_defense_minutes': is_president_or_secretary_of_jury
             & defense_method_is_formula_1
+            & public_defense_is_authorised,
+            # Private & public defenses
+            'parcours_doctoral.api_view_private_public_defenses': is_president_or_secretary_of_jury
+            & defense_method_is_formula_2,
+            'parcours_doctoral.api_upload_private_public_defense_minutes': is_president_or_secretary_of_jury
+            & defense_method_is_formula_2
             & public_defense_is_authorised,
         }
         return RuleSet(ruleset)

@@ -33,10 +33,6 @@
     </div>
     <div class="card-body">
       <div>
-        {% bootstrap_form_errors form type='non_fields' %}
-
-        {% csrf_token %}
-
         {% bootstrap_field form.titre_these wrapper_class="mb-3 required_field" %}
 
         {% include 'parcours_doctoral/includes/private_defense/supervision_panel.html' %}

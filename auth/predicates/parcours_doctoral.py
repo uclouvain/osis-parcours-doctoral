@@ -42,6 +42,7 @@ from parcours_doctoral.ddd.domain.model.enums import (
     STATUTS_DOCTORAT_AUTORISATION_THESE_FORMULE_1,
     STATUTS_DOCTORAT_AUTORISATION_THESE_FORMULE_2,
     STATUTS_DOCTORAT_DEFENSE_PRIVEE_EN_COURS,
+    STATUTS_DOCTORAT_DEFENSE_PRIVEE_SOUTENANCE_PUBLIQUE_EN_COURS,
     STATUTS_DOCTORAT_EPREUVE_CONFIRMATION_EN_COURS,
     STATUTS_DOCTORAT_RECEVABILITE_EN_COURS,
     STATUTS_DOCTORAT_SOUTENANCE_PUBLIQUE_EN_COURS,
@@ -241,6 +242,30 @@ def public_defense_in_progress(self, user: User, obj: ParcoursDoctoral):
 )
 def public_defense_is_authorised(self, user: User, obj: ParcoursDoctoral):
     return obj.status == ChoixStatutParcoursDoctoral.SOUTENANCE_PUBLIQUE_AUTORISEE.name
+
+
+@predicate(bind=True)
+@predicate_failed_msg(message=_("The public defence is not in progress"))
+def private_public_defenses_are_in_progress_formula_2(self, user: User, obj: ParcoursDoctoral):
+    return obj.status in STATUTS_DOCTORAT_DEFENSE_PRIVEE_SOUTENANCE_PUBLIQUE_EN_COURS
+
+
+@predicate(bind=True)
+@predicate_failed_msg(
+    message=_("The doctorate must be in the status '%(status)s' to realize this action.")
+    % {'status': ChoixStatutParcoursDoctoral.DEFENSE_ET_SOUTENANCE_AUTORISEES.value}
+)
+def private_public_defenses_are_authorised_formula_2(self, user: User, obj: ParcoursDoctoral):
+    return obj.status == ChoixStatutParcoursDoctoral.DEFENSE_ET_SOUTENANCE_AUTORISEES.name
+
+
+@predicate(bind=True)
+@predicate_failed_msg(
+    message=_("The doctorate must be in the status '%(status)s' to realize this action.")
+    % {'status': ChoixStatutParcoursDoctoral.DEFENSE_ET_SOUTENANCE_SOUMISES.value}
+)
+def private_public_defenses_are_submitted_formula_2(self, user: User, obj: ParcoursDoctoral):
+    return obj.status == ChoixStatutParcoursDoctoral.DEFENSE_ET_SOUTENANCE_SOUMISES.name
 
 
 @predicate(bind=True)

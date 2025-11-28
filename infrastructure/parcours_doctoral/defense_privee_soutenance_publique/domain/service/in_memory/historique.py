@@ -24,9 +24,11 @@
 #
 # ##############################################################################
 
+from parcours_doctoral.ddd.defense_privee_soutenance_publique.domain.service.i_historique import (
+    IHistorique,
+)
 from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoral
-from parcours_doctoral.ddd.defense_privee_soutenance_publique.domain.service.i_historique import IHistorique
 
 
 class HistoriqueInMemory(IHistorique):
@@ -36,5 +38,21 @@ class HistoriqueInMemory(IHistorique):
         parcours_doctoral: ParcoursDoctoral,
         matricule_auteur: str,
         statut_original_parcours_doctoral: ChoixStatutParcoursDoctoral,
+    ):
+        pass
+
+    @classmethod
+    def historiser_autorisation_defense_privee_et_soutenance_publique(
+        cls,
+        parcours_doctoral: ParcoursDoctoral,
+        matricule_auteur: str,
+    ):
+        pass
+
+    @classmethod
+    def historiser_decision_reussie_defense_privee_et_soutenance_publique(
+        cls,
+        parcours_doctoral: ParcoursDoctoral,
+        matricule_auteur: str,
     ):
         pass

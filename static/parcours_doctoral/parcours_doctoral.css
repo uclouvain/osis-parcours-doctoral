@@ -634,3 +634,11 @@ a.no-link {
     font-size: clamp(30px, 3vw, 45px);
     color: #6699FF;
 }
+
+.date-hour-field input {
+  display: inline-block;
+  width: 49.75%;
+}
+.date-hour-field input:last-child {
+  margin-left: 0.5%;
+}

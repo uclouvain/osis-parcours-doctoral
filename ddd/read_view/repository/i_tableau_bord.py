@@ -158,7 +158,7 @@ class ITableauBordRepository(ITableauBordRepositoryAdmissionMixin, interface.Rea
                     id=IndicateurTableauBordEnum.FORMULE_2_DEFENSE_PRIVEE_SOUTENANCE_PUBLIQUE_SOUMISE,
                     libelle=pgettext_lazy(
                         'dashboard-indicator formula-2-defence',
-                        'Submitted private defense / Submitted public defence',
+                        'Submitted defences',
                     ),
                 ),
                 IndicateurTableauBord(
