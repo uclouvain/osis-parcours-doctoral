@@ -72,6 +72,8 @@ READ_ACTIONS_BY_TAB = {
     'manuscript-validation': 'parcours_doctoral.view_manuscript_validation',
     # Public defense
     'public-defense': 'parcours_doctoral.view_public_defense',
+    # Private & public defenses
+    'private-public-defenses': 'parcours_doctoral.view_private_public_defenses',
     # Management
     'internal-note': 'parcours_doctoral.view_internalnote',
     'debug': 'parcours_doctoral.view_debug_info',
@@ -130,4 +132,6 @@ UPDATE_ACTIONS_BY_TAB = {
     'manuscript-validation': 'parcours_doctoral.validate_manuscript',
     # Public defense
     'public-defense': 'parcours_doctoral.change_public_defense',
+    # Private & public defenses
+    'private-public-defenses': 'parcours_doctoral.change_private_public_defenses',
 }

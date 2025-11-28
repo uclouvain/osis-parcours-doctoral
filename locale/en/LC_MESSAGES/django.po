@@ -589,6 +589,9 @@ msgstr ""
 msgid "Author of this command is not from the doctorate CDD."
 msgstr ""
 
+msgid "Authorise the defences"
+msgstr ""
+
 msgid "Authorise the private defence"
 msgstr ""
 
@@ -1034,6 +1037,12 @@ msgstr ""
 msgid "DECISION_DE_RECEVABILITE"
 msgstr "Admissibility decision"
 
+msgid "DEFENSE_ET_SOUTENANCE_AUTORISEES"
+msgstr "Authorized defences"
+
+msgid "DEFENSE_ET_SOUTENANCE_SOUMISES"
+msgstr "Submitted defences"
+
 msgid "DEFENSE_PRIVEE"
 msgstr "Private defence"
 
@@ -1051,6 +1060,9 @@ msgstr "Passed private defence"
 
 msgid "DEFENSE_PRIVEE_SOUMISE"
 msgstr "Submitted private defence"
+
+msgid "DEFENSE_SOUTENANCE_FORMULE_2"
+msgstr "Defences (method 2)"
 
 msgid "DESINSCRITE"
 msgstr "Withdrawn"
@@ -1796,6 +1808,9 @@ msgstr ""
 msgid "Invite the members of the jury to the admissibility"
 msgstr ""
 
+msgid "Invite the members of the jury to the defences"
+msgstr ""
+
 msgid "Invite the members of the jury to the private defence"
 msgstr ""
 
@@ -2080,6 +2095,11 @@ msgstr ""
 
 msgid ""
 "Mail sent to the doctoral student to inform him of the favourable opinion on "
+"the private and public defences"
+msgstr ""
+
+msgid ""
+"Mail sent to the doctoral student to inform him of the favourable opinion on "
 "the private defence"
 msgstr ""
 
@@ -2110,6 +2130,11 @@ msgstr ""
 
 msgid ""
 "Mail sent to the doctoral student to inform of the authorisation of the "
+"private and the public defences"
+msgstr ""
+
+msgid ""
+"Mail sent to the doctoral student to inform of the authorisation of the "
 "private defence"
 msgstr ""
 
@@ -2119,6 +2144,11 @@ msgid ""
 msgstr ""
 
 msgid "Mail sent to the jury members to invite them to the admissibility"
+msgstr ""
+
+msgid ""
+"Mail sent to the jury members to invite them to the private and the public "
+"defences"
 msgstr ""
 
 msgid "Mail sent to the jury members to invite them to the private defence"
@@ -2551,6 +2581,9 @@ msgstr "President"
 msgid "PRIVATE_DEFENSE"
 msgstr "Private defence"
 
+msgid "PROCLAMATION"
+msgstr "Proclamation"
+
 msgid "PROCLAME"
 msgstr "Proclaimed"
 
@@ -2647,6 +2680,11 @@ msgstr ""
 msgid ""
 "Please be sure that the date and time of the defence have been filled in and "
 "that the defence minutes have been submitted in the application."
+msgstr ""
+
+msgid ""
+"Please be sure that the date and time of the defences have been filled in "
+"and that the defences minutes have been submitted in the application."
 msgstr ""
 
 msgid ""
@@ -2759,6 +2797,9 @@ msgstr ""
 
 msgctxt "dashboard-category"
 msgid "Private defence (formula 1)"
+msgstr ""
+
+msgid "Private defence / Public defence"
 msgstr ""
 
 msgctxt "dashboard-category"
@@ -3456,6 +3497,10 @@ msgctxt "dashboard-indicator confirmation"
 msgid "Submitted confirmation"
 msgstr ""
 
+msgctxt "dashboard-indicator formula-2-defence"
+msgid "Submitted defences"
+msgstr ""
+
 msgid "Submitted distribution"
 msgstr ""
 
@@ -3464,10 +3509,6 @@ msgstr ""
 
 msgctxt "dashboard-indicator formula-1-private-defence"
 msgid "Submitted private defence"
-msgstr ""
-
-msgctxt "dashboard-indicator formula-2-defence"
-msgid "Submitted private defense / Submitted public defence"
 msgstr ""
 
 msgctxt "dashboard-indicator formula-1-public-defence"
@@ -3538,6 +3579,9 @@ msgid "Template title"
 msgstr ""
 
 msgid "Temporary / definitive admission date"
+msgstr ""
+
+msgid "Text for the poster"
 msgstr ""
 
 msgid ""
@@ -3647,6 +3691,9 @@ msgid ""
 "The declaration of you doctoral training activities must be consistent with "
 "the specifics disposition of your domain. Please refer to those on the "
 "website of your Domain Doctoral Commission for more information."
+msgstr ""
+
+msgid "The defences have been authorised."
 msgstr ""
 
 msgid "The defense method must be the formula 1."
@@ -3800,6 +3847,9 @@ msgid "The member was not found in the jury."
 msgstr ""
 
 msgid "The members of the jury have been invited to the admissibility."
+msgstr ""
+
+msgid "The members of the jury have been invited to the defences."
 msgstr ""
 
 msgid "The members of the jury have been invited to the private defence."

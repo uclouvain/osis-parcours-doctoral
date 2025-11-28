@@ -29,11 +29,12 @@ from rest_framework import serializers
 from base.utils.serializers import DTOSerializer
 from parcours_doctoral.ddd.defense_privee_soutenance_publique.commands import (
     SoumettreDefensePriveeEtSoutenancePubliqueCommand,
+    SoumettreProcesVerbauxDefensePriveeEtSoutenancePubliqueCommand,
 )
-
 
 __all__ = [
     'SubmitPrivatePublicDefensesSerializer',
+    'SubmitPrivatePublicDefensesMinutesSerializer',
 ]
 
 
@@ -47,3 +48,13 @@ class SubmitPrivatePublicDefensesSerializer(DTOSerializer):
 
     class Meta:
         source = SoumettreDefensePriveeEtSoutenancePubliqueCommand
+
+
+class SubmitPrivatePublicDefensesMinutesSerializer(DTOSerializer):
+    """Contains the submitted data to complete the minutes of the private and public defences."""
+
+    uuid_parcours_doctoral = None
+    matricule_auteur = None
+
+    class Meta:
+        source = SoumettreProcesVerbauxDefensePriveeEtSoutenancePubliqueCommand

@@ -241,6 +241,7 @@ class ParcoursDoctoralAPIViewTestCase(CheckActionLinksMixin, APITestCase):
                 'validate_manuscript',
                 'retrieve_private_public_defenses',
                 'update_private_public_defenses',
+                'submit_private_public_defenses_minutes',
             ],
         )
 

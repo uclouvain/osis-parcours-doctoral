@@ -40,6 +40,8 @@ from parcours_doctoral.auth.predicates.parcours_doctoral import (
     is_related_to_an_admission,
     private_defense_is_authorised,
     private_defense_is_submitted,
+    private_public_defenses_are_authorised_formula_2,
+    private_public_defenses_are_submitted_formula_2,
     public_defense_is_authorised,
     public_defense_is_submitted,
     submitted_confirmation_paper,
@@ -174,7 +176,7 @@ PROGRAM_MANAGER_RULES = {
     & defense_method_is_formula_1,
     'parcours_doctoral.invite_jury_to_public_defense': is_part_of_education_group
     & has_valid_enrollment
-    & public_defense_is_submitted
+    & public_defense_is_authorised
     & defense_method_is_formula_1,
     'parcours_doctoral.authorise_public_defense': is_part_of_education_group
     & has_valid_enrollment
@@ -186,8 +188,24 @@ PROGRAM_MANAGER_RULES = {
     & defense_method_is_formula_1,
     'parcours_doctoral.send_email_for_diploma_collection': is_part_of_education_group
     & has_valid_enrollment
-    & doctorate_is_proclaimed
-    & defense_method_is_formula_1,
+    & doctorate_is_proclaimed,
+    # -- Défense privée et soutenance publique
+    'parcours_doctoral.view_private_public_defenses': is_part_of_education_group & defense_method_is_formula_2,
+    'parcours_doctoral.change_private_public_defenses': is_part_of_education_group
+    & has_valid_enrollment
+    & defense_method_is_formula_2,
+    'parcours_doctoral.authorise_private_public_defenses': is_part_of_education_group
+    & has_valid_enrollment
+    & private_public_defenses_are_submitted_formula_2
+    & defense_method_is_formula_2,
+    'parcours_doctoral.invite_jury_to_private_public_defenses': is_part_of_education_group
+    & has_valid_enrollment
+    & private_public_defenses_are_authorised_formula_2
+    & defense_method_is_formula_2,
+    'parcours_doctoral.make_private_public_defenses_decision': is_part_of_education_group
+    & has_valid_enrollment
+    & private_public_defenses_are_authorised_formula_2
+    & defense_method_is_formula_2,
     # -- Commentaire
     'parcours_doctoral.view_comments': is_part_of_education_group,
     'parcours_doctoral.change_comments': is_part_of_education_group,

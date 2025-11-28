@@ -93,7 +93,7 @@ class DefensePrivee(interface.RootEntity):
 
     def modifier(
         self,
-        date_heure: datetime.datetime,
+        date_heure: Optional[datetime.datetime],
         lieu: str,
         date_envoi_manuscrit: Optional[datetime.datetime],
         proces_verbal: list[str],

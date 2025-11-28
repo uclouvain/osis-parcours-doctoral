@@ -28,18 +28,22 @@ import datetime
 from django.test import SimpleTestCase
 
 from base.ddd.utils.business_validator import MultipleBusinessExceptions
-from parcours_doctoral.ddd.defense_privee.commands import SoumettreDefensePriveeCommand
 from parcours_doctoral.ddd.defense_privee.test.factory.defense_privee import (
     DefensePriveeFactory,
 )
 from parcours_doctoral.ddd.defense_privee.validators.exceptions import (
     DefensePriveeNonCompleteeException,
 )
-from parcours_doctoral.ddd.defense_privee_soutenance_publique.commands import \
-    SoumettreDefensePriveeEtSoutenancePubliqueCommand
+from parcours_doctoral.ddd.defense_privee_soutenance_publique.commands import (
+    SoumettreDefensePriveeEtSoutenancePubliqueCommand,
+)
+from parcours_doctoral.ddd.defense_privee_soutenance_publique.validators.exceptions import (
+    EtapeDefensePriveeEtSoutenancePubliquePasEnCoursException,
+)
 from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
-from parcours_doctoral.ddd.soutenance_publique.validators.exceptions import SoutenancePubliqueNonCompleteeException, \
-    EtapeSoutenancePubliquePasEnCoursException
+from parcours_doctoral.ddd.soutenance_publique.validators.exceptions import (
+    SoutenancePubliqueNonCompleteeException,
+)
 from parcours_doctoral.infrastructure.message_bus_in_memory import (
     message_bus_in_memory_instance,
 )
@@ -136,7 +140,7 @@ class TestSoumettreDefensePriveeSoutenancePublique(SimpleTestCase):
 
         with self.assertRaises(MultipleBusinessExceptions) as e:
             self.message_bus.invoke(self.cmd(**self.parametres_cmd))
-        self.assertIsInstance(e.exception.exceptions.pop(), EtapeSoutenancePubliquePasEnCoursException)
+        self.assertIsInstance(e.exception.exceptions.pop(), EtapeDefensePriveeEtSoutenancePubliquePasEnCoursException)
 
     def test_should_soumettre_defense_privee_et_soutenance_publique_si_valide(self):
         parcours_doctoral_id_resultat = self.message_bus.invoke(self.cmd(**self.parametres_cmd))
@@ -152,10 +156,19 @@ class TestSoumettreDefensePriveeSoutenancePublique(SimpleTestCase):
         self.assertEqual(defense_privee_mise_a_jour.lieu, self.parametres_cmd['lieu_defense_privee'])
         self.assertEqual(defense_privee_mise_a_jour.date_envoi_manuscrit, self.parametres_cmd['date_envoi_manuscrit'])
 
-        self.assertEqual(parcours_doctoral.statut, ChoixStatutParcoursDoctoral.SOUTENANCE_PUBLIQUE_SOUMISE)
+        self.assertEqual(
+            parcours_doctoral.statut,
+            ChoixStatutParcoursDoctoral.DEFENSE_ET_SOUTENANCE_SOUMISES,
+        )
         self.assertEqual(parcours_doctoral.titre_these_propose, self.parametres_cmd['titre_these'])
-        self.assertEqual(parcours_doctoral.langue_soutenance_publique, self.parametres_cmd['langue_soutenance_publique'],)
-        self.assertEqual(parcours_doctoral.date_heure_soutenance_publique, self.parametres_cmd['date_heure_soutenance_publique'],)
+        self.assertEqual(
+            parcours_doctoral.langue_soutenance_publique,
+            self.parametres_cmd['langue_soutenance_publique'],
+        )
+        self.assertEqual(
+            parcours_doctoral.date_heure_soutenance_publique,
+            self.parametres_cmd['date_heure_soutenance_publique'],
+        )
         self.assertEqual(parcours_doctoral.lieu_soutenance_publique, self.parametres_cmd['lieu_soutenance_publique'])
         self.assertEqual(parcours_doctoral.local_deliberation, self.parametres_cmd['local_deliberation'])
         self.assertEqual(parcours_doctoral.resume_annonce, self.parametres_cmd['resume_annonce'])

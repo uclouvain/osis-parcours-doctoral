@@ -48,3 +48,59 @@ class SoumettreDefensePriveeEtSoutenancePubliqueCommand(interface.CommandRequest
     local_deliberation: Optional[str]
     resume_annonce: Optional[str]
     photo_annonce: list[str]
+
+
+@attr.dataclass(frozen=True, slots=True)
+class ModifierDefensePriveeEtSoutenancePubliqueCommand(interface.CommandRequest):
+    uuid_parcours_doctoral: str
+    matricule_auteur: str
+
+    titre_these: str
+    langue_soutenance_publique: str
+
+    date_heure_defense_privee: Optional[datetime.datetime]
+    lieu_defense_privee: Optional[str]
+    date_envoi_manuscrit: Optional[datetime.date]
+    proces_verbal_defense_privee: list[str]
+
+    date_heure_soutenance_publique: Optional[datetime.datetime]
+    lieu_soutenance_publique: Optional[str]
+    local_deliberation: str
+    informations_complementaires: str
+    resume_annonce: str
+    photo_annonce: list[str]
+    proces_verbal_soutenance_publique: list[str]
+    date_retrait_diplome: Optional[datetime.date]
+
+
+@attr.dataclass(frozen=True, slots=True)
+class AutoriserDefensePriveeEtSoutenancePubliqueCommand(interface.CommandRequest):
+    uuid_parcours_doctoral: str
+    matricule_auteur: str
+
+    sujet_message: str
+    corps_message: str
+
+
+@attr.dataclass(frozen=True, slots=True)
+class InviterJuryDefensePriveeEtSoutenancePubliqueCommand(interface.CommandRequest):
+    uuid_parcours_doctoral: str
+    matricule_auteur: str
+
+
+@attr.dataclass(frozen=True, slots=True)
+class SoumettreProcesVerbauxDefensePriveeEtSoutenancePubliqueCommand(interface.CommandRequest):
+    uuid_parcours_doctoral: str
+    matricule_auteur: str
+
+    proces_verbal_defense_privee: list[str]
+    proces_verbal_soutenance_publique: list[str]
+
+
+@attr.dataclass(frozen=True, slots=True)
+class ConfirmerReussiteDefensePriveeEtSoutenancePubliqueCommand(interface.CommandRequest):
+    uuid_parcours_doctoral: str
+
+    matricule_auteur: str
+    sujet_message: str
+    corps_message: str

@@ -69,7 +69,7 @@ class InviterJurySoutenancePubliqueValidatorList(TwoStepsMultipleBusinessExcepti
 
     def get_invariants_validators(self) -> List[BusinessValidator]:
         return [
-            ShouldStatutDoctoratEtreSoutenancePubliqueSoumise(
+            ShouldStatutDoctoratEtreSoutenancePubliqueAutorisee(
                 statut=self.statut_parcours_doctoral,
             ),
         ]

@@ -114,7 +114,7 @@ class PublicDefenseJuryInvitationViewTestCase(MockOsisDocumentMixin, TestCase):
     def test_get_jury_invitation_form(self):
         self.client.force_login(self.manager.user)
 
-        self.doctorate.status = ChoixStatutParcoursDoctoral.SOUTENANCE_PUBLIQUE_SOUMISE.name
+        self.doctorate.status = ChoixStatutParcoursDoctoral.SOUTENANCE_PUBLIQUE_AUTORISEE.name
         self.doctorate.save(update_fields=['status'])
 
         response = self.client.get(self.url)
@@ -160,7 +160,7 @@ class PublicDefenseJuryInvitationViewTestCase(MockOsisDocumentMixin, TestCase):
         self.assertEqual(response.status_code, 403)
 
         # Valid status
-        self.doctorate.status = ChoixStatutParcoursDoctoral.SOUTENANCE_PUBLIQUE_SOUMISE.name
+        self.doctorate.status = ChoixStatutParcoursDoctoral.SOUTENANCE_PUBLIQUE_AUTORISEE.name
         self.doctorate.save(update_fields=['status'])
 
         response = self.client.post(self.url)

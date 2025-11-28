@@ -29,9 +29,11 @@ from osis_history.utilities import add_history_entry
 from infrastructure.shared_kernel.personne_connue_ucl.personne_connue_ucl import (
     PersonneConnueUclTranslator,
 )
+from parcours_doctoral.ddd.defense_privee_soutenance_publique.domain.service.i_historique import (
+    IHistorique,
+)
 from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoral
-from parcours_doctoral.ddd.defense_privee_soutenance_publique.domain.service.i_historique import IHistorique
 
 
 class Historique(IHistorique):
@@ -54,3 +56,38 @@ class Historique(IHistorique):
                 '{auteur.prenom} {auteur.nom}'.format(auteur=auteur),
                 tags=tags,
             )
+
+    @classmethod
+    def historiser_autorisation_defense_privee_et_soutenance_publique(
+        cls,
+        parcours_doctoral: ParcoursDoctoral,
+        matricule_auteur: str,
+    ):
+        auteur = PersonneConnueUclTranslator().get(matricule_auteur)
+        tags = ['parcours_doctoral', 'private-public-defenses', 'status-changed']
+
+        add_history_entry(
+            parcours_doctoral.entity_id.uuid,
+            'La défense privée et la soutenance publique ont été autorisées.',
+            'The private and public defences have been authorised.',
+            '{auteur.prenom} {auteur.nom}'.format(auteur=auteur),
+            tags=tags,
+        )
+
+    @classmethod
+    def historiser_decision_reussie_defense_privee_et_soutenance_publique(
+        cls,
+        parcours_doctoral: ParcoursDoctoral,
+        matricule_auteur: str,
+    ):
+        auteur = PersonneConnueUclTranslator().get(matricule_auteur)
+        tags = ['parcours_doctoral', 'private-public-defenses', 'status-changed']
+
+        add_history_entry(
+            parcours_doctoral.entity_id.uuid,
+            'Les décisions de la défense privée et de la soutenance publique ont été données : celles-ci ont été '
+            'réussies.',
+            'The decisions of the private and public defences have been made: they have been passed.',
+            '{auteur.prenom} {auteur.nom}'.format(auteur=auteur),
+            tags=tags,
+        )
