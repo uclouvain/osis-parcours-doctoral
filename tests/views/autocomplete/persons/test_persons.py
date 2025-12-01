@@ -23,7 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from django.contrib.auth.models import AnonymousUser, User
+from django.contrib.auth.models import User
 from django.test import RequestFactory, TestCase
 from django.urls import reverse
 
@@ -59,10 +59,7 @@ class PersonsAutocompleteTestCase(TestCase):
         cls.url = reverse('parcours_doctoral:autocomplete:persons')
 
     def test_redirects_with_anonymous_user(self):
-        request = self.factory.get(self.url)
-        request.user = AnonymousUser()
-
-        response = PersonsAutocomplete.as_view()(request)
+        response = self.client.get(self.url)
         self.assertEqual(response.status_code, 302)
 
     def test_without_query(self):

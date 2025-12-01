@@ -263,26 +263,28 @@ class GroupeDeSupervisionRepository(IGroupeDeSupervisionRepository):
         if type == ActorType.PROMOTER:
             group_name, model = 'promoters', Promoter
             signataire_id = PromoteurIdentity(str(new_actor.uuid))
-            JuryActor.objects.create(
-                role=RoleJury.MEMBRE.name,
-                process_id=ParcoursDoctoral.objects.only('id', 'jury_group_id')
-                .get(supervision_group=groupe)
-                .jury_group_id,
-                is_promoter=True,
-                **(
-                    {'person_id': new_actor.person_id}
-                    if new_actor.person_id
-                    else {
-                        'first_name': new_actor.first_name,
-                        'last_name': new_actor.last_name,
-                        'email': new_actor.email,
-                        'institute': new_actor.institute,
-                        'city': new_actor.city,
-                        'country_id': new_actor.country_id,
-                        'language': new_actor.language,
-                    }
-                ),
+            jury_group_id = (
+                ParcoursDoctoral.objects.only('id', 'jury_group_id').get(supervision_group=groupe).jury_group_id
             )
+            if jury_group_id:
+                JuryActor.objects.create(
+                    role=RoleJury.MEMBRE.name,
+                    process_id=jury_group_id,
+                    is_promoter=True,
+                    **(
+                        {'person_id': new_actor.person_id}
+                        if new_actor.person_id
+                        else {
+                            'first_name': new_actor.first_name,
+                            'last_name': new_actor.last_name,
+                            'email': new_actor.email,
+                            'institute': new_actor.institute,
+                            'city': new_actor.city,
+                            'country_id': new_actor.country_id,
+                            'language': new_actor.language,
+                        }
+                    ),
+                )
         else:
             group_name, model = 'committee_members', CommitteeMember
             signataire_id = MembreCAIdentity(str(new_actor.uuid))

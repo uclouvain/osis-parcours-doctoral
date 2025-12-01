@@ -26,7 +26,6 @@
 import json
 
 from django.contrib import messages
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.cache import cache
 from django.http import Http404
 from django.shortcuts import resolve_url
@@ -53,7 +52,6 @@ from parcours_doctoral.ddd.domain.validator.exceptions import (
     ParcoursDoctoralNonTrouveException,
 )
 from parcours_doctoral.ddd.dtos import ParcoursDoctoralDTO
-from parcours_doctoral.ddd.dtos.parcours_doctoral import CotutelleDTO
 from parcours_doctoral.ddd.epreuve_confirmation.commands import (
     RecupererDerniereEpreuveConfirmationQuery,
 )
@@ -62,13 +60,12 @@ from parcours_doctoral.ddd.epreuve_confirmation.validators.exceptions import (
     EpreuveConfirmationNonTrouveeException,
 )
 from parcours_doctoral.ddd.jury.commands import RecupererJuryQuery
-from parcours_doctoral.ddd.jury.dtos.jury import JuryDTO
 from parcours_doctoral.models.parcours_doctoral import ParcoursDoctoral
 from parcours_doctoral.utils.cache import get_cached_parcours_doctoral_perm_obj
 from parcours_doctoral.views.list import ParcoursDoctoralList
 
 
-class ParcoursDoctoralBaseViewMixin(LoginRequiredMixin, PermissionRequiredMixin):
+class ParcoursDoctoralBaseViewMixin(PermissionRequiredMixin):
     @property
     def parcours_doctoral_uuid(self) -> str:
         return str(self.kwargs.get('uuid', ''))

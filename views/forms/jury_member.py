@@ -24,7 +24,6 @@
 #
 # ##############################################################################
 from django.contrib import messages
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.forms import Form
 from django.http import Http404
 from django.shortcuts import redirect
@@ -36,8 +35,8 @@ from django.views.generic import FormView
 
 from base.ddd.utils.business_validator import (
     BusinessException,
-    MultipleBusinessExceptions,
 )
+from base.ddd.utils.business_validator import MultipleBusinessExceptions
 from infrastructure.messages_bus import message_bus_instance
 from parcours_doctoral.ddd.jury.commands import (
     ApprouverJuryParPdfCommand,
@@ -83,7 +82,6 @@ from reference.models.country import Country
 
 class JuryMemberRemoveView(
     ParcoursDoctoralViewMixin,
-    LoginRequiredMixin,
     PermissionRequiredMixin,
     View,
 ):
@@ -180,7 +178,6 @@ class JuryMembreUpdateFormView(
 
 class JuryMemberChangeRoleView(
     ParcoursDoctoralViewMixin,
-    LoginRequiredMixin,
     PermissionRequiredMixin,
     View,
 ):

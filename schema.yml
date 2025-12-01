@@ -4448,9 +4448,9 @@ components:
       - ACCEPTED
       - PUBLISHED
       type: string
-      description: "* `` - \n* `UNSUBMITTED` - UNSUBMITTED\n* `SUBMITTED` - SUBMITTED\n\
-        * `IN_REVIEW` - IN_REVIEW\n* `DEPOSITED` - DEPOSITED\n* `ACCEPTED` - ACCEPTED\n\
-        * `PUBLISHED` - PUBLISHED"
+      description: "* `` - \n* `UNSUBMITTED` - UNSUBMITTED\n* `SUBMITTED` - SUBMITTED\n*
+        `IN_REVIEW` - IN_REVIEW\n* `DEPOSITED` - DEPOSITED\n* `ACCEPTED` - ACCEPTED\n*
+        `PUBLISHED` - PUBLISHED"
     RefuserJuryCommand:
       type: object
       description: |-
@@ -4663,10 +4663,10 @@ components:
       - EDITEURTRICE
       - COEDITEURTRICE
       type: string
-      description: "* `` - \n* `AUTERTRICE_UNIQUE` - AUTERTRICE_UNIQUE\n* `COAUTEURTRICE`\
-        \ - COAUTEURTRICE\n* `PREMIER_AUTEURTRICE` - PREMIER_AUTEURTRICE\n* `DEUXIEME_AUTEURTRICE`\
-        \ - DEUXIEME_AUTEURTRICE\n* `EDITEURTRICE` - EDITEURTRICE\n* `COEDITEURTRICE`\
-        \ - COEDITEURTRICE"
+      description: "* `` - \n* `AUTERTRICE_UNIQUE` - AUTERTRICE_UNIQUE\n* `COAUTEURTRICE`
+        - COAUTEURTRICE\n* `PREMIER_AUTEURTRICE` - PREMIER_AUTEURTRICE\n* `DEUXIEME_AUTEURTRICE`
+        - DEUXIEME_AUTEURTRICE\n* `EDITEURTRICE` - EDITEURTRICE\n* `COEDITEURTRICE`
+        - COEDITEURTRICE"
     Seminar:
       type: object
       description: |-

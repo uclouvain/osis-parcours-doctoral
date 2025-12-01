@@ -208,7 +208,7 @@ class DoctorateTrainingActivityViewTestCase(TestCase):
             'end_date': '01/01/2022',
         }
         response = self.client.post(add_url, data)
-        self.assertFormError(response, 'form', 'start_date', _("The start date can't be later than the end date"))
+        self.assertFormError(response.context['form'], 'start_date', _("The start date can't be later than the end date"))
 
     def test_training_restricted(self):
         with self.subTest('doctoral-training'):
@@ -875,7 +875,7 @@ class DoctorateTrainingActivityViewTestCase(TestCase):
     def test_submit_without_activities(self):
         response = self.client.post(self.url, {'activity_ids': []})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertFormError(response, 'form', None, _("Select at least one activity"))
+        self.assertFormError(response.context['form'], None, _("Select at least one activity"))
 
     @patch('osis_document_components.services.get_remote_token')
     @patch('osis_document_components.services.get_remote_metadata')
@@ -920,7 +920,7 @@ class DoctorateTrainingActivityViewTestCase(TestCase):
         response = self.client.post(self.url, {'activity_ids': [self.service.uuid]})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertContains(response, _('NON_SOUMISE'))
-        self.assertFormError(response, 'form', None, _("This activity is not complete"))
+        self.assertFormError(response.context['form'], None, _("This activity is not complete"))
 
         self.conference.title = ""
         self.conference.save()
@@ -955,7 +955,7 @@ class DoctorateTrainingActivityViewTestCase(TestCase):
 
         response = self.client.post(url, {}, follow=True)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertFormError(response, "form", "reason", Field.default_error_messages['required'])
+        self.assertFormError(response.context["form"], "reason", Field.default_error_messages['required'])
 
         response = self.client.post(url, {"reason": "Not ok"}, follow=True)
         self.assertRedirects(response, f"{self.url}#{self.conference.uuid}")
