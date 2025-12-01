@@ -27,6 +27,7 @@ import re
 from dataclasses import dataclass
 
 import attr
+import waffle
 from django import template
 from django.conf import settings
 from django.core.validators import EMPTY_VALUES
@@ -169,8 +170,17 @@ def get_valid_tab_tree(context, permission_obj, tab_tree):
     """
     valid_tab_tree = {}
 
+    # Some tabs are temporary hidden depending on a switch
+    doctorate_limited_tabs = waffle.switch_is_active('parcours_doctoral_limited_tabs')
+
     # Loop over the tabs of the original tab tree
     for parent_tab, sub_tabs in tab_tree.items():
+        if doctorate_limited_tabs and parent_tab.name not in {
+            'doctorate',
+            'course-enrollment',
+        }:
+            continue
+
         # Get the accessible sub tabs depending on the user permissions
         valid_sub_tabs = [tab for tab in sub_tabs if can_read_tab(context, tab.name, permission_obj)]
 

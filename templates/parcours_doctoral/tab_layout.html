@@ -110,13 +110,17 @@
               href="{% url 'admission:doctorate' parcours_doctoral.uuid_admission %}"
               target="_blank"
             >
-              <span class="badge bg-secondary">{% translate 'Admission' %}</span>
+              {% translate 'Admission' %}
             </a>
             {% if not original_parcours_doctoral.has_valid_enrollment %}
               <span class="badge bg-warning">{% translate 'Not in order of registration' %}</span>
             {% endif %}
           </div>
           <div class="min-width">
+            {% if parcours_doctoral.type_admission == 'PRE_ADMISSION' %}
+              <span class="bold-text">{{ parcours_doctoral.type_admission|enum_display:'ChoixTypeAdmission' }}</span>
+              <br>
+            {% endif %}
             {% include 'parcours_doctoral/includes/parcours_doctoral_status.html' with display_on_load=True %}
             <br>
           </div>

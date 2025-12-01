@@ -88,6 +88,7 @@ PROGRAM_MANAGER_RULES = {
     & has_valid_enrollment,
     'parcours_doctoral.view_supervision': is_part_of_education_group,
     'parcours_doctoral.add_supervision_member': is_part_of_education_group & has_valid_enrollment,
+    'parcours_doctoral.set_reference_promoter': is_part_of_education_group & has_valid_enrollment,
     'parcours_doctoral.edit_external_supervision_member': is_part_of_education_group & has_valid_enrollment,
     'parcours_doctoral.remove_supervision_member': is_part_of_education_group & has_valid_enrollment,
     'parcours_doctoral.approve_member_by_pdf': is_part_of_education_group & has_valid_enrollment,
