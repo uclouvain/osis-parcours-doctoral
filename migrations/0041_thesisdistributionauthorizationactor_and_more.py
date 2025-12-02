@@ -7,10 +7,9 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("osis_signature", "0003_external_actor"),
-        ("parcours_doctoral", "0038_admissibility_mail_templates"),
+        ("parcours_doctoral", "0040_admissibility_mail_templates"),
     ]
 
     operations = [

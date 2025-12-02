@@ -217,7 +217,7 @@ class DashboardCommandTestCase(TestCase):
         category = CategorieTableauBordEnum.ADMISSION.name
         indicator = IndicateurTableauBordEnum.ADMISSION_DOSSIER_SOUMIS.name
 
-        admission = DoctorateAdmissionFactory(
+        DoctorateAdmissionFactory(
             status=ChoixStatutPropositionDoctorale.CONFIRMEE.name,
             type=ChoixTypeAdmission.ADMISSION.name,
             proximity_commission=ChoixCommissionProximiteCDSS.DENT.name,
@@ -230,7 +230,7 @@ class DashboardCommandTestCase(TestCase):
         category = CategorieTableauBordEnum.CONFIRMATION.name
         indicator = IndicateurTableauBordEnum.CONFIRMATION_SOUMISE.name
 
-        doctorate = ParcoursDoctoralFactory(
+        ParcoursDoctoralFactory(
             status=ChoixStatutParcoursDoctoral.CONFIRMATION_SOUMISE.name,
             proximity_commission=ChoixCommissionProximiteCDSS.DENT.name,
         )
@@ -250,7 +250,7 @@ class DashboardCommandTestCase(TestCase):
             entity_type=EntityType.DOCTORAL_COMMISSION.name,
         )
 
-        admission = DoctorateAdmissionFactory(
+        DoctorateAdmissionFactory(
             status=ChoixStatutPropositionDoctorale.CONFIRMEE.name,
             type=ChoixTypeAdmission.ADMISSION.name,
             training__management_entity=entity,
@@ -263,7 +263,7 @@ class DashboardCommandTestCase(TestCase):
         category = CategorieTableauBordEnum.CONFIRMATION.name
         indicator = IndicateurTableauBordEnum.CONFIRMATION_SOUMISE.name
 
-        doctorate = ParcoursDoctoralFactory(
+        ParcoursDoctoralFactory(
             status=ChoixStatutParcoursDoctoral.CONFIRMATION_SOUMISE.name,
             training__management_entity=entity,
         )
@@ -339,7 +339,7 @@ class DashboardCommandTestCase(TestCase):
         confirmation_paper.is_active = False
         confirmation_paper.save()
 
-        new_confirmation_paper = ConfirmationPaperFactory(
+        ConfirmationPaperFactory(
             parcours_doctoral=doctorate,
             supervisor_panel_report=[self.file_uuid],
             is_active=True,
@@ -376,7 +376,7 @@ class DashboardCommandTestCase(TestCase):
         confirmation_paper.is_active = False
         confirmation_paper.save()
 
-        new_confirmation_paper = ConfirmationPaperFactory(
+        ConfirmationPaperFactory(
             parcours_doctoral=doctorate,
             extended_deadline=datetime.date(2025, 1, 1),
             is_active=True,
@@ -439,7 +439,7 @@ class DashboardCommandTestCase(TestCase):
             confirmation_paper.is_active = False
             confirmation_paper.save()
 
-            new_confirmation_paper = ConfirmationPaperFactory(
+            ConfirmationPaperFactory(
                 parcours_doctoral=doctorate,
                 is_active=True,
                 confirmation_deadline=datetime.date(2025, 1, 31),
@@ -526,7 +526,7 @@ class DashboardCommandTestCase(TestCase):
         private_defense.current_parcours_doctoral = None
         private_defense.save()
 
-        new_private_defense = PrivateDefenseFactory(parcours_doctoral=doctorate, minutes=[])
+        PrivateDefenseFactory(parcours_doctoral=doctorate, minutes=[])
 
         self.assert_dashboard_value(category, indicator, 0)
 
@@ -606,7 +606,7 @@ class DashboardCommandTestCase(TestCase):
         private_defense.current_parcours_doctoral = None
         private_defense.save()
 
-        new_private_defense = PrivateDefenseFactory(parcours_doctoral=doctorate, minutes=[])
+        PrivateDefenseFactory(parcours_doctoral=doctorate, minutes=[])
 
         self.assert_dashboard_value(category, indicator, 0)
 

@@ -147,7 +147,7 @@ class PrivatePublicDefensesJuryInvitationViewTestCase(MockOsisDocumentMixin, Tes
     def test_jury_invitation(self):
         self.client.force_login(self.manager.user)
 
-        fr_cdd_template = CddMailTemplateFactory(
+        CddMailTemplateFactory(
             identifier=PARCOURS_DOCTORAL_EMAIL_PRIVATE_PUBLIC_DEFENSES_JURY_INVITATION,
             language=settings.LANGUAGE_CODE_FR,
             cdd=self.doctorate.training.management_entity,
@@ -156,7 +156,7 @@ class PrivatePublicDefensesJuryInvitationViewTestCase(MockOsisDocumentMixin, Tes
             body='FR[]',
         )
 
-        en_cdd_template = CddMailTemplateFactory(
+        CddMailTemplateFactory(
             identifier=PARCOURS_DOCTORAL_EMAIL_PRIVATE_PUBLIC_DEFENSES_JURY_INVITATION,
             language=settings.LANGUAGE_CODE_EN,
             cdd=self.doctorate.training.management_entity,

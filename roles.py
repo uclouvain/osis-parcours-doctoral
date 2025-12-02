@@ -76,12 +76,6 @@ PROGRAM_MANAGER_RULES = {
     'parcours_doctoral.view_parcours_doctoral_home': always_allow,
     'parcours_doctoral.view_parcours_doctoral': always_allow,
     'parcours_doctoral.view_historyentry': is_part_of_education_group,
-    'parcours_doctoral.view_person': is_part_of_education_group,
-    'parcours_doctoral.view_coordinates': is_part_of_education_group,
-    'parcours_doctoral.view_secondary_studies': is_part_of_education_group,
-    'parcours_doctoral.view_curriculum': is_part_of_education_group,
-    'parcours_doctoral.view_languages': is_part_of_education_group,
-    'parcours_doctoral.view_internalnote': is_part_of_education_group,
     # --- Projet de recherche
     'parcours_doctoral.view_project': is_part_of_education_group,
     'parcours_doctoral.change_project': is_part_of_education_group & has_valid_enrollment,

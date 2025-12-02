@@ -23,7 +23,6 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-import datetime
 from email import message_from_string
 from email.utils import getaddresses
 
@@ -140,7 +139,7 @@ class AdmissibilityRepeatViewTestCase(MockOsisDocumentMixin, TestCase):
         self.assertNotIn('_UNDEFINED', form.initial['body'])
 
         # With cdd email templates
-        fr_cdd_template = CddMailTemplateFactory(
+        CddMailTemplateFactory(
             identifier=PARCOURS_DOCTORAL_EMAIL_ADMISSIBILITY_ON_REPEAT,
             language=settings.LANGUAGE_CODE_FR,
             cdd=self.doctorate.training.management_entity,
@@ -149,7 +148,7 @@ class AdmissibilityRepeatViewTestCase(MockOsisDocumentMixin, TestCase):
             body='FR[BODY]',
         )
 
-        en_cdd_template = CddMailTemplateFactory(
+        CddMailTemplateFactory(
             identifier=PARCOURS_DOCTORAL_EMAIL_ADMISSIBILITY_ON_REPEAT,
             language=settings.LANGUAGE_CODE_EN,
             cdd=self.doctorate.training.management_entity,

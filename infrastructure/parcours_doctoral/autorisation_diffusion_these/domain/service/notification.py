@@ -24,7 +24,6 @@
 #
 # ##############################################################################
 from django.conf import settings
-from django.db.models import Prefetch
 from django.utils.translation import pgettext_lazy
 from osis_mail_template import generate_email
 from osis_notification.contrib.handlers import EmailNotificationHandler

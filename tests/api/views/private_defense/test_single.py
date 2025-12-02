@@ -24,7 +24,6 @@
 #
 # ##############################################################################
 import datetime
-import uuid
 
 from django.shortcuts import resolve_url
 from django.utils.translation import gettext
@@ -33,10 +32,6 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 
 from base.tests.factories.user import UserFactory
-from parcours_doctoral.ddd.defense_privee.validators.exceptions import (
-    DefensePriveeNonActiveeException,
-    DefensePriveeNonTrouveeException,
-)
 from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from parcours_doctoral.models import ParcoursDoctoral
 from parcours_doctoral.models.private_defense import PrivateDefense

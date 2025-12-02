@@ -7,11 +7,10 @@ from parcours_doctoral.mail_templates.admissibility import *
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         (
             "parcours_doctoral",
-            "0037_alter_cddmailtemplate_identifier_and_more",
+            "0039_alter_cddmailtemplate_identifier_and_more",
         ),
     ]
 

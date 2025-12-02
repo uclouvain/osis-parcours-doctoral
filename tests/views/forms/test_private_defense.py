@@ -188,9 +188,7 @@ class PrivateDefenseFormViewTestCase(MockOsisDocumentMixin, TestCase):
     def test_post_with_valid_data(self):
         self.client.force_login(self.manager.user)
 
-        private_defense = PrivateDefenseFactory(
-            parcours_doctoral=self.doctorate
-        )
+        private_defense = PrivateDefenseFactory(parcours_doctoral=self.doctorate)
 
         data = {
             'titre_these': 'Title 2',

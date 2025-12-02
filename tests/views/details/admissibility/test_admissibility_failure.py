@@ -139,7 +139,7 @@ class AdmissibilityFailureViewTestCase(MockOsisDocumentMixin, TestCase):
         self.assertNotIn('_UNDEFINED', form.initial['body'])
 
         # With cdd email templates
-        fr_cdd_template = CddMailTemplateFactory(
+        CddMailTemplateFactory(
             identifier=PARCOURS_DOCTORAL_EMAIL_ADMISSIBILITY_ON_FAILURE,
             language=settings.LANGUAGE_CODE_FR,
             cdd=self.doctorate.training.management_entity,
@@ -148,7 +148,7 @@ class AdmissibilityFailureViewTestCase(MockOsisDocumentMixin, TestCase):
             body='FR[BODY]',
         )
 
-        en_cdd_template = CddMailTemplateFactory(
+        CddMailTemplateFactory(
             identifier=PARCOURS_DOCTORAL_EMAIL_ADMISSIBILITY_ON_FAILURE,
             language=settings.LANGUAGE_CODE_EN,
             cdd=self.doctorate.training.management_entity,

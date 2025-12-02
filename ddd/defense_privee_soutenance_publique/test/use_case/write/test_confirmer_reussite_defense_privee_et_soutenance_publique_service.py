@@ -33,7 +33,6 @@ from parcours_doctoral.ddd.defense_privee.test.factory.defense_privee import (
 )
 from parcours_doctoral.ddd.defense_privee.validators.exceptions import (
     DefensePriveeNonCompleteePourDecisionException,
-    StatutDoctoratDifferentDefensePriveeAutoriseeException,
 )
 from parcours_doctoral.ddd.defense_privee_soutenance_publique.commands import (
     ConfirmerReussiteDefensePriveeEtSoutenancePubliqueCommand,

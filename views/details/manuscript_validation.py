@@ -50,7 +50,6 @@ from parcours_doctoral.forms.manuscript_validation import (
 from parcours_doctoral.views.mixins import (
     BusinessExceptionFormViewMixin,
     ParcoursDoctoralFormMixin,
-    ParcoursDoctoralViewMixin,
 )
 
 __all__ = [

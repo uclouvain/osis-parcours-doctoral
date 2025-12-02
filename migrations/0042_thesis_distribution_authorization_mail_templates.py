@@ -7,11 +7,10 @@ from parcours_doctoral.mail_templates.thesis_distribution_authorization import *
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         (
             "parcours_doctoral",
-            "0039_thesisdistributionauthorizationactor_and_more",
+            "0041_thesisdistributionauthorizationactor_and_more",
         ),
     ]
 

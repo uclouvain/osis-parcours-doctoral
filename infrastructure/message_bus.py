@@ -24,6 +24,7 @@
 #
 ##############################################################################
 from infrastructure.utils import AbstractMessageBusCommands
+
 from .parcours_doctoral import handlers as parcours_doctoral_handlers
 from .parcours_doctoral.autorisation_diffusion_these import (
     handlers as autorisation_diffusion_these_handlers,

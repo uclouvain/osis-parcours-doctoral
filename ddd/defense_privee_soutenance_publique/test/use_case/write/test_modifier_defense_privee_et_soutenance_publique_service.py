@@ -27,7 +27,6 @@ import datetime
 
 from django.test import SimpleTestCase
 
-from parcours_doctoral.ddd.defense_privee.commands import ModifierDefensePriveeCommand
 from parcours_doctoral.ddd.defense_privee.test.factory.defense_privee import (
     DefensePriveeFactory,
 )
@@ -87,7 +86,7 @@ class TestModifierDefensePriveeEtSoutenancePubliqueService(SimpleTestCase):
 
     def test_should_generer_exception_si_parcours_doctoral_inconnu(self):
         self.parametres_cmd['uuid_parcours_doctoral'] = 'INCONNU'
-        with self.assertRaises(ParcoursDoctoralNonTrouveException) as e:
+        with self.assertRaises(ParcoursDoctoralNonTrouveException):
             self.message_bus.invoke(self.cmd(**self.parametres_cmd))
 
     def test_should_modifier_informations_defense_privee_et_soutenance_publique(self):

@@ -101,7 +101,7 @@ class PrivateDefenseListAPIViewTestCase(APITestCase):
                 parcours_doctoral=self.doctorate,
             )
 
-        other_private_defense: PrivateDefense = PrivateDefenseFactory(
+        PrivateDefenseFactory(
             parcours_doctoral=self.other_doctorate,
         )
 

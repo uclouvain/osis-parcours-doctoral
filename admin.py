@@ -29,7 +29,6 @@ from django.conf import settings
 from django.contrib import admin
 from django.db import models
 from django.forms import BooleanField, ModelForm
-from django.forms.widgets import HiddenInput
 from django.shortcuts import resolve_url
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
@@ -40,7 +39,6 @@ from osis_document_components.fields import FileField
 from osis_mail_template.admin import MailTemplateAdmin
 
 from base.models.entity_version import EntityVersion
-from education_group.contrib.admin import EducationGroupRoleModelAdmin
 from osis_role.contrib.admin import RoleModelAdmin
 from parcours_doctoral.auth.roles.adre_manager import AdreManager
 from parcours_doctoral.auth.roles.adre_secretary import AdreSecretary
@@ -241,7 +239,7 @@ class CddMailTemplateAdmin(MailTemplateAdmin):
 
     @staticmethod
     def view_on_site(obj):
-        return resolve_url(f'parcours_doctoral:config:cdd-mail-template:preview', identifier=obj.identifier, pk=obj.pk)
+        return resolve_url('parcours_doctoral:config:cdd-mail-template:preview', identifier=obj.identifier, pk=obj.pk)
 
 
 @admin.register(
@@ -262,7 +260,7 @@ class HijackRoleModelAdmin(HijackUserAdminMixin, RoleModelAdmin):
 
 
 @admin.register(Auditor)
-class HijackRoleModelAdmin(HijackUserAdminMixin, RoleModelAdmin):
+class HijackRoleModelWithEntityAdmin(HijackUserAdminMixin, RoleModelAdmin):
     list_display = ('person', 'entity', 'with_child')
     list_select_related = ['person__user']
 

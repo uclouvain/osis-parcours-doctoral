@@ -46,7 +46,7 @@ from parcours_doctoral.ddd.autorisation_diffusion_these.domain.validator.excepti
     SignataireNonInviteException,
 )
 from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
-from parcours_doctoral.ddd.jury.domain.model.enums import FormuleDefense, RoleJury
+from parcours_doctoral.ddd.jury.domain.model.enums import FormuleDefense
 from parcours_doctoral.models import ParcoursDoctoral
 from parcours_doctoral.models.thesis_distribution_authorization import (
     ThesisDistributionAuthorization,

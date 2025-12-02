@@ -35,17 +35,14 @@ from rest_framework.test import APITestCase
 
 from base.tests.factories.academic_year import AcademicYearFactory
 from base.tests.factories.user import UserFactory
-from parcours_doctoral.auth.roles.jury_member import JuryMember
 from parcours_doctoral.ddd.defense_privee.validators.exceptions import (
     DefensePriveeNonActiveeException,
     DefensePriveeNonTrouveeException,
 )
 from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from parcours_doctoral.ddd.jury.domain.model.enums import RoleJury
-from parcours_doctoral.models import JuryActor
 from parcours_doctoral.tests.factories.jury import (
     JuryActorFactory,
-    JuryMemberRoleFactory,
 )
 from parcours_doctoral.tests.factories.parcours_doctoral import ParcoursDoctoralFactory
 from parcours_doctoral.tests.factories.private_defense import PrivateDefenseFactory

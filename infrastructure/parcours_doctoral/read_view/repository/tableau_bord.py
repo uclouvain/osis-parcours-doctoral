@@ -30,7 +30,7 @@ from django.db.models.aggregates import Count
 from django.db.models.expressions import ExpressionWrapper, F
 from django.db.models.fields import DateField
 from django.db.models.functions.datetime import Now
-from django.db.models.lookups import GreaterThanOrEqual, LessThanOrEqual
+from django.db.models.lookups import GreaterThanOrEqual
 from django.db.models.query_utils import Q
 
 from admission.ddd.admission.doctorat.preparation.read_view.domain.enums.tableau_bord import (
