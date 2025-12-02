@@ -71,7 +71,7 @@ class TestSoumettreProcesVerbalEtAvisRecevabilite(SimpleTestCase):
 
     def test_should_generer_exception_si_parcours_doctoral_inconnu(self):
         self.parametres_cmd['parcours_doctoral_uuid'] = 'ID-INCONNUE'
-        with self.assertRaises(ParcoursDoctoralNonTrouveException) as e:
+        with self.assertRaises(ParcoursDoctoralNonTrouveException):
             self.message_bus.invoke(self.cmd(**self.parametres_cmd))
 
     def test_should_generer_exception_si_statut_parcours_doctoral_incorrect(self):

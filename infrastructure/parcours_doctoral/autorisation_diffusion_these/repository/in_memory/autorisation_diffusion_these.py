@@ -24,7 +24,6 @@
 #
 # ##############################################################################
 import datetime
-import uuid
 from typing import List
 
 from base.ddd.utils.in_memory_repository import InMemoryGenericRepository

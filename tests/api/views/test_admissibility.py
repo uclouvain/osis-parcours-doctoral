@@ -116,7 +116,7 @@ class AdmissibilityListAPIViewGetTestCase(APITestCase):
                 parcours_doctoral=self.doctorate,
             )
 
-        other_admissibility: Admissibility = AdmissibilityFactory(
+        AdmissibilityFactory(
             parcours_doctoral=self.other_doctorate,
         )
 

@@ -5,9 +5,8 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ("parcours_doctoral", "0042_alter_parcoursdoctoral_status"),
+        ("parcours_doctoral", "0044_alter_parcoursdoctoral_status"),
     ]
 
     operations = [

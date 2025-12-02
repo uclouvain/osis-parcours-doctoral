@@ -4,9 +4,8 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ("parcours_doctoral", "0041_private_public_defenses_mail_templates"),
+        ("parcours_doctoral", "0043_private_public_defenses_mail_templates"),
     ]
 
     operations = [

@@ -27,9 +27,6 @@
 from django.test import SimpleTestCase
 
 from base.ddd.utils.business_validator import MultipleBusinessExceptions
-from parcours_doctoral.ddd.defense_privee.validators.exceptions import (
-    DefensePriveeNonCompleteePourDecisionException,
-)
 from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from parcours_doctoral.ddd.domain.validator.exceptions import (
     ParcoursDoctoralNonTrouveException,

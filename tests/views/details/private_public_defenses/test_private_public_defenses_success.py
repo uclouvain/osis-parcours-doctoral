@@ -145,7 +145,7 @@ class PrivatePublicDefensesSuccessViewTestCase(MockOsisDocumentMixin, TestCase):
         self.assertNotIn('_UNDEFINED', form.initial['body'])
 
         # With cdd email templates
-        fr_cdd_template = CddMailTemplateFactory(
+        CddMailTemplateFactory(
             identifier=PARCOURS_DOCTORAL_EMAIL_PRIVATE_PUBLIC_DEFENSES_ON_SUCCESS,
             language=settings.LANGUAGE_CODE_FR,
             cdd=self.doctorate.training.management_entity,
@@ -154,7 +154,7 @@ class PrivatePublicDefensesSuccessViewTestCase(MockOsisDocumentMixin, TestCase):
             body='FR[BODY]',
         )
 
-        en_cdd_template = CddMailTemplateFactory(
+        CddMailTemplateFactory(
             identifier=PARCOURS_DOCTORAL_EMAIL_PRIVATE_PUBLIC_DEFENSES_ON_SUCCESS,
             language=settings.LANGUAGE_CODE_EN,
             cdd=self.doctorate.training.management_entity,

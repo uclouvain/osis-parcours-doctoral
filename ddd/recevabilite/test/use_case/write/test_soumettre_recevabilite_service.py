@@ -40,9 +40,6 @@ from parcours_doctoral.ddd.recevabilite.validators.exceptions import (
 from parcours_doctoral.infrastructure.message_bus_in_memory import (
     message_bus_in_memory_instance,
 )
-from parcours_doctoral.infrastructure.parcours_doctoral.recevabilite.repository.in_memory import (
-    recevabilite,
-)
 from parcours_doctoral.infrastructure.parcours_doctoral.recevabilite.repository.in_memory.recevabilite import (
     RecevabiliteInMemoryRepository,
 )

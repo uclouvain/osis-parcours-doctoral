@@ -34,9 +34,8 @@ from django.core.validators import EMPTY_VALUES
 from django.db.models import QuerySet
 from django.urls import NoReverseMatch, reverse
 from django.utils.safestring import mark_safe
-from django.utils.translation import get_language
+from django.utils.translation import get_language, pgettext_lazy
 from django.utils.translation import gettext_lazy as _
-from django.utils.translation import pgettext_lazy
 from django_bootstrap5.renderers import FieldRenderer
 from osis_document_components.enums import PostProcessingWanted
 from osis_document_components.services import get_remote_metadata, get_remote_token
@@ -394,7 +393,7 @@ def field_data(
             data = template.Template(template_string).render(template.Context(template_context))
         else:
             data = ''
-    elif type(data) == bool:
+    elif isinstance(data, bool):
         data = _('Yes') if data else _('No')
     elif translate_data is True:
         data = _(data)

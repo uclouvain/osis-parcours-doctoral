@@ -36,7 +36,6 @@ from parcours_doctoral.ddd.autorisation_diffusion_these.domain.model.enums impor
     CHOIX_STATUTS_AUTORISATION_DIFFUSION_THESE_MODIFIABLE_PAR_DOCTORANT,
     CHOIX_STATUTS_AUTORISATION_DIFFUSION_THESE_MODIFIABLE_PAR_PROMOTEUR_REFERENCE,
     CHOIX_STATUTS_AUTORISATION_DIFFUSION_THESE_MODIFIABLE_PAR_SCEB,
-    ChoixStatutAutorisationDiffusionThese,
 )
 from parcours_doctoral.ddd.domain.model.enums import (
     STATUTS_DOCTORAT_AUTORISATION_THESE_FORMULE_1,

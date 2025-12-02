@@ -23,7 +23,9 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from parcours_doctoral.ddd.builder.parcours_doctoral_identity import ParcoursDoctoralIdentityBuilder
+from parcours_doctoral.ddd.builder.parcours_doctoral_identity import (
+    ParcoursDoctoralIdentityBuilder,
+)
 from parcours_doctoral.ddd.defense_privee.commands import SoumettreDefensePriveeCommand
 from parcours_doctoral.ddd.defense_privee.repository.i_defense_privee import (
     IDefensePriveeRepository,

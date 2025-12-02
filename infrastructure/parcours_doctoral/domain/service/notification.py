@@ -51,7 +51,7 @@ from parcours_doctoral.ddd.domain.validator.exceptions import (
     SignataireNonTrouveException,
 )
 from parcours_doctoral.ddd.jury.builder.jury_identity_builder import JuryIdentityBuilder
-from parcours_doctoral.ddd.jury.domain.model.enums import ROLES_MEMBRES_JURY, RoleJury
+from parcours_doctoral.ddd.jury.domain.model.enums import ROLES_MEMBRES_JURY
 from parcours_doctoral.ddd.jury.repository.i_jury import IJuryRepository
 from parcours_doctoral.infrastructure.mixins.notification import NotificationMixin
 from parcours_doctoral.mail_templates.signatures import (

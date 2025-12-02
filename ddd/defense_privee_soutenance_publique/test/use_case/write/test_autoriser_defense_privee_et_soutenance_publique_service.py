@@ -76,7 +76,7 @@ class TestAutoriserDefensePriveeEtSoutenancePublique(SimpleTestCase):
 
     def test_should_generer_exception_si_parcours_doctoral_inconnu(self):
         self.parametres_cmd['uuid_parcours_doctoral'] = 'INCONNU'
-        with self.assertRaises(ParcoursDoctoralNonTrouveException) as e:
+        with self.assertRaises(ParcoursDoctoralNonTrouveException):
             self.message_bus.invoke(self.cmd(**self.parametres_cmd))
 
     def test_should_generer_exception_si_statut_parcours_doctoral_invalide(self):

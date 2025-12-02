@@ -9,9 +9,8 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ("parcours_doctoral", "0036_scebmanager"),
+        ("parcours_doctoral", "0038_merge_20251205_1454"),
     ]
 
     operations = [

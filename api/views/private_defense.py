@@ -39,8 +39,8 @@ from parcours_doctoral.api.serializers.private_defense import (
 )
 from parcours_doctoral.ddd.defense_privee.commands import (
     RecupererDefensesPriveesQuery,
-    SoumettreDefensePriveeCommand,
     RecupererDerniereDefensePriveeQuery,
+    SoumettreDefensePriveeCommand,
     SoumettreProcesVerbalDefensePriveeCommand,
 )
 from parcours_doctoral.exports.private_defense_minutes_canvas import (

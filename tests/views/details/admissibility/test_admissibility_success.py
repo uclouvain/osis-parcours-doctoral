@@ -47,9 +47,6 @@ from parcours_doctoral.ddd.jury.domain.model.enums import FormuleDefense
 from parcours_doctoral.mail_templates.admissibility import (
     PARCOURS_DOCTORAL_EMAIL_ADMISSIBILITY_ON_SUCCESS,
 )
-from parcours_doctoral.mail_templates.private_defense import (
-    PARCOURS_DOCTORAL_EMAIL_PRIVATE_DEFENSE_ON_SUCCESS,
-)
 from parcours_doctoral.tests.factories.admissibility import AdmissibilityFactory
 from parcours_doctoral.tests.factories.jury import (
     ExternalJuryActorFactory,
@@ -142,7 +139,7 @@ class AdmissibilitySuccessViewTestCase(MockOsisDocumentMixin, TestCase):
         self.assertNotIn('_UNDEFINED', form.initial['body'])
 
         # With cdd email templates
-        fr_cdd_template = CddMailTemplateFactory(
+        CddMailTemplateFactory(
             identifier=PARCOURS_DOCTORAL_EMAIL_ADMISSIBILITY_ON_SUCCESS,
             language=settings.LANGUAGE_CODE_FR,
             cdd=self.doctorate.training.management_entity,
@@ -151,7 +148,7 @@ class AdmissibilitySuccessViewTestCase(MockOsisDocumentMixin, TestCase):
             body='FR[BODY]',
         )
 
-        en_cdd_template = CddMailTemplateFactory(
+        CddMailTemplateFactory(
             identifier=PARCOURS_DOCTORAL_EMAIL_ADMISSIBILITY_ON_SUCCESS,
             language=settings.LANGUAGE_CODE_EN,
             cdd=self.doctorate.training.management_entity,
