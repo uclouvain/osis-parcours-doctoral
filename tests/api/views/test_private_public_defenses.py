@@ -283,6 +283,5 @@ class PrivatePublicDefensesAPIViewTestCase(MockOsisDocumentMixin, APITestCase):
         json_response = response.json()
         self.assertEqual(
             json_response.get('detail'),
-            "Le doctorat doit être dans le statut 'Défense privée et soutenance publique autorisées' pour "
-            "réaliser cette action.",
+            "Le doctorat doit être dans le statut 'Défense/Soutenance autorisées' pour réaliser cette action.",
         )
