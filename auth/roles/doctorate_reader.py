@@ -29,6 +29,8 @@ from rules import RuleSet, always_allow
 
 from osis_role.contrib.models import RoleModel
 from parcours_doctoral.auth.predicates.parcours_doctoral import (
+    defense_method_is_formula_1,
+    defense_method_is_formula_2,
     is_related_to_an_admission,
 )
 
@@ -44,12 +46,26 @@ class DoctorateReader(RoleModel):
         ruleset = {
             'base.can_access_student_path': always_allow,
             'parcours_doctoral.view_parcours_doctoral_home': always_allow,
+            'parcours_doctoral.view_parcours_doctoral': always_allow,
             'parcours_doctoral.view_project': always_allow,
+            'parcours_doctoral.view_funding': always_allow,
             'parcours_doctoral.view_cotutelle': is_related_to_an_admission,
             'parcours_doctoral.view_supervision': always_allow,
-            'parcours_doctoral.view_jury': always_allow,
+            'parcours_doctoral.view_historyentry': always_allow,
+            'parcours_doctoral.view_comments': always_allow,
+            'parcours_doctoral.view_documents': always_allow,
+            'parcours_doctoral.view_training': always_allow,
+            'parcours_doctoral.view_doctoral_training': always_allow,
+            'parcours_doctoral.view_complementary_training': always_allow,
+            'parcours_doctoral.view_course_enrollment': always_allow,
+            'parcours_doctoral.view_assessment_enrollment': always_allow,
             'parcours_doctoral.view_confirmation': is_related_to_an_admission,
-            'parcours_doctoral.view_dossiers': always_allow,
-            'parcours_doctoral.view_internalnote': always_allow,
+            'parcours_doctoral.view_jury': always_allow,
+            'parcours_doctoral.view_private_defense': defense_method_is_formula_1,
+            'parcours_doctoral.view_public_defense': defense_method_is_formula_1,
+            'parcours_doctoral.view_admissibility': defense_method_is_formula_2,
+            'parcours_doctoral.view_private_public_defenses': defense_method_is_formula_2,
+            'parcours_doctoral.view_authorization_distribution': always_allow,
+            'parcours_doctoral.view_manuscript_validation': always_allow,
         }
         return RuleSet(ruleset)
