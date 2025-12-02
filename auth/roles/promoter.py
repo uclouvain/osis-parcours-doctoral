@@ -87,6 +87,8 @@ class Promoter(AdmissionPromoter):
             'parcours_doctoral.api_view_course_enrollment': is_parcours_doctoral_promoter,
             'parcours_doctoral.api_view_training': is_parcours_doctoral_promoter,
             'parcours_doctoral.api_assent_training': is_parcours_doctoral_reference_promoter,
+            'parcours_doctoral.api_view_doctoral_training': is_parcours_doctoral_promoter,
+            'parcours_doctoral.api_view_assessment_enrollment': is_parcours_doctoral_promoter,
             # Admissibility
             'parcours_doctoral.api_view_admissibility': is_parcours_doctoral_promoter & defense_method_is_formula_2,
             'parcours_doctoral.api_view_admissibility_minutes': is_parcours_doctoral_promoter

@@ -32,6 +32,8 @@ from osis_role.contrib.models import RoleModel
 from parcours_doctoral.auth.predicates.parcours_doctoral import (
     authorization_distribution_can_be_changed_by_adre,
     authorization_distribution_is_in_progress,
+    defense_method_is_formula_1,
+    defense_method_is_formula_2,
     has_valid_enrollment,
     is_jury_approuve_cdd,
     is_related_to_an_admission,
@@ -51,27 +53,33 @@ class AdreManager(RoleModel):
     @classmethod
     def rule_set(cls):
         ruleset = {
+            'base.can_access_student_path': rules.always_allow,
             # Doctorate
             'parcours_doctoral.view_parcours_doctoral': rules.always_allow,
-            'parcours_doctoral.view_person': rules.always_allow,
-            'parcours_doctoral.view_coordinates': rules.always_allow,
-            'parcours_doctoral.view_secondary_studies': rules.always_allow,
-            'parcours_doctoral.view_curriculum': rules.always_allow,
+            'parcours_doctoral.view_parcours_doctoral_home': rules.always_allow,
             'parcours_doctoral.view_project': rules.always_allow,
+            'parcours_doctoral.view_funding': rules.always_allow,
             'parcours_doctoral.view_cotutelle': is_related_to_an_admission,
             'parcours_doctoral.view_jury': rules.always_allow,
-            'parcours_doctoral.view_languages': rules.always_allow,
             'parcours_doctoral.view_confirmation': is_related_to_an_admission,
+            'parcours_doctoral.upload_pdf_confirmation': is_related_to_an_admission & has_valid_enrollment,
             'parcours_doctoral.view_supervision': rules.always_allow,
+            'parcours_doctoral.view_documents': rules.always_allow,
             'parcours_doctoral.view_historyentry': rules.always_allow,
-            'parcours_doctoral.view_internalnote': rules.always_allow,
+            'parcours_doctoral.view_comments': rules.always_allow,
             'parcours_doctoral.view_training': rules.always_allow,
             'parcours_doctoral.view_doctoral_training': rules.always_allow,
             'parcours_doctoral.view_complementary_training': rules.always_allow,
             'parcours_doctoral.view_course_enrollment': rules.always_allow,
+            'parcours_doctoral.view_assessment_enrollment': rules.always_allow,
+            'parcours_doctoral.view_private_defense': defense_method_is_formula_1,
+            'parcours_doctoral.view_public_defense': defense_method_is_formula_1,
+            'parcours_doctoral.view_admissibility': defense_method_is_formula_2,
+            'parcours_doctoral.view_private_public_defenses': defense_method_is_formula_2,
             'parcours_doctoral.view_authorization_distribution': rules.always_allow,
             'parcours_doctoral.view_manuscript_validation': rules.always_allow,
-            'parcours_doctoral.validate_manuscript': authorization_distribution_can_be_changed_by_adre
+            'parcours_doctoral.validate_manuscript': has_valid_enrollment
+            & authorization_distribution_can_be_changed_by_adre
             & authorization_distribution_is_in_progress,
             'parcours_doctoral.approve_jury': is_jury_approuve_cdd,
         }
