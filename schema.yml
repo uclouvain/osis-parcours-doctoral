@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Parcours Doctoral API
-  version: 1.1.8
+  version: 1.1.8.dev1339
   description: This API delivers data for the Parcours Doctoral project.
   contact:
     name: UCLouvain - OSIS
@@ -3700,8 +3700,6 @@ components:
           type: array
           items:
             type: string
-        reference:
-          type: string
         formation:
           $ref: '#/components/schemas/FormationDTONested'
         matricule_doctorant:
@@ -3715,7 +3713,6 @@ components:
       - formation
       - matricule_doctorant
       - projet
-      - reference
       - statut
       - uuid
     ExternalProjetDTO:
@@ -4346,8 +4343,6 @@ components:
           type: string
         type_admission:
           type: string
-        reference:
-          type: string
         sigle_entite_gestion:
           type: string
         statut:
@@ -4548,7 +4543,6 @@ components:
       - prenom_doctorant
       - proces_verbal_soutenance_publique
       - projet
-      - reference
       - resume_annonce
       - sigle_entite_gestion
       - statut
@@ -4572,8 +4566,6 @@ components:
         * All fields are set to read-only if needed when Meta.read_only is True.
       properties:
         uuid:
-          type: string
-        reference:
           type: string
         statut:
           type: string
@@ -4670,7 +4662,6 @@ components:
       - matricule_doctorant
       - nom_doctorant
       - prenom_doctorant
-      - reference
       - statut
       - uuid
     PatchedModifierRoleMembreCommand:

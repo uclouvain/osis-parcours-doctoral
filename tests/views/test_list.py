@@ -281,9 +281,6 @@ class ParcoursDoctoralListTestView(QueriesAssertionsMixin, TestCase):
             [ALL_FEMININE_EMPTY_CHOICE[0]] + [(year, f'{year}-{str(year + 1)[2:]}') for year in academic_years],
         )
 
-        # numero
-        self.assertEqual(form['numero'].value(), None)
-
         # matricule_doctorant
         self.assertEqual(form['matricule_doctorant'].value(), None)
         self.assertEqual(form.fields['matricule_doctorant'].widget.choices, [])
@@ -399,7 +396,6 @@ class ParcoursDoctoralListTestView(QueriesAssertionsMixin, TestCase):
 
         self.assertEqual(dto.uuid, self.doctorate.uuid)
         self.assertEqual(dto.statut, self.doctorate.status)
-        self.assertEqual(dto.reference, f'M-CDA23-{self.doctorate.reference_str}')
         self.assertEqual(dto.matricule_doctorant, self.doctorate.student.global_id)
         self.assertEqual(dto.genre_doctorant, self.doctorate.student.gender)
         self.assertEqual(dto.nom_doctorant, self.doctorate.student.last_name)
@@ -556,19 +552,6 @@ class ParcoursDoctoralListTestView(QueriesAssertionsMixin, TestCase):
             f'{form.fields["annee_academique"].error_messages["required"]}',
             messages,
         )
-
-    def test_filter_by_reference(self):
-        self.client.force_login(user=self.program_manager.user)
-
-        response = self._do_request(numero='12345678')
-
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.context['object_list']), 0)
-
-        response = self._do_request(numero=self.doctorate.reference_str)
-
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.context['object_list']), 1)
 
     def test_filter_by_student_global_id(self):
         self.client.force_login(user=self.program_manager.user)
@@ -982,15 +965,6 @@ class ParcoursDoctoralListTestView(QueriesAssertionsMixin, TestCase):
 
         self.assertEqual(doctorate_uuids, results_uuids)
 
-    def test_sort_by_reference(self):
-        self.client.force_login(user=self.program_manager.user)
-
-        other_doctorate = ParcoursDoctoralFactory(
-            training=self.other_doctorate_training,
-        )
-
-        self._test_sort_doctorates('reference', self.doctorate, other_doctorate)
-
     def test_sort_by_student_name(self):
         self.client.force_login(user=self.program_manager.user)
 
@@ -1079,7 +1053,7 @@ class ParcoursDoctoralListTestView(QueriesAssertionsMixin, TestCase):
     def test_sort_by_credits(self):
         self.client.force_login(user=self.program_manager.user)
 
-        doctorate_activities = [
+        [
             CourseFactory(
                 parcours_doctoral=self.doctorate,
                 status=StatutActivite.ACCEPTEE.name,
@@ -1093,7 +1067,7 @@ class ParcoursDoctoralListTestView(QueriesAssertionsMixin, TestCase):
             international_scholarship=self.other_scholarship,
         )
 
-        other_doctorate_activities = [
+        [
             CourseFactory(
                 parcours_doctoral=other_doctorate,
                 status=StatutActivite.ACCEPTEE.name,

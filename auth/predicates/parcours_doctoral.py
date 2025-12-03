@@ -81,7 +81,7 @@ def is_parcours_doctoral_student(self, user: User, obj: ParcoursDoctoral):
 @predicate(bind=True)
 @predicate_failed_msg(message=_("The doctorate is not initialized"))
 def is_related_to_an_admission(self, user: User, obj: ParcoursDoctoral):
-    return obj.admission.type == ChoixTypeAdmission.ADMISSION.name
+    return obj.admission_type == ChoixTypeAdmission.ADMISSION.name
 
 
 @predicate(bind=True)

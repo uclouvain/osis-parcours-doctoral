@@ -39,7 +39,6 @@ def lister_parcours_doctoraux(
     lister_tous_parcours_doctoraux_service: 'IListeParcoursDoctorauxRepository',
 ) -> 'PaginatedList[ParcoursDoctoralRechercheDTO]':
     return lister_tous_parcours_doctoraux_service.get(
-        numero=cmd.numero,
         noma=cmd.noma,
         matricule_doctorant=cmd.matricule_doctorant,
         type_admission=cmd.type_admission,

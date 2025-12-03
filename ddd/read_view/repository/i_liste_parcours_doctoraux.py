@@ -39,7 +39,6 @@ class IListeParcoursDoctorauxRepository(interface.ReadModelRepository):
     @abstractmethod
     def get(
         cls,
-        numero: Optional[int] = None,
         noma: Optional[str] = '',
         matricule_doctorant: Optional[str] = '',
         type_admission: Optional[str] = '',

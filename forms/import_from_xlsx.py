@@ -23,44 +23,11 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from rest_framework import serializers
-
-from base.utils.serializers import DTOSerializer
-from parcours_doctoral.api.serializers.mixins import IncludedFieldsMixin
-from parcours_doctoral.api.serializers.supervision import SupervisionDTOSerializer
-from parcours_doctoral.ddd.dtos import ParcoursDoctoralDTO
-from parcours_doctoral.ddd.dtos.parcours_doctoral import ProjetDTO
-
-__all__ = [
-    'ExternalSupervisionDTOSerializer',
-]
+from django import forms
+from django.utils.translation import gettext_lazy
 
 
-class ExternalProjetDTOSerializer(IncludedFieldsMixin, DTOSerializer):
-    class Meta:
-        source = ProjetDTO
-        fields = [
-            'institut_these',
-            'institution',
-            'domaine_these',
-        ]
-
-
-class ExternalParcoursDoctoralDTOSerializer(IncludedFieldsMixin, DTOSerializer):
-    projet = ExternalProjetDTOSerializer()
-
-    class Meta:
-        source = ParcoursDoctoralDTO
-        fields = [
-            'uuid',
-            'archive',
-            'formation',
-            'matricule_doctorant',
-            'projet',
-            'statut',
-        ]
-
-
-class ExternalSupervisionDTOSerializer(serializers.Serializer):
-    parcours_doctoral = ExternalParcoursDoctoralDTOSerializer()
-    supervision = SupervisionDTOSerializer()
+class ImportFromXLSXForm(forms.Form):
+    file = forms.FileField(
+        label=gettext_lazy('File'),
+    )

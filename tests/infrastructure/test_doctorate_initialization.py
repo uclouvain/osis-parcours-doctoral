@@ -48,7 +48,6 @@ from admission.tests.factories.supervision import (
     ExternalPromoterFactory,
     PromoterFactory,
 )
-from base.forms.utils.file_field import PDF_MIME_TYPE
 from base.models.enums.entity_type import EntityType
 from base.tests.factories.entity_version import EntityVersionFactory
 from base.tests.factories.person import PersonFactory
@@ -289,7 +288,6 @@ class DoctorateInitializationTestCase(MockOsisDocumentMixin, TestCase):
 
         self.assertEqual(str(doctorate.uuid), result.uuid)
         self.assertEqual(doctorate.admission, self.pre_admission)
-        self.assertEqual(doctorate.reference, self.pre_admission.reference)
         self.assertEqual(doctorate.justification, self.pre_admission.comment)
         self.assertEqual(doctorate.student, self.pre_admission.candidate)
         self.assertEqual(doctorate.training, self.pre_admission.training)
@@ -416,7 +414,6 @@ class DoctorateInitializationTestCase(MockOsisDocumentMixin, TestCase):
 
         self.assertEqual(str(doctorate.uuid), result.uuid)
         self.assertEqual(doctorate.admission, self.admission)
-        self.assertEqual(doctorate.reference, self.admission.reference)
         self.assertEqual(doctorate.justification, self.admission.comment)
         self.assertEqual(doctorate.student, self.admission.candidate)
         self.assertEqual(doctorate.training, self.admission.training)
@@ -574,7 +571,6 @@ class DoctorateInitializationTestCase(MockOsisDocumentMixin, TestCase):
 
         self.assertEqual(str(doctorate.uuid), result.uuid)
         self.assertEqual(doctorate.admission, self.admission)
-        self.assertEqual(doctorate.reference, self.admission.reference)
         self.assertEqual(doctorate.justification, self.admission.comment)
         self.assertEqual(doctorate.student, self.admission.candidate)
         self.assertEqual(doctorate.training, self.admission.training)

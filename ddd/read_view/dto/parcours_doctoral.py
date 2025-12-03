@@ -35,7 +35,6 @@ from parcours_doctoral.ddd.read_view.dto.formation import FormationRechercheDTO
 @attr.dataclass(slots=True)
 class ParcoursDoctoralRechercheDTO(interface.DTO):
     uuid: str
-    reference: str
     statut: str
     type_admission: str
 

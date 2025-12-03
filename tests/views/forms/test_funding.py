@@ -200,8 +200,9 @@ class FundingFormViewTestCase(TestCase):
     def test_form_initialization_for_a_pre_admission(self):
         self.client.force_login(user=self.manager.user)
 
-        self.doctorate.admission = self.pre_admission
-        self.doctorate.save(update_fields=['admission'])
+        self.doctorate.admission_type = self.pre_admission.type
+        self.doctorate.admission_approved_by_cdd_at = self.pre_admission.approved_by_cdd_at
+        self.doctorate.save(update_fields=['admission', 'admission_type', 'admission_approved_by_cdd_at'])
 
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -328,7 +329,9 @@ class FundingFormViewTestCase(TestCase):
         self.client.force_login(self.manager.user)
 
         self.doctorate.admission = self.pre_admission
-        self.doctorate.save(update_fields=['admission'])
+        self.doctorate.admission_type = self.pre_admission.type
+        self.doctorate.admission_approved_by_cdd_at = self.pre_admission.approved_by_cdd_at
+        self.doctorate.save(update_fields=['admission', 'admission_type', 'admission_approved_by_cdd_at'])
 
         response = self.client.post(
             self.url,
@@ -350,7 +353,9 @@ class FundingFormViewTestCase(TestCase):
         self.client.force_login(self.manager.user)
 
         self.doctorate.admission = self.pre_admission
-        self.doctorate.save(update_fields=['admission'])
+        self.doctorate.admission_type = self.pre_admission.type
+        self.doctorate.admission_approved_by_cdd_at = self.pre_admission.approved_by_cdd_at
+        self.doctorate.save(update_fields=['admission', 'admission_type', 'admission_approved_by_cdd_at'])
 
         response = self.client.post(
             self.url,

@@ -203,7 +203,7 @@ class Notification(NotificationMixin, INotification):
 
         # Création de la tâche de génération du document
         task = AsyncTask.objects.create(
-            name=_("Exporting %(reference)s to PDF") % {'reference': parcours_doctoral.reference},
+            name=_("Exporting to PDF"),
             description=_("Exporting the admission information to PDF"),
             person=parcours_doctoral_instance.student,
             time_to_live=5,
