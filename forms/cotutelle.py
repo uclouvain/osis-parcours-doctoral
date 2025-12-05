@@ -53,7 +53,7 @@ class CotutelleForm(forms.Form):
         label=_('Motivation for joint supervision'),
         required=False,
         widget=forms.Textarea(attrs={'rows': 2}),
-        max_length=255,
+        max_length=1024,
     )
 
     institution_fwb = forms.NullBooleanField(
@@ -143,7 +143,7 @@ class CotutelleForm(forms.Form):
         cleaned_data = super().clean()
 
         if cleaned_data.get('cotutelle') == 'YES':
-            for field in ['motivation', 'demande_ouverture']:
+            for field in ['motivation']:
                 if not cleaned_data.get(field):
                     self.add_error(field, FIELD_REQUIRED_MESSAGE)
 

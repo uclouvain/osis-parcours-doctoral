@@ -396,7 +396,7 @@ class ParcoursDoctoral(models.Model):
         blank=True,
     )
     cotutelle_motivation = models.CharField(
-        max_length=255,
+        max_length=1024,
         verbose_name=_("Motivation"),
         default='',
         blank=True,
