@@ -32,12 +32,10 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 
 from base.models.enums.entity_type import EntityType
-from base.tests.factories.entity_version import EntityVersionFactory
+from base.tests.factories.entity_version import EntityVersionFactory, MainEntityVersionFactory
 from base.tests.factories.person import PersonFactory
 from parcours_doctoral.ddd.domain.model.enums import (
     ChoixDoctoratDejaRealise,
-    ChoixLangueDefense,
-    ChoixStatutParcoursDoctoral,
     ChoixTypeFinancement,
 )
 from parcours_doctoral.tests.factories.parcours_doctoral import ParcoursDoctoralFactory
@@ -56,7 +54,7 @@ class ParcoursDoctoralAPIViewTestCase(CheckActionLinksMixin, APITestCase):
         promoter = PromoterFactory()
 
         # Create parcours_doctoral management entity
-        root = EntityVersionFactory(parent=None).entity
+        root = MainEntityVersionFactory(parent=None, entity_type='').entity
         cls.sector = EntityVersionFactory(
             parent=root,
             entity_type=EntityType.SECTOR.name,

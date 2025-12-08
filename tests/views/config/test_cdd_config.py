@@ -24,13 +24,13 @@
 #
 # ##############################################################################
 
-from base.tests.factories.person import SuperUserPersonFactory
 from django.db.models import JSONField
 from django.shortcuts import resolve_url
 from django.test import TestCase
 from django.utils.translation import gettext_lazy as _
 from rest_framework import status
 
+from base.tests.factories.person import SuperUserPersonFactory
 from parcours_doctoral.ddd.formation.domain.model.enums import CategorieActivite
 from parcours_doctoral.models.cdd_config import CddConfiguration
 from parcours_doctoral.tests.factories.roles import CddConfiguratorFactory
@@ -88,4 +88,4 @@ class CddConfigTestCase(TestCase):
         values = [str(v) for v in dict(CategorieActivite.choices()).values()][:-2]
         data['category_labels_en'] = "\n".join(values)
         response = self.client.post(url, data)
-        self.assertFormError(response, 'form', 'category_labels', _("Number of values mismatch"))
+        self.assertFormError(response.context['form'], 'category_labels', _("Number of values mismatch"))
