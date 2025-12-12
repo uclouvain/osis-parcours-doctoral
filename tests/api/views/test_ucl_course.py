@@ -33,7 +33,6 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 
 from base.models.enums.entity_type import EntityType
-from base.models.learning_unit_year import LearningUnitYear
 from base.tests import QueriesAssertionsMixin
 from base.tests.factories.entity_version import EntityVersionFactory
 from base.tests.factories.learning_unit_year import LearningUnitYearFactory
@@ -95,7 +94,7 @@ class ListTrainingApiForUCLCourseTestCase(TrainingApiForUCLCourseBaseTestCase):
             context=ContexteFormation.DOCTORAL_TRAINING.name,
         )
 
-        with self.assertNumQueriesLessThan(7, verbose=True):
+        with self.assertNumQueriesLessThan(8, verbose=True):
             response = self.client.get(self.url)
 
         activities = response.json()
@@ -105,7 +104,7 @@ class ListTrainingApiForUCLCourseTestCase(TrainingApiForUCLCourseBaseTestCase):
         ucl_course.course_completed = True
         ucl_course.save()
 
-        with self.assertNumQueriesLessThan(7, verbose=True):
+        with self.assertNumQueriesLessThan(8, verbose=True):
             response = self.client.get(self.url)
 
         activities = response.json()
@@ -143,7 +142,7 @@ class ListTrainingApiForUCLCourseTestCase(TrainingApiForUCLCourseBaseTestCase):
             context=ContexteFormation.COMPLEMENTARY_TRAINING.name,
         )
 
-        with self.assertNumQueriesLessThan(7, verbose=True):
+        with self.assertNumQueriesLessThan(8, verbose=True):
             response = self.client.get(self.url)
 
         activities = response.json()
@@ -293,7 +292,7 @@ class SingleTrainingApiForUCLCourseTestCase(TrainingApiForUCLCourseBaseTestCase)
 
         self.student.language = settings.LANGUAGE_CODE_EN
         self.student.save()
-        with self.assertNumQueriesLessThan(8):
+        with self.assertNumQueriesLessThan(9):
             response = self.client.get(self.url, HTTP_ACCEPT_LANGUAGE=settings.LANGUAGE_CODE_EN)
 
         activity = response.json()
@@ -413,7 +412,7 @@ class SingleUpdateTrainingApiForUCLCourseTestCase(TrainingApiForUCLCourseBaseTes
 
         self.assertIn(
             _('No element has been found for the academic year %(academic_year)s.')
-            % {'academic_year': f'{academic_year}-{academic_year+1}'},
+            % {'academic_year': f'{academic_year}-{academic_year + 1}'},
             json_response.get('course', []),
         )
 
@@ -432,13 +431,11 @@ class SingleUpdateTrainingApiForUCLCourseTestCase(TrainingApiForUCLCourseBaseTes
 
         self.assertIn(
             _('No element has been found for the academic year %(academic_year)s.')
-            % {'academic_year': f'{academic_year}-{academic_year+1}'},
+            % {'academic_year': f'{academic_year}-{academic_year + 1}'},
             json_response.get('course', []),
         )
 
-        learning_class_year = LearningClassLecturingFactory(
-            learning_component_year__learning_unit_year=new_learning_unit_year
-        )
+        LearningClassLecturingFactory(learning_component_year__learning_unit_year=new_learning_unit_year)
 
         response = self.client.put(
             self.url,

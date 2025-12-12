@@ -96,7 +96,7 @@ from reference.tests.factories.scholarship import DoctorateScholarshipFactory
 @freezegun.freeze_time('2023-01-01')
 @override_settings(WAFFLE_CREATE_MISSING_SWITCHES=False)
 class ParcoursDoctoralListTestView(QueriesAssertionsMixin, TestCase):
-    NB_MAX_QUERIES = 27
+    NB_MAX_QUERIES = 28
 
     @classmethod
     def setUpTestData(cls):
@@ -416,7 +416,7 @@ class ParcoursDoctoralListTestView(QueriesAssertionsMixin, TestCase):
         self.assertEqual(dto.code_bourse, self.doctorate.international_scholarship.short_name)
         self.assertEqual(dto.cotutelle, self.doctorate.cotutelle)
         self.assertEqual(dto.formation_complementaire, False)
-        self.assertEqual(dto.en_regle_inscription, False)
+        self.assertEqual(dto.en_regle_inscription, True)
         self.assertEqual(dto.total_credits_valides, 0)
 
     def test_dto_with_complementary_training_activity(self):
@@ -1079,28 +1079,24 @@ class ParcoursDoctoralListTestView(QueriesAssertionsMixin, TestCase):
     def test_sort_by_credits(self):
         self.client.force_login(user=self.program_manager.user)
 
-        doctorate_activities = [
+        for _ in range(3):
             CourseFactory(
                 parcours_doctoral=self.doctorate,
                 status=StatutActivite.ACCEPTEE.name,
                 ects=20,
             )
-            for _ in range(3)
-        ]
 
         other_doctorate = ParcoursDoctoralFactory(
             training=self.other_doctorate_training,
             international_scholarship=self.other_scholarship,
         )
 
-        other_doctorate_activities = [
+        for _ in range(5):
             CourseFactory(
                 parcours_doctoral=other_doctorate,
                 status=StatutActivite.ACCEPTEE.name,
                 ects=5,
             )
-            for _ in range(5)
-        ]
 
         self._test_sort_doctorates('total_credits_valides', other_doctorate, self.doctorate)
 

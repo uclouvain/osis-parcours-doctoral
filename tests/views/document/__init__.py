@@ -36,7 +36,10 @@ from base.tests.factories.program_manager import ProgramManagerFactory
 from parcours_doctoral.ddd.domain.model.document import TypeDocument
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import ENTITY_CDE
 from parcours_doctoral.tests.factories.document import DocumentFactory
-from parcours_doctoral.tests.factories.parcours_doctoral import ParcoursDoctoralFactory
+from parcours_doctoral.tests.factories.parcours_doctoral import (
+    ParcoursDoctoralFactory,
+    create_valid_enrolment,
+)
 
 
 @override_settings(OSIS_DOCUMENT_BASE_URL='http://dummyurl')
@@ -57,6 +60,7 @@ class DocumentBaseTestCase(TestCase):
             training__management_entity=first_doctoral_commission,
             training__academic_year=academic_years[0],
         )
+        create_valid_enrolment(doctorate=cls.doctorate, year=2021)
 
         # Create users
         cls.manager = ProgramManagerFactory(education_group=cls.doctorate.training.education_group).person
