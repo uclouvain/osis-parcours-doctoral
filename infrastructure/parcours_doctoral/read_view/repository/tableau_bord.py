@@ -25,8 +25,9 @@
 # ##############################################################################
 from typing import Dict, List, Optional
 
+from django.db.models import OuterRef
 from django.db.models.aggregates import Count
-from django.db.models.expressions import ExpressionWrapper, F
+from django.db.models.expressions import Exists, ExpressionWrapper, F
 from django.db.models.fields import DateField
 from django.db.models.functions.datetime import Now
 from django.db.models.lookups import GreaterThanOrEqual
@@ -40,11 +41,12 @@ from admission.infrastructure.admission.doctorat.preparation.read_view.repositor
 )
 from admission.models import DoctorateAdmission
 from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
+from parcours_doctoral.ddd.formation.domain.model.enums import StatutActivite
 from parcours_doctoral.ddd.read_view.repository.i_tableau_bord import (
     ITableauBordRepository,
 )
 from parcours_doctoral.infrastructure.utils import get_entities_with_descendants_ids
-from parcours_doctoral.models import ParcoursDoctoral
+from parcours_doctoral.models import Activity, ParcoursDoctoral
 
 
 class TableauBordRepository(TableauBordRepositoryAdmissionMixin, ITableauBordRepository):
@@ -78,7 +80,15 @@ class TableauBordRepository(TableauBordRepositoryAdmissionMixin, ITableauBordRep
             confirmationpaper__is_active=True,
             confirmationpaper__extended_deadline__isnull=False,
         ),
-        # IndicateurTableauBordEnum.FORMATION_DOCTORALE_VALIDE_PROMOTEUR.name: Q(),
+        IndicateurTableauBordEnum.FORMATION_DOCTORALE_VALIDE_PROMOTEUR.name: Q(
+            Exists(
+                Activity.objects.filter(
+                    parcours_doctoral_id=OuterRef('pk'),
+                    reference_promoter_assent=True,
+                    status=StatutActivite.SOUMISE.name,
+                )
+            ),
+        ),
         IndicateurTableauBordEnum.JURY_VALIDE_CA.name: Q(
             status=ChoixStatutParcoursDoctoral.JURY_APPROUVE_CA.name,
         ),

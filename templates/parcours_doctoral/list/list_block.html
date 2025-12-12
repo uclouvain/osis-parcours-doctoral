@@ -112,8 +112,10 @@
             {% endif %}
           </td>
           <td>
-            {# <span class="dot {% if parcours_doctoral.en_regle_inscription %}green-dot{% else %}red-dot{% endif %}"></span> #}
-            (TODO)
+            <i
+              class="fa-solid fa-flag"
+              style="color: {% if parcours_doctoral.en_regle_inscription %}#26a269{% else %}#c01c28;"{% endif %}
+            ></i>
           </td>
           <td>{{ parcours_doctoral.total_credits_valides }}</td>
         </tr>
