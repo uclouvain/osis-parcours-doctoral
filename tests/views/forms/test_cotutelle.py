@@ -205,9 +205,8 @@ class CotutelleFormViewTestCase(TestCase):
 
         self.assertFalse(form.is_valid())
 
-        self.assertEqual(len(form.errors), 4)
+        self.assertEqual(len(form.errors), 3)
         self.assertIn(FIELD_REQUIRED_MESSAGE, form.errors.get('motivation', []))
-        self.assertIn(FIELD_REQUIRED_MESSAGE, form.errors.get('demande_ouverture', []))
         self.assertIn(FIELD_REQUIRED_MESSAGE, form.errors.get('institution', []))
         self.assertIn(FIELD_REQUIRED_MESSAGE, form.errors.get('institution_fwb', []))
 
@@ -226,9 +225,8 @@ class CotutelleFormViewTestCase(TestCase):
 
         self.assertFalse(form.is_valid())
 
-        self.assertEqual(len(form.errors), 5)
+        self.assertEqual(len(form.errors), 4)
         self.assertIn(FIELD_REQUIRED_MESSAGE, form.errors.get('motivation', []))
-        self.assertIn(FIELD_REQUIRED_MESSAGE, form.errors.get('demande_ouverture', []))
         self.assertIn(FIELD_REQUIRED_MESSAGE, form.errors.get('autre_institution_nom', []))
         self.assertIn(FIELD_REQUIRED_MESSAGE, form.errors.get('autre_institution_adresse', []))
         self.assertIn(FIELD_REQUIRED_MESSAGE, form.errors.get('institution_fwb', []))

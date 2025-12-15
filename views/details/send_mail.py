@@ -65,7 +65,7 @@ class SendMailView(HtmxMixin, ParcoursDoctoralFormMixin, FormView):
     permission_required = 'parcours_doctoral.send_message'
 
     def get_success_url(self):
-        return self.request.get_full_path()
+        return self.next_url or self.request.get_full_path()
 
     def get_extra_form_kwargs(self):
         return {
