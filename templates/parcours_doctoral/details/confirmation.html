@@ -64,7 +64,7 @@
         {% if can_make_decision %}
           <li><hr class="dropdown-divider"></li>
           <li>
-            <a class="dropdown-item" href="{% url 'parcours_doctoral:send-mail' uuid=uuid %}?template={{ INFO_TEMPLATE_IDENTIFIER }}&cc_promoteurs=True&from={{ request.path }}">
+            <a class="dropdown-item" href="{% url 'parcours_doctoral:send-mail' uuid=uuid %}?template={{ INFO_TEMPLATE_IDENTIFIER }}&cc_promoteurs=True&next={{ request.path }}">
               {% trans "Send an information email" %}
             </a>
           </li>
