@@ -75,7 +75,7 @@ class DashboardForm(forms.Form):
         self.fields['cdds'].choices = []
         for acronym in self.cdd_acronyms:
             self.fields['cdds'].choices.append((acronym, acronym))
-
+        self.fields['cdds'].widget.choices = self.fields['cdds'].choices
         self.fields['commission_proximite'].choices = self.get_proximity_commission_choices()
 
     def get_cdd_queryset(self):
