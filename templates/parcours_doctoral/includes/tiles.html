@@ -24,7 +24,7 @@
 * see http://www.gnu.org/licenses/.
 {% endcomment %}
 
-<div class="dashboard-grid">
+<div class="dashboard-grid" style="grid-auto-flow: row;">
     {% if perms.parcours_doctoral.view_parcours_doctoral %}
     <div class="grid-item" style="grid-area: auto/{{ tile.column }}">
         <i class="icon fa-thin fa-award navigation-dashboard-icon"></i>
