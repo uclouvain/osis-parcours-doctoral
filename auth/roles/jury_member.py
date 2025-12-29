@@ -31,6 +31,7 @@ from osis_role.contrib.models import RoleModel
 from parcours_doctoral.auth.predicates.parcours_doctoral import (
     admissibility_is_submitted,
     defense_method_is_formula_1,
+    defense_method_is_formula_1_or_unknown,
     defense_method_is_formula_2,
     is_jury_signing_in_progress,
     is_part_of_jury,
@@ -61,7 +62,7 @@ class JuryMember(RoleModel):
             'parcours_doctoral.api_view_cotutelle': is_part_of_jury & is_related_to_an_admission,
             'parcours_doctoral.api_view_funding': is_part_of_jury,
             'parcours_doctoral.api_view_supervision': is_part_of_jury,
-            'parcours_doctoral.api_view_confirmation': is_part_of_jury & is_related_to_an_admission,
+            'parcours_doctoral.api_view_confirmation': is_part_of_jury,
             'parcours_doctoral.api_view_complementary_training': is_part_of_jury,
             'parcours_doctoral.api_view_course_enrollment': is_part_of_jury,
             'parcours_doctoral.api_view_training': is_part_of_jury,
@@ -78,13 +79,13 @@ class JuryMember(RoleModel):
             & admissibility_is_submitted,
             # Private defense
             'parcours_doctoral.api_retrieve_private_defenses': is_part_of_jury,
-            'parcours_doctoral.api_view_private_defense': is_part_of_jury & defense_method_is_formula_1,
+            'parcours_doctoral.api_view_private_defense': is_part_of_jury & defense_method_is_formula_1_or_unknown,
             'parcours_doctoral.api_view_private_defense_minutes': is_president_or_secretary_of_jury,
             'parcours_doctoral.api_upload_private_defense_minutes': is_president_or_secretary_of_jury
             & defense_method_is_formula_1
             & private_defense_is_authorised,
             # Public defense
-            'parcours_doctoral.api_view_public_defense': is_part_of_jury & defense_method_is_formula_1,
+            'parcours_doctoral.api_view_public_defense': is_part_of_jury & defense_method_is_formula_1_or_unknown,
             'parcours_doctoral.api_view_public_defense_minutes': is_president_or_secretary_of_jury,
             'parcours_doctoral.api_upload_public_defense_minutes': is_president_or_secretary_of_jury
             & defense_method_is_formula_1

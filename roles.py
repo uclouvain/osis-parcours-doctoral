@@ -30,6 +30,7 @@ from parcours_doctoral.auth.predicates.parcours_doctoral import (
     admissibility_is_submitted,
     complementary_training_enabled,
     defense_method_is_formula_1,
+    defense_method_is_formula_1_or_unknown,
     defense_method_is_formula_2,
     doctorate_is_proclaimed,
     has_valid_enrollment,
@@ -95,7 +96,7 @@ PROGRAM_MANAGER_RULES = {
     'parcours_doctoral.view_documents': is_part_of_education_group,
     'parcours_doctoral.change_documents': is_part_of_education_group & has_valid_enrollment,
     # --- Confirmation
-    'parcours_doctoral.view_confirmation': is_related_to_an_admission & is_part_of_education_group,
+    'parcours_doctoral.view_confirmation': is_part_of_education_group,
     'parcours_doctoral.change_confirmation': is_related_to_an_admission
     & is_part_of_education_group
     & has_valid_enrollment,
@@ -148,7 +149,7 @@ PROGRAM_MANAGER_RULES = {
     # -- Validation du manuscript
     'parcours_doctoral.view_manuscript_validation': is_part_of_education_group,
     # -- Défense
-    'parcours_doctoral.view_private_defense': is_part_of_education_group & defense_method_is_formula_1,
+    'parcours_doctoral.view_private_defense': is_part_of_education_group & defense_method_is_formula_1_or_unknown,
     'parcours_doctoral.authorise_private_defense': is_part_of_education_group
     & has_valid_enrollment
     & private_defense_is_submitted
@@ -165,7 +166,7 @@ PROGRAM_MANAGER_RULES = {
     & has_valid_enrollment
     & defense_method_is_formula_1,
     # -- Soutenance
-    'parcours_doctoral.view_public_defense': is_part_of_education_group & defense_method_is_formula_1,
+    'parcours_doctoral.view_public_defense': is_part_of_education_group & defense_method_is_formula_1_or_unknown,
     'parcours_doctoral.change_public_defense': is_part_of_education_group
     & has_valid_enrollment
     & defense_method_is_formula_1,

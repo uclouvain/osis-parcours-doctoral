@@ -35,8 +35,8 @@ from django.utils.translation import get_language
 from admission.views import PaginatedList
 from parcours_doctoral.ddd.domain.model.enums import (
     BourseRecherche,
-    ChoixEtapeParcoursDoctoral,
     ChoixStatutParcoursDoctoral,
+    TypeDateParcoursDoctoral,
 )
 from parcours_doctoral.ddd.formation.domain.model.enums import StatutActivite
 from parcours_doctoral.ddd.read_view.dto.formation import FormationRechercheDTO
@@ -59,14 +59,14 @@ from parcours_doctoral.models import Activity, ParcoursDoctoral
 
 class ListeParcoursDoctorauxRepository(IListeParcoursDoctorauxRepository):
     DATE_FIELD_BY_DATE_TYPE = {
-        ChoixEtapeParcoursDoctoral.ADMISSION.name: 'admission__approved_by_cdd_at__date',
-        ChoixEtapeParcoursDoctoral.CONFIRMATION.name: 'confirmationpaper__confirmation_date',
-        ChoixEtapeParcoursDoctoral.DEFENSE_PRIVEE.name: 'current_private_defense__datetime__date',
-        ChoixEtapeParcoursDoctoral.SOUTENANCE_PUBLIQUE.name: 'defense_datetime__date',
-        ChoixEtapeParcoursDoctoral.DECISION_DE_RECEVABILITE.name: 'current_admissibility__decision_date',
+        TypeDateParcoursDoctoral.ADMISSION.name: 'admission__approved_by_cdd_at__date',
+        TypeDateParcoursDoctoral.CONFIRMATION.name: 'confirmationpaper__confirmation_date',
+        TypeDateParcoursDoctoral.DEFENSE_PRIVEE.name: 'current_private_defense__datetime__date',
+        TypeDateParcoursDoctoral.SOUTENANCE_PUBLIQUE.name: 'defense_datetime__date',
+        TypeDateParcoursDoctoral.DECISION_DE_RECEVABILITE.name: 'current_admissibility__decision_date',
     }
     ADDITIONAL_DATE_CONDITION_BY_DATE_TYPE = {
-        ChoixEtapeParcoursDoctoral.CONFIRMATION.name: {
+        TypeDateParcoursDoctoral.CONFIRMATION.name: {
             'confirmationpaper__is_active': True,
         }
     }

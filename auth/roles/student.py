@@ -54,8 +54,7 @@ class Student(RoleModel):
             & parcours_doctoral.is_related_to_an_admission,
             'parcours_doctoral.api_view_supervision': parcours_doctoral.is_parcours_doctoral_student,
             'parcours_doctoral.api_view_supervision_canvas': parcours_doctoral.is_parcours_doctoral_student,
-            'parcours_doctoral.api_view_confirmation': parcours_doctoral.is_parcours_doctoral_student
-            & parcours_doctoral.is_related_to_an_admission,
+            'parcours_doctoral.api_view_confirmation': parcours_doctoral.is_parcours_doctoral_student,
             # Can edit while the jury is not submitted
             'parcours_doctoral.api_view_jury': parcours_doctoral.is_parcours_doctoral_student,
             'parcours_doctoral.api_change_jury': parcours_doctoral.is_parcours_doctoral_student
@@ -94,7 +93,7 @@ class Student(RoleModel):
             # Private defense
             'parcours_doctoral.api_retrieve_private_defenses': parcours_doctoral.is_parcours_doctoral_student,
             'parcours_doctoral.api_view_private_defense': parcours_doctoral.is_parcours_doctoral_student
-            & parcours_doctoral.defense_method_is_formula_1,
+            & parcours_doctoral.defense_method_is_formula_1_or_unknown,
             'parcours_doctoral.api_change_private_defense': parcours_doctoral.is_parcours_doctoral_student
             & parcours_doctoral.defense_method_is_formula_1
             & parcours_doctoral.private_defense_in_progress,
@@ -107,7 +106,7 @@ class Student(RoleModel):
             'parcours_doctoral.api_view_manuscript_validation': parcours_doctoral.is_parcours_doctoral_student,
             # Public defense
             'parcours_doctoral.api_view_public_defense': parcours_doctoral.is_parcours_doctoral_student
-            & parcours_doctoral.defense_method_is_formula_1,
+            & parcours_doctoral.defense_method_is_formula_1_or_unknown,
             'parcours_doctoral.api_change_public_defense': parcours_doctoral.is_parcours_doctoral_student
             & parcours_doctoral.defense_method_is_formula_1
             & parcours_doctoral.public_defense_in_progress,

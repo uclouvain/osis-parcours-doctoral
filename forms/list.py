@@ -54,9 +54,9 @@ from parcours_doctoral.ddd.domain.model.enums import (
     BourseRecherche,
     ChoixCommissionProximiteCDEouCLSM,
     ChoixCommissionProximiteCDSS,
-    ChoixEtapeParcoursDoctoral,
     ChoixSousDomaineSciences,
     ChoixTypeFinancement,
+    TypeDateParcoursDoctoral,
 )
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import (
     ENTITY_CDE,
@@ -455,12 +455,7 @@ class ParcoursDoctorauxFilterForm(forms.Form):
 
 class IntervalDateForm(forms.Form):
     type_date = forms.ChoiceField(
-        choices=ChoixEtapeParcoursDoctoral.choices_except(
-            ChoixEtapeParcoursDoctoral.JURY,
-            ChoixEtapeParcoursDoctoral.DEFENSE_SOUTENANCE_FORMULE_2,
-            ChoixEtapeParcoursDoctoral.PROCLAMATION,
-            ChoixEtapeParcoursDoctoral.ABANDON_ECHEC,
-        ),
+        choices=TypeDateParcoursDoctoral.choices(),
         label=_('Date type'),
     )
 

@@ -67,13 +67,9 @@
     {% get_thesis_institute_name parcours_doctoral.projet.institut_these as institut_these %}
     {% field_data _("Thesis institute") institut_these inline=True %}
     {% field_data _("Financing type") parcours_doctoral.financement.type|enum_display:"ChoixTypeFinancement" inline=True %}
-
-    {# Uncomment after OS-1395 merge #}
-    {# {% field_data _("Temporary / definitive admission date") parcours_doctoral.date_admission_par_cdd inline=True %} #}
-    {% field_data _("Temporary / definitive admission date") "En cours de développement (OS-1395)" inline=True %}
-
+     {% field_data _("Temporary / definitive admission date") parcours_doctoral.date_admission_par_cdd inline=True %}
     {% field_data _("PhD first inscription date") propriete_pae.specificites.date_inscription_formation inline=True %}
-    {% field_data _("Thesis title") parcours_doctoral.projet.titre inline=True %}
+    {% field_data _("Thesis title") parcours_doctoral.titre_these_propose|default:parcours_doctoral.projet.titre inline=True %}
 
     {% if parcours_doctoral.cotutelle.institution or parcours_doctoral.cotutelle.autre_institution_nom %}
       <h2>{% translate "Cotutelle" %}</h2>
@@ -112,20 +108,24 @@
       {% translate "No one invited" %}
     {% endfor %}
 
-    <h2>{% translate "Confirmation paper" %}</h2>
+    {% get_step_status parcours_doctoral 'CONFIRMATION' as confirmation_status %}
+    {% get_step_status parcours_doctoral 'DEFENSE_PRIVEE' as private_defence_status %}
+    {% get_step_status parcours_doctoral 'SOUTENANCE_PUBLIQUE' as public_defence_status %}
+    {% if jury.formule_defense == 'FORMULE_2' %}
+      {% get_step_status parcours_doctoral 'DECISION_DE_RECEVABILITE' as admissibility_status %}
+    {% endif %}
 
-    {% for current_confirmation_paper in epreuves_confirmation %}
-      <div class="confirmation-paper">
-        {% field_data _("Confirmation deadline:") current_confirmation_paper.date_limite inline=True %}
-        {% field_data _("Confirmation exam date:") current_confirmation_paper.date inline=True %}
-      </div>
-    {% empty %}
-      {% translate "No confirmation paper yet" %}
-    {% endfor %}
+    {% if confirmation_status %}
+      <h2>{% translate "Confirmation paper" %}</h2>
 
-    {% if epreuves_confirmation %}
-      {% get_confirmation_status parcours_doctoral as confirmation_status %}
-      {% field_data _("Current status of the confirmation") confirmation_status inline=True %}
+      {% for current_confirmation_paper in epreuves_confirmation %}
+        {% field_data _("Confirmation deadline") current_confirmation_paper.date_limite inline=True %}
+        {% field_data _("Confirmation exam date") current_confirmation_paper.date inline=True %}
+      {% empty %}
+        {% field_data _("Confirmation deadline") '' inline=True %}
+        {% field_data _("Confirmation exam date") '' inline=True %}
+      {% endfor %}
+      {% field_data _("Current status of the confirmation") confirmation_status.value inline=True %}
     {% endif %}
 
     <h2>{% translate "Additional training" context 'parcours_doctoral' %}</h2>
@@ -151,35 +151,44 @@
       {% if membre.ville %} - {{ membre.ville }}{% endif %}
       {% if membre.pays %} - {{ membre.pays }}{% endif %}
       {% if membre.email %} - {{ membre.email }}{% endif %}
-{#      [TODO statut de signature][date]#}
+       - {{ membre.signature.etat|enum_display:'SignatureState' }}
+      {% if membre.signature.date %}({{ membre.signature.date }}){% endif %}
       {% if not forloop.last %}<br>{% endif %}
     {% empty %}
       {% translate "No one invited" %}
     {% endfor %}
 
-    {% comment %}
+    {% if admissibility_status %}
+      <h2>{% translate "Admissibility" %}</h2>
 
-    <h2>{% translate "Recevability" %}</h2>
+      {% for admissibility in recevabilites %}
+        {% field_data _("Admissibility decision date") admissibility.date_decision inline=True %}
+      {% empty %}
+        {% field_data _("Admissibility decision date") '' inline=True %}
+      {% endfor %}
+      {% field_data _("Current status of the admissibility") admissibility_status.value inline=True %}
+    {% endif %}
 
-    Titre de la thèse : [...]
-    Date de décision de recevabilité : [...]
-    Statut actuel de la recevabilité : [soumise, etc]
+    {% if private_defence_status %}
+      <h2>{% translate "Private defence" %}</h2>
 
-    <h2>{% translate "Private defense" %}</h2>
+      {% for current_private_defence in defenses_privees %}
+        {% field_data _("Private defence date and time") current_private_defence.date_heure inline=True %}
+        {% field_data _("Private defence location") current_private_defence.lieu inline=True %}
+      {% empty %}
+        {% field_data _("Private defence date and time") '' inline=True %}
+        {% field_data _("Private defence location") '' inline=True %}
+      {% endfor %}
+      {% field_data _("Current status of the private defence") private_defence_status.value inline=True %}
+    {% endif %}
 
-    Titre de la thèse : [...]
-    Date de la défense privée : [...]
-    Lieu de la défense privée : [...]
-    Statut actuel de la défense: [soumise, etc]
+    {% if public_defence_status %}
+      <h2>{% translate "Public defence" %}</h2>
 
-    <h2>{% translate "Public defense" %}</h2>
-
-    Titre de la thèse : [...]
-    Date de la soutenance publique : [...]
-    Lieu de la soutenance publique : [...]
-    Statut actuel de la soutenance : [soumise, etc]
-
-    {% endcomment %}
+      {% field_data _("Public defence date and time") parcours_doctoral.date_heure_soutenance_publique inline=True %}
+      {% field_data _("Public defence location") parcours_doctoral.lieu_soutenance_publique inline=True %}
+      {% field_data _("Current status of the public defence") public_defence_status.value inline=True %}
+    {% endif %}
 
   </div>
 {% endblock %}
