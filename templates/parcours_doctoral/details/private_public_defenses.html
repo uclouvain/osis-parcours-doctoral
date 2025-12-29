@@ -106,7 +106,7 @@
       <h4 class="card-title">{% translate "Private defence / Public defence" %}</h4>
     </div>
     <div class="card-body">
-      {% field_data _("Thesis title") current_private_defense.titre_these %}
+      {% field_data _("Thesis title") parcours_doctoral.titre_these_propose %}
       {% field_data _("Public defence language") parcours_doctoral.nom_langue_soutenance_publique %}
 
       {% include 'parcours_doctoral/includes/private_defense/supervision_panel.html' %}

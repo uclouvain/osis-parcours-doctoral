@@ -160,6 +160,12 @@ def defense_method_is_formula_1(self, user: User, obj: ParcoursDoctoral):
 
 
 @predicate(bind=True)
+@predicate_failed_msg(message=_("The defense method must be the formula 1."))
+def defense_method_is_formula_1_or_unknown(self, user: User, obj: ParcoursDoctoral):
+    return obj.defense_method == FormuleDefense.FORMULE_1.name or not obj.defense_method
+
+
+@predicate(bind=True)
 @predicate_failed_msg(message=_("The defense method must be the formula 2."))
 def defense_method_is_formula_2(self, user: User, obj: ParcoursDoctoral):
     return obj.defense_method == FormuleDefense.FORMULE_2.name
