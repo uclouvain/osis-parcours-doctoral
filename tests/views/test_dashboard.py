@@ -52,6 +52,9 @@ from base.tests.factories.entity_version import (
 )
 from base.tests.factories.program_manager import ProgramManagerFactory
 from infrastructure.messages_bus import message_bus_instance
+from parcours_doctoral.ddd.autorisation_diffusion_these.domain.model.enums import (
+    ChoixStatutAutorisationDiffusionThese,
+)
 from parcours_doctoral.ddd.domain.model.enums import (
     ChoixCommissionProximiteCDEouCLSM,
     ChoixCommissionProximiteCDSS,
@@ -68,6 +71,9 @@ from parcours_doctoral.ddd.domain.model.parcours_doctoral import (
 from parcours_doctoral.ddd.read_view.dto.tableau_bord import TableauBordDTO
 from parcours_doctoral.ddd.read_view.queries import (
     RecupererInformationsTableauBordQuery,
+)
+from parcours_doctoral.tests.factories.authorization_distribution import (
+    ThesisDistributionAuthorizationFactory,
 )
 from parcours_doctoral.tests.factories.confirmation_paper import (
     ConfirmationPaperFactory,
@@ -211,7 +217,7 @@ class DashboardCommandTestCase(TestCase):
         category = CategorieTableauBordEnum.ADMISSION.name
         indicator = IndicateurTableauBordEnum.ADMISSION_DOSSIER_SOUMIS.name
 
-        admission = DoctorateAdmissionFactory(
+        DoctorateAdmissionFactory(
             status=ChoixStatutPropositionDoctorale.CONFIRMEE.name,
             type=ChoixTypeAdmission.ADMISSION.name,
             proximity_commission=ChoixCommissionProximiteCDSS.DENT.name,
@@ -224,7 +230,7 @@ class DashboardCommandTestCase(TestCase):
         category = CategorieTableauBordEnum.CONFIRMATION.name
         indicator = IndicateurTableauBordEnum.CONFIRMATION_SOUMISE.name
 
-        doctorate = ParcoursDoctoralFactory(
+        ParcoursDoctoralFactory(
             status=ChoixStatutParcoursDoctoral.CONFIRMATION_SOUMISE.name,
             proximity_commission=ChoixCommissionProximiteCDSS.DENT.name,
         )
@@ -244,7 +250,7 @@ class DashboardCommandTestCase(TestCase):
             entity_type=EntityType.DOCTORAL_COMMISSION.name,
         )
 
-        admission = DoctorateAdmissionFactory(
+        DoctorateAdmissionFactory(
             status=ChoixStatutPropositionDoctorale.CONFIRMEE.name,
             type=ChoixTypeAdmission.ADMISSION.name,
             training__management_entity=entity,
@@ -257,7 +263,7 @@ class DashboardCommandTestCase(TestCase):
         category = CategorieTableauBordEnum.CONFIRMATION.name
         indicator = IndicateurTableauBordEnum.CONFIRMATION_SOUMISE.name
 
-        doctorate = ParcoursDoctoralFactory(
+        ParcoursDoctoralFactory(
             status=ChoixStatutParcoursDoctoral.CONFIRMATION_SOUMISE.name,
             training__management_entity=entity,
         )
@@ -333,7 +339,7 @@ class DashboardCommandTestCase(TestCase):
         confirmation_paper.is_active = False
         confirmation_paper.save()
 
-        new_confirmation_paper = ConfirmationPaperFactory(
+        ConfirmationPaperFactory(
             parcours_doctoral=doctorate,
             supervisor_panel_report=[self.file_uuid],
             is_active=True,
@@ -370,7 +376,7 @@ class DashboardCommandTestCase(TestCase):
         confirmation_paper.is_active = False
         confirmation_paper.save()
 
-        new_confirmation_paper = ConfirmationPaperFactory(
+        ConfirmationPaperFactory(
             parcours_doctoral=doctorate,
             extended_deadline=datetime.date(2025, 1, 1),
             is_active=True,
@@ -433,7 +439,7 @@ class DashboardCommandTestCase(TestCase):
             confirmation_paper.is_active = False
             confirmation_paper.save()
 
-            new_confirmation_paper = ConfirmationPaperFactory(
+            ConfirmationPaperFactory(
                 parcours_doctoral=doctorate,
                 is_active=True,
                 confirmation_deadline=datetime.date(2025, 1, 31),
@@ -507,12 +513,12 @@ class DashboardCommandTestCase(TestCase):
 
         self.assert_dashboard_value(category, indicator, 0)
 
-        doctorate = ParcoursDoctoralFactory(status=ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_AUTORISEE.name)
+        doctorate = ParcoursDoctoralFactory(status=ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_SOUMISE.name)
         private_defense = PrivateDefenseFactory(parcours_doctoral=doctorate)
 
         self.assert_dashboard_value(category, indicator, 0)
 
-        doctorate.status = ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_SOUMISE.name
+        doctorate.status = ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_AUTORISEE.name
         doctorate.save()
 
         self.assert_dashboard_value(category, indicator, 1)
@@ -520,7 +526,7 @@ class DashboardCommandTestCase(TestCase):
         private_defense.current_parcours_doctoral = None
         private_defense.save()
 
-        new_private_defense = PrivateDefenseFactory(parcours_doctoral=doctorate, minutes=[])
+        PrivateDefenseFactory(parcours_doctoral=doctorate, minutes=[])
 
         self.assert_dashboard_value(category, indicator, 0)
 
@@ -546,13 +552,13 @@ class DashboardCommandTestCase(TestCase):
         self.assert_dashboard_value(category, indicator, 0)
 
         doctorate = ParcoursDoctoralFactory(
-            status=ChoixStatutParcoursDoctoral.SOUTENANCE_PUBLIQUE_AUTORISEE.name,
+            status=ChoixStatutParcoursDoctoral.SOUTENANCE_PUBLIQUE_SOUMISE.name,
             defense_minutes=[],
         )
 
         self.assert_dashboard_value(category, indicator, 0)
 
-        doctorate.status = ChoixStatutParcoursDoctoral.SOUTENANCE_PUBLIQUE_SOUMISE.name
+        doctorate.status = ChoixStatutParcoursDoctoral.SOUTENANCE_PUBLIQUE_AUTORISEE.name
         doctorate.save()
 
         self.assert_dashboard_value(category, indicator, 0)
@@ -560,6 +566,125 @@ class DashboardCommandTestCase(TestCase):
         doctorate.defense_minutes = [uuid.uuid4()]
         doctorate.save()
 
+        self.assert_dashboard_value(category, indicator, 1)
+
+    def test_submitted_private_and_public_defenses_2(self):
+        category = CategorieTableauBordEnum.FORMULE_2_DEFENSE_PRIVEE_SOUTENANCE_PUBLIQUE.name
+        indicator = IndicateurTableauBordEnum.FORMULE_2_DEFENSE_PRIVEE_SOUTENANCE_PUBLIQUE_SOUMISE.name
+
+        self.assert_dashboard_value(category, indicator, 0)
+
+        doctorate = ParcoursDoctoralFactory(
+            status=ChoixStatutParcoursDoctoral.DEFENSE_ET_SOUTENANCE_AUTORISEES.name,
+        )
+
+        self.assert_dashboard_value(category, indicator, 0)
+
+        doctorate.status = ChoixStatutParcoursDoctoral.DEFENSE_ET_SOUTENANCE_SOUMISES.name
+        doctorate.save()
+
+        self.assert_dashboard_value(category, indicator, 1)
+
+    def test_submitted_private_and_public_defenses_2_with_private_defense_minutes(self):
+        category = CategorieTableauBordEnum.FORMULE_2_DEFENSE_PRIVEE_SOUTENANCE_PUBLIQUE.name
+        indicator = IndicateurTableauBordEnum.FORMULE_2_DEFENSE_PRIVEE_PV_TELEVERSE.name
+
+        self.assert_dashboard_value(category, indicator, 0)
+
+        doctorate = ParcoursDoctoralFactory(
+            status=ChoixStatutParcoursDoctoral.DEFENSE_ET_SOUTENANCE_SOUMISES.name,
+        )
+        private_defense = PrivateDefenseFactory(parcours_doctoral=doctorate)
+
+        self.assert_dashboard_value(category, indicator, 0)
+
+        doctorate.status = ChoixStatutParcoursDoctoral.DEFENSE_ET_SOUTENANCE_AUTORISEES.name
+        doctorate.save()
+
+        self.assert_dashboard_value(category, indicator, 1)
+
+        private_defense.current_parcours_doctoral = None
+        private_defense.save()
+
+        PrivateDefenseFactory(parcours_doctoral=doctorate, minutes=[])
+
+        self.assert_dashboard_value(category, indicator, 0)
+
+    def test_submitted_private_public_defenses_2_with_public_defense_minutes(self):
+        category = CategorieTableauBordEnum.FORMULE_2_DEFENSE_PRIVEE_SOUTENANCE_PUBLIQUE.name
+        indicator = IndicateurTableauBordEnum.FORMULE_2_SOUTENANCE_PUBLIQUE_PV_TELEVERSE.name
+
+        self.assert_dashboard_value(category, indicator, 0)
+
+        doctorate = ParcoursDoctoralFactory(
+            status=ChoixStatutParcoursDoctoral.DEFENSE_ET_SOUTENANCE_SOUMISES.name,
+            defense_minutes=[],
+        )
+
+        self.assert_dashboard_value(category, indicator, 0)
+
+        doctorate.status = ChoixStatutParcoursDoctoral.DEFENSE_ET_SOUTENANCE_AUTORISEES.name
+        doctorate.save()
+
+        self.assert_dashboard_value(category, indicator, 0)
+
+        doctorate.defense_minutes = [uuid.uuid4()]
+        doctorate.save()
+
+        self.assert_dashboard_value(category, indicator, 1)
+
+    @mock.patch('django.db.models.functions.datetime.Now.resolve_expression')
+    def test_authorization_distribution_not_submitted_and_15_days_to_public_defense(self, mock_resolve):
+        category = CategorieTableauBordEnum.AUTORISATION_DIFFUSION_THESE.name
+        indicator = IndicateurTableauBordEnum.AUTORISATION_DIFFUSION_THESE_ECHEANCE_15_JOURS.name
+
+        # Today date: 2024/01/01
+        with freezegun.freeze_time(datetime.date(2024, 1, 1)):
+            current_date = Value(datetime.date(2024, 1, 1))
+            mock_resolve.side_effect = current_date.resolve_expression
+
+            # Public defense date: 2024/01/15
+            doctorate = ParcoursDoctoralFactory(defense_datetime=datetime.datetime(2024, 1, 15))
+            self.assert_dashboard_value(category, indicator, 1)
+
+            authorization_distribution = ThesisDistributionAuthorizationFactory(parcours_doctoral=doctorate)
+            self.assert_dashboard_value(category, indicator, 1)
+
+            authorization_distribution.status = ChoixStatutAutorisationDiffusionThese.DIFFUSION_SOUMISE.name
+            authorization_distribution.save()
+
+            self.assert_dashboard_value(category, indicator, 0)
+
+            authorization_distribution.delete()
+
+            # Public defense date: 2024/01/15 - 00:00:01
+            doctorate.defense_datetime = datetime.datetime(2024, 1, 15, 0, 0, 1)
+            doctorate.save()
+
+            self.assert_dashboard_value(category, indicator, 0)
+
+    def test_authorization_distribution_rejected_by_adre(self):
+        category = CategorieTableauBordEnum.AUTORISATION_DIFFUSION_THESE.name
+        indicator = IndicateurTableauBordEnum.AUTORISATION_DIFFUSION_THESE_REJET_ADRE.name
+
+        doctorate = ParcoursDoctoralFactory(defense_datetime=datetime.datetime(2024, 1, 15))
+        authorization_distribution = ThesisDistributionAuthorizationFactory(parcours_doctoral=doctorate)
+        self.assert_dashboard_value(category, indicator, 0)
+
+        authorization_distribution.status = ChoixStatutAutorisationDiffusionThese.DIFFUSION_REFUSEE_ADRE.name
+        authorization_distribution.save()
+        self.assert_dashboard_value(category, indicator, 1)
+
+    def test_authorization_distribution_rejected_by_sceb(self):
+        category = CategorieTableauBordEnum.AUTORISATION_DIFFUSION_THESE.name
+        indicator = IndicateurTableauBordEnum.AUTORISATION_DIFFUSION_THESE_REJET_SCEB.name
+
+        doctorate = ParcoursDoctoralFactory(defense_datetime=datetime.datetime(2024, 1, 15))
+        authorization_distribution = ThesisDistributionAuthorizationFactory(parcours_doctoral=doctorate)
+        self.assert_dashboard_value(category, indicator, 0)
+
+        authorization_distribution.status = ChoixStatutAutorisationDiffusionThese.DIFFUSION_REFUSEE_SCEB.name
+        authorization_distribution.save()
         self.assert_dashboard_value(category, indicator, 1)
 
 

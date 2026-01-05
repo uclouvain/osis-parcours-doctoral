@@ -105,13 +105,13 @@
       <h4 class="card-title">{% translate "Public defence" %}</h4>
     </div>
     <div class="card-body">
-      {% field_data _("Thesis title") parcours_doctoral.titre_these_propose inline=True %}
-      {% field_data _("Public defence language") parcours_doctoral.nom_langue_soutenance_publique inline=True %}
-      {% field_data _("Public defence date and time") parcours_doctoral.date_heure_soutenance_publique inline=True %}
+      {% field_data _("Thesis title") parcours_doctoral.titre_these_propose %}
+      {% field_data _("Public defence language") parcours_doctoral.nom_langue_soutenance_publique %}
+      {% field_data _("Public defence date and time") parcours_doctoral.date_heure_soutenance_publique %}
       {% field_data _("Public defence location") parcours_doctoral.lieu_soutenance_publique %}
       {% field_data _("Deliberation room") parcours_doctoral.local_deliberation %}
       {% field_data _("Additional information") parcours_doctoral.informations_complementaires_soutenance_publique html_tag="blockquote" %}
-      {% field_data _("Summary for announcement") parcours_doctoral.resume_annonce html_tag="blockquote" %}
+      {% field_data _("Text for the poster") parcours_doctoral.resume_annonce html_tag="blockquote" %}
       {% field_data _("Photo for announcement") parcours_doctoral.photo_annonce %}
       <p>
         <a href="{% url 'parcours_doctoral:public-defense-minutes-canvas' view.kwargs.uuid %}" target="_blank">
@@ -119,8 +119,8 @@
         </a>
       </p>
       {% field_data _("Public defence minutes") parcours_doctoral.proces_verbal_soutenance_publique %}
-      {% field_data _("Diploma collection date") parcours_doctoral.date_retrait_diplome inline=True %}
-      {% field_data _("DIAL link") '' inline=True %}
+      {% field_data _("Diploma collection date") parcours_doctoral.date_retrait_diplome %}
+      {% field_data _("DIAL link") '' %}
     </div>
   </div>
 

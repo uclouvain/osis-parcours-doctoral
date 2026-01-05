@@ -85,13 +85,37 @@ class Student(RoleModel):
             'parcours_doctoral.api_change_confirmation_extension': parcours_doctoral.is_parcours_doctoral_student
             & parcours_doctoral.confirmation_paper_in_progress
             & parcours_doctoral.is_related_to_an_admission,
+            # Admissibility
+            'parcours_doctoral.api_view_admissibility': parcours_doctoral.is_parcours_doctoral_student
+            & parcours_doctoral.defense_method_is_formula_2,
+            'parcours_doctoral.api_change_admissibility': parcours_doctoral.is_parcours_doctoral_student
+            & parcours_doctoral.defense_method_is_formula_2
+            & parcours_doctoral.admissibility_in_progress,
             # Private defense
-            'parcours_doctoral.api_view_private_defense': parcours_doctoral.is_parcours_doctoral_student,
+            'parcours_doctoral.api_retrieve_private_defenses': parcours_doctoral.is_parcours_doctoral_student,
+            'parcours_doctoral.api_view_private_defense': parcours_doctoral.is_parcours_doctoral_student
+            & parcours_doctoral.defense_method_is_formula_1,
             'parcours_doctoral.api_change_private_defense': parcours_doctoral.is_parcours_doctoral_student
+            & parcours_doctoral.defense_method_is_formula_1
             & parcours_doctoral.private_defense_in_progress,
+            # Authorization distribution
+            'parcours_doctoral.api_view_authorization_distribution': parcours_doctoral.is_parcours_doctoral_student,
+            'parcours_doctoral.api_change_authorization_distribution': parcours_doctoral.is_parcours_doctoral_student
+            & parcours_doctoral.authorization_distribution_can_be_changed_by_student
+            & parcours_doctoral.authorization_distribution_is_in_progress,
+            # Manuscript validation
+            'parcours_doctoral.api_view_manuscript_validation': parcours_doctoral.is_parcours_doctoral_student,
             # Public defense
-            'parcours_doctoral.api_view_public_defense': parcours_doctoral.is_parcours_doctoral_student,
+            'parcours_doctoral.api_view_public_defense': parcours_doctoral.is_parcours_doctoral_student
+            & parcours_doctoral.defense_method_is_formula_1,
             'parcours_doctoral.api_change_public_defense': parcours_doctoral.is_parcours_doctoral_student
+            & parcours_doctoral.defense_method_is_formula_1
             & parcours_doctoral.public_defense_in_progress,
+            # Private and public defenses
+            'parcours_doctoral.api_view_private_public_defenses': parcours_doctoral.is_parcours_doctoral_student
+            & parcours_doctoral.defense_method_is_formula_2,
+            'parcours_doctoral.api_change_private_public_defenses': parcours_doctoral.is_parcours_doctoral_student
+            & parcours_doctoral.defense_method_is_formula_2
+            & parcours_doctoral.private_public_defenses_are_in_progress_formula_2,
         }
         return RuleSet(rules)

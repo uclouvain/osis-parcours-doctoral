@@ -54,18 +54,19 @@ class PrivateDefenseFormView(
     form_class = PrivateDefenseForm
 
     def get_initial(self):
+        initial_data: dict = {
+            'titre_these': self.parcours_doctoral.thesis_proposed_title,
+        }
+
         current_private_defense = self.current_private_defense
-        return (
-            {
-                'titre_these': current_private_defense.titre_these,
-                'date_heure': current_private_defense.date_heure,
-                'lieu': current_private_defense.lieu,
-                'date_envoi_manuscrit': current_private_defense.date_envoi_manuscrit,
-                'proces_verbal': current_private_defense.proces_verbal,
-            }
-            if current_private_defense
-            else {}
-        )
+
+        if current_private_defense:
+            initial_data['date_heure_defense_privee'] = current_private_defense.date_heure
+            initial_data['lieu_defense_privee'] = current_private_defense.lieu
+            initial_data['date_envoi_manuscrit'] = current_private_defense.date_envoi_manuscrit
+            initial_data['proces_verbal_defense_privee'] = current_private_defense.proces_verbal
+
+        return initial_data
 
     def call_command(self, form):
         message_bus_instance.invoke(
@@ -73,10 +74,10 @@ class PrivateDefenseFormView(
                 uuid=self.current_private_defense.uuid,
                 matricule_auteur=self.request.user.person.global_id,
                 titre_these=form.cleaned_data['titre_these'],
-                date_heure=form.cleaned_data['date_heure'],
-                lieu=form.cleaned_data['lieu'],
+                date_heure=form.cleaned_data['date_heure_defense_privee'],
+                lieu=form.cleaned_data['lieu_defense_privee'],
                 date_envoi_manuscrit=form.cleaned_data['date_envoi_manuscrit'],
-                proces_verbal=form.cleaned_data['proces_verbal'],
+                proces_verbal=form.cleaned_data['proces_verbal_defense_privee'],
             )
         )
 

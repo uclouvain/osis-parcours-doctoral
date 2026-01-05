@@ -335,6 +335,25 @@ class Historique(IHistorique):
         )
 
     @classmethod
+    def historiser_soumission_recevabilite(
+        cls,
+        parcours_doctoral: ParcoursDoctoral,
+        matricule_auteur: str,
+        statut_original_parcours_doctoral: ChoixStatutParcoursDoctoral,
+    ):
+        if parcours_doctoral.statut != statut_original_parcours_doctoral:
+            auteur = PersonneConnueUclTranslator().get(matricule_auteur)
+            tags = ["parcours_doctoral", "admissibility", "status-changed"]
+
+            add_history_entry(
+                parcours_doctoral.entity_id.uuid,
+                "Le doctorant a renseigné des informations relatives à la recevabilité.",
+                "The doctoral student has filled in information relating to the admissibility.",
+                "{auteur.prenom} {auteur.nom}".format(auteur=auteur),
+                tags=tags,
+            )
+
+    @classmethod
     def historiser_soumission_defense_privee(
         cls,
         parcours_doctoral: ParcoursDoctoral,
@@ -508,4 +527,51 @@ class Historique(IHistorique):
             'The decision of the public defence has been made: it has been passed.',
             '{auteur.prenom} {auteur.nom}'.format(auteur=auteur),
             tags=['parcours_doctoral', 'public-defense', 'status-changed'],
+        )
+
+    @classmethod
+    def historiser_decision_reussie_recevabilite(
+        cls,
+        parcours_doctoral: ParcoursDoctoral,
+        matricule_auteur: str,
+    ):
+        auteur = PersonneConnueUclTranslator().get(matricule_auteur)
+
+        add_history_entry(
+            parcours_doctoral.entity_id.uuid,
+            'La décision de la recevabilité a été donnée : celle-ci a été réussie.',
+            'The decision of the admissibility has been made: it has been passed.',
+            '{auteur.prenom} {auteur.nom}'.format(auteur=auteur),
+            tags=['parcours_doctoral', 'admissibility', 'status-changed'],
+        )
+
+    @classmethod
+    def historiser_decision_repetition_recevabilite(
+        cls,
+        parcours_doctoral: ParcoursDoctoral,
+        matricule_auteur: str,
+    ):
+        auteur = PersonneConnueUclTranslator().get(matricule_auteur)
+
+        add_history_entry(
+            parcours_doctoral.entity_id.uuid,
+            'La décision de la recevabilité a été donnée : celle-ci doit être repassée.',
+            'The decision of the admissibility has been made: it must be repeated.',
+            '{auteur.prenom} {auteur.nom}'.format(auteur=auteur),
+            tags=['parcours_doctoral', 'admissibility', 'status-changed'],
+        )
+
+    @classmethod
+    def historiser_decision_echec_recevabilite(
+        cls,
+        parcours_doctoral: ParcoursDoctoral,
+        matricule_auteur: str,
+    ):
+        auteur = PersonneConnueUclTranslator().get(matricule_auteur)
+        add_history_entry(
+            parcours_doctoral.entity_id.uuid,
+            'La décision de la recevabilite a été donnée : le candidat n\'est pas autorisé à poursuivre.',
+            'The decision of the admissibility has been made: the candidate is not authorized to continue.',
+            '{auteur.prenom} {auteur.nom}'.format(auteur=auteur),
+            tags=['parcours_doctoral', 'admissibility', 'status-changed'],
         )

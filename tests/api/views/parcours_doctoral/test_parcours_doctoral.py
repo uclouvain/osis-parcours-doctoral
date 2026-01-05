@@ -32,7 +32,10 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 
 from base.models.enums.entity_type import EntityType
-from base.tests.factories.entity_version import EntityVersionFactory, MainEntityVersionFactory
+from base.tests.factories.entity_version import (
+    EntityVersionFactory,
+    MainEntityVersionFactory,
+)
 from base.tests.factories.person import PersonFactory
 from parcours_doctoral.ddd.domain.model.enums import (
     ChoixDoctoratDejaRealise,
@@ -213,6 +216,8 @@ class ParcoursDoctoralAPIViewTestCase(CheckActionLinksMixin, APITestCase):
                 'retrieve_assessment_enrollment',
                 'retrieve_private_defense',
                 'retrieve_public_defense',
+                'retrieve_authorization_distribution',
+                'retrieve_manuscript_validation',
             ],
             forbidden_actions=[
                 'jury_add_approval',
@@ -222,12 +227,21 @@ class ParcoursDoctoralAPIViewTestCase(CheckActionLinksMixin, APITestCase):
                 'assent_training',
                 'update_jury_preparation',
                 'create_jury_members',
+                'retrieve_admissibility',
+                'update_admissibility',
+                'retrieve_admissibility_minutes_canvas',
+                'submit_admissibility_minutes_and_opinions',
                 'update_private_defense',
                 'retrieve_private_defense_minutes_canvas',
                 'submit_private_defense_minutes',
                 'update_public_defense',
                 'retrieve_public_defense_minutes_canvas',
                 'submit_public_defense_minutes',
+                'update_authorization_distribution',
+                'validate_manuscript',
+                'retrieve_private_public_defenses',
+                'update_private_public_defenses',
+                'submit_private_public_defenses_minutes',
             ],
         )
 

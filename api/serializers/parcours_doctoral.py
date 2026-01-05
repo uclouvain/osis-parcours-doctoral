@@ -74,16 +74,31 @@ class ParcoursDoctoralDTOSerializer(DTOSerializer):
                 'jury_request_signatures',
                 'jury_add_approval',
                 'jury_approve_by_pdf',
+                # Admissibility
+                'retrieve_admissibility',
+                'update_admissibility',
+                'retrieve_admissibility_minutes_canvas',
+                'submit_admissibility_minutes_and_opinions',
                 # Private defense
                 'retrieve_private_defense',
                 'update_private_defense',
                 'retrieve_private_defense_minutes_canvas',
                 'submit_private_defense_minutes',
+                # Authorization distribution
+                'retrieve_authorization_distribution',
+                'update_authorization_distribution',
+                # Manuscript validation
+                'retrieve_manuscript_validation',
+                'validate_manuscript',
                 # Public defense
                 'retrieve_public_defense',
                 'update_public_defense',
                 'retrieve_public_defense_minutes_canvas',
                 'submit_public_defense_minutes',
+                # Private and public defenses
+                'retrieve_private_public_defenses',
+                'update_private_public_defenses',
+                'submit_private_public_defenses_minutes',
             ]
         }
     )
@@ -125,12 +140,26 @@ class ParcoursDoctoralRechercheDTOSerializer(DTOSerializer):
                     'update_jury_preparation',
                     'list_jury_members',
                     'create_jury_members',
+                    # Admissibility
+                    'retrieve_admissibility',
+                    'update_admissibility',
+                    'submit_admissibility_minutes_and_opinions',
                     # Private defense
                     'retrieve_private_defense',
                     'update_private_defense',
+                    # Authorization distribution
+                    'retrieve_authorization_distribution',
+                    'update_authorization_distribution',
+                    # Manuscript validation
+                    'retrieve_manuscript_validation',
+                    'validate_manuscript',
                     # Public defense
                     'retrieve_public_defense',
                     'update_public_defense',
+                    # Private and public defenses
+                    'retrieve_private_public_defenses',
+                    'update_private_public_defenses',
+                    'submit_private_public_defenses_minutes',
                 ]
             },
         }

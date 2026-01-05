@@ -193,6 +193,38 @@ msgstr ""
 "l'ensemble des membres du jury."
 
 msgid ""
+"<strong>admissible subject to minor changes</strong> which can be completed "
+"within three months of full-time work. In this case, the supervisor(s) is/"
+"are responsible for checking and approving the changes before the date of "
+"the private defence (if applicable) or the public defence. Please attach a "
+"report <u>explicitly</u> specifying all the requested changes."
+msgstr ""
+"<strong>la thèse est recevable moyennant des modifications mineures</"
+"strong>, réalisables dans un délai inférieur à trois mois de travail à temps "
+"plein. Dans ce cas, la, le ou les promoteur·trices est/sont chargé·es de "
+"vérifier et approuver ces modifications avant la date de la défense privée "
+"(le cas échéant) ou de la soutenance publique. Veuillez joindre un rapport "
+"précisant explicitement toutes les modifications demandées."
+
+msgid ""
+"<strong>inadmissible</strong> (changes requiring more than three months of "
+"full-time work). The second decision on admissibility will be made on "
+"__________ (at least three months after the date of the first decision). "
+"Please attach a report stating the <u>reasons for the inadmissibility</u> "
+"and <u>explicitly</u> specifying all the changes requested. This report, "
+"which allows the PhD Field Committee to determine inadmissibility, must be "
+"signed by the Exam Board chair and secretary."
+msgstr ""
+"<strong>la thèse est jugée non recevable</strong> (modifications nécessitant "
+"plus de trois mois de travail à temps plein). La seconde décision de "
+"recevabilité aura lieu le __________ (minimum dans les trois mois qui "
+"suivent la date de la première décision). Veuillez joindre un rapport "
+"reprenant les <u>motifs du refus</u> et précisant <u>explicitement</u> "
+"toutes les modifications demandées. Ce rapport permettant à la commission "
+"doctorale du domaine de constater la non recevabilité doit être signé par le "
+"ou la président·e et le ou la secrétaire du jury."
+
+msgid ""
 "<strong>non-admissible</strong> (changes requiring more than three months of "
 "full-time work). In this case, a new private defence must be held. Please "
 "attach a report explaining the reasons for the decision."
@@ -272,9 +304,19 @@ msgstr "Accepter les activités sélectionnées"
 msgid "Accept selected courses"
 msgstr "Accepter les cours sélectionnées"
 
+msgid "Acceptation content"
+msgstr "Contenu de l'acceptation"
+
+msgid "Acceptation date"
+msgstr "Date de l'acceptation"
+
 msgctxt "publication-status"
 msgid "Accepted"
 msgstr "Acceptée"
+
+#, python-format
+msgid "Accepted by %(first_name)s %(last_name)s on"
+msgstr "Accepté par %(first_name)s %(last_name)s le"
 
 msgid "Achieved additional training"
 msgstr "Formation complémentaire réalisée"
@@ -385,6 +427,9 @@ msgstr "Ajouter une valorisation des acquis de l'expérience"
 msgid "Additional information"
 msgstr "Informations complémentaires"
 
+msgid "Additional limitation for certain specific chapters"
+msgstr "Limitation additionnelle pour certains chapitres uniquement"
+
 msgctxt "parcours_doctoral"
 msgid "Additional training"
 msgstr "Formation complémentaire"
@@ -392,6 +437,31 @@ msgstr "Formation complémentaire"
 msgctxt "parcours_doctoral filter"
 msgid "Additional training"
 msgstr "Formation complémentaire"
+
+msgid "Admissibility"
+msgstr "Recevabilité"
+
+msgctxt "dashboard-category"
+msgid "Admissibility (formula 2)"
+msgstr "Recevabilité (formule 2)"
+
+msgid "Admissibility decision"
+msgstr "Décision de recevabilité"
+
+msgid "Admissibility minutes"
+msgstr "Procès verbal de recevabilité"
+
+msgid "Admissibility minutes canvas"
+msgstr "Canevas du procès verbal de recevabilité"
+
+msgid "Admissibility not activated."
+msgstr "Recevabilité non activée."
+
+msgid "Admissibility not completed."
+msgstr "Recevabilité non complétée."
+
+msgid "Admissibility not found."
+msgstr "Recevabilité non trouvée."
 
 msgid "Admission"
 msgstr "Admission"
@@ -419,6 +489,16 @@ msgstr ""
 "Après examen de l’avis de votre comité d’accompagnement réuni le "
 "%(confirmation_date)s, la %(cdd_title)s constate la réussite de votre "
 "épreuve de confirmation au doctorat."
+
+#, python-format
+msgid ""
+"After consultation chaired by Professor %(jury_president_last_name)s "
+"%(jury_president_first_name)s (UCLouvain) and based on the opinions "
+"submitted by Exam Board members:"
+msgstr ""
+"Après consultation menée sous la présidence du ou de la professeur·e "
+"%(jury_president_last_name)s %(jury_president_first_name)s (UCLouvain) et "
+"sur base des avis transmis par les membres du jury composé de :"
 
 msgctxt "filters"
 msgid "All"
@@ -572,6 +652,9 @@ msgstr ""
 "Au-moins une classe existe pour cet unité d'enseignement. Merci de la "
 "sélectionner à la place de l'unité d'enseignement."
 
+msgid "At least one keyword must be specified."
+msgstr "Au-moins un mot-clé doit être spécifié."
+
 msgid "Attachment: PhD training"
 msgstr "Annexe : Formation doctorale"
 
@@ -593,11 +676,17 @@ msgstr "L'auteur de cette commande n'est pas le recteur."
 msgid "Author of this command is not from the doctorate CDD."
 msgstr "L'auteur de cette commande n'est pas de la CDD du doctorat."
 
+msgid "Authorise the defences"
+msgstr "Autoriser les défenses"
+
 msgid "Authorise the private defence"
 msgstr "Autoriser la défense privée"
 
 msgid "Authorise the public defence"
 msgstr "Autoriser la soutenance publique"
+
+msgid "Authorization and distribution"
+msgstr "Autorisation et diffusion"
 
 msgid "Authors"
 msgstr "Auteurs et autrices"
@@ -623,6 +712,29 @@ msgstr ""
 "Attention, certaines commissions doctorales exigent une preuve de l’activité "
 "dans leurs dispositions particulières. Référez-vous aux dispositions "
 "particulières de votre commission"
+
+#, python-format
+msgid ""
+"Before your defence, you must submit your thesis electronically to the DIAL "
+"electronic thesis repository (<a href=\"%(url)s\" target=\"_blank\">%(url)s</"
+"a>). Before you do so, please enter the metadata using the form below. "
+"Please also indicate your chosen distribution conditions (open or restricted "
+"access, blocking for a certain period, etc.), after discussing these with "
+"your supervisors. You will then receive an email confirming that your "
+"supervisor has approved the distribution, followed by an email from the "
+"library team regarding the deposit formalities to be completed in their DIAL "
+"application."
+msgstr ""
+"Avant votre soutenance, il convient de réaliser le dépôt électronique de "
+"votre thèse dans le répertoire électronique des thèses DIAL (<a "
+"href=\"%(url)s\">%(url)s</a>). Veuillez au préalable encoder les métadonnées "
+"à l’aide du formulaire ci-dessous. Veuillez également y indiquer les options "
+"de diffusion choisies (accès libre ou limité, blocage durant une certaine "
+"période, etc.), après discussion de celles-ci avec vos promoteurs·trices. "
+"Vous recevrez ensuite un mail comme quoi votre promoteur·trice de référence "
+"valide cette diffusion et recevrez ensuite un mail de l'équipe des "
+"bibliothèques pour les formalités de dépôt à accomplir dans leur application "
+"DIAL."
 
 msgid "Body"
 msgstr "Corps"
@@ -733,6 +845,9 @@ msgstr "Peut voir les informations relatives à l'épreuve de confirmation"
 msgid "Cancel"
 msgstr "Annuler"
 
+msgid "Canvas of the admissibility minutes to download."
+msgstr "Canevas de procès-verbal de la recevabilité à télécharger."
+
 msgid "Canvas of the private defence minutes to download."
 msgstr "Canevas de procès-verbal de la défense privée à télécharger."
 
@@ -840,6 +955,9 @@ msgstr "Proposition de formation complémentaire"
 
 msgid "Concluded in"
 msgstr "Fait à"
+
+msgid "Conditions"
+msgstr "Conditions"
 
 msgid "Configuration saved."
 msgstr "Configuration enregistrée."
@@ -990,6 +1108,10 @@ msgstr ""
 msgid "Created"
 msgstr "Créé"
 
+msgctxt "admissibility"
+msgid "Created at"
+msgstr "Créée le"
+
 msgctxt "admission"
 msgid "Created at"
 msgstr "Créé le"
@@ -1022,6 +1144,12 @@ msgstr "Template d'email personnalisé enregistré avec succès."
 msgid "DECISION_DE_RECEVABILITE"
 msgstr "Décision de recevabilité"
 
+msgid "DEFENSE_ET_SOUTENANCE_AUTORISEES"
+msgstr "Défense/Soutenance autorisées"
+
+msgid "DEFENSE_ET_SOUTENANCE_SOUMISES"
+msgstr "Défense/Soutenance soumises"
+
 msgid "DEFENSE_PRIVEE"
 msgstr "Défense privée"
 
@@ -1039,6 +1167,9 @@ msgstr "Défense privée réussie"
 
 msgid "DEFENSE_PRIVEE_SOUMISE"
 msgstr "Défense privée soumise"
+
+msgid "DEFENSE_SOUTENANCE_FORMULE_2"
+msgstr "Défense/Soutenance (formule 2)"
 
 msgid "DESINSCRITE"
 msgstr "Désinscrite"
@@ -1062,11 +1193,17 @@ msgstr "Date"
 msgid "Date - Filter #%s"
 msgstr "Date - Filtre #%s"
 
+msgid "Date of admissibility decision"
+msgstr "Date de décision de recevabilité"
+
 msgid "Date of manuscript submission to the thesis exam board"
 msgstr "Date d'envoi du manuscrit au jury"
 
 msgid "Date of the confirmation paper (DD/MM/YYYY)"
 msgstr "Date de l'épreuve de confirmation (JJ/MM/AAAA)"
+
+msgid "Date of the decision of the admissibility (DD/MM/YYYY)"
+msgstr "Date de la décision de recevabilité (JJ/MM/AAAA)"
 
 msgid "Date of the private defence (DD/MM/YYYY)"
 msgstr "Date de la défense privée (JJ/MM/AAAA)"
@@ -1204,6 +1341,27 @@ msgstr "Retrait du diplôme"
 msgid "Diploma collection date"
 msgstr "Date de retrait du diplôme"
 
+msgid "Distribution conditions"
+msgstr "Modalités de diffusion"
+
+msgid "Distribution refused by ADRE"
+msgstr "Diffusion refusée ADRE"
+
+msgid "Distribution refused by SCEB"
+msgstr "Diffusion refusée SCEB"
+
+msgid "Distribution refused by the supervisor"
+msgstr "Diffusion refusée promoteur"
+
+msgid "Distribution validated by ADRE"
+msgstr "Diffusion approuvée ADRE"
+
+msgid "Distribution validated by SCEB"
+msgstr "Diffusion approuvée SCEB"
+
+msgid "Distribution validated by the supervisor"
+msgstr "Diffusion validée promoteur"
+
 msgid "Do not reorder values, and keep the same count"
 msgstr "Ne pas réordonner les valeurs, et garder le même nombre"
 
@@ -1253,6 +1411,9 @@ msgstr "Doctorat"
 
 msgid "Doctorate thesis field"
 msgstr "Domaine de la thèse de doctorat"
+
+msgid "Doctorate whose this admissibility is the active one"
+msgstr "Doctorat dont cette recevabilité est la courante"
 
 msgid "Doctorate whose this private defence is the active one"
 msgstr "Doctorat dont cette défense privée est la courante"
@@ -1342,11 +1503,20 @@ msgstr "Email"
 msgid "Email:"
 msgstr "E-mail :"
 
+msgid "Embargo access"
+msgstr "Accès embargo"
+
+msgid "Embargo date"
+msgstr "Date de l'embargo"
+
 msgid "Enable complementary training tab"
 msgstr "Activer l'onglet Formation complémentaire"
 
 msgid "End date"
 msgstr "Date de fin"
+
+msgid "End of the embargo period"
+msgstr "Terme de la période d'embargo"
 
 msgid "English"
 msgstr "Anglais"
@@ -1379,8 +1549,14 @@ msgstr "Nom de l'événement"
 msgid "Event website"
 msgstr "Site web de l'événement"
 
+msgid "Exam Board Chair"
+msgstr "Le/La Président·e du jury"
+
 msgid "Exam Board Members"
 msgstr "Les membres du jury"
+
+msgid "Exam Board Secretary "
+msgstr "Le/La Secrétaire du jury"
 
 msgid "Example"
 msgstr "Exemple"
@@ -1412,6 +1588,9 @@ msgstr "Externe"
 
 msgid "FNRS, FRIA, FRESH, CSC"
 msgstr "FNRS, FRIA, FRESH, CSC"
+
+msgid "Failure of the admissibility"
+msgstr "Échec de la recevabilité"
 
 msgid "Failure of the confirmation paper"
 msgstr "Échec de l'épreuve de confirmation"
@@ -1491,8 +1670,14 @@ msgstr ""
 "Par exemple, un contrat, une lettre d'un•e promoteur•trice ou tout autre "
 "document indiquant que la bourse vous est octroyée aux dates indiquées."
 
+msgid "Forbidden access"
+msgstr "Accès interdit"
+
 msgid "Free"
 msgstr "Libre"
+
+msgid "Free access (Internet)"
+msgstr "Accès libre (Internet)"
 
 msgid "French"
 msgstr "Français"
@@ -1580,6 +1765,55 @@ msgstr "Volume d’heures"
 msgid "Hourly volume type"
 msgstr "Type de volume horaire"
 
+msgid ""
+"I accept that the text of this thesis may be published in UCLouvain's "
+"digital thesis collection."
+msgstr ""
+"J'accepte que le texte de la thèse soit publié dans le recueil électronique "
+"des thèses de l'UCLouvain."
+
+msgid ""
+"I also certify that I have obtained, in accordance with copyright "
+"legislation and the requirements of image rights, all the necessary "
+"authorisations for the reproduction in the thesis of images, texts and/or "
+"any other works protected by copyright, and that I have obtained the "
+"necessary authorisations for their transmission to third parties."
+msgstr ""
+"Je certifie également avoir obtenu, conformément à la législation sur le "
+"droit d'auteur et aux exigences du droit à l'image, toutes les autorisations "
+"nécessaires à la reproduction dans la thèse d'images, de textes, et/ou de "
+"toutes autres oeuvres protégés par le droit d'auteur, et avoir obtenu les "
+"autorisations nécessaires à leur communication à des tiers."
+
+msgid "I am aware that the thesis summary will be available to the public."
+msgstr ""
+"Je suis conscient.e que le résumé de la thèse sera dans tous les cas "
+"disponible en accès public."
+
+msgid ""
+"I hereby certify that the digital version of the thesis submitted to "
+"UCLouvain for the purposes of the distribution authorised herein conforms to "
+"the official version approved by the thesis exam board."
+msgstr ""
+"Je certifie que la version électronique de la thèse remise à l'UCLouvain en "
+"vue de la diffusion autorisée par la présente est conforme à la version "
+"officielle approuvée par le jury de thèse."
+
+msgid ""
+"I retain all other rights regarding reproduction of and communications "
+"pertaining to the thesis, as well as the right to use the thesis in future "
+"works. I undertake, however, not to grant to third parties any rights which "
+"would in any way interfere with this authorisation and will reserve in any "
+"subsequent contract with third parties the rights and obligations arising "
+"from this authorisation."
+msgstr ""
+"Je conserve tous les autres droits pour la reproduction et la communication "
+"de la thèse, ainsi que le droit de l'utiliser dans de futurs travaux. Je "
+"m'engage toutefois à n'accorder à des tiers aucun droit qui viendrait d'une "
+"manière quelconque interférer avec la présente autorisation et réserverai "
+"dans tout contrat subséquent avec des tiers les droits et obligations "
+"découlant de la présente autorisation."
+
 msgid "INVITED"
 msgstr "Invité"
 
@@ -1664,6 +1898,19 @@ msgstr "En présentiel"
 msgid "In the context of a course, specify the name of the professor"
 msgstr "Dans le cadre d’un cours, indiquez ici le nom du ou de la professeur.e"
 
+msgid ""
+"In the event that a third party benefits from a right to review the "
+"publication and/or is the holder of a property right to all or part of the "
+"results described in the thesis, I certify that I have obtained their "
+"written authorisation for dissemination. This has been verified in "
+"collaboration with the Research Administration Department."
+msgstr ""
+"Au cas où un tiers bénéficie d’un droit de regard sur la publication et/ou "
+"est titulaire d’un droit de propriété sur tout ou partie des résultats "
+"décrits dans la thèse, je certifie avoir obtenu son autorisation écrite pour "
+"la diffusion. Cette vérification s'est faite en collaboration avec "
+"l'administration de la recherche."
+
 msgid "Incomplete field"
 msgstr "Non renseigné·e"
 
@@ -1728,6 +1975,12 @@ msgstr "Publication internationale"
 
 msgid "International scholarship"
 msgstr "Bourse internationale"
+
+msgid "Invite the members of the jury to the admissibility"
+msgstr "Inviter les membres du jury à la recevabilité"
+
+msgid "Invite the members of the jury to the defences"
+msgstr "Inviter les membres du jury aux défenses"
 
 msgid "Invite the members of the jury to the private defence"
 msgstr "Inviter les membres du jury à la défense privée"
@@ -1855,6 +2108,9 @@ msgstr "Quitter la page ?"
 msgid "Letters of recommendation"
 msgstr "Lettres de recommandation"
 
+msgid "Limited access (Intranet)"
+msgstr "Accès restreint (Intranet) "
+
 msgid "Link to the PhD training (back-office)"
 msgstr "Lien vers la formation doctorale (back-office)"
 
@@ -1881,6 +2137,14 @@ msgstr "Lien vers le jury du doctorat (front-office)"
 
 msgid "Link to the doctorate supervisory panel (front-office)"
 msgstr "Lien vers le groupe de supervision du doctorat (front-office)"
+
+msgid "Link to the thesis distribution authorization form (backoffice)"
+msgstr ""
+"Le lien vers la page d'autorisation de diffusion de la thèse (backoffice)"
+
+msgid "Link to the thesis distribution authorization form (frontoffice)"
+msgstr ""
+"Le lien vers la page d'autorisation de diffusion de la thèse (frontoffice)"
 
 msgid "Lookup somebody"
 msgstr "Rechercher une personne"
@@ -1926,6 +2190,13 @@ msgstr ""
 "de confirmation"
 
 msgid ""
+"Mail sent to ADRE to inform that the promoter approved the thesis "
+"distribution authorization"
+msgstr ""
+"E-Mail envoyé à ADRE pour l'informer que le promoteur a approuvé "
+"l'autorisation de diffusion de thèse"
+
+msgid ""
 "Mail sent to ADRI to inform him of the defavourable opinion on one "
 "confirmation paper"
 msgstr ""
@@ -1945,6 +2216,13 @@ msgid ""
 msgstr ""
 "E-Mail envoyé à ADRI pour l'informer de la nécessité de repasser une épreuve "
 "de confirmation"
+
+msgid ""
+"Mail sent to SCEB to inform that ADRE approved the thesis distribution "
+"authorization"
+msgstr ""
+"Mail envoyé à SCEB pour l'informer que ADRE a approuvé l'autorisation de "
+"diffusion de thèse"
 
 msgid ""
 "Mail sent to contact supervisor to inform of the submission of complementary "
@@ -2004,6 +2282,13 @@ msgstr ""
 
 msgid ""
 "Mail sent to the doctoral student to inform him of the defavourable opinion "
+"on the admissibility"
+msgstr ""
+"E-Mail envoyé au doctorand pour l'informer de l'issue défavorable de sa "
+"recevabilité"
+
+msgid ""
+"Mail sent to the doctoral student to inform him of the defavourable opinion "
 "on the confirmation paper"
 msgstr ""
 "E-Mail envoyé au doctorand pour l'informer de l'issue défavorable de son "
@@ -2018,10 +2303,24 @@ msgstr ""
 
 msgid ""
 "Mail sent to the doctoral student to inform him of the favourable opinion on "
+"the admissibility"
+msgstr ""
+"E-Mail envoyé au doctorand pour l'informer de l'issue favorable de sa "
+"recevabilité"
+
+msgid ""
+"Mail sent to the doctoral student to inform him of the favourable opinion on "
 "the confirmation paper"
 msgstr ""
 "E-Mail envoyé au doctorand pour l'informer de l'issue favorable de son "
 "épreuve de confirmation"
+
+msgid ""
+"Mail sent to the doctoral student to inform him of the favourable opinion on "
+"the private and public defences"
+msgstr ""
+"E-Mail envoyé au doctorand pour l'informer de l'issue favorable de sa "
+"défense privée et de sa soutenance publique"
 
 msgid ""
 "Mail sent to the doctoral student to inform him of the favourable opinion on "
@@ -2036,6 +2335,13 @@ msgid ""
 msgstr ""
 "E-Mail envoyé au doctorand pour l'informer de l'issue favorable de sa "
 "soutenance publique"
+
+msgid ""
+"Mail sent to the doctoral student to inform him of the necessity to repeat "
+"the admissibility"
+msgstr ""
+"E-Mail envoyé au doctorand pour l'informer de la nécessité de repasser sa "
+"recevabilité"
 
 msgid ""
 "Mail sent to the doctoral student to inform him of the necessity to repeat "
@@ -2060,6 +2366,13 @@ msgstr ""
 
 msgid ""
 "Mail sent to the doctoral student to inform of the authorisation of the "
+"private and the public defences"
+msgstr ""
+"E-Mail envoyé au doctorand pour l'informer de l'autorisation de sa défense "
+"privée et de sa soutenance publique"
+
+msgid ""
+"Mail sent to the doctoral student to inform of the authorisation of the "
 "private defence"
 msgstr ""
 "E-Mail envoyé au doctorand pour l'informer de l'autorisation de sa défense "
@@ -2071,6 +2384,16 @@ msgid ""
 msgstr ""
 "E-Mail envoyé au doctorand pour l'informer de l'autorisation de sa "
 "soutenance publique"
+
+msgid "Mail sent to the jury members to invite them to the admissibility"
+msgstr "E-Mail envoyé aux membres du jury pour les inviter à la recevabilité"
+
+msgid ""
+"Mail sent to the jury members to invite them to the private and the public "
+"defences"
+msgstr ""
+"E-Mail envoyé aux membres du jury pour les inviter à la défense privée et à "
+"la soutenance publique"
 
 msgid "Mail sent to the jury members to invite them to the private defence"
 msgstr "E-Mail envoyé aux membres du jury pour les inviter à la défense privée"
@@ -2092,6 +2415,27 @@ msgstr ""
 "E-mail envoyé à l'étudiant pour confirmer l'envoi des demandes de signature"
 
 msgid ""
+"Mail sent to the student to inform him that ADRE refused the thesis "
+"distribution authorization"
+msgstr ""
+"E-mail envoyé à l'étudiant pour l'informer du refus par ADRE de "
+"l'autorisation de diffusion de thèse"
+
+msgid ""
+"Mail sent to the student to inform him that SCEB refused the thesis "
+"distribution authorization"
+msgstr ""
+"E-mail envoyé à l'étudiant pour l'informer du refus par SCEB de "
+"l'autorisation de diffusion de thèse"
+
+msgid ""
+"Mail sent to the student to inform him the promoter refused the thesis "
+"distribution authorization"
+msgstr ""
+"E-mail envoyé à l'étudiant pour l'informer du refus par le promoteur de "
+"l'autorisation de diffusion de thèse"
+
+msgid ""
 "Mail sent to the student to inform of the refusal of complementary training "
 "activity"
 msgstr ""
@@ -2109,6 +2453,13 @@ msgid ""
 msgstr ""
 "E-mail envoyé à l'étudiant pour lui informer du refus d'une activité de "
 "formation doctorale"
+
+msgid ""
+"Mail sent to the student to invite him to upload its thesis after the "
+"supervisor invitation"
+msgstr ""
+"E-Mail envoyé à l'étudiant pour l'inviter à téléverser sa thèse après "
+"l'invitation du promoteur"
 
 msgid "Mail sent to the student to update a complementary training activity"
 msgstr ""
@@ -2141,6 +2492,13 @@ msgstr ""
 msgid "Mail sent to the student when the CDD refuse the jury"
 msgstr "E-mail envoyé à l'étudiant pour lui informer du refus de la CDD"
 
+msgid ""
+"Mail sent to the supervisor to invite him to authorize the thesis "
+"distribution"
+msgstr ""
+"E-Mail envoyé au promoteur pour l'inviter à autoriser l'autorisation de "
+"diffusion de thèse"
+
 msgid "Main institute"
 msgstr "Institution principale"
 
@@ -2165,6 +2523,9 @@ msgstr "Les champs requis de la cotutelle sont manquants."
 msgid "Mandatory fields are missing in the project details of the proposition."
 msgstr ""
 "Les champs requis des details du projet de la proposition sont manquants."
+
+msgid "Manuscript validation"
+msgstr "Validation du manuscrit"
 
 msgid "Mark or honours obtained"
 msgstr "Note ou mention obtenue"
@@ -2269,6 +2630,9 @@ msgstr "Nom"
 msgid "Name of the ADRE manager"
 msgstr "Nom du gestionnaire ADRE"
 
+msgid "Name of the SCEB manager"
+msgstr "Nom du gestionnaire SCEB"
+
 msgid "Name of the doctoral commission"
 msgstr "Nom de la commission doctorale"
 
@@ -2277,6 +2641,12 @@ msgstr "Nom de l'entité de gestion"
 
 msgid "Name of the manager sending the email"
 msgstr "Nom du gestionnaire qui envoie l'email"
+
+msgid "Name of the president of the jury (eventually with the title)"
+msgstr "Nom du président du jury (éventuellement avec le titre)"
+
+msgid "Name of the secretary of the jury (eventually with the title)"
+msgstr "Nom du secrétaire du jury (éventuellement avec le titre)"
 
 msgid "Name or brief description"
 msgstr "Nom ou description brève"
@@ -2302,14 +2672,23 @@ msgstr "Doctorat suivant"
 msgid "No"
 msgstr "Non"
 
+msgid "No ADRE manager has been found."
+msgstr "Aucun gestionnaire ADRE n'a été trouvé."
+
 msgid "No CDD found for this doctorate."
 msgstr "Pas de CDD trouvé pour ce doctorat."
+
+msgid "No SCEB manager has been found."
+msgstr "Aucun gestionnaire SCEB n'a été trouvé."
 
 msgid "No auditor are set for this training."
 msgstr "Aucun vérificateur.trice configuré.e pour cette formation."
 
 msgid "No confirmation paper yet"
 msgstr "Pas encore d'épreuve de confirmation"
+
+msgid "No contact supervisor has been found."
+msgstr "Aucun promoteur de contact n'a été trouvé."
 
 msgid "No defence"
 msgstr "Non soutenue"
@@ -2359,6 +2738,9 @@ msgstr "Non libre"
 msgid "Not in order of registration"
 msgstr "Pas en ordre d'inscription"
 
+msgid "Not submitted distribution"
+msgstr "Diffusion non soumise"
+
 msgid ""
 "Note: in cases of force majeure, an absent member shall send the chair a "
 "written report prior to the meeting, setting out their reasoned opinion on "
@@ -2390,6 +2772,9 @@ msgstr "OSIS DOCTORAT"
 
 msgid "OTHER"
 msgstr "Autre"
+
+msgid "On"
+msgstr "En la date du"
 
 msgid "One choice per line, leave the \"Other\" value out"
 msgstr "Un choix, par ligne, ne pas renseigner la valeur \"Autre\""
@@ -2489,6 +2874,9 @@ msgstr "Président"
 msgid "PRIVATE_DEFENSE"
 msgstr "Défense privée"
 
+msgid "PROCLAMATION"
+msgstr "Proclamation"
+
 msgid "PROCLAME"
 msgstr "Proclamé"
 
@@ -2578,12 +2966,34 @@ msgid "Planned duration"
 msgstr "Durée prévue"
 
 msgid ""
+"Please be sure that the admissibility minutes have been submitted in the "
+"application."
+msgstr ""
+"Veuillez vous assurer que le procès verbal de recevabilité a bien été déposé "
+"dans l'application."
+
+msgid ""
 "Please be sure that the date and time of the defence have been filled in and "
 "that the defence minutes have been submitted in the application."
 msgstr ""
 "Veuillez vous assurer que la date et heure de la défense ont bien été "
-"complétés et que le procès verbal de la défense a bien été déposé dans "
+"complétées et que le procès verbal de la défense a bien été déposé dans "
 "l'application."
+
+msgid ""
+"Please be sure that the date and time of the defences have been filled in "
+"and that the defences minutes have been submitted in the application."
+msgstr ""
+"Veuillez vous assurer que la date et heure des défenses ont bien été "
+"complétées et que les procès verbaux des défenses ont bien été déposés dans "
+"l'application."
+
+msgid ""
+"Please be sure that the date of the admissibility have been filled in and "
+"that the admissibility minutes have been submitted in the application."
+msgstr ""
+"Veuillez vous assurer que la date de recevabilité a bien été complétée et "
+"que le procès verbal de recevabilité a bien été déposé dans l'application."
 
 #, python-format
 msgid ""
@@ -2692,6 +3102,9 @@ msgstr "Prévisualiser"
 msgid "Preview <em>%(name)s</em> custom mail template"
 msgstr "Prévisualiser le template d'email personnalisé <em>%(name)s</em>"
 
+msgid "Previous admissibilities"
+msgstr "Recevabilités passées"
+
 msgid "Previous confirmation exams"
 msgstr "Epreuves de confirmation passées"
 
@@ -2708,9 +3121,12 @@ msgctxt "dashboard-category"
 msgid "Private defence (formula 1)"
 msgstr "Défense privée (formule 1)"
 
+msgid "Private defence / Public defence"
+msgstr "Défense privée / Soutenance publique"
+
 msgctxt "dashboard-category"
 msgid "Private defence / Public defence (formula 2)"
-msgstr "Défense privée / Soutenance (formule 2)"
+msgstr "Défense privée / Soutenance publique (formule 2)"
 
 msgid "Private defence assessment"
 msgstr "Procès verbal de la défense privée"
@@ -2738,6 +3154,14 @@ msgstr "Défense privée non trouvée."
 
 msgid "Proclaimed"
 msgstr "Proclamé"
+
+msgctxt "female gender"
+msgid "Professor"
+msgstr "Professeure"
+
+msgctxt "male gender"
+msgid "Professor"
+msgstr "Professeur"
 
 msgctxt "other gender"
 msgid "Professor"
@@ -2787,6 +3211,9 @@ msgstr "Nouvelle échéance proposée"
 
 msgid "Proposed thesis title"
 msgstr "Titre proposé pour la thèse"
+
+msgid "Provisional thesis title"
+msgstr "Titre provisoire de la thèse"
 
 msgid "Proximity Commission for Dental Sciences (DENT)"
 msgstr "Commission de proximité de sciences dentaires (DENT)"
@@ -2863,6 +3290,18 @@ msgctxt "publication-status"
 msgid "Published"
 msgstr "Publiée"
 
+msgid "RECEVABILITE_A_RECOMMENCER"
+msgstr "Recevabilité à recommencer"
+
+msgid "RECEVABILITE_EN_ECHEC"
+msgstr "Recevabilité en échec"
+
+msgid "RECEVABILITE_REUSSIE"
+msgstr "Recevabilité réussie"
+
+msgid "RECEVABILITE_SOUMISE"
+msgstr "Recevabilité soumise"
+
 msgid "REFUSEE"
 msgstr "Refusée"
 
@@ -2886,10 +3325,6 @@ msgid ""
 msgstr ""
 "Avis motivé et inventaire des questions posées par un·e/des membre(s) du "
 "jury éventuellement absent·es."
-
-msgctxt "dashboard-category"
-msgid "Recevability (formula 2)"
-msgstr "Recevabilité (formule 2)"
 
 msgid "Recipient"
 msgstr "Destinataire"
@@ -2915,6 +3350,15 @@ msgstr "Référence DIAL.Pr"
 
 msgid "Refusal reason"
 msgstr "Motif de refus"
+
+msgid "Refusal reason of ADRE"
+msgstr "Raison de refus d'ADRE"
+
+msgid "Refusal reason of SCEB"
+msgstr "Raison de SCEB"
+
+msgid "Refusal reason of the supervisor"
+msgstr "Raison de refus du promoteur"
 
 msgid "Refuse activity"
 msgstr "Refuser l'activité"
@@ -2942,8 +3386,17 @@ msgctxt "jury member"
 msgid "Remove?"
 msgstr "Retirer ?"
 
+msgid "Repeat of the admissibility"
+msgstr "Recevabilité à recommencer"
+
 msgid "Repeat of the defence"
 msgstr "Défense à recommencer"
+
+msgid ""
+"Report specifying the changes and/or justifying the decision (if applicable)."
+msgstr ""
+"Rapport précisant les modifications et/ou motivant la décision (le cas "
+"échéant)."
 
 msgid "Reporting categories"
 msgstr "Catégories de reporting"
@@ -3012,6 +3465,9 @@ msgstr "Épreuve de confirmation à représenter"
 msgid "Retaking of the test"
 msgstr "Confirmation à représenter"
 
+msgid "Role"
+msgstr "Rôle"
+
 msgctxt "activity"
 msgid "Role"
 msgstr "Rôle"
@@ -3076,6 +3532,9 @@ msgstr "Rôle: Directeur.trices administratif de secteur"
 
 msgid "Role: Student"
 msgstr "Rôle: Étudiant"
+
+msgid "SCEB"
+msgstr "SCEB"
 
 msgid "SEARCH_SCHOLARSHIP"
 msgstr "Bourse de recherche"
@@ -3249,6 +3708,9 @@ msgstr "Monsieur"
 msgid "Some errors have been encountered."
 msgstr "Des erreurs ont été rencontrées."
 
+msgid "Sources of funding throughout PhD"
+msgstr "Sources de financement durant toute la durée du doctorat"
+
 msgid "Specified"
 msgstr "Renseigné·e"
 
@@ -3382,6 +3844,13 @@ msgctxt "dashboard-indicator confirmation"
 msgid "Submitted confirmation"
 msgstr "Confirmation soumise"
 
+msgctxt "dashboard-indicator formula-2-defence"
+msgid "Submitted defences"
+msgstr "Défense/Soutenance soumises"
+
+msgid "Submitted distribution"
+msgstr "Diffusion soumise"
+
 msgid "Submitted mark"
 msgstr "Note soumise"
 
@@ -3389,13 +3858,12 @@ msgctxt "dashboard-indicator formula-1-private-defence"
 msgid "Submitted private defence"
 msgstr "Défense soumise"
 
-msgctxt "dashboard-indicator formula-2-defence"
-msgid "Submitted private defense / Submitted public defence"
-msgstr "Défense soumise / Soutenance soumise"
-
 msgctxt "dashboard-indicator formula-1-public-defence"
 msgid "Submitted public defence"
 msgstr "Soutenance soumise"
+
+msgid "Successful admissibility"
+msgstr "Recevabilité réussie"
 
 msgid "Successful defence"
 msgstr "Défense réussie"
@@ -3409,6 +3877,12 @@ msgstr "Résumé"
 
 msgid "Summary for announcement"
 msgstr "Résumé pour l'annonce"
+
+msgid "Summary in English"
+msgstr "Résumé en anglais"
+
+msgid "Summary in other language"
+msgstr "Résumé dans une autre langue"
 
 msgid "Summary of the communication"
 msgstr "Résumé de la communication"
@@ -3454,6 +3928,9 @@ msgstr "Intitulé du template"
 msgid "Temporary / definitive admission date"
 msgstr "Date de l’admission provisoire / définitive"
 
+msgid "Text for the poster"
+msgstr "Texte pour l'affiche"
+
 msgid ""
 "The \"doctoral training\" must be completed before submitting the defence "
 "preparation and the jury proposition."
@@ -3488,8 +3965,14 @@ msgstr "L'acronyme de la bourse d'études"
 msgid "The activity title"
 msgstr "Le titre de l'activité"
 
+msgid "The admissibility is not in progress"
+msgstr "La recevabilité n'est pas en cours"
+
 msgid "The assessment enrollment has not been found"
 msgstr "L'inscription à l'évaluation n'a pas été trouvée"
+
+msgid "The authorization distribution is not in progress."
+msgstr "L'autorisation de diffusion n'est pas en cours."
 
 msgid ""
 "The authorized publications and their valuation in credits are specified on "
@@ -3554,6 +4037,22 @@ msgid "The current training is attached to this document."
 msgstr ""
 "La formation réalisée à ce jour se trouve en annexe à ce procès-verbal."
 
+msgid ""
+"The date and time of the private defence (if applicable) and public defence "
+"are set for: __________ at _____ / __________ at _____."
+msgstr ""
+"La date et l'heure de la défense privée (le cas échéant) et de la soutenance "
+"publique sont fixées aux : __________ à _____ / __________ à _____ ."
+
+msgid ""
+"The date and time of the private defence (if applicable) and the public "
+"defence are set for: __________ at _____ / __________ at _____ (minimum "
+"delay of one month after admissibility)."
+msgstr ""
+"La date et l'heure de la défense privée (le cas échéant) et de la soutenance "
+"publique sont fixées aux : __________ à _____ / __________ à _____ (délai "
+"minimal d’un mois après la recevabilité)."
+
 msgid "The date cannot be in the future."
 msgstr "La date ne peut pas être dans le futur."
 
@@ -3575,8 +4074,53 @@ msgstr ""
 "dispositions sur la page web de votre Commission Doctorale de Domaine (CDD) "
 "pour plus d’informations."
 
+msgid "The defences have been authorised."
+msgstr "Les défenses ont été autorisées."
+
+msgid "The defense method must be the formula 1."
+msgstr "La formule de défense doit être la formule 1."
+
+msgid "The defense method must be the formula 2."
+msgstr "La formule de défense doit être la formule 2."
+
 msgid "The definitive thesis title is:"
 msgstr "Le titre définitif de la thèse est le suivant :"
+
+msgid ""
+"The distribution authorization cannot currently be changed by the ADRE "
+"manager."
+msgstr ""
+"L'autorisation de diffusion de thèse n'est actuellement pas modifiable par "
+"le gestionnaire ADRE."
+
+msgid ""
+"The distribution authorization cannot currently be changed by the SCEB "
+"manager."
+msgstr ""
+"L'autorisation de diffusion de thèse n'est actuellement pas modifiable par "
+"le gestionnaire SCEB."
+
+msgid ""
+"The distribution authorization cannot currently be changed by the contact "
+"supervisor."
+msgstr ""
+"L'autorisation de diffusion de thèse n'est actuellement pas modifiable par "
+"le·la promoteur·trice de contact."
+
+msgid ""
+"The distribution authorization cannot currently be changed by the student."
+msgstr ""
+"L'autorisation de diffusion de thèse n'est actuellement pas modifiable par "
+"l'étudiant."
+
+msgid "The distribution authorization has not been found."
+msgstr "L'autorisation de diffusion de thèse n'a pas été trouvée."
+
+msgid "The distribution conditions type must be specified."
+msgstr "Le type des modalités de diffusion doit être spécifié."
+
+msgid "The distributions conditions must be accepted."
+msgstr "Les conditions de diffusion doivent être acceptées."
 
 msgctxt "female gender"
 msgid "The doctoral student"
@@ -3606,6 +4150,9 @@ msgid ""
 "The doctorate must be in the status '%(status)s' to realize this action."
 msgstr ""
 "Le doctorat doit être dans le statut '%(status)s' pour réaliser cette action."
+
+msgid "The embargo date must be specified."
+msgstr "La date d'embargo doit être spécifiée."
 
 msgid "The enrollment has not been found"
 msgstr "L'évaluation n'a pas été trouvée"
@@ -3642,6 +4189,9 @@ msgstr ""
 "doctorale de domaine (CDD) à l'autre. Informez-vous sur le site web de votre "
 "CDD ou auprès de votre gestionnaire de doctorat."
 
+msgid "The grounds for denied must be specified."
+msgstr "Les motifs de refus doivent être spécifiés."
+
 msgid "The jury is not in progress"
 msgstr "Le jury n'est pas en cours"
 
@@ -3669,6 +4219,18 @@ msgstr "Le nom du signataire"
 msgid "The last name of the student"
 msgstr "Le nom de l'étudiant"
 
+msgid ""
+"The licence, which is free of charge and non-exclusive, is valid for the "
+"entire duration of the copyright, including any extensions, and for the "
+"entire world."
+msgstr ""
+"Cette licence, gratuite et non exclusive, est valable pour toute la durée de "
+"la propriété littéraire et artistique, y compris ses éventuelles "
+"prolongations, et pour le monde entier."
+
+msgid "The link to the admissibility minutes"
+msgstr "Le lien vers le procès verbal de la recevabilité"
+
 msgid "The link to the private defence minutes"
 msgstr "Le lien vers le procès verbal de la défense privée"
 
@@ -3687,6 +4249,12 @@ msgstr "Le membre n'est pas externe."
 msgid "The member was not found in the jury."
 msgstr "Le membre n'a pas été trouvé dans le jury."
 
+msgid "The members of the jury have been invited to the admissibility."
+msgstr "Les membres du jury ont été invités à la recevabilité."
+
+msgid "The members of the jury have been invited to the defences."
+msgstr "Les membres du jury ont été invités aux défenses."
+
 msgid "The members of the jury have been invited to the private defence."
 msgstr "Les membres du jury ont été invités à la défense privée."
 
@@ -3698,6 +4266,9 @@ msgid ""
 msgstr ""
 "Le procès verbal sera téléversé par le·la secrétaire du jury ou le·la "
 "président·e du jury."
+
+msgid "The name of the supervisor"
+msgstr "Le nom du promoteur"
 
 #, python-format
 msgid ""
@@ -3729,6 +4300,9 @@ msgstr "La personne n'a pas été trouvée."
 
 msgid "The person is not a president, a secretary or a member."
 msgstr "La personne n'est pas président, secrétaire ou membre."
+
+msgid "The personal pronoun to use for the student"
+msgstr "Le pronom personnel à utiliser pour l'étudiant"
 
 msgid ""
 "The private defence date is chosen collectively by the jury and in agreement "
@@ -3775,11 +4349,20 @@ msgstr "La raison de la demande de mise à jour"
 msgid "The reason for refusal"
 msgstr "La raison du refus"
 
+msgid "The reference to use for the student"
+msgstr "La référence à utiliser pour l'étudiant"
+
 msgid "The signature request procedure is already in progress."
 msgstr "La procédure de demande de signature a déjà été lancée."
 
 msgid "The signature request procedure isn't in progress."
 msgstr "La procédure de demande de signature n'a pas été lancée."
+
+msgid "The signing process has not yet started."
+msgstr "Le processus de signature n'a pas encore commencé."
+
+msgid "The sources of funding must be specified."
+msgstr "Les sources de financement doivent être spécifiées."
 
 msgid "The start date can't be later than the end date"
 msgstr "La date de début ne peut être postérieure à la date de fin"
@@ -3787,6 +4370,9 @@ msgstr "La date de début ne peut être postérieure à la date de fin"
 #, python-format
 msgid "The status has been changed to %(status)s."
 msgstr "Le statut a bien été modifié pour : %(status)s."
+
+msgid "The step related to the admissibility is not in progress."
+msgstr "L'étape relative à la recevabilité n'est pas en cours."
 
 msgid "The step related to the public defence is not in progress."
 msgstr "L'étape relative à la soutenance publique n'est pas en cours."
@@ -3799,6 +4385,18 @@ msgstr "L'étudiant·e a été désinscrit·e de cette évaluation."
 
 msgid "The student has been withdrawn lately from this assessment."
 msgstr "L'étudiant·e a été désinscrit·e tardivement de cette évaluation."
+
+msgid "The summary in english must be specified."
+msgstr "Le résumé en anglais doit être spécifié."
+
+msgid "The thesis language must be specified."
+msgstr "La langue de la thèse doit être spécifiée."
+
+msgid "The title of the supervisor"
+msgstr "Le titre du promoteur"
+
+msgid "The title of the supervisor (in lowercase)"
+msgstr "Le titre du promoteur (en minuscules)"
 
 msgid "There can be no more CA members in the supervision group."
 msgstr ""
@@ -3826,6 +4424,9 @@ msgstr "Défense et soutenance"
 msgctxt "dashboard-category"
 msgid "Thesis distribution authorisation"
 msgstr "Autorisation de diffusion de thèse"
+
+msgid "Thesis exam board opinion"
+msgstr "Avis du jury"
 
 msgid "Thesis field"
 msgstr "Domaine de la thèse"
@@ -3919,6 +4520,13 @@ msgid "This comment will be visible to all users with access to the jury."
 msgstr ""
 "Ce commentaire sera visible à tous les utilisateurs ayant accès au jury."
 
+msgid ""
+"This comment will be visible to all users with access to the manuscript "
+"validation."
+msgstr ""
+"Ce commentaire sera visible à tous les utilisateurs ayant accès à la "
+"validation du manuscrit."
+
 msgid "This field is required."
 msgstr "Ce champ est obligatoire."
 
@@ -4002,6 +4610,14 @@ msgstr "À"
 msgid "To be completed and signed by the exam board"
 msgstr "À compléter et signer par le jury"
 
+msgid "To be completed by Exam Board chair and secretary"
+msgstr "A remplir par le ou la président·e et le ou la secrétaire du jury"
+
+msgid "To be sent to CDD administrator"
+msgstr ""
+"À transmettre à la ou le gestionnaire de commission doctorale de domaine "
+"(CDD)"
+
 msgid ""
 "To be sent to the CDD secretariat <br> (To help you to fill this form, "
 "please read the UCLouvain Doctoral Regulations and the special provisions of "
@@ -4024,6 +4640,9 @@ msgid ""
 msgstr ""
 "À téléverser dans votre dossier sur la plateforme doctorale dans les plus "
 "brefs délais après l’épreuve de confirmation"
+
+msgid "To this end, I license to UCLouvain the right to:"
+msgstr "A cette fin, je donne en licence à l'UCLouvain"
 
 msgid ""
 "To visualize and edit a document, please select it in the list opposite."
@@ -4261,6 +4880,9 @@ msgstr ""
 "Vous devez ajouter au moins deux membres du comité d'accompagnement afin de "
 "demander les signatures."
 
+msgid "You must be a SCEB manager to do this action."
+msgstr "Vous devez être un gestionnaire SCEB pour réaliser cette action."
+
 msgid "You must be a member of the committee to access this doctoral training"
 msgstr ""
 "Vous devez être membre du comité pour accéder à cette formation doctorale"
@@ -4275,6 +4897,15 @@ msgstr ""
 msgid "You must be a member of the jury to access this doctoral training"
 msgstr ""
 "Vous devez être membre du comité pour accéder à cette formation doctorale"
+
+msgid "You must be an ADRE manager to do this action."
+msgstr "Vous devez être un gestionnaire ADRE pour réaliser cette action."
+
+msgid "You must be invited to do this action."
+msgstr "Vous devez être invité pour réaliser cette action."
+
+msgid "You must be supervisor to do this action."
+msgstr "Vous devez être promoteur·trice pour réaliser cette action"
 
 msgid "You must be the contact supervisor to access this doctoral training"
 msgstr ""
@@ -4348,6 +4979,9 @@ msgstr "Votre participation à l'événement"
 msgid "admissible and accepted as is."
 msgstr "la thèse est jugée recevable et le manuscrit est accepté tel quel."
 
+msgid "admissible and the manuscript is accepted as is."
+msgstr "la thèse est jugée recevable et le manuscrit est accepté tel quel."
+
 msgid "and supervisor"
 msgstr "et promoteur·trice"
 
@@ -4388,11 +5022,21 @@ msgstr ""
 "présentant les résultats de ses travaux de recherche qui ont conduit à la "
 "thèse intitulée : <strong>%(thesis_title)s</strong>;"
 
+msgid "he"
+msgstr "il"
+
 msgid "hh:mm"
 msgstr "hh:mm"
 
 msgid "hours"
 msgstr "heures"
+
+msgid ""
+"impart the thesis to the public according to the procedures established "
+"below."
+msgstr ""
+"le droit de communiquer la thèse au public suivant les modalités définies ci-"
+"après."
 
 msgid "items per page"
 msgstr "éléments par page"
@@ -4410,6 +5054,12 @@ msgid ""
 msgstr ""
 "Avis motivé et inventaire des questions posées par un/des membre(s) du jury "
 "éventuellement absent(s) pour cas de force majeure."
+
+msgid "set and reproduce the thesis on a digital medium;"
+msgstr "le droit de fixer et de reproduire la thèse sur support électronique"
+
+msgid "she"
+msgstr "elle"
 
 msgid ""
 "the 120 credits (thesis) required for the award of the academic degree of "
@@ -4433,6 +5083,18 @@ msgstr "la <strong>non-poursuite</strong> du doctorat."
 
 msgid "the <strong>successful completion</strong> of the confirmation paper."
 msgstr "la <strong>réussite</strong> de l'épreuve de confirmation."
+
+msgctxt "F"
+msgid "the PhD student"
+msgstr "la doctorante"
+
+msgctxt "H"
+msgid "the PhD student"
+msgstr "le doctorant"
+
+msgctxt "X"
+msgid "the PhD student"
+msgstr "la·le doctorant·e"
 
 msgid "the credits for additional training having been obtained;"
 msgstr "les crédits de la formation complémentaire ayant été obtenus;"
@@ -4460,6 +5122,14 @@ msgstr ""
 "constatons l'aboutissement favorable du cursus doctoral et validons "
 "l'obtention du minimum de 180 crédits exigés pour l'octroi du grade "
 "académique de doctorat."
+
+#, python-format
+msgid ""
+"we, the undersigned, the chair and secretary of the PhD Thesis Exam Board in "
+"%(training_name)s for the above named student, declare the thesis is:"
+msgstr ""
+"nous, soussigné·es, président·e et secrétaire du jury de thèse de doctorat "
+"en %(training_name)s de l'intéressé·e, déclarons que :"
 
 #, python-brace-format
 msgid "{items} types out of {total}"

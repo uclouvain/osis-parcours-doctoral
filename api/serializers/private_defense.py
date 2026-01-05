@@ -44,7 +44,7 @@ class PrivateDefenseDTOSerializer(DTOSerializer):
 class SubmitPrivateDefenseSerializer(DTOSerializer):
     """Contains the submitted data to complete a private defence."""
 
-    uuid = None
+    parcours_doctoral_uuid = None
     matricule_auteur = None
     date_heure = serializers.DateTimeField(default_timezone=get_default_timezone())
 

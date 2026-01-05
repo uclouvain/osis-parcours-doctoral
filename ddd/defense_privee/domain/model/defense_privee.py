@@ -81,12 +81,11 @@ class DefensePrivee(interface.RootEntity):
         self,
         titre_these: str,
         date_heure: datetime.datetime,
-        est_active: bool,
     ):
         SoumettreDefensePriveeValidatorList(
             titre_these=titre_these,
             date_heure=date_heure,
-            est_active=est_active,
+            est_active=self.est_active,
         ).validate()
 
     def rendre_inactive(self):
@@ -94,7 +93,7 @@ class DefensePrivee(interface.RootEntity):
 
     def modifier(
         self,
-        date_heure: datetime.datetime,
+        date_heure: Optional[datetime.datetime],
         lieu: str,
         date_envoi_manuscrit: Optional[datetime.datetime],
         proces_verbal: list[str],

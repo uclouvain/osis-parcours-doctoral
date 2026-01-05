@@ -26,23 +26,10 @@
 
 # Association between a read-only tab name (path name) and a permission
 READ_ACTIONS_BY_TAB = {
-    # Personal data
-    'coordonnees': 'parcours_doctoral.view_coordinates',
-    'cotutelle': 'parcours_doctoral.view_cotutelle',
-    'person': 'parcours_doctoral.view_person',
-    # Training choice
-    'training-choice': 'parcours_doctoral.view_training_choice',
-    # Previous experience
-    'curriculum': 'parcours_doctoral.view_curriculum',
-    'educational': '',
-    'educational_create': '',
-    'non_educational': '',
-    'non_educational_create': '',
-    'education': 'parcours_doctoral.view_secondary_studies',
-    'languages': 'parcours_doctoral.view_languages',
     # Project
     'project': 'parcours_doctoral.view_project',
     'funding': 'parcours_doctoral.view_funding',
+    'cotutelle': 'parcours_doctoral.view_cotutelle',
     'supervision': 'parcours_doctoral.view_supervision',
     # Confirmation exam
     'confirmation': 'parcours_doctoral.view_confirmation',
@@ -62,12 +49,19 @@ READ_ACTIONS_BY_TAB = {
     # Jury
     'jury-preparation': 'parcours_doctoral.view_jury',
     'jury': 'parcours_doctoral.view_jury',
+    # Admissibility
+    'admissibility': 'parcours_doctoral.view_admissibility',
     # Private defense
     'private-defense': 'parcours_doctoral.view_private_defense',
+    # Thesis distribution authorization
+    'authorization-distribution': 'parcours_doctoral.view_authorization_distribution',
+    # Manuscript validation
+    'manuscript-validation': 'parcours_doctoral.view_manuscript_validation',
     # Public defense
     'public-defense': 'parcours_doctoral.view_public_defense',
+    # Private & public defenses
+    'private-public-defenses': 'parcours_doctoral.view_private_public_defenses',
     # Management
-    'internal-note': 'parcours_doctoral.view_internalnote',
     'debug': 'parcours_doctoral.view_debug_info',
     'comments': 'parcours_doctoral.view_comments',
     'checklist': 'parcours_doctoral.view_checklist',
@@ -77,23 +71,10 @@ READ_ACTIONS_BY_TAB = {
 
 # Association between a write-only tab name (path name) and a permission
 UPDATE_ACTIONS_BY_TAB = {
-    # Personal data
-    'coordonnees': 'parcours_doctoral.change_coordinates',
-    'cotutelle': 'parcours_doctoral.change_cotutelle',
-    'person': 'parcours_doctoral.change_person',
-    # Training choice
-    'training-choice': 'parcours_doctoral.change_training_choice',
-    # Previous experience
-    'curriculum': 'parcours_doctoral.change_curriculum',
-    'educational': '',
-    'educational_create': '',
-    'non_educational': '',
-    'non_educational_create': '',
-    'education': 'parcours_doctoral.change_secondary_studies',
-    'languages': 'parcours_doctoral.change_languages',
     # Project
     'project': 'parcours_doctoral.change_project',
     'funding': 'parcours_doctoral.change_funding',
+    'cotutelle': 'parcours_doctoral.change_cotutelle',
     'supervision': 'parcours_doctoral.change_supervision',
     # Confirmation exam
     'confirmation': 'parcours_doctoral.change_confirmation',
@@ -114,8 +95,16 @@ UPDATE_ACTIONS_BY_TAB = {
     # Jury
     'jury-preparation': 'parcours_doctoral.change_jury',
     'jury': 'parcours_doctoral.change_jury',
+    # Admissibility
+    'admissibility': 'parcours_doctoral.change_admissibility',
     # Private defense
     'private-defense': 'parcours_doctoral.change_private_defense',
+    # Thesis distribution authorization
+    'authorization-distribution': 'parcours_doctoral.change_authorization_distribution',
+    # Manuscript validation
+    'manuscript-validation': 'parcours_doctoral.validate_manuscript',
     # Public defense
     'public-defense': 'parcours_doctoral.change_public_defense',
+    # Private & public defenses
+    'private-public-defenses': 'parcours_doctoral.change_private_public_defenses',
 }

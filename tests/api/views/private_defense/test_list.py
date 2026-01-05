@@ -72,16 +72,10 @@ class PrivateDefenseListAPIViewTestCase(APITestCase):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-        response = self.client.put(self.url)
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
     def test_access_other_student(self):
         self.client.force_authenticate(self.other_doctorate_student.user)
 
         response = self.client.get(self.url)
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
-        response = self.client.put(self.url)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_get_with_no_private_defense(self):
@@ -107,7 +101,7 @@ class PrivateDefenseListAPIViewTestCase(APITestCase):
                 parcours_doctoral=self.doctorate,
             )
 
-        other_private_defense: PrivateDefense = PrivateDefenseFactory(
+        PrivateDefenseFactory(
             parcours_doctoral=self.other_doctorate,
         )
 
@@ -119,7 +113,6 @@ class PrivateDefenseListAPIViewTestCase(APITestCase):
 
         self.assertEqual(private_defenses[0].get('uuid'), str(second_private_defense.uuid))
         self.assertTrue(private_defenses[0].get('est_active'))
-        self.assertEqual(private_defenses[0].get('titre_these'), self.doctorate.thesis_proposed_title)
         self.assertEqual(private_defenses[0].get('date_heure'), second_private_defense.datetime.isoformat())
         self.assertEqual(private_defenses[0].get('lieu'), second_private_defense.place)
         self.assertEqual(
@@ -134,7 +127,6 @@ class PrivateDefenseListAPIViewTestCase(APITestCase):
 
         self.assertEqual(private_defenses[1].get('uuid'), str(first_private_defense.uuid))
         self.assertFalse(private_defenses[1].get('est_active'))
-        self.assertEqual(private_defenses[1].get('titre_these'), self.doctorate.thesis_proposed_title)
         self.assertEqual(private_defenses[1].get('date_heure'), first_private_defense.datetime.isoformat())
         self.assertEqual(private_defenses[1].get('lieu'), first_private_defense.place)
         self.assertEqual(

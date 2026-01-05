@@ -83,6 +83,7 @@ class DoctorateAPIView(
             'student',
             'admission',
             'training__management_entity__doctorate_config',
+            'thesis_distribution_authorization',
         ).get(uuid=doctorate_dto.uuid)
 
         doctorate_dto._perm_obj = doctorate_permission_obj
@@ -109,6 +110,7 @@ class BaseListView(APIPermissionRequiredMixin, ListAPIView):
             'student',
             'admission',
             'training__management_entity__doctorate_config',
+            'thesis_distribution_authorization',
         ).filter(uuid__in=[doctorate.uuid for doctorate in doctorate_list])
 
     def list(self, request, **kwargs):

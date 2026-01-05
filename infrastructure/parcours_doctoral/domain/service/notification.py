@@ -25,6 +25,7 @@
 # ##############################################################################
 
 from email.message import EmailMessage
+from email.utils import formataddr
 
 from django.conf import settings
 from django.utils import translation
@@ -49,7 +50,9 @@ from parcours_doctoral.ddd.domain.service.i_notification import INotification
 from parcours_doctoral.ddd.domain.validator.exceptions import (
     SignataireNonTrouveException,
 )
-from parcours_doctoral.ddd.jury.domain.model.enums import ROLES_MEMBRES_JURY, RoleJury
+from parcours_doctoral.ddd.jury.builder.jury_identity_builder import JuryIdentityBuilder
+from parcours_doctoral.ddd.jury.domain.model.enums import ROLES_MEMBRES_JURY
+from parcours_doctoral.ddd.jury.repository.i_jury import IJuryRepository
 from parcours_doctoral.infrastructure.mixins.notification import NotificationMixin
 from parcours_doctoral.mail_templates.signatures import (
     PARCOURS_DOCTORAL_EMAIL_MEMBER_REMOVED,
@@ -135,6 +138,39 @@ class Notification(NotificationMixin, INotification):
         return email_message
 
     @classmethod
+    def envoyer_message_au_doctorant_et_au_jury(
+        cls,
+        jury_repository: IJuryRepository,
+        parcours_doctoral: ParcoursDoctoral,
+        sujet: str,
+        message: str,
+    ) -> EmailMessage:
+        parcours_doctoral_instance = ParcoursDoctoralModel.objects.get(uuid=parcours_doctoral.entity_id.uuid)
+
+        jury = jury_repository.get(JuryIdentityBuilder.build_from_uuid(parcours_doctoral.entity_id.uuid))
+
+        recipients = [
+            formataddr((f'{jury_member.prenom} {jury_member.nom}', jury_member.email))
+            for jury_member in jury.membres
+            if jury_member.role.name in ROLES_MEMBRES_JURY
+        ]
+        recipients.insert(0, cls._format_email(parcours_doctoral_instance.student))
+
+        # Notifier le doctorant via mail
+        email_message = EmailNotificationHandler.build(
+            EmailNotification(
+                recipient=', '.join(recipients),
+                subject=sujet,
+                plain_text_content=transform_html_to_text(message),
+                html_content=message,
+            )
+        )
+
+        EmailNotificationHandler.create(email_message, person=parcours_doctoral_instance.student)
+
+        return email_message
+
+    @classmethod
     def _get_parcours_doctoral_title_translation(cls, parcours_doctoral: ParcoursDoctoralModel):
         """Populate the translations of parcours_doctoral title and lazy return them"""
         # Create a dict to cache the translations of the parcours_doctoral title
@@ -156,10 +192,6 @@ class Notification(NotificationMixin, INotification):
             "parcours_doctoral_link_front": get_parcours_doctoral_link_front(parcours_doctoral.uuid),
             "parcours_doctoral_link_back": get_parcours_doctoral_link_back(parcours_doctoral.uuid),
         }
-
-    @classmethod
-    def _format_email(cls, actor: ParcoursDoctoralSupervisionActor | JuryActor | Person):
-        return "{a.first_name} {a.last_name} <{a.email}>".format(a=actor)
 
     @classmethod
     def envoyer_signatures(
