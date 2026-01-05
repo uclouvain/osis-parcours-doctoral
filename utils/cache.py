@@ -35,6 +35,7 @@ def get_cached_parcours_doctoral_perm_obj(parcours_doctoral_uuid):
         'student',
         'admission',
         'training__academic_year',
+        'thesis_distribution_authorization',
     )
     return cache.get_or_set(
         'parcours_doctoral_permission_{}'.format(parcours_doctoral_uuid),

@@ -32,40 +32,22 @@
       <h4 class="card-title">{% translate "Private defence" %}</h4>
     </div>
     <div class="card-body">
-      {% bootstrap_form_errors form type='non_fields' %}
-
-      {% csrf_token %}
-
       {% bootstrap_field form.titre_these wrapper_class="mb-3 required_field" %}
 
       {% include 'parcours_doctoral/includes/private_defense/supervision_panel.html' %}
 
       <div id="date-hour-field">
-        {% bootstrap_field_with_tooltip form.date_heure classes="required_field" %}
+        {% bootstrap_field_with_tooltip form.date_heure_defense_privee classes="required_field" %}
       </div>
-      {% bootstrap_field form.lieu %}
+      {% bootstrap_field form.lieu_defense_privee %}
       <div class="row">
         {% bootstrap_field form.date_envoi_manuscrit classes="col-md-6" %}
       </div>
 
-      {% bootstrap_field_with_tooltip form.proces_verbal %}
+      {% bootstrap_field_with_tooltip form.proces_verbal_defense_privee %}
     </div>
   </div>
 
   {% include 'parcours_doctoral/includes/private_defense/previous_private_defenses.html' %}
-
-{% endblock %}
-
-{% block style %}
-  {{ block.super }}
-  <style>
-    #date-hour-field input {
-      display: inline-block;
-      width: 49.75%;
-    }
-    #date-hour-field input:last-child {
-      margin-left: 0.5%;
-    }
-  </style>
 
 {% endblock %}

@@ -23,6 +23,7 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+import datetime
 from typing import Dict, List, Optional
 
 from django.db.models.aggregates import Count
@@ -39,6 +40,9 @@ from admission.infrastructure.admission.doctorat.preparation.read_view.repositor
     TableauBordRepositoryAdmissionMixin,
 )
 from admission.models import DoctorateAdmission
+from parcours_doctoral.ddd.autorisation_diffusion_these.domain.model.enums import (
+    ChoixStatutAutorisationDiffusionThese,
+)
 from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
 from parcours_doctoral.ddd.read_view.repository.i_tableau_bord import (
     ITableauBordRepository,
@@ -88,26 +92,55 @@ class TableauBordRepository(TableauBordRepositoryAdmissionMixin, ITableauBordRep
         IndicateurTableauBordEnum.JURY_VALIDE_ADRE.name: Q(
             status=ChoixStatutParcoursDoctoral.JURY_APPROUVE_ADRE.name,
         ),
-        # IndicateurTableauBordEnum.RECEVABILITE_SOUMISE.name: Q(),
-        # IndicateurTableauBordEnum.RECEVABILITE_PV_TELEVERSE.name: Q(),
+        IndicateurTableauBordEnum.FORMULE_2_RECEVABILITE_SOUMISE.name: Q(
+            status=ChoixStatutParcoursDoctoral.RECEVABILITE_SOUMISE.name,
+        ),
+        IndicateurTableauBordEnum.FORMULE_2_RECEVABILITE_PV_TELEVERSE.name: Q(
+            status=ChoixStatutParcoursDoctoral.RECEVABILITE_SOUMISE.name,
+            current_admissibility__minutes__len__gt=0,
+        ),
         IndicateurTableauBordEnum.FORMULE_1_DEFENSE_PRIVEE_SOUMISE.name: Q(
             status=ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_SOUMISE.name,
         ),
         IndicateurTableauBordEnum.FORMULE_1_DEFENSE_PRIVEE_PV_TELEVERSE.name: Q(
-            status=ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_SOUMISE.name,
+            status=ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_AUTORISEE.name,
             current_private_defense__minutes__len__gt=0,
         ),
         IndicateurTableauBordEnum.FORMULE_1_SOUTENANCE_PUBLIQUE_SOUMISE.name: Q(
             status=ChoixStatutParcoursDoctoral.SOUTENANCE_PUBLIQUE_SOUMISE.name,
         ),
         IndicateurTableauBordEnum.FORMULE_1_SOUTENANCE_PUBLIQUE_PV_TELEVERSE.name: Q(
-            status=ChoixStatutParcoursDoctoral.SOUTENANCE_PUBLIQUE_SOUMISE.name,
+            status=ChoixStatutParcoursDoctoral.SOUTENANCE_PUBLIQUE_AUTORISEE.name,
             defense_minutes__len__gt=0,
         ),
-        # IndicateurTableauBordEnum.AUTORISATION_DIFFUSION_THESE_ECHEANCE_15_JOURS.name: Q(),
-        # IndicateurTableauBordEnum.AUTORISATION_DIFFUSION_THESE_REJET_ADRE.name: Q(),
-        # IndicateurTableauBordEnum.AUTORISATION_DIFFUSION_THESE_REJET_SCEB.name: Q(),
-        # IndicateurTableauBordEnum.SOUTENANCE_PUBLIQUE_PV_TELEVERSE.name: Q(),
+        IndicateurTableauBordEnum.FORMULE_2_DEFENSE_PRIVEE_SOUTENANCE_PUBLIQUE_SOUMISE.name: Q(
+            status=ChoixStatutParcoursDoctoral.DEFENSE_ET_SOUTENANCE_SOUMISES.name,
+        ),
+        IndicateurTableauBordEnum.FORMULE_2_DEFENSE_PRIVEE_PV_TELEVERSE.name: Q(
+            status=ChoixStatutParcoursDoctoral.DEFENSE_ET_SOUTENANCE_AUTORISEES.name,
+            current_private_defense__minutes__len__gt=0,
+        ),
+        IndicateurTableauBordEnum.FORMULE_2_SOUTENANCE_PUBLIQUE_PV_TELEVERSE.name: Q(
+            status=ChoixStatutParcoursDoctoral.DEFENSE_ET_SOUTENANCE_AUTORISEES.name,
+            defense_minutes__len__gt=0,
+        ),
+        IndicateurTableauBordEnum.AUTORISATION_DIFFUSION_THESE_ECHEANCE_15_JOURS.name: Q(
+            Q(
+                Q(thesis_distribution_authorization__isnull=True)
+                | Q(
+                    thesis_distribution_authorization__status=(
+                        ChoixStatutAutorisationDiffusionThese.DIFFUSION_NON_SOUMISE.name
+                    )
+                )
+            )
+            & Q(defense_datetime__lte=Now() + datetime.timedelta(days=14))
+        ),
+        IndicateurTableauBordEnum.AUTORISATION_DIFFUSION_THESE_REJET_ADRE.name: Q(
+            thesis_distribution_authorization__status=ChoixStatutAutorisationDiffusionThese.DIFFUSION_REFUSEE_ADRE.name,
+        ),
+        IndicateurTableauBordEnum.AUTORISATION_DIFFUSION_THESE_REJET_SCEB.name: Q(
+            thesis_distribution_authorization__status=ChoixStatutAutorisationDiffusionThese.DIFFUSION_REFUSEE_SCEB.name,
+        ),
     }
 
     @classmethod

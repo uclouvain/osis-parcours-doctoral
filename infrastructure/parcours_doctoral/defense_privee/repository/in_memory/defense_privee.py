@@ -50,7 +50,6 @@ class DefensePriveeInMemoryRepository(InMemoryGenericRepository, IDefensePriveeR
             DefensePriveeDTO(
                 uuid=entity.entity_id.uuid,
                 est_active=entity.est_active,
-                titre_these='',
                 date_heure=entity.date_heure,
                 lieu=entity.lieu,
                 date_envoi_manuscrit=entity.date_envoi_manuscrit,

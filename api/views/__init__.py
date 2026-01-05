@@ -24,6 +24,8 @@
 #
 # ##############################################################################
 
+from .admissibility import *
+from .authorization_distribution import *
 from .autocomplete import *
 from .confirmation import *
 from .cotutelle import *
@@ -31,8 +33,10 @@ from .dashboard import *
 from .external import *
 from .funding import *
 from .jury import *
+from .manuscript_validation import *
 from .parcours_doctoral import *
 from .private_defense import *
+from .private_public_defenses import *
 from .project import *
 from .public_defense import *
 from .supervision import *

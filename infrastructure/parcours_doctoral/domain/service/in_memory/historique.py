@@ -144,6 +144,15 @@ class HistoriqueInMemory(IHistorique):
         pass
 
     @classmethod
+    def historiser_soumission_recevabilite(
+        cls,
+        parcours_doctoral: ParcoursDoctoral,
+        matricule_auteur: str,
+        statut_original_parcours_doctoral: ChoixStatutParcoursDoctoral,
+    ):
+        pass
+
+    @classmethod
     def historiser_soumission_defense_privee(
         cls,
         parcours_doctoral: ParcoursDoctoral,
@@ -231,4 +240,16 @@ class HistoriqueInMemory(IHistorique):
         parcours_doctoral: ParcoursDoctoral,
         matricule_auteur: str,
     ):
+        pass
+
+    @classmethod
+    def historiser_decision_reussie_recevabilite(cls, parcours_doctoral: ParcoursDoctoral, matricule_auteur: str):
+        pass
+
+    @classmethod
+    def historiser_decision_repetition_recevabilite(cls, parcours_doctoral: ParcoursDoctoral, matricule_auteur: str):
+        pass
+
+    @classmethod
+    def historiser_decision_echec_recevabilite(cls, parcours_doctoral: ParcoursDoctoral, matricule_auteur: str):
         pass

@@ -30,6 +30,12 @@ from django.utils.translation import gettext_lazy as _
 from rules import RuleSet
 
 from osis_role.contrib.models import RoleModel
+from parcours_doctoral.auth.predicates.parcours_doctoral import (
+    authorization_distribution_can_be_changed_by_sceb,
+    authorization_distribution_is_in_progress,
+    defense_method_is_formula_1,
+    defense_method_is_formula_2,
+)
 
 
 class ScebManager(RoleModel):
@@ -48,14 +54,11 @@ class ScebManager(RoleModel):
     @classmethod
     def rule_set(cls):
         ruleset = {
+            'base.can_access_student_path': rules.always_allow,
+            # Doctorate
             'parcours_doctoral.view_parcours_doctoral_home': rules.always_allow,
             'parcours_doctoral.view_parcours_doctoral': rules.always_allow,
             'parcours_doctoral.view_historyentry': rules.always_allow,
-            'parcours_doctoral.view_person': rules.always_allow,
-            'parcours_doctoral.view_coordinates': rules.always_allow,
-            'parcours_doctoral.view_secondary_studies': rules.always_allow,
-            'parcours_doctoral.view_curriculum': rules.always_allow,
-            'parcours_doctoral.view_languages': rules.always_allow,
             'parcours_doctoral.view_project': rules.always_allow,
             'parcours_doctoral.view_funding': rules.always_allow,
             'parcours_doctoral.view_cotutelle': rules.always_allow,
@@ -68,8 +71,14 @@ class ScebManager(RoleModel):
             'parcours_doctoral.view_course_enrollment': rules.always_allow,
             'parcours_doctoral.view_assessment_enrollment': rules.always_allow,
             'parcours_doctoral.view_jury': rules.always_allow,
-            'parcours_doctoral.view_private_defense': rules.always_allow,
-            'parcours_doctoral.view_public_defense': rules.always_allow,
+            'parcours_doctoral.view_private_defense': defense_method_is_formula_1,
+            'parcours_doctoral.view_public_defense': defense_method_is_formula_1,
+            'parcours_doctoral.view_admissibility': defense_method_is_formula_2,
+            'parcours_doctoral.view_private_public_defenses': defense_method_is_formula_2,
             'parcours_doctoral.view_comments': rules.always_allow,
+            'parcours_doctoral.view_authorization_distribution': rules.always_allow,
+            'parcours_doctoral.view_manuscript_validation': rules.always_allow,
+            'parcours_doctoral.validate_manuscript': authorization_distribution_can_be_changed_by_sceb
+            & authorization_distribution_is_in_progress,
         }
         return RuleSet(ruleset)

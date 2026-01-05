@@ -41,7 +41,7 @@ from parcours_doctoral.ddd.soutenance_publique.commands import (
     InviterJurySoutenancePubliqueCommand,
 )
 from parcours_doctoral.ddd.soutenance_publique.validators.exceptions import (
-    StatutDoctoratDifferentSoutenancePubliqueSoumiseException,
+    StatutDoctoratDifferentSoutenancePubliqueAutoriseeException,
 )
 from parcours_doctoral.ddd.test.factory.person import PersonneConnueUclDTOFactory
 from parcours_doctoral.infrastructure.message_bus_in_memory import (
@@ -88,11 +88,11 @@ class TestInviterJurySoutenancePublique(SimpleTestCase):
         with self.assertRaises(MultipleBusinessExceptions) as e:
             self.message_bus.invoke(self.cmd(**self.parametres_cmd))
 
-        self.assertIsInstance(e.exception.exceptions.pop(), StatutDoctoratDifferentSoutenancePubliqueSoumiseException)
+        self.assertIsInstance(e.exception.exceptions.pop(), StatutDoctoratDifferentSoutenancePubliqueAutoriseeException)
 
     def test_should_inviter_jury(self):
         proposition = self.parcours_doctoral_repository.get(entity_id=self.id_parcours_doctoral)
-        proposition.statut = ChoixStatutParcoursDoctoral.SOUTENANCE_PUBLIQUE_SOUMISE
+        proposition.statut = ChoixStatutParcoursDoctoral.SOUTENANCE_PUBLIQUE_AUTORISEE
 
         resultat = self.message_bus.invoke(self.cmd(**self.parametres_cmd))
 

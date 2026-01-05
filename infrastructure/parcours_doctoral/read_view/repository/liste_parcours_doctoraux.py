@@ -63,6 +63,7 @@ class ListeParcoursDoctorauxRepository(IListeParcoursDoctorauxRepository):
         ChoixEtapeParcoursDoctoral.CONFIRMATION.name: 'confirmationpaper__confirmation_date',
         ChoixEtapeParcoursDoctoral.DEFENSE_PRIVEE.name: 'current_private_defense__datetime__date',
         ChoixEtapeParcoursDoctoral.SOUTENANCE_PUBLIQUE.name: 'defense_datetime__date',
+        ChoixEtapeParcoursDoctoral.DECISION_DE_RECEVABILITE.name: 'current_admissibility__decision_date',
     }
     ADDITIONAL_DATE_CONDITION_BY_DATE_TYPE = {
         ChoixEtapeParcoursDoctoral.CONFIRMATION.name: {

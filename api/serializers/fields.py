@@ -168,14 +168,36 @@ PARCOURS_DOCTORAL_ACTION_LINKS = {
         'method': 'POST',
         'params': ['uuid'],
     },
+    # Admissibility
+    'retrieve_admissibility_minutes_canvas': {
+        'path_name': 'parcours_doctoral_api_v1:admissibility-minutes',
+        'method': 'GET',
+        'params': ['uuid'],
+    },
+    'submit_admissibility_minutes_and_opinions': {
+        'path_name': 'parcours_doctoral_api_v1:admissibility-minutes',
+        'method': 'PUT',
+        'params': ['uuid'],
+    },
+    # Admissibility
+    'retrieve_admissibility': {
+        'path_name': 'parcours_doctoral_api_v1:admissibility-list',
+        'method': 'GET',
+        'params': ['uuid'],
+    },
+    'update_admissibility': {
+        'path_name': 'parcours_doctoral_api_v1:admissibility-list',
+        'method': 'PUT',
+        'params': ['uuid'],
+    },
     # Private defense
     'retrieve_private_defense': {
-        'path_name': 'parcours_doctoral_api_v1:private-defense-list',
+        'path_name': 'parcours_doctoral_api_v1:private-defense',
         'method': 'GET',
         'params': ['uuid'],
     },
     'update_private_defense': {
-        'path_name': 'parcours_doctoral_api_v1:private-defense-list',
+        'path_name': 'parcours_doctoral_api_v1:private-defense',
         'method': 'PUT',
         'params': ['uuid'],
     },
@@ -186,6 +208,28 @@ PARCOURS_DOCTORAL_ACTION_LINKS = {
     },
     'submit_private_defense_minutes': {
         'path_name': 'parcours_doctoral_api_v1:private-defense-minutes',
+        'method': 'PUT',
+        'params': ['uuid'],
+    },
+    # Authorization distribution
+    'retrieve_authorization_distribution': {
+        'path_name': 'parcours_doctoral_api_v1:authorization-distribution',
+        'method': 'GET',
+        'params': ['uuid'],
+    },
+    'update_authorization_distribution': {
+        'path_name': 'parcours_doctoral_api_v1:authorization-distribution',
+        'method': 'PUT',
+        'params': ['uuid'],
+    },
+    # Manuscript validation
+    'retrieve_manuscript_validation': {
+        'path_name': 'parcours_doctoral_api_v1:manuscript-validation',
+        'method': 'GET',
+        'params': ['uuid'],
+    },
+    'validate_manuscript': {
+        'path_name': 'parcours_doctoral_api_v1:manuscript-validation',
         'method': 'PUT',
         'params': ['uuid'],
     },
@@ -208,6 +252,22 @@ PARCOURS_DOCTORAL_ACTION_LINKS = {
     'submit_public_defense_minutes': {
         'path_name': 'parcours_doctoral_api_v1:public-defense-minutes',
         'method': 'PUT',
+        'params': ['uuid'],
+    },
+    # Private & public defenses
+    'retrieve_private_public_defenses': {
+        'path_name': 'parcours_doctoral_api_v1:private-public-defenses',
+        'method': 'GET',
+        'params': ['uuid'],
+    },
+    'update_private_public_defenses': {
+        'path_name': 'parcours_doctoral_api_v1:private-public-defenses',
+        'method': 'PUT',
+        'params': ['uuid'],
+    },
+    'submit_private_public_defenses_minutes': {
+        'path_name': 'parcours_doctoral_api_v1:private-public-defenses',
+        'method': 'POST',
         'params': ['uuid'],
     },
 }
