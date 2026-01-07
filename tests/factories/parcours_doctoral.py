@@ -25,9 +25,11 @@
 # ##############################################################################
 
 import uuid
+from datetime import datetime
 
 import factory
 
+from admission.ddd.admission.doctorat.preparation.domain.model.enums import ChoixTypeAdmission
 from admission.tests.factories import DoctorateAdmissionFactory
 from base.models.education_group_year import EducationGroupYear
 from base.models.enums.education_group_types import TrainingType
@@ -138,7 +140,7 @@ class ParcoursDoctoralFactory(factory.django.DjangoModelFactory):
         model = ParcoursDoctoral
 
     student = factory.SubFactory(PersonFactory)
-    admission = factory.SubFactory(DoctorateAdmissionFactory, admitted=True)
+    admission = factory.SubFactory(DoctorateAdmissionFactory, admitted=True, approved_by_cdd_at=datetime(2025, 1, 1))
     training = factory.SubFactory(
         FormationFactory,
         enrollment_campus__name='Mons',
@@ -153,7 +155,12 @@ class ParcoursDoctoralFactory(factory.django.DjangoModelFactory):
     additional_training_project = factory.LazyFunction(lambda: [uuid.uuid4()])
     gantt_graph = factory.LazyFunction(lambda: [uuid.uuid4()])
     recommendation_letters = factory.LazyFunction(lambda: [uuid.uuid4()])
-    reference = factory.LazyAttribute(lambda obj: obj.admission.reference)
+    admission_type = factory.LazyAttribute(
+        lambda obj: obj.admission.type if getattr(obj, 'admission') else ChoixTypeAdmission.ADMISSION.name
+    )
+    admission_approved_by_cdd_at = factory.LazyAttribute(
+        lambda obj: obj.admission.approved_by_cdd_at if getattr(obj, 'admission') else obj.created_at
+    )
     thesis_institute = factory.SubFactory(EntityVersionFactory)
     defense_method = FormuleDefense.FORMULE_1.name
 

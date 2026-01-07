@@ -57,7 +57,6 @@ def lister_parcours_doctoraux(
 
     return lister_tous_parcours_doctoraux_service.get(
         annee_academique_courante=annee_courante,
-        numero=cmd.numero,
         noma=cmd.noma,
         matricule_doctorant=cmd.matricule_doctorant,
         type_admission=cmd.type_admission,
