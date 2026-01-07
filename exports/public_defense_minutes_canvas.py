@@ -52,7 +52,7 @@ def public_defense_minutes_canvas_url(doctorate_uuid, language):
         # Generate the pdf
         save_token = parcours_doctoral_generate_pdf(
             template='parcours_doctoral/exports/public_defense_minutes_canvas.html',
-            filename=f'public_defense_canvas_{doctorate_dto.reference}.pdf',
+            filename='public_defense_canvas.pdf',
             context={
                 'parcours_doctoral': doctorate_dto,
                 'jury_members': [member for member in jury_dto.membres if member.role in ROLES_MEMBRES_JURY],

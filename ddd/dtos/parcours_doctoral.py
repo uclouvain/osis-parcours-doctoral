@@ -103,7 +103,6 @@ class ParcoursDoctoralDTO(interface.DTO):
     uuid: str
     uuid_admission: str
     type_admission: str
-    reference: str
     sigle_entite_gestion: str
     statut: str
     date_changement_statut: Optional[datetime.datetime]
@@ -151,7 +150,6 @@ class ParcoursDoctoralDTO(interface.DTO):
 @attr.dataclass(slots=True)
 class ParcoursDoctoralRechercheEtudiantDTO(interface.DTO):
     uuid: str
-    reference: str
     statut: str
 
     formation: FormationDTO

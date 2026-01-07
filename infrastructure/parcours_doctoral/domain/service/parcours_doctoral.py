@@ -32,9 +32,6 @@ from osis_document_components.services import documents_remote_duplicate
 from osis_signature.enums import SignatureState
 from osis_signature.models import Process, StateHistory
 
-from admission.ddd.admission.doctorat.preparation.domain.model.enums import (
-    ChoixTypeAdmission,
-)
 from admission.ddd.admission.doctorat.preparation.domain.model.proposition import (
     Proposition,
 )
@@ -52,9 +49,6 @@ from parcours_doctoral.ddd.domain.model.parcours_doctoral import (
 )
 from parcours_doctoral.ddd.domain.service.i_parcours_doctoral import (
     IParcoursDoctoralService,
-)
-from parcours_doctoral.ddd.epreuve_confirmation.domain.service.epreuve_confirmation import (
-    EpreuveConfirmationService,
 )
 from parcours_doctoral.ddd.epreuve_confirmation.repository.i_epreuve_confirmation import (
     IEpreuveConfirmationRepository,
@@ -169,8 +163,9 @@ class ParcoursDoctoralService(IParcoursDoctoralService):
 
         # The doctorate is initialized / updated with the admission data
         parcours_doctoral.admission = admission
-        parcours_doctoral.reference = admission.reference
         parcours_doctoral.justification = admission.comment
+        parcours_doctoral.admission_type = admission.type
+        parcours_doctoral.admission_approved_by_cdd_at = admission.approved_by_cdd_at
         parcours_doctoral.student = admission.candidate
         parcours_doctoral.training = admission.training
         parcours_doctoral.project_title = admission.project_title

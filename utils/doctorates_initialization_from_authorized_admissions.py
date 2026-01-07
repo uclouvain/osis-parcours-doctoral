@@ -54,32 +54,29 @@ def initialize_the_doctorates_from_authorized_admissions(doctorate_admission_mod
     if on_migration:
         qs = qs.annotate(
             proposition_uuid=models.F('baseadmission_ptr__uuid'),
-            proposition_reference=models.F('baseadmission_ptr__reference'),
             created_at=Value(''),  # Otherwise, the field is not found (FieldDoesNotExist exception)
         )
     else:
         qs = qs.annotate(
             proposition_uuid=models.F('uuid'),
-            proposition_reference=models.F('reference'),
         )
 
-    qs = qs.values('proposition_uuid', 'proposition_reference')
+    qs = qs.values_list('proposition_uuid', flat=True)
 
     valid_references = []
     invalid_references = []
 
-    for admission in qs:
+    for admission_uuid in qs:
         try:
             message_bus_instance.invoke(
-                InitialiserParcoursDoctoralCommand(proposition_uuid=admission['proposition_uuid']),
+                InitialiserParcoursDoctoralCommand(proposition_uuid=admission_uuid),
             )
-            valid_references.append(admission['proposition_reference'])
+            valid_references.append(admission_uuid)
         except Exception:
-            invalid_references.append(admission['proposition_reference'])
+            invalid_references.append(admission_uuid)
 
     error_message = (
-        f' Some errors have been encountered for the following admission(s): '
-        f'{", ".join(map(str, invalid_references))}.'
+        f' Some errors have been encountered for the following admission(s): {", ".join(map(str, invalid_references))}.'
         if invalid_references
         else ''
     )
