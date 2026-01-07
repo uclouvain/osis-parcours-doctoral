@@ -107,7 +107,6 @@ class Notification(NotificationMixin, INotification):
             'admissibility_decision_date': (
                 cls._format_date(current_admissibility.decision_date) if current_admissibility else ''
             ),
-            'reference': doctorate.reference,
             'student_reference': {
                 'F': pgettext_lazy('F', 'the PhD student'),
                 'H': pgettext_lazy('H', 'the PhD student'),

@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -108,7 +108,6 @@ class _ParcoursDoctoralFactory(factory.Factory):
 
     entity_id = factory.SubFactory(_ParcoursDoctoralIdentityFactory)
     matricule_doctorant = factory.LazyFunction(generate_global_id)
-    reference = factory.Iterator(REFERENCE_MEMORY_ITERATOR)
     formation_id = factory.SubFactory(_FormationIdentityFactory)
     statut = ChoixStatutParcoursDoctoral.ADMIS
     projet = factory.SubFactory(_ProjetFactory)
@@ -121,7 +120,6 @@ class ParcoursDoctoralSC3DPMinimaleFactory(_ParcoursDoctoralFactory):
     entity_id = factory.SubFactory(_ParcoursDoctoralIdentityFactory, uuid='uuid-SC3DP')
     formation_id = FormationIdentity(sigle='SC3DP', annee=2022)
     matricule_doctorant = '1'
-    reference = 'r1'
     cotutelle = factory.SubFactory(
         _CotutelleFactory,
         motivation="Runs in family",
@@ -185,7 +183,6 @@ class ParcoursDoctoralPreSC3DPAvecPromoteursEtMembresCADejaApprouvesAccepteeFact
     )
     formation_id = FormationIdentity(sigle='SC3DP', annee=2022)
     matricule_doctorant = '1'
-    reference = 'r2'
     cotutelle = pas_de_cotutelle
 
 
@@ -195,7 +192,6 @@ class ParcoursDoctoralSC3DPAvecPromoteurRefuseEtMembreCADejaApprouveFactoryRejet
     )
     formation_id = FormationIdentity(sigle='SC3DP', annee=2022)
     matricule_doctorant = '2'
-    reference = 'r3'
     cotutelle = pas_de_cotutelle
 
 
@@ -205,7 +201,6 @@ class ParcoursDoctoralSC3DPAvecPromoteursEtMembresCADejaApprouvesFactory(_Parcou
     )
     formation_id = FormationIdentity(sigle='SC3DP', annee=2022)
     matricule_doctorant = '3'
-    reference = 'r4'
 
 
 class ParcoursDoctoralSC3DPAvecMembresFactory(ParcoursDoctoralSC3DPMinimaleFactory):

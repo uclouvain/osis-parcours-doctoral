@@ -148,7 +148,6 @@ class ParcoursDoctoralInMemoryRepository(InMemoryGenericRepository, IParcoursDoc
             date_changement_statut=None,
             justification="",
             intitule_secteur_formation="FOO",
-            reference=str(parcours_doctoral.reference),
             sigle_entite_gestion='',
             matricule_doctorant=parcours_doctoral.matricule_doctorant,
             noma_doctorant=doctorant.noma,
@@ -284,7 +283,6 @@ class ParcoursDoctoralInMemoryRepository(InMemoryGenericRepository, IParcoursDoc
 
         return ParcoursDoctoralRechercheEtudiantDTO(
             uuid=parcours_doctoral.entity_id.uuid,
-            reference=str(parcours_doctoral.reference),
             statut=parcours_doctoral.statut.name,
             formation=FormationDTO(
                 annee=formation.annee,

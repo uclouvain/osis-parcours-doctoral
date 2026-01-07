@@ -59,7 +59,7 @@ from parcours_doctoral.models import Activity, ParcoursDoctoral
 
 class ListeParcoursDoctorauxRepository(IListeParcoursDoctorauxRepository):
     DATE_FIELD_BY_DATE_TYPE = {
-        ChoixEtapeParcoursDoctoral.ADMISSION.name: 'admission__approved_by_cdd_at__date',
+        ChoixEtapeParcoursDoctoral.ADMISSION.name: 'admission_approved_by_cdd_at__date',
         ChoixEtapeParcoursDoctoral.CONFIRMATION.name: 'confirmationpaper__confirmation_date',
         ChoixEtapeParcoursDoctoral.DEFENSE_PRIVEE.name: 'current_private_defense__datetime__date',
         ChoixEtapeParcoursDoctoral.SOUTENANCE_PUBLIQUE.name: 'defense_datetime__date',
@@ -75,7 +75,6 @@ class ListeParcoursDoctorauxRepository(IListeParcoursDoctorauxRepository):
     def get(
         cls,
         annee_academique_courante: int,
-        numero: Optional[int] = None,
         noma: Optional[str] = '',
         matricule_doctorant: Optional[str] = '',
         type_admission: Optional[str] = '',
@@ -103,7 +102,6 @@ class ListeParcoursDoctorauxRepository(IListeParcoursDoctorauxRepository):
 
         qs = (
             ParcoursDoctoral.objects.annotate_training_management_entity()
-            .annotate_with_reference()
             .annotate(
                 scholarship=Coalesce('international_scholarship__short_name', 'other_international_scholarship'),
             )
@@ -125,7 +123,6 @@ class ListeParcoursDoctorauxRepository(IListeParcoursDoctorauxRepository):
                 ),
             )
             .select_related(
-                'admission',
                 'student',
                 'training__academic_year',
                 'training__enrollment_campus',
@@ -134,9 +131,6 @@ class ListeParcoursDoctorauxRepository(IListeParcoursDoctorauxRepository):
         )
 
         # Add filters
-        if numero:
-            qs = qs.filter(reference=numero)
-
         if noma:
             qs = qs.filter(student__student__registration_id=noma)
 
@@ -144,7 +138,7 @@ class ListeParcoursDoctorauxRepository(IListeParcoursDoctorauxRepository):
             qs = qs.filter(student__global_id=matricule_doctorant)
 
         if type_admission:
-            qs = qs.filter(admission__type=type_admission)
+            qs = qs.filter(admission_type=type_admission)
 
         if sigles_formations:
             qs = qs.filter(training__acronym__in=sigles_formations)
@@ -220,7 +214,6 @@ class ListeParcoursDoctorauxRepository(IListeParcoursDoctorauxRepository):
                 qs = qs.annotate_ordered_enum('status', 'ordered_status', ChoixStatutParcoursDoctoral)
 
             field_order = {
-                'reference': ['formatted_reference'],
                 'nom_etudiant': ['student__last_name', 'student__first_name'],
                 'formation': ['training__acronym'],
                 'bourse': ['scholarship'],
@@ -261,7 +254,6 @@ class ListeParcoursDoctorauxRepository(IListeParcoursDoctorauxRepository):
         return ParcoursDoctoralRechercheDTO(
             uuid=parcours_doctoral.uuid,
             statut=parcours_doctoral.status,
-            reference=parcours_doctoral.formatted_reference,  # From annotation
             matricule_doctorant=parcours_doctoral.student.global_id,
             genre_doctorant=parcours_doctoral.student.gender,
             nom_doctorant=parcours_doctoral.student.last_name,
@@ -275,12 +267,12 @@ class ListeParcoursDoctorauxRepository(IListeParcoursDoctorauxRepository):
                 intitule_en=parcours_doctoral.training.title_english,
                 type=parcours_doctoral.training.education_group_type.name,
             ),
-            type_admission=parcours_doctoral.admission.type,
+            type_admission=parcours_doctoral.admission_type,
             cree_le=parcours_doctoral.created_at,
             code_bourse=parcours_doctoral.scholarship,  # From annotation
             cotutelle=parcours_doctoral.cotutelle,
             formation_complementaire=parcours_doctoral.follows_an_additional_training,
             en_regle_inscription=parcours_doctoral.in_order_of_registration,
             total_credits_valides=parcours_doctoral.validated_credits_number,
-            date_admission_par_cdd=parcours_doctoral.admission.approved_by_cdd_at,
+            date_admission_par_cdd=parcours_doctoral.admission_approved_by_cdd_at,
         )
