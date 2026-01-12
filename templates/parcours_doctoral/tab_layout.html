@@ -8,7 +8,7 @@
   * The core business involves the administration of students, teachers,
   * courses, programs and so on.
   *
-  * Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
+  * Copyright (C) 2015-2026 Université catholique de Louvain (http://www.uclouvain.be)
   *
   * This program is free software: you can redistribute it and/or modify
   * it under the terms of the GNU General Public License as published by
@@ -59,7 +59,7 @@
     <div id="parcours_doctoral-panel-header-container" class="card-header flex-content">
       <a
         title="{% translate 'Previous doctorate' %}"
-        class="btn btn-default border border-dark-subtle parcours_doctoral-navigation-button {% if not previous_parcours_doctoral_url %} disabled{% endif %}"
+        class="btn btn-default border border-dark-subtle parcours_doctoral-navigation-button {% if not previous_parcours_doctoral_url %} disabled pe-none{% endif %}"
         href="{{ previous_parcours_doctoral_url }}">
         <i class="fa-solid fa-chevron-left" aria-hidden="true"></i>
       </a>
@@ -181,7 +181,7 @@
       </div>
       <a
         title="{% translate 'Next doctorate' %}"
-        class="btn btn-default border border-dark-subtle parcours_doctoral-navigation-button {% if not next_parcours_doctoral_url %} disabled{% endif %}"
+        class="btn btn-default border border-dark-subtle parcours_doctoral-navigation-button {% if not next_parcours_doctoral_url %} disabled pe-none{% endif %}"
         href="{{ next_parcours_doctoral_url }}">
         <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
       </a>
