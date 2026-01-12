@@ -36,6 +36,13 @@ from parcours_doctoral.ddd.defense_privee.validators.validator_by_business_actio
     DonnerDecisionDefensePriveeValidatorList,
     InviterJuryDefensePriveeValidatorList,
 )
+from parcours_doctoral.ddd.defense_privee_soutenance_publique.validators.validator_by_business_action import (
+    AutoriserDefensePriveeEtSoutenancePubliqueValidatorList,
+    DonnerDecisionDefensePriveeEtSoutenancePubliqueValidatorList,
+    InviterJuryDefensePriveeEtSoutenancePubliqueValidatorList,
+    SoumettreDefensePriveeEtSoutenancePubliqueFormule2ValidatorList,
+    SoumettreProcesVerbauxDefensePriveeEtSoutenancePubliqueValidatorList,
+)
 from parcours_doctoral.ddd.domain.model._cotutelle import Cotutelle
 from parcours_doctoral.ddd.domain.model._experience_precedente_recherche import (
     ExperiencePrecedenteRecherche,
@@ -58,6 +65,11 @@ from parcours_doctoral.ddd.domain.validator.validator_by_business_action import 
     ProjetDoctoralValidatorList,
 )
 from parcours_doctoral.ddd.jury.domain.model.enums import ChoixEtatSignature
+from parcours_doctoral.ddd.recevabilite.validators.validator_by_business_action import (
+    DonnerDecisionEchecOuRepetitionRecevabiliteValidatorList,
+    DonnerDecisionReussiteRecevabiliteValidatorList,
+    InviterJuryRecevabiliteValidatorList,
+)
 from parcours_doctoral.ddd.soutenance_publique.validators.validator_by_business_action import (
     AutoriserSoutenancePubliqueValidatorList,
     DonnerDecisionSoutenancePubliqueValidatorList,
@@ -352,6 +364,40 @@ class ParcoursDoctoral(interface.RootEntity):
         if all(member.signature.etat == ChoixEtatSignature.APPROVED for member in jury.membres):
             self.statut = ChoixStatutParcoursDoctoral.JURY_APPROUVE_CA
 
+    # Recevabilité
+    def soumettre_recevabilite(self, titre_these: str):
+        self.statut = ChoixStatutParcoursDoctoral.RECEVABILITE_SOUMISE
+        self.titre_these_propose = titre_these
+
+    def verifier_invitation_du_jury_a_recevabilite_est_possible(self):
+        InviterJuryRecevabiliteValidatorList(
+            statut_parcours_doctoral=self.statut,
+        ).validate()
+
+    def confirmer_reussite_recevabilite(self, recevabilite: 'Recevabilite'):
+        DonnerDecisionReussiteRecevabiliteValidatorList(
+            recevabilite=recevabilite,
+            statut_parcours_doctoral=self.statut,
+        ).validate()
+
+        self.statut = ChoixStatutParcoursDoctoral.RECEVABILITE_REUSSIE
+
+    def confirmer_repetition_recevabilite(self, recevabilite: 'Recevabilite'):
+        DonnerDecisionEchecOuRepetitionRecevabiliteValidatorList(
+            recevabilite=recevabilite,
+            statut_parcours_doctoral=self.statut,
+        ).validate()
+
+        self.statut = ChoixStatutParcoursDoctoral.RECEVABILITE_A_RECOMMENCER
+
+    def confirmer_echec_recevabilite(self, recevabilite: 'Recevabilite'):
+        DonnerDecisionEchecOuRepetitionRecevabiliteValidatorList(
+            recevabilite=recevabilite,
+            statut_parcours_doctoral=self.statut,
+        ).validate()
+
+        self.statut = ChoixStatutParcoursDoctoral.RECEVABILITE_EN_ECHEC
+
     # Défense privée
     def soumettre_defense_privee(self, titre_these: str):
         self.statut = ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_SOUMISE
@@ -470,4 +516,91 @@ class ParcoursDoctoral(interface.RootEntity):
         self.resume_annonce = resume_annonce
         self.photo_annonce = photo_annonce
         self.proces_verbal_soutenance_publique = proces_verbal
+        self.date_retrait_diplome = date_retrait_diplome
+
+    # Défense privée et soutenance publique (formule 2)
+    def soumettre_defense_privee_et_soutenance_publique_formule_2(
+        self,
+        titre_these: str,
+        date_heure_defense_privee: Optional[datetime],
+        langue: str,
+        date_heure_soutenance_publique: Optional[datetime],
+        lieu: str,
+        local_deliberation: str,
+        resume_annonce: str,
+        photo_annonce: list[str],
+    ):
+        SoumettreDefensePriveeEtSoutenancePubliqueFormule2ValidatorList(
+            titre_these=titre_these,
+            date_heure_defense_privee=date_heure_defense_privee,
+            langue_soutenance_publique=langue,
+            date_heure_soutenance_publique=date_heure_soutenance_publique,
+            photo_annonce=photo_annonce,
+            statut_parcours_doctoral=self.statut,
+        ).validate()
+
+        self.titre_these_propose = titre_these
+        self.langue_soutenance_publique = langue
+        self.date_heure_soutenance_publique = date_heure_soutenance_publique
+        self.lieu_soutenance_publique = lieu
+        self.local_deliberation = local_deliberation
+        self.resume_annonce = resume_annonce
+        self.photo_annonce = photo_annonce
+
+        self.statut = ChoixStatutParcoursDoctoral.DEFENSE_ET_SOUTENANCE_SOUMISES
+
+    def inviter_jury_defense_privee_et_soutenance_publique_formule_2(self):
+        InviterJuryDefensePriveeEtSoutenancePubliqueValidatorList(
+            statut_parcours_doctoral=self.statut,
+        ).validate()
+
+    def autoriser_defense_privee_et_soutenance_publique_formule_2(self):
+        AutoriserDefensePriveeEtSoutenancePubliqueValidatorList(
+            statut_parcours_doctoral=self.statut,
+        ).validate()
+
+        self.statut = ChoixStatutParcoursDoctoral.DEFENSE_ET_SOUTENANCE_AUTORISEES
+
+    def soumettre_proces_verbaux_defense_privee_et_soutenance_publique_formule_2(
+        self,
+        proces_verbal_soutenance_publique,
+    ):
+        SoumettreProcesVerbauxDefensePriveeEtSoutenancePubliqueValidatorList(
+            statut_parcours_doctoral=self.statut,
+        ).validate()
+
+        self.proces_verbal_soutenance_publique = proces_verbal_soutenance_publique
+
+    def confirmer_reussite_defense_privee_et_soutenance_publique_formule_2(self, defense_privee: 'DefensePrivee'):
+        DonnerDecisionDefensePriveeEtSoutenancePubliqueValidatorList(
+            statut_parcours_doctoral=self.statut,
+            proces_verbal_soutenance_publique=self.proces_verbal_soutenance_publique,
+            date_heure_soutenance_publique=self.date_heure_soutenance_publique,
+            defense_privee=defense_privee,
+        ).validate()
+
+        self.statut = ChoixStatutParcoursDoctoral.PROCLAME
+
+    def modifier_defense_privee_et_soutenance_publique_formule_2(
+        self,
+        titre_these: str,
+        langue: str,
+        date_heure_soutenance_publique: Optional[datetime],
+        lieu_soutenance_publique: str,
+        local_deliberation: str,
+        informations_complementaires: str,
+        resume_annonce: str,
+        photo_annonce: list[str],
+        proces_verbal_soutenance_publique: list[str],
+        date_retrait_diplome: Optional[date],
+    ):
+        self.titre_these_propose = titre_these
+        self.langue_soutenance_publique = langue
+        self.date_heure_soutenance_publique = date_heure_soutenance_publique
+        self.lieu_soutenance_publique = lieu_soutenance_publique
+        self.local_deliberation = local_deliberation
+        self.informations_complementaires_soutenance_publique = informations_complementaires
+        self.resume_annonce = resume_annonce
+        self.photo_annonce = photo_annonce
+        self.proces_verbal_soutenance_publique = proces_verbal_soutenance_publique
         self.date_retrait_diplome = date_retrait_diplome

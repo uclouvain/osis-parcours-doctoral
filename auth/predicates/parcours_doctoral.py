@@ -31,13 +31,23 @@ from admission.ddd.admission.doctorat.preparation.domain.model.enums import (
     ChoixTypeAdmission,
 )
 from osis_role.errors import predicate_failed_msg
+from parcours_doctoral.ddd.autorisation_diffusion_these.domain.model.enums import (
+    CHOIX_STATUTS_AUTORISATION_DIFFUSION_THESE_MODIFIABLE_PAR_ADRE,
+    CHOIX_STATUTS_AUTORISATION_DIFFUSION_THESE_MODIFIABLE_PAR_DOCTORANT,
+    CHOIX_STATUTS_AUTORISATION_DIFFUSION_THESE_MODIFIABLE_PAR_PROMOTEUR_REFERENCE,
+    CHOIX_STATUTS_AUTORISATION_DIFFUSION_THESE_MODIFIABLE_PAR_SCEB,
+)
 from parcours_doctoral.ddd.domain.model.enums import (
+    STATUTS_DOCTORAT_AUTORISATION_THESE_FORMULE_1,
+    STATUTS_DOCTORAT_AUTORISATION_THESE_FORMULE_2,
     STATUTS_DOCTORAT_DEFENSE_PRIVEE_EN_COURS,
+    STATUTS_DOCTORAT_DEFENSE_PRIVEE_SOUTENANCE_PUBLIQUE_EN_COURS,
     STATUTS_DOCTORAT_EPREUVE_CONFIRMATION_EN_COURS,
+    STATUTS_DOCTORAT_RECEVABILITE_EN_COURS,
     STATUTS_DOCTORAT_SOUTENANCE_PUBLIQUE_EN_COURS,
     ChoixStatutParcoursDoctoral,
 )
-from parcours_doctoral.ddd.jury.domain.model.enums import RoleJury
+from parcours_doctoral.ddd.jury.domain.model.enums import FormuleDefense, RoleJury
 from parcours_doctoral.models import ActorType
 from parcours_doctoral.models.parcours_doctoral import ParcoursDoctoral
 
@@ -129,9 +139,87 @@ def private_defense_is_authorised(self, user: User, obj: ParcoursDoctoral):
 
 
 @predicate(bind=True)
+@predicate_failed_msg(
+    message=_("The doctorate must be in the status '%(status)s' to realize this action.")
+    % {'status': ChoixStatutParcoursDoctoral.RECEVABILITE_SOUMISE.value}
+)
+def admissibility_is_submitted(self, user: User, obj: ParcoursDoctoral):
+    return obj.status == ChoixStatutParcoursDoctoral.RECEVABILITE_SOUMISE.name
+
+
+@predicate(bind=True)
 @predicate_failed_msg(message=_("The confirmation paper is not in progress"))
 def confirmation_paper_in_progress(self, user: User, obj: ParcoursDoctoral):
     return obj.status in STATUTS_DOCTORAT_EPREUVE_CONFIRMATION_EN_COURS
+
+
+@predicate(bind=True)
+@predicate_failed_msg(message=_("The defense method must be the formula 1."))
+def defense_method_is_formula_1(self, user: User, obj: ParcoursDoctoral):
+    return obj.defense_method == FormuleDefense.FORMULE_1.name
+
+
+@predicate(bind=True)
+@predicate_failed_msg(message=_("The defense method must be the formula 2."))
+def defense_method_is_formula_2(self, user: User, obj: ParcoursDoctoral):
+    return obj.defense_method == FormuleDefense.FORMULE_2.name
+
+
+@predicate(bind=True)
+@predicate_failed_msg(message=_("The authorization distribution is not in progress."))
+def authorization_distribution_is_in_progress(self, user: User, obj: ParcoursDoctoral):
+    return obj.status in {
+        FormuleDefense.FORMULE_1.name: STATUTS_DOCTORAT_AUTORISATION_THESE_FORMULE_1,
+        FormuleDefense.FORMULE_2.name: STATUTS_DOCTORAT_AUTORISATION_THESE_FORMULE_2,
+    }.get(obj.defense_method, set())
+
+
+@predicate(bind=True)
+@predicate_failed_msg(message=_("The distribution authorization cannot currently be changed by the student."))
+def authorization_distribution_can_be_changed_by_student(self, user: User, obj: ParcoursDoctoral):
+    return (
+        not hasattr(obj, 'thesis_distribution_authorization')
+        or obj.thesis_distribution_authorization.status
+        in CHOIX_STATUTS_AUTORISATION_DIFFUSION_THESE_MODIFIABLE_PAR_DOCTORANT
+    )
+
+
+@predicate(bind=True)
+@predicate_failed_msg(
+    message=_("The distribution authorization cannot currently be changed by the contact supervisor.")
+)
+def authorization_distribution_can_be_changed_by_lead_promoter(self, user: User, obj: ParcoursDoctoral):
+    return (
+        hasattr(obj, 'thesis_distribution_authorization')
+        and obj.thesis_distribution_authorization.status
+        in CHOIX_STATUTS_AUTORISATION_DIFFUSION_THESE_MODIFIABLE_PAR_PROMOTEUR_REFERENCE
+    )
+
+
+@predicate(bind=True)
+@predicate_failed_msg(message=_("The distribution authorization cannot currently be changed by the ADRE manager."))
+def authorization_distribution_can_be_changed_by_adre(self, user: User, obj: ParcoursDoctoral):
+    return (
+        hasattr(obj, 'thesis_distribution_authorization')
+        and obj.thesis_distribution_authorization.status
+        in CHOIX_STATUTS_AUTORISATION_DIFFUSION_THESE_MODIFIABLE_PAR_ADRE
+    )
+
+
+@predicate(bind=True)
+@predicate_failed_msg(message=_("The distribution authorization cannot currently be changed by the SCEB manager."))
+def authorization_distribution_can_be_changed_by_sceb(self, user: User, obj: ParcoursDoctoral):
+    return (
+        hasattr(obj, 'thesis_distribution_authorization')
+        and obj.thesis_distribution_authorization.status
+        in CHOIX_STATUTS_AUTORISATION_DIFFUSION_THESE_MODIFIABLE_PAR_SCEB
+    )
+
+
+@predicate(bind=True)
+@predicate_failed_msg(message=_("The admissibility is not in progress"))
+def admissibility_in_progress(self, user: User, obj: ParcoursDoctoral):
+    return obj.status in STATUTS_DOCTORAT_RECEVABILITE_EN_COURS
 
 
 @predicate(bind=True)
@@ -153,6 +241,30 @@ def public_defense_in_progress(self, user: User, obj: ParcoursDoctoral):
 )
 def public_defense_is_authorised(self, user: User, obj: ParcoursDoctoral):
     return obj.status == ChoixStatutParcoursDoctoral.SOUTENANCE_PUBLIQUE_AUTORISEE.name
+
+
+@predicate(bind=True)
+@predicate_failed_msg(message=_("The public defence is not in progress"))
+def private_public_defenses_are_in_progress_formula_2(self, user: User, obj: ParcoursDoctoral):
+    return obj.status in STATUTS_DOCTORAT_DEFENSE_PRIVEE_SOUTENANCE_PUBLIQUE_EN_COURS
+
+
+@predicate(bind=True)
+@predicate_failed_msg(
+    message=_("The doctorate must be in the status '%(status)s' to realize this action.")
+    % {'status': ChoixStatutParcoursDoctoral.DEFENSE_ET_SOUTENANCE_AUTORISEES.value}
+)
+def private_public_defenses_are_authorised_formula_2(self, user: User, obj: ParcoursDoctoral):
+    return obj.status == ChoixStatutParcoursDoctoral.DEFENSE_ET_SOUTENANCE_AUTORISEES.name
+
+
+@predicate(bind=True)
+@predicate_failed_msg(
+    message=_("The doctorate must be in the status '%(status)s' to realize this action.")
+    % {'status': ChoixStatutParcoursDoctoral.DEFENSE_ET_SOUTENANCE_SOUMISES.value}
+)
+def private_public_defenses_are_submitted_formula_2(self, user: User, obj: ParcoursDoctoral):
+    return obj.status == ChoixStatutParcoursDoctoral.DEFENSE_ET_SOUTENANCE_SOUMISES.name
 
 
 @predicate(bind=True)

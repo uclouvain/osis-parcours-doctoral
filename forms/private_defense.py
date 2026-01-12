@@ -38,7 +38,7 @@ class PrivateDefenseForm(forms.Form):
         required=False,
     )
 
-    date_heure = DoctorateDateTimeField(
+    date_heure_defense_privee = DoctorateDateTimeField(
         label=_('Private defence date and time'),
         help_text=_(
             'The private defence date is chosen collectively by the jury and in agreement with the PhD student'
@@ -46,7 +46,7 @@ class PrivateDefenseForm(forms.Form):
         required=False,
     )
 
-    lieu = forms.CharField(
+    lieu_defense_privee = forms.CharField(
         label=_('Private defence location'),
         required=False,
         max_length=255,
@@ -58,7 +58,7 @@ class PrivateDefenseForm(forms.Form):
         required=False,
     )
 
-    proces_verbal = FileUploadField(
+    proces_verbal_defense_privee = FileUploadField(
         label=_('Private defence minutes'),
         help_text=_('The minutes will be uploaded by the thesis exam board secretary or chair.'),
         required=False,

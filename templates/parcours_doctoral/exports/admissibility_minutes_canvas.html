@@ -1,0 +1,225 @@
+{% extends "parcours_doctoral/exports/base_pdf.html" %}
+{% load doctorate_enums i18n parcours_doctoral strings %}
+
+{% comment "License" %}
+  * OSIS stands for Open Student Information System. It's an application
+  * designed to manage the core business of higher education institutions,
+  * such as universities, faculties, institutes and professional schools.
+  * The core business involves the administration of students, teachers,
+  * courses, programs and so on.
+  *
+  * Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
+  *
+  * This program is free software: you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License as published by
+  * the Free Software Foundation, either version 3 of the License, or
+  * (at your option) any later version.
+  *
+  * This program is distributed in the hope that it will be useful,
+  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  * GNU General Public License for more details.
+  *
+  * A copy of this license - GNU General Public License - is available
+  * at the root of the source code of this program.  If not,
+  * see http://www.gnu.org/licenses/.
+{% endcomment %}
+
+{% block extra_head %}
+  <style>
+      #admissibility-result {
+          margin-left: 2em;
+      }
+
+      #admissibility-result > div > div {
+          margin-left: 2em;
+          margin-bottom: 1em;
+      }
+
+      #admissibility-result label {
+          display: inline;
+          font-weight: normal;
+      }
+
+      #admissibility-result input[type="checkbox"] {
+          float: left;
+          height: 1em;
+          width: 1em;
+          display: inline-block;
+          border: #444 1px solid;
+          margin-top: 0.3em;
+      }
+
+      p {
+          margin-top: 1.5em;
+      }
+
+      #signatures {
+          text-align: center;
+      }
+
+      #signatures td {
+          min-height: 8em;
+      }
+  </style>
+{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <div id="title">
+      <h1>{% translate "Admissibility decision" %}</h1>
+      <h2>
+        {% translate "To be completed by Exam Board chair and secretary" %}
+        <br>
+        {% translate "To be sent to CDD administrator" %}
+      </h2>
+    </div>
+    {% if parcours_doctoral.genre_doctorant == "F" %}
+      {% translate "PhD student" as student_title context "female gender" %}
+    {% elif parcours_doctoral.genre_doctorant == "H" %}
+      {% translate "PhD student" as student_title context "male gender" %}
+    {% else %}
+      {% translate "PhD student" as student_title context "gender" %}
+    {% endif %}
+    {% concat parcours_doctoral.nom_doctorant " " parcours_doctoral.prenom_doctorant as full_name %}
+
+    {% field_data student_title full_name inline=True css_class='fw-bold' %}
+
+    {% field_data _("Noma") parcours_doctoral.noma_doctorant inline=True css_class='fw-bold' %}
+
+    {% if parcours_doctoral.cotutelle.cotutelle %}
+      {% get_superior_institute_name parcours_doctoral.cotutelle.institution as institute_name %}
+      <p class="underline-text as-field-data">
+        {% blocktranslate trimmed with institute_name=institute_name|default:parcours_doctoral.cotutelle.autre_institution_nom %}
+          Thesis completed under joint supervision with {{ institute_name }}
+        {% endblocktranslate %}
+      </p>
+    {% endif %}
+
+    {% field_data _("Provisional thesis title") parcours_doctoral.titre_these_propose inline=True css_class='fw-bold' %}
+    <p>
+      {% blocktranslate trimmed with jury_president_first_name=jury_president.prenom jury_president_last_name=jury_president.nom %}
+        After consultation chaired by Professor {{ jury_president_last_name }} {{ jury_president_first_name }}
+        (UCLouvain) and based on the opinions submitted by Exam Board members:
+      {% endblocktranslate %}
+    </p>
+
+    <ul class="fw-bold">
+      {% for jury_member in jury_members %}
+        <li>
+          {{ jury_member.nom }} {{ jury_member.prenom }}
+          {% if not jury_member.membre_ucl %}
+            {% if jury_member.institution %}- {{ jury_member.institution }}{% endif %}
+            {% if jury_member.pays %} - {{ jury_member.pays }}{% endif %}
+          {% endif %}
+          {% if jury_member.role != 'MEMBRE' %}
+            - {{ jury_member.role|enum_display:'RoleJury' }}
+            {% if jury_member.est_promoteur %}
+              {% translate 'and supervisor' %}
+            {% endif %}
+          {% elif jury_member.est_promoteur %}
+            - {% translate 'Supervisor' %}
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+
+    <p>{% translate 'On' %} {{ admissibility_decision_date }},</p>
+    <p>
+      {% blocktranslate trimmed with training_name=parcours_doctoral.formation.intitule %}
+        we, the undersigned, the chair and secretary of the PhD Thesis Exam Board in {{ training_name }} for
+        the above named student, declare the thesis is:
+      {% endblocktranslate %}
+    </p>
+
+    <form id="admissibility-result">
+      <div class="avoid-break-inside">
+        <input type="checkbox" name="admissibility-success">
+        <div>
+          <label for="admissibility-success">
+            <strong>{% translate "admissible and the manuscript is accepted as is." %}</strong>
+          </label>
+          <div>
+            {% translate "The date and time of the private defence (if applicable) and the public defence are set for: __________ at _____ / __________ at _____ (minimum delay of one month after admissibility)." %}
+          </div>
+        </div>
+      </div>
+
+      <div class="avoid-break-inside">
+        <input type="checkbox" name="admissibility-retaking">
+        <div>
+          <label for="admissibility-retaking">
+            {% blocktranslate trimmed %}
+              <strong>admissible subject to minor changes</strong> which can be completed within three
+              months of full-time work.
+              In this case, the supervisor(s) is/are responsible for checking and approving the changes
+              before the date of the private defence (if applicable) or the public defence. Please attach a report
+              <u>explicitly</u> specifying all the requested changes.
+            {% endblocktranslate %}
+            <div>
+              {% translate "The date and time of the private defence (if applicable) and public defence are set for: __________ at _____ / __________ at _____." %}
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <div class="avoid-break-inside">
+        <input type="checkbox" name="admissibility-failure">
+        <div>
+          <label for="admissibility-retaking">
+            {% blocktranslate trimmed %}
+              <strong>inadmissible</strong> (changes requiring more than three months of full-time
+              work).
+              The second decision on admissibility will be made on __________ (at least three months after the date of
+              the first decision). Please attach a report stating the <u>reasons for the inadmissibility</u>
+              and <u>explicitly</u> specifying all the changes requested. This report, which allows the PhD Field
+              Committee to determine inadmissibility, must be signed by the Exam Board chair and secretary.
+            {% endblocktranslate %}
+          </label>
+        </div>
+      </div>
+    </form>
+
+    <p class="complete-after">
+      {% translate 'The definitive thesis title is:' %}
+    </p>
+
+    <hr class="dashed-line" />
+
+    <div class="avoid-break-inside break-before">
+      <div class="d-flex py-2 ps-0">
+        <div>{% translate "Concluded in" %}</div>
+        <div class="solid-line" style="flex: 2;"></div>
+        <div>{% translate ", on" %}</div>
+        <div class="solid-line" style="flex: 1;"></div>
+      </div>
+
+      <table id="signatures" class="table table-bordered caption-top">
+        <caption>
+          <span class="fw-bold text-uppercase text-black">{% translate "Signatures" %}</span>
+        </caption>
+        <thead>
+        <tr>
+          <th>{% translate "Exam Board Chair" %}</th>
+          <th>{% translate "Exam Board Secretary " %}</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td><span>{{ jury_president.nom }} {{ jury_president.prenom }}</span></td>
+          <td><span>{{ jury_secretary.nom }} {{ jury_secretary.prenom }}</span></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div style="break-before: page">
+      <span class="list-title">
+        {% translate "Appendix:" %}
+      </span>
+      <ul>
+        <li>{% translate "Report specifying the changes and/or justifying the decision (if applicable)." %}</li>
+      </ul>
+    </div>
+  </div>
+{% endblock %}

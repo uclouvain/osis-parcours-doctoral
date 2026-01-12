@@ -27,7 +27,10 @@ from rules import always_allow
 
 from osis_role import role
 from parcours_doctoral.auth.predicates.parcours_doctoral import (
+    admissibility_is_submitted,
     complementary_training_enabled,
+    defense_method_is_formula_1,
+    defense_method_is_formula_2,
     doctorate_is_proclaimed,
     has_valid_enrollment,
     is_jury_approuve_ca,
@@ -37,6 +40,8 @@ from parcours_doctoral.auth.predicates.parcours_doctoral import (
     is_related_to_an_admission,
     private_defense_is_authorised,
     private_defense_is_submitted,
+    private_public_defenses_are_authorised_formula_2,
+    private_public_defenses_are_submitted_formula_2,
     public_defense_is_authorised,
     public_defense_is_submitted,
     submitted_confirmation_paper,
@@ -71,12 +76,6 @@ PROGRAM_MANAGER_RULES = {
     'parcours_doctoral.view_parcours_doctoral_home': always_allow,
     'parcours_doctoral.view_parcours_doctoral': always_allow,
     'parcours_doctoral.view_historyentry': is_part_of_education_group,
-    'parcours_doctoral.view_person': is_part_of_education_group,
-    'parcours_doctoral.view_coordinates': is_part_of_education_group,
-    'parcours_doctoral.view_secondary_studies': is_part_of_education_group,
-    'parcours_doctoral.view_curriculum': is_part_of_education_group,
-    'parcours_doctoral.view_languages': is_part_of_education_group,
-    'parcours_doctoral.view_internalnote': is_part_of_education_group,
     # --- Projet de recherche
     'parcours_doctoral.view_project': is_part_of_education_group,
     'parcours_doctoral.change_project': is_part_of_education_group & has_valid_enrollment,
@@ -131,33 +130,77 @@ PROGRAM_MANAGER_RULES = {
     & is_jury_signing_in_progress
     & has_valid_enrollment,
     'parcours_doctoral.approve_jury': is_part_of_education_group & is_jury_approuve_ca & has_valid_enrollment,
+    # -- Recevabilité
+    'parcours_doctoral.view_admissibility': is_part_of_education_group & defense_method_is_formula_2,
+    'parcours_doctoral.change_admissibility': is_part_of_education_group
+    & has_valid_enrollment
+    & defense_method_is_formula_2,
+    'parcours_doctoral.invite_jury_to_admissibility': is_part_of_education_group
+    & has_valid_enrollment
+    & admissibility_is_submitted
+    & defense_method_is_formula_2,
+    'parcours_doctoral.make_admissibility_decision': is_part_of_education_group
+    & has_valid_enrollment
+    & admissibility_is_submitted
+    & defense_method_is_formula_2,
+    # -- Autorisation de diffusion de thèse
+    'parcours_doctoral.view_authorization_distribution': is_part_of_education_group,
+    # -- Validation du manuscript
+    'parcours_doctoral.view_manuscript_validation': is_part_of_education_group,
     # -- Défense
-    'parcours_doctoral.view_private_defense': is_part_of_education_group,
+    'parcours_doctoral.view_private_defense': is_part_of_education_group & defense_method_is_formula_1,
     'parcours_doctoral.authorise_private_defense': is_part_of_education_group
     & has_valid_enrollment
-    & private_defense_is_submitted,
+    & private_defense_is_submitted
+    & defense_method_is_formula_1,
     'parcours_doctoral.invite_jury_to_private_defense': is_part_of_education_group
     & has_valid_enrollment
-    & private_defense_is_authorised,
+    & private_defense_is_authorised
+    & defense_method_is_formula_1,
     'parcours_doctoral.make_private_defense_decision': is_part_of_education_group
     & has_valid_enrollment
-    & private_defense_is_authorised,
-    'parcours_doctoral.change_private_defense': is_part_of_education_group & has_valid_enrollment,
+    & private_defense_is_authorised
+    & defense_method_is_formula_1,
+    'parcours_doctoral.change_private_defense': is_part_of_education_group
+    & has_valid_enrollment
+    & defense_method_is_formula_1,
     # -- Soutenance
-    'parcours_doctoral.view_public_defense': is_part_of_education_group,
-    'parcours_doctoral.change_public_defense': is_part_of_education_group & has_valid_enrollment,
+    'parcours_doctoral.view_public_defense': is_part_of_education_group & defense_method_is_formula_1,
+    'parcours_doctoral.change_public_defense': is_part_of_education_group
+    & has_valid_enrollment
+    & defense_method_is_formula_1,
     'parcours_doctoral.invite_jury_to_public_defense': is_part_of_education_group
     & has_valid_enrollment
-    & public_defense_is_submitted,
+    & public_defense_is_authorised
+    & defense_method_is_formula_1,
     'parcours_doctoral.authorise_public_defense': is_part_of_education_group
     & has_valid_enrollment
-    & public_defense_is_submitted,
+    & public_defense_is_submitted
+    & defense_method_is_formula_1,
     'parcours_doctoral.make_public_defense_decision': is_part_of_education_group
     & has_valid_enrollment
-    & public_defense_is_authorised,
+    & public_defense_is_authorised
+    & defense_method_is_formula_1,
     'parcours_doctoral.send_email_for_diploma_collection': is_part_of_education_group
     & has_valid_enrollment
     & doctorate_is_proclaimed,
+    # -- Défense privée et soutenance publique
+    'parcours_doctoral.view_private_public_defenses': is_part_of_education_group & defense_method_is_formula_2,
+    'parcours_doctoral.change_private_public_defenses': is_part_of_education_group
+    & has_valid_enrollment
+    & defense_method_is_formula_2,
+    'parcours_doctoral.authorise_private_public_defenses': is_part_of_education_group
+    & has_valid_enrollment
+    & private_public_defenses_are_submitted_formula_2
+    & defense_method_is_formula_2,
+    'parcours_doctoral.invite_jury_to_private_public_defenses': is_part_of_education_group
+    & has_valid_enrollment
+    & private_public_defenses_are_authorised_formula_2
+    & defense_method_is_formula_2,
+    'parcours_doctoral.make_private_public_defenses_decision': is_part_of_education_group
+    & has_valid_enrollment
+    & private_public_defenses_are_authorised_formula_2
+    & defense_method_is_formula_2,
     # -- Commentaire
     'parcours_doctoral.view_comments': is_part_of_education_group,
     'parcours_doctoral.change_comments': is_part_of_education_group,

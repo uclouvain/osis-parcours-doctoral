@@ -34,9 +34,8 @@ from django.core.validators import EMPTY_VALUES
 from django.db.models import QuerySet
 from django.urls import NoReverseMatch, reverse
 from django.utils.safestring import mark_safe
-from django.utils.translation import get_language
+from django.utils.translation import get_language, pgettext_lazy
 from django.utils.translation import gettext_lazy as _
-from django.utils.translation import pgettext_lazy
 from django_bootstrap5.renderers import FieldRenderer
 from osis_document_components.enums import PostProcessingWanted
 from osis_document_components.services import get_remote_metadata, get_remote_token
@@ -121,8 +120,12 @@ TAB_TREE = {
     Tab('defense', pgettext_lazy('doctorate tab', 'Defence'), 'person-chalkboard'): [
         Tab('jury-preparation', pgettext_lazy('admission tab', 'Defence method')),
         Tab('jury', _('Jury composition')),
+        Tab('admissibility', _('Admissibility')),
         Tab('private-defense', _('Private defence')),
+        Tab('authorization-distribution', _('Authorization and distribution')),
+        Tab('manuscript-validation', _('Manuscript validation')),
         Tab('public-defense', _('Public defence')),
+        Tab('private-public-defenses', _('Private defence / Public defence')),
     ],
     Tab('comments', pgettext_lazy('tab', 'Comments'), 'comments'): [
         Tab('comments', pgettext_lazy('tab', 'Comments'), 'comments')
@@ -245,7 +248,7 @@ def detail_tab_path_from_update(context, parcours_doctoral_uuid):
     if len(match.namespaces) > 1 and match.namespaces[1] != 'update':
         current_tab_name = match.namespaces[1]
     return reverse(
-        '{}:{}'.format(':'.join(match.namespaces[:-1]), current_tab_name),
+        '{}:{}'.format(':'.join(match.namespaces[:-1]) or 'parcours_doctoral', current_tab_name),
         args=[parcours_doctoral_uuid],
     )
 
@@ -390,7 +393,7 @@ def field_data(
             data = template.Template(template_string).render(template.Context(template_context))
         else:
             data = ''
-    elif type(data) == bool:
+    elif isinstance(data, bool):
         data = _('Yes') if data else _('No')
     elif translate_data is True:
         data = _(data)

@@ -31,6 +31,7 @@ from parcours_doctoral.ddd.domain.model.groupe_de_supervision import (
 )
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoral
 from parcours_doctoral.ddd.domain.service.i_notification import INotification
+from parcours_doctoral.ddd.jury.repository.i_jury import IJuryRepository
 
 
 class NotificationInMemory(INotification):
@@ -46,6 +47,16 @@ class NotificationInMemory(INotification):
         cc_membres_ca: bool = False,
         cc_jury: bool = False,
         cc_sceb: bool = False,
+    ) -> EmailMessage:
+        pass
+
+    @classmethod
+    def envoyer_message_au_doctorant_et_au_jury(
+        cls,
+        jury_repository: IJuryRepository,
+        parcours_doctoral: ParcoursDoctoral,
+        sujet: str,
+        message: str,
     ) -> EmailMessage:
         pass
 

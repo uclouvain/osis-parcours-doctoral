@@ -29,7 +29,6 @@ from django.conf import settings
 from django.contrib import admin
 from django.db import models
 from django.forms import BooleanField, ModelForm
-from django.forms.widgets import HiddenInput
 from django.shortcuts import resolve_url
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
@@ -40,7 +39,6 @@ from osis_document_components.fields import FileField
 from osis_mail_template.admin import MailTemplateAdmin
 
 from base.models.entity_version import EntityVersion
-from education_group.contrib.admin import EducationGroupRoleModelAdmin
 from osis_role.contrib.admin import RoleModelAdmin
 from parcours_doctoral.auth.roles.adre_manager import AdreManager
 from parcours_doctoral.auth.roles.adre_secretary import AdreSecretary
@@ -66,6 +64,10 @@ from parcours_doctoral.models.activity import Activity
 from parcours_doctoral.models.cdd_config import CddConfiguration
 from parcours_doctoral.models.cdd_mail_template import CddMailTemplate
 from parcours_doctoral.models.private_defense import PrivateDefense
+from parcours_doctoral.models.thesis_distribution_authorization import (
+    ThesisDistributionAuthorization,
+    ThesisDistributionAuthorizationActor,
+)
 
 
 @admin.register(Activity)
@@ -237,7 +239,7 @@ class CddMailTemplateAdmin(MailTemplateAdmin):
 
     @staticmethod
     def view_on_site(obj):
-        return resolve_url(f'parcours_doctoral:config:cdd-mail-template:preview', identifier=obj.identifier, pk=obj.pk)
+        return resolve_url('parcours_doctoral:config:cdd-mail-template:preview', identifier=obj.identifier, pk=obj.pk)
 
 
 @admin.register(
@@ -258,7 +260,7 @@ class HijackRoleModelAdmin(HijackUserAdminMixin, RoleModelAdmin):
 
 
 @admin.register(Auditor)
-class HijackRoleModelAdmin(HijackUserAdminMixin, RoleModelAdmin):
+class HijackRoleModelWithEntityAdmin(HijackUserAdminMixin, RoleModelAdmin):
     list_display = ('person', 'entity', 'with_child')
     list_select_related = ['person__user']
 
@@ -458,3 +460,34 @@ class PrivateDefenseAdmin(ReadOnlyFilesMixin, admin.ModelAdmin):
     @admin.display(description=_('Is active'))
     def is_active(self, obj):
         return bool(obj.current_parcours_doctoral_id)
+
+
+@admin.register(ThesisDistributionAuthorization)
+class ThesisDistributionAuthorizationAdmin(admin.ModelAdmin):
+    list_display = [
+        'parcours_doctoral_reference',
+        'status',
+    ]
+    search_fields = [
+        'parcours_doctoral__reference',
+        'parcours_doctoral__student__last_name',
+        'parcours_doctoral__student__first_name',
+    ]
+    autocomplete_fields = [
+        'parcours_doctoral',
+    ]
+    ordering = [
+        'parcours_doctoral__reference',
+    ]
+    list_select_related = [
+        'parcours_doctoral',
+    ]
+
+    @admin.display(description=_('Related doctorate'))
+    def parcours_doctoral_reference(self, obj):
+        return obj.parcours_doctoral.reference
+
+
+@admin.register(ThesisDistributionAuthorizationActor)
+class ThesisDistributionAuthorizationActorAdmin(admin.ModelAdmin):
+    pass

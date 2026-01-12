@@ -24,6 +24,7 @@
 #
 # ##############################################################################
 from .activity import *
+from .admissibility import *
 from .confirmation import *
 from .cotutelle import *
 from .dashboard import *

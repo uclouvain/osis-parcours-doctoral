@@ -28,9 +28,8 @@ import re
 from dal import forward
 from django import forms
 from django.conf import settings
-from django.utils.translation import get_language
+from django.utils.translation import get_language, pgettext_lazy
 from django.utils.translation import gettext_lazy as _
-from django.utils.translation import pgettext_lazy
 
 from admission.ddd.admission.doctorat.preparation.domain.model.enums import (
     ChoixTypeAdmission,
@@ -456,7 +455,12 @@ class ParcoursDoctorauxFilterForm(forms.Form):
 
 class IntervalDateForm(forms.Form):
     type_date = forms.ChoiceField(
-        choices=ChoixEtapeParcoursDoctoral.choices_except(ChoixEtapeParcoursDoctoral.JURY),
+        choices=ChoixEtapeParcoursDoctoral.choices_except(
+            ChoixEtapeParcoursDoctoral.JURY,
+            ChoixEtapeParcoursDoctoral.DEFENSE_SOUTENANCE_FORMULE_2,
+            ChoixEtapeParcoursDoctoral.PROCLAMATION,
+            ChoixEtapeParcoursDoctoral.ABANDON_ECHEC,
+        ),
         label=_('Date type'),
     )
 
