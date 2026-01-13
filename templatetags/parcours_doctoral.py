@@ -179,8 +179,12 @@ def get_valid_tab_tree(context, permission_obj, tab_tree):
     # Loop over the tabs of the original tab tree
     for parent_tab, sub_tabs in tab_tree.items():
         if doctorate_limited_tabs and parent_tab.name not in {
+            'documents',
             'doctorate',
             'course-enrollment',
+            'comments',
+            'history',
+            'management',
         }:
             continue
 
