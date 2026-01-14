@@ -2810,7 +2810,7 @@ components:
       type: string
       description: |-
         * `CONFERENCE` - Colloques et conférences
-        * `COMMUNICATION` - Communications orale (hors conférence)
+        * `COMMUNICATION` - Communications orale
         * `SEMINAR` - Séminaires suivis
         * `PUBLICATION` - Publications
         * `SERVICE` - Services
@@ -3628,7 +3628,7 @@ components:
         conference_publication_types:
           title: Types d'activité pour une communication dans la catégorie Conférence
         communication_types:
-          title: Types d'activité pour la catégorie Communication orale (hors conférence)
+          title: Types d'activité pour la catégorie Communication orale
         seminar_types:
           title: 'Types d''activité pour la catégorie Séminaire de recherche : assistance'
         publication_types:
