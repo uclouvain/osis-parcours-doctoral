@@ -59,9 +59,9 @@ from parcours_doctoral.ddd.domain.model.enums import (
     STATUTS_ACTIFS,
     BourseRecherche,
     ChoixCommissionProximiteCDSS,
-    ChoixEtapeParcoursDoctoral,
     ChoixStatutParcoursDoctoral,
     ChoixTypeFinancement,
+    TypeDateParcoursDoctoral,
 )
 from parcours_doctoral.ddd.formation.domain.model.enums import (
     CategorieActivite,
@@ -833,7 +833,7 @@ class ParcoursDoctoralListTestView(QueriesAssertionsMixin, TestCase):
         response = self._do_request(
             **{
                 'date_form-TOTAL_FORMS': 1,
-                'date_form-0-type_date': ChoixEtapeParcoursDoctoral.ADMISSION.name,
+                'date_form-0-type_date': TypeDateParcoursDoctoral.ADMISSION.name,
             }
         )
 
@@ -856,7 +856,7 @@ class ParcoursDoctoralListTestView(QueriesAssertionsMixin, TestCase):
         response = self._do_request(
             **{
                 'date_form-TOTAL_FORMS': 1,
-                'date_form-0-type_date': ChoixEtapeParcoursDoctoral.ADMISSION.name,
+                'date_form-0-type_date': TypeDateParcoursDoctoral.ADMISSION.name,
                 'date_form-0-date_debut': '2022-01-02',
                 'date_form-0-date_fin': '2021-01-01',
             }
@@ -879,7 +879,7 @@ class ParcoursDoctoralListTestView(QueriesAssertionsMixin, TestCase):
         response = self._do_request(
             **{
                 'date_form-TOTAL_FORMS': 1,
-                'date_form-0-type_date': ChoixEtapeParcoursDoctoral.ADMISSION.name,
+                'date_form-0-type_date': TypeDateParcoursDoctoral.ADMISSION.name,
                 'date_form-0-date_debut': '2022-01-01',
                 'date_form-0-date_fin': '2022-12-31',
             }
@@ -891,7 +891,7 @@ class ParcoursDoctoralListTestView(QueriesAssertionsMixin, TestCase):
         response = self._do_request(
             **{
                 'date_form-TOTAL_FORMS': 1,
-                'date_form-0-type_date': ChoixEtapeParcoursDoctoral.ADMISSION.name,
+                'date_form-0-type_date': TypeDateParcoursDoctoral.ADMISSION.name,
                 'date_form-0-date_debut': '2023-01-01',
                 'date_form-0-date_fin': '2023-01-02',
             }
@@ -905,7 +905,7 @@ class ParcoursDoctoralListTestView(QueriesAssertionsMixin, TestCase):
 
         data = {
             'date_form-TOTAL_FORMS': 1,
-            'date_form-0-type_date': ChoixEtapeParcoursDoctoral.CONFIRMATION.name,
+            'date_form-0-type_date': TypeDateParcoursDoctoral.CONFIRMATION.name,
             'date_form-0-date_debut': '2024-01-01',
             'date_form-0-date_fin': '2024-01-02',
         }
@@ -1079,7 +1079,7 @@ class ParcoursDoctoralListTestView(QueriesAssertionsMixin, TestCase):
     def test_sort_by_credits(self):
         self.client.force_login(user=self.program_manager.user)
 
-        doctorate_activities = [
+        [
             CourseFactory(
                 parcours_doctoral=self.doctorate,
                 status=StatutActivite.ACCEPTEE.name,
@@ -1093,7 +1093,7 @@ class ParcoursDoctoralListTestView(QueriesAssertionsMixin, TestCase):
             international_scholarship=self.other_scholarship,
         )
 
-        other_doctorate_activities = [
+        [
             CourseFactory(
                 parcours_doctoral=other_doctorate,
                 status=StatutActivite.ACCEPTEE.name,

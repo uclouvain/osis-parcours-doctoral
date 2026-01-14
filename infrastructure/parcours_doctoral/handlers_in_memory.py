@@ -103,6 +103,9 @@ from parcours_doctoral.infrastructure.parcours_doctoral.jury.repository.in_memor
 from parcours_doctoral.infrastructure.parcours_doctoral.read_view.handlers_in_memory import (
     COMMAND_HANDLERS as READ_VIEW_COMMAND_HANDLERS,
 )
+from parcours_doctoral.infrastructure.parcours_doctoral.recevabilite.repository.in_memory.recevabilite import (
+    RecevabiliteInMemoryRepository,
+)
 from parcours_doctoral.infrastructure.parcours_doctoral.repository.in_memory.document import (
     DocumentInMemoryRepository,
 )
@@ -128,6 +131,7 @@ _pdf_generation_service = InMemoryPDFGeneration()
 _jury_repository = JuryInMemoryRepository()
 _activite_repository = ActiviteInMemoryRepository()
 _pae_translator = InMemoryPaeTranslator()
+_recevabilite_repository = RecevabiliteInMemoryRepository()
 
 
 COMMAND_HANDLERS = {
@@ -281,6 +285,8 @@ COMMAND_HANDLERS = {
         activite_repository=_activite_repository,
         document_repository=_document_repository,
         pae_translator=_pae_translator,
+        defense_privee_repository=_defense_privee_repository,
+        recevabilite_repository=_recevabilite_repository,
     ),
     **READ_VIEW_COMMAND_HANDLERS,
 }

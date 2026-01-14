@@ -378,6 +378,9 @@ msgstr ""
 msgid "Admissibility decision"
 msgstr ""
 
+msgid "Admissibility decision date"
+msgstr ""
+
 msgid "Admissibility minutes"
 msgstr ""
 
@@ -1020,7 +1023,16 @@ msgstr ""
 msgid "Current funding"
 msgstr ""
 
+msgid "Current status of the admissibility"
+msgstr ""
+
 msgid "Current status of the confirmation"
+msgstr ""
+
+msgid "Current status of the private defence"
+msgstr ""
+
+msgid "Current status of the public defence"
 msgstr ""
 
 msgid "Custom mail template deleted successfully"
@@ -2399,9 +2411,6 @@ msgid "No SCEB manager has been found."
 msgstr ""
 
 msgid "No auditor are set for this training."
-msgstr ""
-
-msgid "No confirmation paper yet"
 msgstr ""
 
 msgid "No contact supervisor has been found."
@@ -4531,6 +4540,9 @@ msgid ""
 msgstr ""
 
 msgid "items per page"
+msgstr ""
+
+msgid "no."
 msgstr ""
 
 msgctxt "parcours_doctoral"

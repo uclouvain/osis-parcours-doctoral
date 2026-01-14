@@ -448,6 +448,9 @@ msgstr "Recevabilité (formule 2)"
 msgid "Admissibility decision"
 msgstr "Décision de recevabilité"
 
+msgid "Admissibility decision date"
+msgstr "Date de décision de recevabilité"
+
 msgid "Admissibility minutes"
 msgstr "Procès verbal de recevabilité"
 
@@ -1127,8 +1130,17 @@ msgstr ""
 msgid "Current funding"
 msgstr "Financement actuel"
 
+msgid "Current status of the admissibility"
+msgstr "Statut actuel de la recevabilité"
+
 msgid "Current status of the confirmation"
 msgstr "Statut actuel de la confirmation"
+
+msgid "Current status of the private defence"
+msgstr "Statut actuel de la défense privée"
+
+msgid "Current status of the public defence"
+msgstr "Statut actuel de la soutenance publique"
 
 msgid "Custom mail template deleted successfully"
 msgstr "Template d'email personnalisé supprimé avec succès"
@@ -2678,9 +2690,6 @@ msgstr "Aucun gestionnaire SCEB n'a été trouvé."
 
 msgid "No auditor are set for this training."
 msgstr "Aucun vérificateur.trice configuré.e pour cette formation."
-
-msgid "No confirmation paper yet"
-msgstr "Pas encore d'épreuve de confirmation"
 
 msgid "No contact supervisor has been found."
 msgstr "Aucun promoteur de contact n'a été trouvé."
@@ -5042,6 +5051,9 @@ msgstr ""
 
 msgid "items per page"
 msgstr "éléments par page"
+
+msgid "no."
+msgstr "n°"
 
 msgctxt "parcours_doctoral"
 msgid "on"

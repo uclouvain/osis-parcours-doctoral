@@ -33,7 +33,7 @@ from osis_role.contrib.models import RoleModel
 from parcours_doctoral.auth.predicates.parcours_doctoral import (
     authorization_distribution_can_be_changed_by_sceb,
     authorization_distribution_is_in_progress,
-    defense_method_is_formula_1,
+    defense_method_is_formula_1_or_unknown,
     defense_method_is_formula_2,
 )
 
@@ -71,8 +71,8 @@ class ScebManager(RoleModel):
             'parcours_doctoral.view_course_enrollment': rules.always_allow,
             'parcours_doctoral.view_assessment_enrollment': rules.always_allow,
             'parcours_doctoral.view_jury': rules.always_allow,
-            'parcours_doctoral.view_private_defense': defense_method_is_formula_1,
-            'parcours_doctoral.view_public_defense': defense_method_is_formula_1,
+            'parcours_doctoral.view_private_defense': defense_method_is_formula_1_or_unknown,
+            'parcours_doctoral.view_public_defense': defense_method_is_formula_1_or_unknown,
             'parcours_doctoral.view_admissibility': defense_method_is_formula_2,
             'parcours_doctoral.view_private_public_defenses': defense_method_is_formula_2,
             'parcours_doctoral.view_comments': rules.always_allow,
