@@ -671,11 +671,10 @@ msgstr "Chemistry"
 
 msgctxt "CategorieActivite"
 msgid "COMMUNICATION"
-msgstr "Oral communications (excluding conference)"
+msgstr "Oral communications"
 
 msgid "COMMUNICATION types"
-msgstr ""
-"Activity types for the oral communication category (excluding conference)"
+msgstr "Activity types for the oral communication category"
 
 msgid "COMPLEMENTARY_TRAINING"
 msgstr "Further training"
@@ -948,10 +947,6 @@ msgstr ""
 msgid "Country"
 msgstr ""
 
-msgid "Course"
-msgstr ""
-
-msgctxt "admission"
 msgid "Course"
 msgstr ""
 
@@ -4202,6 +4197,13 @@ msgid "Total"
 msgstr ""
 
 msgid "Total hourly volume"
+msgstr ""
+
+msgid "Total volume"
+msgstr ""
+
+msgctxt "admission"
+msgid "Training"
 msgstr ""
 
 msgid "Training activities"

@@ -50,7 +50,7 @@
 ></a>
 <span class="badge bg-{{ activity|status_as_class }} text-bg-{{ activity|status_as_class }}">{{ activity.status|enum_display:'StatutActivite' }}</span>
 
-{{ activity.category|enum_display:'CategorieActivite' }}{% if activity.ects %} - {{ activity.ects|format_ects }}{% endif %}
+{{ categories_dict | get_item:activity.category }}{% if activity.ects %} - {{ activity.ects|format_ects }}{% endif %}
 {% if activity.category == 'UCL_COURSE' %}<br>{{ activity.learning_year_acronym }} - {{ activity.learning_year_title }} - {{ activity.learning_year_academic_year|get_short_academic_year }}{% endif %}
 
 {% trans "Please check the details of the activity (and sub-activities) to fill in all the mandatory fields" as not_complete_sub %}
