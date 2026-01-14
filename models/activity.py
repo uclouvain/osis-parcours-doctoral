@@ -469,9 +469,8 @@ class Activity(models.Model):
     )
 
     # Publication
-    authors = models.CharField(
+    authors = models.TextField(
         verbose_name=_("Authors"),
-        max_length=100,
         default="",
         blank=True,
     )
