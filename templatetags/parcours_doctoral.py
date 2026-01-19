@@ -109,7 +109,7 @@ TAB_TREE = {
         Tab('confirmation', _('Confirmation exam')),
         Tab('extension-request', _('New deadline')),
     ],
-    Tab('training', pgettext_lazy('admission', 'Course'), 'book-open-reader'): [
+    Tab('training', pgettext_lazy('admission', 'Training'), 'book-open-reader'): [
         Tab('doctoral-training', _('PhD training')),
         Tab('complementary-training', _('Complementary training')),
     ],
@@ -179,8 +179,12 @@ def get_valid_tab_tree(context, permission_obj, tab_tree):
     # Loop over the tabs of the original tab tree
     for parent_tab, sub_tabs in tab_tree.items():
         if doctorate_limited_tabs and parent_tab.name not in {
+            'documents',
             'doctorate',
             'course-enrollment',
+            'comments',
+            'history',
+            'management',
         }:
             continue
 
