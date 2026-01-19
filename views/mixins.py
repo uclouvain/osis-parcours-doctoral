@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2026 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -24,6 +24,7 @@
 #
 # ##############################################################################
 import json
+import uuid
 
 from django.contrib import messages
 from django.core.cache import cache
@@ -139,8 +140,9 @@ class ParcoursDoctoralViewMixin(ParcoursDoctoralBaseViewMixin, ContextMixin):
             ParcoursDoctoralList.cache_key_for_result(user_id=self.request.user.id)
         )
 
-        if cached_parcours_doctorals_list and self.parcours_doctoral_uuid in cached_parcours_doctorals_list:
-            current_parcours_doctoral = cached_parcours_doctorals_list[self.parcours_doctoral_uuid]
+        parcours_doctoral_uuid = uuid.UUID(self.parcours_doctoral_uuid) if self.parcours_doctoral_uuid else None
+        if cached_parcours_doctorals_list and parcours_doctoral_uuid in cached_parcours_doctorals_list:
+            current_parcours_doctoral = cached_parcours_doctorals_list[parcours_doctoral_uuid]
             for key in ['previous', 'next']:
                 if current_parcours_doctoral[key]:
                     context[f'{key}_parcours_doctoral_url'] = resolve_url(
