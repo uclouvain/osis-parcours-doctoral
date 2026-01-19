@@ -52,12 +52,14 @@ from parcours_doctoral.tests.factories.activity import (
 from parcours_doctoral.tests.factories.parcours_doctoral import ParcoursDoctoralFactory
 from parcours_doctoral.tests.factories.roles import StudentRoleFactory
 from parcours_doctoral.tests.factories.supervision import PromoterFactory
+from reference.tests.factories.country import CountryFactory
 
 
 @override_settings(WAFFLE_CREATE_MISSING_SWITCHES=False)
 class TrainingApiTestCase(QueriesAssertionsMixin, APITestCase):
     @classmethod
     def setUpTestData(cls) -> None:
+        cls.country = CountryFactory()
         cls.valid_data_for_conference = {
             'object_type': 'Conference',
             'context': ContexteFormation.DOCTORAL_TRAINING.name,
@@ -73,7 +75,7 @@ class TrainingApiTestCase(QueriesAssertionsMixin, APITestCase):
             'end_date': None,
             'participating_days': 0.0,
             'is_online': False,
-            'country': None,
+            'country': cls.country.iso_code,
             'city': '',
             'organizing_institution': '',
             'website': '',
@@ -239,7 +241,7 @@ class TrainingApiTestCase(QueriesAssertionsMixin, APITestCase):
             'end_date': None,
             'participating_days': 0.0,
             'is_online': False,
-            'country': None,
+            'country': self.country.iso_code,
             'city': '',
             'organizing_institution': '',
             'website': '',
