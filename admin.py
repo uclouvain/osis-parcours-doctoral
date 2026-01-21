@@ -199,7 +199,7 @@ class AssessmentEnrollmentAdmin(admin.ModelAdmin):
 
     @admin.display(description=_('Related doctorate'))
     def related_doctorate(self, obj):
-        return obj.course.parcours_doctoral.reference
+        return obj.course.parcours_doctoral.uuid
 
     @admin.display(description=_('Learning unit'))
     def course_acronym(self, obj):
@@ -214,7 +214,7 @@ class AssessmentEnrollmentAdmin(admin.ModelAdmin):
                 'course__parcours_doctoral',
             )
             .order_by(
-                'course__parcours_doctoral__reference',
+                'course__parcours_doctoral_id',
                 'learning_year_academic_year',
                 'learning_year_acronym',
             )
@@ -381,7 +381,7 @@ class ConfirmationPaperAdmin(ReadOnlyFilesMixin, admin.ModelAdmin):
         'confirmation_date',
     ]
     search_fields = [
-        'parcours_doctoral__reference',
+        'parcours_doctoral__uuid',
         'parcours_doctoral__student__last_name',
         'parcours_doctoral__student__first_name',
     ]
@@ -389,7 +389,7 @@ class ConfirmationPaperAdmin(ReadOnlyFilesMixin, admin.ModelAdmin):
         'parcours_doctoral',
     ]
     ordering = [
-        'parcours_doctoral__reference',
+        'parcours_doctoral_id',
         '-created_at',
     ]
     list_select_related = [
@@ -398,7 +398,7 @@ class ConfirmationPaperAdmin(ReadOnlyFilesMixin, admin.ModelAdmin):
 
     @admin.display(description=_('Related doctorate'))
     def parcours_doctoral_reference(self, obj):
-        return obj.parcours_doctoral.reference
+        return obj.parcours_doctoral.uuid
 
 
 class PrivateDefenseAdminForm(ModelForm):
@@ -438,7 +438,7 @@ class PrivateDefenseAdmin(ReadOnlyFilesMixin, admin.ModelAdmin):
         'datetime',
     ]
     search_fields = [
-        'parcours_doctoral__reference',
+        'parcours_doctoral__uuid',
         'parcours_doctoral__student__last_name',
         'parcours_doctoral__student__first_name',
     ]
@@ -446,7 +446,7 @@ class PrivateDefenseAdmin(ReadOnlyFilesMixin, admin.ModelAdmin):
         'parcours_doctoral',
     ]
     ordering = [
-        'parcours_doctoral__reference',
+        'parcours_doctoral_id',
         '-created_at',
     ]
     list_select_related = [
@@ -455,7 +455,7 @@ class PrivateDefenseAdmin(ReadOnlyFilesMixin, admin.ModelAdmin):
 
     @admin.display(description=_('Related doctorate'))
     def parcours_doctoral_reference(self, obj):
-        return obj.parcours_doctoral.reference
+        return obj.parcours_doctoral.uuid
 
     @admin.display(description=_('Is active'))
     def is_active(self, obj):
@@ -469,7 +469,7 @@ class ThesisDistributionAuthorizationAdmin(admin.ModelAdmin):
         'status',
     ]
     search_fields = [
-        'parcours_doctoral__reference',
+        'parcours_doctoral__uuid',
         'parcours_doctoral__student__last_name',
         'parcours_doctoral__student__first_name',
     ]
@@ -477,7 +477,7 @@ class ThesisDistributionAuthorizationAdmin(admin.ModelAdmin):
         'parcours_doctoral',
     ]
     ordering = [
-        'parcours_doctoral__reference',
+        'parcours_doctoral_id',
     ]
     list_select_related = [
         'parcours_doctoral',
@@ -485,7 +485,7 @@ class ThesisDistributionAuthorizationAdmin(admin.ModelAdmin):
 
     @admin.display(description=_('Related doctorate'))
     def parcours_doctoral_reference(self, obj):
-        return obj.parcours_doctoral.reference
+        return obj.parcours_doctoral.uuid
 
 
 @admin.register(ThesisDistributionAuthorizationActor)

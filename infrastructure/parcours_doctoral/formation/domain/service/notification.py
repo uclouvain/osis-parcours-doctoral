@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -29,15 +29,16 @@ from django.conf import settings
 from django.db.models import QuerySet
 from django.utils import translation
 from django.utils.functional import Promise, lazy
-from django.utils.translation import get_language
+from django.utils.translation import get_language, override
 from django.utils.translation import gettext_lazy as _
-from django.utils.translation import override
 from osis_mail_template import generate_email
 from osis_notification.contrib.handlers import (
     EmailNotificationHandler,
     WebNotificationHandler,
 )
 from osis_notification.contrib.notification import WebNotification
+from osis_notification.models.enums import NotificationTypes
+from osis_notification.models.web_notification import WebNotification as WebNotificationDBModel
 from osis_signature.models import Actor
 
 from base.auth.roles.program_manager import ProgramManager
@@ -128,7 +129,6 @@ class Notification(INotification):
                 parcours_doctoral.uuid,
                 'course-enrollment',
             ),
-            "reference": parcours_doctoral.reference,
         }
 
     @classmethod
@@ -176,17 +176,17 @@ class Notification(INotification):
         common_tokens = cls.get_common_tokens(parcours_doctoral_instance)
         if activites[0].categorie == CategorieActivite.UCL_COURSE:
             msg = _(
-                '<a href="%(parcours_doctoral_link_front_course_enrollment)s">%(reference)s</a> - '
+                '<a href="%(parcours_doctoral_link_front_course_enrollment)s">PhD</a> - '
                 'Some course enrollment have been approved.'
             )
         elif activites[0].contexte == ContexteFormation.COMPLEMENTARY_TRAINING:
             msg = _(
-                '<a href="%(parcours_doctoral_link_front_complementary_training)s">%(reference)s</a> - '
+                '<a href="%(parcours_doctoral_link_front_complementary_training)s">PhD</a> - '
                 'Some complementary training activities have been approved.'
             )
         else:
             msg = _(
-                '<a href="%(parcours_doctoral_link_front_doctoral_training)s">%(reference)s</a> - '
+                '<a href="%(parcours_doctoral_link_front_doctoral_training)s">PhD</a> - '
                 'Some doctoral training activities have been approved.'
             )
         with translation.override(parcours_doctoral_instance.student.language):
@@ -218,7 +218,7 @@ class Notification(INotification):
     def notifier_encodage_note_aux_gestionnaires(cls, evaluation: Evaluation, cours: Activite) -> None:
         doctorate = (
             ParcoursDoctoralModel.objects.filter(uuid=cours.parcours_doctoral_id.uuid)
-            .values('uuid', 'reference', 'training__education_group_id')
+            .values('uuid', 'training__education_group_id')
             .first()
         )
 
@@ -232,20 +232,26 @@ class Notification(INotification):
         assessment_enrolment_list_url = get_parcours_doctoral_link_back(doctorate['uuid'], 'assessment-enrollment')
 
         content = _(
-            '<a href="%(assessment_enrolment_list_url)s">%(reference)s</a> - '
+            '<a href="%(assessment_enrolment_list_url)s">PhD</a> - '
             'A mark has been specified for an assessment '
             '(%(course_acronym)s - session numero %(session)s - %(course_year)s-%(course_year_1)s).'
         )
         tokens = {
             'assessment_enrolment_list_url': assessment_enrolment_list_url,
-            'reference': doctorate['reference'],
             'course_acronym': evaluation.entity_id.code_unite_enseignement,
             'session': evaluation.entity_id.session,
             'course_year': evaluation.entity_id.annee,
             'course_year_1': evaluation.entity_id.annee + 1,
         }
 
+        web_notifications: list[WebNotificationDBModel] = []
         for manager in program_managers:
             with override(manager.person.language):
-                web_notification = WebNotification(recipient=manager.person, content=str(content % tokens))
-            WebNotificationHandler.create(web_notification)
+                web_notifications.append(
+                    WebNotificationDBModel(
+                        person=manager.person,
+                        payload=str(content % tokens),
+                        type=NotificationTypes.WEB_TYPE.name,
+                    )
+                )
+        WebNotificationDBModel.objects.bulk_create(objs=web_notifications)

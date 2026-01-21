@@ -40,7 +40,6 @@ class ListerTousParcoursDoctorauxQuery(interface.QueryRequest):
 
     annee_academique: Optional[int] = None
     type_admission: Optional[str] = ''
-    numero: Optional[int] = None
     noma: Optional[str] = ''
     matricule_doctorant: Optional[str] = ''
     uuid_promoteur: Optional[str] = ''

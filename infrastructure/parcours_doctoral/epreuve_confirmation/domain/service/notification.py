@@ -99,7 +99,6 @@ class Notification(NotificationMixin, INotification):
             "confirmation_paper_date": cls._format_date(confirmation_paper.date),
             "confirmation_paper_deadline": cls._format_date(confirmation_paper.date_limite),
             "scholarship_grant_acronym": financing_type,
-            "reference": parcours_doctoral.reference,
             "extension_request_proposed_date": (
                 cls._format_date(confirmation_paper.demande_prolongation.nouvelle_echeance)
                 if confirmation_paper.demande_prolongation
@@ -115,7 +114,7 @@ class Notification(NotificationMixin, INotification):
         if parcours_doctoral.status == ChoixStatutParcoursDoctoral.CONFIRMATION_SOUMISE.name:
             # Already submitted at least once
             manager_notification_content = _(
-                '<a href="%(confirmation_paper_link_back)s">%(reference)s</a> - '
+                '<a href="%(confirmation_paper_link_back)s">PhD</a> - '
                 '%(student_first_name)s %(student_last_name)s submitted new data '
                 'for the confirmation paper for %(training_title)s'
             )
@@ -123,7 +122,7 @@ class Notification(NotificationMixin, INotification):
         else:
             # First submission
             manager_notification_content = _(
-                '<a href="%(confirmation_paper_link_back)s">%(reference)s</a> - '
+                '<a href="%(confirmation_paper_link_back)s">PhD</a> - '
                 '%(student_first_name)s %(student_last_name)s submitted data '
                 'for the first time for the confirmation paper for %(training_title)s'
             )
@@ -153,7 +152,7 @@ class Notification(NotificationMixin, INotification):
         cls._send_notification_to_managers(
             education_group_id=parcours_doctoral.training.education_group_id,
             content=_(
-                '<a href="%(confirmation_paper_link_back)s">%(reference)s</a> - '
+                '<a href="%(confirmation_paper_link_back)s">PhD</a> - '
                 'A supervisor submitted documents related to the confirmation paper of '
                 '%(student_first_name)s %(student_last_name)s for %(training_title)s'
             ),
@@ -169,7 +168,7 @@ class Notification(NotificationMixin, INotification):
         cls._send_notification_to_managers(
             education_group_id=parcours_doctoral.training.education_group_id,
             content=_(
-                '<a href="%(confirmation_paper_link_back)s">%(reference)s</a> - '
+                '<a href="%(confirmation_paper_link_back)s">PhD</a> - '
                 '%(student_first_name)s %(student_last_name)s proposed a new deadline '
                 '(%(extension_request_proposed_date)s) for the confirmation paper for %(training_title)s'
             ),
@@ -265,8 +264,7 @@ class Notification(NotificationMixin, INotification):
 
         # Create the async task to generate the success attestation
         cls._create_async_task(
-            task_name=_('Create the confirmation paper success attestation (%(reference)s)')
-            % {'reference': parcours_doctoral.reference},
+            task_name=_('Create the confirmation paper success attestation'),
             task_description=_('Create the confirmation paper success attestation as PDF'),
             task_type=ParcoursDoctoralTask.TaskType.CONFIRMATION_SUCCESS_ATTESTATION,
             parcours_doctoral=parcours_doctoral,

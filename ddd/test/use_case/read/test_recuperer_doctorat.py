@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -56,7 +56,6 @@ class TestRecupererDoctorat(TestCase):
             )
         )
         self.assertEqual(parcours_doctoral_dto.uuid, 'uuid-SC3DP-promoteurs-membres-deja-approuves')
-        self.assertEqual(parcours_doctoral_dto.reference, 'r4')
 
         self.assertEqual(parcours_doctoral_dto.statut, ChoixStatutParcoursDoctoral.ADMIS.name)
 
@@ -65,5 +64,5 @@ class TestRecupererDoctorat(TestCase):
         self.assertEqual(parcours_doctoral_dto.formation.intitule, 'Doctorat en sciences')
 
         self.assertEqual(parcours_doctoral_dto.matricule_doctorant, '3')
-        self.assertEqual(parcours_doctoral_dto.nom_doctorant, 'Dupond'),
+        self.assertEqual(parcours_doctoral_dto.nom_doctorant, 'Dupond')
         self.assertEqual(parcours_doctoral_dto.prenom_doctorant, 'Pierre')

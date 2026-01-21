@@ -81,7 +81,6 @@ class Notification(NotificationMixin, INotification):
             'public_defense_date': cls._format_date(doctorate.defense_datetime),
             'public_defense_place': doctorate.defense_place,
             'deliberation_room': doctorate.defense_deliberation_room,
-            'reference': doctorate.reference,
             'sender_name': f'{sender_first_name} {sender_last_name}',
             'management_entity_name': doctorate.management_entity_title,  # From annotation
         }
