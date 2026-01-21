@@ -23,8 +23,15 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+import datetime
 
 from admission.views import PaginatedList
+from ddd.logic.shared_kernel.academic_year.domain.service.get_current_academic_year import (
+    GetCurrentAcademicYear,
+)
+from ddd.logic.shared_kernel.academic_year.repository.i_academic_year import (
+    IAcademicYearRepository,
+)
 from parcours_doctoral.ddd.read_view.dto.parcours_doctoral import (
     ParcoursDoctoralRechercheDTO,
 )
@@ -37,8 +44,19 @@ from parcours_doctoral.ddd.read_view.repository.i_liste_parcours_doctoraux impor
 def lister_parcours_doctoraux(
     cmd: 'ListerTousParcoursDoctorauxQuery',
     lister_tous_parcours_doctoraux_service: 'IListeParcoursDoctorauxRepository',
+    academic_year_repository: 'IAcademicYearRepository',
 ) -> 'PaginatedList[ParcoursDoctoralRechercheDTO]':
+    annee_courante = (
+        GetCurrentAcademicYear()
+        .get_starting_academic_year(
+            datetime.date.today(),
+            academic_year_repository,
+        )
+        .year
+    )
+
     return lister_tous_parcours_doctoraux_service.get(
+        annee_academique_courante=annee_courante,
         numero=cmd.numero,
         noma=cmd.noma,
         matricule_doctorant=cmd.matricule_doctorant,

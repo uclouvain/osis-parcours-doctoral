@@ -32,6 +32,7 @@ from admission.tests.factories import DoctorateAdmissionFactory
 from base.models.education_group_year import EducationGroupYear
 from base.models.enums.education_group_types import TrainingType
 from base.models.enums.entity_type import EntityType
+from base.models.student import Student
 from base.tests.factories.academic_year import AcademicYearFactory
 from base.tests.factories.education_group_type import EducationGroupTypeFactory
 from base.tests.factories.education_group_year import EducationGroupYearFactory
@@ -114,6 +115,24 @@ class FormationFactory(EducationGroupYearFactory):
         )
 
 
+def create_valid_enrolment(doctorate: ParcoursDoctoral, year: int | None = None):
+    """
+    Create a valid enrolment of the student to the doctorate for the specified year (by default the current year).
+    """
+    academic_year = AcademicYearFactory(year=year) if year else AcademicYearFactory(current=True)
+    student = Student.objects.filter(person=doctorate.student).first()
+    return InscriptionProgrammeAnnuelFactory(
+        programme__offer=FormationFactory(
+            academic_year=academic_year,
+            education_group=doctorate.training.education_group,
+            acronym=doctorate.training.acronym,
+            partial_acronym=doctorate.training.partial_acronym,
+        ),
+        programme_cycle__etudiant=student,
+        etat_inscription=EtatInscriptionFormation.INSCRIT_AU_ROLE.name,
+    )
+
+
 class ParcoursDoctoralFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = ParcoursDoctoral
@@ -141,14 +160,10 @@ class ParcoursDoctoralFactory(factory.django.DjangoModelFactory):
     @factory.post_generation
     def create_student(self, create, extracted, with_valid_enrolment=True, **kwargs):
         StudentRoleFactory(person=self.student)
-        student = StudentFactory(person=self.student)
+        StudentFactory(person=self.student)
 
         if with_valid_enrolment:
-            InscriptionProgrammeAnnuelFactory(
-                programme__offer=self.training,
-                programme_cycle__etudiant=student,
-                etat_inscription=EtatInscriptionFormation.INSCRIT_AU_ROLE.name,
-            )
+            create_valid_enrolment(doctorate=self, year=self.training.academic_year.year)
 
     @factory.post_generation
     def create_supervision_group(self, create, extracted, **kwargs):

@@ -143,20 +143,20 @@ class TrainingApiTestCase(QueriesAssertionsMixin, APITestCase):
     def test_training_get_with_student(self):
         self.client.force_authenticate(user=self.student.user)
 
-        with self.assertNumQueriesLessThan(8):
+        with self.assertNumQueriesLessThan(9, verbose=True):
             response = self.client.get(self.url)
         activities = response.json()
         self.assertEqual(len(activities), 1)
 
         CourseFactory(parcours_doctoral=self.parcours_doctoral, context=ContexteFormation.COMPLEMENTARY_TRAINING.name)
-        with self.assertNumQueriesLessThan(8):
+        with self.assertNumQueriesLessThan(9):
             response = self.client.get(self.complementary_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         activities = response.json()
         self.assertEqual(len(activities), 1)
 
         UclCourseFactory(parcours_doctoral=self.parcours_doctoral, context=ContexteFormation.DOCTORAL_TRAINING.name)
-        with self.assertNumQueriesLessThan(8):
+        with self.assertNumQueriesLessThan(9):
             response = self.client.get(self.enrollment_url)
         activities = response.json()
         self.assertEqual(response.status_code, status.HTTP_200_OK)
