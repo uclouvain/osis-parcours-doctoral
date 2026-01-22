@@ -79,6 +79,7 @@ __all__ = [
 ]
 
 from parcours_doctoral.models.parcours_doctoral import ParcoursDoctoral
+from reference.models.country import Country
 
 MINIMUM_YEAR = 2000
 
@@ -152,6 +153,16 @@ class ActivityFormMixin(forms.BaseForm):
     def __init__(self, parcours_doctoral, *args, **kwargs) -> None:
         self.cdd_id = parcours_doctoral.training.management_entity_id
         super().__init__(*args, **kwargs)
+        if 'country' in self.fields and self.instance.country is not None:
+            self.initial['country'] = self.instance.country.iso_code
+            self.fields['country'].widget.choices = ((self.instance.country.iso_code, self.instance.country.name),)
+            self.fields['country'].choices = ((self.instance.country.iso_code, self.instance.country.name),)
+
+    def clean_country(self):
+        country = self.cleaned_data.get('country')
+        if country:
+            country = Country.objects.filter(iso_code=country).first()
+        return country
 
     def clean_start_date(self):
         start_date = self.cleaned_data.get("start_date")
@@ -189,6 +200,7 @@ class ConferenceForm(ActivityFormMixin, forms.ModelForm):
     template_name = "parcours_doctoral/forms/training/conference.html"
     type = ConfigurableActivityTypeField('conference_types', label=_("Activity type"))
     is_online = IsOnlineField()
+    country = forms.CharField(widget=autocomplete.ListSelect2(url="country-autocomplete"))
 
     class Meta:
         model = Activity
@@ -216,7 +228,6 @@ class ConferenceForm(ActivityFormMixin, forms.ModelForm):
         widgets = {
             'start_date': CustomDatePickerInput(),
             'end_date': CustomDatePickerInput(),
-            'country': autocomplete.ListSelect2(url="country-autocomplete"),
             'participating_days': forms.NumberInput(attrs={'min': '0', 'step': '0.5'}),
             'ects': forms.NumberInput(attrs={'min': '0', 'step': '0.5'}),
         }
@@ -338,6 +349,7 @@ class ConferencePublicationForm(ActivityFormMixin, forms.ModelForm):
         }
         widgets = {
             'ects': forms.NumberInput(attrs={'min': '0', 'step': '0.5'}),
+            'authors': forms.TextInput(),
         }
         help_texts = {
             'publication_status': _("Refer to the website of your commission for more details."),
@@ -383,6 +395,7 @@ class CommunicationForm(ActivityFormMixin, forms.ModelForm):
         max_length=200,
         required=False,
     )
+    country = forms.CharField(widget=autocomplete.ListSelect2(url="country-autocomplete"))
     is_online = IsOnlineField()
 
     def clean(self):
@@ -423,7 +436,6 @@ class CommunicationForm(ActivityFormMixin, forms.ModelForm):
         }
         widgets = {
             'start_date': CustomDatePickerInput(),
-            'country': autocomplete.ListSelect2(url="country-autocomplete"),
             'ects': forms.NumberInput(attrs={'min': '0', 'step': '0.5'}),
         }
         help_texts = {
@@ -484,6 +496,7 @@ class PublicationForm(ActivityFormMixin, forms.ModelForm):
             'ects': forms.NumberInput(attrs={'min': '0', 'step': '0.5'}),
             'is_publication_national': forms.RadioSelect(),
             'with_reading_committee': forms.RadioSelect(),
+            'authors': forms.TextInput(),
         }
         help_texts = {
             'publication_status': _(
@@ -535,6 +548,7 @@ class ResidencyForm(ActivityFormMixin, forms.ModelForm):
         label=_("Activity type"),
         help_text=_("Refer to your commission website for more detail."),
     )
+    country = forms.CharField(widget=autocomplete.ListSelect2(url="country-autocomplete"))
 
     class Meta:
         model = Activity
@@ -558,7 +572,6 @@ class ResidencyForm(ActivityFormMixin, forms.ModelForm):
         widgets = {
             'start_date': CustomDatePickerInput(),
             'end_date': CustomDatePickerInput(),
-            'country': autocomplete.ListSelect2(url="country-autocomplete"),
             'ects': forms.NumberInput(attrs={'min': '0', 'step': '0.5'}),
         }
         help_texts = {
@@ -662,6 +675,7 @@ class ServiceForm(ActivityFormMixin, forms.ModelForm):
 class SeminarForm(ActivityFormMixin, forms.ModelForm):
     template_name = "parcours_doctoral/forms/training/seminar.html"
     type = ConfigurableActivityTypeField("seminar_types", label=_("Activity type"))
+    country = forms.CharField(widget=autocomplete.ListSelect2(url="country-autocomplete"))
 
     class Meta:
         model = Activity
@@ -682,6 +696,7 @@ class SeminarForm(ActivityFormMixin, forms.ModelForm):
         labels = {
             'title': _("Activity name"),
             'participating_proof': _("Proof of participation for the whole activity"),
+            'hourly_volume': _("Total volume"),
         }
         widgets = {
             'start_date': CustomDatePickerInput(),
@@ -721,8 +736,8 @@ class SeminarCommunicationForm(ActivityFormMixin, forms.ModelForm):
         }
         widgets = {
             'start_date': CustomDatePickerInput(),
-            'country': autocomplete.ListSelect2(url="country-autocomplete"),
             'ects': forms.NumberInput(attrs={'min': '0', 'step': '0.5'}),
+            'authors': forms.TextInput(),
         }
 
 
@@ -812,6 +827,7 @@ class CourseForm(ActivityFormMixin, forms.ModelForm):
             'start_date': CustomDatePickerInput(),
             'end_date': CustomDatePickerInput(),
             'ects': forms.NumberInput(attrs={'min': '0', 'step': '0.5'}),
+            'authors': forms.TextInput(),
         }
         labels = {
             'title': pgettext_lazy("parcours_doctoral course", "Title"),
@@ -1007,6 +1023,9 @@ class UclCompletedCourseForm(ActivityFormMixin, forms.ModelForm):
             'ects',
             'participating_proof',
         ]
+        widgets = {
+            'authors': forms.TextInput(),
+        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

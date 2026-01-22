@@ -88,6 +88,8 @@ from reference.tests.factories.country import CountryFactory
 class DoctorateTrainingActivityViewTestCase(TestCase):
     @classmethod
     def setUpTestData(cls):
+        cls.country = CountryFactory()
+
         # A parcours_doctoral without complementary training
         cls.restricted_parcours_doctoral = ParcoursDoctoralFactory()
         CddConfiguration.objects.create(
@@ -772,6 +774,7 @@ class DoctorateTrainingActivityViewTestCase(TestCase):
                 'subtype': 'Some type',
                 'committee': ChoixComiteSelection.NO.name,
                 'acceptation_proof_0': 'test',
+                'country': self.country.iso_code,
             },
         )
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
@@ -784,6 +787,7 @@ class DoctorateTrainingActivityViewTestCase(TestCase):
                 'subtype': 'Some type',
                 'committee': ChoixComiteSelection.YES.name,
                 'acceptation_proof_0': 'test',
+                'country': self.country.iso_code,
             },
         )
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
@@ -803,6 +807,7 @@ class DoctorateTrainingActivityViewTestCase(TestCase):
                 'type': 'Some type',
                 'committee': ChoixComiteSelection.NO.name,
                 'acceptation_proof_0': 'test',
+                'country': self.country.iso_code,
             },
         )
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
