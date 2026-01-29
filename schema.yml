@@ -3397,8 +3397,8 @@ components:
           readOnly: true
         academic_year:
           type: integer
-          maximum: 2999
-          minimum: 1900
+          maximum: 2147483647
+          minimum: -2147483648
           writeOnly: true
           nullable: true
         type:
