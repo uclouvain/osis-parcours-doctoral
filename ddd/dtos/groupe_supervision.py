@@ -44,6 +44,7 @@ class PromoteurDTO(interface.DTO):
     code_pays: str = ""
     pays: str = ""
     est_externe: bool = False
+    langue: str = ''
 
 
 @attr.dataclass(frozen=True, slots=True)
@@ -59,6 +60,7 @@ class MembreCADTO(interface.DTO):
     code_pays: str = ""
     pays: str = ""
     est_externe: bool = False
+    langue: str = ''
 
 
 @attr.dataclass(frozen=True, slots=True)
