@@ -324,8 +324,6 @@ class CourseSerializer(ActivitySerializerBase):
         write_only=True,
         allow_null=True,
         required=False,
-        min_value=1900,
-        max_value=2999,
     )
 
     class Meta:
