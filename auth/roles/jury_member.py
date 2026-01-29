@@ -49,7 +49,7 @@ class JuryMember(RoleModel):
     class Meta:
         verbose_name = _("Role: Jury member")
         verbose_name_plural = _("Role: Jury members")
-        group_name = "jury_members"
+        group_name = "doctoral_program_jury_members"
         constraints = [UniqueConstraint(fields=['person'], name='parcours_doctoral_unique_jury_member_by_person')]
 
     @classmethod
