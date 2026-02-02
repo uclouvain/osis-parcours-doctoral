@@ -181,6 +181,7 @@ def get_valid_tab_tree(context, permission_obj, tab_tree):
         if doctorate_limited_tabs and parent_tab.name not in {
             'documents',
             'doctorate',
+            'training',
             'course-enrollment',
             'comments',
             'history',

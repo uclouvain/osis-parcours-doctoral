@@ -23,20 +23,29 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from infrastructure.shared_kernel.academic_year.repository.academic_year import (
+    AcademicYearRepository,
+)
 from parcours_doctoral.ddd.read_view.queries import (
     ListerTousParcoursDoctorauxQuery,
     RecupererInformationsTableauBordQuery,
 )
-from parcours_doctoral.ddd.read_view.use_case import recuperer_informations_tableau_bord, lister_parcours_doctoraux
+from parcours_doctoral.ddd.read_view.use_case import (
+    lister_parcours_doctoraux,
+    recuperer_informations_tableau_bord,
+)
 from parcours_doctoral.infrastructure.parcours_doctoral.read_view.repository.liste_parcours_doctoraux import (
     ListeParcoursDoctorauxRepository,
 )
-from parcours_doctoral.infrastructure.parcours_doctoral.read_view.repository.tableau_bord import TableauBordRepository
+from parcours_doctoral.infrastructure.parcours_doctoral.read_view.repository.tableau_bord import (
+    TableauBordRepository,
+)
 
 COMMAND_HANDLERS = {
     ListerTousParcoursDoctorauxQuery: lambda msg_bus, cmd: lister_parcours_doctoraux(
         cmd,
         lister_tous_parcours_doctoraux_service=ListeParcoursDoctorauxRepository(),
+        academic_year_repository=AcademicYearRepository(),
     ),
     RecupererInformationsTableauBordQuery: lambda msg_bus, cmd: recuperer_informations_tableau_bord(
         cmd,

@@ -74,6 +74,7 @@ class ListeParcoursDoctorauxRepository(IListeParcoursDoctorauxRepository):
     @classmethod
     def get(
         cls,
+        annee_academique_courante: int,
         numero: Optional[int] = None,
         noma: Optional[str] = '',
         matricule_doctorant: Optional[str] = '',
@@ -114,6 +115,13 @@ class ListeParcoursDoctorauxRepository(IListeParcoursDoctorauxRepository):
                     'activity__ects',
                     filter=Q(activity__status=StatutActivite.ACCEPTEE.name),
                     default=0,
+                ),
+                in_order_of_registration=Exists(
+                    ParcoursDoctoral.retrieve_valid_enrolments_of_student(
+                        student_id=OuterRef('student_id'),
+                        education_group_id=OuterRef('training__education_group_id'),
+                        academic_year=annee_academique_courante,
+                    )
                 ),
             )
             .select_related(
@@ -221,7 +229,7 @@ class ListeParcoursDoctorauxRepository(IListeParcoursDoctorauxRepository):
                 'pre_admission': ['admission__type'],
                 'cotutelle': ['cotutelle'],
                 'formation_complementaire': ['follows_an_additional_training'],
-                'en_regle_inscription': [''],  # TODO
+                'en_regle_inscription': ['in_order_of_registration'],
                 'total_credits_valides': ['validated_credits_number'],
             }[champ_tri]
 
@@ -272,7 +280,7 @@ class ListeParcoursDoctorauxRepository(IListeParcoursDoctorauxRepository):
             code_bourse=parcours_doctoral.scholarship,  # From annotation
             cotutelle=parcours_doctoral.cotutelle,
             formation_complementaire=parcours_doctoral.follows_an_additional_training,
-            en_regle_inscription=False,  # TODO
+            en_regle_inscription=parcours_doctoral.in_order_of_registration,
             total_credits_valides=parcours_doctoral.validated_credits_number,
             date_admission_par_cdd=parcours_doctoral.admission.approved_by_cdd_at,
         )
