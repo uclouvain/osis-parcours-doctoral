@@ -51,6 +51,7 @@ from osis_signature.contrib.fields import SignatureProcessField
 
 from admission.models.functions import ToChar
 from base.forms.utils.file_field import PDF_MIME_TYPE
+from base.models.academic_year import AcademicYear
 from base.models.education_group_year import EducationGroupYear
 from base.models.entity_version import EntityVersion
 from base.models.enums.education_group_categories import Categories
@@ -622,12 +623,34 @@ class ParcoursDoctoral(models.Model):
             ),
         ]
 
+    @classmethod
+    def retrieve_valid_enrolments_of_student(cls, student_id, education_group_id, academic_year):
+        """
+        Return the valid enrolments of a student for a specific course for a specific year or for the year following it.
+        """
+        return InscriptionProgrammeAnnuel.objects.filter(
+            programme__offer__education_group_id=education_group_id,
+            programme__offer__academic_year__year__in=[academic_year, academic_year + 1],
+            programme_cycle__etudiant__person_id=student_id,
+            etat_inscription=EtatInscriptionFormation.INSCRIT_AU_ROLE.name,
+        )
+
     @cached_property
     def has_valid_enrollment(self):
+        """Return if there is a valid enrolment of the student to the related training (first year for now)."""
         return InscriptionProgrammeAnnuel.objects.filter(
             programme__offer_id=self.training_id,
             programme_cycle__etudiant__person_id=self.student_id,
             etat_inscription=EtatInscriptionFormation.INSCRIT_AU_ROLE.name,
+        ).exists()
+
+    @cached_property
+    def has_valid_enrollment_for_current_year_or_following_year(self):
+        current_academic_year = AcademicYear.objects.current().year
+        return self.retrieve_valid_enrolments_of_student(
+            student_id=self.student_id,
+            education_group_id=self.training.education_group_id,
+            academic_year=current_academic_year,
         ).exists()
 
     def save(self, *args, **kwargs) -> None:

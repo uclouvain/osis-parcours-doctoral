@@ -23,11 +23,17 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from infrastructure.shared_kernel.academic_year.repository.in_memory.academic_year import (
+    AcademicYearInMemoryRepository,
+)
 from parcours_doctoral.ddd.read_view.queries import (
     ListerTousParcoursDoctorauxQuery,
     RecupererInformationsTableauBordQuery,
 )
-from parcours_doctoral.ddd.read_view.use_case import recuperer_informations_tableau_bord, lister_parcours_doctoraux
+from parcours_doctoral.ddd.read_view.use_case import (
+    lister_parcours_doctoraux,
+    recuperer_informations_tableau_bord,
+)
 from parcours_doctoral.infrastructure.parcours_doctoral.read_view.repository.in_memory.liste_parcours_doctoraux import (
     ListeParcoursDoctorauxInMemoryRepository,
 )
@@ -35,14 +41,14 @@ from parcours_doctoral.infrastructure.parcours_doctoral.read_view.repository.in_
     TableauBordInMemoryRepository,
 )
 
-
 _lister_tous_parcours_doctoraux_in_memory_repository = ListeParcoursDoctorauxInMemoryRepository()
-
+_academic_year_repository = AcademicYearInMemoryRepository()
 
 COMMAND_HANDLERS = {
     ListerTousParcoursDoctorauxQuery: lambda msg_bus, cmd: lister_parcours_doctoraux(
         cmd,
         lister_tous_parcours_doctoraux_service=_lister_tous_parcours_doctoraux_in_memory_repository,
+        academic_year_repository=_academic_year_repository,
     ),
     RecupererInformationsTableauBordQuery: lambda msg_bus, cmd: recuperer_informations_tableau_bord(
         cmd,

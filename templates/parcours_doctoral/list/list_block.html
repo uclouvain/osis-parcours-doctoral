@@ -101,19 +101,20 @@
           <td>{{ parcours_doctoral.statut|enum_display:'ChoixStatutParcoursDoctoral' }}</td>
           <td>{{ parcours_doctoral.date_admission_par_cdd|date:"d/m/Y" }}</td>
           <td class="text-center">
-            {% if parcours_doctoral.type_admission == "PRE_ADMISSION" %}<i class="fa-solid fa-flag" style="color: #c01c28;"></i>{% endif %}
+            {% if parcours_doctoral.type_admission == "PRE_ADMISSION" %}<i class="fa-solid fa-flag text-danger"></i>{% endif %}
           </td>
           <td class="text-center">
-            {% if parcours_doctoral.cotutelle %}<i class="fa-solid fa-seedling" style="color: #26a269;"></i>{% endif %}
+            {% if parcours_doctoral.cotutelle %}<i class="fa-solid fa-seedling text-success"></i>{% endif %}
           </td>
           <td class="text-center">
             {% if parcours_doctoral.formation_complementaire %}
               <i class="fa-regular fa-calendar-circle-plus" style="color: #2c67b1;"></i>
             {% endif %}
           </td>
-          <td>
-            {# <span class="dot {% if parcours_doctoral.en_regle_inscription %}green-dot{% else %}red-dot{% endif %}"></span> #}
-            (TODO)
+          <td class="text-center">
+            <i
+              class="fa-solid fa-flag {% if parcours_doctoral.en_regle_inscription %}text-success{% else %}text-danger{% endif %}"
+            ></i>
           </td>
           <td>{{ parcours_doctoral.total_credits_valides }}</td>
         </tr>

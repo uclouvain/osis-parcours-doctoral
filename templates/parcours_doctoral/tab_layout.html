@@ -112,7 +112,7 @@
             >
               {% translate 'Admission' %}
             </a>
-            {% if not original_parcours_doctoral.has_valid_enrollment %}
+            {% if not original_parcours_doctoral.has_valid_enrollment_for_current_year_or_following_year %}
               <span class="badge bg-warning">{% translate 'Not in order of registration' %}</span>
             {% endif %}
           </div>

@@ -43,6 +43,7 @@ class ListeParcoursDoctorauxInMemoryRepository(IListeParcoursDoctorauxRepository
     @classmethod
     def get(
         cls,
+        annee_academique_courante: int,
         numero: Optional[int] = None,
         noma: Optional[str] = '',
         matricule_doctorant: Optional[str] = '',
@@ -67,7 +68,6 @@ class ListeParcoursDoctorauxInMemoryRepository(IListeParcoursDoctorauxRepository
         taille_page: Optional[int] = None,
         demandeur: Optional[str] = '',
     ) -> ListeParcoursDoctoralRechercheDTO:
-
         result = PaginatedList(id_attribute='uuid')
 
         for parcours_doctoral in ParcoursDoctoralInMemoryRepository.search_dto(matricule_doctorant=matricule_doctorant):
