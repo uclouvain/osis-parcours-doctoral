@@ -126,24 +126,24 @@ class TestIdentifierMembreCAService(TestCase):
             self.message_bus.invoke(cmd)
 
     def test_should_pas_ajouter_personne_si_groupe_complet_pour_membres_ca(self):
-        # Add 3 CA members -> valid
-        for k in range(1, 4):
+        # Add 10 CA members -> valid
+        for k in range(1, 11):
             self.message_bus.invoke(
                 IdentifierMembreCACommand(
                     uuid_parcours_doctoral=self.uuid_parcours_doctoral,
-                    matricule='0098789{}'.format(k),
+                    matricule='',
                     matricule_auteur="0123456",
-                    prenom="",
-                    nom="",
-                    email="",
+                    prenom=f"p{k}",
+                    nom=f"n{k}",
+                    email=f"{k}@test.be",
                     est_docteur=False,
-                    institution="",
-                    ville="",
-                    pays="",
-                    langue="",
+                    institution="I1",
+                    ville="V1",
+                    pays="P1",
+                    langue="L1",
                 )
             )
-        # Add a 4th member -> invalid
+        # Add a 11th member -> invalid
         with self.assertRaises(MultipleBusinessExceptions) as e:
             self.message_bus.invoke(self.cmd)
         self.assertIsInstance(e.exception.exceptions.pop(), GroupeSupervisionCompletPourMembresCAException)
