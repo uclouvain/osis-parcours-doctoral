@@ -478,6 +478,9 @@ msgctxt "doctorate-filter"
 msgid "Admission type"
 msgstr "Type d'admission"
 
+msgid "Admitted on"
+msgstr "Admis·e le"
+
 msgid "Advanced filters"
 msgstr "Filtres avancés"
 
@@ -1089,8 +1092,7 @@ msgid "Courses"
 msgstr "Formations"
 
 msgid "Create the confirmation paper success attestation"
-msgstr ""
-"Création de l'attestation de réussite de l'épreuve de confirmation"
+msgstr "Création de l'attestation de réussite de l'épreuve de confirmation"
 
 msgid "Create the confirmation paper success attestation as PDF"
 msgstr ""
@@ -1402,6 +1404,9 @@ msgstr "Doctorat"
 
 msgid "Doctorate import"
 msgstr "Import des doctorats"
+
+msgid "Doctorate link"
+msgstr "Lien doctorat"
 
 msgid "Doctorate thesis field"
 msgstr "Domaine de la thèse de doctorat"
@@ -4529,6 +4534,9 @@ msgid ""
 msgstr ""
 "Ce commentaire sera visible à tous les utilisateurs ayant accès à la "
 "validation du manuscrit."
+
+msgid "This doctoral student did not enroll in OSIS."
+msgstr "Ce·cette doctorant·e n'a pas fait son admission dans OSIS."
 
 msgid "This field is required."
 msgstr "Ce champ est obligatoire."

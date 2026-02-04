@@ -18,7 +18,7 @@ class Migration(migrations.Migration):
                 editable=False,
                 unique=True,
                 verbose_name="Reference",
-                null=True,  # Make it nullable to migrate the data on reverse migration (0047)
+                null=True,  # Make it nullable to migrate the data on reverse migration (0048)
             ),
         ),
         migrations.AddField(
@@ -40,7 +40,7 @@ class Migration(migrations.Migration):
                 ],
                 db_index=True,
                 max_length=255,
-                null=True,  # Nullable to initialize the field with a migration (0047)
+                null=True,  # Nullable to initialize the field with a migration (0048)
                 verbose_name="Admission type",
             ),
         ),

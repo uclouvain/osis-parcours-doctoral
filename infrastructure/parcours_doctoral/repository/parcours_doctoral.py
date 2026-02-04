@@ -343,7 +343,7 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
 
         return ParcoursDoctoralDTO(
             uuid=str(parcours_doctoral.uuid),
-            uuid_admission=str(parcours_doctoral.admission_uuid),  # from annotation
+            uuid_admission=str(parcours_doctoral.admission_uuid or ''),  # from annotation
             type_admission=parcours_doctoral.admission_type,
             date_admission_par_cdd=parcours_doctoral.admission_approved_by_cdd_at,
             statut=parcours_doctoral.status,

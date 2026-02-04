@@ -23,6 +23,7 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+import datetime
 import decimal
 from datetime import date
 from typing import Any, Literal, Optional
@@ -72,6 +73,7 @@ from parcours_doctoral.views.config.import_from_xlsx import (
     ImportFromXLSXView,
 )
 from reference.models.country import Country
+from parcours_doctoral.auth.roles.student import Student as StudentRole
 
 __all__ = [
     'DoctorateImportFromXLSXView',
@@ -105,8 +107,8 @@ MAPPING_STATUT = {
 }
 
 MAPPING_TYPE_ACTEUR = {
-    'PROMOTER': ActorType.PROMOTER.name,
-    'CA_MEMBER': ActorType.CA_MEMBER.name,
+    'promoteur': ActorType.PROMOTER.name,
+    'membre CA': ActorType.CA_MEMBER.name,
 }
 
 MAPPING_CHAMP_CATEGORIE_ACTIVITE = {
@@ -201,7 +203,7 @@ class SupervisionImportModel(BaseModel):
     @field_validator('est_promoteur_reference')
     @classmethod
     def is_lead_promoter(cls, input_value: Any, info: ValidationInfo):
-        if info.data.get('promoteur_ou_membre') == 'CA_MEMBER' and input_value == ChoixOuiNon.OUI:
+        if info.data.get('promoteur_ou_membre') == 'membre CA' and input_value == ChoixOuiNon.OUI:
             raise PydanticCustomError(
                 'promoter_data_error',
                 'The field can only be true for a promoter',
@@ -334,6 +336,31 @@ class DoctorateImportFromXLSXView(ImportFromXLSXView):
         doctorates: list[ParcoursDoctoral] = []
         private_defenses: list[PrivateDefense] = []
         supervision_processes_by_key: dict[str, Process] = {}
+        students: list[StudentRole] = []
+
+        # Initialize some activity fields
+        today_date = datetime.date.today().strftime('%d/%m/%Y')
+
+        def _get_category_label(c: CategorieActivite):
+            return f'Total des crédits pour les {str(c.value).lower()} acquis avant le {today_date}'
+
+        default_activity_titles_by_category: dict[str, str] = {
+            CategorieActivite.CONFERENCE.name: _get_category_label(CategorieActivite.CONFERENCE),
+            CategorieActivite.COMMUNICATION.name: _get_category_label(CategorieActivite.COMMUNICATION),
+            CategorieActivite.SEMINAR.name: _get_category_label(CategorieActivite.SEMINAR),
+            CategorieActivite.PUBLICATION.name: _get_category_label(CategorieActivite.PUBLICATION),
+            CategorieActivite.SERVICE.name: _get_category_label(CategorieActivite.SERVICE),
+            CategorieActivite.VAE.name: _get_category_label(CategorieActivite.VAE),
+            CategorieActivite.COURSE.name: _get_category_label(CategorieActivite.COURSE),
+        }
+
+        default_activity_subtitles_by_category: dict[str, str] = {
+            CategorieActivite.RESIDENCY.name: _get_category_label(CategorieActivite.RESIDENCY),
+
+        }
+        default_activity_comments_by_category: dict[str, str] = {
+            CategorieActivite.PAPER.name: _get_category_label(CategorieActivite.PAPER),
+        }
 
         for validated_object in doctorate_worksheet_config.validated_objects:
             key = validated_object.identification_noma
@@ -363,7 +390,7 @@ class DoctorateImportFromXLSXView(ImportFromXLSXView):
                 thesis_location=validated_object.projet_recherche_lieu_these,
                 cotutelle=validated_object.cotutelle_cotutelle == ChoixOuiNon.OUI,
                 cotutelle_institution_fwb=validated_object.cotutelle_institution_fwb == ChoixOuiNon.OUI,
-                cotutelle_other_institution_name=validated_object.cotutelle_nom_etablissement,
+                cotutelle_other_institution_name=validated_object.cotutelle_nom_etablissement or '',
                 proximity_commission=MAPPING_COMMISSION_PROXIMITE.get(
                     validated_object.choix_formation_commission_proximite,
                     '',
@@ -375,6 +402,7 @@ class DoctorateImportFromXLSXView(ImportFromXLSXView):
             )
 
             doctorates.append(doctorate)
+            students.append(StudentRole(person_id=doctorate.student_id))
 
             for field, category in MAPPING_CHAMP_CATEGORIE_ACTIVITE.items():
                 activity_ects = getattr(validated_object, field)
@@ -382,6 +410,9 @@ class DoctorateImportFromXLSXView(ImportFromXLSXView):
                     activity = Activity(
                         parcours_doctoral=doctorate,
                         ects=activity_ects,
+                        title=default_activity_titles_by_category.get(category, ''),
+                        subtitle=default_activity_subtitles_by_category.get(category, ''),
+                        comment=default_activity_comments_by_category.get(category, ''),
                         category=category,
                         status=StatutActivite.ACCEPTEE.name,
                     )
@@ -414,6 +445,7 @@ class DoctorateImportFromXLSXView(ImportFromXLSXView):
         ConfirmationPaper.objects.bulk_create(objs=confirmation_papers)
         PrivateDefense.objects.bulk_create(objs=private_defenses)
         Activity.objects.bulk_create(objs=activities)
+        StudentRole.objects.bulk_create(objs=students, ignore_conflicts=True)
 
         promoter_roles: list[Promoter] = []
         committee_member_roles: list[CommitteeMember] = []

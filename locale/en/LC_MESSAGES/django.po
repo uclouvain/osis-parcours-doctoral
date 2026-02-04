@@ -54,9 +54,9 @@ msgid ""
 "specified for an assessment (%(course_acronym)s - session numero %(session)s "
 "- %(course_year)s-%(course_year_1)s)."
 msgstr ""
-"<a href=\"%(assessment_enrolment_list_url)s\">PhD</a> - A mark has "
-"been specified for an assessment (%(course_acronym)s - session n°%(session)s "
-"- %(course_year)s-%(course_year_1)s)."
+"<a href=\"%(assessment_enrolment_list_url)s\">PhD</a> - A mark has been "
+"specified for an assessment (%(course_acronym)s - session n°%(session)s - "
+"%(course_year)s-%(course_year_1)s)."
 
 #, python-format
 msgid ""
@@ -408,6 +408,9 @@ msgstr ""
 
 msgctxt "doctorate-filter"
 msgid "Admission type"
+msgstr ""
+
+msgid "Admitted on"
 msgstr ""
 
 msgid "Advanced filters"
@@ -1290,6 +1293,9 @@ msgid "Doctorate"
 msgstr ""
 
 msgid "Doctorate import"
+msgstr ""
+
+msgid "Doctorate link"
 msgstr ""
 
 msgid "Doctorate thesis field"
@@ -4096,6 +4102,9 @@ msgstr ""
 msgid ""
 "This comment will be visible to all users with access to the manuscript "
 "validation."
+msgstr ""
+
+msgid "This doctoral student did not enroll in OSIS."
 msgstr ""
 
 msgid "This field is required."
