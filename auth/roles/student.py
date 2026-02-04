@@ -23,6 +23,7 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from django.db.models import UniqueConstraint
 from django.utils.translation import gettext_lazy as _
 from rules import RuleSet, always_allow
 
@@ -39,6 +40,9 @@ class Student(RoleModel):
         verbose_name = _("Role: Student")
         verbose_name_plural = _("Role: Student")
         group_name = "students"
+        constraints = [
+            UniqueConstraint(fields=['person'], name='unique_doctorate_student'),
+        ]
 
     @classmethod
     def rule_set(cls):

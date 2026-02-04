@@ -792,13 +792,18 @@ class DoctorateImportFromXLSXViewTestCase(TestCase):
 
         self.assertFieldIsValid(
             field_name='promoteur_ou_membre',
-            field_value='PROMOTER',
+            field_value='promoteur',
+        )
+
+        self.assertFieldIsValid(
+            field_name='promoteur_ou_membre',
+            field_value='membre CA',
         )
 
     def test_supervision_import_with_lead_actor(self):
         self.client.force_login(user=self.fac_manager_user)
 
-        self.supervision_first_row_cells['promoteur_ou_membre'].value = 'PROMOTER'
+        self.supervision_first_row_cells['promoteur_ou_membre'].value = 'promoteur'
 
         self.assertFieldIsInvalid(
             field_name='est_promoteur_reference',
@@ -817,7 +822,7 @@ class DoctorateImportFromXLSXViewTestCase(TestCase):
             field_value=ChoixOuiNon.OUI.value,
         )
 
-        self.supervision_first_row_cells['promoteur_ou_membre'].value = 'CA_MEMBER'
+        self.supervision_first_row_cells['promoteur_ou_membre'].value = 'membre CA'
 
         self.assertFieldIsInvalid(
             field_name='est_promoteur_reference',
@@ -1199,7 +1204,7 @@ class DoctorateImportFromXLSXViewTestCase(TestCase):
         ].value = ChoixStatutParcoursDoctoral.CONFIRMATION_A_REPRESENTER.name
 
         self.supervision_first_row_cells['noma_doctorant'].value = self.student.registration_id
-        self.supervision_first_row_cells['promoteur_ou_membre'].value = 'PROMOTER'
+        self.supervision_first_row_cells['promoteur_ou_membre'].value = 'promoteur'
         self.supervision_first_row_cells['est_promoteur_reference'].value = ChoixOuiNon.NON.value
         self.supervision_first_row_cells['prenom'].value = 'John'
         self.supervision_first_row_cells['nom'].value = 'Doe'
@@ -1212,7 +1217,7 @@ class DoctorateImportFromXLSXViewTestCase(TestCase):
 
         second_row_cells = {
             'noma_doctorant': Mock(value=self.student.registration_id),
-            'promoteur_ou_membre': Mock(value='CA_MEMBER'),
+            'promoteur_ou_membre': Mock(value='membre CA'),
             'est_promoteur_reference': Mock(value=ChoixOuiNon.NON.value),
             'prenom': Mock(value=self.internal_person.first_name),
             'nom': Mock(value=self.internal_person.last_name),
@@ -1227,7 +1232,7 @@ class DoctorateImportFromXLSXViewTestCase(TestCase):
 
         third_row_cells = {
             'noma_doctorant': Mock(value=self.student.registration_id),
-            'promoteur_ou_membre': Mock(value='PROMOTER'),
+            'promoteur_ou_membre': Mock(value='promoteur'),
             'est_promoteur_reference': Mock(value=ChoixOuiNon.OUI.value),
             'prenom': Mock(value=self.internal_student_and_tutor.last_name),
             'nom': Mock(value=self.internal_student_and_tutor.first_name),

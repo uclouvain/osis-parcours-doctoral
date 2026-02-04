@@ -33,7 +33,7 @@
     </a>
   </li>
   <li class="breadcrumb-item active">
-    {{ parcours_doctoral.formation.intitule }} ({{ parcours_doctoral.reference }})
+    {{ parcours_doctoral.formation.intitule }}
   </li>
 {% endblock %}
 
@@ -98,7 +98,7 @@
             <br>
             <span class="copy-to-clipboard">
               {% url "parcours_doctoral:base" parcours_doctoral.uuid as parcours_doctoral_url %}
-              <a href="{{ request.scheme }}://{{ request.get_host }}{{ parcours_doctoral_url }}" class="copy-to-clipboard-element bold-text">{{ parcours_doctoral.reference }}</a>
+              <a href="{{ request.scheme }}://{{ request.get_host }}{{ parcours_doctoral_url }}" class="copy-to-clipboard-element bold-text">{% translate 'Doctorate link' %}</a>
               <button
                   class="copy-button"
                   data-bs-html="true"
@@ -106,12 +106,21 @@
                 <i class="far fa-copy"></i>
               </button>
             </span>
-            <a
-              href="{% url 'admission:doctorate' parcours_doctoral.uuid_admission %}"
-              target="_blank"
-            >
-              {% translate 'Admission' %}
-            </a>
+            {% if parcours_doctoral.uuid_admission %}
+              <a
+                href="{% url 'admission:doctorate' parcours_doctoral.uuid_admission %}"
+                target="_blank"
+              >
+                {% translate 'Admission' %}
+              </a>
+            {% else %}
+              <span
+                data-bs-toggle="tooltip"
+                data-bs-title="{% translate 'This doctoral student did not enroll in OSIS.' %}"
+              >
+                {% translate 'Admission' %}
+              </span>
+            {% endif %}
             {% if not original_parcours_doctoral.has_valid_enrollment_for_current_year_or_following_year %}
               <span class="badge bg-warning">{% translate 'Not in order of registration' %}</span>
             {% endif %}
@@ -122,6 +131,7 @@
               <br>
             {% endif %}
             {% include 'parcours_doctoral/includes/parcours_doctoral_status.html' with display_on_load=True %}
+            {% translate 'Admitted on' %} {{ parcours_doctoral.date_admission_par_cdd|date:'d/m/Y' }}
             <br>
           </div>
         {% endblock %}
