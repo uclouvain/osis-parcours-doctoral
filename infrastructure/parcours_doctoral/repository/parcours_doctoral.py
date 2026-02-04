@@ -49,7 +49,6 @@ from parcours_doctoral.ddd.domain.model.enums import (
     ChoixCommissionProximiteCDEouCLSM,
     ChoixCommissionProximiteCDSS,
     ChoixDoctoratDejaRealise,
-    ChoixLangueDefense,
     ChoixSousDomaineSciences,
     ChoixStatutParcoursDoctoral,
     ChoixTypeFinancement,
@@ -74,7 +73,6 @@ from parcours_doctoral.ddd.dtos.parcours_doctoral import (
 )
 from parcours_doctoral.ddd.repository.i_parcours_doctoral import (
     IParcoursDoctoralRepository,
-    formater_reference,
 )
 from parcours_doctoral.models import Document
 from parcours_doctoral.models.parcours_doctoral import (
@@ -119,7 +117,6 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
         return ParcoursDoctoral(
             entity_id=entity_id,
             statut=ChoixStatutParcoursDoctoral[parcours_doctoral.status],
-            reference=parcours_doctoral.reference,
             formation_id=FormationIdentity(
                 parcours_doctoral.training.acronym,
                 parcours_doctoral.training.academic_year.year,
@@ -316,13 +313,10 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
                     'defense_language',
                 )
                 .annotate_training_management_entity()
-                .annotate_with_reference()
                 .annotate_with_student_registration_id()
                 .annotate_last_status_update()
                 .annotate(
                     admission_uuid=F('admission__uuid'),
-                    admission_type=F('admission__type'),
-                    admission_date=F('admission__approved_by_cdd_at'),
                 )
                 .annotate_secteur_formation()
                 .get(search_filter)
@@ -349,14 +343,13 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
 
         return ParcoursDoctoralDTO(
             uuid=str(parcours_doctoral.uuid),
-            uuid_admission=str(parcours_doctoral.admission_uuid),  # from annotation
-            type_admission=parcours_doctoral.admission_type,  # from annotation
-            date_admission_par_cdd=parcours_doctoral.admission_date,  # from annotation
+            uuid_admission=str(parcours_doctoral.admission_uuid or ''),  # from annotation
+            type_admission=parcours_doctoral.admission_type,
+            date_admission_par_cdd=parcours_doctoral.admission_approved_by_cdd_at,
             statut=parcours_doctoral.status,
             date_changement_statut=parcours_doctoral.status_updated_at,  # from annotation
             cree_le=parcours_doctoral.created_at,
             archive=last_archive.file if last_archive else [],
-            reference=parcours_doctoral.formatted_reference,
             sigle_entite_gestion=parcours_doctoral.sigle_entite_gestion,
             noma_doctorant=parcours_doctoral.student_registration_id or '',  # from annotation
             photo_identite_doctorant=parcours_doctoral.student.id_photo,
@@ -614,16 +607,9 @@ class ParcoursDoctoralRepository(IParcoursDoctoralRepository):
         results = []
         for doctorate in doctorates:
             management_entity = management_entities.get(doctorate.training.management_entity_id)
-            formatted_reference = formater_reference(
-                reference=doctorate.reference,
-                nom_campus_inscription=doctorate.training.enrollment_campus.name,
-                annee=doctorate.training.academic_year.year,
-                sigle_entite_gestion=management_entity.sigle,
-            )
             results.append(
                 ParcoursDoctoralRechercheEtudiantDTO(
                     uuid=str(doctorate.uuid),
-                    reference=formatted_reference,
                     statut=doctorate.status,
                     formation=FormationDTO(
                         sigle=doctorate.training.acronym,

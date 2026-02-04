@@ -49,6 +49,7 @@ from osis_document_components.fields import FileField
 from osis_history.models import HistoryEntry
 from osis_signature.contrib.fields import SignatureProcessField
 
+from admission.ddd.admission.doctorat.preparation.domain.model.enums import ChoixTypeAdmission
 from admission.models.functions import ToChar
 from base.forms.utils.file_field import PDF_MIME_TYPE
 from base.models.academic_year import AcademicYear
@@ -240,11 +241,18 @@ class ParcoursDoctoral(models.Model):
         to="admission.DoctorateAdmission",
         verbose_name=pgettext_lazy("parcours_doctoral", "Admission"),
         on_delete=models.PROTECT,
+        null=True,
     )
-    reference = models.BigIntegerField(
-        verbose_name=_("Reference"),
-        unique=True,
-        editable=False,
+    admission_type = models.CharField(
+        verbose_name=_("Admission type"),
+        max_length=255,
+        choices=ChoixTypeAdmission.choices(),
+        db_index=True,
+    )
+    admission_approved_by_cdd_at = models.DateTimeField(
+        blank=True,
+        null=True,
+        verbose_name=_('Admission approved by CDD at'),
     )
     justification = models.TextField(
         default='',
@@ -657,13 +665,8 @@ class ParcoursDoctoral(models.Model):
         super().save(*args, **kwargs)
         cache.delete('parcours_doctoral_permission_{}'.format(self.uuid))
 
-    @property
-    def reference_str(self):
-        reference = '{:08}'.format(self.reference)
-        return f'{reference[:4]}.{reference[4:]}'
-
     def __str__(self):
-        return self.reference_str
+        return str(self.uuid)
 
 
 @receiver(post_save, sender=EducationGroupYear)

@@ -51,14 +51,6 @@ CAMPUS_LETTRE_DOSSIER = {
 }
 
 
-def formater_reference(reference: int, nom_campus_inscription: str, sigle_entite_gestion: str, annee: int) -> str:
-    """Formater la référence d'un parcours doctoral"""
-    reference_formatee = '{:08}'.format(reference)
-    reference_formatee = f'{reference_formatee[:4]}.{reference_formatee[4:]}'
-    lettre_campus = CAMPUS_LETTRE_DOSSIER.get(nom_campus_inscription, 'X')
-    return f'{lettre_campus}-{sigle_entite_gestion}{annee % 100}-{reference_formatee}'
-
-
 class IParcoursDoctoralRepository(interface.AbstractRepository, metaclass=ABCMeta):
     @classmethod
     @abc.abstractmethod

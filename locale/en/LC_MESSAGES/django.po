@@ -50,17 +50,17 @@ msgstr ""
 
 #, python-format
 msgid ""
-"<a href=\"%(assessment_enrolment_list_url)s\">%(reference)s</a> - A mark has "
-"been specified for an assessment (%(course_acronym)s - session numero "
-"%(session)s - %(course_year)s-%(course_year_1)s)."
-msgstr ""
-"<a href=\"%(assessment_enrolment_list_url)s\">%(reference)s</a> - A mark has "
-"been specified for an assessment (%(course_acronym)s - session n°%(session)s "
+"<a href=\"%(assessment_enrolment_list_url)s\">PhD</a> - A mark has been "
+"specified for an assessment (%(course_acronym)s - session numero %(session)s "
 "- %(course_year)s-%(course_year_1)s)."
+msgstr ""
+"<a href=\"%(assessment_enrolment_list_url)s\">PhD</a> - A mark has been "
+"specified for an assessment (%(course_acronym)s - session n°%(session)s - "
+"%(course_year)s-%(course_year_1)s)."
 
 #, python-format
 msgid ""
-"<a href=\"%(confirmation_paper_link_back)s\">%(reference)s</a> - "
+"<a href=\"%(confirmation_paper_link_back)s\">PhD</a> - "
 "%(student_first_name)s %(student_last_name)s proposed a new deadline "
 "(%(extension_request_proposed_date)s) for the confirmation paper for "
 "%(training_title)s"
@@ -68,22 +68,22 @@ msgstr ""
 
 #, python-format
 msgid ""
-"<a href=\"%(confirmation_paper_link_back)s\">%(reference)s</a> - "
+"<a href=\"%(confirmation_paper_link_back)s\">PhD</a> - "
 "%(student_first_name)s %(student_last_name)s submitted data for the first "
 "time for the confirmation paper for %(training_title)s"
 msgstr ""
 
 #, python-format
 msgid ""
-"<a href=\"%(confirmation_paper_link_back)s\">%(reference)s</a> - "
+"<a href=\"%(confirmation_paper_link_back)s\">PhD</a> - "
 "%(student_first_name)s %(student_last_name)s submitted new data for the "
 "confirmation paper for %(training_title)s"
 msgstr ""
 
 #, python-format
 msgid ""
-"<a href=\"%(confirmation_paper_link_back)s\">%(reference)s</a> - A "
-"supervisor submitted documents related to the confirmation paper of "
+"<a href=\"%(confirmation_paper_link_back)s\">PhD</a> - A supervisor "
+"submitted documents related to the confirmation paper of "
 "%(student_first_name)s %(student_last_name)s for %(training_title)s"
 msgstr ""
 
@@ -95,23 +95,20 @@ msgstr ""
 
 #, python-format
 msgid ""
-"<a "
-"href=\"%(parcours_doctoral_link_front_complementary_training)s\">%(reference)s</"
-"a> - Some complementary training activities have been approved."
+"<a href=\"%(parcours_doctoral_link_front_complementary_training)s\">PhD</a> "
+"- Some complementary training activities have been approved."
 msgstr ""
 
 #, python-format
 msgid ""
-"<a "
-"href=\"%(parcours_doctoral_link_front_course_enrollment)s\">%(reference)s</"
-"a> - Some course enrollment have been approved."
+"<a href=\"%(parcours_doctoral_link_front_course_enrollment)s\">PhD</a> - "
+"Some course enrollment have been approved."
 msgstr ""
 
 #, python-format
 msgid ""
-"<a "
-"href=\"%(parcours_doctoral_link_front_doctoral_training)s\">%(reference)s</"
-"a> - Some doctoral training activities have been approved."
+"<a href=\"%(parcours_doctoral_link_front_doctoral_training)s\">PhD</a> - "
+"Some doctoral training activities have been approved."
 msgstr ""
 
 msgid ""
@@ -400,11 +397,20 @@ msgctxt "parcours_doctoral"
 msgid "Admission"
 msgstr ""
 
+msgid "Admission approved by CDD at"
+msgstr ""
+
 msgid "Admission date"
+msgstr ""
+
+msgid "Admission type"
 msgstr ""
 
 msgctxt "doctorate-filter"
 msgid "Admission type"
+msgstr ""
+
+msgid "Admitted on"
 msgstr ""
 
 msgid "Advanced filters"
@@ -486,9 +492,6 @@ msgid "Appendices:"
 msgstr ""
 
 msgid "Appendix:"
-msgstr ""
-
-msgid "Application numero"
 msgstr ""
 
 msgid "Application status"
@@ -987,8 +990,7 @@ msgctxt "doctorate"
 msgid "Courses"
 msgstr ""
 
-#, python-format
-msgid "Create the confirmation paper success attestation (%(reference)s)"
+msgid "Create the confirmation paper success attestation"
 msgstr ""
 
 msgid "Create the confirmation paper success attestation as PDF"
@@ -1290,6 +1292,12 @@ msgstr ""
 msgid "Doctorate"
 msgstr ""
 
+msgid "Doctorate import"
+msgstr ""
+
+msgid "Doctorate link"
+msgstr ""
+
 msgid "Doctorate thesis field"
 msgstr ""
 
@@ -1322,9 +1330,6 @@ msgid "Domain doctoral committee"
 msgstr ""
 
 msgid "Done in"
-msgstr ""
-
-msgid "Dossier numero"
 msgstr ""
 
 msgid "Download the PDF recap"
@@ -1451,11 +1456,10 @@ msgstr ""
 msgid "Export"
 msgstr ""
 
-#, python-format
-msgid "Exporting %(reference)s to PDF"
+msgid "Exporting the admission information to PDF"
 msgstr ""
 
-msgid "Exporting the admission information to PDF"
+msgid "Exporting to PDF"
 msgstr ""
 
 msgid "Extension request not completed."
@@ -1714,6 +1718,9 @@ msgstr ""
 msgid ""
 "If you submit the activity, you will no longer be able to modify the seminar "
 "or the various activities within it."
+msgstr ""
+
+msgid "Import"
 msgstr ""
 
 msgid "Important information:"
@@ -3008,9 +3015,6 @@ msgstr ""
 msgid "Refer to your commission website for more detail."
 msgstr ""
 
-msgid "Reference"
-msgstr ""
-
 msgid "Reference DIAL.Pr"
 msgstr "Référence DIAL.Pr"
 
@@ -3662,6 +3666,9 @@ msgstr ""
 msgid "The current training is attached to this document."
 msgstr ""
 
+msgid "The data have been imported."
+msgstr ""
+
 msgid ""
 "The date and time of the private defence (if applicable) and public defence "
 "are set for: __________ at _____ / __________ at _____."
@@ -3768,6 +3775,16 @@ msgid ""
 msgstr ""
 
 msgid "The export has failed"
+msgstr ""
+
+#, python-format
+msgid "The file must have %(nb)s worksheet."
+msgid_plural "The file must have %(nb)s worksheets."
+msgstr[0] ""
+msgstr[1] ""
+
+#, python-format
+msgid "The file must have %(nb)s worksheets."
 msgstr ""
 
 msgid "The first name of the jury member"
@@ -4085,6 +4102,9 @@ msgstr ""
 msgid ""
 "This comment will be visible to all users with access to the manuscript "
 "validation."
+msgstr ""
+
+msgid "This doctoral student did not enroll in OSIS."
 msgstr ""
 
 msgid "This field is required."

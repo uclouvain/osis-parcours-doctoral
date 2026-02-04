@@ -23,6 +23,7 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+import datetime
 from unittest.mock import patch
 
 from django.test import TestCase, override_settings
@@ -129,6 +130,7 @@ class InitializeTheDoctoratesFromAuthorizedAdmissionsTestCase(TestCase):
         admission: DoctorateAdmission = DoctorateAdmissionFactory(
             status=ChoixStatutPropositionDoctorale.INSCRIPTION_AUTORISEE.name,
             supervision_group=PromoterFactory().process,
+            approved_by_cdd_at=datetime.datetime(2025, 1, 1),
         )
 
         valid_references, invalid_references = initialize_the_doctorates_from_authorized_admissions(DoctorateAdmission)
