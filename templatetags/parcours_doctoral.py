@@ -51,7 +51,10 @@ from osis_profile.utils.utils import (
 from parcours_doctoral.auth.constants import READ_ACTIONS_BY_TAB, UPDATE_ACTIONS_BY_TAB
 from parcours_doctoral.constants import CAMPUSES_UUIDS
 from parcours_doctoral.ddd.domain.model.enums import (
-    STATUTS_PAR_ETAPE_PARCOURS_DOCTORAL,
+    ETAPE_PARCOURS_DOCTORAL_PAR_STATUT,
+    ETAPES_EQUIVALENTES,
+    INDEX_ETAPE,
+    STATUT_REUSSITE_PAR_ETAPE,
     ChoixEtapeParcoursDoctoral,
     ChoixStatutParcoursDoctoral,
 )
@@ -634,13 +637,26 @@ def country_name_from_iso_code(iso_code: str):
 
 
 @register.simple_tag
-def get_confirmation_status(parcours_doctoral: ParcoursDoctoralDTO):
+def get_step_status(doctorate: ParcoursDoctoralDTO, step: str) -> ChoixStatutParcoursDoctoral | None:
+    """Return the step status of the specified doctorate or None if the step has not started yet"""
+    current_status = ChoixStatutParcoursDoctoral[doctorate.statut]
+    current_step = ETAPE_PARCOURS_DOCTORAL_PAR_STATUT[current_status]
+    target_step = ChoixEtapeParcoursDoctoral[step]
+
     if (
-        ChoixStatutParcoursDoctoral[parcours_doctoral.statut]
-        in STATUTS_PAR_ETAPE_PARCOURS_DOCTORAL[ChoixEtapeParcoursDoctoral.CONFIRMATION]
+        current_step == target_step
+        or {current_step, target_step} in ETAPES_EQUIVALENTES
+        or current_step == ChoixEtapeParcoursDoctoral.ABANDON_ECHEC
     ):
-        return ChoixStatutParcoursDoctoral[parcours_doctoral.statut].value
-    return ChoixStatutParcoursDoctoral.CONFIRMATION_REUSSIE.value
+        return current_status
+
+    current_step_index = INDEX_ETAPE[current_step]
+    target_step_index = INDEX_ETAPE[target_step]
+
+    if current_step_index > target_step_index:
+        return STATUT_REUSSITE_PAR_ETAPE[target_step]
+
+    return None
 
 
 @register.simple_tag(takes_context=True)

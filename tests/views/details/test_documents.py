@@ -27,7 +27,6 @@ import datetime
 import uuid
 from typing import List
 from unittest.mock import patch
-from uuid import uuid4
 
 import freezegun
 from django.test import TestCase, override_settings
@@ -41,13 +40,15 @@ from base.tests.factories.entity_version import EntityVersionFactory
 from base.tests.factories.program_manager import ProgramManagerFactory
 from parcours_doctoral.ddd.domain.model.document import TypeDocument
 from parcours_doctoral.ddd.domain.model.enums import ChoixEtapeParcoursDoctoral
-from parcours_doctoral.ddd.domain.model.parcours_doctoral import ENTITY_CDE, ENTITY_CDSS
+from parcours_doctoral.ddd.domain.model.parcours_doctoral import ENTITY_CDE
 from parcours_doctoral.ddd.dtos.document import DocumentDTO
+from parcours_doctoral.tests.factories.admissibility import AdmissibilityFactory
 from parcours_doctoral.tests.factories.confirmation_paper import (
     ConfirmationPaperFactory,
 )
 from parcours_doctoral.tests.factories.document import DocumentFactory
-from parcours_doctoral.tests.factories.parcours_doctoral import ParcoursDoctoralFactory
+from parcours_doctoral.tests.factories.parcours_doctoral import FormationFactory, ParcoursDoctoralFactory
+from parcours_doctoral.tests.factories.private_defense import PrivateDefenseFactory
 
 
 @override_settings(OSIS_DOCUMENT_BASE_URL='http://dummyurl')
@@ -61,47 +62,21 @@ class DocumentsDetailViewTestCase(TestCase):
         first_doctoral_commission = EntityFactory()
         EntityVersionFactory(entity=first_doctoral_commission, acronym=ENTITY_CDE)
 
-        # Create doctorates
-        cls.doctorate = ParcoursDoctoralFactory(
-            training__management_entity=first_doctoral_commission,
-            training__academic_year=academic_years[0],
+        # Create training
+        cls.training = FormationFactory(
+            management_entity=first_doctoral_commission,
+            academic_year=academic_years[0],
         )
 
         # Create users
-        cls.manager = ProgramManagerFactory(education_group=cls.doctorate.training.education_group).person
+        cls.manager = ProgramManagerFactory(education_group=cls.training.education_group).person
         cls.other_manager = ProgramManagerFactory().person
 
         # Create url
         cls.base_url = 'parcours_doctoral:documents'
-        cls.url = reverse(cls.base_url, args=[str(cls.doctorate.uuid)])
 
-        cls.confirmation_label = ChoixEtapeParcoursDoctoral.CONFIRMATION.value
-        cls.jury_label = ChoixEtapeParcoursDoctoral.JURY.value
         cls.free_label = TypeDocument.LIBRE.value
         cls.system_label = TypeDocument.SYSTEME.value
-
-        cls.confirmation_files_names = [
-            'research_report',
-            'supervisor_panel_report',
-            'supervisor_panel_report_canvas',
-            'research_mandate_renewal_opinion',
-            'certificate_of_failure',
-            'certificate_of_achievement',
-            'justification_letter',
-        ]
-
-        cls.jury_files_names = [
-            'jury_approval',
-        ]
-
-        cls.files_names = [
-            *cls.confirmation_files_names,
-            *cls.jury_files_names,
-        ]
-
-        cls.file_uuids = {file_name: str(uuid4()) for file_name in cls.files_names}
-
-        cls.tokens = {file_name: cls.file_uuids[file_name] for file_name in cls.files_names}
 
         cls.default_upload_date = datetime.datetime(2022, 1, 1)
 
@@ -147,6 +122,9 @@ class DocumentsDetailViewTestCase(TestCase):
         patcher.start()
         self.addCleanup(patcher.stop)
 
+        self.doctorate = ParcoursDoctoralFactory(training=self.training)
+        self.url = reverse(self.base_url, args=[str(self.doctorate.uuid)])
+
     def test_with_other_manager(self):
         self.client.force_login(user=self.other_manager.user)
 
@@ -161,16 +139,30 @@ class DocumentsDetailViewTestCase(TestCase):
 
         documents = response.context['documents_by_section']
 
-        self.assertNotIn(self.confirmation_label, documents)
-        self.assertNotIn(self.jury_label, documents)
         self.assertEqual(documents.get(self.free_label), [])
         self.assertEqual(documents.get(self.system_label), [])
+        self.assertEqual(len(documents), 2)
 
         create_form = response.context.get('create_form')
         self.assertIsNotNone(create_form)
 
     def test_with_confirmation_documents(self):
         self.client.force_login(user=self.manager.user)
+
+        category_label = ChoixEtapeParcoursDoctoral.CONFIRMATION.value
+
+        file_uuids = {
+            file_name: str(uuid.uuid4())
+            for file_name in [
+                'research_report',
+                'supervisor_panel_report',
+                'supervisor_panel_report_canvas',
+                'research_mandate_renewal_opinion',
+                'certificate_of_failure',
+                'certificate_of_achievement',
+                'justification_letter',
+            ]
+        }
 
         # Add a confirmation paper but without any document
         with freezegun.freeze_time('2022-01-01'):
@@ -183,16 +175,16 @@ class DocumentsDetailViewTestCase(TestCase):
 
         documents = response.context['documents_by_section']
 
-        self.assertNotIn(self.confirmation_label, documents)
+        self.assertNotIn(category_label, documents)
 
         # Complete with documents
-        confirmation_paper_1.research_report = [self.file_uuids['research_report']]
-        confirmation_paper_1.supervisor_panel_report = [self.file_uuids['supervisor_panel_report']]
-        confirmation_paper_1.supervisor_panel_report_canvas = [self.file_uuids['supervisor_panel_report_canvas']]
-        confirmation_paper_1.research_mandate_renewal_opinion = [self.file_uuids['research_mandate_renewal_opinion']]
-        confirmation_paper_1.certificate_of_failure = [self.file_uuids['certificate_of_failure']]
-        confirmation_paper_1.certificate_of_achievement = [self.file_uuids['certificate_of_achievement']]
-        confirmation_paper_1.justification_letter = [self.file_uuids['justification_letter']]
+        confirmation_paper_1.research_report = [file_uuids['research_report']]
+        confirmation_paper_1.supervisor_panel_report = [file_uuids['supervisor_panel_report']]
+        confirmation_paper_1.supervisor_panel_report_canvas = [file_uuids['supervisor_panel_report_canvas']]
+        confirmation_paper_1.research_mandate_renewal_opinion = [file_uuids['research_mandate_renewal_opinion']]
+        confirmation_paper_1.certificate_of_failure = [file_uuids['certificate_of_failure']]
+        confirmation_paper_1.certificate_of_achievement = [file_uuids['certificate_of_achievement']]
+        confirmation_paper_1.justification_letter = [file_uuids['justification_letter']]
 
         confirmation_paper_1.save()
 
@@ -201,12 +193,12 @@ class DocumentsDetailViewTestCase(TestCase):
 
         documents = response.context['documents_by_section']
 
-        self.assertIn(self.confirmation_label, documents)
+        self.assertIn(category_label, documents)
 
-        confirmation_documents: List[DocumentDTO] = documents.get(self.confirmation_label)
-        self.assertEqual(len(confirmation_documents), 7)
+        category_documents: List[DocumentDTO] = documents[category_label]
+        self.assertEqual(len(category_documents), 7)
 
-        confirmation_labels = {
+        labels = {
             'research_report': gettext('Research report'),
             'supervisor_panel_report': gettext('Support Committee minutes'),
             'supervisor_panel_report_canvas': gettext('Canvas of the report of the supervisory panel'),
@@ -215,17 +207,17 @@ class DocumentsDetailViewTestCase(TestCase):
             'certificate_of_achievement': gettext('Certificate of achievement'),
             'justification_letter': gettext('Justification letter'),
         }
-        for index, confirmation_file_name in enumerate(self.confirmation_files_names):
-            self.assertEqual(confirmation_documents[index].identifiant, self.file_uuids[confirmation_file_name])
-            self.assertEqual(confirmation_documents[index].uuids_documents, [self.file_uuids[confirmation_file_name]])
-            self.assertEqual(confirmation_documents[index].type, TypeDocument.NON_LIBRE.name)
-            self.assertEqual(confirmation_documents[index].libelle, confirmation_labels[confirmation_file_name])
-            self.assertIsNotNone(confirmation_documents[index].auteur)
-            self.assertEqual(confirmation_documents[index].auteur.prenom, self.other_manager.first_name)
-            self.assertEqual(confirmation_documents[index].auteur.nom, self.other_manager.last_name)
-            self.assertEqual(confirmation_documents[index].auteur.matricule, self.other_manager.global_id)
+        for index, (file_name, file_uuid) in enumerate(file_uuids.items()):
+            self.assertEqual(category_documents[index].identifiant, file_uuid)
+            self.assertEqual(category_documents[index].uuids_documents, [file_uuid])
+            self.assertEqual(category_documents[index].type, TypeDocument.NON_LIBRE.name)
+            self.assertEqual(category_documents[index].libelle, labels[file_name])
+            self.assertIsNotNone(category_documents[index].auteur)
+            self.assertEqual(category_documents[index].auteur.prenom, self.other_manager.first_name)
+            self.assertEqual(category_documents[index].auteur.nom, self.other_manager.last_name)
+            self.assertEqual(category_documents[index].auteur.matricule, self.other_manager.global_id)
 
-            self.assertEqual(confirmation_documents[index].modifie_le, self.default_upload_date)
+            self.assertEqual(category_documents[index].modifie_le, self.default_upload_date)
 
         # Add another confirmation paper
         with freezegun.freeze_time('2021-01-01'):
@@ -240,11 +232,10 @@ class DocumentsDetailViewTestCase(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         documents = response.context['documents_by_section']
+        first_confirmation_label = ChoixEtapeParcoursDoctoral.CONFIRMATION.value + ' ' + gettext('no.') + '1'
+        second_confirmation_label = ChoixEtapeParcoursDoctoral.CONFIRMATION.value + ' ' + gettext('no.') + '2'
 
-        first_confirmation_label = ChoixEtapeParcoursDoctoral.CONFIRMATION.value + ' - 1'
-        second_confirmation_label = ChoixEtapeParcoursDoctoral.CONFIRMATION.value + ' - 2'
-
-        self.assertNotIn(self.confirmation_label, documents)
+        self.assertNotIn(category_label, documents)
         self.assertIsNotNone(documents.get(first_confirmation_label), None)
         self.assertIsNotNone(documents.get(second_confirmation_label), None)
 
@@ -259,39 +250,215 @@ class DocumentsDetailViewTestCase(TestCase):
     def test_with_jury_documents(self):
         self.client.force_login(self.manager.user)
 
-        other_doctorate = ParcoursDoctoralFactory(
-            training=self.doctorate.training,
-            jury_approval=[self.file_uuids['jury_approval']],
-        )
+        category_label = ChoixEtapeParcoursDoctoral.JURY.value
 
-        url = reverse(self.base_url, args=[str(other_doctorate.uuid)])
+        file_uuids = {
+            file_name: str(uuid.uuid4())
+            for file_name in [
+                'jury_approval',
+            ]
+        }
 
-        response = self.client.get(url)
+        self.doctorate.jury_approval = [file_uuids['jury_approval']]
+        self.doctorate.save()
+
+        response = self.client.get(self.url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         documents = response.context['documents_by_section']
 
-        self.assertIn(self.jury_label, documents)
+        self.assertIn(category_label, documents)
 
-        jury_documents = documents[self.jury_label]
+        category_documents = documents[category_label]
 
-        self.assertEqual(len(jury_documents), 1)
+        self.assertEqual(len(category_documents), 1)
 
-        jury_labels = {
+        labels = {
             'jury_approval': gettext('Jury approval'),
         }
 
-        for index, jury_file_name in enumerate(self.jury_files_names):
-            self.assertEqual(jury_documents[index].identifiant, self.file_uuids[jury_file_name])
-            self.assertEqual(jury_documents[index].uuids_documents, [self.file_uuids[jury_file_name]])
-            self.assertEqual(jury_documents[index].type, TypeDocument.NON_LIBRE.name)
-            self.assertEqual(jury_documents[index].libelle, jury_labels[jury_file_name])
-            self.assertIsNotNone(jury_documents[index].auteur)
-            self.assertEqual(jury_documents[index].auteur.prenom, self.other_manager.first_name)
-            self.assertEqual(jury_documents[index].auteur.nom, self.other_manager.last_name)
-            self.assertEqual(jury_documents[index].auteur.matricule, self.other_manager.global_id)
-            self.assertEqual(jury_documents[index].modifie_le, self.default_upload_date)
+        for index, (file_name, file_uuid) in enumerate(file_uuids.items()):
+            self.assertEqual(category_documents[index].identifiant, file_uuid)
+            self.assertEqual(category_documents[index].uuids_documents, [file_uuid])
+            self.assertEqual(category_documents[index].type, TypeDocument.NON_LIBRE.name)
+            self.assertEqual(category_documents[index].libelle, labels[file_name])
+            self.assertIsNotNone(category_documents[index].auteur)
+            self.assertEqual(category_documents[index].auteur.prenom, self.other_manager.first_name)
+            self.assertEqual(category_documents[index].auteur.nom, self.other_manager.last_name)
+            self.assertEqual(category_documents[index].auteur.matricule, self.other_manager.global_id)
+            self.assertEqual(category_documents[index].modifie_le, self.default_upload_date)
+
+    def test_with_admissibility_documents(self):
+        self.client.force_login(self.manager.user)
+
+        category_label = ChoixEtapeParcoursDoctoral.DECISION_DE_RECEVABILITE.value
+
+        response = self.client.get(self.url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        documents = response.context['documents_by_section']
+        self.assertNotIn(category_label, documents)
+
+        # Add documents
+        file_uuids = {
+            file_name: str(uuid.uuid4())
+            for file_name in [
+                'thesis_exam_board_opinion',
+                'minutes',
+                'minutes_canvas',
+            ]
+        }
+
+        AdmissibilityFactory(
+            thesis_exam_board_opinion=[file_uuids['thesis_exam_board_opinion']],
+            minutes=[file_uuids['minutes']],
+            minutes_canvas=[file_uuids['minutes_canvas']],
+            parcours_doctoral=self.doctorate,
+        )
+
+        response = self.client.get(self.url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        documents = response.context['documents_by_section']
+
+        self.assertIn(category_label, documents)
+
+        category_documents = documents[category_label]
+
+        self.assertEqual(len(category_documents), 3)
+
+        labels = {
+            'thesis_exam_board_opinion': gettext('Thesis exam board opinion'),
+            'minutes': gettext('Admissibility minutes'),
+            'minutes_canvas': gettext('Admissibility minutes canvas'),
+        }
+
+        for index, (file_name, file_uuid) in enumerate(file_uuids.items()):
+            self.assertEqual(category_documents[index].identifiant, file_uuids[file_name])
+            self.assertEqual(category_documents[index].uuids_documents, [file_uuids[file_name]])
+            self.assertEqual(category_documents[index].type, TypeDocument.NON_LIBRE.name)
+            self.assertEqual(category_documents[index].libelle, labels[file_name])
+            self.assertIsNotNone(category_documents[index].auteur)
+            self.assertEqual(category_documents[index].auteur.prenom, self.other_manager.first_name)
+            self.assertEqual(category_documents[index].auteur.nom, self.other_manager.last_name)
+            self.assertEqual(category_documents[index].auteur.matricule, self.other_manager.global_id)
+            self.assertEqual(category_documents[index].modifie_le, self.default_upload_date)
+
+    def test_with_private_defense_documents(self):
+        self.client.force_login(self.manager.user)
+
+        category_label = ChoixEtapeParcoursDoctoral.DEFENSE_PRIVEE.value
+
+        response = self.client.get(self.url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        documents = response.context['documents_by_section']
+
+        self.assertNotIn(category_label, documents)
+
+        # Add documents
+        file_uuids = {
+            file_name: str(uuid.uuid4())
+            for file_name in [
+                'minutes',
+                'minutes_canvas',
+            ]
+        }
+
+        PrivateDefenseFactory(
+            minutes=[file_uuids['minutes']],
+            minutes_canvas=[file_uuids['minutes_canvas']],
+            parcours_doctoral=self.doctorate,
+        )
+
+        response = self.client.get(self.url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        documents = response.context['documents_by_section']
+
+        self.assertIn(category_label, documents)
+
+        category_documents = documents[category_label]
+
+        self.assertEqual(len(category_documents), 2)
+
+        labels = {
+            'minutes': gettext('Private defence minutes'),
+            'minutes_canvas': gettext('Private defence minutes canvas'),
+        }
+
+        for index, (file_name, file_uuid) in enumerate(file_uuids.items()):
+            self.assertEqual(category_documents[index].identifiant, file_uuid)
+            self.assertEqual(category_documents[index].uuids_documents, [file_uuid])
+            self.assertEqual(category_documents[index].type, TypeDocument.NON_LIBRE.name)
+            self.assertEqual(category_documents[index].libelle, labels[file_name])
+            self.assertIsNotNone(category_documents[index].auteur)
+            self.assertEqual(category_documents[index].auteur.prenom, self.other_manager.first_name)
+            self.assertEqual(category_documents[index].auteur.nom, self.other_manager.last_name)
+            self.assertEqual(category_documents[index].auteur.matricule, self.other_manager.global_id)
+            self.assertEqual(category_documents[index].modifie_le, self.default_upload_date)
+
+    def test_with_public_defense_documents(self):
+        self.client.force_login(self.manager.user)
+
+        category_label = ChoixEtapeParcoursDoctoral.SOUTENANCE_PUBLIQUE.value
+
+        # Without document
+        response = self.client.get(self.url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        documents = response.context['documents_by_section']
+
+        self.assertNotIn(category_label, documents)
+
+        # With documents
+        file_uuids = {
+            file_name: str(uuid.uuid4())
+            for file_name in [
+                'announcement_photo',
+                'defense_minutes',
+                'defense_minutes_canvas',
+            ]
+        }
+        self.doctorate.announcement_photo = [file_uuids['announcement_photo']]
+        self.doctorate.defense_minutes = [file_uuids['defense_minutes']]
+        self.doctorate.defense_minutes_canvas = [file_uuids['defense_minutes_canvas']]
+        self.doctorate.save()
+
+        response = self.client.get(self.url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        documents = response.context['documents_by_section']
+
+        self.assertIn(category_label, documents)
+
+        category_documents = documents[category_label]
+
+        self.assertEqual(len(category_documents), 3)
+
+        labels = {
+            'announcement_photo': gettext('Photo for announcement'),
+            'defense_minutes': gettext('Public defence minutes'),
+            'defense_minutes_canvas': gettext('Public defence minutes canvas'),
+        }
+
+        for index, (file_name, file_uuid) in enumerate(file_uuids.items()):
+            self.assertEqual(category_documents[index].identifiant, file_uuid)
+            self.assertEqual(category_documents[index].uuids_documents, [file_uuid])
+            self.assertEqual(category_documents[index].type, TypeDocument.NON_LIBRE.name)
+            self.assertEqual(category_documents[index].libelle, labels[file_name])
+            self.assertIsNotNone(category_documents[index].auteur)
+            self.assertEqual(category_documents[index].auteur.prenom, self.other_manager.first_name)
+            self.assertEqual(category_documents[index].auteur.nom, self.other_manager.last_name)
+            self.assertEqual(category_documents[index].auteur.matricule, self.other_manager.global_id)
+            self.assertEqual(category_documents[index].modifie_le, self.default_upload_date)
 
     def test_with_free_documents(self):
         self.client.force_login(self.manager.user)
@@ -312,7 +479,7 @@ class DocumentsDetailViewTestCase(TestCase):
                 updated_by=self.manager,
             )
 
-        other_document = DocumentFactory(
+        DocumentFactory(
             name='Other document',
             document_type=TypeDocument.LIBRE.name,
             related_doctorate=ParcoursDoctoralFactory(),

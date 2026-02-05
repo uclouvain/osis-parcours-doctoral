@@ -27,6 +27,7 @@ from typing import Dict, List
 
 from django.db.models import Prefetch
 from django.utils.dateparse import parse_datetime
+from django.utils.translation import gettext_lazy
 from osis_document_components.enums import PostProcessingWanted
 
 from base.models.person import Person
@@ -46,7 +47,6 @@ from parcours_doctoral.ddd.domain.validator.exceptions import (
 )
 from parcours_doctoral.ddd.dtos.document import AuteurDocumentDTO, DocumentDTO
 from parcours_doctoral.ddd.repository.i_document import IDocumentRepository
-from parcours_doctoral.models import ConfirmationPaper
 from parcours_doctoral.models import Document as DocumentDbModel
 from parcours_doctoral.models import ParcoursDoctoral
 
@@ -120,26 +120,6 @@ class DocumentRepository(IDocumentRepository):
             )
         }
 
-    confirmation_paper_fields_names = {
-        field_name: ConfirmationPaper._meta.get_field(field_name).verbose_name
-        for field_name in [
-            'research_report',
-            'supervisor_panel_report',
-            'supervisor_panel_report_canvas',
-            'research_mandate_renewal_opinion',
-            'certificate_of_failure',
-            'certificate_of_achievement',
-            'justification_letter',
-        ]
-    }
-
-    jury_fields_names = {
-        field_name: ParcoursDoctoral._meta.get_field(field_name).verbose_name
-        for field_name in [
-            'jury_approval',
-        ]
-    }
-
     @classmethod
     def get_dtos_parcours_doctoral(
         cls,
@@ -149,15 +129,10 @@ class DocumentRepository(IDocumentRepository):
 
         doctorate = ParcoursDoctoral.objects.prefetch_related(
             Prefetch(
-                'confirmationpaper_set',
-                queryset=ConfirmationPaper.objects.order_by('created_at'),
-            ),
-            Prefetch(
                 'document_set',
                 queryset=DocumentDbModel.objects.select_related('updated_by').order_by('updated_at'),
             ),
         ).get(uuid=parcours_doctoral_id.uuid)
-
         cls._set_non_free_documents_dtos(doctorate, documents)
 
         # Set free and system documents
@@ -196,37 +171,88 @@ class DocumentRepository(IDocumentRepository):
     ):
         # Add non-free documents
         documents_uuids: List[str] = []
-
-        # Confirmation
         document_name_by_uuid = {}
         documents_categories_by_uuid = {}
 
-        confirmation_papers = doctorate.confirmationpaper_set.all()
-        confirmation_category_label = ChoixEtapeParcoursDoctoral.CONFIRMATION.value
-
-        if len(confirmation_papers) > 1:
-            confirmation_category_label += ' - {index}'
-
-        for index, confirmation_paper in enumerate(confirmation_papers, start=1):
-            document_category = confirmation_category_label.format(index=index)
-            for field_name, field_verbose_name in cls.confirmation_paper_fields_names.items():
-                field_value = getattr(confirmation_paper, field_name)
+        def _set_non_free_documents_dtos_category(model_object, category_label, field_names):
+            """Loop over the files fields of the object of one category."""
+            for field_name in field_names:
+                field_value = getattr(model_object, field_name)
 
                 for file_uuid in field_value:
                     file_uuid_as_str = str(file_uuid)
                     documents_uuids.append(file_uuid_as_str)
-                    document_name_by_uuid[file_uuid_as_str] = field_verbose_name
-                    documents_categories_by_uuid[file_uuid_as_str] = document_category
+                    document_name_by_uuid[file_uuid_as_str] = model_object._meta.get_field(field_name).verbose_name
+                    documents_categories_by_uuid[file_uuid_as_str] = category_label
+
+        def _set_non_free_documents_dtos_multiple_category(model_objects, category_label, field_names):
+            """Loop over the files fields of the objects of one category which can have multiple instances."""
+            default_category_label = (
+                category_label + ' ' + gettext_lazy('no.') + '{index}' if len(model_objects) > 1 else category_label
+            )
+
+            for index, model_object in enumerate(model_objects, start=1):
+                _set_non_free_documents_dtos_category(
+                    model_object=model_object,
+                    category_label=default_category_label.format(index=index),
+                    field_names=field_names,
+                )
+
+        # Confirmation
+        _set_non_free_documents_dtos_multiple_category(
+            model_objects=doctorate.confirmationpaper_set.all().order_by('created_at'),
+            category_label=ChoixEtapeParcoursDoctoral.CONFIRMATION.value,
+            field_names=[
+                'research_report',
+                'supervisor_panel_report',
+                'supervisor_panel_report_canvas',
+                'research_mandate_renewal_opinion',
+                'certificate_of_failure',
+                'certificate_of_achievement',
+                'justification_letter',
+            ],
+        )
 
         # Jury
-        for field_name, field_verbose_name in cls.jury_fields_names.items():
-            field_value = getattr(doctorate, field_name)
+        _set_non_free_documents_dtos_category(
+            model_object=doctorate,
+            category_label=ChoixEtapeParcoursDoctoral.JURY.value,
+            field_names=[
+                'jury_approval',
+            ],
+        )
 
-            for file_uuid in field_value:
-                file_uuid_as_str = str(file_uuid)
-                documents_uuids.append(file_uuid_as_str)
-                document_name_by_uuid[file_uuid_as_str] = field_verbose_name
-                documents_categories_by_uuid[file_uuid_as_str] = ChoixEtapeParcoursDoctoral.JURY.value
+        # Admissibility
+        _set_non_free_documents_dtos_multiple_category(
+            model_objects=doctorate.admissibility_set.all().order_by('created_at'),
+            category_label=ChoixEtapeParcoursDoctoral.DECISION_DE_RECEVABILITE.value,
+            field_names=[
+                'thesis_exam_board_opinion',
+                'minutes',
+                'minutes_canvas',
+            ],
+        )
+
+        # Private defense
+        _set_non_free_documents_dtos_multiple_category(
+            model_objects=doctorate.privatedefense_set.all().order_by('created_at'),
+            category_label=ChoixEtapeParcoursDoctoral.DEFENSE_PRIVEE.value,
+            field_names=[
+                'minutes',
+                'minutes_canvas',
+            ],
+        )
+
+        # Public defense
+        _set_non_free_documents_dtos_category(
+            model_object=doctorate,
+            category_label=ChoixEtapeParcoursDoctoral.SOUTENANCE_PUBLIQUE.value,
+            field_names=[
+                'announcement_photo',
+                'defense_minutes',
+                'defense_minutes_canvas',
+            ],
+        )
 
         metadata = cls.recuperer_metadonnees_par_uuid_document(documents_uuids)
 
