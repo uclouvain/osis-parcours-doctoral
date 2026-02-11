@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2026 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -23,27 +23,24 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from unittest.mock import ANY, Mock, patch
+from unittest.mock import patch
 
 from django.shortcuts import resolve_url
 from django.test import TestCase, override_settings
 from django.urls import reverse
-from django.utils.translation import gettext_lazy as _
 from osis_signature.enums import SignatureState
 from osis_signature.models import StateHistory
 
-from admission.tests.factories.person import InternalPersonFactory
 from base.tests.factories.academic_year import AcademicYearFactory
 from base.tests.factories.entity import EntityFactory
 from base.tests.factories.entity_version import EntityVersionFactory
-from base.tests.factories.person import ExternalPersonFactory, PersonFactory
+from base.tests.factories.person import ExternalPersonFactory, InternalPersonFactory, EmployeeInternalPersonFactory
 from base.tests.factories.program_manager import ProgramManagerFactory
 from base.tests.factories.tutor import TutorFactory
 from parcours_doctoral.ddd.domain.model.parcours_doctoral import ENTITY_CDE
 from parcours_doctoral.forms.supervision import ACTOR_EXTERNAL, EXTERNAL_FIELDS
 from parcours_doctoral.models import ActorType
 from parcours_doctoral.tests.factories.parcours_doctoral import ParcoursDoctoralFactory
-from parcours_doctoral.tests.factories.roles import AdreSecretaryRoleFactory
 from parcours_doctoral.tests.factories.supervision import (
     CaMemberFactory,
     ExternalPromoterFactory,
@@ -58,7 +55,7 @@ class SupervisionTestCase(TestCase):
     @classmethod
     def setUpTestData(cls):
         # Create some academic years
-        academic_years = [AcademicYearFactory(year=year) for year in [2021, 2022]]
+        [AcademicYearFactory(year=year) for year in [2021, 2022]]
 
         # First entity
         first_doctoral_commission = EntityFactory()
@@ -80,7 +77,7 @@ class SupervisionTestCase(TestCase):
 
         cls.country = CountryFactory()
 
-        cls.person = InternalPersonFactory(global_id='00005789')
+        cls.person = EmployeeInternalPersonFactory(global_id='00005789')
         TutorFactory(person=cls.person)
 
         cls.external_person = ExternalPersonFactory()
@@ -125,6 +122,40 @@ class SupervisionTestCase(TestCase):
     def test_should_add_supervision_member_error(self):
         self.client.force_login(user=self.program_manager_user)
         response = self.client.post(self.update_url, {'type': ActorType.CA_MEMBER.name})
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('__all__', response.context['add_form'].errors)
+
+    def test_should_not_add_promoter_who_is_not_employee(self):
+        self.client.force_login(user=self.program_manager_user)
+
+        person_not_employee = InternalPersonFactory(employee=False)
+
+        data = {
+            'type': ActorType.PROMOTER.name,
+            'internal_external': "INTERNAL",
+            'person': person_not_employee.global_id,
+            'email': "test@test.fr",
+        }
+
+        response = self.client.post(self.update_url, data)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('__all__', response.context['add_form'].errors)
+
+    def test_should_not_add_ca_member_who_is_not_employee(self):
+        self.client.force_login(user=self.program_manager_user)
+
+        person_not_employee = InternalPersonFactory(employee=False)
+
+        data = {
+            'type': ActorType.CA_MEMBER.name,
+            'internal_external': "INTERNAL",
+            'person': person_not_employee.global_id,
+            'email': "test@test.fr",
+        }
+
+        response = self.client.post(self.update_url, data)
+
         self.assertEqual(response.status_code, 200)
         self.assertIn('__all__', response.context['add_form'].errors)
 
