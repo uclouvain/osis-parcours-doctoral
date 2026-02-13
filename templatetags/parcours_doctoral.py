@@ -58,9 +58,8 @@ from parcours_doctoral.ddd.domain.model.enums import (
 from parcours_doctoral.ddd.dtos import CampusDTO, ParcoursDoctoralDTO
 from parcours_doctoral.ddd.formation.domain.model.enums import StatutActivite
 from parcours_doctoral.ddd.jury.dtos.jury import MembreJuryDTO
-from parcours_doctoral.ddd.repository.i_parcours_doctoral import formater_reference
 from parcours_doctoral.forms.supervision import MemberSupervisionForm
-from parcours_doctoral.models import Activity, ParcoursDoctoral
+from parcours_doctoral.models import Activity
 from parcours_doctoral.utils.formatting import format_activity_ects
 from parcours_doctoral.utils.trainings import training_categories_stats
 from reference.models.country import Country
@@ -450,17 +449,6 @@ def sortable_header_div(context, order_field_name, order_field_label):
         'url': context.request.path + '?' + new_params.urlencode(),
         'ordering_class': ordering_class,
     }
-
-
-@register.filter
-def formatted_reference(parcours_doctoral: ParcoursDoctoral):
-    return formater_reference(
-        reference=parcours_doctoral.reference,
-        nom_campus_inscription=parcours_doctoral.training.enrollment_campus.name,
-        sigle_entite_gestion=parcours_doctoral.training_management_faculty
-        or parcours_doctoral.sigle_entite_gestion,  # From annotation
-        annee=parcours_doctoral.training.academic_year.year,
-    )
 
 
 @register.filter

@@ -23,7 +23,6 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-import re
 
 from dal import forward
 from django import forms
@@ -85,17 +84,6 @@ class ParcoursDoctorauxFilterForm(forms.Form):
         label=_('Year'),
         coerce=int,
         required=False,
-    )
-
-    numero = forms.RegexField(
-        label=_('Application numero'),
-        regex=re.compile(REGEX_REFERENCE),
-        required=False,
-        widget=forms.TextInput(
-            attrs={
-                'placeholder': 'L-ESPO22-0001.2345',
-            },
-        ),
     )
 
     matricule_doctorant = forms.CharField(
@@ -421,10 +409,6 @@ class ParcoursDoctorauxFilterForm(forms.Form):
             proximity_commission_choices.append([ENTITY_SCIENCES, ChoixSousDomaineSciences.choices()])
 
         return proximity_commission_choices
-
-    def clean_numero(self):
-        numero = self.cleaned_data.get('numero')
-        return re.search(REGEX_REFERENCE, numero).group(0).replace('.', '') if numero else ''
 
     def clean_taille_page(self):
         return self.cleaned_data.get('taille_page') or self.fields['taille_page'].initial

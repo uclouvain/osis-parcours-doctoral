@@ -54,7 +54,6 @@ class ExternalParcoursDoctoralDTOSerializer(IncludedFieldsMixin, DTOSerializer):
         fields = [
             'uuid',
             'archive',
-            'reference',
             'formation',
             'matricule_doctorant',
             'projet',
