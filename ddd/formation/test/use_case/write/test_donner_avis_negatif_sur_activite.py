@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2026 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -26,7 +26,7 @@
 
 from django.test import TestCase
 
-from parcours_doctoral.ddd.formation.commands import DonnerAvisSurActiviteCommand
+from parcours_doctoral.ddd.formation.commands import DonnerAvisNegatifSurActiviteCommand
 from parcours_doctoral.infrastructure.message_bus_in_memory import (
     message_bus_in_memory_instance,
 )
@@ -35,18 +35,19 @@ from parcours_doctoral.infrastructure.parcours_doctoral.formation.repository.in_
 )
 
 
-class DonnerAvisSurActiviteTestCase(TestCase):
+class DonnerAvisNegatifSurActiviteTestCase(TestCase):
     def setUp(self) -> None:
         self.message_bus = message_bus_in_memory_instance
 
     def test_donner_avis_sur_activite(self):
         activite_id = ActiviteInMemoryRepository.entities[0].entity_id
         self.message_bus.invoke(
-            DonnerAvisSurActiviteCommand(
+            DonnerAvisNegatifSurActiviteCommand(
                 parcours_doctoral_uuid="uuid-SC3DP-promoteurs-membres-deja-approuves",
                 activite_uuid=activite_id.uuid,
-                approbation=False,
                 commentaire="Pas ok",
             )
         )
-        self.assertEqual(ActiviteInMemoryRepository.get(activite_id).commentaire_promoteur_reference, "Pas ok")
+        activite = ActiviteInMemoryRepository.get(activite_id)
+        self.assertEqual(activite.commentaire_promoteur_reference, "Pas ok")
+        self.assertIs(activite.avis_promoteur_reference, False)
