@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2026 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -90,7 +90,7 @@ urlpatterns = [
     path('doctorate/<uuid:uuid>/course-enrollment', views.CourseEnrollmentListView),
     path('doctorate/<uuid:uuid>/assessment-enrollment', views.AssessmentEnrollmentListView),
     path('doctorate/<uuid:uuid>/assessment-enrollment/<uuid:enrollment_uuid>', views.AssessmentEnrollmentDetailView),
-    path('doctorate/<uuid:uuid>/training-recap-pdf', views.TrainingRecapPdfApiView),
+    path('doctorate/<uuid:uuid>/training-recap-pdf/<str:status>', views.TrainingRecapPdfApiView),
     # Autocomplete
     path('autocomplete/tutor', views.AutocompleteTutorView),
     path('autocomplete/person', views.AutocompletePersonView),

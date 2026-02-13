@@ -23,37 +23,31 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from typing import List
 
-from assessments.models.evaluation import Evaluation
-from parcours_doctoral.ddd.domain.model._promoteur import PromoteurIdentity
-from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoral
-from parcours_doctoral.ddd.formation.domain.model.activite import Activite
-from parcours_doctoral.ddd.formation.domain.service.i_notification import INotification
+from django.test import TestCase
+
+from parcours_doctoral.ddd.formation.commands import DonnerAvisPositifSurActiviteCommand
+from parcours_doctoral.infrastructure.message_bus_in_memory import (
+    message_bus_in_memory_instance,
+)
+from parcours_doctoral.infrastructure.parcours_doctoral.formation.repository.in_memory.activite import (
+    ActiviteInMemoryRepository,
+)
 
 
-class NotificationInMemory(INotification):
-    @classmethod
-    def notifier_soumission_au_promoteur_de_reference(
-        cls,
-        parcours_doctoral: ParcoursDoctoral,
-        activites: List[Activite],
-        promoteur_de_reference_id: PromoteurIdentity,
-    ) -> None:
-        pass
+class DonnerAvisPositifSurActiviteTestCase(TestCase):
+    def setUp(self) -> None:
+        self.message_bus = message_bus_in_memory_instance
 
-    @classmethod
-    def notifier_validation_au_doctorant(cls, parcours_doctoral: ParcoursDoctoral, activites: List[Activite]) -> None:
-        pass
-
-    @classmethod
-    def notifier_refus_au_candidat(cls, parcours_doctoral, activite):
-        pass
-
-    @classmethod
-    def notifier_refus_par_promoteur_au_candidat(cls, doctorat, activite):
-        pass
-
-    @classmethod
-    def notifier_encodage_note_aux_gestionnaires(cls, evaluation: Evaluation, cours: Activite) -> None:
-        pass
+    def test_donner_avis_sur_activite(self):
+        activite_id = ActiviteInMemoryRepository.entities[0].entity_id
+        self.message_bus.invoke(
+            DonnerAvisPositifSurActiviteCommand(
+                parcours_doctoral_uuid="uuid-SC3DP-promoteurs-membres-deja-approuves",
+                activite_uuid=activite_id.uuid,
+                commentaire="Ok",
+            )
+        )
+        activite = ActiviteInMemoryRepository.get(activite_id)
+        self.assertEqual(activite.commentaire_promoteur_reference, "Ok")
+        self.assertIs(activite.avis_promoteur_reference, True)

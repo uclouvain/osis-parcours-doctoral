@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Parcours Doctoral API
-  version: 1.1.8.dev1739
+  version: 1.1.9
   description: This API delivers data for the Parcours Doctoral project.
   contact:
     name: UCLouvain - OSIS
@@ -2203,11 +2203,16 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '404':
           $ref: '#/components/responses/NotFound'
-  /doctorate/{uuid}/training-recap-pdf:
+  /doctorate/{uuid}/training-recap-pdf/{status}:
     get:
       operationId: training_recap_pdf
       description: Get the recap PDF of the doctoral training
       parameters:
+      - in: path
+        name: status
+        schema:
+          type: string
+        required: true
       - in: path
         name: uuid
         schema:
@@ -3623,6 +3628,11 @@ components:
           title: Activer l'onglet Formation complémentaire
         category_labels:
           title: Libellés de catégories
+        enabled_categories:
+          type: array
+          items:
+            $ref: '#/components/schemas/EnabledCategoriesEnum'
+          title: Catégories activées
         conference_types:
           title: Types d'activité pour la catégorie Conférence
         conference_publication_types:
@@ -3643,6 +3653,30 @@ components:
           title: Types d'activité pour la catégorie Cours
         complementary_course_types:
           title: Type de cours pour la formation complémentaire
+    EnabledCategoriesEnum:
+      enum:
+      - CONFERENCE
+      - COMMUNICATION
+      - SEMINAR
+      - PUBLICATION
+      - SERVICE
+      - RESIDENCY
+      - VAE
+      - COURSE
+      - PAPER
+      - UCL_COURSE
+      type: string
+      description: |-
+        * `CONFERENCE` - Colloques et conférences
+        * `COMMUNICATION` - Communications orale
+        * `SEMINAR` - Séminaires suivis
+        * `PUBLICATION` - Publications
+        * `SERVICE` - Services
+        * `RESIDENCY` - Séjours de recherche
+        * `VAE` - Valorisations des acquis de l'expérience
+        * `COURSE` - Cours, formations et écoles
+        * `PAPER` - Épreuves
+        * `UCL_COURSE` - Cours UCL
     EntiteGestionDTONested:
       type: object
       description: |-

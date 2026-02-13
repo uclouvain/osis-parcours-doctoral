@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2026 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -61,6 +61,9 @@ from parcours_doctoral.mail_templates import (
     PARCOURS_DOCTORAL_EMAIL_STUDENT_COURSE_ENROLLMENT_REFUSED,
     PARCOURS_DOCTORAL_EMAIL_STUDENT_DOCTORAL_TRAINING_NEEDS_UPDATE,
     PARCOURS_DOCTORAL_EMAIL_STUDENT_DOCTORAL_TRAINING_REFUSED,
+)
+from parcours_doctoral.mail_templates.training import (
+    PARCOURS_DOCTORAL_EMAIL_STUDENT_DOCTORAL_TRAINING_PROMOTER_REFUSED,
 )
 from parcours_doctoral.models.activity import Activity
 from parcours_doctoral.models.parcours_doctoral import (
@@ -204,6 +207,23 @@ class Notification(INotification):
         )
         email_message = generate_email(
             mail_template_id,
+            parcours_doctoral_instance.student.language,
+            {
+                **common_tokens,
+                'reason': activite.commentaire_gestionnaire,
+                'activity_title': str(Activity.objects.get(uuid=activite.entity_id.uuid)),
+            },
+            recipients=[parcours_doctoral_instance.student.email],
+        )
+        EmailNotificationHandler.create(email_message, person=parcours_doctoral_instance.student)
+
+    @classmethod
+    def notifier_avis_negatif_par_promoteur_au_candidat(cls, parcours_doctoral, activite):
+        parcours_doctoral_instance = cls._get_doctorate(doctorate_uuid=parcours_doctoral.entity_id.uuid)
+        common_tokens = cls.get_common_tokens(parcours_doctoral_instance)
+
+        email_message = generate_email(
+            PARCOURS_DOCTORAL_EMAIL_STUDENT_DOCTORAL_TRAINING_PROMOTER_REFUSED,
             parcours_doctoral_instance.student.language,
             {
                 **common_tokens,

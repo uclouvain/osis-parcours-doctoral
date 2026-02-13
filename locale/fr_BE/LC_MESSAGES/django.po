@@ -106,14 +106,6 @@ msgstr ""
 
 #, python-format
 msgid ""
-"<a href=\"%(enrollment_url)s\">Go to course enrolment</a> or <a "
-"href=\"%(add_url)s\">add a course</a>"
-msgstr ""
-"<a href=\"%(enrollment_url)s\">Aller à l'inscription aux cours</a> ou <a "
-"href=\"%(add_url)s\">ajouter un cours</a>"
-
-#, python-format
-msgid ""
 "<a "
 "href=\"%(parcours_doctoral_link_front_complementary_training)s\">%(reference)s</"
 "a> - Some complementary training activities have been approved."
@@ -237,12 +229,16 @@ msgstr ""
 msgid "A comment is required."
 msgstr "Un commentaire est requis."
 
+msgid "A document proving that the committee approved the publication"
+msgstr ""
+"Un document prouvant qu'un comité de sélection a accepté la publication"
+
 msgid ""
-"A document proving that the communication was done (i.e. communication "
+"A document proving that the communication was done (not a transport "
 "certificate)"
 msgstr ""
-"Un document prouvant que la communication a eu lieu (i.e. certificat de "
-"communication)"
+"Un document prouvant que la communication a eu lieu (pas un titre de "
+"transport)"
 
 msgid ""
 "A member should be either internal or external, please check the fields."
@@ -314,6 +310,9 @@ msgctxt "publication-status"
 msgid "Accepted"
 msgstr "Acceptée"
 
+msgid "Accepted activities"
+msgstr "Activités acceptées"
+
 #, python-format
 msgid "Accepted by %(first_name)s %(last_name)s on"
 msgstr "Accepté par %(first_name)s %(last_name)s le"
@@ -369,9 +368,6 @@ msgstr "Ajouter"
 msgid "Add a conference, a symposium"
 msgstr "Ajouter une conférence, un colloque"
 
-msgid "Add a course unit"
-msgstr "Ajouter un cours"
-
 #, python-format
 msgid "Add a custom mail template for <em>%(description)s</em>"
 msgstr "Ajouter un template d'email personnalisé pour <em>%(description)s</em>"
@@ -417,6 +413,9 @@ msgstr "Ajouter un·e promoteur·trice ou un·e membre du comité d'accompagneme
 
 msgid "Add an activity"
 msgstr "Ajouter une activité"
+
+msgid "Add course units, courses and schools"
+msgstr "Ajouter cours, formations et écoles"
 
 msgid "Add date filter"
 msgstr "Ajouter un filtre de date"
@@ -1507,6 +1506,9 @@ msgstr "Date de l'embargo"
 msgid "Enable complementary training tab"
 msgstr "Activer l'onglet Formation complémentaire"
 
+msgid "Enabled categories"
+msgstr "Catégories activées"
+
 msgid "End date"
 msgstr "Date de fin"
 
@@ -1643,13 +1645,6 @@ msgstr ""
 "À la suite de la présentation de l'état de la recherche et de l'échange qui "
 "s'en est suivi avec le candidat, le comité d'accompagnement a évalué "
 "l'avancement du travail et conclut à :"
-
-msgid ""
-"Following the specifics of your domain doctoral commission, specify the "
-"total time dedicated to this activity"
-msgstr ""
-"En suivant les dispositions particulières de votre commission doctorale de "
-"domaine, indiquer ici la durée totale consacrée à cette activité"
 
 msgid ""
 "For a released text, specify the month and year of publication. Else, "
@@ -2141,6 +2136,10 @@ msgid "Link to the thesis distribution authorization form (frontoffice)"
 msgstr ""
 "Le lien vers la page d'autorisation de diffusion de la thèse (frontoffice)"
 
+msgid ""
+"List of course units in complementary training completed by the student:"
+msgstr "Liste des cours en formation complémentaire réussis par le doctorant ou la doctorante :"
+
 msgid "Lookup somebody"
 msgstr "Rechercher une personne"
 
@@ -2429,6 +2428,13 @@ msgid ""
 msgstr ""
 "E-mail envoyé à l'étudiant pour l'informer du refus par le promoteur de "
 "l'autorisation de diffusion de thèse"
+
+msgid ""
+"Mail sent to the student to inform of the refusal of a doctoral training "
+"activity by a promoter"
+msgstr ""
+"E-mail envoyé à l'étudiant pour lui informer du refus d'une activité de "
+"formation doctorale par un promoteur"
 
 msgid ""
 "Mail sent to the student to inform of the refusal of complementary training "
@@ -2823,8 +2829,8 @@ msgstr "Exposé oral"
 msgid "Organisers or academic responsibles"
 msgstr "Organisateur.trice.s ou responsables académiques"
 
-msgid "Organising institution"
-msgstr "Institution organisatrice"
+msgid "Organising institutions"
+msgstr "Institutions organisatrices"
 
 msgid "Other"
 msgstr "Autre"
@@ -3733,6 +3739,9 @@ msgstr ""
 msgid "Specify the title in the language of the activity"
 msgstr "Inscrire le titre dans la langue de l’activité"
 
+msgid "Specify the total time dedicated to this activity"
+msgstr "Indiquer ici la durée totale consacrée à cette activité"
+
 msgid ""
 "Specify your participation in a course in the context of your doctoral "
 "training, excepting courses from the catalog of the UCLouvain in which you "
@@ -3830,6 +3839,9 @@ msgstr "PV téléversé (dans tuile Défense)"
 msgctxt "dashboard-indicator formula-2-defence"
 msgid "Submitted PV (public defence)"
 msgstr "PV téléversé (dans tuile Soutenance)"
+
+msgid "Submitted activities"
+msgstr "Activités soumises"
 
 msgctxt "dashboard-indicator formula-2-admissibility"
 msgid "Submitted admissibility"

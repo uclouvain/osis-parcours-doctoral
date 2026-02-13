@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2026 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -195,14 +195,19 @@ class AssessmentEnrollmentListView(ParcoursDoctoralViewMixin, TemplateView):
 
 
 class TrainingRecapPdfView(ParcoursDoctoralViewMixin, generic.View):
-    urlpatterns = {'training_pdf_recap': 'pdf_recap'}
+    urlpatterns = {'training_pdf_recap': 'pdf_recap/<str:status>'}
     permission_required = "parcours_doctoral.view_doctoral_training"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        activities = Activity.objects.for_doctoral_training(self.parcours_doctoral_uuid).filter(
-            status=StatutActivite.ACCEPTEE.name
-        )
+        if self.kwargs['status'] == StatutActivite.SOUMISE.name:
+            activities = Activity.objects.for_doctoral_training(self.parcours_doctoral_uuid).filter(
+                status=StatutActivite.SOUMISE.name
+            )
+        else:
+            activities = Activity.objects.for_doctoral_training(self.parcours_doctoral_uuid).filter(
+                status=StatutActivite.ACCEPTEE.name
+            )
         context['categories'] = training_categories_activities(activities)
         return context
 
