@@ -26,11 +26,13 @@
 from typing import List
 
 from ddd.logic.parcours_interne.dto.info import ProprietesPaeDTO
+from parcours_doctoral.ddd.defense_privee.dtos import DefensePriveeDTO
 from parcours_doctoral.ddd.domain.service.i_pdf_generation import IPDFGeneration
 from parcours_doctoral.ddd.dtos import GroupeDeSupervisionDTO, ParcoursDoctoralDTO
 from parcours_doctoral.ddd.epreuve_confirmation.dtos import EpreuveConfirmationDTO
 from parcours_doctoral.ddd.formation.dtos import CoursDTO
 from parcours_doctoral.ddd.jury.dtos.jury import JuryDTO
+from parcours_doctoral.ddd.recevabilite.dtos import RecevabiliteDTO
 
 
 class InMemoryPDFGeneration(IPDFGeneration):
@@ -43,5 +45,7 @@ class InMemoryPDFGeneration(IPDFGeneration):
         jury: JuryDTO,
         cours_complementaires: List[CoursDTO],
         proprietes_pae: List['ProprietesPaeDTO'],
+        defenses_privees: List[DefensePriveeDTO],
+        recevabilites: List[RecevabiliteDTO],
     ) -> str:
         return ''

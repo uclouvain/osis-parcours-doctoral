@@ -176,10 +176,17 @@ CHOIX_COMMISSION_PROXIMITE = {
 }
 
 
-class ChoixEtapeParcoursDoctoral(ChoiceEnum):
+class TypeDateParcoursDoctoral(ChoiceEnum):
     ADMISSION = _('ADMISSION')
-    JURY = _('JURY')
     CONFIRMATION = _('CONFIRMATION')
+    DECISION_DE_RECEVABILITE = _('DECISION_DE_RECEVABILITE')
+    DEFENSE_PRIVEE = _('DEFENSE_PRIVEE')
+    SOUTENANCE_PUBLIQUE = _('SOUTENANCE_PUBLIQUE')
+
+
+class ChoixEtapeParcoursDoctoral(ChoiceEnum):
+    CONFIRMATION = _('CONFIRMATION')
+    JURY = _('JURY')
     DECISION_DE_RECEVABILITE = _('DECISION_DE_RECEVABILITE')
     DEFENSE_PRIVEE = _('DEFENSE_PRIVEE')
     SOUTENANCE_PUBLIQUE = _('SOUTENANCE_PUBLIQUE')
@@ -232,6 +239,28 @@ STATUTS_PAR_ETAPE_PARCOURS_DOCTORAL = {
         ChoixStatutParcoursDoctoral.ABANDON,
     ],
 }
+
+STATUT_REUSSITE_PAR_ETAPE = {
+    ChoixEtapeParcoursDoctoral.CONFIRMATION: ChoixStatutParcoursDoctoral.CONFIRMATION_REUSSIE,
+    ChoixEtapeParcoursDoctoral.JURY: ChoixStatutParcoursDoctoral.JURY_APPROUVE_ADRE,
+    ChoixEtapeParcoursDoctoral.DECISION_DE_RECEVABILITE: ChoixStatutParcoursDoctoral.RECEVABILITE_REUSSIE,
+    ChoixEtapeParcoursDoctoral.DEFENSE_PRIVEE: ChoixStatutParcoursDoctoral.DEFENSE_PRIVEE_REUSSIE,
+    ChoixEtapeParcoursDoctoral.SOUTENANCE_PUBLIQUE: ChoixStatutParcoursDoctoral.PROCLAME,
+    ChoixEtapeParcoursDoctoral.DEFENSE_SOUTENANCE_FORMULE_2: ChoixStatutParcoursDoctoral.PROCLAME,
+    ChoixEtapeParcoursDoctoral.PROCLAMATION: ChoixStatutParcoursDoctoral.PROCLAME,
+    ChoixEtapeParcoursDoctoral.ABANDON_ECHEC: ChoixStatutParcoursDoctoral.ABANDON,
+}
+
+ETAPE_PARCOURS_DOCTORAL_PAR_STATUT = {
+    statut: etape for etape, statuts in STATUTS_PAR_ETAPE_PARCOURS_DOCTORAL.items() for statut in statuts
+}
+
+INDEX_ETAPE = {etape: index for index, etape in enumerate(ChoixEtapeParcoursDoctoral)}
+
+ETAPES_EQUIVALENTES = (
+    {ChoixEtapeParcoursDoctoral.DEFENSE_PRIVEE, ChoixEtapeParcoursDoctoral.DEFENSE_SOUTENANCE_FORMULE_2},
+    {ChoixEtapeParcoursDoctoral.SOUTENANCE_PUBLIQUE, ChoixEtapeParcoursDoctoral.DEFENSE_SOUTENANCE_FORMULE_2},
+)
 
 STATUTS_INACTIFS = {
     ChoixStatutParcoursDoctoral.NON_AUTORISE_A_POURSUIVRE.name,

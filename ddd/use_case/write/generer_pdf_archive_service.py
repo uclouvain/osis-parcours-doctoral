@@ -23,7 +23,6 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from uuid import UUID
 
 from ddd.logic.parcours_interne.domain.service.i_pae import IPaeTranslator
 from infrastructure.utils import MessageBus
@@ -32,6 +31,7 @@ from parcours_doctoral.ddd.builder.parcours_doctoral_identity import (
     ParcoursDoctoralIdentityBuilder,
 )
 from parcours_doctoral.ddd.commands import GenererPdfArchiveCommand
+from parcours_doctoral.ddd.defense_privee.repository.i_defense_privee import IDefensePriveeRepository
 from parcours_doctoral.ddd.domain.model.document import DocumentIdentity, TypeDocument
 from parcours_doctoral.ddd.domain.service.groupe_de_supervision_dto import (
     GroupeDeSupervisionDto,
@@ -45,6 +45,7 @@ from parcours_doctoral.ddd.epreuve_confirmation.repository.i_epreuve_confirmatio
 from parcours_doctoral.ddd.formation.repository.i_activite import IActiviteRepository
 from parcours_doctoral.ddd.jury.builder.jury_identity_builder import JuryIdentityBuilder
 from parcours_doctoral.ddd.jury.repository.i_jury import IJuryRepository
+from parcours_doctoral.ddd.recevabilite.repository.i_recevabilite import IRecevabiliteRepository
 from parcours_doctoral.ddd.repository.i_document import IDocumentRepository
 from parcours_doctoral.ddd.repository.i_groupe_de_supervision import (
     IGroupeDeSupervisionRepository,
@@ -67,6 +68,8 @@ def generer_pdf_archive(
     activite_repository: 'IActiviteRepository',
     document_repository: 'IDocumentRepository',
     pae_translator: 'IPaeTranslator',
+    defense_privee_repository: 'IDefensePriveeRepository',
+    recevabilite_repository: 'IRecevabiliteRepository',
 ) -> 'DocumentIdentity':
     # GIVEN
     parcours_doctoral_id = ParcoursDoctoralIdentityBuilder.build_from_uuid(cmd.uuid_parcours_doctoral)
@@ -89,6 +92,8 @@ def generer_pdf_archive(
         annee=parcours_doctoral.formation.annee,
         est_premiere_annee_bachelier=False,
     )
+    defenses_privees = defense_privee_repository.search_dto(parcours_doctoral_id=parcours_doctoral_id)
+    recevabilites = recevabilite_repository.search_dto(parcours_doctoral_id=parcours_doctoral_id)
 
     # WHEN
 
@@ -100,6 +105,8 @@ def generer_pdf_archive(
         jury=jury,
         cours_complementaires=cours_complementaires,
         proprietes_pae=proprietes_pae,
+        defenses_privees=defenses_privees,
+        recevabilites=recevabilites,
     )
 
     document = DocumentBuilder().initialiser_document(

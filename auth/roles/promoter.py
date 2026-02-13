@@ -32,6 +32,7 @@ from parcours_doctoral.auth.predicates.parcours_doctoral import (
     authorization_distribution_is_in_progress,
     complementary_training_enabled,
     defense_method_is_formula_1,
+    defense_method_is_formula_1_or_unknown,
     defense_method_is_formula_2,
     is_jury_in_progress,
     is_jury_signing_in_progress,
@@ -75,7 +76,7 @@ class Promoter(AdmissionPromoter):
             'parcours_doctoral.api_view_supervision': is_parcours_doctoral_promoter,
             'parcours_doctoral.api_view_supervision_canvas': is_parcours_doctoral_reference_promoter,
             'parcours_doctoral.api_view_jury': is_parcours_doctoral_promoter,
-            'parcours_doctoral.api_view_confirmation': is_parcours_doctoral_promoter & is_related_to_an_admission,
+            'parcours_doctoral.api_view_confirmation': is_parcours_doctoral_promoter,
             'parcours_doctoral.api_upload_pdf_confirmation': is_parcours_doctoral_promoter & is_related_to_an_admission,
             'parcours_doctoral.api_change_jury': is_parcours_doctoral_reference_promoter & is_jury_in_progress,
             'parcours_doctoral.api_change_jury_role': is_parcours_doctoral_reference_promoter
@@ -98,7 +99,8 @@ class Promoter(AdmissionPromoter):
             & admissibility_is_submitted,
             # Private defense
             'parcours_doctoral.api_retrieve_private_defenses': is_parcours_doctoral_promoter,
-            'parcours_doctoral.api_view_private_defense': is_parcours_doctoral_promoter & defense_method_is_formula_1,
+            'parcours_doctoral.api_view_private_defense': is_parcours_doctoral_promoter
+            & defense_method_is_formula_1_or_unknown,
             'parcours_doctoral.api_view_private_defense_minutes': is_parcours_doctoral_promoter,
             'parcours_doctoral.api_upload_private_defense_minutes': is_parcours_doctoral_promoter
             & defense_method_is_formula_1
@@ -111,7 +113,8 @@ class Promoter(AdmissionPromoter):
             & authorization_distribution_can_be_changed_by_lead_promoter
             & authorization_distribution_is_in_progress,
             # Public defense
-            'parcours_doctoral.api_view_public_defense': is_parcours_doctoral_promoter & defense_method_is_formula_1,
+            'parcours_doctoral.api_view_public_defense': is_parcours_doctoral_promoter
+            & defense_method_is_formula_1_or_unknown,
             'parcours_doctoral.api_view_public_defense_minutes': is_parcours_doctoral_promoter,
             'parcours_doctoral.api_upload_public_defense_minutes': is_parcours_doctoral_promoter
             & defense_method_is_formula_1

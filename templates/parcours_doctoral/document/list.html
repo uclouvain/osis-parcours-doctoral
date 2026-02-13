@@ -65,7 +65,7 @@
       >
         <td>{{ document.libelle }}</td>
         <td>{{ document.auteur|default_if_none:'' }}</td>
-        <td>{{ document.modifie_le }}</td>
+        <td>{{ document.modifie_le|date:'d/m/Y' }}</td>
       </tr>
     {% endfor %}
     </tbody>

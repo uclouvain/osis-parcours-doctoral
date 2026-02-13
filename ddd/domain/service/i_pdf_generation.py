@@ -28,10 +28,12 @@ from typing import List
 
 from ddd.logic.parcours_interne.dto.info import ProprietesPaeDTO
 from osis_common.ddd.interface import DomainService
+from parcours_doctoral.ddd.defense_privee.dtos import DefensePriveeDTO
 from parcours_doctoral.ddd.dtos import GroupeDeSupervisionDTO, ParcoursDoctoralDTO
 from parcours_doctoral.ddd.epreuve_confirmation.dtos import EpreuveConfirmationDTO
 from parcours_doctoral.ddd.formation.dtos import CoursDTO
 from parcours_doctoral.ddd.jury.dtos.jury import JuryDTO
+from parcours_doctoral.ddd.recevabilite.dtos import RecevabiliteDTO
 
 
 class IPDFGeneration(DomainService):
@@ -45,5 +47,7 @@ class IPDFGeneration(DomainService):
         jury: JuryDTO,
         cours_complementaires: List[CoursDTO],
         proprietes_pae: List['ProprietesPaeDTO'],
+        defenses_privees: List[DefensePriveeDTO],
+        recevabilites: List[RecevabiliteDTO],
     ) -> str:
         raise NotImplementedError

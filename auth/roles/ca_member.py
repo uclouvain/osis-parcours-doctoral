@@ -54,7 +54,7 @@ class CommitteeMember(AdmissionCommitteeMember):
             'parcours_doctoral.api_view_cotutelle': is_part_of_committee & is_related_to_an_admission,
             'parcours_doctoral.api_view_funding': is_part_of_committee,
             'parcours_doctoral.api_view_supervision': is_part_of_committee,
-            'parcours_doctoral.api_view_confirmation': is_part_of_committee & is_related_to_an_admission,
+            'parcours_doctoral.api_view_confirmation': is_part_of_committee,
             'parcours_doctoral.api_view_jury': is_part_of_committee,
             'parcours_doctoral.api_approve_jury': is_part_of_committee,
         }

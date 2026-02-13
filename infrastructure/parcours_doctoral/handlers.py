@@ -79,6 +79,7 @@ from .epreuve_confirmation.repository.epreuve_confirmation import (
 from .event_handlers import reagir_a_approbation_admission
 from .formation.repository.activite import ActiviteRepository
 from .jury.repository.jury import JuryRepository
+from .recevabilite.repository.recevabilite import RecevabiliteRepository
 from .repository.groupe_de_supervision import GroupeDeSupervisionRepository
 from .repository.parcours_doctoral import ParcoursDoctoralRepository
 
@@ -233,6 +234,8 @@ COMMAND_HANDLERS = {
         activite_repository=ActiviteRepository(),
         document_repository=DocumentRepository(),
         pae_translator=PaeTranslator(),
+        defense_privee_repository=DefensePriveeRepository(),
+        recevabilite_repository=RecevabiliteRepository(),
     ),
     **READ_VIEW_COMMAND_HANDLERS,
 }
