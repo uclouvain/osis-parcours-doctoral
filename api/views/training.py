@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2026 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -47,7 +47,10 @@ from parcours_doctoral.api.serializers.activity import (
     DoctoralTrainingBatchSerializer,
     DoctoralTrainingConfigSerializer,
 )
-from parcours_doctoral.api.serializers.training import TrainingRecapPdfSerializer
+from parcours_doctoral.api.serializers.training import (
+    TrainingRecapPdfRequestSerializer,
+    TrainingRecapPdfSerializer,
+)
 from parcours_doctoral.ddd.commands import RecupererParcoursDoctoralQuery
 from parcours_doctoral.ddd.formation.commands import (
     DonnerAvisSurActiviteCommand,
@@ -406,14 +409,19 @@ class TrainingRecapPdfApiView(DoctorateAPIPermissionRequiredMixin, RetrieveModel
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
-        activities = Activity.objects.for_doctoral_training(self.doctorate_uuid).filter(
-            status=StatutActivite.ACCEPTEE.name
-        )
+        if self.kwargs['status'] == StatutActivite.SOUMISE.name:
+            activities = Activity.objects.for_doctoral_training(self.doctorate_uuid).filter(
+                status=StatutActivite.SOUMISE.name
+            )
+        else:
+            activities = Activity.objects.for_doctoral_training(self.doctorate_uuid).filter(
+                status=StatutActivite.ACCEPTEE.name
+            )
         context['categories'] = training_categories_activities(activities)
         return context
 
     @extend_schema(
-        request=TrainingRecapPdfSerializer,
+        request=TrainingRecapPdfRequestSerializer,
         responses=TrainingRecapPdfSerializer,
         operation_id='training_recap_pdf',
     )
