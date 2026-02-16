@@ -77,7 +77,6 @@
         {% translate 'Course' context 'parcours_doctoral' as course_label %}
         {% translate 'Status' context 'parcours_doctoral filter' as status_label %}
         {% translate 'Additional training' context 'parcours_doctoral filter' as additional_training_label %}
-        {% sortable_header_div 'reference' _('Dossier numero') %}
         {% sortable_header_div 'nom_etudiant' _('Last name / First name') %}
         {% sortable_header_div 'bourse' _('Scholarship holder') %}
         {% sortable_header_div 'formation' course_label %}
@@ -94,8 +93,7 @@
     <tbody>
       {% for parcours_doctoral in object_list %}
         <tr>
-          <td><a href="{% url 'parcours_doctoral:base' parcours_doctoral.uuid %}">{{ parcours_doctoral.reference }}</a></td>
-          <td>{{ parcours_doctoral.nom_doctorant }}, {{ parcours_doctoral.prenom_doctorant }} </td>
+          <td><a href="{% url 'parcours_doctoral:base' parcours_doctoral.uuid %}">{{ parcours_doctoral.nom_doctorant }}, {{ parcours_doctoral.prenom_doctorant }}</a></td>
           <td>{{ parcours_doctoral.code_bourse }}</td>
           <td>{{ parcours_doctoral.formation.nom_complet }}</td>
           <td>{{ parcours_doctoral.statut|enum_display:'ChoixStatutParcoursDoctoral' }}</td>

@@ -23,39 +23,11 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-import datetime
-from typing import Optional
-
-import attr
-
-from admission.views import PaginatedList
-from osis_common.ddd import interface
-from parcours_doctoral.ddd.read_view.dto.formation import FormationRechercheDTO
+from django import forms
+from django.utils.translation import gettext_lazy
 
 
-@attr.dataclass(slots=True)
-class ParcoursDoctoralRechercheDTO(interface.DTO):
-    uuid: str
-    statut: str
-    type_admission: str
-
-    formation: FormationRechercheDTO
-
-    matricule_doctorant: str
-    genre_doctorant: str
-    prenom_doctorant: str
-    nom_doctorant: str
-
-    code_bourse: str
-    cotutelle: bool
-    formation_complementaire: bool
-    en_regle_inscription: bool
-    total_credits_valides: int
-
-    cree_le: datetime.datetime
-    date_admission_par_cdd: Optional[datetime.datetime]
-
-
-@attr.dataclass(slots=True)
-class ListeParcoursDoctoralRechercheDTO(interface.DTO):
-    parcours_doctoraux: PaginatedList[ParcoursDoctoralRechercheDTO]
+class ImportFromXLSXForm(forms.Form):
+    file = forms.FileField(
+        label=gettext_lazy('File'),
+    )

@@ -61,7 +61,7 @@ def admissibility_minutes_canvas_url(doctorate_uuid, language):
         # Generate the pdf
         save_token = parcours_doctoral_generate_pdf(
             template='parcours_doctoral/exports/admissibility_minutes_canvas.html',
-            filename=f'admissibility_minutes_canvas_{doctorate_dto.reference}.pdf',
+            filename='admissibility_minutes_canvas.pdf',
             context={
                 'parcours_doctoral': doctorate_dto,
                 'jury_members': jury_members,

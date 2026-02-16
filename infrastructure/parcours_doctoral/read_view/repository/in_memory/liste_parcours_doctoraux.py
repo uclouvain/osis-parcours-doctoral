@@ -44,7 +44,6 @@ class ListeParcoursDoctorauxInMemoryRepository(IListeParcoursDoctorauxRepository
     def get(
         cls,
         annee_academique_courante: int,
-        numero: Optional[int] = None,
         noma: Optional[str] = '',
         matricule_doctorant: Optional[str] = '',
         type_admission: Optional[str] = '',

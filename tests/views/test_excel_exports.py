@@ -32,7 +32,7 @@ from typing import List
 import freezegun
 from django.contrib.auth.models import User
 from django.template.defaultfilters import yesno
-from django.test import RequestFactory, TestCase
+from django.test import TestCase
 from django.urls import reverse
 from django.utils.translation import gettext as _
 from osis_async.models import AsyncTask
@@ -120,11 +120,8 @@ class ParcoursDoctoralListExcelExportViewTestCase(QueriesAssertionsMixin, TestCa
             other_international_scholarship='scholarship',
         )
 
-        cls.lite_reference = '{:07,}'.format(cls.parcours_doctoral.reference).replace(',', '.')
-
         cls.result = _ParcoursDoctoralRechercheDTO(
             uuid=cls.parcours_doctoral.uuid,
-            reference=f'M-ABCDEF22-{cls.lite_reference}',
             statut=cls.parcours_doctoral.status,
             type_admission=cls.parcours_doctoral.admission.type,
             formation=FormationRechercheDTO(
@@ -263,7 +260,7 @@ class ParcoursDoctoralListExcelExportViewTestCase(QueriesAssertionsMixin, TestCa
         ParcoursDoctoralFactory()
 
         results: List[ParcoursDoctoralRechercheDTO] = message_bus_instance.invoke(
-            ListerTousParcoursDoctorauxQuery(numero=self.parcours_doctoral.reference)
+            ListerTousParcoursDoctorauxQuery(matricule_doctorant=self.parcours_doctoral.student.global_id)
         )
 
         self.assertEqual(len(results), 1)
@@ -274,14 +271,13 @@ class ParcoursDoctoralListExcelExportViewTestCase(QueriesAssertionsMixin, TestCa
 
         self.assertEqual(len(header), len(row_data))
 
-        self.assertEqual(row_data[0], result.reference)
-        self.assertEqual(row_data[1], f'{result.nom_doctorant}, {result.prenom_doctorant}')
-        self.assertEqual(row_data[2], result.code_bourse)
-        self.assertEqual(row_data[3], result.formation.nom_complet)
-        self.assertEqual(row_data[4], result.statut)
-        self.assertEqual(row_data[5], result.cree_le.strftime(SHORT_DATE_FORMAT))
-        self.assertEqual(row_data[6], yesno(result.type_admission == ChoixTypeAdmission.PRE_ADMISSION.name))
-        self.assertEqual(row_data[7], yesno(result.cotutelle))
-        self.assertEqual(row_data[8], yesno(result.formation_complementaire))
-        self.assertEqual(row_data[9], '')
-        self.assertEqual(row_data[10], Decimal('0'))
+        self.assertEqual(row_data[0], f'{result.nom_doctorant}, {result.prenom_doctorant}')
+        self.assertEqual(row_data[1], result.code_bourse)
+        self.assertEqual(row_data[2], result.formation.nom_complet)
+        self.assertEqual(row_data[3], result.statut)
+        self.assertEqual(row_data[4], result.cree_le.strftime(SHORT_DATE_FORMAT))
+        self.assertEqual(row_data[5], yesno(result.type_admission == ChoixTypeAdmission.PRE_ADMISSION.name))
+        self.assertEqual(row_data[6], yesno(result.cotutelle))
+        self.assertEqual(row_data[7], yesno(result.formation_complementaire))
+        self.assertEqual(row_data[8], '')
+        self.assertEqual(row_data[9], Decimal('0'))
