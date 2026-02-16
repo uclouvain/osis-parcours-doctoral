@@ -57,7 +57,7 @@ def private_defense_minutes_canvas_url(doctorate_uuid, language):
         # Generate the pdf
         save_token = parcours_doctoral_generate_pdf(
             template='parcours_doctoral/exports/private_defense_minutes_canvas.html',
-            filename=f'private_defense_canvas_{doctorate_dto.reference}.pdf',
+            filename='private_defense_canvas.pdf',
             context={
                 'parcours_doctoral': doctorate_dto,
                 'has_additional_training': has_additional_training,

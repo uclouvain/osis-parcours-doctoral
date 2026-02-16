@@ -35,8 +35,8 @@ from django.template.defaultfilters import yesno
 from django.urls import reverse
 from django.utils.html import format_html
 from django.utils.text import slugify
-from django.utils.translation import gettext as _, pgettext
-from django.utils.translation import gettext_lazy
+from django.utils.translation import gettext as _
+from django.utils.translation import gettext_lazy, pgettext
 from django.views import View
 from osis_async.models import AsyncTask
 from osis_export.contrib.export_mixins import ExcelFileExportMixin, ExportMixin
@@ -218,7 +218,6 @@ class ParcoursDoctoralListExcelExportView(
 
     def get_header(self):
         return [
-            _('Dossier numero'),
             _('Student'),
             _('Scholarship holder'),
             _('Course'),
@@ -233,7 +232,6 @@ class ParcoursDoctoralListExcelExportView(
 
     def get_row_data(self, row: ParcoursDoctoralRechercheDTO):
         return [
-            row.reference,
             f'{row.nom_doctorant}, {row.prenom_doctorant}',
             row.code_bourse,
             row.formation.nom_complet,
