@@ -2731,9 +2731,6 @@ components:
       - statut
       - type_modalites_diffusion
       - uuid
-    BlankEnum:
-      enum:
-      - ''
     BourseDTONested:
       type: object
       description: |-
@@ -2795,37 +2792,6 @@ components:
       - rue
       - uuid
       - ville
-    CategoryEnum:
-      enum:
-      - CONFERENCE
-      - COMMUNICATION
-      - SEMINAR
-      - PUBLICATION
-      - SERVICE
-      - RESIDENCY
-      - VAE
-      - COURSE
-      - PAPER
-      - UCL_COURSE
-      type: string
-      description: |-
-        * `CONFERENCE` - Colloques et conférences
-        * `COMMUNICATION` - Communications orale
-        * `SEMINAR` - Séminaires suivis
-        * `PUBLICATION` - Publications
-        * `SERVICE` - Services
-        * `RESIDENCY` - Séjours de recherche
-        * `VAE` - Valorisations des acquis de l'expérience
-        * `COURSE` - Cours, formations et écoles
-        * `PAPER` - Épreuves
-        * `UCL_COURSE` - Cours UCL
-    CommitteeEnum:
-      enum:
-      - 'YES'
-      - 'NO'
-      - NA
-      type: string
-      description: "* `` - \n* `YES` - YES\n* `NO` - NO\n* `NA` - NA"
     Communication:
       type: object
       description: |-
@@ -2842,13 +2808,53 @@ components:
           type: string
           readOnly: true
         category:
-          $ref: '#/components/schemas/CategoryEnum'
+          enum:
+          - CONFERENCE
+          - COMMUNICATION
+          - SEMINAR
+          - PUBLICATION
+          - SERVICE
+          - RESIDENCY
+          - VAE
+          - COURSE
+          - PAPER
+          - UCL_COURSE
+          type: string
+          description: |-
+            * `CONFERENCE` - Colloques et conférences
+            * `COMMUNICATION` - Communications orale
+            * `SEMINAR` - Séminaires suivis
+            * `PUBLICATION` - Publications
+            * `SERVICE` - Services
+            * `RESIDENCY` - Séjours de recherche
+            * `VAE` - Valorisations des acquis de l'expérience
+            * `COURSE` - Cours, formations et écoles
+            * `PAPER` - Épreuves
+            * `UCL_COURSE` - Cours UCL
+          x-spec-enum-id: c9aaf10aff1e995b
         status:
-          allOf:
-          - $ref: '#/components/schemas/StatusEnum'
+          enum:
+          - NON_SOUMISE
+          - SOUMISE
+          - ACCEPTEE
+          - REFUSEE
+          type: string
+          description: |-
+            * `NON_SOUMISE` - Non soumise
+            * `SOUMISE` - Soumise
+            * `ACCEPTEE` - Acceptée
+            * `REFUSEE` - Refusée
+          x-spec-enum-id: c41b2a51c922d770
           readOnly: true
         context:
-          $ref: '#/components/schemas/ContextEnum'
+          enum:
+          - DOCTORAL_TRAINING
+          - COMPLEMENTARY_TRAINING
+          type: string
+          description: |-
+            * `DOCTORAL_TRAINING` - Formation doctorale
+            * `COMPLEMENTARY_TRAINING` - Formation complémentaire
+          x-spec-enum-id: 0cf70ff7ab368492
         parcours_doctoral:
           type: integer
           writeOnly: true
@@ -2894,11 +2900,16 @@ components:
           items:
             type: string
         committee:
+          enum:
+          - ''
+          - 'YES'
+          - 'NO'
+          - NA
+          - null
+          type: string
+          description: "* `` - \n* `YES` - YES\n* `NO` - NO\n* `NA` - NA"
+          x-spec-enum-id: 01e8097729f5b857
           nullable: true
-          oneOf:
-          - $ref: '#/components/schemas/CommitteeEnum'
-          - $ref: '#/components/schemas/BlankEnum'
-          - $ref: '#/components/schemas/NullEnum'
         acceptation_proof:
           type: array
           items:
@@ -2969,13 +2980,53 @@ components:
           type: string
           readOnly: true
         category:
-          $ref: '#/components/schemas/CategoryEnum'
+          enum:
+          - CONFERENCE
+          - COMMUNICATION
+          - SEMINAR
+          - PUBLICATION
+          - SERVICE
+          - RESIDENCY
+          - VAE
+          - COURSE
+          - PAPER
+          - UCL_COURSE
+          type: string
+          description: |-
+            * `CONFERENCE` - Colloques et conférences
+            * `COMMUNICATION` - Communications orale
+            * `SEMINAR` - Séminaires suivis
+            * `PUBLICATION` - Publications
+            * `SERVICE` - Services
+            * `RESIDENCY` - Séjours de recherche
+            * `VAE` - Valorisations des acquis de l'expérience
+            * `COURSE` - Cours, formations et écoles
+            * `PAPER` - Épreuves
+            * `UCL_COURSE` - Cours UCL
+          x-spec-enum-id: c9aaf10aff1e995b
         status:
-          allOf:
-          - $ref: '#/components/schemas/StatusEnum'
+          enum:
+          - NON_SOUMISE
+          - SOUMISE
+          - ACCEPTEE
+          - REFUSEE
+          type: string
+          description: |-
+            * `NON_SOUMISE` - Non soumise
+            * `SOUMISE` - Soumise
+            * `ACCEPTEE` - Acceptée
+            * `REFUSEE` - Refusée
+          x-spec-enum-id: c41b2a51c922d770
           readOnly: true
         context:
-          $ref: '#/components/schemas/ContextEnum'
+          enum:
+          - DOCTORAL_TRAINING
+          - COMPLEMENTARY_TRAINING
+          type: string
+          description: |-
+            * `DOCTORAL_TRAINING` - Formation doctorale
+            * `COMPLEMENTARY_TRAINING` - Formation complémentaire
+          x-spec-enum-id: 0cf70ff7ab368492
         parcours_doctoral:
           type: integer
           writeOnly: true
@@ -3067,13 +3118,53 @@ components:
           type: string
           readOnly: true
         category:
-          $ref: '#/components/schemas/CategoryEnum'
+          enum:
+          - CONFERENCE
+          - COMMUNICATION
+          - SEMINAR
+          - PUBLICATION
+          - SERVICE
+          - RESIDENCY
+          - VAE
+          - COURSE
+          - PAPER
+          - UCL_COURSE
+          type: string
+          description: |-
+            * `CONFERENCE` - Colloques et conférences
+            * `COMMUNICATION` - Communications orale
+            * `SEMINAR` - Séminaires suivis
+            * `PUBLICATION` - Publications
+            * `SERVICE` - Services
+            * `RESIDENCY` - Séjours de recherche
+            * `VAE` - Valorisations des acquis de l'expérience
+            * `COURSE` - Cours, formations et écoles
+            * `PAPER` - Épreuves
+            * `UCL_COURSE` - Cours UCL
+          x-spec-enum-id: c9aaf10aff1e995b
         status:
-          allOf:
-          - $ref: '#/components/schemas/StatusEnum'
+          enum:
+          - NON_SOUMISE
+          - SOUMISE
+          - ACCEPTEE
+          - REFUSEE
+          type: string
+          description: |-
+            * `NON_SOUMISE` - Non soumise
+            * `SOUMISE` - Soumise
+            * `ACCEPTEE` - Acceptée
+            * `REFUSEE` - Refusée
+          x-spec-enum-id: c41b2a51c922d770
           readOnly: true
         context:
-          $ref: '#/components/schemas/ContextEnum'
+          enum:
+          - DOCTORAL_TRAINING
+          - COMPLEMENTARY_TRAINING
+          type: string
+          description: |-
+            * `DOCTORAL_TRAINING` - Formation doctorale
+            * `COMPLEMENTARY_TRAINING` - Formation complémentaire
+          x-spec-enum-id: 0cf70ff7ab368492
         parcours_doctoral:
           type: integer
           writeOnly: true
@@ -3104,11 +3195,16 @@ components:
           items:
             type: string
         committee:
+          enum:
+          - ''
+          - 'YES'
+          - 'NO'
+          - NA
+          - null
+          type: string
+          description: "* `` - \n* `YES` - YES\n* `NO` - NO\n* `NA` - NA"
+          x-spec-enum-id: 01e8097729f5b857
           nullable: true
-          oneOf:
-          - $ref: '#/components/schemas/CommitteeEnum'
-          - $ref: '#/components/schemas/BlankEnum'
-          - $ref: '#/components/schemas/NullEnum'
         acceptation_proof:
           type: array
           items:
@@ -3150,13 +3246,53 @@ components:
           type: string
           readOnly: true
         category:
-          $ref: '#/components/schemas/CategoryEnum'
+          enum:
+          - CONFERENCE
+          - COMMUNICATION
+          - SEMINAR
+          - PUBLICATION
+          - SERVICE
+          - RESIDENCY
+          - VAE
+          - COURSE
+          - PAPER
+          - UCL_COURSE
+          type: string
+          description: |-
+            * `CONFERENCE` - Colloques et conférences
+            * `COMMUNICATION` - Communications orale
+            * `SEMINAR` - Séminaires suivis
+            * `PUBLICATION` - Publications
+            * `SERVICE` - Services
+            * `RESIDENCY` - Séjours de recherche
+            * `VAE` - Valorisations des acquis de l'expérience
+            * `COURSE` - Cours, formations et écoles
+            * `PAPER` - Épreuves
+            * `UCL_COURSE` - Cours UCL
+          x-spec-enum-id: c9aaf10aff1e995b
         status:
-          allOf:
-          - $ref: '#/components/schemas/StatusEnum'
+          enum:
+          - NON_SOUMISE
+          - SOUMISE
+          - ACCEPTEE
+          - REFUSEE
+          type: string
+          description: |-
+            * `NON_SOUMISE` - Non soumise
+            * `SOUMISE` - Soumise
+            * `ACCEPTEE` - Acceptée
+            * `REFUSEE` - Refusée
+          x-spec-enum-id: c41b2a51c922d770
           readOnly: true
         context:
-          $ref: '#/components/schemas/ContextEnum'
+          enum:
+          - DOCTORAL_TRAINING
+          - COMPLEMENTARY_TRAINING
+          type: string
+          description: |-
+            * `DOCTORAL_TRAINING` - Formation doctorale
+            * `COMPLEMENTARY_TRAINING` - Formation complémentaire
+          x-spec-enum-id: 0cf70ff7ab368492
         parcours_doctoral:
           type: integer
           writeOnly: true
@@ -3187,19 +3323,40 @@ components:
           format: date
           nullable: true
         publication_status:
+          enum:
+          - ''
+          - UNSUBMITTED
+          - SUBMITTED
+          - IN_REVIEW
+          - DEPOSITED
+          - ACCEPTED
+          - PUBLISHED
+          - null
+          type: string
+          description: "* `` - \n* `UNSUBMITTED` - UNSUBMITTED\n* `SUBMITTED` - SUBMITTED\n*
+            `IN_REVIEW` - IN_REVIEW\n* `DEPOSITED` - DEPOSITED\n* `ACCEPTED` - ACCEPTED\n*
+            `PUBLISHED` - PUBLISHED"
+          x-spec-enum-id: 2bf9916cefa5a8fb
           nullable: true
-          oneOf:
-          - $ref: '#/components/schemas/PublicationStatusEnum'
-          - $ref: '#/components/schemas/BlankEnum'
-          - $ref: '#/components/schemas/NullEnum'
         authors:
           type: string
         role:
+          enum:
+          - ''
+          - AUTERTRICE_UNIQUE
+          - COAUTEURTRICE
+          - PREMIER_AUTEURTRICE
+          - DEUXIEME_AUTEURTRICE
+          - EDITEURTRICE
+          - COEDITEURTRICE
+          - null
+          type: string
+          description: "* `` - \n* `AUTERTRICE_UNIQUE` - AUTERTRICE_UNIQUE\n* `COAUTEURTRICE`
+            - COAUTEURTRICE\n* `PREMIER_AUTEURTRICE` - PREMIER_AUTEURTRICE\n* `DEUXIEME_AUTEURTRICE`
+            - DEUXIEME_AUTEURTRICE\n* `EDITEURTRICE` - EDITEURTRICE\n* `COEDITEURTRICE`
+            - COEDITEURTRICE"
+          x-spec-enum-id: 4e968abd698cc447
           nullable: true
-          oneOf:
-          - $ref: '#/components/schemas/RoleEnum'
-          - $ref: '#/components/schemas/BlankEnum'
-          - $ref: '#/components/schemas/NullEnum'
         keywords:
           type: string
         summary:
@@ -3207,11 +3364,16 @@ components:
           items:
             type: string
         committee:
+          enum:
+          - ''
+          - 'YES'
+          - 'NO'
+          - NA
+          - null
+          type: string
+          description: "* `` - \n* `YES` - YES\n* `NO` - NO\n* `NA` - NA"
+          x-spec-enum-id: 01e8097729f5b857
           nullable: true
-          oneOf:
-          - $ref: '#/components/schemas/CommitteeEnum'
-          - $ref: '#/components/schemas/BlankEnum'
-          - $ref: '#/components/schemas/NullEnum'
         journal:
           type: string
         dial_reference:
@@ -3303,14 +3465,6 @@ components:
       - proces_verbal_ca
       - rapport_recherche
       - uuid
-    ContextEnum:
-      enum:
-      - DOCTORAL_TRAINING
-      - COMPLEMENTARY_TRAINING
-      type: string
-      description: |-
-        * `DOCTORAL_TRAINING` - Formation doctorale
-        * `COMPLEMENTARY_TRAINING` - Formation complémentaire
     CotutelleDTONested:
       type: object
       description: |-
@@ -3372,13 +3526,53 @@ components:
           type: string
           readOnly: true
         category:
-          $ref: '#/components/schemas/CategoryEnum'
+          enum:
+          - CONFERENCE
+          - COMMUNICATION
+          - SEMINAR
+          - PUBLICATION
+          - SERVICE
+          - RESIDENCY
+          - VAE
+          - COURSE
+          - PAPER
+          - UCL_COURSE
+          type: string
+          description: |-
+            * `CONFERENCE` - Colloques et conférences
+            * `COMMUNICATION` - Communications orale
+            * `SEMINAR` - Séminaires suivis
+            * `PUBLICATION` - Publications
+            * `SERVICE` - Services
+            * `RESIDENCY` - Séjours de recherche
+            * `VAE` - Valorisations des acquis de l'expérience
+            * `COURSE` - Cours, formations et écoles
+            * `PAPER` - Épreuves
+            * `UCL_COURSE` - Cours UCL
+          x-spec-enum-id: c9aaf10aff1e995b
         status:
-          allOf:
-          - $ref: '#/components/schemas/StatusEnum'
+          enum:
+          - NON_SOUMISE
+          - SOUMISE
+          - ACCEPTEE
+          - REFUSEE
+          type: string
+          description: |-
+            * `NON_SOUMISE` - Non soumise
+            * `SOUMISE` - Soumise
+            * `ACCEPTEE` - Acceptée
+            * `REFUSEE` - Refusée
+          x-spec-enum-id: c41b2a51c922d770
           readOnly: true
         context:
-          $ref: '#/components/schemas/ContextEnum'
+          enum:
+          - DOCTORAL_TRAINING
+          - COMPLEMENTARY_TRAINING
+          type: string
+          description: |-
+            * `DOCTORAL_TRAINING` - Formation doctorale
+            * `COMPLEMENTARY_TRAINING` - Formation complémentaire
+          x-spec-enum-id: 0cf70ff7ab368492
         parcours_doctoral:
           type: integer
           writeOnly: true
@@ -3453,16 +3647,6 @@ components:
       - subtitle
       - title
       - type
-    CreatablePapersTypesEnum:
-      enum:
-      - CONFIRMATION_PAPER
-      - PRIVATE_DEFENSE
-      - PUBLIC_DEFENSE
-      type: string
-      description: |-
-        * `CONFIRMATION_PAPER` - Épreuve de confirmation
-        * `PRIVATE_DEFENSE` - Défense privée
-        * `PUBLIC_DEFENSE` - Soutenance publique
     Dashboard:
       type: object
       properties:
@@ -3616,7 +3800,16 @@ components:
         creatable_papers_types:
           type: array
           items:
-            $ref: '#/components/schemas/CreatablePapersTypesEnum'
+            enum:
+            - CONFIRMATION_PAPER
+            - PRIVATE_DEFENSE
+            - PUBLIC_DEFENSE
+            type: string
+            description: |-
+              * `CONFIRMATION_PAPER` - Épreuve de confirmation
+              * `PRIVATE_DEFENSE` - Défense privée
+              * `PUBLIC_DEFENSE` - Soutenance publique
+            x-spec-enum-id: e34836a6dad6b171
           readOnly: true
         is_complementary_training_enabled:
           type: boolean
@@ -3834,12 +4027,6 @@ components:
       - intitule_fr
       - sigle
       - type
-    HourVolumeTypeEnum:
-      enum:
-      - HEURES
-      - JOURS
-      type: string
-      description: "* `` - \n* `HEURES` - HEURES\n* `JOURS` - JOURS"
     InscriptionEvaluationDTO:
       type: object
       description: |-
@@ -4228,9 +4415,6 @@ components:
           type: string
         email:
           type: string
-    NullEnum:
-      enum:
-      - null
     PaginatedPersonList:
       type: object
       required:
@@ -4293,13 +4477,53 @@ components:
           type: string
           readOnly: true
         category:
-          $ref: '#/components/schemas/CategoryEnum'
+          enum:
+          - CONFERENCE
+          - COMMUNICATION
+          - SEMINAR
+          - PUBLICATION
+          - SERVICE
+          - RESIDENCY
+          - VAE
+          - COURSE
+          - PAPER
+          - UCL_COURSE
+          type: string
+          description: |-
+            * `CONFERENCE` - Colloques et conférences
+            * `COMMUNICATION` - Communications orale
+            * `SEMINAR` - Séminaires suivis
+            * `PUBLICATION` - Publications
+            * `SERVICE` - Services
+            * `RESIDENCY` - Séjours de recherche
+            * `VAE` - Valorisations des acquis de l'expérience
+            * `COURSE` - Cours, formations et écoles
+            * `PAPER` - Épreuves
+            * `UCL_COURSE` - Cours UCL
+          x-spec-enum-id: c9aaf10aff1e995b
         status:
-          allOf:
-          - $ref: '#/components/schemas/StatusEnum'
+          enum:
+          - NON_SOUMISE
+          - SOUMISE
+          - ACCEPTEE
+          - REFUSEE
+          type: string
+          description: |-
+            * `NON_SOUMISE` - Non soumise
+            * `SOUMISE` - Soumise
+            * `ACCEPTEE` - Acceptée
+            * `REFUSEE` - Refusée
+          x-spec-enum-id: c41b2a51c922d770
           readOnly: true
         context:
-          $ref: '#/components/schemas/ContextEnum'
+          enum:
+          - DOCTORAL_TRAINING
+          - COMPLEMENTARY_TRAINING
+          type: string
+          description: |-
+            * `DOCTORAL_TRAINING` - Formation doctorale
+            * `COMPLEMENTARY_TRAINING` - Formation complémentaire
+          x-spec-enum-id: 0cf70ff7ab368492
         parcours_doctoral:
           type: integer
           writeOnly: true
@@ -4317,7 +4541,16 @@ components:
           type: boolean
           readOnly: true
         type:
-          $ref: '#/components/schemas/TypeEnum'
+          enum:
+          - CONFIRMATION_PAPER
+          - PRIVATE_DEFENSE
+          - PUBLIC_DEFENSE
+          type: string
+          description: |-
+            * `CONFIRMATION_PAPER` - CONFIRMATION_PAPER
+            * `PRIVATE_DEFENSE` - PRIVATE_DEFENSE
+            * `PUBLIC_DEFENSE` - PUBLIC_DEFENSE
+          x-spec-enum-id: b048850a236f814b
         ects:
           type: number
           format: double
@@ -4889,13 +5122,53 @@ components:
           type: string
           readOnly: true
         category:
-          $ref: '#/components/schemas/CategoryEnum'
+          enum:
+          - CONFERENCE
+          - COMMUNICATION
+          - SEMINAR
+          - PUBLICATION
+          - SERVICE
+          - RESIDENCY
+          - VAE
+          - COURSE
+          - PAPER
+          - UCL_COURSE
+          type: string
+          description: |-
+            * `CONFERENCE` - Colloques et conférences
+            * `COMMUNICATION` - Communications orale
+            * `SEMINAR` - Séminaires suivis
+            * `PUBLICATION` - Publications
+            * `SERVICE` - Services
+            * `RESIDENCY` - Séjours de recherche
+            * `VAE` - Valorisations des acquis de l'expérience
+            * `COURSE` - Cours, formations et écoles
+            * `PAPER` - Épreuves
+            * `UCL_COURSE` - Cours UCL
+          x-spec-enum-id: c9aaf10aff1e995b
         status:
-          allOf:
-          - $ref: '#/components/schemas/StatusEnum'
+          enum:
+          - NON_SOUMISE
+          - SOUMISE
+          - ACCEPTEE
+          - REFUSEE
+          type: string
+          description: |-
+            * `NON_SOUMISE` - Non soumise
+            * `SOUMISE` - Soumise
+            * `ACCEPTEE` - Acceptée
+            * `REFUSEE` - Refusée
+          x-spec-enum-id: c41b2a51c922d770
           readOnly: true
         context:
-          $ref: '#/components/schemas/ContextEnum'
+          enum:
+          - DOCTORAL_TRAINING
+          - COMPLEMENTARY_TRAINING
+          type: string
+          description: |-
+            * `DOCTORAL_TRAINING` - Formation doctorale
+            * `COMPLEMENTARY_TRAINING` - Formation complémentaire
+          x-spec-enum-id: 0cf70ff7ab368492
         parcours_doctoral:
           type: integer
           writeOnly: true
@@ -4926,11 +5199,22 @@ components:
         authors:
           type: string
         role:
+          enum:
+          - ''
+          - AUTERTRICE_UNIQUE
+          - COAUTEURTRICE
+          - PREMIER_AUTEURTRICE
+          - DEUXIEME_AUTEURTRICE
+          - EDITEURTRICE
+          - COEDITEURTRICE
+          - null
+          type: string
+          description: "* `` - \n* `AUTERTRICE_UNIQUE` - AUTERTRICE_UNIQUE\n* `COAUTEURTRICE`
+            - COAUTEURTRICE\n* `PREMIER_AUTEURTRICE` - PREMIER_AUTEURTRICE\n* `DEUXIEME_AUTEURTRICE`
+            - DEUXIEME_AUTEURTRICE\n* `EDITEURTRICE` - EDITEURTRICE\n* `COEDITEURTRICE`
+            - COEDITEURTRICE"
+          x-spec-enum-id: 4e968abd698cc447
           nullable: true
-          oneOf:
-          - $ref: '#/components/schemas/RoleEnum'
-          - $ref: '#/components/schemas/BlankEnum'
-          - $ref: '#/components/schemas/NullEnum'
         keywords:
           type: string
         summary:
@@ -4940,11 +5224,21 @@ components:
         journal:
           type: string
         publication_status:
+          enum:
+          - ''
+          - UNSUBMITTED
+          - SUBMITTED
+          - IN_REVIEW
+          - DEPOSITED
+          - ACCEPTED
+          - PUBLISHED
+          - null
+          type: string
+          description: "* `` - \n* `UNSUBMITTED` - UNSUBMITTED\n* `SUBMITTED` - SUBMITTED\n*
+            `IN_REVIEW` - IN_REVIEW\n* `DEPOSITED` - DEPOSITED\n* `ACCEPTED` - ACCEPTED\n*
+            `PUBLISHED` - PUBLISHED"
+          x-spec-enum-id: 2bf9916cefa5a8fb
           nullable: true
-          oneOf:
-          - $ref: '#/components/schemas/PublicationStatusEnum'
-          - $ref: '#/components/schemas/BlankEnum'
-          - $ref: '#/components/schemas/NullEnum'
         with_reading_committee:
           type: boolean
           nullable: true
@@ -4978,18 +5272,6 @@ components:
       - title
       - type
       - with_reading_committee
-    PublicationStatusEnum:
-      enum:
-      - UNSUBMITTED
-      - SUBMITTED
-      - IN_REVIEW
-      - DEPOSITED
-      - ACCEPTED
-      - PUBLISHED
-      type: string
-      description: "* `` - \n* `UNSUBMITTED` - UNSUBMITTED\n* `SUBMITTED` - SUBMITTED\n*
-        `IN_REVIEW` - IN_REVIEW\n* `DEPOSITED` - DEPOSITED\n* `ACCEPTED` - ACCEPTED\n*
-        `PUBLISHED` - PUBLISHED"
     RefuserJuryCommand:
       type: object
       description: |-
@@ -5047,13 +5329,53 @@ components:
           type: string
           readOnly: true
         category:
-          $ref: '#/components/schemas/CategoryEnum'
+          enum:
+          - CONFERENCE
+          - COMMUNICATION
+          - SEMINAR
+          - PUBLICATION
+          - SERVICE
+          - RESIDENCY
+          - VAE
+          - COURSE
+          - PAPER
+          - UCL_COURSE
+          type: string
+          description: |-
+            * `CONFERENCE` - Colloques et conférences
+            * `COMMUNICATION` - Communications orale
+            * `SEMINAR` - Séminaires suivis
+            * `PUBLICATION` - Publications
+            * `SERVICE` - Services
+            * `RESIDENCY` - Séjours de recherche
+            * `VAE` - Valorisations des acquis de l'expérience
+            * `COURSE` - Cours, formations et écoles
+            * `PAPER` - Épreuves
+            * `UCL_COURSE` - Cours UCL
+          x-spec-enum-id: c9aaf10aff1e995b
         status:
-          allOf:
-          - $ref: '#/components/schemas/StatusEnum'
+          enum:
+          - NON_SOUMISE
+          - SOUMISE
+          - ACCEPTEE
+          - REFUSEE
+          type: string
+          description: |-
+            * `NON_SOUMISE` - Non soumise
+            * `SOUMISE` - Soumise
+            * `ACCEPTEE` - Acceptée
+            * `REFUSEE` - Refusée
+          x-spec-enum-id: c41b2a51c922d770
           readOnly: true
         context:
-          $ref: '#/components/schemas/ContextEnum'
+          enum:
+          - DOCTORAL_TRAINING
+          - COMPLEMENTARY_TRAINING
+          type: string
+          description: |-
+            * `DOCTORAL_TRAINING` - Formation doctorale
+            * `COMPLEMENTARY_TRAINING` - Formation complémentaire
+          x-spec-enum-id: 0cf70ff7ab368492
         parcours_doctoral:
           type: integer
           writeOnly: true
@@ -5129,13 +5451,53 @@ components:
           type: string
           readOnly: true
         category:
-          $ref: '#/components/schemas/CategoryEnum'
+          enum:
+          - CONFERENCE
+          - COMMUNICATION
+          - SEMINAR
+          - PUBLICATION
+          - SERVICE
+          - RESIDENCY
+          - VAE
+          - COURSE
+          - PAPER
+          - UCL_COURSE
+          type: string
+          description: |-
+            * `CONFERENCE` - Colloques et conférences
+            * `COMMUNICATION` - Communications orale
+            * `SEMINAR` - Séminaires suivis
+            * `PUBLICATION` - Publications
+            * `SERVICE` - Services
+            * `RESIDENCY` - Séjours de recherche
+            * `VAE` - Valorisations des acquis de l'expérience
+            * `COURSE` - Cours, formations et écoles
+            * `PAPER` - Épreuves
+            * `UCL_COURSE` - Cours UCL
+          x-spec-enum-id: c9aaf10aff1e995b
         status:
-          allOf:
-          - $ref: '#/components/schemas/StatusEnum'
+          enum:
+          - NON_SOUMISE
+          - SOUMISE
+          - ACCEPTEE
+          - REFUSEE
+          type: string
+          description: |-
+            * `NON_SOUMISE` - Non soumise
+            * `SOUMISE` - Soumise
+            * `ACCEPTEE` - Acceptée
+            * `REFUSEE` - Refusée
+          x-spec-enum-id: c41b2a51c922d770
           readOnly: true
         context:
-          $ref: '#/components/schemas/ContextEnum'
+          enum:
+          - DOCTORAL_TRAINING
+          - COMPLEMENTARY_TRAINING
+          type: string
+          description: |-
+            * `DOCTORAL_TRAINING` - Formation doctorale
+            * `COMPLEMENTARY_TRAINING` - Formation complémentaire
+          x-spec-enum-id: 0cf70ff7ab368492
         parcours_doctoral:
           type: integer
           writeOnly: true
@@ -5203,19 +5565,6 @@ components:
       - title
       - type
       - website
-    RoleEnum:
-      enum:
-      - AUTERTRICE_UNIQUE
-      - COAUTEURTRICE
-      - PREMIER_AUTEURTRICE
-      - DEUXIEME_AUTEURTRICE
-      - EDITEURTRICE
-      - COEDITEURTRICE
-      type: string
-      description: "* `` - \n* `AUTERTRICE_UNIQUE` - AUTERTRICE_UNIQUE\n* `COAUTEURTRICE`
-        - COAUTEURTRICE\n* `PREMIER_AUTEURTRICE` - PREMIER_AUTEURTRICE\n* `DEUXIEME_AUTEURTRICE`
-        - DEUXIEME_AUTEURTRICE\n* `EDITEURTRICE` - EDITEURTRICE\n* `COEDITEURTRICE`
-        - COEDITEURTRICE"
     Seminar:
       type: object
       description: |-
@@ -5232,13 +5581,53 @@ components:
           type: string
           readOnly: true
         category:
-          $ref: '#/components/schemas/CategoryEnum'
+          enum:
+          - CONFERENCE
+          - COMMUNICATION
+          - SEMINAR
+          - PUBLICATION
+          - SERVICE
+          - RESIDENCY
+          - VAE
+          - COURSE
+          - PAPER
+          - UCL_COURSE
+          type: string
+          description: |-
+            * `CONFERENCE` - Colloques et conférences
+            * `COMMUNICATION` - Communications orale
+            * `SEMINAR` - Séminaires suivis
+            * `PUBLICATION` - Publications
+            * `SERVICE` - Services
+            * `RESIDENCY` - Séjours de recherche
+            * `VAE` - Valorisations des acquis de l'expérience
+            * `COURSE` - Cours, formations et écoles
+            * `PAPER` - Épreuves
+            * `UCL_COURSE` - Cours UCL
+          x-spec-enum-id: c9aaf10aff1e995b
         status:
-          allOf:
-          - $ref: '#/components/schemas/StatusEnum'
+          enum:
+          - NON_SOUMISE
+          - SOUMISE
+          - ACCEPTEE
+          - REFUSEE
+          type: string
+          description: |-
+            * `NON_SOUMISE` - Non soumise
+            * `SOUMISE` - Soumise
+            * `ACCEPTEE` - Acceptée
+            * `REFUSEE` - Refusée
+          x-spec-enum-id: c41b2a51c922d770
           readOnly: true
         context:
-          $ref: '#/components/schemas/ContextEnum'
+          enum:
+          - DOCTORAL_TRAINING
+          - COMPLEMENTARY_TRAINING
+          type: string
+          description: |-
+            * `DOCTORAL_TRAINING` - Formation doctorale
+            * `COMPLEMENTARY_TRAINING` - Formation complémentaire
+          x-spec-enum-id: 0cf70ff7ab368492
         parcours_doctoral:
           type: integer
           writeOnly: true
@@ -5277,11 +5666,15 @@ components:
         hour_volume:
           type: string
         hour_volume_type:
+          enum:
+          - ''
+          - HEURES
+          - JOURS
+          - null
+          type: string
+          description: "* `` - \n* `HEURES` - HEURES\n* `JOURS` - JOURS"
+          x-spec-enum-id: a20919c94c162039
           nullable: true
-          oneOf:
-          - $ref: '#/components/schemas/HourVolumeTypeEnum'
-          - $ref: '#/components/schemas/BlankEnum'
-          - $ref: '#/components/schemas/NullEnum'
         summary:
           type: array
           items:
@@ -5325,13 +5718,53 @@ components:
           type: string
           readOnly: true
         category:
-          $ref: '#/components/schemas/CategoryEnum'
+          enum:
+          - CONFERENCE
+          - COMMUNICATION
+          - SEMINAR
+          - PUBLICATION
+          - SERVICE
+          - RESIDENCY
+          - VAE
+          - COURSE
+          - PAPER
+          - UCL_COURSE
+          type: string
+          description: |-
+            * `CONFERENCE` - Colloques et conférences
+            * `COMMUNICATION` - Communications orale
+            * `SEMINAR` - Séminaires suivis
+            * `PUBLICATION` - Publications
+            * `SERVICE` - Services
+            * `RESIDENCY` - Séjours de recherche
+            * `VAE` - Valorisations des acquis de l'expérience
+            * `COURSE` - Cours, formations et écoles
+            * `PAPER` - Épreuves
+            * `UCL_COURSE` - Cours UCL
+          x-spec-enum-id: c9aaf10aff1e995b
         status:
-          allOf:
-          - $ref: '#/components/schemas/StatusEnum'
+          enum:
+          - NON_SOUMISE
+          - SOUMISE
+          - ACCEPTEE
+          - REFUSEE
+          type: string
+          description: |-
+            * `NON_SOUMISE` - Non soumise
+            * `SOUMISE` - Soumise
+            * `ACCEPTEE` - Acceptée
+            * `REFUSEE` - Refusée
+          x-spec-enum-id: c41b2a51c922d770
           readOnly: true
         context:
-          $ref: '#/components/schemas/ContextEnum'
+          enum:
+          - DOCTORAL_TRAINING
+          - COMPLEMENTARY_TRAINING
+          type: string
+          description: |-
+            * `DOCTORAL_TRAINING` - Formation doctorale
+            * `COMPLEMENTARY_TRAINING` - Formation complémentaire
+          x-spec-enum-id: 0cf70ff7ab368492
         parcours_doctoral:
           type: integer
           writeOnly: true
@@ -5425,13 +5858,53 @@ components:
           type: string
           readOnly: true
         category:
-          $ref: '#/components/schemas/CategoryEnum'
+          enum:
+          - CONFERENCE
+          - COMMUNICATION
+          - SEMINAR
+          - PUBLICATION
+          - SERVICE
+          - RESIDENCY
+          - VAE
+          - COURSE
+          - PAPER
+          - UCL_COURSE
+          type: string
+          description: |-
+            * `CONFERENCE` - Colloques et conférences
+            * `COMMUNICATION` - Communications orale
+            * `SEMINAR` - Séminaires suivis
+            * `PUBLICATION` - Publications
+            * `SERVICE` - Services
+            * `RESIDENCY` - Séjours de recherche
+            * `VAE` - Valorisations des acquis de l'expérience
+            * `COURSE` - Cours, formations et écoles
+            * `PAPER` - Épreuves
+            * `UCL_COURSE` - Cours UCL
+          x-spec-enum-id: c9aaf10aff1e995b
         status:
-          allOf:
-          - $ref: '#/components/schemas/StatusEnum'
+          enum:
+          - NON_SOUMISE
+          - SOUMISE
+          - ACCEPTEE
+          - REFUSEE
+          type: string
+          description: |-
+            * `NON_SOUMISE` - Non soumise
+            * `SOUMISE` - Soumise
+            * `ACCEPTEE` - Acceptée
+            * `REFUSEE` - Refusée
+          x-spec-enum-id: c41b2a51c922d770
           readOnly: true
         context:
-          $ref: '#/components/schemas/ContextEnum'
+          enum:
+          - DOCTORAL_TRAINING
+          - COMPLEMENTARY_TRAINING
+          type: string
+          description: |-
+            * `DOCTORAL_TRAINING` - Formation doctorale
+            * `COMPLEMENTARY_TRAINING` - Formation complémentaire
+          x-spec-enum-id: 0cf70ff7ab368492
         parcours_doctoral:
           type: integer
           writeOnly: true
@@ -5578,18 +6051,6 @@ components:
       - etat
       - motif_refus
       - pdf
-    StatusEnum:
-      enum:
-      - NON_SOUMISE
-      - SOUMISE
-      - ACCEPTEE
-      - REFUSEE
-      type: string
-      description: |-
-        * `NON_SOUMISE` - Non soumise
-        * `SOUMISE` - Soumise
-        * `ACCEPTEE` - Acceptée
-        * `REFUSEE` - Refusée
     SubmitAdmissibility:
       type: object
       description: Contains the submitted data to complete an admissibility.
@@ -5836,16 +6297,6 @@ components:
           type: string
           nullable: true
           readOnly: true
-    TypeEnum:
-      enum:
-      - CONFIRMATION_PAPER
-      - PRIVATE_DEFENSE
-      - PUBLIC_DEFENSE
-      type: string
-      description: |-
-        * `CONFIRMATION_PAPER` - CONFIRMATION_PAPER
-        * `PRIVATE_DEFENSE` - PRIVATE_DEFENSE
-        * `PUBLIC_DEFENSE` - PUBLIC_DEFENSE
     UclCourse:
       type: object
       description: |-
@@ -5862,13 +6313,53 @@ components:
           type: string
           readOnly: true
         category:
-          $ref: '#/components/schemas/CategoryEnum'
+          enum:
+          - CONFERENCE
+          - COMMUNICATION
+          - SEMINAR
+          - PUBLICATION
+          - SERVICE
+          - RESIDENCY
+          - VAE
+          - COURSE
+          - PAPER
+          - UCL_COURSE
+          type: string
+          description: |-
+            * `CONFERENCE` - Colloques et conférences
+            * `COMMUNICATION` - Communications orale
+            * `SEMINAR` - Séminaires suivis
+            * `PUBLICATION` - Publications
+            * `SERVICE` - Services
+            * `RESIDENCY` - Séjours de recherche
+            * `VAE` - Valorisations des acquis de l'expérience
+            * `COURSE` - Cours, formations et écoles
+            * `PAPER` - Épreuves
+            * `UCL_COURSE` - Cours UCL
+          x-spec-enum-id: c9aaf10aff1e995b
         status:
-          allOf:
-          - $ref: '#/components/schemas/StatusEnum'
+          enum:
+          - NON_SOUMISE
+          - SOUMISE
+          - ACCEPTEE
+          - REFUSEE
+          type: string
+          description: |-
+            * `NON_SOUMISE` - Non soumise
+            * `SOUMISE` - Soumise
+            * `ACCEPTEE` - Acceptée
+            * `REFUSEE` - Refusée
+          x-spec-enum-id: c41b2a51c922d770
           readOnly: true
         context:
-          $ref: '#/components/schemas/ContextEnum'
+          enum:
+          - DOCTORAL_TRAINING
+          - COMPLEMENTARY_TRAINING
+          type: string
+          description: |-
+            * `DOCTORAL_TRAINING` - Formation doctorale
+            * `COMPLEMENTARY_TRAINING` - Formation complémentaire
+          x-spec-enum-id: 0cf70ff7ab368492
         parcours_doctoral:
           type: integer
           writeOnly: true
@@ -5957,13 +6448,53 @@ components:
           type: string
           readOnly: true
         category:
-          $ref: '#/components/schemas/CategoryEnum'
+          enum:
+          - CONFERENCE
+          - COMMUNICATION
+          - SEMINAR
+          - PUBLICATION
+          - SERVICE
+          - RESIDENCY
+          - VAE
+          - COURSE
+          - PAPER
+          - UCL_COURSE
+          type: string
+          description: |-
+            * `CONFERENCE` - Colloques et conférences
+            * `COMMUNICATION` - Communications orale
+            * `SEMINAR` - Séminaires suivis
+            * `PUBLICATION` - Publications
+            * `SERVICE` - Services
+            * `RESIDENCY` - Séjours de recherche
+            * `VAE` - Valorisations des acquis de l'expérience
+            * `COURSE` - Cours, formations et écoles
+            * `PAPER` - Épreuves
+            * `UCL_COURSE` - Cours UCL
+          x-spec-enum-id: c9aaf10aff1e995b
         status:
-          allOf:
-          - $ref: '#/components/schemas/StatusEnum'
+          enum:
+          - NON_SOUMISE
+          - SOUMISE
+          - ACCEPTEE
+          - REFUSEE
+          type: string
+          description: |-
+            * `NON_SOUMISE` - Non soumise
+            * `SOUMISE` - Soumise
+            * `ACCEPTEE` - Acceptée
+            * `REFUSEE` - Refusée
+          x-spec-enum-id: c41b2a51c922d770
           readOnly: true
         context:
-          $ref: '#/components/schemas/ContextEnum'
+          enum:
+          - DOCTORAL_TRAINING
+          - COMPLEMENTARY_TRAINING
+          type: string
+          description: |-
+            * `DOCTORAL_TRAINING` - Formation doctorale
+            * `COMPLEMENTARY_TRAINING` - Formation complémentaire
+          x-spec-enum-id: 0cf70ff7ab368492
         parcours_doctoral:
           type: integer
           writeOnly: true
