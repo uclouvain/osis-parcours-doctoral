@@ -38,13 +38,10 @@
 
       .dotted-line {
           border: none;
-          border-bottom: 1px solid black;
+          border-bottom: 1px dotted black;
           margin-top: 0;
           height: 1em;
-      }
-
-      .dotted-line {
-          border-bottom-style: dotted;
+          opacity: 1;  {# Override the bootstrap opacity #}
       }
 
       .complete-after {
@@ -61,8 +58,12 @@
           margin: 5px;
       }
 
-      .complete-after.solid-line:after {
+      .complete-after-solid-line:after {
           border-bottom-style: solid;
+      }
+
+      .complete-after-dotted-line:after {
+          border-bottom-style: dotted;
       }
 
       .font-italic {
@@ -140,21 +141,25 @@
     </p>
 
     <div class="avoid-break-inside">
-      <span class="bold-text">{% translate "Supervisor" context "gender" %}</span>{% translate ':' %}
-    <hr class="dotted-line" style="margin-bottom: 0.5em" />
+      <div class="complete-after complete-after-dotted-line">
+        <span class="bold-text">{% translate "Supervisor" context "gender" %}</span>{% translate ':' %}
+      </div>
+      <hr class="dotted-line" style="margin-bottom: 5px" />
 
-    <div class="complete-after solid-line">
-      ➔ <span class="underline-text font-italic bold-text">{% translate 'Signature and date' %}</span>
-      <span class="font-italic">{% translate '(or attach a confirmation email):' %}</span>
-    </div>
+      <div class="complete-after complete-after-solid-line">
+        ➔ <span class="underline-text font-italic bold-text">{% translate 'Signature and date' %}</span>
+        <span class="font-italic">{% translate '(or attach a confirmation email):' %}</span>
+      </div>
     </div>
 
     {% for promoter_index in 1|range_for:2 %}
-      <div class="mt-3 avoid-break-inside ca-member">
+      <div class="mt-3 avoid-break-inside">
+        <div class="complete-after complete-after-dotted-line">
         <span class="bold-text">{% translate "Supervisor" context "gender" %}</span> {% translate '(if applicable):' %}
-        <hr class="dotted-line" style="margin-bottom: 0.5em" />
+        </div>
+        <hr class="dotted-line" style="margin-bottom: 5px" />
 
-        <div class="complete-after solid-line" style="margin: 0">
+        <div class="complete-after complete-after-solid-line">
           ➔ <span class="underline-text font-italic bold-text">{% translate 'Signature and date' %}</span>
           <span class="font-italic">{% translate '(or attach a confirmation email):' %}</span>
         </div>
@@ -175,7 +180,7 @@
         {% translate 'Institution:' %}<br>
         {% translate 'Email:' %}<br>
 
-        <div class="complete-after solid-line">
+        <div class="complete-after complete-after-solid-line">
           ➔ <span class="underline-text font-italic bold-text">{% translate 'Signature and date' %}</span>
           <span class="font-italic">{% translate '(or attach a confirmation email):' %}</span>
         </div>
