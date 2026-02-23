@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2026 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -26,9 +26,7 @@
 from django.shortcuts import resolve_url
 from rest_framework.test import APITestCase
 
-from admission.tests.factories.person import InternalPersonFactory
-from base.models.person import Person
-from base.tests.factories.person import ExternalPersonFactory
+from base.tests.factories.person import ExternalPersonFactory, InternalPersonFactory, EmployeeInternalPersonFactory
 from base.tests.factories.tutor import TutorFactory
 from base.tests.factories.user import UserFactory
 
@@ -41,7 +39,7 @@ class AutocompleteTutorViewTestCase(APITestCase):
 
     def test_autocomplete_persons_with_search_on_global_id(self):
         self.client.force_authenticate(user=self.user)
-        TutorFactory(person=InternalPersonFactory(global_id='00005789'))
+        TutorFactory(person=EmployeeInternalPersonFactory(global_id='00005789'))
         response = self.client.get(
             self.base_url + '?search=57',
             format='json',
@@ -51,7 +49,7 @@ class AutocompleteTutorViewTestCase(APITestCase):
 
     def test_autocomplete_persons_with_search_on_first_name(self):
         self.client.force_authenticate(user=self.user)
-        TutorFactory(person=InternalPersonFactory(first_name='Jean-Marc'))
+        TutorFactory(person=EmployeeInternalPersonFactory(first_name='Jean-Marc'))
         response = self.client.get(
             self.base_url + '?search=jean',
             format='json',
@@ -61,7 +59,7 @@ class AutocompleteTutorViewTestCase(APITestCase):
 
     def test_autocomplete_persons_with_search_on_last_name(self):
         self.client.force_authenticate(user=self.user)
-        TutorFactory(person=InternalPersonFactory(last_name='Doe'))
+        TutorFactory(person=EmployeeInternalPersonFactory(last_name='Doe'))
         response = self.client.get(
             self.base_url + '?search=doe',
             format='json',
@@ -71,7 +69,7 @@ class AutocompleteTutorViewTestCase(APITestCase):
 
     def test_autocomplete_persons_without_persons_with_empty_global_id(self):
         self.client.force_authenticate(user=self.user)
-        TutorFactory(person__global_id=None, person__first_name='John', person__last_name='Doe')
+        TutorFactory(person__global_id=None, person__first_name='John', person__last_name='Doe', person__employee=True)
         response = self.client.get(
             self.base_url + '?search=doe',
             format='json',
@@ -81,7 +79,17 @@ class AutocompleteTutorViewTestCase(APITestCase):
 
     def test_autocomplete_persons_without_persons_with_external_account(self):
         self.client.force_authenticate(user=self.user)
-        TutorFactory(person=ExternalPersonFactory())
+        TutorFactory(person=ExternalPersonFactory(employee=True))
+        response = self.client.get(
+            self.base_url + '?search=57',
+            format='json',
+        )
+        self.assertEqual(response.status_code, 200, response.content)
+        self.assertEqual(response.json()['count'], 0)
+
+    def test_autocomplete_persons_without_persons_who_are_not_employees(self):
+        self.client.force_authenticate(user=self.user)
+        TutorFactory(person=InternalPersonFactory(global_id='00005789', employee=False))
         response = self.client.get(
             self.base_url + '?search=57',
             format='json',

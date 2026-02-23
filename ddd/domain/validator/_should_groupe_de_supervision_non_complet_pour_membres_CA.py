@@ -34,7 +34,7 @@ from parcours_doctoral.ddd.domain.validator.exceptions import (
 @attr.dataclass(frozen=True, slots=True)
 class ShouldGroupeDeSupervisionNonCompletPourMembresCA(BusinessValidator):
     groupe_de_supervision: 'GroupeDeSupervision'
-    NOMBRE_MAX_MEMBRES_CA = 3
+    NOMBRE_MAX_MEMBRES_CA = 10
 
     def validate(self, *args, **kwargs):
         if len(self.groupe_de_supervision.signatures_membres_CA) >= self.NOMBRE_MAX_MEMBRES_CA:

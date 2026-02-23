@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2026 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -26,8 +26,7 @@
 from django.shortcuts import resolve_url
 from rest_framework.test import APITestCase
 
-from admission.tests.factories.person import InternalPersonFactory
-from base.tests.factories.person import ExternalPersonFactory, PersonFactory
+from base.tests.factories.person import ExternalPersonFactory, InternalPersonFactory, EmployeeInternalPersonFactory
 from base.tests.factories.student import StudentFactory
 from base.tests.factories.tutor import TutorFactory
 from base.tests.factories.user import UserFactory
@@ -41,7 +40,7 @@ class AutocompletePersonViewTestCase(APITestCase):
 
     def test_autocomplete_persons_with_search_on_global_id(self):
         self.client.force_authenticate(user=self.user)
-        InternalPersonFactory(global_id='00005789')
+        EmployeeInternalPersonFactory(global_id='00005789')
         response = self.client.get(
             self.base_url + '?search=57',
             format='json',
@@ -51,7 +50,7 @@ class AutocompletePersonViewTestCase(APITestCase):
 
     def test_autocomplete_persons_with_search_on_first_name(self):
         self.client.force_authenticate(user=self.user)
-        InternalPersonFactory(first_name='Jean-Marc')
+        EmployeeInternalPersonFactory(first_name='Jean-Marc')
         response = self.client.get(
             self.base_url + '?search=jean',
             format='json',
@@ -61,7 +60,7 @@ class AutocompletePersonViewTestCase(APITestCase):
 
     def test_autocomplete_persons_with_search_on_last_name(self):
         self.client.force_authenticate(user=self.user)
-        InternalPersonFactory(last_name='Doe')
+        EmployeeInternalPersonFactory(last_name='Doe')
         response = self.client.get(
             self.base_url + '?search=doe',
             format='json',
@@ -71,7 +70,7 @@ class AutocompletePersonViewTestCase(APITestCase):
 
     def test_autocomplete_persons_without_students_that_are_not_tutors(self):
         self.client.force_authenticate(user=self.user)
-        student = StudentFactory(person=InternalPersonFactory(global_id='00005789'))
+        student = StudentFactory(person=InternalPersonFactory(global_id='00005789', employee=True))
         response = self.client.get(
             self.base_url + '?search=57',
             format='json',
@@ -88,7 +87,7 @@ class AutocompletePersonViewTestCase(APITestCase):
 
     def test_autocomplete_persons_without_persons_with_empty_global_id(self):
         self.client.force_authenticate(user=self.user)
-        InternalPersonFactory(global_id=None, first_name='John', last_name='Doe')
+        EmployeeInternalPersonFactory(global_id=None, first_name='John', last_name='Doe')
         response = self.client.get(
             self.base_url + '?search=doe',
             format='json',
@@ -98,7 +97,17 @@ class AutocompletePersonViewTestCase(APITestCase):
 
     def test_autocomplete_persons_without_persons_with_external_account(self):
         self.client.force_authenticate(user=self.user)
-        ExternalPersonFactory()
+        ExternalPersonFactory(employee=True)
+        response = self.client.get(
+            self.base_url + '?search=57',
+            format='json',
+        )
+        self.assertEqual(response.status_code, 200, response.content)
+        self.assertEqual(response.json()['count'], 0)
+
+    def test_autocomplete_persons_without_persons_who_are_not_employees(self):
+        self.client.force_authenticate(user=self.user)
+        InternalPersonFactory(global_id='00005789', employee=False)
         response = self.client.get(
             self.base_url + '?search=57',
             format='json',
