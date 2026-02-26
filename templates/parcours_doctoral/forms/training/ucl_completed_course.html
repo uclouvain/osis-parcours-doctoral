@@ -7,7 +7,7 @@
   * The core business involves the administration of students, teachers,
   * courses, programs and so on.
   *
-  * Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
+  * Copyright (C) 2015-2026 Université catholique de Louvain (http://www.uclouvain.be)
   *
   * This program is free software: you can redistribute it and/or modify
   * it under the terms of the GNU General Public License as published by
@@ -59,7 +59,7 @@
 <div class="row">
   {% field_data _('Course unit with evaluation') _('Yes') css_class='col-md-4' %}
   {% field_data _('Mark or honours obtained') form.final_assessment.submitted_mark css_class='col-md-4' %}
-  {% bootstrap_field form.corrected_mark wrapper_class="form-group col-md-4" placeholder="15/20" %}
+  {% bootstrap_field form.corrected_mark wrapper_class="form-group col-md-4" %}
   {{ form.assessment_to_correct_uuid }}
 </div>
 

@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2026 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -72,6 +72,30 @@ PARCOURS_DOCTORAL_EMAIL_STUDENT_DOCTORAL_TRAINING_REFUSED = 'osis-parcours-docto
 templates.register(
     PARCOURS_DOCTORAL_EMAIL_STUDENT_DOCTORAL_TRAINING_REFUSED,
     description=_("Mail sent to the student to inform of the refusal of doctoral training activity"),
+    tokens=(
+        training_common_tokens
+        + doctoral_training_token
+        + [
+            Token(
+                name='reason',
+                description=_("The reason for refusal"),
+                example="This activity is not part of doctoral program",
+            ),
+            Token(
+                name='activity_title',
+                description=_("The activity title"),
+                example="Cours de langue : Anglais médiéval (ANGMED003) - 2 ECTS",
+            ),
+        ]
+    ),
+    tag=PARCOURS_DOCTORAL_TAG,
+)
+PARCOURS_DOCTORAL_EMAIL_STUDENT_DOCTORAL_TRAINING_PROMOTER_REFUSED = (
+    'osis-parcours-doctoral-doctoral-training-promoter-refused-student'
+)
+templates.register(
+    PARCOURS_DOCTORAL_EMAIL_STUDENT_DOCTORAL_TRAINING_PROMOTER_REFUSED,
+    description=_("Mail sent to the student to inform of the refusal of a doctoral training activity by a promoter"),
     tokens=(
         training_common_tokens
         + doctoral_training_token
