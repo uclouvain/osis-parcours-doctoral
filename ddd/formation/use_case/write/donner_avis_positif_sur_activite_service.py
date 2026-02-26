@@ -23,37 +23,26 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-from typing import List
+from parcours_doctoral.ddd.formation.builder.activite_identity_builder import (
+    ActiviteIdentityBuilder,
+)
+from parcours_doctoral.ddd.formation.commands import DonnerAvisPositifSurActiviteCommand
+from parcours_doctoral.ddd.formation.domain.model.activite import ActiviteIdentity
+from parcours_doctoral.ddd.formation.repository.i_activite import IActiviteRepository
 
-from assessments.models.evaluation import Evaluation
-from parcours_doctoral.ddd.domain.model._promoteur import PromoteurIdentity
-from parcours_doctoral.ddd.domain.model.parcours_doctoral import ParcoursDoctoral
-from parcours_doctoral.ddd.formation.domain.model.activite import Activite
-from parcours_doctoral.ddd.formation.domain.service.i_notification import INotification
 
+def donner_avis_positif_sur_activite(
+    cmd: 'DonnerAvisPositifSurActiviteCommand',
+    activite_repository: 'IActiviteRepository',
+) -> 'ActiviteIdentity':
+    # GIVEN
+    activite_id = ActiviteIdentityBuilder.build_from_uuid(cmd.activite_uuid)
+    activite = activite_repository.get(activite_id)
 
-class NotificationInMemory(INotification):
-    @classmethod
-    def notifier_soumission_au_promoteur_de_reference(
-        cls,
-        parcours_doctoral: ParcoursDoctoral,
-        activites: List[Activite],
-        promoteur_de_reference_id: PromoteurIdentity,
-    ) -> None:
-        pass
+    # WHEN
 
-    @classmethod
-    def notifier_validation_au_doctorant(cls, parcours_doctoral: ParcoursDoctoral, activites: List[Activite]) -> None:
-        pass
+    # THEN
+    activite.donner_avis_positif_promoteur_reference(cmd.commentaire)
+    activite_repository.save(activite)
 
-    @classmethod
-    def notifier_refus_au_candidat(cls, parcours_doctoral, activite):
-        pass
-
-    @classmethod
-    def notifier_refus_par_promoteur_au_candidat(cls, doctorat, activite):
-        pass
-
-    @classmethod
-    def notifier_encodage_note_aux_gestionnaires(cls, evaluation: Evaluation, cours: Activite) -> None:
-        pass
+    return activite_id
