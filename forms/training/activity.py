@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2026 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -99,10 +99,11 @@ def get_cdd_config(cdd_id) -> CddConfiguration:
 def get_category_labels(cdd_id, lang_code: str = None) -> List[Tuple[str, str]]:
     lang_code = lang_code or get_language()
     original_constants = dict(CategorieActivite.choices()).keys()
+    cdd_config = get_cdd_config(cdd_id)
     return [
         (constant, label)
-        for constant, label in zip(original_constants, get_cdd_config(cdd_id).category_labels[lang_code])
-        if constant != CategorieActivite.UCL_COURSE.name
+        for constant, label in zip(original_constants, cdd_config.category_labels[lang_code])
+        if constant != CategorieActivite.UCL_COURSE.name and constant in cdd_config.enabled_categories
     ]
 
 
@@ -200,7 +201,7 @@ class ConferenceForm(ActivityFormMixin, forms.ModelForm):
     template_name = "parcours_doctoral/forms/training/conference.html"
     type = ConfigurableActivityTypeField('conference_types', label=_("Activity type"))
     is_online = IsOnlineField()
-    country = forms.CharField(widget=autocomplete.ListSelect2(url="country-autocomplete"))
+    country = forms.CharField(widget=autocomplete.ListSelect2(url="country-autocomplete"), label=_("Country"))
 
     class Meta:
         model = Activity
@@ -224,6 +225,7 @@ class ConferenceForm(ActivityFormMixin, forms.ModelForm):
             'title': _("Event name"),
             'website': _("Event website"),
             'ects': _("ECTS for the participation"),
+            'country': _("Country"),
         }
         widgets = {
             'start_date': CustomDatePickerInput(),
@@ -253,13 +255,7 @@ class ConferenceForm(ActivityFormMixin, forms.ModelForm):
 
 class ConferenceCommunicationForm(ActivityFormMixin, forms.ModelForm):
     template_name = "parcours_doctoral/forms/training/conference_communication.html"
-    type = SelectOrOtherField(
-        label=_("Type of communication"),
-        choices=[
-            _("Oral presentation"),
-            _("Poster"),
-        ],
-    )
+    type = ConfigurableActivityTypeField('conference_communication_types', label=_("Type of communication"))
 
     def clean(self):
         data = super().clean()
@@ -292,8 +288,9 @@ class ConferenceCommunicationForm(ActivityFormMixin, forms.ModelForm):
         }
         help_texts = {
             'title': _("Specify the title in the language of the activity"),
+            'acceptation_proof': _("A document proving that the committee approved the publication"),
             'participating_proof': _(
-                "A document proving that the communication was done (i.e. communication certificate)"
+                "A document proving that the communication was done (not a transport certificate)"
             ),
         }
 
@@ -395,7 +392,7 @@ class CommunicationForm(ActivityFormMixin, forms.ModelForm):
         max_length=200,
         required=False,
     )
-    country = forms.CharField(widget=autocomplete.ListSelect2(url="country-autocomplete"))
+    country = forms.CharField(widget=autocomplete.ListSelect2(url="country-autocomplete"), label=_("Country"))
     is_online = IsOnlineField()
 
     def clean(self):
@@ -433,6 +430,7 @@ class CommunicationForm(ActivityFormMixin, forms.ModelForm):
             'participating_proof': _("Communication attestation"),
             'committee': _("Selection committee"),
             'summary': _("Summary of the communication"),
+            'country': _("Country"),
         }
         widgets = {
             'start_date': CustomDatePickerInput(),
@@ -443,6 +441,10 @@ class CommunicationForm(ActivityFormMixin, forms.ModelForm):
             'summary': _(
                 "Required field for some of the doctoral commissions. Refer to the website of your commission for "
                 "more detail."
+            ),
+            'acceptation_proof': _("A document proving that the committee approved the publication"),
+            'participating_proof': _(
+                "A document proving that the communication was done (not a transport certificate)"
             ),
         }
 
@@ -548,7 +550,7 @@ class ResidencyForm(ActivityFormMixin, forms.ModelForm):
         label=_("Activity type"),
         help_text=_("Refer to your commission website for more detail."),
     )
-    country = forms.CharField(widget=autocomplete.ListSelect2(url="country-autocomplete"))
+    country = forms.CharField(widget=autocomplete.ListSelect2(url="country-autocomplete"), label=_("Country"))
 
     class Meta:
         model = Activity
@@ -568,6 +570,7 @@ class ResidencyForm(ActivityFormMixin, forms.ModelForm):
             'subtitle': _("Activity description"),
             'organizing_institution': _("Institution"),
             'participating_proof': _("Attestation"),
+            'country': _("Country"),
         }
         widgets = {
             'start_date': CustomDatePickerInput(),
@@ -627,6 +630,9 @@ class ResidencyCommunicationForm(ActivityFormMixin, forms.ModelForm):
             'summary': _(
                 "Required field if some doctorals commissions, refer to your commission specifics dispositions."
             ),
+            'participating_proof': _(
+                "A document proving that the communication was done (not a transport certificate)"
+            ),
         }
 
 
@@ -675,7 +681,7 @@ class ServiceForm(ActivityFormMixin, forms.ModelForm):
 class SeminarForm(ActivityFormMixin, forms.ModelForm):
     template_name = "parcours_doctoral/forms/training/seminar.html"
     type = ConfigurableActivityTypeField("seminar_types", label=_("Activity type"))
-    country = forms.CharField(widget=autocomplete.ListSelect2(url="country-autocomplete"))
+    country = forms.CharField(widget=autocomplete.ListSelect2(url="country-autocomplete"), label=_("Country"))
 
     class Meta:
         model = Activity
@@ -697,6 +703,7 @@ class SeminarForm(ActivityFormMixin, forms.ModelForm):
             'title': _("Activity name"),
             'participating_proof': _("Proof of participation for the whole activity"),
             'hourly_volume': _("Total volume"),
+            'country': _("Country"),
         }
         widgets = {
             'start_date': CustomDatePickerInput(),
@@ -706,10 +713,7 @@ class SeminarForm(ActivityFormMixin, forms.ModelForm):
         }
         help_texts = {
             'city': _("If the seminar takes place in several places, leave this field empty."),
-            'hour_volume': _(
-                "Following the specifics of your domain doctoral commission,"
-                " specify the total time dedicated to this activity"
-            ),
+            'hour_volume': _("Specify the total time dedicated to this activity"),
         }
 
 
@@ -738,6 +742,11 @@ class SeminarCommunicationForm(ActivityFormMixin, forms.ModelForm):
             'start_date': CustomDatePickerInput(),
             'ects': forms.NumberInput(attrs={'min': '0', 'step': '0.5'}),
             'authors': forms.TextInput(),
+        }
+        help_texts = {
+            'participating_proof': _(
+                "A document proving that the communication was done (not a transport certificate)"
+            ),
         }
 
 
