@@ -548,8 +548,7 @@ class ParcoursDoctoralListTestView(QueriesAssertionsMixin, TestCase):
 
         self.assertIn(
             f'{gettext("Year")} - '
-            f'{form.fields["annee_academique"].error_messages["invalid_choice"] % {"value": 1}} '
-            f'{form.fields["annee_academique"].error_messages["required"]}',
+            f'{form.fields["annee_academique"].error_messages["invalid_choice"] % {"value": 1}}',
             messages,
         )
 

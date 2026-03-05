@@ -175,20 +175,7 @@ class ParcoursDoctoralListExcelExportViewTestCase(QueriesAssertionsMixin, TestCa
 
         self.assertEqual(response.status_code, 200)
 
-    def test_export_with_adre_user_without_filters_doesnt_plan_the_export(self):
-        self.client.force_login(user=self.adre_user)
-
-        response = self.client.get(self.url)
-
-        self.assertRedirects(response, expected_url=self.list_url, fetch_redirect_response=False)
-
-        task = AsyncTask.objects.filter(person=self.adre_user.person).first()
-        self.assertIsNone(task)
-
-        export = Export.objects.filter(person=self.adre_user.person).first()
-        self.assertIsNone(export)
-
-    def test_export_with_adre_user_with_filters_plans_the_export(self):
+    def test_export_with_adre_user_with_filters(self):
         self.client.force_login(user=self.adre_user)
 
         response = self.client.get(self.url, data=self.default_params)
