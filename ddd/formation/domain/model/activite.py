@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2026 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -84,8 +84,12 @@ class Activite(interface.RootEntity):
         if self.categorie_parente != CategorieActivite.SEMINAR:
             self.commentaire_gestionnaire = remarque
 
-    def donner_avis_promoteur_reference(self, approbation, commentaire):
-        self.avis_promoteur_reference = approbation
+    def donner_avis_positif_promoteur_reference(self, commentaire):
+        self.avis_promoteur_reference = True
+        self.commentaire_promoteur_reference = commentaire
+
+    def donner_avis_negatif_promoteur_reference(self, commentaire):
+        self.avis_promoteur_reference = False
         self.commentaire_promoteur_reference = commentaire
 
     def encoder_note_cours_ucl(self, note: str):

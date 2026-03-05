@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2026 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -23,13 +23,13 @@
 #  see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
-
-from base.models.enums.organization_type import MAIN
 from django.conf import settings
+from django.contrib.postgres.fields import ArrayField
 from django.db import models
 from django.utils import translation
 from django.utils.translation import gettext_lazy as _
 
+from base.models.enums.organization_type import MAIN
 from parcours_doctoral.ddd.formation.domain.model.enums import CategorieActivite
 from parcours_doctoral.forms.translation_field import (
     TextareaArrayField,
@@ -188,7 +188,7 @@ def default_course_types():
             "Summer school",
             "Winter school",
             "Language courses",
-            "Moocs (online / offline)",
+            "Moocs",
         ],
         settings.LANGUAGE_CODE_FR: [
             "Cours de 2e cycle",
@@ -198,7 +198,7 @@ def default_course_types():
             "Summer school",
             "Winter school",
             "Cours de langue",
-            "Moocs (en ligne / pas en ligne)",
+            "Moocs",
         ],
     }
 
@@ -211,7 +211,7 @@ def default_complementary_course_types():
             "Continuing education",
             "Transversal training",
             "Language courses",
-            "Moocs (online / offline)",
+            "Moocs",
         ],
         settings.LANGUAGE_CODE_FR: [
             "Cours de 2e cycle",
@@ -219,7 +219,7 @@ def default_complementary_course_types():
             "Formation continuée",
             "Formation transversale",
             "Cours de langue",
-            "Moocs (en ligne / pas en ligne)",
+            "Moocs",
         ],
     }
 
@@ -231,6 +231,10 @@ class TranslatedMultilineField(models.JSONField):
         kwargs.setdefault('base_field', TextareaArrayField)
         kwargs.setdefault('widget', TranslatedTextareasWidget())
         return super().formfield(**kwargs)
+
+
+def get_default_enabled_categories():
+    return CategorieActivite.get_names_except(CategorieActivite.UCL_COURSE)
 
 
 class CddConfiguration(models.Model):
@@ -249,6 +253,12 @@ class CddConfiguration(models.Model):
         verbose_name=_("Category labels"),
         default=default_category_labels,
     )
+    enabled_categories = ArrayField(
+        models.TextField(choices=CategorieActivite.choices_except(CategorieActivite.UCL_COURSE)),
+        verbose_name=_("Enabled categories"),
+        default=get_default_enabled_categories,
+    )
+
     conference_types = TranslatedMultilineField(
         verbose_name=_("CONFERENCE types"),
         default=default_conference_types,
@@ -256,6 +266,10 @@ class CddConfiguration(models.Model):
     conference_publication_types = TranslatedMultilineField(
         verbose_name=_("CONFERENCE PUBLICATION types"),
         default=default_conference_publication_types,
+    )
+    conference_communication_types = TranslatedMultilineField(
+        verbose_name=_("CONFERENCE COMMUNICATION types"),
+        default=default_communication_types,
     )
     communication_types = TranslatedMultilineField(
         verbose_name=_("COMMUNICATION types"),
