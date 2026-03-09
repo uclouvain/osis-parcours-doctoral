@@ -3632,7 +3632,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/EnabledCategoriesEnum'
-          title: Catégories activées
         conference_types:
           title: Types d'activité pour la catégorie Conférence
         conference_publication_types:

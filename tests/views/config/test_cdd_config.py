@@ -51,6 +51,8 @@ class CddConfigTestCase(TestCase):
                 cls.data[f'{field.name}_en'] = "Foo\nBarbaz"
                 cls.data[f'{field.name}_fr-be'] = "Bar\nBaz"
 
+        cls.data['enabled_categories'] = CategorieActivite.get_names_except(CategorieActivite.UCL_COURSE)
+
     def test_cdd_config_access(self):
         url = resolve_url('parcours_doctoral:config:cdd-config:list')
         self.client.force_login(SuperUserPersonFactory().user)
