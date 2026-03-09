@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2026 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -26,14 +26,20 @@
 from parcours_doctoral.ddd.formation.commands import *
 from parcours_doctoral.ddd.formation.use_case.read import *
 from parcours_doctoral.ddd.formation.use_case.write import *
+from parcours_doctoral.ddd.formation.use_case.write.donner_avis_negatif_sur_activite_service import (
+    donner_avis_negatif_sur_activite,
+)
+from parcours_doctoral.ddd.formation.use_case.write.donner_avis_positif_sur_activite_service import (
+    donner_avis_positif_sur_activite,
+)
 from parcours_doctoral.ddd.formation.use_case.write.inscrire_evaluation_service import (
     inscrire_evaluation,
 )
-from parcours_doctoral.infrastructure.parcours_doctoral.repository.in_memory.groupe_de_supervision import (
-    GroupeDeSupervisionInMemoryRepository,
-)
 from parcours_doctoral.ddd.formation.use_case.write.reinscrire_evaluation_service import (
     reinscrire_evaluation,
+)
+from parcours_doctoral.infrastructure.parcours_doctoral.repository.in_memory.groupe_de_supervision import (
+    GroupeDeSupervisionInMemoryRepository,
 )
 from parcours_doctoral.infrastructure.parcours_doctoral.repository.in_memory.parcours_doctoral import (
     ParcoursDoctoralInMemoryRepository,
@@ -66,7 +72,13 @@ COMMAND_HANDLERS = {
         groupe_de_supervision_repository=_groupe_de_supervision_repository,
         notification=_notification,
     ),
-    DonnerAvisSurActiviteCommand: lambda msg_bus, cmd: donner_avis_sur_activite(
+    DonnerAvisNegatifSurActiviteCommand: lambda msg_bus, cmd: donner_avis_negatif_sur_activite(
+        cmd,
+        activite_repository=_activite_repository,
+        parcours_doctoral_repository=_parcours_doctoral_repository,
+        notification=_notification,
+    ),
+    DonnerAvisPositifSurActiviteCommand: lambda msg_bus, cmd: donner_avis_positif_sur_activite(
         cmd,
         activite_repository=_activite_repository,
     ),

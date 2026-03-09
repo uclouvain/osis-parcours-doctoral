@@ -8,7 +8,7 @@
   * The core business involves the administration of students, teachers,
   * courses, programs and so on.
   *
-  * Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
+  * Copyright (C) 2015-2026 Université catholique de Louvain (http://www.uclouvain.be)
   *
   * This program is free software: you can redistribute it and/or modify
   * it under the terms of the GNU General Public License as published by
@@ -29,7 +29,7 @@
 {% block actions-group %}
   {% url "parcours_doctoral:complementary-training:add" uuid=view.kwargs.uuid category='COURSE' as add_url %}
   <a href="{{ add_url }}" class="btn btn-default border border-dark-subtle">
-    {% trans "Add a course unit" %}
+    {% trans "Add course units, courses and schools" %}
   </a>
 {% endblock %}
 
@@ -39,6 +39,7 @@
   <h3>{% trans "Complementary training" %}</h3>
 
   <h4>{% trans "Course units" context 'parcours_doctoral' %}</h4>
+  <p>{% translate "List of course units in complementary training completed by the student:" %}</p>
   {% if activities %}
     <div class="filter-status mb-3">
       <strong>{% trans "Status" context 'parcours_doctoral' %}</strong>
@@ -74,15 +75,9 @@
       <button class="btn btn-default border border-dark-subtle" type="submit" name="_submit">{% trans "Submit selected courses" %}</button>
       <button class="btn btn-default border border-dark-subtle" type="submit" name="_accept">{% trans "Accept selected courses" %}</button>
       <a href="{{ add_url }}" class="btn btn-default border border-dark-subtle">
-        {% trans "Add a course unit" %}
+        {% trans "Add course units, courses and schools" %}
       </a>
     </form>
-  {% else %}
-    {% trans "This student has not created any course yet." %}
-    {% url 'parcours_doctoral:course-enrollment' uuid=view.kwargs.uuid as enrollment_url %}
-    {% blocktrans  trimmed %}
-      <a href="{{ enrollment_url }}">Go to course enrolment</a> or <a href="{{ add_url }}">add a course</a>
-    {% endblocktrans %}
   {% endif %}
 {% endblock %}
 
@@ -98,8 +93,6 @@
   <script src="{% static 'osis_document_components/osis-document.umd.min.js' %}"></script>
   <script>
     $(function () {
-      $('[data-bs-toggle="popover"]').popover();
-
       $('.accept-activity-btn').on('click', function (event) {
           event.preventDefault();
           $('[name=activity_ids]').val([$(this).attr('data-uuid')]);
