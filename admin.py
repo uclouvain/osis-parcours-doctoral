@@ -343,6 +343,7 @@ class ParcoursDoctoralAdmin(ReadOnlyFilesMixin, admin.ModelAdmin):
         'student__global_id',
         'student__last_name',
         'student__first_name',
+        'student__student__registration_id',
     ]
     list_select_related = [
         'student',
