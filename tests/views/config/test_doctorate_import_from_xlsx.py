@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2026 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -66,7 +66,11 @@ from parcours_doctoral.models import (
     ParcoursDoctoral,
     ParcoursDoctoralSupervisionActor,
 )
-from parcours_doctoral.views.config.doctorate_import_from_xlsx import ChoixOuiNon
+from parcours_doctoral.views.config.doctorate_import_from_xlsx import (
+    ChoixOuiNon,
+    format_str_for_email_import,
+    format_str_for_import,
+)
 from reference.tests.factories.country import CountryFactory
 
 
@@ -92,7 +96,7 @@ class DoctorateImportFromXLSXViewTestCase(TestCase):
 
         cls.candidate = CompletePersonFactory(language=settings.LANGUAGE_CODE_FR)
 
-        cls.student = StudentFactory(person=cls.candidate, registration_id='01234567')
+        cls.student = StudentFactory(person=cls.candidate, registration_id='41234567')
 
         cls.internal_student_not_tutor = StudentFactory(person=InternalPersonFactory()).person
         cls.internal_student_and_tutor = TutorFactory(
@@ -291,6 +295,11 @@ class DoctorateImportFromXLSXViewTestCase(TestCase):
         self.assertFieldIsValid(
             field_name='identification_noma',
             field_value=self.student.registration_id,
+        )
+
+        self.assertFieldIsValid(
+            field_name='identification_noma',
+            field_value=int(self.student.registration_id),
         )
 
     def test_doctorate_import_with_student_name(self):
@@ -925,15 +934,14 @@ class DoctorateImportFromXLSXViewTestCase(TestCase):
             error='external_promoter_data_error',
         )
 
+        # This is an internal promoter so the field is not required
         self.supervision_first_row_cells['email'].value = self.internal_student_not_tutor.email
 
-        self.assertFieldIsInvalid(
+        self.assertFieldIsValid(
             field_name='doctorat_avec_these',
             field_value=None,
-            error='external_promoter_data_error',
         )
 
-        # This is an internal promoter so the field is not required
         self.supervision_first_row_cells['email'].value = self.internal_student_and_tutor.email
 
         self.assertFieldIsValid(
@@ -1313,7 +1321,8 @@ class DoctorateImportFromXLSXViewTestCase(TestCase):
                     getattr(activity, field),
                     f'Total des crédits pour les {str(CategorieActivite[activity.category].value).lower()} '
                     f'acquis avant le {today_date}'
-                    if field == title_field_by_category[category] else ''
+                    if field == title_field_by_category[category]
+                    else '',
                 )
 
         # The confirmation paper
@@ -1375,3 +1384,25 @@ class DoctorateImportFromXLSXViewTestCase(TestCase):
         committee_members_roles = CommitteeMember.objects.all()
         self.assertEqual(len(committee_members_roles), 1)
         self.assertEqual(committee_members_roles[0].person, internal_ca_member.person)
+
+
+class DoctorateImportPreProcessingsFunctionsTestCase(TestCase):
+    def test_format_str_for_import(self):
+        self.assertEqual(format_str_for_import(value=None), None)
+        self.assertEqual(format_str_for_import(value=''), '')
+        self.assertEqual(format_str_for_import(value=10), '10')
+        self.assertEqual(format_str_for_import(value='  string with spaces  '), 'string with spaces')
+        self.assertEqual(format_str_for_import(value='\nmulti\nlines\r\nstring'), 'multilinesstring')
+        self.assertEqual(format_str_for_import(value='validstring'), 'validstring')
+
+    def test_format_str_for_email_import(self):
+        self.assertEqual(format_str_for_email_import(value=None), None)
+        self.assertEqual(format_str_for_email_import(value=''), '')
+        self.assertEqual(format_str_for_email_import(value=10), '10')
+        self.assertEqual(format_str_for_email_import(value='  string with spaces  '), 'string with spaces')
+        self.assertEqual(format_str_for_email_import(value='\nmulti\nlines\r\nstring'), 'multilinesstring')
+        self.assertEqual(format_str_for_email_import(value='validstring'), 'validstring')
+        self.assertEqual(
+            format_str_for_email_import(value='\n MyAddress@uclouvain.be \r  \n  '),
+            'myaddress@uclouvain.be',
+        )
