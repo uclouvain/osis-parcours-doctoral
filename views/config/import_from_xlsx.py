@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2026 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -37,7 +37,7 @@ from django.views.generic import FormView
 from openpyxl import load_workbook
 from openpyxl.cell import Cell
 from openpyxl.comments import Comment
-from openpyxl.styles import PatternFill, Alignment
+from openpyxl.styles import Alignment, PatternFill
 from openpyxl.worksheet.worksheet import Worksheet
 from pydantic import AfterValidator, ValidationError
 from pydantic.main import ModelT
@@ -114,6 +114,7 @@ class WorksheetConfig(Generic[ModelT]):
         validation_model_class: Type[ModelT],
         with_header: bool,
         additional_validations_conditions: list[ValidationCondition] = None,
+        pre_process_functions: dict[str, Callable] = None,
     ):
         self.worksheet: Worksheet | None = None
         self.validation_model_class: Type[ModelT] = validation_model_class
@@ -126,6 +127,7 @@ class WorksheetConfig(Generic[ModelT]):
         self.validation_context_data: dict[
             str | tuple[str, ...], dict[str | tuple[str, ...], int]
         ] = {}  # {'f1': {'v1': 1}} or {('f1, 'f2'): {('v1', 'v2'): 1}}
+        self.pre_process_functions: dict[str, Callable] = pre_process_functions or {}
 
         # Validation fields
         self.validated_objects: list[ModelT] = []
@@ -260,6 +262,20 @@ class WorksheetConfig(Generic[ModelT]):
                         cell.value = f'{condition.no_valid_row_message}\n{cell.value}'
                         cell.fill = self.cell_error_style
 
+    def pre_process_data(self):
+        """Pre-process the worksheet data if necessary"""
+        if not self.pre_process_functions:
+            return
+
+        for row in self.worksheet.iter_rows(min_row=self.min_row, max_col=self.max_col):
+            if all(cell.value is None for cell in row):
+                continue
+
+            for field_name, pre_process_function in self.pre_process_functions.items():
+                field_index = self.mapping_col_name_index[field_name]
+                cell = row[field_index]
+                cell.value = pre_process_function(cell.value)
+
 
 class ImportFromXLSXView(FormView):
     template_name = 'parcours_doctoral/config/excel_import.html'
@@ -277,6 +293,11 @@ class ImportFromXLSXView(FormView):
 
     def get_success_url(self):
         return self.request.get_full_path()
+
+    def pre_process_worksheet_data(self):
+        """Pre-process the worksheet data if necessary"""
+        for worksheet_config in self.worksheet_configs:
+            worksheet_config.pre_process_data()
 
     def load_worksheet_validation_context_data(self):
         """Load the worksheet validation context data if some are necessary (WorksheetConfig.validation_context_data)"""
@@ -309,6 +330,8 @@ class ImportFromXLSXView(FormView):
 
         for index, worksheet in enumerate(workbook.worksheets):
             self.worksheet_configs[index].load_worksheet(worksheet=worksheet)
+
+        self.pre_process_worksheet_data()
 
         self.load_worksheet_validation_context_data()
 
