@@ -428,12 +428,6 @@ class ParcoursDoctorauxFilterForm(forms.Form):
             for value in sector_institutes_values:
                 cleaned_data['secteurs' if value in self.sectors_acronyms else 'instituts'].append(value)
 
-        # The academic year is not required if we use a doctorate dashboard indicator
-        dashboard_indicator = cleaned_data.get('indicateur_tableau_bord')
-
-        if not dashboard_indicator and not cleaned_data.get('annee_academique'):
-            self.add_error('annee_academique', FIELD_REQUIRED_MESSAGE)
-
         return cleaned_data
 
 

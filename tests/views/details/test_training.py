@@ -1034,7 +1034,7 @@ class TrainingPdfRecapViewTestCase(TestCase):
         cls.manager = ProgramManagerFactory(education_group=cls.doctorate.training.education_group).person.user
 
         # Targeted path
-        cls.url = resolve_url('parcours_doctoral:training_pdf_recap', uuid=cls.doctorate.uuid)
+        cls.url = resolve_url('parcours_doctoral:training_pdf_recap', uuid=cls.doctorate.uuid, status='ACCEPTEE')
 
     @classmethod
     def tearDownClass(cls):

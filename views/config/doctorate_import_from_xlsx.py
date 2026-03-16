@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2026 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -30,7 +30,7 @@ from typing import Any, Literal, Optional
 
 from dateutil.relativedelta import relativedelta
 from django.conf import settings
-from django.db.models import Exists, F, OuterRef
+from django.db.models import F
 from django.db.models.fields.tuple_lookups import Tuple
 from django.utils.translation import gettext_lazy
 from osis_signature.enums import SignatureState
@@ -48,6 +48,7 @@ from base.models.student import Student
 from epc.models.inscription_programme_annuel import InscriptionProgrammeAnnuel
 from parcours_doctoral.auth.roles.ca_member import CommitteeMember
 from parcours_doctoral.auth.roles.promoter import Promoter
+from parcours_doctoral.auth.roles.student import Student as StudentRole
 from parcours_doctoral.ddd.domain.model.enums import (
     ChoixCommissionProximiteCDEouCLSM,
     ChoixCommissionProximiteCDSS,
@@ -67,13 +68,12 @@ from parcours_doctoral.models.private_defense import PrivateDefense
 from parcours_doctoral.views.config.import_from_xlsx import (
     ChoixOuiNon,
     ForeignKey,
+    ImportFromXLSXView,
     UniqueIdValidationCondition,
     ValidationCondition,
     WorksheetConfig,
-    ImportFromXLSXView,
 )
 from reference.models.country import Country
-from parcours_doctoral.auth.roles.student import Student as StudentRole
 
 __all__ = [
     'DoctorateImportFromXLSXView',
@@ -211,6 +211,20 @@ class SupervisionImportModel(BaseModel):
         return input_value
 
 
+def format_str_for_import(value):
+    """If not none, converts the value to a string without line breaks and leading and trailing spaces."""
+    if value is not None:
+        return ''.join(str(value).splitlines()).strip()
+    return value
+
+
+def format_str_for_email_import(value):
+    """If not none, converts the value to a lowercase string without line breaks and leading and trailing spaces."""
+    if value is not None:
+        return ''.join(str(value).splitlines()).strip().lower()
+    return value
+
+
 class DoctorateImportFromXLSXView(ImportFromXLSXView):
     urlpatterns = 'doctorate-import-from-xlsx'
     template_name = 'parcours_doctoral/config/excel_import.html'
@@ -223,6 +237,9 @@ class DoctorateImportFromXLSXView(ImportFromXLSXView):
             additional_validations_conditions=[
                 UniqueIdValidationCondition('identification_noma'),
             ],
+            pre_process_functions={
+                'identification_noma': format_str_for_import,
+            },
         )
 
         supervision_worksheet_config: WorksheetConfig[SupervisionImportModel] = WorksheetConfig(
@@ -238,6 +255,9 @@ class DoctorateImportFromXLSXView(ImportFromXLSXView):
                     validation_key_fields=('noma_doctorant',),
                 ),
             ],
+            pre_process_functions={
+                'email': format_str_for_email_import,
+            },
         )
 
         super().__init__(
@@ -305,19 +325,12 @@ class DoctorateImportFromXLSXView(ImportFromXLSXView):
             'pays',
         )
 
-        persons = (
-            Person.objects.filter(
-                # Keep only persons with internal account and email address
-                global_id__startswith='0',
-                email__endswith=settings.INTERNAL_EMAIL_SUFFIX,
-                email__in=db_supervision_data_ids['email'],
-            )
-            .filter(
-                # Remove students who aren't tutors
-                ~Exists(Student.objects.filter(person=OuterRef('pk'), person__tutor__isnull=True)),
-            )
-            .only('email', 'id')
-        )
+        persons = Person.objects.filter(
+            # Keep only persons with internal account and email address
+            global_id__startswith='0',
+            email__endswith=settings.INTERNAL_EMAIL_SUFFIX,
+            email__in=db_supervision_data_ids['email'],
+        ).only('email', 'id')
 
         countries = Country.objects.filter(iso_code__in=db_supervision_data_ids['pays']).only('iso_code', 'id')
 
@@ -356,7 +369,6 @@ class DoctorateImportFromXLSXView(ImportFromXLSXView):
 
         default_activity_subtitles_by_category: dict[str, str] = {
             CategorieActivite.RESIDENCY.name: _get_category_label(CategorieActivite.RESIDENCY),
-
         }
         default_activity_comments_by_category: dict[str, str] = {
             CategorieActivite.PAPER.name: _get_category_label(CategorieActivite.PAPER),

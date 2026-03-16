@@ -51,6 +51,7 @@ from parcours_doctoral.models.activity import Activity
 from parcours_doctoral.models.cdd_config import CddConfiguration
 from parcours_doctoral.models.parcours_doctoral import ParcoursDoctoral
 from reference.api.serializers.country import RelatedCountryField
+from reference.models.country import Country
 
 FORM_SERIALIZER_FIELD_MAPPING = {
     forms.CharField: serializers.CharField,
@@ -257,6 +258,10 @@ class ActivitySerializerBase(serializers.Serializer):
         :return: validated, cleaned form data
         :raise: ``django.core.exceptions.ValidationError`` on failed validation.
         """
+        # We need to have the iso code for the form validation to work
+        if 'country' in data and isinstance(data['country'], Country):
+            data['country'] = data['country'].iso_code
+
         self.form_instance = form = self.get_form(data=data)
 
         if not form.is_valid():
