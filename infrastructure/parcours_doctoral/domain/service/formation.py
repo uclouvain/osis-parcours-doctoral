@@ -184,7 +184,7 @@ class FormationTranslator(IDoctoratTranslator):
                 est_inscriptible=True,
                 uclouvain_est_institution_reference=True,
                 inscription_web=True,
-                statut=ActiveStatusEnum.ACTIVE.name,
+                statuts=[ActiveStatusEnum.ACTIVE.name],
             )
         )
 
@@ -230,7 +230,7 @@ class FormationTranslator(IDoctoratTranslator):
                 est_inscriptible=True,
                 uclouvain_est_institution_reference=True,
                 inscription_web=True,
-                statut=ActiveStatusEnum.ACTIVE.name,
+                statuts=[ActiveStatusEnum.ACTIVE.name],
             )
         )
         return bool(dtos)
