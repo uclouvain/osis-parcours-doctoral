@@ -33,9 +33,9 @@ from django.utils.translation import gettext as _
 from django.views.generic import ListView
 from django.views.generic.edit import FormMixin
 
-from admission.utils import add_messages_into_htmx_response
 from admission.views import ListPaginator
 from base.templatetags.pagination_bs5 import DEFAULT_PAGINATOR_SIZE
+from base.utils.utils import add_messages_into_htmx_response
 from base.views.common import display_error_messages
 from infrastructure.messages_bus import message_bus_instance
 from osis_common.utils.htmx import HtmxMixin

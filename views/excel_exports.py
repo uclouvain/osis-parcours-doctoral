@@ -46,8 +46,8 @@ from osis_export.models.enums.types import ExportTypes
 from admission.ddd.admission.doctorat.preparation.domain.model.enums import (
     ChoixTypeAdmission,
 )
-from admission.utils import add_messages_into_htmx_response
 from base.models.person import Person
+from base.utils.utils import add_messages_into_htmx_response
 from infrastructure.messages_bus import message_bus_instance
 from parcours_doctoral.ddd.domain.model.enums import (
     ChoixStatutParcoursDoctoral,
