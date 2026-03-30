@@ -15,13 +15,13 @@ paths:
       - name: limit
         required: false
         in: query
-        description: Number of results to return per page.
+        description: Nombre de résultats à retourner par page.
         schema:
           type: integer
       - name: offset
         required: false
         in: query
-        description: The initial index from which to return the results.
+        description: L'index initial depuis lequel retourner les résultats.
         schema:
           type: integer
       - name: search
@@ -62,13 +62,13 @@ paths:
       - name: limit
         required: false
         in: query
-        description: Number of results to return per page.
+        description: Nombre de résultats à retourner par page.
         schema:
           type: integer
       - name: offset
         required: false
         in: query
-        description: The initial index from which to return the results.
+        description: L'index initial depuis lequel retourner les résultats.
         schema:
           type: integer
       - name: search
@@ -3632,11 +3632,13 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/EnabledCategoriesEnum'
+          title: Catégories activées
         conference_types:
           title: Types d'activité pour la catégorie Conférence
         conference_publication_types:
+          title: Types d'activité pour une publication dans la catégorie Conférence
+        conference_communication_types:
           title: Types d'activité pour une communication dans la catégorie Conférence
-        conference_communication_types: {}
         communication_types:
           title: Types d'activité pour la catégorie Communication orale
         seminar_types:
