@@ -215,7 +215,6 @@ class ListeParcoursDoctorauxRepository(IListeParcoursDoctorauxRepository):
 
             field_order = {
                 'nom_etudiant': ['student__last_name', 'student__first_name'],
-                'email_etudiant': ['student__private_email'],
                 'formation': ['training__acronym'],
                 'bourse': ['scholarship'],
                 'statut': ['ordered_status'],
@@ -259,7 +258,7 @@ class ListeParcoursDoctorauxRepository(IListeParcoursDoctorauxRepository):
             genre_doctorant=parcours_doctoral.student.gender,
             nom_doctorant=parcours_doctoral.student.last_name,
             prenom_doctorant=parcours_doctoral.student.first_name,
-            email_doctorant=parcours_doctoral.student.private_email,
+            email_doctorant=parcours_doctoral.student.email,
             formation=FormationRechercheDTO(
                 sigle=parcours_doctoral.training.acronym,
                 code=parcours_doctoral.training.partial_acronym,
