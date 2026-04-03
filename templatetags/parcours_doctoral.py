@@ -185,6 +185,7 @@ def get_valid_tab_tree(context, permission_obj, tab_tree):
             'comments',
             'history',
             'management',
+            'confirmation',
         }:
             continue
 
