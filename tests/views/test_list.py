@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2026 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -55,6 +55,8 @@ from base.tests.factories.learning_unit_year import LearningUnitYearFactory
 from base.tests.factories.person import PersonFactory
 from base.tests.factories.program_manager import ProgramManagerFactory
 from base.tests.factories.user import UserFactory
+from epc.models.enums.etat_inscription import EtatInscriptionFormation
+from epc.tests.factories.inscription_programme_annuel import InscriptionProgrammeAnnuelFactory
 from parcours_doctoral.ddd.domain.model.enums import (
     STATUTS_ACTIFS,
     BourseRecherche,
@@ -231,6 +233,11 @@ class ParcoursDoctoralListTestView(QueriesAssertionsMixin, TestCase):
             entity_type=EntityType.SCHOOL.name,
             parent=faculty_entity,
         ).entity
+
+        cls.enrollment = InscriptionProgrammeAnnuelFactory(
+            admission_uuid=cls.doctorate.admission.uuid,
+            etat_inscription=EtatInscriptionFormation.INSCRIT_AU_ROLE.name,
+        )
 
         cls.default_params = {
             'annee_academique': 2023,
@@ -547,8 +554,7 @@ class ParcoursDoctoralListTestView(QueriesAssertionsMixin, TestCase):
         messages = [m.message for m in list(response.context['messages'])]
 
         self.assertIn(
-            f'{gettext("Year")} - '
-            f'{form.fields["annee_academique"].error_messages["invalid_choice"] % {"value": 1}}',
+            f'{gettext("Year")} - {form.fields["annee_academique"].error_messages["invalid_choice"] % {"value": 1}}',
             messages,
         )
 

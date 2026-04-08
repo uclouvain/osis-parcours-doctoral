@@ -1401,6 +1401,9 @@ msgstr "Formations doctorales"
 msgid "Doctoral trainings export"
 msgstr "Export des parcours doctoraux"
 
+msgid "Doctoral trainings list"
+msgstr "Liste des formations doctorales"
+
 msgid "Doctorate"
 msgstr "Doctorat"
 
@@ -1728,6 +1731,9 @@ msgstr "E-mail générique qui peut être envoyé manuellement"
 
 msgid "Global comments"
 msgstr "Commentaires globaux"
+
+msgid "Go to the doctoral trainings list"
+msgstr "Accéder à la liste des formations doctorales"
 
 msgid "Grounds for denied"
 msgstr "Motif de refus"
@@ -2141,6 +2147,9 @@ msgstr ""
 msgid "Link to the thesis distribution authorization form (frontoffice)"
 msgstr ""
 "Le lien vers la page d'autorisation de diffusion de la thèse (frontoffice)"
+
+msgid "List"
+msgstr "Liste"
 
 msgid ""
 "List of course units in complementary training completed by the student:"
