@@ -45,6 +45,7 @@ class ParcoursDoctoralRechercheDTO(interface.DTO):
     genre_doctorant: str
     prenom_doctorant: str
     nom_doctorant: str
+    email_doctorant: str
 
     code_bourse: str
     cotutelle: bool
