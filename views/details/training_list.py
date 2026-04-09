@@ -201,10 +201,12 @@ class TrainingRecapPdfView(ParcoursDoctoralViewMixin, generic.View):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         if self.kwargs['status'] == StatutActivite.SOUMISE.name:
+            context['activities_status'] = StatutActivite.SOUMISE.name
             activities = Activity.objects.for_doctoral_training(self.parcours_doctoral_uuid).filter(
                 status=StatutActivite.SOUMISE.name
             )
         else:
+            context['activities_status'] = StatutActivite.ACCEPTEE.name
             activities = Activity.objects.for_doctoral_training(self.parcours_doctoral_uuid).filter(
                 status=StatutActivite.ACCEPTEE.name
             )
