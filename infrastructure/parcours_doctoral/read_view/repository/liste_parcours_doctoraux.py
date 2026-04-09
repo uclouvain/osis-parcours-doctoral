@@ -258,6 +258,8 @@ class ListeParcoursDoctorauxRepository(IListeParcoursDoctorauxRepository):
             genre_doctorant=parcours_doctoral.student.gender,
             nom_doctorant=parcours_doctoral.student.last_name,
             prenom_doctorant=parcours_doctoral.student.first_name,
+            email_doctorant=parcours_doctoral.student.email
+            if parcours_doctoral.student.email else parcours_doctoral.student.private_email,
             formation=FormationRechercheDTO(
                 sigle=parcours_doctoral.training.acronym,
                 code=parcours_doctoral.training.partial_acronym,

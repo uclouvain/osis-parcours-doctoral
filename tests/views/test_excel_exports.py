@@ -137,6 +137,7 @@ class ParcoursDoctoralListExcelExportViewTestCase(QueriesAssertionsMixin, TestCa
             genre_doctorant=cls.parcours_doctoral.student.gender,
             prenom_doctorant=cls.parcours_doctoral.student.first_name,
             nom_doctorant=cls.parcours_doctoral.student.last_name,
+            email_doctorant=cls.parcours_doctoral.student.email,
             code_bourse=cls.parcours_doctoral.other_international_scholarship,
             cotutelle=cls.parcours_doctoral.cotutelle,
             formation_complementaire=False,
@@ -259,12 +260,13 @@ class ParcoursDoctoralListExcelExportViewTestCase(QueriesAssertionsMixin, TestCa
         self.assertEqual(len(header), len(row_data))
 
         self.assertEqual(row_data[0], f'{result.nom_doctorant}, {result.prenom_doctorant}')
-        self.assertEqual(row_data[1], result.code_bourse)
-        self.assertEqual(row_data[2], result.formation.nom_complet)
-        self.assertEqual(row_data[3], result.statut)
-        self.assertEqual(row_data[4], result.cree_le.strftime(SHORT_DATE_FORMAT))
-        self.assertEqual(row_data[5], yesno(result.type_admission == ChoixTypeAdmission.PRE_ADMISSION.name))
-        self.assertEqual(row_data[6], yesno(result.cotutelle))
-        self.assertEqual(row_data[7], yesno(result.formation_complementaire))
-        self.assertEqual(row_data[8], '')
-        self.assertEqual(row_data[9], Decimal('0'))
+        self.assertEqual(row_data[1], result.email_doctorant)
+        self.assertEqual(row_data[2], result.code_bourse)
+        self.assertEqual(row_data[3], result.formation.nom_complet)
+        self.assertEqual(row_data[4], result.statut)
+        self.assertEqual(row_data[5], result.cree_le.strftime(SHORT_DATE_FORMAT))
+        self.assertEqual(row_data[6], yesno(result.type_admission == ChoixTypeAdmission.PRE_ADMISSION.name))
+        self.assertEqual(row_data[7], yesno(result.cotutelle))
+        self.assertEqual(row_data[8], yesno(result.formation_complementaire))
+        self.assertEqual(row_data[9], '')
+        self.assertEqual(row_data[10], Decimal('0'))
