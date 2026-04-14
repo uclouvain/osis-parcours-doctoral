@@ -36,11 +36,8 @@ from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 from django.views.generic.base import ContextMixin
 
-from admission.utils import (
-    add_close_modal_into_htmx_response,
-    add_messages_into_htmx_response,
-)
 from base.ddd.utils.business_validator import MultipleBusinessExceptions
+from base.utils.utils import add_messages_into_htmx_response, add_close_modal_into_htmx_response
 from infrastructure.messages_bus import message_bus_instance
 from osis_common.ddd.interface import BusinessException
 from osis_role.contrib.views import PermissionRequiredMixin
