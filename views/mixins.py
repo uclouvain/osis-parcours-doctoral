@@ -46,6 +46,7 @@ from parcours_doctoral.ddd.commands import (
     GetCotutelleQuery,
     RecupererParcoursDoctoralQuery,
 )
+from parcours_doctoral.ddd.domain.model.enums import STATUTS_DOCTORAT_EPREUVE_CONFIRMATION_EN_COURS
 from parcours_doctoral.ddd.domain.validator.exceptions import (
     ParcoursDoctoralNonTrouveException,
 )
@@ -219,6 +220,9 @@ class ParcoursDoctoralFormMixin(ParcoursDoctoralViewMixin):
 
 
 class LastConfirmationMixin(ParcoursDoctoralViewMixin):
+    extra_context = {
+        'STATUTS_DOCTORAT_EPREUVE_CONFIRMATION_EN_COURS': STATUTS_DOCTORAT_EPREUVE_CONFIRMATION_EN_COURS,
+    }
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs) if hasattr(super(), 'get_context_data') else {}
         context['confirmation_paper'] = self.last_confirmation_paper

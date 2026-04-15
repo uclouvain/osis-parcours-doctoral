@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2025 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2026 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -46,11 +46,8 @@ from parcours_doctoral.ddd.epreuve_confirmation.dtos import EpreuveConfirmationD
 from parcours_doctoral.infrastructure.mixins.notification import NotificationMixin
 from parcours_doctoral.mail_templates.confirmation_paper import (
     PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_ON_FAILURE_ADRE,
-    PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_ON_FAILURE_ADRI,
     PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_ON_RETAKING_ADRE,
-    PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_ON_RETAKING_ADRI,
     PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_ON_SUCCESS_ADRE,
-    PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_ON_SUCCESS_ADRI,
     PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_ON_SUCCESS_STUDENT,
     PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_SUBMISSION_ADRE,
 )
@@ -207,15 +204,6 @@ class Notification(NotificationMixin, INotification):
         )
         EmailNotificationHandler.create(adre_email_message, person=None)
 
-        # Notify ADRI > email
-        adri_email_message = generate_email(
-            PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_ON_FAILURE_ADRI,
-            settings.LANGUAGE_CODE,
-            common_tokens,
-            recipients=[cls.ADRI_EMAIL],
-        )
-        EmailNotificationHandler.create(adri_email_message, person=None)
-
     @classmethod
     def notifier_repassage_epreuve(
         cls,
@@ -249,15 +237,6 @@ class Notification(NotificationMixin, INotification):
         )
         EmailNotificationHandler.create(adre_email_message, person=None)
 
-        # Notify ADRI > email
-        adri_email_message = generate_email(
-            PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_ON_RETAKING_ADRI,
-            settings.LANGUAGE_CODE,
-            common_tokens,
-            recipients=[cls.ADRI_EMAIL],
-        )
-        EmailNotificationHandler.create(adri_email_message, person=None)
-
     @classmethod
     def notifier_reussite_epreuve(cls, epreuve_confirmation: EpreuveConfirmation):
         parcours_doctoral = cls._get_doctorate(doctorate_uuid=epreuve_confirmation.parcours_doctoral_id.uuid)
@@ -290,12 +269,3 @@ class Notification(NotificationMixin, INotification):
             recipients=[cls.ADRE_EMAIL],
         )
         EmailNotificationHandler.create(adre_email_message, person=None)
-
-        # Notify ADRI > email
-        adri_email_message = generate_email(
-            PARCOURS_DOCTORAL_EMAIL_CONFIRMATION_PAPER_ON_SUCCESS_ADRI,
-            settings.LANGUAGE_CODE,
-            common_tokens,
-            recipients=[cls.ADRI_EMAIL],
-        )
-        EmailNotificationHandler.create(adri_email_message, person=None)

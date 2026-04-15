@@ -28,7 +28,7 @@ from django.urls import reverse
 from django.views.generic import FormView
 
 from infrastructure.messages_bus import message_bus_instance
-from parcours_doctoral.ddd.domain.model.enums import ChoixStatutParcoursDoctoral
+from parcours_doctoral.ddd.domain.model.enums import STATUTS_DOCTORAT_EPREUVE_CONFIRMATION_EN_COURS
 from parcours_doctoral.ddd.epreuve_confirmation.commands import (
     SoumettreReportDeDateParCDDCommand,
 )
@@ -53,10 +53,7 @@ class ExtensionRequestFormView(
     form_class = ExtensionRequestForm
 
     def dispatch(self, request, *args, **kwargs):
-        if (
-            self.parcours_doctoral.status != ChoixStatutParcoursDoctoral.ADMIS.name
-            and self.parcours_doctoral.status != ChoixStatutParcoursDoctoral.CONFIRMATION_SOUMISE.name
-        ):
+        if self.parcours_doctoral.status not in STATUTS_DOCTORAT_EPREUVE_CONFIRMATION_EN_COURS:
             return redirect("parcours_doctoral:extension-request", uuid=self.parcours_doctoral.uuid)
         return super().dispatch(request, *args, **kwargs)
 

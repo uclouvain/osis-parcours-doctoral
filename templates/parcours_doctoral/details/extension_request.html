@@ -27,7 +27,7 @@
 {% endcomment %}
 
 {% block actions-group %}
-  {% if parcours_doctoral.statut == 'ADMIS' or parcours_doctoral.statut == 'CONFIRMATION_SOUMISE' %}
+  {% if parcours_doctoral.statut in STATUTS_DOCTORAT_EPREUVE_CONFIRMATION_EN_COURS %}
     {{ block.super }}
   {% endif %}
 {% endblock %}
