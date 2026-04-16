@@ -6,7 +6,7 @@
 #  The core business involves the administration of students, teachers,
 #  courses, programs and so on.
 #
-#  Copyright (C) 2015-2024 Université catholique de Louvain (http://www.uclouvain.be)
+#  Copyright (C) 2015-2026 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -74,7 +74,9 @@ class DoctorateConfirmationDecisionViewTestCase(TestCase):
         patched = cls.confirm_remote_upload_patcher.start()
         patched.return_value = '4bdffb42-552d-415d-9e4c-725f10dce228'
 
-        cls.confirm_multiple_upload_patcher = patch('osis_document_components.fields.FileField._confirm_multiple_upload')
+        cls.confirm_multiple_upload_patcher = patch(
+            'osis_document_components.fields.FileField._confirm_multiple_upload'
+        )
         patched = cls.confirm_multiple_upload_patcher.start()
         patched.side_effect = lambda _, value, __: ['4bdffb42-552d-415d-9e4c-725f10dce228'] if value else []
 
@@ -218,7 +220,7 @@ class DoctorateConfirmationDecisionViewTestCase(TestCase):
         # Check the notifications
         email_notifications = EmailNotification.objects.all()
 
-        self.assertEqual(len(email_notifications), 3)
+        self.assertEqual(len(email_notifications), 2)
         email_messages = [message_from_string(notification.payload) for notification in email_notifications]
 
         self.assertCountEqual(
@@ -226,7 +228,6 @@ class DoctorateConfirmationDecisionViewTestCase(TestCase):
             [
                 self.parcours_doctoral_with_confirmation_papers.student.email,
                 NotificationMixin.ADRE_EMAIL,
-                NotificationMixin.ADRI_EMAIL,
             ],
         )
 
@@ -327,7 +328,7 @@ class DoctorateConfirmationDecisionViewTestCase(TestCase):
         # Check the notifications
         email_notifications = EmailNotification.objects.all()
 
-        self.assertEqual(len(email_notifications), 3)
+        self.assertEqual(len(email_notifications), 2)
         email_messages = [message_from_string(notification.payload) for notification in email_notifications]
 
         self.assertCountEqual(
@@ -335,7 +336,6 @@ class DoctorateConfirmationDecisionViewTestCase(TestCase):
             [
                 self.parcours_doctoral_with_confirmation_papers.student.email,
                 NotificationMixin.ADRE_EMAIL,
-                NotificationMixin.ADRI_EMAIL,
             ],
         )
 
@@ -451,7 +451,7 @@ class DoctorateConfirmationDecisionViewTestCase(TestCase):
         # Check the notifications
         email_notifications = EmailNotification.objects.all()
 
-        self.assertEqual(len(email_notifications), 3)
+        self.assertEqual(len(email_notifications), 2)
         email_messages = [message_from_string(notification.payload) for notification in email_notifications]
 
         self.assertCountEqual(
@@ -459,7 +459,6 @@ class DoctorateConfirmationDecisionViewTestCase(TestCase):
             [
                 self.parcours_doctoral_with_confirmation_papers.student.email,
                 NotificationMixin.ADRE_EMAIL,
-                NotificationMixin.ADRI_EMAIL,
             ],
         )
 
