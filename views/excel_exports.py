@@ -219,6 +219,7 @@ class ParcoursDoctoralListExcelExportView(
     def get_header(self):
         return [
             _('Student'),
+            _('Email'),
             _('Scholarship holder'),
             _('Course'),
             _('Status'),
@@ -233,6 +234,7 @@ class ParcoursDoctoralListExcelExportView(
     def get_row_data(self, row: ParcoursDoctoralRechercheDTO):
         return [
             f'{row.nom_doctorant}, {row.prenom_doctorant}',
+            row.email_doctorant,
             row.code_bourse,
             row.formation.nom_complet,
             row.statut,
