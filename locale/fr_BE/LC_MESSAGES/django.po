@@ -1327,8 +1327,11 @@ msgstr "Désigner comme promoteur·trice de contact"
 msgid "Detailed curriculum vitae"
 msgstr "Curriculum vitae détaillé"
 
-msgid "Detailed doctoral training"
-msgstr "Formation doctorale détaillée"
+msgid "Detailed doctoral training: accepted activities"
+msgstr "Formation doctorale détaillée : activités acceptées"
+
+msgid "Detailed doctoral training: submitted activities"
+msgstr "Formation doctorale détaillée : activités soumises"
 
 msgid "Diploma collection"
 msgstr "Retrait du diplôme"
