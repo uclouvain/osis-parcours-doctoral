@@ -645,12 +645,12 @@ class ParcoursDoctoral(models.Model):
 
     @cached_property
     def has_valid_enrollment(self):
-        """Return if there is a valid enrolment of the student to the related training (first year for now)."""
-        return InscriptionProgrammeAnnuel.objects.filter(
-            programme__offer_id=self.training_id,
-            programme_cycle__etudiant__person_id=self.student_id,
-            etat_inscription=EtatInscriptionFormation.INSCRIT_AU_ROLE.name,
-        ).exists()
+        """
+        Return if there is a valid enrolment of the student to the related training.
+        This function is used to give access or not to the users through the permissions but we don't know yet what
+        will be the condition so WE ALWAYS RETURN TRUE FOR NOW.
+        """
+        return True
 
     @cached_property
     def has_valid_enrollment_for_current_year_or_following_year(self):

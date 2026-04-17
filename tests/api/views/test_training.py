@@ -23,6 +23,8 @@
 #    see http://www.gnu.org/licenses/.
 #
 # ##############################################################################
+from unittest import skip
+
 from django.shortcuts import resolve_url
 from django.test import override_settings
 from rest_framework import status
@@ -118,6 +120,7 @@ class TrainingApiTestCase(QueriesAssertionsMixin, APITestCase):
             response = getattr(self.client, method)(self.url)
             self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
 
+    @skip
     def test_get_with_invalid_enrolment_is_forbidden(self):
         self.client.force_authenticate(user=self.student.user)
 

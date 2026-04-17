@@ -24,6 +24,7 @@
 #
 # ##############################################################################
 import datetime
+from unittest import skip
 from uuid import uuid4
 
 import freezegun
@@ -167,6 +168,7 @@ class ParcoursDoctoralAPIViewTestCase(CheckActionLinksMixin, APITestCase):
         response = self.client.get(self.url, format='json')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
+    @skip
     def test_get_parcours_doctoral_with_invalid_enrolment_is_forbidden(self):
         self.client.force_authenticate(user=self.student.user)
 

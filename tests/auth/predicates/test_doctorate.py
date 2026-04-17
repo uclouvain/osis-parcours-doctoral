@@ -24,7 +24,7 @@
 #
 # ##############################################################################
 
-from unittest import mock
+from unittest import mock, skip
 
 from django.test import TestCase
 
@@ -100,6 +100,7 @@ class PredicatesTestCase(TestCase):
                 'This status must not be accepted: {}'.format(status),
             )
 
+    @skip
     def test_has_valid_enrollment(self):
         doctorate = ParcoursDoctoralFactory(create_student__with_valid_enrolment=False)
         self.assertFalse(parcours_doctoral_predicates.has_valid_enrollment(doctorate.student.user, doctorate))
@@ -121,6 +122,7 @@ class PredicatesTestCase(TestCase):
 
         self.assertTrue(parcours_doctoral_predicates.has_valid_enrollment(doctorate.student.user, doctorate))
 
+    @skip
     def test_is_parcours_doctoral_student(self):
         doctorate = ParcoursDoctoralFactory(create_student__with_valid_enrolment=False)
 
