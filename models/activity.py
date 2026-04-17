@@ -353,8 +353,7 @@ class Activity(models.Model):
     )
 
     # Common
-    type = models.CharField(
-        max_length=100,
+    type = models.TextField(
         default="",
         blank=True,
         verbose_name=_("Activity type"),
